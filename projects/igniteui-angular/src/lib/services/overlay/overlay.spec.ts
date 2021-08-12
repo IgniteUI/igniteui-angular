@@ -77,7 +77,7 @@ const css = (element) => {
     return ret;
 };
 
-const addScrollDivToElement = (parent) => {
+export const addScrollDivToElement = (parent) => {
     const scrollDiv = document.createElement('div');
     scrollDiv.style.width = '100px';
     scrollDiv.style.height = '100px';
@@ -538,63 +538,63 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
             const overlayInstance = fixture.componentInstance.overlay;
-            spyOn(overlayInstance.onClosed, 'emit');
-            spyOn(overlayInstance.onClosing, 'emit');
-            spyOn(overlayInstance.onOpened, 'emit');
-            spyOn(overlayInstance.onAppended, 'emit');
-            spyOn(overlayInstance.onOpening, 'emit');
-            spyOn(overlayInstance.onAnimation, 'emit');
+            spyOn(overlayInstance.closed, 'emit');
+            spyOn(overlayInstance.closing, 'emit');
+            spyOn(overlayInstance.opened, 'emit');
+            spyOn(overlayInstance.contentAppended, 'emit');
+            spyOn(overlayInstance.opening, 'emit');
+            spyOn(overlayInstance.animationStarting, 'emit');
 
             const firstCallId = overlayInstance.attach(SimpleDynamicComponent);
             overlayInstance.show(firstCallId);
             tick();
 
-            expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onOpening.emit)
+            expect(overlayInstance.opening.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.opening.emit)
                 .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false });
-            const args: OverlayEventArgs = (overlayInstance.onOpening.emit as jasmine.Spy).calls.mostRecent().args[0];
+            const args: OverlayEventArgs = (overlayInstance.opening.emit as jasmine.Spy).calls.mostRecent().args[0];
             expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
-            expect(overlayInstance.onAppended.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.animationStarting.emit).toHaveBeenCalledTimes(1);
 
             tick();
-            expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any });
+            expect(overlayInstance.opened.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.opened.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any });
             overlayInstance.hide(firstCallId);
 
             tick();
-            expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onClosing.emit)
+            expect(overlayInstance.closing.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.closing.emit)
                 .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false, event: undefined });
-            expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(2);
+            expect(overlayInstance.animationStarting.emit).toHaveBeenCalledTimes(2);
 
             tick();
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onClosed.emit).
+            expect(overlayInstance.closed.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.closed.emit).
                 toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, event: undefined });
 
             const secondCallId = overlayInstance.attach(fixture.componentInstance.item);
             overlayInstance.show(secondCallId);
             tick();
-            expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false });
-            expect(overlayInstance.onAppended.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(3);
+            expect(overlayInstance.opening.emit).toHaveBeenCalledTimes(2);
+            expect(overlayInstance.opening.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false });
+            expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(2);
+            expect(overlayInstance.animationStarting.emit).toHaveBeenCalledTimes(3);
 
             tick();
-            expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId });
+            expect(overlayInstance.opened.emit).toHaveBeenCalledTimes(2);
+            expect(overlayInstance.opened.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId });
 
             overlayInstance.hide(secondCallId);
             tick();
-            expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onClosing.emit).
+            expect(overlayInstance.closing.emit).toHaveBeenCalledTimes(2);
+            expect(overlayInstance.closing.emit).
                 toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false, event: undefined });
-            expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(4);
+            expect(overlayInstance.animationStarting.emit).toHaveBeenCalledTimes(4);
 
             tick();
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, event: undefined });
+            expect(overlayInstance.closed.emit).toHaveBeenCalledTimes(2);
+            expect(overlayInstance.closed.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, event: undefined });
         }));
 
         it('Should properly set style on position method call - GlobalPosition.', () => {
@@ -910,42 +910,42 @@ describe('igxOverlay', () => {
             expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().left).toBe(400);
         }));
 
-        it('#2798 - Allow canceling of open and close of IgxDropDown through onOpening and onClosing events', fakeAsync(() => {
+        it('#2798 - Allow canceling of open and close of IgxDropDown through opening and closing events', fakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
             const overlayInstance = fixture.componentInstance.overlay;
 
-            overlayInstance.onClosing.subscribe((e: OverlayCancelableEventArgs) => {
+            overlayInstance.closing.subscribe((e: OverlayCancelableEventArgs) => {
                 e.cancel = true;
             });
 
-            spyOn(overlayInstance.onClosed, 'emit').and.callThrough();
-            spyOn(overlayInstance.onClosing, 'emit').and.callThrough();
-            spyOn(overlayInstance.onOpened, 'emit').and.callThrough();
-            spyOn(overlayInstance.onOpening, 'emit').and.callThrough();
+            spyOn(overlayInstance.closed, 'emit').and.callThrough();
+            spyOn(overlayInstance.closing, 'emit').and.callThrough();
+            spyOn(overlayInstance.opened, 'emit').and.callThrough();
+            spyOn(overlayInstance.opening, 'emit').and.callThrough();
 
             const firstCallId = overlayInstance.attach(SimpleDynamicComponent);
             overlayInstance.show(firstCallId);
             tick();
 
-            expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.opening.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.opened.emit).toHaveBeenCalledTimes(1);
 
             overlayInstance.hide(firstCallId);
             tick();
 
-            expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(0);
+            expect(overlayInstance.closing.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.closed.emit).toHaveBeenCalledTimes(0);
 
-            overlayInstance.onOpening.subscribe((e: OverlayCancelableEventArgs) => {
+            overlayInstance.opening.subscribe((e: OverlayCancelableEventArgs) => {
                 e.cancel = true;
             });
 
             overlayInstance.show(firstCallId);
             tick();
 
-            expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.opening.emit).toHaveBeenCalledTimes(2);
+            expect(overlayInstance.opened.emit).toHaveBeenCalledTimes(1);
         }));
 
         it('#3673 - Should not close dropdown in dropdown', fakeAsync(() => {
@@ -3948,7 +3948,6 @@ describe('igxOverlay', () => {
         }));
 
         it('Should collapse/close the component when click outside it (DropDown, DatePicker, NavBar etc.)', fakeAsync(async () => {
-            // TO DO replace Spies with css class and/or getBoundingClientRect.
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [
@@ -3968,22 +3967,23 @@ describe('igxOverlay', () => {
             };
 
             spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay.onClosing, 'emit');
+            spyOn(overlay.closing, 'emit');
 
             const firstCallId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(firstCallId);
             tick();
             expect(overlay.show).toHaveBeenCalledTimes(1);
-            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(0);
+            expect(overlay.closing.emit).toHaveBeenCalledTimes(0);
 
-            fixture.componentInstance.buttonElement.nativeElement.click();
+            document.documentElement.click();
             tick();
-            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(overlay.onClosing.emit)
-                .toHaveBeenCalledWith({
-                    id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false,
-                    event: new MouseEvent('click')
-                });
+            expect(overlay.closing.emit).toHaveBeenCalledTimes(1);
+            expect(overlay.closing.emit).toHaveBeenCalledWith({
+                id: firstCallId,
+                componentRef: jasmine.any(ComponentRef) as any,
+                cancel: false,
+                event: jasmine.any(Event) as any
+            });
         }));
 
         it('Should remain opened when click is on an element contained in the excludeFromOutsideClick collection', fakeAsync(async () => {
@@ -4000,27 +4000,36 @@ describe('igxOverlay', () => {
             };
 
             spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay.onClosing, 'emit');
-            spyOn(overlay.onClosed, 'emit');
+            spyOn(overlay.closing, 'emit');
+            spyOn(overlay.closed, 'emit');
 
-            overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            let callId = overlay.attach(SimpleDynamicComponent, overlaySettings);
+            overlay.show(callId);
             tick();
             expect(overlay.show).toHaveBeenCalledTimes(1);
 
             divElement.click();
             tick();
 
-            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(0);
-            expect(overlay.onClosed.emit).toHaveBeenCalledTimes(0);
+            expect(overlay.closing.emit).toHaveBeenCalledTimes(0);
+            expect(overlay.closed.emit).toHaveBeenCalledTimes(0);
 
             overlay.hideAll();
             tick();
-            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(overlay.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(overlay.closing.emit).toHaveBeenCalledTimes(1);
+            expect(overlay.closed.emit).toHaveBeenCalledTimes(1);
+            expect(overlay.closing.emit)
+            .toHaveBeenCalledWith({
+                id: callId,
+                componentRef: jasmine.any(ComponentRef) as any,
+                cancel: false,
+                event: undefined
+            });
+            overlay.detachAll();
 
             overlaySettings.excludeFromOutsideClick = [];
             tick();
-            const callId = overlay.attach(SimpleDynamicComponent, overlaySettings);
+            callId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(callId);
             tick();
 
@@ -4028,13 +4037,15 @@ describe('igxOverlay', () => {
             divElement.click();
             tick();
 
-            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(2);
-            expect(overlay.onClosed.emit).toHaveBeenCalledTimes(2);
-            expect(overlay.onClosing.emit)
-                .toHaveBeenCalledWith({
-                    id: callId, componentRef: jasmine.any(ComponentRef) as any, cancel: false,
-                    event: new MouseEvent('click')
-                });
+            expect(overlay.closing.emit).toHaveBeenCalledTimes(2);
+            expect(overlay.closed.emit).toHaveBeenCalledTimes(2);
+            expect(overlay.closing.emit)
+            .toHaveBeenCalledWith({
+                id: callId,
+                componentRef: jasmine.any(ComponentRef) as any,
+                cancel: false,
+                event: jasmine.any(Event) as any
+            });
         }));
     });
 
@@ -4282,10 +4293,10 @@ export class TopLeftOffsetComponent {
 @Component({
     template: `
     <div>
-        <button class='buttonOne' (click)='clickOne($event)'>Show first Overlay</button>
+        <button class='buttonOne' (click)='clickOne()'>Show first Overlay</button>
     </div>
     <div (click)='divClick($event)'>
-        <button class='buttonTwo' (click)='clickTwo($event)'>Show second Overlay</button>
+        <button class='buttonTwo' (click)='clickTwo()'>Show second Overlay</button>
     </div>`
 })
 export class TwoButtonsComponent {
@@ -4331,7 +4342,7 @@ export class WidthTestOverlayComponent {
 
     constructor(
         @Inject(IgxOverlayService) public overlay: IgxOverlayService,
-        public elementRef: ElementRef
+        @Inject(ElementRef) public elementRef: ElementRef
     ) { }
 
     public click() {

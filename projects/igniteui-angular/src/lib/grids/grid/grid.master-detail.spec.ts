@@ -360,7 +360,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate down through a detail view by focusing the whole row and continuing onto the next with arrow down.', () => {
-            const targetCellElement = grid.getCellByColumn(0, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
@@ -379,7 +379,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it('Should navigate down through a detail view partially out of view by scrolling it so it becomes fully visible.', async () => {
             const row = grid.gridAPI.get_row_by_index(4) as IgxGridRowComponent;
-            const targetCellElement = grid.getCellByColumn(4, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(4, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
@@ -400,7 +400,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             const row = grid.gridAPI.get_row_by_index(6) as IgxGridRowComponent;
-            const targetCellElement = grid.getCellByColumn(6, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(6, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
@@ -418,7 +418,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it('Should navigate up through a detail view by focusing the whole row and continuing onto the next with arrow up.', () => {
             const prevRow = grid.gridAPI.get_row_by_index(0) as IgxGridRowComponent;
-            const targetCellElement = grid.getCellByColumn(2, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(2, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
@@ -441,7 +441,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             const row = grid.gridAPI.get_row_by_index(2);
-            const targetCellElement = grid.getCellByColumn(2, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(2, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
@@ -460,7 +460,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             let row = grid.gridAPI.get_row_by_index(2);
-            const targetCellElement = grid.getCellByColumn(2, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(2, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
@@ -476,7 +476,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it('Should expand and collapse using Alt + Right/Down and Alt + Left/Up without losing focus on current row.', async () => {
             const row = grid.gridAPI.get_row_by_index(0) as IgxGridRowComponent;
-            const targetCellElement = grid.getCellByColumn(0, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
             expect(targetCellElement.active).toBeTruthy();
@@ -519,7 +519,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             const row = grid.gridAPI.get_row_by_index(52) as IgxGridRowComponent;
-            let targetCellElement = grid.getCellByColumn(52, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'ContactName');
 
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -533,8 +533,8 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             expect(row.expanded).toBeFalsy();
-            targetCellElement = grid.getCellByColumn(52, 'ContactName');
-            expect(targetCellElement.active).toBeTruthy();
+            let targetCellElement2 = grid.getCellByColumn(52, 'ContactName');
+            expect(targetCellElement2.active).toBeTruthy();
 
             // expand with alt + ArrowDown
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, true);
@@ -544,8 +544,8 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             expect(row.expanded).toBeTruthy();
-            targetCellElement = grid.getCellByColumn(52, 'ContactName');
-            expect(targetCellElement.active).toBeTruthy();
+            targetCellElement2 = grid.getCellByColumn(52, 'ContactName');
+            expect(targetCellElement2.active).toBeTruthy();
         });
 
         it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async () => {
@@ -574,7 +574,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it('Should navigate to the last data cell in the grid using Ctrl + End.', async () => {
             setupGridScrollDetection(fix, grid);
-            const targetCellElement = grid.getCellByColumn(0, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
@@ -596,7 +596,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const targetCellElement = grid.getCellByColumn(52, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
@@ -612,7 +612,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async () => {
             setupGridScrollDetection(fix, grid);
-            const targetCellElement = grid.getCellByColumn(0, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
@@ -634,7 +634,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const targetCellElement = grid.getCellByColumn(52, 'CompanyName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'CompanyName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
@@ -691,8 +691,10 @@ describe('IgxGrid Master Detail #grid', () => {
         describe('Paging', () => {
              it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
-                fix.componentInstance.paging = true;
                 grid = fix.componentInstance.grid;
+                fix.detectChanges();
+
+                fix.componentInstance.paging = true;
                 fix.detectChanges();
 
                 grid.expandRow(fix.componentInstance.data[0].ID);
@@ -704,9 +706,11 @@ describe('IgxGrid Master Detail #grid', () => {
 
             it('Should persist template state after paging to a page with fewer records and paging back.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
-                fix.componentInstance.paging = true;
                 fix.componentInstance.perPage = 5;
                 grid = fix.componentInstance.grid;
+                fix.detectChanges();
+
+                fix.componentInstance.paging = true;
                 fix.detectChanges();
 
                 grid.expandRow(fix.componentInstance.data[4].ID);
@@ -806,8 +810,8 @@ describe('IgxGrid Master Detail #grid', () => {
             it('Should exclude expanded detail views when doing range cell selection', fakeAsync(() => {
                 grid.expandRow(fix.componentInstance.data[2].ID);
                 const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
-                const startCell = grid.getCellByColumn(1, 'ContactName');
-                const endCell = grid.getCellByColumn(6, 'CompanyName');
+                const startCell = grid.gridAPI.get_cell_by_index(1, 'ContactName');
+                const endCell = grid.gridAPI.get_cell_by_index(6, 'CompanyName');
                 const range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 1 };
 
                 UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
@@ -817,7 +821,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(startCell.active).toBe(true);
 
                 for (let i = 2; i < 6; i++) {
-                    const cell = grid.getCellByColumn(i, 'ContactName');
+                    const cell = grid.gridAPI.get_cell_by_index(i, 'ContactName');
                     if (!cell) {
                         UIInteractions.simulatePointerOverElementEvent('pointerenter',
                             fix.debugElement.query(By.css('.addressArea')).nativeElement);
@@ -929,7 +933,8 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(row).toBeUndefined();
                 detailViews = GridFunctions.getAllMasterRowDetailDebug(fix);
                 expect(detailViews[0].context.index).toBe(1);
-                expect(detailViews[0].context.templateID).toBe('detailRow-ANATR');
+                expect(detailViews[0].context.templateID.type).toBe('detailRow');
+                expect(detailViews[0].context.templateID.id).toBe('ANATR');
             });
 
             it('Should be able to expand detail view of newly added row.', async () => {
@@ -1020,7 +1025,7 @@ describe('IgxGrid Master Detail #grid', () => {
             }));
 
             it('Should render expand/collapse icon in the column with visible index 0.', () => {
-                const cell = grid.getCellByKey('ALFKI', 'CompanyName');
+                const cell = grid.gridAPI.get_cell_by_key('ALFKI', 'CompanyName');
                 expect(cell instanceof IgxGridExpandableCellComponent).toBeTruthy();
                 const iconName = cell.nativeElement.querySelector('igx-icon').textContent;
                 expect(iconName).toEqual(EXPANDED_ICON_NAME);
@@ -1042,15 +1047,15 @@ describe('IgxGrid Master Detail #grid', () => {
             it(`Should navigate down through a detail view by focusing the whole row and continuing
             onto the next with arrow down in multi-row layout grid.`, async () => {
                 const gridContent = GridFunctions.getGridContent(fix);
-                let targetCellElement = grid.getCellByColumn(0, 'ContactName');
+                const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 UIInteractions.simulateClickAndSelectEvent(targetCellElement);
                 fix.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
                 fix.detectChanges();
 
-                targetCellElement = grid.getCellByColumn(0, 'Address');
-                expect(targetCellElement.active).toBeTruthy();
+                let targetCellElement2 = grid.getCellByColumn(0, 'Address');
+                expect(targetCellElement2.active).toBeTruthy();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
                 fix.detectChanges();
@@ -1062,14 +1067,14 @@ describe('IgxGrid Master Detail #grid', () => {
                 await wait();
                 fix.detectChanges();
 
-                targetCellElement = grid.getCellByColumn(2, 'CompanyName');
-                expect(targetCellElement.active).toBeTruthy();
+                targetCellElement2 = grid.getCellByColumn(2, 'CompanyName');
+                expect(grid.gridAPI.get_cell_by_index(2, 'CompanyName').active).toBeTruthy();
             });
 
             it(`Should navigate up through a detail view by
             focusing the whole row and continuing onto the next with arrow up in multi-row layout grid.`, async () => {
                 const gridContent = GridFunctions.getGridContent(fix);
-                let targetCellElement = grid.getCellByColumn(2, 'ContactName');
+                const targetCellElement = grid.gridAPI.get_cell_by_index(2, 'ContactName');
                 UIInteractions.simulateClickAndSelectEvent(targetCellElement);
                 fix.detectChanges();
 
@@ -1077,8 +1082,8 @@ describe('IgxGrid Master Detail #grid', () => {
                 await wait();
                 fix.detectChanges();
 
-                targetCellElement = grid.getCellByColumn(2, 'CompanyName');
-                expect(targetCellElement.active).toBeTruthy();
+                let targetCellElement2 = grid.getCellByColumn(2, 'CompanyName');
+                expect(targetCellElement2.active).toBeTruthy();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
                 fix.detectChanges();
@@ -1089,8 +1094,8 @@ describe('IgxGrid Master Detail #grid', () => {
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
                 fix.detectChanges();
 
-                targetCellElement = grid.getCellByColumn(0, 'Address');
-                expect(targetCellElement.active).toBeTruthy();
+                targetCellElement2 = grid.getCellByColumn(0, 'Address');
+                expect(grid.gridAPI.get_cell_by_index(0, 'Address').active).toBeTruthy();
             });
         });
 
@@ -1190,9 +1195,10 @@ describe('IgxGrid Master Detail #grid', () => {
 @Component({
     template: `
         <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]="true"
-        [paging]="paging" [perPage]="perPage" [rowSelection]="rowSelectable">
+         [perPage]="perPage" [rowSelection]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width" [dataType]='c.dataType'>
             </igx-column>
+            <igx-paginator *ngIf="paging"></igx-paginator>
 
             <ng-template igxGridDetail let-dataItem>
                 <div>

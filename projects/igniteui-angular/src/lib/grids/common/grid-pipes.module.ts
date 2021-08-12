@@ -18,7 +18,8 @@ import {
     IgxGridTransactionStatePipe,
     IgxColumnFormatterPipe,
     IgxSummaryFormatterPipe,
-    IgxGridAddRowPipe
+    IgxGridAddRowPipe,
+    IgxHeaderGroupWidthPipe
 } from './pipes';
 export * from './pipes';
 
@@ -41,7 +42,8 @@ export * from './pipes';
         IgxGridTransactionStatePipe,
         IgxGridAddRowPipe,
         IgxColumnFormatterPipe,
-        IgxSummaryFormatterPipe
+        IgxSummaryFormatterPipe,
+        IgxHeaderGroupWidthPipe
     ],
     exports: [
         IgxGridFilterConditionPipe,
@@ -61,7 +63,8 @@ export * from './pipes';
         IgxGridTransactionStatePipe,
         IgxGridAddRowPipe,
         IgxColumnFormatterPipe,
-        IgxSummaryFormatterPipe
+        IgxSummaryFormatterPipe,
+        IgxHeaderGroupWidthPipe
     ],
     imports: [
         CommonModule

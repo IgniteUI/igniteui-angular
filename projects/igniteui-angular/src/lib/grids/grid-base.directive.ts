@@ -29,11 +29,11 @@ import {
     LOCALE_ID,
     HostListener
 } from '@angular/core';
-import { ResizeObserver } from '@juggle/resize-observer';
+import { resizeObservable } from '../core/utils';
 import 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, noop } from 'rxjs';
-import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
-import { cloneArray, flatten, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
+import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
+import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
+import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -50,7 +50,8 @@ import {
     ConnectedPositioningStrategy,
     ContainerPositionStrategy,
     StateUpdateEvent,
-    TransactionEventOrigin
+    TransactionEventOrigin,
+    Action,
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -58,7 +59,6 @@ import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxRowDirective } from './row.directive';
-import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import {
     FilteringExpressionsTree, IFilteringExpressionsTree, FilteringExpressionsTreeType
@@ -84,19 +84,12 @@ import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import {
     IgxGridSelectionService,
-    GridSelectionRange,
-    isChromium
+    GridSelectionRange
 } from './selection/selection.service';
-import {
-    IgxRow,
-    IgxCell
-}
-    from './common/crud.service';
-import { DragScrollDirection } from './selection/drag-select.directive';
+import { IgxRow, IgxCell } from './common/crud.service';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
-import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
@@ -119,7 +112,6 @@ import {
     IRowSelectionEventArgs,
     IPinColumnEventArgs,
     IGridEditEventArgs,
-    IPageEventArgs,
     IRowDataEventArgs,
     IColumnResizeEventArgs,
     IColumnMovingStartEventArgs,
@@ -156,12 +148,17 @@ import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/gri
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
+import { IPageEventArgs } from '../paginator/paginator-interfaces';
+import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
+import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
+import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
 
 let FAKE_ROW_ID = -1;
-
+const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
 // By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
@@ -176,6 +173,7 @@ export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
      *
@@ -297,6 +295,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted after the current page is changed.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```html
      * <igx-grid (pageChange)="onPageChange($event)"></igx-grid>
@@ -307,12 +306,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * }
      * ```
      */
+    @DeprecateProperty('`pageChange` is deprecated. Use the corresponding output exposed by the `igx-paginator` component instead.')
     @Output()
     public pageChange = new EventEmitter<number>();
 
     /**
      * Emitted when `perPage` property value of the grid is changed.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```html
      * <igx-grid #grid (perPageChange)="onPerPageChange($event)" [autoGenerate]="true"></igx-grid>
@@ -323,19 +324,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * }
      * ```
      */
+    @DeprecateProperty('`perPageChange` is deprecated. Use the corresponding output exposed by the `igx-paginator` component instead.')
     @Output()
     public perPageChange = new EventEmitter<number>();
-
-    /**
-     * Gets/Sets a custom `ng-template` for the pagination UI of the grid.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [paging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
-     * ```
-     */
-    @Input()
-    public paginationTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -400,17 +391,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent, descendants: false })
     public excelStyleFilteringComponents: QueryList<IgxGridExcelStyleFilteringComponent>;
 
-    /**
-     * @hidden @internal
-     */
-    @ViewChildren(IgxGridHeaderGroupComponent, { read: IgxGridHeaderGroupComponent })
-    public headerGroups: QueryList<IgxGridHeaderGroupComponent>;
+    public get headerGroups() {
+        return this.theadRow.groups;
+    }
 
     /**
-     * Emitted when `IgxGridCellComponent` is clicked.
+     * Emitted when a cell is clicked.
      *
      * @remarks
-     * Returns the `IgxGridCellComponent`.
+     * Returns the `IgxGridCell`.
      * @example
      * ```html
      * <igx-grid #grid (cellClick)="cellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -420,10 +409,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public cellClick = new EventEmitter<IGridCellEventArgs>();
 
     /**
-     * Emitted when `IgxGridCellComponent` is selected.
+     * Emitted when a cell is selected.
      *
      * @remarks
-     *  Returns the `IgxGridCellComponent`.
+     *  Returns the `IgxGridCell`.
      * @example
      * ```html
      * <igx-grid #grid (selected)="onCellSelect($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -675,6 +664,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted after paging is performed.
      *
+     * @deprecated in version 12.1.x
      * @remarks
      * Returns an object consisting of the previous and next pages.
      * @example
@@ -682,11 +672,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (pagingDone)="pagingDone($event)"></igx-grid>
      * ```
      */
+    @DeprecateProperty('`pagingDone` is deprecated. Use the corresponding output exposed by the `igx-paginator` component instead.')
     @Output()
     public pagingDone = new EventEmitter<IPageEventArgs>();
 
     /**
-     * Emitted when a row added through the API.
+     * Emitted when a row is added.
      *
      * @remarks
      * Returns the data for the new `IgxGridRowComponent` object.
@@ -699,7 +690,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowAdded = new EventEmitter<IRowDataEventArgs>();
 
     /**
-     * Emitted when a row is deleted through API.
+     * Emitted when a row is deleted.
      *
      * @remarks
      * Returns an `IRowDataEventArgs` object.
@@ -728,7 +719,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emitted when a cell is right clicked.
      *
      * @remarks
-     * Returns the `IgxGridCellComponent` object.
+     * Returns the `IgxGridCell` object.
      * ```html
      * <igx-grid #grid [data]="localData" (contextMenu)="contextMenu($event)" [autoGenerate]="true"></igx-grid>
      * ```
@@ -740,7 +731,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emitted when a cell is double clicked.
      *
      * @remarks
-     * Returns the `IgxGridCellComponent` object.
+     * Returns the `IgxGridCell` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (doubleClick)="dblClick($event)" [autoGenerate]="true"></igx-grid>
@@ -939,6 +930,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    @Output()
+    public localeChange = new EventEmitter<boolean>();
+
+    /**
+     * @hidden @internal
+     */
     @ViewChild(IgxSnackbarComponent)
     public addRowSnackbar: IgxSnackbarComponent;
 
@@ -1048,47 +1045,43 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild('scr', { read: ElementRef, static: true })
     public scr: ElementRef;
 
+    /** @hidden @internal */
+    @ViewChild('headSelectorBaseTemplate', { read: TemplateRef, static: true })
+    public headerSelectorBaseTemplate: TemplateRef<any>;
+
     /**
      * @hidden @internal
      */
     @ViewChild('footer', { read: ElementRef })
     public footer: ElementRef;
 
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('hContainer', { read: IgxGridForOfDirective, static: true })
-    public headerContainer: IgxGridForOfDirective<any>;
+    public get headerContainer() {
+        return this.theadRow.headerContainer;
+    }
 
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('headerSelectorContainer')
-    public headerSelectorContainer: ElementRef;
+    public get headerSelectorContainer() {
+        return this.theadRow.headerSelectorContainer;
+    }
 
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('headerDragContainer')
-    public headerDragContainer: ElementRef;
+    public get headerDragContainer() {
+        return this.theadRow.headerDragContainer;
+    }
 
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('headerGroupContainer')
-    public headerGroupContainer: ElementRef;
+    public get headerGroupContainer() {
+        return this.theadRow.headerGroupContainer;
+    }
 
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('filteringRow', { read: IgxGridFilteringRowComponent })
-    public filteringRow: IgxGridFilteringRowComponent;
+    public get filteringRow() {
+        return this.theadRow.filterRow;
+    }
 
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('theadRow', { static: true })
-    public theadRow: ElementRef;
+    /** @hidden @internal */
+    @ViewChild(IgxGridHeaderRowComponent, { static: true })
+    public theadRow: IgxGridHeaderRowComponent;
+
+    /** @hidden @internal */
+    @ViewChild(IgxGridGroupByAreaComponent)
+    public groupByArea: IgxGridGroupByAreaComponent;
 
     /**
      * @hidden @internal
@@ -1222,6 +1215,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden @internal */
     @ContentChildren(IgxGridToolbarComponent)
     public toolbar: QueryList<IgxGridToolbarComponent>;
+
+    /** @hidden @internal */
+    @ContentChildren(IgxPaginatorComponent)
+    protected paginationComponents: QueryList<IgxPaginatorComponent>;
 
     /**
      * @hidden @internal
@@ -1403,6 +1400,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this.pipeTrigger++;
             this.notifyChanges();
+            this.localeChange.next();
         }
     }
 
@@ -1420,13 +1418,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets whether the paging feature is enabled.
      *
+     * @deprecated in version 12.1.x
      * @remarks
      * The default state is disabled (false).
      * @example
      * ```html
-     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [paging]="true"></igx-grid>
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true">
+     *  <igx-paginator></igx-paginator>
+     * </igx-grid>
      * ```
      */
+    @DeprecateProperty('`paging` is deprecated')
     @Input()
     public get paging(): boolean {
         return this._paging;
@@ -1440,62 +1442,58 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets the current page index.
      *
+     * @deprecated in version 12.1.x
      * @example
      * ```html
-     *  <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true">
+     *  <igx-paginator [(page)]="model.page"></igx-paginator>
+     * </igx-grid>
      * ```
      * @remarks
      * Supports two-way binding.
      */
+    @DeprecateProperty('`page` is deprecated. Use `page` property form `paginator` component instead.')
     @Input()
     public get page(): number {
-        return this._page;
+        return this.paginator?.page || 0;
     }
 
     public set page(val: number) {
-        if (val === this._page || val < 0 || val > this.totalPages - 1) {
-            return;
+        if (this.paginator) {
+            this.paginator.page = val;
         }
-        this.selectionService.clear(true);
-        this.pagingDone.emit({ previous: this._page, current: val });
-        this._page = val;
-        this.pageChange.emit(this._page);
-        this.navigateTo(0);
-        this.notifyChanges();
     }
 
     /**
      * Gets/Sets the number of visible items per page.
      *
+     * @deprecated in version 12.1.x
      * @remarks
      * The default is 15.
      * @example
      * ```html
-     * <igx-grid #grid [data]="Data" [paging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true">
+     *  <igx-paginator [(perPage)]="model.perPage"></igx-paginator>
+     * </igx-grid>
      * ```
      */
+    @DeprecateProperty('`perPage` is deprecated. Use `perPage` property from `paginator` component instead.')
     @Input()
     public get perPage(): number {
-        return this._perPage;
+        return this.paginator?.perPage || DEFAULT_ITEMS_PER_PAGE;
     }
 
     public set perPage(val: number) {
-        if (val < 0) {
-            return;
-        }
-        this.selectionService.clear(true);
         this._perPage = val;
-        this.perPageChange.emit(this._perPage);
-        this.page = 0;
-        this.crudService.endEdit(false);
-        this.notifyChanges();
+        if (this.paginator) {
+            this.paginator.perPage = val;
+        }
     }
 
     /**
      * Gets/Sets whether the column hiding UI is enabled.
      *
      * @deprecated
-     *
      * @remarks
      * By default it is disabled (false). In order for the UI to work, you need to enable the toolbar as shown in the example below.
      * @example
@@ -2066,7 +2064,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get headerGroupsList(): IgxGridHeaderGroupComponent[] {
-        return this.headerGroups ? flatten(this.headerGroups.toArray()) : [];
+        return this.theadRow.groups;
     }
 
     /**
@@ -2077,8 +2075,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const headers = this.grid.headerCellList;
      * ```
      */
-    public get headerCellList(): IgxGridHeaderComponent[] {
-        return this.headerGroupsList.map((headerGroup) => headerGroup.headerCell).filter((headerCell) => headerCell);
+    public get headerCellList() {
+        return this.headerGroupsList.map(headerGroup => headerGroup.header).filter(header => header);
     }
 
     /**
@@ -2090,7 +2088,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get filterCellList(): IgxGridFilteringCellComponent[] {
-        return this.headerGroupsList.map((headerGroup) => headerGroup.filterCell).filter((filterCell) => filterCell);
+        return this.headerGroupsList.map(group => group.filter).filter(cell => cell);
     }
 
     /**
@@ -2370,6 +2368,31 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
+    /**
+     * Gets/Sets whether the grid has batch editing enabled.
+     * When batch editing is enabled, changes are not made directly to the underlying data.
+     * Instead, they are stored as transactions, which can later be committed w/ the `commit` method.
+     *
+     * @example
+     * ```html
+     * <igx-grid [batchEditing]="true" [data]="someData">
+     * </igx-grid>
+     * ```
+     */
+    @Input()
+    public get batchEditing(): boolean {
+        return this._batchEditing;
+    }
+
+    public set batchEditing(val: boolean) {
+        if (val !== this._batchEditing) {
+            delete this._transactions;
+            this._batchEditing = val;
+            this.switchTransactionService(val);
+            this.subscribeToTransactions();
+        }
+    }
+
     /** @hidden @internal */
     public get pinnedColumnsTextInternal() {
         return this._pinnedColumnsText;
@@ -2379,6 +2402,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Get transactions service for the grid.
      */
     public get transactions(): TransactionService<Transaction, State> {
+        if (this._diTransactions && !this.batchEditing) {
+            return this._diTransactions;
+        }
         return this._transactions;
     }
 
@@ -2609,6 +2635,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public set pagingState(value) {
+        this._pagingState = value;
+        if (this.paginator && !this._init) {
+            this.paginator.totalRecords = value.metadata.countRecords;
+        }
+    }
+
+    public get pagingState() {
+        return this._pagingState;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public rowEditMessage;
 
     /**
@@ -2616,15 +2656,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public snackbarActionText = this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
 
-    /**
-     * @hidden @internal
-     */
-    public snackbarLabel = this.resourceStrings.igx_grid_snackbar_addrow_label;
-
-    /**
-     * @hidden @internal
-     */
-    public pagingState;
     /**
      * @hidden @internal
      */
@@ -2640,17 +2671,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public chipsGoupingExpressions = [];
-    /**
-     * @hidden @internal
-     */
     public summariesHeight: number;
-
-    /**
-     * @hidden @internal
-     */
-    public draggedColumn: IgxColumnComponent;
-
 
     /**
      * @hidden @internal
@@ -2689,12 +2710,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public resizeNotify = new Subject();
 
     /** @hidden @internal */
-    public pipeTriggerNotifier = new Subject();
+    public rowAddedNotifier = new Subject<IRowDataEventArgs>();
 
-    /**
-     * @hidden @internal
-     */
-    public paginatorSettings: OverlaySettings = null;
+    /** @hidden @internal */
+    public rowDeletedNotifier = new Subject<IRowDataEventArgs>();
+
+    /** @hidden @internal */
+    public pipeTriggerNotifier = new Subject();
 
     /**
      * @hidden
@@ -2738,14 +2760,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public summaryPipeTrigger = 0;
+
+    public EMPTY_DATA = [];
     /**
      * @hidden
      */
-    protected _perPage = 15;
-    /**
-     * @hidden
-     */
-    protected _page = 0;
+    protected _perPage = DEFAULT_ITEMS_PER_PAGE;
     /**
      * @hidden
      */
@@ -2754,6 +2774,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected _pagingMode = GridPagingMode.Local;
+    /**
+     * @hidden
+     */
+    protected _pagingState;
     /**
      * @hidden
      */
@@ -2818,7 +2842,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _allowAdvancedFiltering = false;
     protected _filterMode: FilterMode = FilterMode.quickFilter;
 
-    protected observer: ResizeObserver = new ResizeObserver(() => { });
 
     protected _defaultTargetRecordNumber = 10;
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
@@ -2828,6 +2851,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _init = true;
     protected _cdrRequestRepaint = false;
     protected _userOutletDirective: IgxOverlayOutletDirective;
+    protected _transactions: TransactionService<Transaction, State>;
+    protected _batchEditing = false;
+
+    /** @hidden @internal */
+    public get paginator() {
+        return this.paginationComponents?.first;
+    }
 
     /**
      * @hidden @internal
@@ -2926,11 +2956,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: this.rowEditPositioningStrategy
     };
 
+    private transactionChange$ = new Subject<void>();
+
+    private readonly DRAG_SCROLL_DELTA = 10;
+
     /**
      * @hidden @internal
      */
     public abstract id: string;
-    abstract data: any[];
+    abstract data: any[] | null;
     abstract filteredData: any[];
     /**
      * Returns an array containing the filtered sorted data.
@@ -3041,14 +3075,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.cellSelection !== GridSelectionMode.none;
     }
 
+    /**
+     * @hidden @internal
+     */
+    public get columnInDrag() {
+        return this.gridAPI.cms.column;
+    }
+
     constructor(
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
-        private elementRef: ElementRef,
+        protected transactionFactory: IgxFlatTransactionFactory,
+        private elementRef: ElementRef<HTMLElement>,
         private zone: NgZone,
-        @Inject(DOCUMENT) public document,
+        @Inject(DOCUMENT) public document: any,
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
@@ -3059,13 +3100,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) private localeId: string,
-        protected platform: PlatformUtil) {
+        protected platform: PlatformUtil,
+        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
         super(_displayDensityOptions);
         this.locale = this.locale || this.localeId;
         this.datePipe = new DatePipe(this.locale);
         this.decimalPipe = new DecimalPipe(this.locale);
         this.currencyPipe = new CurrencyPipe(this.locale);
         this.percentPipe = new PercentPipe(this.locale);
+        this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this.cdr.detach();
     }
 
@@ -3163,10 +3206,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
-            if (this.overlayService.getOverlayById(overlayID)?.visible) {
+            const overlay = this.overlayService.getOverlayById(overlayID);
+
+            if (overlay?.visible && !overlay.closeAnimationPlayer?.hasStarted()) {
                 this.overlayService.hide(overlayID);
+
+                this.nativeElement.focus();
             }
-            this.nativeElement.focus();
         });
     }
 
@@ -3209,13 +3255,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public getInitialPinnedIndex(rec) {
         const id = this.gridAPI.get_row_id(rec);
         return this._pinnedRecordIDs.indexOf(id);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public isSummaryRecord(record: any): boolean {
-        return record.summaries && record.summaries.size;
     }
 
     /**
@@ -3262,41 +3301,26 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
                     this.navigation.activeNode.row < this.dataView.length)
                     || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                    || (event.target === this.tfoot.nativeElement.children[0] &&
-                        this.navigation.activeNode.row === this.dataView.length)) &&
+                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
                 !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
                 this.navigation.lastActiveNode = this.navigation.activeNode;
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
             }
         });
-        this.rowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
-        this.rowDeleted.pipe(destructor).subscribe(args => {
+        this.rowAddedNotifier.pipe(destructor).subscribe(args => this.refreshGridState(args));
+        this.rowDeletedNotifier.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
             this.summaryService.clearSummaryCache(args);
         });
 
-        this.transactions.onStateUpdate.pipe(destructor).subscribe((event: StateUpdateEvent) => {
-            let actions = [];
-            if (event.origin === TransactionEventOrigin.REDO) {
-                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
-            } else if (event.origin === TransactionEventOrigin.UNDO) {
-                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
-            }
-            if (actions.length > 0) {
-                for (const action of actions) {
-                    if (this.selectionService.isRowSelected(action.transaction.id)) {
-                        this.selectionService.deselectRow(action.transaction.id);
-                    }
-                }
-            }
-            this.selectionService.clearHeaderCBState();
-            this.summaryService.clearSummaryCache();
-            this.pipeTrigger++;
-            this.notifyChanges();
-        });
+        this.subscribeToTransactions();
 
-        this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(100, undefined, { leading: true, trailing: true }))
+        this.resizeNotify.pipe(
+            destructor,
+            filter(() => !this._init),
+            throttleTime(0, animationFrameScheduler, { leading: true, trailing: true })
+        )
             .subscribe(() => {
                 this.zone.run(() => {
                     this.notifyChanges(true);
@@ -3304,15 +3328,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
 
         this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
-
-        this.pagingDone.pipe(destructor).subscribe(() => {
-            this.crudService.endEdit(false);
-            this.selectionService.clear(true);
-        });
-
         this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
 
-        this.overlayService.onOpening.pipe(destructor).subscribe((event) => {
+        this.overlayService.opening.pipe(destructor).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
@@ -3321,7 +3339,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
+        this.overlayService.opened.pipe(destructor).subscribe((event) => {
             const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
 
             // do not hide the advanced filtering overlay on scroll
@@ -3344,7 +3362,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.overlayService.onClosed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
+        this.overlayService.closed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
                 this.overlayService.detach(this._advancedFilteringOverlayId);
                 this._advancedFilteringOverlayId = null;
@@ -3411,7 +3429,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public generateRowID(): string | number {
         const primaryColumn = this.columnList.find(col => col.field === this.primaryKey);
-        const idType = this.data.length ? typeof (this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
+        const idType = this.data.length ?
+            this.resolveDataTypes(this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
         return idType === 'string' ? uuidv4() : FAKE_ROW_ID--;
     }
 
@@ -3488,8 +3507,41 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public ngAfterContentInit() {
         this.setupColumns();
         this.toolbar.changes.pipe(takeUntil(this.destroy$), filter(() => !this._init)).subscribe(() => this.notifyChanges(true));
+        this.setUpPaginator();
+        this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.setUpPaginator();
+        });
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
+        }
+    }
+
+    /** @hidden @internal */
+    public setUpPaginator() {
+        if (this.paginator) {
+            this.paginator.pageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+            .subscribe((page: number) => {
+                this.pageChange.emit(page);
+            });
+            this.paginator.pagingDone.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+            .subscribe((args: IPageEventArgs) => {
+                this.selectionService.clear(true);
+                this.pagingDone.emit({ previous: args.previous, current: args.current });
+                this.crudService.endEdit(false);
+                this.pipeTrigger++;
+                this.navigateTo(0);
+                this.notifyChanges();
+            });
+            this.paginator.perPageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+            .subscribe((perPage: number) => {
+                this.selectionService.clear(true);
+                this.perPageChange.emit(perPage);
+                this.paginator.page = 0;
+                this.crudService.endEdit(false);
+                this.notifyChanges();
+            });
+        } else {
+            this.markForCheck();
         }
     }
 
@@ -3548,8 +3600,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
             this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
-            this.observer = new ResizeObserver(() => this.resizeNotify.next());
-            this.observer.observe(this.nativeElement);
+            fromEvent(window, 'resize').pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
+            resizeObservable(this.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
         });
     }
 
@@ -3563,8 +3615,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.reattach();
         this._setupRowObservers();
         this._zoneBegoneListeners();
-
-        this.paginatorSettings = { outlet: this.outlet };
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
         vertScrDC.addEventListener('scroll', this.preventContainerScroll.bind(this));
@@ -3582,7 +3632,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         // Keep the stream open for future subscribers
-        this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(noop);
+        this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.paginator) {
+                this.paginator.perPage = this._perPage !== DEFAULT_ITEMS_PER_PAGE ? this._perPage : this.paginator.perPage;
+                this.paginator.totalRecords = this.totalRecords;
+                this.paginator.overlaySettings = { outlet: this.outlet };
+            }
+        });
         Promise.resolve().then(() => this.rendered.next(true));
     }
 
@@ -3639,6 +3695,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.destroy$.next(true);
         this.destroy$.complete();
+        this.transactionChange$.next();
+        this.transactionChange$.complete();
         this._destroyed = true;
 
         if (this._advancedFilteringOverlayId) {
@@ -3646,14 +3704,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         this.overlayIDs.forEach(overlayID => {
-            if (this.overlayService.getOverlayById(overlayID) && !this.overlayService.getOverlayById(overlayID).detached) {
+            const overlay = this.overlayService.getOverlayById(overlayID);
+
+            if (overlay && !overlay.detached) {
                 this.overlayService.detach(overlayID);
             }
-            this.nativeElement.focus();
         });
 
         this.zone.runOutsideAngular(() => {
-            this.observer.disconnect();
             this.verticalScrollContainer?.getScroll()?.removeEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer?.getScroll()?.removeEventListener('scroll', this.horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer?.displayContainer;
@@ -3869,20 +3927,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     */
-    public paginatorClassName(): string {
-        switch (this.displayDensity) {
-            case DisplayDensity.cosy:
-                return 'igx-paginator--cosy';
-            case DisplayDensity.compact:
-                return 'igx-paginator--compact';
-            default:
-                return 'igx-paginator';
-        }
-    }
-
-    /**
      * Gets the current width of the container for the pinned `IgxColumnComponent`s.
      *
      * @example
@@ -4057,96 +4101,61 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the `IgxGridCellComponent` that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param columnField
-     */
-    public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
-        const columnId = this.columnList.map((column) => column.field).indexOf(columnField);
-        if (columnId !== -1) {
-            return this.gridAPI.get_cell_by_index(rowIndex, columnId);
-        }
-    }
-
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): IgxGridCellComponent {
-        return this.gridAPI.get_cell_by_visible_index(rowIndex, index);
-
-    }
-
-    /**
-     * Returns an `IgxGridCellComponent` object by the specified primary key and column field.
-     *
-     * @remarks
-     * Requires that the primaryKey property is set.
-     * @example
-     * ```typescript
-     * grid.getCellByKey(1, 'index');
-     * ```
-     * @param rowSelector match any rowID
-     * @param columnField
-     */
-    public getCellByKey(rowSelector: any, columnField: string): IgxGridCellComponent {
-        return this.gridAPI.get_cell_by_key(rowSelector, columnField);
-    }
-
-    /**
      * Gets the total number of pages.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * const totalPages = this.grid.totalPages;
      * ```
      */
+    @DeprecateProperty('`totalPages` is deprecated. Use the corresponding property exposed by the `igx-paginator`.')
     public get totalPages(): number {
-        if (this.pagingState) {
-            return this.pagingState.metadata.countPages;
-        }
-        return this._totalRecords >= 0 ? Math.ceil(this._totalRecords / this.perPage) : -1;
+        return this.paginator?.totalPages;
     }
 
     /**
      * Gets if the current page is the first page.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * const firstPage = this.grid.isFirstPage;
      * ```
      */
+    @DeprecateProperty('`isFirstPage` is deprecated. Use the corresponding property exposed by the `igx-paginator`.')
     public get isFirstPage(): boolean {
-        return this.page === 0;
+        return this.paginator.isLastPage;
     }
 
     /**
      * Goes to the next page, if the grid is not already at the last page.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * this.grid1.nextPage();
      * ```
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public nextPage(): void {
-        if (!this.isLastPage) {
-            this.page += 1;
-        }
+        this.paginator?.nextPage();
     }
 
     /**
      * Goes to the previous page, if the grid is not already at the first page.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * this.grid1.previousPage();
      * ```
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public previousPage(): void {
-        if (!this.isFirstPage) {
-            this.page -= 1;
-        }
+        this.paginator?.previousPage();
     }
 
     /**
@@ -4166,6 +4175,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set totalRecords(total: number) {
         if (total >= 0) {
+            if (this.paginator) {
+                this.paginator.totalRecords = total;
+            }
             this._totalRecords = total;
             this.pipeTrigger++;
             this.notifyChanges();
@@ -4175,13 +4187,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Returns if the current page is the last page.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * const lastPage = this.grid.isLastPage;
      * ```
      */
+    @DeprecateProperty('`isLastPage` is deprecated. Use the corresponding property exposed by the `igx-paginator`.')
     public get isLastPage(): boolean {
-        return this.page + 1 >= this.totalPages;
+        return this.paginator.isLastPage;
     }
 
     /**
@@ -4240,6 +4254,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
+        // M.A. May 11th, 2021 #9508 Make the event cancelable
+        const eventArgs: IColumnMovingEndEventArgs = { source: column, target, cancel: false };
+
+        this.columnMovingEnd.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
 
         if (column === target || (column.level !== target.level) ||
             (column.topLevelParent !== target.topLevelParent)) {
@@ -4275,8 +4297,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this._moveColumns(column, target, pos);
         this._columnsReordered(column);
-
-        this.columnMovingEnd.emit({ source: column, target });
     }
 
     /**
@@ -4288,12 +4308,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param val
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+     @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public paginate(val: number): void {
-        if (val < 0 || val > this.totalPages - 1) {
-            return;
-        }
-
-        this.page = val;
+        this.paginator?.paginate(val);
     }
 
     /**
@@ -4369,7 +4387,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             row.animateAdd = false;
             const cell = row.cells.find(c => c.editable);
             if (cell) {
-                this.gridAPI.submit_value(event);
+                this.gridAPI.update_cell(this.crudService.cell);
                 this.crudService.enterEditMode(cell, event);
                 cell.activate();
             }
@@ -4390,7 +4408,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data);
 
-        this.rowAdded.emit({ data });
+        this.rowAddedNotifier.next({ data });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -4407,15 +4425,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param rowSelector
      */
-    public deleteRow(rowSelector: any): void {
+    public deleteRow(rowSelector: any): any {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            this.deleteRowById(rowSelector);
+            return this.deleteRowById(rowSelector);
         }
     }
 
     /** @hidden */
-    public deleteRowById(rowId: any) {
-        this.gridAPI.deleteRowById(rowId);
+    public deleteRowById(rowId: any): any {
+        return this.gridAPI.deleteRowById(rowId);
     }
 
     /**
@@ -4442,21 +4460,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 if (index < 0) {
                     return;
                 }
+
                 const id = {
                     rowID: rowSelector,
                     columnID: col.index,
                     rowIndex: index
                 };
 
-                const cell = new IgxCell(id, index, col, rowData[col.field], rowData[col.field], rowData, this);
-                const args = this.gridAPI.update_cell(cell, value);
-
-                if (this.crudService.cell && this.crudService.sameCell(cell)) {
-                    if (args.cancel) {
-                        return;
-                    }
-                    this.crudService.exitCellEdit();
-                }
+                const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this);
+                this.gridAPI.update_cell(cell);
                 this.cdr.detectChanges();
             }
         }
@@ -4475,14 +4487,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *       ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 1, OrderDate: new Date('2005-03-21')
      *   }, 1);
      * ```
-     * @param value
+     * @param value–
      * @param rowSelector correspond to rowID
      */
+    // TODO: prevent event invocation
     public updateRow(value: any, rowSelector: any): void {
         if (this.isDefined(this.primaryKey)) {
             const editableCell = this.crudService.cell;
             if (editableCell && editableCell.id.rowID === rowSelector) {
-                this.crudService.exitCellEdit();
+                this.crudService.endCellEdit();
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
             this.gridAPI.update_row(row, value);
@@ -5010,21 +5023,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return !!this.columnList.some(col => col.columnLayout);
     }
 
-    /**
-     * Returns an array of the selected `IgxGridCellComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const selectedCells = this.grid.selectedCells;
-     * ```
-     */
-    public get selectedCells(): IgxGridCellComponent[] | any[] {
-        if (this.dataRowList) {
-            return this.dataRowList.map((row) => row.cells.filter((cell) => cell.selected))
-                .reduce((a, b) => a.concat(b), []);
-        }
-        return [];
-    }
 
     /**
      * @hidden @internal
@@ -5060,7 +5058,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.dataLength;
         return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
-            this.paging ? Math.min(allItems, this.perPage) : allItems);
+            this.paginator ? Math.min(allItems, this.paginator.perPage) : allItems);
     }
 
     /**
@@ -5180,13 +5178,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     */
-    public onlyTopLevel(arr) {
-        return arr.filter(c => c.level === 0);
-    }
-
-    /**
      * @hidden @internal
      */
     public isColumnGrouped(_fieldName: string): boolean {
@@ -5195,6 +5186,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
+     * TODO: REMOVE
      */
     public onHeaderSelectorClick(event) {
         if (!this.isMultiRowSelectionEnabled) {
@@ -5365,42 +5357,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public dragScroll(dir: DragScrollDirection): void {
-        const scrollDelta = 48;
+    public dragScroll(delta: { left: number; top: number }): void {
         const horizontal = this.headerContainer.getScroll();
         const vertical = this.verticalScrollContainer.getScroll();
-        switch (dir) {
-            case DragScrollDirection.LEFT:
-                horizontal.scrollLeft -= scrollDelta;
-                break;
-            case DragScrollDirection.RIGHT:
-                horizontal.scrollLeft += scrollDelta;
-                break;
-            case DragScrollDirection.TOP:
-                vertical.scrollTop -= scrollDelta;
-                break;
-            case DragScrollDirection.BOTTOM:
-                vertical.scrollTop += scrollDelta;
-                break;
-            case DragScrollDirection.BOTTOMLEFT:
-                horizontal.scrollLeft -= scrollDelta;
-                vertical.scrollTop += scrollDelta;
-                break;
-            case DragScrollDirection.BOTTOMRIGHT:
-                horizontal.scrollLeft += scrollDelta;
-                vertical.scrollTop += scrollDelta;
-                break;
-            case DragScrollDirection.TOPLEFT:
-                horizontal.scrollLeft -= scrollDelta;
-                vertical.scrollTop -= scrollDelta;
-                break;
-            case DragScrollDirection.TOPRIGHT:
-                horizontal.scrollLeft += scrollDelta;
-                vertical.scrollTop -= scrollDelta;
-                break;
-            default:
-                return;
-        }
+        const { left, top } = delta;
+
+        horizontal.scrollLeft += left * this.DRAG_SCROLL_DELTA;
+        vertical.scrollTop += top * this.DRAG_SCROLL_DELTA;
     }
 
     /**
@@ -5610,7 +5573,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let data = [];
         let result;
 
-        if (event.code === 'KeyC' && (event.ctrlKey || event.metaKey) && event.currentTarget.className === 'igx-grid__thead-wrapper') {
+        if (event.code === 'KeyC' && (event.ctrlKey || event.metaKey) && event.currentTarget.className === 'igx-grid-thead__wrapper') {
             if (selectedData.length) {
                 if (columnData.length === 0) {
                     result = this.prepareCopyData(event, selectedData);
@@ -5801,6 +5764,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public endRowEditTabStop(commit = true, event?: Event) {
+        const canceled = this.crudService.endEdit(commit, event);
+
+        if (canceled) {
+            return true;
+        }
+
+        const activeCell = this.gridAPI.grid.navigation.activeNode;
+        if (activeCell && activeCell.row !== -1) {
+            this.tbody.nativeElement.focus();
+        }
+    }
+
+    /**
      * @hidden @internal
      */
     public trackColumnChanges(index, col) {
@@ -5868,7 +5848,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
         if (this.hasHorizontalScroll()) {
-            const tmplId = args.context.templateID;
+            const tmplId = args.context.templateID.type;
             const index = args.context.index;
             args.view.detectChanges();
             this.zone.onStable.pipe(first()).subscribe(() => {
@@ -5886,7 +5866,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Opens the advanced filtering dialog.
      */
-    public openAdvancedFilteringDialog() {
+    public openAdvancedFilteringDialog(overlaySettings?: OverlaySettings) {
+        const settings = overlaySettings ? overlaySettings : this._advancedFilteringOverlaySettings;
         if (!this._advancedFilteringOverlayId) {
             this._advancedFilteringOverlaySettings.target =
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
@@ -5894,12 +5875,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,
-                this._advancedFilteringOverlaySettings,
+                settings,
                 {
                     injector: this.viewRef.injector,
                     componentFactoryResolver: this.resolver
                 });
-            this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
+            this.overlayService.show(this._advancedFilteringOverlayId);
         }
     }
 
@@ -5976,6 +5957,40 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         this.crudService.endEdit(commit, event);
     }
+
+    protected switchTransactionService(val: boolean) {
+        if (val) {
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base);
+        } else {
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+        }
+    }
+
+    protected subscribeToTransactions(): void {
+        this.transactionChange$.next();
+        this.transactions.onStateUpdate.pipe(takeUntil(merge(this.destroy$,this.transactionChange$)))
+        .subscribe(this.transactionStatusUpdate.bind(this));
+    }
+
+    protected transactionStatusUpdate(event: StateUpdateEvent) {
+        let actions: Action<Transaction>[] = [];
+        if (event.origin === TransactionEventOrigin.REDO) {
+            actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
+        } else if (event.origin === TransactionEventOrigin.UNDO) {
+            actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
+        }
+        if (actions.length > 0) {
+            for (const action of actions) {
+                if (this.selectionService.isRowSelected(action.transaction.id)) {
+                    this.selectionService.deselectRow(action.transaction.id);
+                }
+            }
+        }
+        this.selectionService.clearHeaderCBState();
+        this.summaryService.clearSummaryCache();
+        this.pipeTrigger++;
+        this.notifyChanges();
+    };
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);
@@ -6453,9 +6468,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected getFilterCellHeight(): number {
         const headerGroupNativeEl = (this.headerGroupsList.length !== 0) ?
-            this.headerGroupsList[0].element.nativeElement : null;
+            this.headerGroupsList[0].nativeElement : null;
         const filterCellNativeEl = (headerGroupNativeEl) ?
-            headerGroupNativeEl.querySelector('igx-grid-filtering-cell') : null;
+            headerGroupNativeEl.querySelector('igx-grid-filtering-cell') as HTMLElement : null;
         return (filterCellNativeEl) ? filterCellNativeEl.offsetHeight : 0;
     }
 
@@ -6511,7 +6526,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let res = !this.nativeElement.parentElement ||
             this.nativeElement.parentElement.clientHeight === 0 ||
             this.nativeElement.parentElement.clientHeight === renderedHeight;
-        if (!isChromium()) {
+        if (!this.platform.isChromium && !this.platform.isFirefox) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
             res = this.checkContainerSizeChange();
@@ -6693,7 +6708,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paging ? row + (this.perPage * this.page) : row;
+            row = this.paginator ? row + (this.paginator.perPage * this.paginator.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -6823,7 +6838,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         }
 
-        // Assign the applicaple collections.
+        // Assign the applicable collections.
         this._pinnedColumns = pinnedColumns;
         this._unpinnedColumns = unpinnedColumns;
         this.notifyChanges();
@@ -6835,13 +6850,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number, inCollection = this._filteredSortedUnpinnedData): void {
         let delayScrolling = false;
 
-        if (this.paging && typeof (row) !== 'number') {
+        if (this.paginator && typeof (row) !== 'number') {
             const rowIndex = inCollection.indexOf(row);
-            const page = Math.floor(rowIndex / this.perPage);
+            const page = Math.floor(rowIndex / this.paginator.perPage);
 
-            if (this.page !== page) {
+            if (this.paginator.page !== page) {
                 delayScrolling = true;
-                this.page = page;
+                this.paginator.page = page;
             }
         }
 
@@ -6901,7 +6916,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Notiy changes, reset cache and populateVisibleIndexes.
+     * Notify changes, reset cache and populateVisibleIndexes.
      *
      * @hidden
      */

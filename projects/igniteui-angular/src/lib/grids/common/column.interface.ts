@@ -44,10 +44,10 @@ export interface ColumnType {
     width: string;
     topLevelParent?: ColumnType;
     parent?: ColumnType;
-    hasLastPinnedChildColumn: boolean;
     pipeArgs: IColumnPipeArgs;
     hasNestedPath: boolean;
     defaultTimeFormat: string;
     defaultDateTimeFormat: string;
+    additionalTemplateContext: any;
     getGridTemplate(isRow: boolean, isIE: boolean): string;
 }

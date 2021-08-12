@@ -1,0 +1,313 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onAppended",
+            "replaceWith": "contentAppended",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onAnimation",
+            "replaceWith": "animationStarting",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },
+        {
+            "member": "onCollapsed",
+            "replaceWith": "contentCollapsed",
+            "definedIn": [
+                "IgxExpansionPanelComponent"
+            ]
+        },
+        {
+            "member": "onExpanded",
+            "replaceWith": "contentExpanded",
+            "definedIn": [
+                "IgxExpansionPanelComponent"
+            ]
+        },
+        {
+            "member": "onInteraction",
+            "replaceWith": "interaction",
+            "definedIn": [
+                "IgxExpansionPanelHeaderComponent"
+            ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxDropDownComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxDropDownComponent"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxDropDownComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxDropDownComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selectionChanging",
+            "definedIn": [
+                "IgxDropDownBaseDirective"
+            ]
+        },
+        {
+            "member": "onOpen",
+            "replaceWith": "open",
+            "definedIn": [
+                "IgxToggleDirective"
+            ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxToggleDirective"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxToggleDirective"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxToggleDirective"
+            ]
+        },
+        {
+            "member": "onAppended",
+            "replaceWith": "appended",
+            "definedIn": [
+                "IgxToggleDirective"
+            ]
+        },
+        {
+            "member": "onSelectionChange",
+            "replaceWith": "selectionChanging",
+            "definedIn": [
+                "IgxComboComponent"
+            ]
+        },
+        {
+            "member": "onSearchInput",
+            "replaceWith": "searchInputUpdate",
+            "definedIn": [
+                "IgxComboComponent"
+            ]
+        },
+        {
+            "member": "onAddition",
+            "replaceWith": "addition",
+            "definedIn": [
+                "IgxComboComponent"
+            ]
+        },
+        {
+            "member": "onDataPreLoad",
+            "replaceWith": "dataPreLoad",
+            "definedIn": [
+                "IgxComboComponent"
+            ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxComboComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxComboComponent"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxComboComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxComboComponent"
+            ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxSelectComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxSelectComponent"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxSelectComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxSelectComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selectionChanging",
+            "definedIn": [
+                "IgxSelectComponent"
+            ]
+        },
+        {
+            "member": "onItemSelected",
+            "replaceWith": "selectionChanging",
+            "definedIn": [
+                "IgxAutocompleteDirective"
+            ]
+        },
+        {
+            "member": "onOpen",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxDialogComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxDialogComponent"
+            ]
+        },
+        {
+            "member": "onClose",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxDialogComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxDialogComponent"
+            ]
+        },
+        {
+            "member": "onLeftButtonSelect",
+            "replaceWith": "leftButtonSelect",
+            "definedIn": [
+                "IgxDialogComponent"
+            ]
+        },
+        {
+            "member": "onRightButtonSelect",
+            "replaceWith": "rightButtonSelect",
+            "definedIn": [
+                "IgxDialogComponent"
+            ]
+        },
+        {
+            "member": "onValueChange",
+            "replaceWith": "valueChanged",
+            "definedIn": [
+                "IgxMaskDirective"
+            ]
+        }
+    ]
+}

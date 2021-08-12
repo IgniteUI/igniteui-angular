@@ -11,7 +11,8 @@ import {
     HostBinding,
     ChangeDetectionStrategy,
     ViewRef,
-    HostListener
+    HostListener,
+    OnDestroy
 } from '@angular/core';
 import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxColumnComponent } from '../../columns/column.component';
@@ -29,6 +30,8 @@ import { DisplayDensity } from '../../../core/displayDensity';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { PlatformUtil } from '../../../core/utils';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -38,7 +41,7 @@ import { PlatformUtil } from '../../../core/utils';
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid-filtering-row.component.html'
 })
-export class IgxGridFilteringRowComponent implements AfterViewInit {
+export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @Input()
     public get column(): IgxColumnComponent {
         return this._column;
@@ -81,6 +84,19 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         return this.column.grid.displayDensity === DisplayDensity.comfortable ? DisplayDensity.cosy : this.column.grid.displayDensity;
     }
 
+    @HostBinding('class.igx-grid__filtering-row')
+    public defaultCSSClass = true;
+
+    @HostBinding('class.igx-grid__filtering-row--compact')
+    public get compactCSSClass() {
+        return this.column.grid.displayDensity === DisplayDensity.compact;
+    }
+
+    @HostBinding('class.igx-grid__filtering-row--cosy')
+    public get cosyCSSClass() {
+        return this.column.grid.displayDensity === DisplayDensity.cosy;
+    }
+
     @ViewChild('defaultFilterUI', { read: TemplateRef, static: true })
     protected defaultFilterUI: TemplateRef<any>;
 
@@ -94,7 +110,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     protected defaultDateTimeUI: TemplateRef<any>;
 
     @ViewChild('input', { read: ElementRef })
-    protected input: ElementRef;
+    protected input: ElementRef<HTMLInputElement>;
 
     @ViewChild('inputGroupConditions', { read: IgxDropDownComponent, static: true })
     protected dropDownConditions: IgxDropDownComponent;
@@ -106,36 +122,25 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     protected dropDownOperators: QueryList<IgxDropDownComponent>;
 
     @ViewChild('inputGroup', { read: ElementRef })
-    protected inputGroup: ElementRef;
+    protected inputGroup: ElementRef<HTMLElement>;
 
     @ViewChild('picker')
     protected picker: IgxDatePickerComponent | IgxTimePickerComponent;
 
     @ViewChild('inputGroupPrefix', { read: ElementRef })
-    protected inputGroupPrefix: ElementRef;
+    protected inputGroupPrefix: ElementRef<HTMLElement>;
 
     @ViewChild('container', { static: true })
-    protected container: ElementRef;
+    protected container: ElementRef<HTMLElement>;
 
     @ViewChild('operand')
-    protected operand: ElementRef;
+    protected operand: ElementRef<HTMLElement>;
 
     @ViewChild('closeButton', { static: true })
-    protected closeButton: ElementRef;
+    protected closeButton: ElementRef<HTMLElement>;
 
-    @HostBinding('class')
-    public get styleClasses(): string {
-        let classes = 'igx-grid__filtering-row';
-
-        switch (this.column.grid.displayDensity) {
-            case DisplayDensity.compact:
-                classes = classes + ' igx-grid__filtering-row--compact';
-                break;
-            case DisplayDensity.cosy:
-                classes = classes + ' igx-grid__filtering-row--cosy';
-                break;
-        }
-        return classes;
+    public get nativeElement() {
+        return this.ref.nativeElement;
     }
 
     public showArrows: boolean;
@@ -168,9 +173,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private isComposing = false;
     private _cancelChipClick = false;
 
+    /** switch to icon buttons when width is below 432px */
+    private readonly NARROW_WIDTH_THRESHOLD = 432;
+
+    private $destroyer = new Subject<boolean>();
+
     constructor(
         public filteringService: IgxFilteringService,
-        public element: ElementRef,
+        public ref: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil
     ) { }
@@ -193,6 +203,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.expression = selectedItem.expression;
         }
 
+        this.filteringService.grid.localeChange
+        .pipe(takeUntil(this.$destroyer))
+        .subscribe(() => {
+            this.cdr.markForCheck();
+        });
+
         this.focusEditElement();
     }
 
@@ -213,7 +229,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         return this.defaultFilterUI;
     }
 
-     public get type() {
+    public get type() {
         switch (this.column.dataType) {
             case GridColumnDataType.String:
             case GridColumnDataType.Boolean:
@@ -684,6 +700,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
     }
 
+    public ngOnDestroy() {
+        this.$destroyer.next();
+    }
+
     private showHideArrowButtons() {
         requestAnimationFrame(() => {
             if (this.filteringService.isFilterRowVisible) {
@@ -694,8 +714,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
                 // TODO: revise the cdr.detectChanges() usage here
                 if (!(this.cdr as ViewRef).destroyed) {
-                this.cdr.detectChanges();
-}
+                    this.cdr.detectChanges();
+                }
             }
         });
     }
@@ -758,11 +778,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             return;
         }
 
-        const containerRectRight = Math.ceil(this.container.nativeElement.getBoundingClientRect().right);
+        const chipsContainerWidth = this.container.nativeElement.offsetWidth;
+        const chipsAreaWidth = this.chipsArea.element.nativeElement.offsetWidth;
 
-        const lastChipRectRight = Math.ceil(chipAraeChildren[chipAraeChildren.length - 1].getBoundingClientRect().right);
-        if (lastChipRectRight >= containerRectRight) {
-            this.chipAreaScrollOffset -= lastChipRectRight - containerRectRight;
+        if (chipsAreaWidth > chipsContainerWidth) {
+            this.chipAreaScrollOffset = chipsContainerWidth - chipsAreaWidth;
             this.transform(this.chipAreaScrollOffset);
         }
     }
@@ -828,6 +848,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     public get isNarrowWidth(): boolean {
-        return this.element.nativeElement.offsetWidth < 432;
+        return this.nativeElement.offsetWidth < this.NARROW_WIDTH_THRESHOLD;
     }
 }

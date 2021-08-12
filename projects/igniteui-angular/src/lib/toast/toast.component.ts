@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import {
     ChangeDetectorRef,
     Component,
@@ -9,24 +8,23 @@ import {
     Inject,
     Input,
     NgModule,
-    OnDestroy,
     OnInit,
     Optional,
     Output,
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxNavigationService, IToggleView } from '../core/navigation';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxNavigationService } from '../core/navigation';
 import {
-    OverlaySettings,
     IgxOverlayService,
     HorizontalAlignment,
     VerticalAlignment,
     GlobalPositionStrategy,
+    OverlaySettings,
+    PositionSettings
 } from '../services/public_api';
 import { mkenum } from '../core/utils';
+import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
+import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
 let NEXT_ID = 0;
 
@@ -55,18 +53,17 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
  * Example:
  * ```html
  * <button (click)="toast.open()">Show notification</button>
- * <igx-toast #toast
- *           message="Notification displayed"
- *           displayTime="1000">
+ * <igx-toast #toast displayTime="1000">
+ *      Notification displayed
  * </igx-toast>
  * ```
  */
 @Component({
     selector: 'igx-toast',
-    templateUrl: 'toast.component.html',
+    templateUrl: 'toast.component.html'
 })
-export class IgxToastComponent extends IgxToggleDirective
-    implements IToggleView, OnInit, OnDestroy {
+export class IgxToastComponent extends IgxNotificationsDirective
+    implements OnInit {
     /**
      * @hidden
      */
@@ -104,129 +101,10 @@ export class IgxToastComponent extends IgxToggleDirective
     public role = 'alert';
 
     /**
-     * Sets/gets the `aria-live` attribute.
-     * If not set, `aria-live` will have value `"polite"`.
-     * ```html
-     * <igx-toast [ariaLive] = "'polite'"></igx-toast>
-     * ```
-     * ```typescript
-     * let toastAriaLive = this.toast.ariaLive;
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @HostBinding('attr.aria-live')
-    @Input()
-    public ariaLive = 'polite';
-
-    /**
-     * Sets/gets whether the toast will be hidden after the `displayTime` is over.
-     * Default value is `true`.
-     * ```html
-     * <igx-toast [autoHide] = "false"></igx-toast>
-     * ```
-     * ```typescript
-     * let autoHide = this.toast.autoHide;
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @Input()
-    public autoHide = true;
-
-    /**
-     * Sets/gets the duration of time span(in milliseconds) which the toast will be visible
-     * after it is being shown.
-     * Default value is `4000`.
-     * ```html
-     * <igx-toast [displayTime] = "2500"></igx-toast>
-     * ```
-     * ```typescript
-     * let displayTime = this.toast.displayTime;
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @Input()
-    public displayTime = 4000;
-
-    /**
-     * Gets/Sets the container used for the toast element.
-     *
-     * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * //..
-     * <igx-toast [outlet]="outlet"></igx-toast>
-     * //..
-     * ```
-     */
-    @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef;
-
-    /**
-     * Enables/Disables the visibility of the toast.
-     * If not set, the `isVisible` attribute will have value `false`.
-     * ```html
-     * <igx-toast [isVisible]="true"></igx-toast>
-     * ```
-     * ```typescript
-     * let isVisible = this.toast.isVisible;
-     * ```
-     *
-     * Two-way data binding.
-     * ```html
-     * <igx-toast [(isVisible)]="model.isVisible"></igx-toast>
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @Input()
-    public get isVisible() {
-        return !this.collapsed;
-    }
-
-    public set isVisible(value) {
-        if (value !== this.isVisible) {
-            if (value) {
-                requestAnimationFrame(() => {
-                    this.open();
-                });
-            } else {
-                this.close();
-            }
-        }
-    }
-
-    /**
      * @hidden
      */
     @Output()
-    public isVisibleChange = new EventEmitter<boolean>();
-
-    /**
-     * @deprecated Place your message in the toast content instead.
-     * Sets/gets the message that will be shown by the toast.
-     * ```html
-     * <igx-toast [message]="Notification"></igx-toast>
-     * ```
-     * ```typescript
-     * let toastMessage = this.toast.message;
-     * ```
-     * @memberof IgxToastComponent
-     */
-    @DeprecateProperty(`'message' property is deprecated.
-        You can use place the message in the toast content or pass it as parameter to the show method instead.`)
-    @Input()
-    public set message(value: string | OverlaySettings) {
-        this.toastMessage = value;
-    }
-
-    public get message() {
-        return this.toastMessage;
-    }
+    public isVisibleChange = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * Sets/gets the position of the toast.
@@ -255,18 +133,6 @@ export class IgxToastComponent extends IgxToggleDirective
         return this._element.nativeElement;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    public toastMessage: string | OverlaySettings = '';
-
-    /**
-     * @hidden
-     */
-    private timeoutId: number;
-    private d$ = new Subject<boolean>();
-
     constructor(
         private _element: ElementRef,
         cdr: ChangeDetectorRef,
@@ -285,68 +151,37 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```
      */
     public open(message?: string | OverlaySettings) {
-        clearInterval(this.timeoutId);
+        if (message !== undefined) {
+            this.textMessage = message;
+        }
 
-        const overlaySettings: OverlaySettings = {
-            positionStrategy: new GlobalPositionStrategy({
-                horizontalDirection: HorizontalAlignment.Center,
-                verticalDirection:
-                    this.position === 'bottom'
-                        ? VerticalAlignment.Bottom
-                        : this.position === 'middle'
-                            ? VerticalAlignment.Middle
-                            : VerticalAlignment.Top,
-            }),
-            closeOnEscape: false,
-            closeOnOutsideClick: false,
-            modal: false,
-            outlet: this.outlet,
+        const toastSettings: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Center,
+            verticalDirection:
+                this.position === 'bottom'
+                    ? VerticalAlignment.Bottom
+                    : this.position === 'middle'
+                        ? VerticalAlignment.Middle
+                        : VerticalAlignment.Top
         };
 
-        if (message !== undefined) {
-            this.toastMessage = message;
-        }
-
-        super.open(overlaySettings);
-
-        if (this.autoHide) {
-            this.timeoutId = window.setTimeout(() => {
-                this.close();
-            }, this.displayTime);
-        }
-    }
-
-    /**
-     * Hides the toast.
-     *
-     * ```typescript
-     * this.toast.close();
-     * ```
-     */
-    public close() {
-        clearInterval(this.timeoutId);
-        super.close();
+        this.strategy = new GlobalPositionStrategy(toastSettings);
+        super.open();
     }
 
     /**
      * @hidden
      */
     public ngOnInit() {
-        this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
-            this.isVisibleChange.emit(true);
+        this.opened.pipe(takeUntil(this.d$)).subscribe(() => {
+            const openedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
+            this.isVisibleChange.emit(openedEventArgs);
         });
 
-        this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
-            this.isVisibleChange.emit(false);
+        this.closed.pipe(takeUntil(this.d$)).subscribe(() => {
+            const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
+            this.isVisibleChange.emit(closedEventArgs);
         });
-    }
-
-    /**
-     * @hidden
-     */
-    public ngOnDestroy() {
-        this.d$.next(true);
-        this.d$.complete();
     }
 }
 

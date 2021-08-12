@@ -16,7 +16,6 @@ import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 export interface ColumnGroupsCache {
@@ -382,7 +381,7 @@ export class IgxGridNavigationService {
                 break;
             case 'enter':
             case 'f2':
-                const cell = this.grid.getCellByColumnVisibleIndex(this.activeNode.row, this.activeNode.column);
+                const cell = this.grid.gridAPI.get_cell_by_visible_index(this.activeNode.row, this.activeNode.column);
                 if (!this.isDataRow(rowIndex) || !cell.editable) {
                     break;
                 }
@@ -539,11 +538,16 @@ export class IgxGridNavigationService {
         if ((this.grid.crudService.rowInEditMode && this.grid.rowEditTabs.length) &&
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
             if (this.grid.crudService.row?.isAddRow) {
-                this.grid.gridAPI.submit_add_value(event);
+                const cancelable = this.grid.crudService.updateAddCell(false, event);
+                if (cancelable && cancelable.cancel) {
+                    this.grid.crudService.endAddRow();
+                } else {
+                    this.grid.crudService.exitCellEdit(event);
+                }
                 const row = this.grid.rowList.find(r => r.rowID === this.grid.crudService.row.id);
                 row.rowData = this.grid.crudService.row.data;
             } else {
-                this.grid.gridAPI.submit_value(event);
+                this.grid.crudService.updateCell(true, event);
             }
             if (shift) {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
@@ -668,8 +672,8 @@ export class IgxGridNavigationService {
         }
         if (ctrl && shift && key === 'l' && this.grid.allowFiltering && !column.columnGroup && column.filterable) {
             if (this.grid.filterMode === FilterMode.excelStyleFilter) {
-                const headerEl = this.grid.nativeElement.querySelector(`.igx-grid__th--active`);
-                this.grid.filteringService.toggleFilterDropdown(headerEl, column, IgxGridExcelStyleFilteringComponent);
+                const headerEl = this.grid.headerGroups.find(g => g.active).nativeElement;
+                this.grid.filteringService.toggleFilterDropdown(headerEl, column);
             } else {
                 this.performHorizontalScrollToCell(column.visibleIndex);
                 this.grid.filteringService.filteredColumn = column;

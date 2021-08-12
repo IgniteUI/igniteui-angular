@@ -2,6 +2,232 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.1.0
+
+### New Features
+- Added `IgxAccordion` component
+    - A collection of vertically collapsible igx-expansion-panels that provide users with data and the ability to navigate through it in a compact manner. The control is **not** data bound and takes a declarative approach, giving users more control over what is being rendered.
+    - Exposed API to control the expansion state, easy-to-use keyboard navigation, option for nested accordions.
+    - Code example below:
+
+    ```html
+    <igx-accordion>
+        <igx-expansion-panel *ngFor="let panel of panels">
+           ...
+        </igx-expansion-panel>
+    </igx-accordion>
+    ```
+
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/accordion/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Accordion-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/accordion)
+
+- `igxGrid`
+    - New `additionalTemplateContext` column input:
+
+    ```html
+    <igx-column [additionalTemplateContext]="contextObject">
+      <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
+         {{ props }}
+      </ng-template>
+    </igx-column>
+    ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added `batchEditing` - an `Input` property for controlling what type of transaction service is provided for the grid.
+    Setting `<igx-grid [batchEditing]="true">` is the same as providing `[{ provide: IgxGridTransaction, useClass: IgxTransactionService }]`. 
+    - **Deprecation** - Providing a transaction service for the grid via `providers: [IgxTransactionService]` is now deprecated and will be removed in a future patch.
+    Instead, use the new `batchEditing` property to control the grid's Transactions.
+
+    ```html
+    <igx-grid #grid [data]="data" [batchEditing]="true">
+        ...
+    </igx-grid>
+    <button igxButton (click)="grid.transactions.undo">Undo</button>
+    ```
+    - **Breaking changes**
+        - `IgxGridCellComponent`,  `IgxTreeGridCellComponent`, `IgxHierarchicalGridCellComponent` are no longer exposed in the public API. Instead, a new class `IgxGridCell` replaces all of these. It is a facade class which exposes only the public API of the above mentioned. Automatic migration will change these imports with `CellType`, which is the interface implemented by `IgxGridCell`
+    - **Behavioral changes**
+    - `getCellByKey`, `getCellByColumn`, `getCellByColumnVisibleIndex`, `row.cells`, `column.cells`, `grid.selectedCells` now return an `IgxGridCell` the `CellType` interface.
+    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitetd in `cellClick`, `selected`, `contextMenu` and `doubleClick` events. 
+    - `let-cell` property in cell template is now `CellType`.
+    - `getCellByColumnVisibleIndex` is now deprecated and will be removed in next major version. Use `getCellByKey`, `getCellByColumn` instead.
+
+- `Transactions`
+    - Added `IgxFlatTransactionFactory` - the singleton service instantiates a new `TransactionService<Transaction, State>` given a `transaction type`.
+    - Added `IgxHierarchicalTransactionFactory` - the singleton service instantiates a new `HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>` given a `transaction type`.
+    
+- `Toolbar Actions`
+    - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
+
+    ```html
+    <igx-grid-toolbar-actions>
+        <igx-grid-toolbar-pinning [overlaySettings]="overlaySettingsGlobal"></igx-grid-toolbar-pinning>
+        <igx-grid-toolbar-hiding [overlaySettings]="overlaySettingsAuto"></igx-grid-toolbar-hiding>
+    </igx-grid-toolbar-actions>
+    ```
+- `IgxPaginatorComponent`
+    - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable; Also `IgxPageSizeSelectorComponent` and `IgxPageNavigationComponent` are introduced and now the paginator components allows you to define a custom content, as it is shown in the example below:
+    ```html
+    <igx-paginator #paginator>
+        <igx-paginator-content>
+            <igx-page-size></igx-page-size>
+            <button [disabled]="paginator.isFirstPage" (click)="paginator.previousPage()">PREV</button>
+            <span>Page {{paginator.page}} of {{paginator.totalPages}}</span>
+            <button [disabled]="paginator.isLastPage" (click)="paginator.nextPage()">NEXT</button>
+        </igx-paginator-content>
+    </igx-paginator>
+    ```
+- `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file.
+    ```typescript
+        this.excelExporterService.columnExporting.subscribe((col) => {
+            if (col.field === 'Index') {
+                col.columnIndex = 0;
+            }
+        });
+    ```
+- `IgxExcelExporterService`
+    - Added support for exporting the grids' multi-column headers to **Excel**. By default, the multi-column headers would be exported but this behavior can be controlled by the `ignoreMultiColumnHeaders` option off the IgxExcelExporterOptions object.
+
+- `IgxDateTimeEditor`, `IgxMask`, `IgxDatePicker`, `IgxTimePicker`, `IgxDateRangePicker`
+    - Added IME input support. When typing in an Asian language input, the control will display input method compositions and candidate lists directly in the control’s editing area, and immediately re-flow surrounding text as the composition ends.
+
+### General
+- `IgxGridComponent`
+    - The following properties are deprecated:
+        - `paging`
+        - `perPage`
+        - `page`
+        - `totalPages`
+        - `isFirstPage`
+        - `isLastPage`
+        - `pageChange`
+        - `perPageChange`
+        - `pagingDone`
+    - The following methods, also are deprecated:
+        - `nextPage()`
+        - `previousPage()`
+    -  **Breaking Change** the following property has been removed
+        - `paginationTemplate`
+- `IgxPaginatorComponent`
+    - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
+    -  **Breaking Change** - the following properties are removed
+        - `pagerEnabled`
+        - `pagerHidden `
+        - `dropdownEnabled`
+        - `dropdownHidden`
+- `IgxSnackbarComponent`
+    - Deprecated property `message` is now removed;
+    - **Breaking Change** - the `snackbarAnimationStarted` and `snackbarAnimationDone` methods are now removed. The `animationStarted` and `animationDone` events now provide reference to the `ToggleViewEventArgs` interface as an argument and are emitted by the `onOpened` and `onClosed` events of the `IgxToggleDirective`.
+- `IgxToastComponent`
+    - Deprecated property `message` is now removed;
+    - **Breaking Change** - The `isVisibleChange` event now provides reference to the `ToggleViewEventArgs` interface as an argument.
+
+- **Breaking Change** - `IgxOverlayService` events are renamed as follows:
+    - `onOpening` -> `opening`
+    - `onOpened` -> `opened`
+    - `onClosing` -> `closing`
+    - `onClosed` -> `closed`
+    - `onAppended` -> `contentAppended`
+    - `onAnimation` -> `animationStarting`
+
+- `IgxMaskDirective`
+    - **Breaking Change** - Deprecated property `placeholder` is now removed;
+    - **Breaking Change** - `IgxMaskDirective` events are renamed as follows:
+        - `onValueChange` -> `valueChanged`
+
+- **Breaking Change** - `IgxBannerComponent` events are renamed as follows:
+    - `onOpening` -> `opening`
+    - `onOpened` -> `opened`
+    - `onClosing` -> `closing`
+    - `onClosed` -> `closed`
+
+- `IgxExpansionPanelComponent`
+    - **Breaking Change** - `IExpansionPanelEventArgs.panel` - Deprecated event property `panel` is removed. Usе `owner` property to get a reference to the panel.
+    - **Breaking Change** - `IgxExpansionPanelComponent` events are renamed as follows:
+        - `onCollapsed` -> `contentCollapsed`
+        - `onExpanded` -> `contentExpanded`
+
+    - **Breaking Change** - `IgxExpansionPanelHeaderComponent` events are renamed as follows:
+        - `onInteraction` -> `interaction`
+
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
+
+    - **Feature** - Added `contentExpanding` and `contentCollapsing` events, fired when the panel's content starts expanding or collapsing, resp.
+    Both events can be canceled, preventing the toggle animation from firing and the `collapsed` property from changing:
+    ```html
+        <igx-expansion-panel (contentExpanding)="handleExpandStart($event)" (contentCollapsing)="handleCollapseStart($event)">
+            ...
+        </igx-expansion-panel>
+    ```
+
+- `IgxBanner`
+    - `BannerEventArgs.banner` - Deprecated. Usе `owner` property to get a reference to the banner.
+
+- `IgxDropDown`
+    - **Breaking Change** - The dropdown items no longer takes focus unless `allowItemsFocus` is set to `true`.
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+        - `onSelection` -> `selectionChanging`
+
+
+- `IgxToggleDirective`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpened` -> `opened`
+        - `onOpening` -> `opening`
+        - `onClosed` -> `closed`
+        - `onClosing` -> `closing`
+        - `onAppended` -> `appended`
+
+- `IgxCombo`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onSelectionChange` -> `selectionChanging`
+        - `onSearchInput` -> `searchInputUpdate`
+        - `onAddition` -> `addition`
+        - `onDataPreLoad` -> `dataPreLoad`
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
+    - **Breaking Change** - `IComboSelectionChangeEventArgs` is renamed to `IComboSelectionChangingEventArgs`
+
+- `IgxSelect`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+        - `onSelection` -> `selectionChanging`
+
+- `IgxAutocomplete`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onItemSelected` -> `selectionChanging`
+    - **Breaking Change** - `AutocompleteItemSelectionEventArgs` is renamed to `AutocompleteSelectionChangingEventArgs`
+
+- `IgxDialog`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpen` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClose` -> `closing`
+        - `onClosed` -> `closed`
+        - `onLeftButtonSelect` -> `leftButtonSelect`
+        - `onRightButtonSelect` -> `rightButtonSelect`
+
+- `IgxDropDown`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`.
+
+### Themes
+- **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
+    - `$color` -> `$icon-color`
+
+## 12.0.3
+
+### General
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
+
 ## 12.0.0
 
 ### General
@@ -78,7 +304,7 @@ All notable changes for each version of this project will be documented in this 
                 </igx-picker-clear>
             </igx-date-picker>
         ```
-    - **Breaking Change** - `mode` and `format` are replaced by `inputFormat`.
+    - **Breaking Change** - `mask` and `format` are replaced by `inputFormat`.
     - **Breaking Change** - `placeholder` defaults to the `inputFormat`
     - **Breaking Change** - `editorTabIndex` is renamed to `tabIndex`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
@@ -267,6 +493,11 @@ All notable changes for each version of this project will be documented in this 
     @include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
     ```
 
+## 11.1.13
+
+### General
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
 
 ## 11.1.1
 
@@ -454,6 +685,10 @@ All notable changes for each version of this project will be documented in this 
 ### Improvements
 - `IgxOverlay`
     - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strategy, where the `IgxOverlay` content is flipped, depending on the available space.
+
+## 10.2.25
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
 
 ## 10.2.15
 
@@ -1002,7 +1237,7 @@ The following example shows how you can use the Indigo theme:
     export class MyInvitationComponent {
         public people: { name: string; id: string }[] = [...];
         ...
-        handleSelection(event: IComboSelectionChangeEventArgs) {
+        handleSelection(event: IComboSelectionChangingEventArgs) {
             const count = event.newSelection.length;
             event.displayText = count > 0 ? `${count} friend(s) invited!` : `No friends invited :(`;
         }
@@ -1247,7 +1482,7 @@ For more information about the theming please read our [documentation](https://w
     ```typescript
         export class Example {
             ...
-            handleChange(event: IComboSelectionChangeEventArgs) {
+            handleChange(event: IComboSelectionChangingEventArgs) {
             console.log("Items added: ", [...event.added]); // the items added to the selection in this change
             console.log("Items removed: ", [...event.removed]); // the items removed from the selection in this change
             }
@@ -3131,7 +3366,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
                 [igxForContainerSize]='"500px"'
                 [igxForItemSize]='"50px"'
                 let-rowIndex="index">
-                <div style='height:50px;'>{{rowIndex}} : {{item.text}}</div>
+                <div style='height: 50px;'>{{rowIndex}} : {{item.text}}</div>
         </ng-template>
     </div>
     ```

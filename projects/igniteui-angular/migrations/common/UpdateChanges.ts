@@ -10,13 +10,15 @@ import {
 } from './schema';
 import {
     getLanguageService, getRenamePositions, getIdentifierPositions, replaceMatch,
-    createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME
+    createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME, findMatches
 } from './tsUtils';
 import {
     getProjectPaths, getWorkspace, getProjects, escapeRegExp,
     getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
 } from './util';
 import { ServerHost } from './ServerHost';
+
+const TSCONFIG_PATH = 'tsconfig.json';
 
 export enum InputPropertyType {
     EVAL = 'eval',
@@ -34,6 +36,23 @@ export class UpdateChanges {
     public get projectService(): tss.server.ProjectService {
         if (!this._projectService) {
             this._projectService = createProjectService(this.serverHost);
+            // Force Angular service to compile project on initial load w/ configure project
+            // otherwise if the first compilation occurs on an HTML file the project won't have proper refs
+            // and no actual angular metadata will be resolved for the rest of the migration
+            const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+            const mainRelPath = wsProject.architect?.build?.options['main'] ?
+            path.join(wsProject.root, wsProject.architect?.build?.options['main']) :
+            `src/main.ts`;
+            // patch TSConfig so it includes angularOptions.strictTemplates
+            // ivy ls requires this in order to function properly on templates
+            this.patchTsConfig();
+            const mainAbsPath = path.resolve(this._projectService.currentDirectory, mainRelPath);
+            const scriptInfo = this._projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.toNormalizedPath(mainAbsPath), false);
+            this._projectService.openClientFile(scriptInfo.fileName);
+
+
+            const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
+            project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
         }
         return this._projectService;
     }
@@ -52,6 +71,8 @@ export class UpdateChanges {
     protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
 
     private _templateFiles: string[] = [];
+    private _initialTsConfig = '';
+
     public get templateFiles(): string[] {
         if (!this._templateFiles.length) {
             // https://github.com/angular/devkit/blob/master/packages/angular_devkit/schematics/src/tree/filesystem.ts
@@ -157,6 +178,12 @@ export class UpdateChanges {
             this.context.logger.info(`Cleaning up temporary migration dependencies.`);
             tryUninstallPackage(this.context, this.packageManager, NG_LANG_SERVICE_PACKAGE_NAME);
         }
+
+        // if tsconfig.json was patched, restore it
+        if (this._initialTsConfig !== '') {
+            this.host.overwrite(TSCONFIG_PATH, this._initialTsConfig);
+        }
+
     }
 
     /** Add condition function. */
@@ -221,15 +248,37 @@ export class UpdateChanges {
 
     protected updateClasses(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
+        const alreadyReplaced = new Set<string>();
         for (const change of this.classChanges.changes) {
             if (fileContent.indexOf(change.name) !== -1) {
                 const positions = getRenamePositions(entryPath, change.name, this.service);
                 // loop backwards to preserve positions
                 for (let i = positions.length; i--;) {
                     const pos = positions[i];
-                    fileContent = fileContent.slice(0, pos.start) + change.replaceWith + fileContent.slice(pos.end);
+                    // V.S. 18th May 2021: If several classes are renamed w/ the same import, erase them
+                    // TODO: Refactor to make use of TSLS API instead of string replace
+                    if (i === 0 && alreadyReplaced.has(change.replaceWith)) {
+                        // only match the first trailing white space, right after the replace position
+                        const trailingCommaWhiteSpace = new RegExp(/,([\s]*)(?=(\s}))/);
+                        let afterReplace = fileContent.slice(pos.end);
+                        const beforeReplace = fileContent.slice(0, pos.start);
+                        const leadingComma = afterReplace[0] === ',' ? 1 : 0;
+                        // recalculate if needed
+                        afterReplace = !leadingComma ? afterReplace : fileContent.slice(pos.end + leadingComma);
+                        const doubleSpaceReplace =
+                            beforeReplace[beforeReplace.length - 1].match(/\s/) !== null && afterReplace[0].match(/\s/) !== null ?
+                                1 :
+                                0;
+                        fileContent = (fileContent.slice(0, pos.start - doubleSpaceReplace) +
+                            '' +
+                            afterReplace).replace(trailingCommaWhiteSpace, '');
+                    } else {
+                        fileContent = fileContent.slice(0, pos.start) + change.replaceWith + fileContent.slice(pos.end);
+                    }
                 }
                 if (positions.length) {
+                    // using a set should be a lot quicker that getting position for renames of replace
+                    alreadyReplaced.add(change.replaceWith);
                     this.host.overwrite(entryPath, fileContent);
                 }
             }
@@ -247,7 +296,6 @@ export class UpdateChanges {
 
             let base: string;
             let replace: string;
-            let groups = 1;
             let searchPattern;
 
             if (type === BindingType.Output) {
@@ -257,7 +305,6 @@ export class UpdateChanges {
                 // Match both bound - [name] - and regular - name
                 base = String.raw`(\s\[?)${change.name}(\s*\]?=)(["'])(.*?)\3`;
                 replace = String.raw`$1${change.replaceWith}$2$3$4$3`;
-                groups = 3;
             }
 
             let reg = new RegExp(base, 'g');
@@ -393,19 +440,29 @@ export class UpdateChanges {
     }
 
     protected updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
-        const langServ = this.getDefaultLanguageService(entryPath);
         let content = this.host.read(entryPath).toString();
+        const absPath = tss.server.toNormalizedPath(path.join(process.cwd(), entryPath));
+        // use the absolute path for ALL LS operations
+        // do not overwrite the entryPath, as Tree operations require relative paths
         const changes = new Set<{ change; position }>();
+        let langServ;
         for (const change of memberChanges.changes) {
 
             if (!content.includes(change.member)) {
                 continue;
             }
-            const source = langServ.getProgram().getSourceFile(entryPath);
-            const matches = getIdentifierPositions(source, change.member);
+
+            langServ = langServ || this.getDefaultLanguageService(absPath);
+            let matches: number[];
+            if (entryPath.endsWith('.ts')) {
+                const source = langServ.getProgram().getSourceFile(absPath);
+                matches = getIdentifierPositions(source, change.member).map(x => x.start);
+            } else {
+                matches = findMatches(content, `.${change.member}`).map(pos => pos + 1);
+            }
             for (const matchPosition of matches) {
-                if (isMemberIgniteUI(change, langServ, entryPath, matchPosition.start)) {
-                    changes.add({ change, position: matchPosition.start });
+                if (isMemberIgniteUI(change, langServ, absPath, matchPosition)) {
+                    changes.add({ change, position: matchPosition });
                 }
             }
         }
@@ -420,6 +477,42 @@ export class UpdateChanges {
             this.host.overwrite(entryPath, content);
         }
     }
+
+    private patchTsConfig(): void {
+        if (this.serverHost.fileExists(TSCONFIG_PATH)) {
+            let originalContent = '';
+            try {
+                originalContent = this.serverHost.readFile(TSCONFIG_PATH);
+            } catch {
+                this.context?.logger
+                .warn(`Could not read ${TSCONFIG_PATH}. Some Angular Ivy features might be unavailable during migrations.`);
+                return;
+            }
+            let content;
+            // use ts parser as it handles jsonc-style files w/ comments
+            const result = ts.parseConfigFileTextToJson(TSCONFIG_PATH, originalContent);
+            if (!result.error) {
+                content = result.config;
+            } else {
+                this.context?.logger
+                .warn(`Could not parse ${TSCONFIG_PATH}. Angular Ivy language service might be unavailable during migrations.`);
+                this.context?.logger
+                .warn(`Error:\n${result.error}`);
+                return;
+            }
+            if (!content.angularCompilerOptions) {
+                content.angularCompilerOptions = {};
+            }
+            if (!content.angularCompilerOptions.strictTemplates) {
+                this.context?.logger
+                .info(`Adding 'angularCompilerOptions.strictTemplates' to ${TSCONFIG_PATH} for migration run.`);
+                content.angularCompilerOptions.strictTemplates = true;
+                this.host.overwrite(TSCONFIG_PATH, JSON.stringify(content));
+                // store initial state and restore it once migrations are finished
+                this._initialTsConfig = originalContent;
+            }
+        }
+    };
 
     private loadConfig(configJson: string) {
         const filePath = path.join(this.rootPath, 'changes', configJson);

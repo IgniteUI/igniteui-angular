@@ -13,7 +13,6 @@
                 [filterMode]="'excelStyleFilter'"
                 [allowAdvancedFiltering]="true"
                 [rowSelection]="selectionMode"
-                [paging]="false"
                 [width]="'980px'"
                 [height]="'600px'"
                 [columnSelection]="'single'">
@@ -47,7 +46,6 @@
                 <igx-column field="Capital" [dataType]="'number'" [filterable]="true" [formatter]="formatNumber"></igx-column>
                 <igx-column field="Index" [dataType]="'string'" [filterable]="true" [formatter]="formatEvenOdd"></igx-column>
             </igx-grid>
-
             <div class="sample-buttons">
                 <igx-checkbox [checked]="grid1.allowFiltering" (change)="onAllowFilteringChanged($event)">Allow Filtering</igx-checkbox>
                 <igx-buttongroup [multiSelection]="false" [values]="filterModes" (selected)="selectFilterMode($event)"></igx-buttongroup>
@@ -69,7 +67,6 @@
                 [filterMode]="'excelStyleFilter'"
                 [allowAdvancedFiltering]="true"
                 [rowSelection]="selectionMode"
-                [paging]="false"
                 [width]="'980px'"
                 [height]="'600px'"
                 [columnSelection]="'single'">

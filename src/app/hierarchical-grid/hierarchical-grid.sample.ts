@@ -40,7 +40,7 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
-        this.localData = this.generateDataUneven(100, 3);
+        this.localData = this.generateDataUneven(10, 3);
         this.data1 = this.localData.slice(0, 10);
         this.data2 = this.localData.slice(10, 20);
         this.localData1 = this.data1;
@@ -63,6 +63,12 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
         this.cdr.detectChanges();
     }
 
+
+    public log() {
+        console.log((this.layout1.gridAPI as any).childGrids);
+        //this.layout1.pipeTrigger++;
+        console.log(this.hGrid2.allLayoutList);
+    }
     public generateData(count: number, level: number) {
         const prods = [];
         const currLevel = level;

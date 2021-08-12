@@ -512,10 +512,12 @@ describe('Column Hiding UI #grid', () => {
         }));
 
         it('- When Hide All columns no rows should be rendered', fakeAsync(() => {
+            fix.componentInstance.paging = true;
+            tick(50);
+            fix.detectChanges();
             grid.rowSelection = GridSelectionMode.multiple;
-            grid.paging = true;
             grid.rowDraggable = true;
-            tick(30);
+            tick(50);
             fix.detectChanges();
 
             grid.groupBy({
@@ -667,7 +669,7 @@ describe('Column Hiding UI #grid', () => {
             fix.detectChanges();
             expect(grid.scr.nativeElement.hidden).toBe(false);
             const toolbar = GridFunctions.getToolbar(fix);
-            const gridHeader = GridFunctions.getGridHeader(fix);
+            const gridHeader = GridFunctions.getGridHeader(grid);
             const gridScroll = GridFunctions.getGridScroll(fix);
             const gridFooter = GridFunctions.getGridFooterWrapper(fix);
             let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)

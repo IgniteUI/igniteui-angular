@@ -1,7 +1,7 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
 import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Output, EventEmitter } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
+import { showMessage } from '../core/deprecateDecorators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
 let NEXT_ID = 0;
@@ -32,6 +32,12 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-drop-down-item-${NEXT_ID++}`;
+
+    @HostBinding('attr.aria-label')
+    @Input()
+    public get ariaLabel(): string {
+        return this.value ? this.value : this.id;
+    }
 
     /**
      * @hidden @internal
@@ -88,7 +94,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * @hidden @internal
      */
     @HostBinding('class.igx-drop-down__item')
-    get itemStyle(): boolean {
+    public get itemStyle(): boolean {
         return !this.isHeader;
     }
 
@@ -124,11 +130,11 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     @Input()
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-drop-down__item--selected')
-    get selected(): boolean {
+    public get selected(): boolean {
         return this._selected;
     }
 
-    set selected(value: boolean) {
+    public set selected(value: boolean) {
         if (this.isHeader) {
             return;
         }
@@ -150,7 +156,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * ```
      */
     @HostBinding('class.igx-drop-down__item--focused')
-    get focused(): boolean {
+    public get focused(): boolean {
         return this.isSelectable && this._focused;
     }
 
@@ -163,7 +169,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      *  </igx-drop-down-item>
      * ```
      */
-    set focused(value: boolean) {
+    public set focused(value: boolean) {
         this._focused = value;
     }
 
@@ -295,10 +301,21 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * @internal
      */
     @HostListener('click', ['$event'])
-    clicked(event): void {
+    public clicked(event): void { // eslint-disable-line
     }
 
-    ngDoCheck(): void {
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('mousedown', ['$event'])
+    public handleMousedown(event: MouseEvent): void {
+        if (!this.dropDown.allowItemsFocus) {
+            event.preventDefault();
+        }
+    }
+
+    public ngDoCheck(): void {
         if (this._selected) {
             const dropDownSelectedItem = this.dropDown.selectedItem;
             if (!dropDownSelectedItem) {

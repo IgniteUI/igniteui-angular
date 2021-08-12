@@ -10,7 +10,6 @@ import { IPinningConfig } from '../grid.common';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import {
     CELL_PINNED_CLASS,
-    GRID_HEADER_CLASS,
     GRID_MRL_BLOCK_CLASS,
     GRID_SCROLL_CLASS,
     GridFunctions,
@@ -69,10 +68,10 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.unpinnedColumns.length).toEqual(9);
 
                 // verify DOM
-                const firstIndexCell = grid.getCellByColumn(0, 'CompanyName');
+                const firstIndexCell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
                 expect(firstIndexCell.visibleColumnIndex).toEqual(0);
 
-                const lastIndexCell = grid.getCellByColumn(0, 'ContactName');
+                const lastIndexCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 expect(lastIndexCell.visibleColumnIndex).toEqual(1);
                 expect(GridFunctions.isCellPinned(lastIndexCell)).toBe(true);
 
@@ -103,7 +102,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(col.visibleIndex).toEqual(2);
 
                 // verify DOM
-                let cell = grid.getCellByColumn(0, 'CompanyName');
+                let cell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
                 expect(cell.visibleColumnIndex).toEqual(2);
                 expect(GridFunctions.isCellPinned(cell)).toBe(false);
 
@@ -131,7 +130,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(col.pinned).toBe(true);
                 expect(col.visibleIndex).toEqual(1);
 
-                cell = grid.getCellByColumn(0, 'CompanyName');
+                cell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
                 expect(cell.visibleColumnIndex).toEqual(1);
                 expect(GridFunctions.isCellPinned(cell)).toBe(true);
             });
@@ -234,7 +233,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should allow navigating to/from pinned area', (async () => {
 
-                const cellContactName = grid.getCellByColumn(0, 'ContactName');
+                const cellContactName = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 const range = {
                     rowStart: cellContactName.rowIndex,
                     rowEnd: cellContactName.rowIndex,
@@ -249,15 +248,15 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                const cellID = grid.getCellByColumn(0, 'ID');
-                expect(cellID.active).toBe(true);
+                const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+                expect(cell.active).toBe(true);
                 expect(cellContactName.active).toBe(false);
 
                 grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowLeft'));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cellID.active).toBe(false);
+                expect(cell.active).toBe(false);
                 expect(cellContactName.active).toBe(true);
             }));
         });
@@ -278,8 +277,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 // Contains filter
                 grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
                 fix.detectChanges();
-                const firstCell = grid.getCellByColumn(0, 'ID');
-                const secondCell = grid.getCellByColumn(1, 'ID');
+                const firstCell = grid.gridAPI.get_cell_by_index(0, 'ID');
+                const secondCell = grid.gridAPI.get_cell_by_index(1, 'ID');
 
                 expect(grid.rowList.length).toEqual(2);
                 expect(parseInt(GridFunctions.getValueFromCellElement(firstCell), 10)).toEqual(1);
@@ -495,19 +494,20 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.unpinnedColumns.length).toEqual(9);
 
                 // verify DOM
-                const firstIndexCell = grid.getCellByColumn(0, 'CompanyName');
+                const firstIndexCell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
                 expect(firstIndexCell.visibleColumnIndex).toEqual(firstPinnedIndex);
                 expect(GridFunctions.isCellPinned(firstIndexCell)).toBe(true);
 
-                const lastIndexCell = grid.getCellByColumn(0, 'ContactName');
+                const lastIndexCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 expect(lastIndexCell.visibleColumnIndex).toEqual(secondPinnedIndex);
 
-                const headers = GridFunctions.getColumnHeaders(fix);
+                // const headers = GridFunctions.getColumnHeaders(fix);
+                const headers = grid.headerCellList;
                 const penultimateColumnHeader = headers[headers.length - 2];
                 const lastColumnHeader = headers[headers.length - 1];
-                expect(penultimateColumnHeader.context.column.field).toEqual('CompanyName');
+                expect(penultimateColumnHeader.column.field).toEqual('CompanyName');
 
-                expect(lastColumnHeader.context.column.field).toEqual('ContactName');
+                expect(lastColumnHeader.column.field).toEqual('ContactName');
 
                 // verify container widths
                 GridFunctions.verifyPinnedAreaWidth(grid, 400);
@@ -529,7 +529,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(col.visibleIndex).toEqual(1);
 
                 // verify DOM
-                let cell = grid.getCellByColumn(0, 'CompanyName');
+                let cell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
                 expect(cell.visibleColumnIndex).toEqual(1);
                 expect(GridFunctions.isCellPinned(cell)).toBe(false);
 
@@ -557,7 +557,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(col.pinned).toBe(true);
                 expect(col.visibleIndex).toEqual(grid.unpinnedColumns.length + 1);
 
-                cell = grid.getCellByColumn(0, 'CompanyName');
+                cell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
                 expect(cell.visibleColumnIndex).toEqual(grid.unpinnedColumns.length + 1);
                 expect(GridFunctions.isCellPinned(cell)).toBe(true);
             });
@@ -623,7 +623,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should allow navigating to/from pinned area', (async () => {
                 setupGridScrollDetection(fix, grid);
-                const cellCompanyName = grid.getCellByColumn(0, 'CompanyName');
+                const cellCompanyName = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
                 const range = { rowStart: 0, rowEnd: 0, columnStart: 9, columnEnd: 9 };
                 grid.selectRange(range);
                 grid.navigation.activeNode = { row: 0, column: 9 };
@@ -633,7 +633,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowLeft'));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                const cellFax = grid.getCellByColumn(0, 'Fax');
+                const cellFax = grid.gridAPI.get_cell_by_index(0, 'Fax');
                 expect(cellFax.active).toBe(true);
                 expect(cellCompanyName.active).toBe(false);
 
@@ -646,7 +646,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should allow navigating to/from pinned area using Ctrl+Left/Right', (async () => {
 
-                const cellCompanyName = grid.getCellByColumn(0, 'CompanyName');
+                const cellCompanyName = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
                 const range = { rowStart: 0, rowEnd: 0, columnStart: 9, columnEnd: 9 };
                 grid.selectRange(range);
                 grid.navigation.activeNode = { row: 0, column: 9 };
@@ -656,15 +656,15 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowLeft', false, false, true));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                const cellID = grid.getCellByColumn(0, 'ID');
-                expect(cellID.active).toBe(true);
+                const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+                expect(cell.active).toBe(true);
                 expect(cellCompanyName.active).toBe(false);
 
                 grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowRight', false, false, true));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                const cellContactName = grid.getCellByColumn(0, 'ContactName');
-                expect(cellID.active).toBe(false);
+                const cellContactName = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+                expect(cell.active).toBe(false);
                 expect(cellContactName.active).toBe(true);
             }));
         });
@@ -691,10 +691,9 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 }
 
                 // check correct headers have left border
-                const fistPinnedHeaders = fix.debugElement.query(By.css(GRID_HEADER_CLASS))
-                    .queryAll((By.css(`.${HEADER_PINNED_CLASS}-first`)));
-                expect(fistPinnedHeaders[0].nativeElement.getAttribute('aria-label')).toBe('General Information');
-                expect(fistPinnedHeaders[1].context.column.field).toBe('CompanyName');
+                const pinnedHeaders = grid.headerGroupsList.filter(group => group.isPinned);
+                expect(pinnedHeaders[0].nativeElement.querySelector('[aria-label="General Information"]')).not.toBeNull();
+                expect(pinnedHeaders[1].column.field).toBe('CompanyName');
             }));
 
             it('should correctly pin multi-row-layouts to end.', fakeAsync(() => {
@@ -712,12 +711,13 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(parseInt((row.children[1] as any).style.left, 10)).toEqual(-408);
 
                 // check correct headers have left border
-                const firstPinnedHeader = GridFunctions.getGridHeader(fix).query((By.css(`.${HEADER_PINNED_CLASS}-first`)));
-                expect(firstPinnedHeader.classes[GRID_MRL_BLOCK_CLASS]).toBeTruthy();
-                expect(firstPinnedHeader.classes[`${HEADER_PINNED_CLASS}-first`]).toBeTruthy();
+                const firstPinnedHeader = grid.headerGroupsList.find(group => group.isPinned);
+                // The first child of the header is the <div> wrapping the MRL block
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(GRID_MRL_BLOCK_CLASS)).toBeTrue();
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(`${HEADER_PINNED_CLASS}-first`)).toBeTrue();
             }));
 
-            it('should correctly add pinned colmns to the right of the already fixed one', () => {
+            it('should correctly add pinned columns to the right of the already fixed one', () => {
                 fix = TestBed.createComponent(GridPinningMRLComponent);
                 fix.componentInstance.grid.pinning = { columns: ColumnPinningPosition.Start };
                 fix.detectChanges();

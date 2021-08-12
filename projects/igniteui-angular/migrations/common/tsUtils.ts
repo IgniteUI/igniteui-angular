@@ -13,6 +13,12 @@ export const NG_CORE_PACKAGE_NAME = '@angular/core';
 export const CUSTOM_TS_PLUGIN_PATH = './tsPlugin';
 export const CUSTOM_TS_PLUGIN_NAME = 'igx-ts-plugin';
 
+enum SynaxTokens {
+    ClosingParenthesis = ')',
+    MemberAccess = '.',
+    Question = '?'
+}
+
 /** Returns a source file */
 // export function getFileSource(sourceText: string): ts.SourceFile {
 //     return ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
@@ -118,9 +124,9 @@ export const getRenamePositions = (sourcePath: string, name: string, service: ts
     return positions;
 };
 
-export const findMatches = (content: string, change: MemberChange): number[] => {
+export const findMatches = (content: string, toFind: string): number[] => {
     let matches: RegExpExecArray;
-    const regex = new RegExp(escapeRegExp(change.member), 'g');
+    const regex = new RegExp(escapeRegExp(toFind), 'g');
     const matchesPositions = [];
     do {
         matches = regex.exec(content);
@@ -216,6 +222,7 @@ export const createProjectService = (serverHost: tss.server.ServerHost): tss.ser
     projectService.configurePlugin({
         pluginName: NG_LANG_SERVICE_PACKAGE_NAME,
         configuration: {
+            ivy: true,
             angularOnly: false,
         },
     });
@@ -250,23 +257,14 @@ export const getTypeDefinitionAtPosition =
             return null;
         }
 
-        // if the definition's kind is a reference, the identifier is a template variable referred in an internal/external template
         if (definition.kind.toString() === 'reference') {
+            // if the definition's kind is a reference, the identifier is a template variable referred in an internal/external template
             return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
         }
         if (definition.kind.toString() === 'method') {
-            // TODO:
-            // const typeChecker = langServ.getProgram().getTypeChecker();
-            // typeChecker.getSymbolAtLocation() // need getTokenAtPosition / adapted getTokenAtPositionWorker from ts
-            // typeChecker.getReturnTypeOfSignature()
-
-            const maybeReturnType = langServ.getQuickInfoAtPosition(entryPath, position).displayParts?.pop();
-
-            // quick info (and getImplementationAtPosition) have the return type as last of the displayParts
-            // check if it's a className (potentially Ignite comp) and use for definition name:
-            definition.name = maybeReturnType.kind === 'className' ? maybeReturnType.text : '';
-            return definition;
+            return getMethodTypeDefinition(langServ, definition);
         }
+
         let typeDefs = getTypeDefinitions(langServ, definition.fileName || entryPath, definition.textSpan.start);
         // if there are no type definitions found, the identifier is a ts property, referred in an internal/external template
         // or is a reference in a decorator
@@ -288,14 +286,14 @@ export const getTypeDefinitionAtPosition =
                 return null;
             }
 
-            const classDeclaration = sourceFile
-                .statements
-                // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-                .filter(<(a: tss.Statement) => a is tss.ClassDeclaration>(m => m.kind === tss.SyntaxKind.ClassDeclaration))
-                .find(m => m.name.getText() === definition.containerName);
+            // find the class declaration in the source file where the member that we want to migrate is declared
+            // atm we are explicitly ignoring unnamed class declarations like - export default class { ... }
+            const classDeclaration = sourceFile.statements
+                .filter((m): m is tss.ClassDeclaration => m.kind === tss.SyntaxKind.ClassDeclaration)
+                .find(m => m.name?.getText() === definition.containerName);
 
-            // there must be at least one class declaration in the .ts file and the property must belong to it
             if (!classDeclaration) {
+                // there must be at least one class declaration in the .ts file and the property must belong to it
                 return null;
             }
 
@@ -313,16 +311,97 @@ export const getTypeDefinitionAtPosition =
         return null;
     };
 
+
+/**
+ * Determines if a member belongs to a type in the `igniteui-angular` toolkit.
+ *
+ * @param change The change that will be applied.
+ * @param langServ The Typescript/Angular Language Service
+ * @param entryPath Relative file path.
+ * @param matchPosition The position of the identifier.
+ */
 export const isMemberIgniteUI =
     (change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean => {
-        const prevChar = langServ.getProgram().getSourceFile(entryPath).getText().substr(matchPosition - 2, 1);
-        if (prevChar === ')') {
+        const content = langServ.getProgram().getSourceFile(entryPath).getText();
+        matchPosition = shiftMatchPosition(matchPosition, content);
+        const prevChar = content.substr(matchPosition - 1, 1);
+        if (prevChar === SynaxTokens.ClosingParenthesis) {
             // methodCall().identifier
-            matchPosition = langServ.getBraceMatchingAtPosition(entryPath, matchPosition - 2)[0]?.start ?? matchPosition;
-
+            matchPosition = langServ.getBraceMatchingAtPosition(entryPath, matchPosition - 1)[0]?.start ?? matchPosition;
         }
-        const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
-        return !typeDef ? false : typeDef.fileName.includes(IG_PACKAGE_NAME) && change.definedIn.indexOf(typeDef.name) !== -1;
+
+        const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition);
+        if (!typeDef) {
+            return false;
+        }
+
+        return typeDef.fileName.includes(IG_PACKAGE_NAME)
+            && change.definedIn.indexOf(typeDef.name) !== -1;
     };
+
+/**
+ * Shifts the match position of the identifier to the left
+ * until any character other than an empty string or a '.' is reached. #9347
+ */
+const shiftMatchPosition = (matchPosition: number, content: string): number => {
+    do {
+        matchPosition--;
+    } while (matchPosition > 0 && !content[matchPosition - 1].trim()
+        || content[matchPosition - 1] === SynaxTokens.MemberAccess
+        || content[matchPosition - 1] === SynaxTokens.Question);
+    return matchPosition;
+};
+
+/**
+ * Looks up a method's definition return type.
+ *
+ * @param langServ The TypeScript LanguageService.
+ * @param definition The method definition.
+ */
+const getMethodTypeDefinition = (langServ: tss.LanguageService, definition: tss.DefinitionInfo):
+    Pick<tss.DefinitionInfo, 'name' | 'fileName'> | null => {
+    // TODO: use typechecker for all the things?
+    const sourceFile = langServ.getProgram().getSourceFile(definition.fileName);
+
+    // find the class declaration in the source file where the method that we want to migrate is declared
+    const classDeclaration = sourceFile.statements
+        .filter((m): m is tss.ClassDeclaration => m.kind === tss.SyntaxKind.ClassDeclaration)
+        .find(m => m.name?.getText() === definition.containerName);
+
+    // find the node in the class declaration's members which represents the method
+    const methodDeclaration = classDeclaration?.members
+        .filter((m): m is tss.MethodDeclaration => m.kind === tss.SyntaxKind.MethodDeclaration)
+        .find(m => m.name.getText() === definition.name);
+
+    if (!methodDeclaration) {
+        return null;
+    }
+
+    // use the TypeChecker to resolve implicit/explicit method return types
+    const typeChecker = langServ.getProgram().getTypeChecker();
+    const signature = typeChecker.getSignatureFromDeclaration(methodDeclaration);
+    if (!signature) {
+        return null;
+    }
+
+    const returnType = typeChecker.getReturnTypeOfSignature(signature);
+    const name = returnType.symbol.escapedName.toString();
+    if (returnType.symbol?.declarations?.length > 0) {
+        // there should never be a case where a type is declared in more than one file
+        /**
+         * For union return types like T | null | undefined
+         * and interesection return types like T & null & undefined
+         * the TypeChecker ignores null and undefined and returns only T which is not
+         * marked as a union or intersection type.
+         *
+         * For union and intersection types like T | R | C
+         * the TypeChecker returns a TypeObject which is marked as union or intersection type.
+         */
+        const fileName = returnType.symbol.declarations[0].getSourceFile().fileName;
+        return { name, fileName };
+    }
+
+    return null;
+};
 
 //#endregion

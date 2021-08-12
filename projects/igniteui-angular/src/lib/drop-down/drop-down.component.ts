@@ -17,13 +17,13 @@ import {
     Inject,
     SimpleChanges
 } from '@angular/core';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBaseDirective } from './drop-down.base';
 import { DropDownActionKey, Navigate } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs } from './drop-down.common';
-import { IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
@@ -65,41 +65,41 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * Emitted before the dropdown is opened
      *
      * ```html
-     * <igx-drop-down (onOpening)='handleOpening()'></igx-drop-down>
+     * <igx-drop-down (opening)='handleOpening($event)'></igx-drop-down>
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
+    public opening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
      *
      * ```html
-     * <igx-drop-down (onOpened)='handleOpened()'></igx-drop-down>
+     * <igx-drop-down (opened)='handleOpened($event)'></igx-drop-down>
      * ```
      */
     @Output()
-    public onOpened = new EventEmitter<void>();
+    public opened = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted before the dropdown is closed
      *
      * ```html
-     * <igx-drop-down (onClosing)='handleClosing()'></igx-drop-down>
+     * <igx-drop-down (closing)='handleClosing($event)'></igx-drop-down>
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
+    public closing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
      *
      * ```html
-     * <igx-drop-down (onClosed)='handleClosed()'></igx-drop-down>
+     * <igx-drop-down (closed)='handleClosed($event)'></igx-drop-down>
      * ```
      */
     @Output()
-    public onClosed = new EventEmitter<void>();
+    public closed = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Gets/sets whether items take focus. Disabled by default.
@@ -340,10 +340,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public onToggleOpening(e: IBaseCancelableBrowserEventArgs) {
-        // do not mutate passed event args
-        const eventArgs: IBaseCancelableBrowserEventArgs = Object.assign({}, e, { owner: this });
-        this.onOpening.emit(eventArgs);
-        e.cancel = eventArgs.cancel;
+        const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: false };
+        this.opening.emit(args);
+        e.cancel = args.cancel;
         if (e.cancel) {
             return;
         }
@@ -356,7 +355,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    public onToggleContentAppended() {
+    public onToggleContentAppended(_event: ToggleViewEventArgs) {
         if (!this.virtDir && this.selectedItem) {
            this.scrollToItem(this.selectedItem);
         }
@@ -367,16 +366,16 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     public onToggleOpened() {
         this.updateItemFocus();
-        this.onOpened.emit();
+        this.opened.emit({ owner: this });
     }
 
     /**
      * @hidden @internal
      */
     public onToggleClosing(e: IBaseCancelableBrowserEventArgs) {
-        const eventArgs: IBaseCancelableBrowserEventArgs = Object.assign({}, e, { owner: this });
-        this.onClosing.emit(eventArgs);
-        e.cancel = eventArgs.cancel;
+        const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: false };
+        this.closing.emit(args);
+        e.cancel = args.cancel;
         if (e.cancel) {
             return;
         }
@@ -390,7 +389,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     public onToggleClosed() {
         this.focusItem(false);
-        this.onClosed.emit();
+        this.closed.emit({ owner: this });
     }
 
     /**
@@ -490,7 +489,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     /**
-     * Handles the `onSelection` emit and the drop down toggle when selection changes
+     * Handles the `selectionChanging` emit and the drop down toggle when selection changes
      *
      * @hidden
      * @internal
@@ -515,7 +514,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             } as IgxDropDownItemBaseDirective;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
-        this.onSelection.emit(args);
+        this.selectionChanging.emit(args);
 
         if (!args.cancel) {
             if (this.isSelectionValid(args.newSelection)) {
@@ -547,7 +546,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         const oldSelection = this.selectedItem;
         const newSelection: IgxDropDownItemBaseDirective = null;
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
-        this.onSelection.emit(args);
+        this.selectionChanging.emit(args);
         if (this.selectedItem && !args.cancel) {
             this.selectedItem.selected = false;
             this.selection.clear(this.id);

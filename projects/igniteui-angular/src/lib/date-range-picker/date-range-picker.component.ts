@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, Component, ContentChild, ContentChildren, ElementRef,
+    AfterViewInit, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
     EventEmitter, HostBinding, HostListener, Inject, Injector, Input, LOCALE_ID,
     NgModuleRef,
     OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
@@ -248,17 +248,17 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
      */
-     @Input()
-     public set resourceStrings(value: IDateRangePickerResourceStrings) {
-         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-     }
+    @Input()
+    public set resourceStrings(value: IDateRangePickerResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
 
-     /**
-      * An accessor that returns the resource strings.
-      */
-     public get resourceStrings(): IDateRangePickerResourceStrings {
-         return this._resourceStrings;
-     }
+    /**
+     * An accessor that returns the resource strings.
+     */
+    public get resourceStrings(): IDateRangePickerResourceStrings {
+        return this._resourceStrings;
+    }
 
     /**
      * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
@@ -447,6 +447,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         protected platform: PlatformUtil,
         private _injector: Injector,
         private _moduleRef: NgModuleRef<any>,
+        private _cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
@@ -632,6 +633,14 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this.updateDisabledState();
             this.initialSetValue();
             this.updateInputs();
+            // B.P. 07 July 2021 - IgxDateRangePicker not showing initial disabled state with ChangeDetectionStrategy.OnPush #9776
+            /**
+             * if disabled is placed on the range picker element and there are projected inputs
+             * run change detection since igxInput will initially set the projected inputs' disabled to false
+             */
+            if (this.hasProjectedInputs && this.disabled) {
+                this._cdr.markForCheck();
+            }
         });
         this.updateDisplayFormat();
         this.updateInputFormat();
@@ -667,19 +676,25 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     protected onStatusChanged = () => {
-        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
-            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            if (this.inputGroup) {
-                this.inputDirective.valid = this.getInputState(this.inputGroup.isFocused);
-            } else if (this.hasProjectedInputs) {
-                this.projectedInputs
-                    .forEach(i => {
-                        i.inputDirective.valid = this.getInputState(i.isFocused);
-                    });
-            }
+        if (this.inputGroup) {
+            this.inputDirective.valid = this.isTouchedOrDirty
+                ? this.getInputState(this.inputGroup.isFocused)
+                : IgxInputState.INITIAL;
+        } else if (this.hasProjectedInputs) {
+            this.projectedInputs
+                .forEach(i => {
+                    i.inputDirective.valid = this.isTouchedOrDirty
+                        ? this.getInputState(i.isFocused)
+                        : IgxInputState.INITIAL;;
+                });
         }
         this.setRequiredToInputs();
     };
+
+    private get isTouchedOrDirty(): boolean {
+        return (this._ngControl.control.touched || this._ngControl.control.dirty)
+            && (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
+    }
 
     private handleSelection(selectionData: Date[]): void {
         let newValue = this.extractRange(selectionData);
@@ -692,18 +707,19 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         }
     }
 
-    private handleClosing(event: IBaseCancelableBrowserEventArgs): void {
-        const args = { owner: this, cancel: event.cancel, event: event.event };
+    private handleClosing(e: IBaseCancelableBrowserEventArgs): void {
+        const args = { owner: this, cancel: e?.cancel, event: e?.event };
         this.closing.emit(args);
-        event.cancel = args.cancel;
+        e.cancel = args.cancel;
         if (args.cancel) {
             return;
         }
 
-        if (this.isDropdown && event.event && !this.element.nativeElement.contains(event.event.target)) {
+        if (this.isDropdown && e?.event && !this.element.nativeElement.contains(e.event.target)) {
             // outside click
             this.updateValidityOnBlur();
         } else {
+            this.onTouchCallback();
             // input click
             if (this.hasProjectedInputs && this._focusedInput) {
                 this._focusedInput.setFocus();
@@ -716,9 +732,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private subscribeToOverlayEvents() {
-        this._overlayService.onOpening.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
-            const args = { owner: this, cancel: false, event: eventArgs.event };
-            const overlayEvent = eventArgs as OverlayCancelableEventArgs;
+        this._overlayService.opening.pipe(...this._overlaySubFilter).subscribe((e) => {
+            const overlayEvent = e as OverlayCancelableEventArgs;
+            const args = { owner: this, cancel: overlayEvent?.cancel, event: e.event };
             this.opening.emit(args);
             if (args.cancel) {
                 this._overlayService.detach(this._overlayId);
@@ -726,21 +742,21 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                 return;
             }
 
-            this._initializeCalendarContainer(eventArgs.componentRef.instance);
+            this._initializeCalendarContainer(e.componentRef.instance);
             this._collapsed = false;
             this.updateCalendar();
         });
 
-        this._overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+        this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.calendar?.daysView?.focusActiveDate();
             this.opened.emit({ owner: this });
         });
 
-        this._overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
-            this.handleClosing(eventArgs as OverlayCancelableEventArgs);
+        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e) => {
+            this.handleClosing(e as OverlayCancelableEventArgs);
         });
 
-        this._overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe(() => {
+        this._overlayService.closed.pipe(...this._overlaySubFilter).subscribe(() => {
             this._overlayService.detach(this._overlayId);
             this._collapsed = true;
             this._overlayId = null;
@@ -783,9 +799,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             start.inputDirective.disabled = this.disabled;
             end.inputDirective.disabled = this.disabled;
             return;
-        }
-        if (this.inputDirective) {
-            this.inputDirective.disabled = this.disabled;
         }
     }
 

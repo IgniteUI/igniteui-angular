@@ -3,13 +3,13 @@ import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services/public_a
 import { GridKeydownTargetType } from './enums';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { GridType } from './grid.interface';
-import { IgxGridCellComponent } from '../cell.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ColumnType } from './column.interface';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { RowType } from './row.interface';
+import { CellType } from './cell.interface';
 export { GridSelectionRange } from '../selection/selection.service';
 
 export interface IGridClipboardEvent {
@@ -18,7 +18,7 @@ export interface IGridClipboardEvent {
 }
 
 export interface IGridCellEventArgs extends IBaseEventArgs {
-    cell: IgxGridCellComponent;
+    cell: CellType;
     event: Event;
 }
 
@@ -69,15 +69,6 @@ export interface IPinColumnEventArgs extends IBaseEventArgs {
  */
 export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, CancelableEventArgs {
 }
-
-/**
- * The event arguments after a page is changed.
- */
-export interface IPageEventArgs extends IBaseEventArgs {
-    previous: number;
-    current: number;
-}
-
 export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
 }
@@ -134,6 +125,7 @@ export interface IColumnMovingEventArgs extends IBaseEventArgs {
 export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
+    cancel: boolean;
 }
 
 export interface IGridKeydownEventArgs extends IBaseEventArgs {

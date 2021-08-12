@@ -30,13 +30,15 @@ import { BottomNavRoutingSampleComponent } from './bottomnav-routing/bottomnav-r
 import {
     BottomNavRoutingView1Component,
     BottomNavRoutingView2Component,
-    BottomNavRoutingView3Component } from './bottomnav-routing/bottomnav-routing-views.sample';
+    BottomNavRoutingView3Component
+} from './bottomnav-routing/bottomnav-routing-views.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
 import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
 import {
     TabsRoutingView1Component,
     TabsRoutingView2Component,
-    TabsRoutingView3Component } from './tabs-routing/tabs-routing-views.sample';
+    TabsRoutingView3Component
+} from './tabs-routing/tabs-routing-views.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
@@ -88,12 +90,21 @@ import { GridEventsComponent } from './grid-events/grid-events.component';
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TreeSampleComponent } from './tree/tree.sample';
+import { AccordionSampleComponent } from './accordion/accordion.sample';
+import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
+import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
+import { PaginationSampleComponent } from './pagination/pagination.component';
+import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
 
 const appRoutes = [
     {
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'accordion',
+        component: AccordionSampleComponent
     },
     {
         path: 'action-strip',
@@ -301,6 +312,10 @@ const appRoutes = [
         component: GridRowAPISampleComponent
     },
     {
+        path: 'gridCellAPI',
+        component: GridCellAPISampleComponent
+    },
+    {
         path: 'gridColumnResizing',
         component: GridColumnResizingSampleComponent
     },
@@ -349,6 +364,10 @@ const appRoutes = [
         component: GridMasterDetailSampleComponent
     },
     {
+        path: 'gridLocalization',
+        component: GridLocalizationSampleComponent
+    },
+    {
         path: 'tree',
         component: TreeSampleComponent
     },
@@ -359,6 +378,10 @@ const appRoutes = [
     {
         path: 'treeGridFlatData',
         component: TreeGridFlatDataSampleComponent
+    },
+    {
+        path: 'treeGridGroupBy',
+        component: TreeGridGroupBySampleComponent
     },
     {
         path: 'treeGridLoadOnDemand',
@@ -420,6 +443,10 @@ const appRoutes = [
         path: 'gridUpdates',
         component: GridUpdatesComponent
     },
+    {
+        path: 'pagination',
+        Comment: PaginationSampleComponent
+    }
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

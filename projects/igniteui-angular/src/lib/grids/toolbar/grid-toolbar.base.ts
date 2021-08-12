@@ -7,7 +7,6 @@ import {
     ConnectedPositioningStrategy,
     HorizontalAlignment,
     OverlaySettings,
-    PositionSettings,
     VerticalAlignment
 } from '../../services/public_api';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
@@ -42,6 +41,20 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     public prompt: string;
 
     /**
+     * Sets overlay settings
+     */
+    @Input()
+    public set overlaySettings(overlaySettings: OverlaySettings) {
+        this._overlaySettings = overlaySettings;
+    };
+
+    /**
+     * Returns overlay settings
+     */
+    public get overlaySettings(): OverlaySettings {
+        return this._overlaySettings;
+    }
+    /**
      * Emits an event before the toggle container is opened.
      */
     @Output()
@@ -74,6 +87,19 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     private $destroyer = new Subject<boolean>();
     private $sub: Subscription;
 
+    private _overlaySettings: OverlaySettings = {
+        positionStrategy: new ConnectedPositioningStrategy({
+            horizontalDirection: HorizontalAlignment.Left,
+            horizontalStartPoint: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            verticalStartPoint: VerticalAlignment.Bottom
+        }),
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnEscape: true,
+        closeOnOutsideClick: true
+    };
+
     /**
      * Returns the grid containing this component.
      */
@@ -90,11 +116,12 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     /** @hidden @internal */
     public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective, actions?: IgxColumnActionsComponent): void {
         if (actions) {
-            this._setupListeners(toggleRef, actions);
-            const setHeight = () => actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight, 200)}px`;
-            toggleRef.onOpening.pipe(first()).subscribe(setHeight);
+            this._setupListeners(toggleRef);
+            const setHeight = () =>
+                actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight * 0.5, 200)}px`;
+            toggleRef.opening.pipe(first()).subscribe(setHeight);
         }
-        toggleRef.toggle({ ..._makeOverlaySettings(), ...{ target: anchorElement, outlet: this.grid.outlet,
+        toggleRef.toggle({ ...this.overlaySettings, ...{ target: anchorElement, outlet: this.grid.outlet,
             excludeFromOutsideClick: [anchorElement] }});
 
     }
@@ -114,11 +141,11 @@ export abstract class BaseToolbarDirective implements OnDestroy {
         }
         /** The if statement prevents emitting open and close events twice  */
         if (toggleRef.collapsed) {
-            toggleRef.onOpening.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.opening.emit(event));
-            toggleRef.onOpened.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.opened.emit(event));
+            toggleRef.opening.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.opening.emit(event));
+            toggleRef.opened.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.opened.emit(event));
         } else {
-            toggleRef.onClosing.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.closing.emit(event));
-            toggleRef.onClosed.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.closed.emit(event));
+            toggleRef.closing.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.closing.emit(event));
+            toggleRef.closed.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.closed.emit(event));
         }
     }
 }
@@ -160,19 +187,3 @@ export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirec
         this.columnActionsUI.uncheckAllColumns();
     }
 }
-
-const _makeOverlaySettings = (): OverlaySettings => {
-    const positionSettings: PositionSettings = {
-        horizontalDirection: HorizontalAlignment.Left,
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Bottom,
-        verticalStartPoint: VerticalAlignment.Bottom
-    };
-    return {
-        positionStrategy: new ConnectedPositioningStrategy(positionSettings),
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnEscape: true,
-        closeOnOutsideClick: true
-    };
-};

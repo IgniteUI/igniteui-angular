@@ -10,6 +10,7 @@ import { ISortingExpression } from '../../data-operations/sorting-expression.int
 import { GridType } from '../common/grid.interface';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 import { GridPagingMode } from '../common/enums';
+import { TransactionType } from '../../services/public_api';
 
 /**
  * @hidden
@@ -39,7 +40,10 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         }
 
         grid.flatData = grid.transactions.enabled ?
-        flatData.filter(rec => !grid.transactions.getState(this.getRowID(primaryKey, rec))) : flatData;
+            flatData.filter(rec => {
+                const state = grid.transactions.getState(this.getRowID(primaryKey, rec));
+                return !state || state.type !== TransactionType.ADD;
+            }) : flatData;
         grid.records = treeGridRecordsMap;
         grid.rootRecords = hierarchicalRecords;
         return hierarchicalRecords;
@@ -239,7 +243,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
 
     public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, _: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
-        if (!grid.paging || grid.pagingMode !== GridPagingMode.Local) {
+        if (!grid.paginator  || grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
 
@@ -253,7 +257,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
 
         const result: ITreeGridRecord[] = DataUtil.page(cloneArray(collection), state, len);
         grid.pagingState = state;
-        (grid as any)._page = state.index;
+        grid.paginator.page = state.index;
 
         return result;
     }

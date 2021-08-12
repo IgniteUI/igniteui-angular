@@ -4,8 +4,6 @@ import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
     IgxGridBodyDirective
 } from './grid.common';
-import { IgxGridTransaction } from './grid-base.directive';
-import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import {
     IgxRowAddTextDirective,
     IgxRowEditTemplateDirective,
@@ -13,7 +11,7 @@ import {
     IgxRowEditTextDirective,
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
-import { IgxPaginatorModule } from '../paginator/paginator.component';
+import { IgxPaginatorModule } from '../paginator/public_api';
 import { IgxGridPipesModule } from './common/grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 import { IgxRowDragModule } from './row-drag.directive';
@@ -31,12 +29,15 @@ import { IgxGridFilteringModule } from './filtering/base/filtering.module';
 import { IgxRowDirective } from './row.directive';
 import {
     IgxExcelStyleHeaderIconDirective,
+    IgxGroupAreaDropDirective,
     IgxHeaderCollapseIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
     IgxRowCollapsedIndicatorDirective,
     IgxRowExpandedIndicatorDirective
 } from './grid/grid.directives';
 export * from './common/grid-pipes.module';
+import { IgxChipsModule } from '../chips/chips.module';
+import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
 
 /**
  * @hidden
@@ -58,6 +59,8 @@ export * from './common/grid-pipes.module';
         IgxHeaderExpandIndicatorDirective,
         IgxHeaderCollapseIndicatorDirective,
         IgxExcelStyleHeaderIconDirective,
+        IgxGroupAreaDropDirective,
+        IgxGroupByMetaPipe
     ],
     entryComponents: [
         IgxAdvancedFilteringDialogComponent
@@ -91,6 +94,8 @@ export * from './common/grid-pipes.module';
         IgxHeaderExpandIndicatorDirective,
         IgxHeaderCollapseIndicatorDirective,
         IgxExcelStyleHeaderIconDirective,
+        IgxGroupAreaDropDirective,
+        IgxGroupByMetaPipe
     ],
     imports: [
         IgxGridColumnModule,
@@ -106,10 +111,8 @@ export * from './common/grid-pipes.module';
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
         IgxPaginatorModule,
-        IgxGridSharedModules
-    ],
-    providers: [
-        { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
+        IgxGridSharedModules,
+        IgxChipsModule
     ]
 })
 export class IgxGridCommonModule { }

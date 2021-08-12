@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, TemplateRef } from '@angular/core';
+﻿import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,7 +10,7 @@ import { IgxGroupAreaDropDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGridModule } from './public_api';
 import { IgxGridRowComponent } from './grid-row.component';
-import { IgxChipComponent, IChipClickEventArgs } from '../../chips/chip.component';
+import { IgxChipComponent } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -19,12 +19,13 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
-import { RowType } from '../common/row.interface';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
-    const COLUMN_HEADER_CLASS = '.igx-grid__th';
-    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
+    const COLUMN_HEADER_CLASS = '.igx-grid-th';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
+    const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const DISABLED_CHIP = 'igx-chip--disabled';
@@ -68,22 +69,22 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     };
 
-    const checkChips = (chips, grExpr, sortExpr) => {
-        for (let i = 0; i < chips.length; i++) {
-            const chip = chips[i].querySelector('div.igx-chip__content').innerText;
-            const chipDirection = chips[i].querySelector('[igxsuffix]').innerText;
-            const grp = grExpr[i];
-            const s = sortExpr[i];
-            expect(chip).toBe(grp.fieldName);
-            expect(chip).toBe(s.fieldName);
-            if (chipDirection === SORTING_ICON_ASC_CONTENT) {
-                expect(grp.dir).toBe(SortingDirection.Asc);
-                expect(s.dir).toBe(SortingDirection.Asc);
+    const checkChips = (chips: QueryList<IgxChipComponent>, grouping: IGroupingExpression[], sorting: ISortingExpression[]) => {
+        chips.forEach((chip, index) => {
+            const content = chip.nativeElement.querySelector('.igx-chip__content').textContent.trim();
+            const icon = chip.nativeElement.querySelector('[igxsuffix]').textContent.trim();
+
+            expect(content).toBe(grouping[index].fieldName);
+            expect(content).toBe(sorting[index].fieldName);
+
+            if (icon === SORTING_ICON_ASC_CONTENT) {
+                expect(grouping[index].dir).toBe(SortingDirection.Asc);
+                expect(sorting[index].dir).toBe(SortingDirection.Asc);
             } else {
-                expect(grp.dir).toBe(SortingDirection.Desc);
-                expect(s.dir).toBe(SortingDirection.Desc);
+                expect(grouping[index].dir).toBe(SortingDirection.Desc);
+                expect(sorting[index].dir).toBe(SortingDirection.Desc);
             }
-        }
+        });
     };
 
     it('should allow grouping by different data types.', fakeAsync(() => {
@@ -226,7 +227,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupingExpressions);
     }));
 
-    it('should allow grouping with a custom comparer', fakeAsync(/** height/width setter rAF */() => {
+    it('should allow grouping with a custom comparer', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         fix.componentInstance.data[0].ReleaseDate = new Date(2017, 1, 1, 15, 30, 0, 0);
@@ -247,21 +248,22 @@ describe('IgxGrid - GroupBy #grid', () => {
                 return DefaultSortingStrategy.instance().compareValues(a, b);
             }
         });
+        tick();
         fix.detectChanges();
         let groupRows = grid.groupsRowList.toArray();
         // verify groups count
         expect(groupRows.length).toEqual(5);
         // now click the chip to change sorting, the grouping expression should hold
         // the comparer and reapply the same grouping again
-        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        const chips = grid.groupArea.chips;
         // click grouping direction arrow
-        const event: IChipClickEventArgs = { owner: chips[0], cancel: false, originalEvent: null };
-        grid.onChipClicked(event);
+        grid.groupArea.handleClick(chips.get(0).id);
+        tick();
         fix.detectChanges();
-        chips = fix.nativeElement.querySelectorAll('igx-chip');
+        // chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
-        expect(chips[0].querySelectorAll('igx-icon')[1].innerText.trim()).toBe('arrow_upward');
+        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows.length).toEqual(5);
     }));
@@ -594,8 +596,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
-        const firstCell = grid.getCellByColumn(2, 'Downloads');
-        UIInteractions.simulateClickAndSelectEvent(firstCell);
+        const firstCellElem = grid.gridAPI.get_cell_by_index(2, 'Downloads');
+        UIInteractions.simulateClickAndSelectEvent(firstCellElem);
         fix.detectChanges();
         expect(grid.groupingExpressionsChange.emit).toHaveBeenCalledTimes(0);
     }));
@@ -971,6 +973,29 @@ describe('IgxGrid - GroupBy #grid', () => {
         // verify row location is the same
         expect(rect.left).toEqual(origRect.left);
         expect(rect.top).toEqual(origRect.top);
+    });
+
+    it('should obtain correct virtualization state after all groups are collapsed and column is resized.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.groupsExpanded = false;
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        let fDataRow = grid.dataRowList.toArray()[0];
+        expect(fDataRow.virtDirRow.sizesCache[1]).toBe(200);
+
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+
+        grid.columns[0].width = '500px';
+        fix.detectChanges();
+        const groupRows = grid.groupsRowList.toArray();
+        groupRows[0].toggle();
+        fix.detectChanges();
+
+        fDataRow = grid.dataRowList.toArray()[0];
+        expect(fDataRow.virtDirRow.sizesCache[1]).toBe(500);
     });
 
     // GroupBy + Filtering
@@ -1554,7 +1579,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             cell.column.editable = true;
             fix.detectChanges();
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
             fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -1597,7 +1622,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             cell.column.editable = true;
             fix.detectChanges();
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
             fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -1642,7 +1667,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
             fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -1685,7 +1710,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(8, 'ProductName'));
             fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -1728,7 +1753,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(2, 'ProductName'));
             fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -1847,11 +1872,11 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
             fix.detectChanges();
-            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextSelect);
+            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextSelect);
 
             grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
             fix.detectChanges();
-            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextUnselect);
         }));
 
     // GroupBy + Resizing
@@ -1882,7 +1907,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
         tick(200);
-        const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
+        const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
         UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
@@ -2026,7 +2051,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         cell.column.editable = true;
         fix.detectChanges();
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
         await wait();
         fix.detectChanges();
 
@@ -2053,7 +2078,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
@@ -2077,7 +2102,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
@@ -2113,7 +2138,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
+        tick();
+        fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
         tick();
         fix.detectChanges();
@@ -2168,23 +2195,22 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.componentInstance.enableSorting = true;
         tick();
         fix.detectChanges();
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-
         grid.groupBy({
             fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
         // verify group area is rendered
-        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(1);
+        expect(grid.groupArea).toBeDefined();
     }));
 
     it('should apply group area if a column is groupable.', fakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
         tick();
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is rendered
-        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(1);
+        expect(grid.groupArea).toBeDefined();
         expect(gridElement.clientHeight).toEqual(700);
     }));
 
@@ -2283,7 +2309,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
                 false, 'Ignite UI for Angular', false, null, '', true, null, true],
             grid.groupingExpressions);
-        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        const chips = grid.groupArea.chips;
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
 
         // change order
@@ -2305,7 +2331,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             [null, 'Ignite UI for Angular', false, 'Ignite UI for Angular', 'Ignite UI for JavaScript',
                 'NetAdvantage', true, null, '', 'Ignite UI for JavaScript', 'NetAdvantage'],
             grid.groupingExpressions);
-        chips = fix.nativeElement.querySelectorAll('igx-chip');
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
     }));
 
@@ -2352,17 +2377,15 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
         });
         fix.detectChanges();
-        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        const chips = grid.groupArea.chips;
         // click grouping direction arrow
-        const event: IChipClickEventArgs = { owner: chips[0], originalEvent: null, cancel: false };
-        grid.onChipClicked(event);
+        grid.groupArea.handleClick(chips.get(0).id);
         tick();
         fix.detectChanges();
-        chips = fix.nativeElement.querySelectorAll('igx-chip');
         tick();
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
-        expect(chips[0].querySelectorAll('igx-icon')[1].innerText.trim()).toBe('arrow_upward');
+        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
     }));
 
     it('should change grouping direction when sorting changes direction', fakeAsync(() => {
@@ -2372,15 +2395,13 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         fix.detectChanges();
 
-        grid.groupBy({
-            fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
-        });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
-        const productNameCol = fix.nativeElement.querySelector('igx-grid-header-group[id$="_-1_0_2"]');
-        UIInteractions.simulateMouseEvent('click', productNameCol,0, 0);
+        const productNameCol = grid.headerGroupsList.find(header => header.column.field === 'ProductName');
+        UIInteractions.simulateClickEvent(productNameCol.nativeElement);
         tick();
         fix.detectChanges();
-        const chips = fix.nativeElement.querySelectorAll('igx-chip');
+        const chips = grid.groupArea.chips;
         tick();
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
     }));
@@ -2671,8 +2692,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective.ghostElement, 250, 30);
         await wait();
         fix.detectChanges();
-        const chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
-        checkChips(chipsElems, grid.groupingExpressions, grid.sortingExpressions);
+        const chips = grid.groupArea.chips;
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
 
         // verify groups
         const groupRows = grid.groupsRowList.toArray();
@@ -2867,9 +2888,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        const groupArea = fix.debugElement.query(By.css('.igx-grid__grouparea'));
-        const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
-        const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
+        const groupArea = grid.groupArea;
+        const gridHeader = grid.theadRow;
+        const gridFooter = grid.tfoot;
         const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
 
         let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
@@ -3021,7 +3042,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(groupRows.length).toEqual(3);
 
-            const chips = fix.nativeElement.querySelectorAll('igx-chip');
+            const chips = grid.groupArea.chips;
             checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
 
             const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));
@@ -3229,7 +3250,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // Try to group by a column group
-        const header = fix.debugElement.queryAll(By.css('.igx-grid__thead-title'))[0].nativeElement;
+        const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__title'))[0].nativeElement;
         UIInteractions.simulatePointerEvent('pointerdown', header, 10, 10);
         await wait();
         UIInteractions.simulatePointerEvent('pointermove', header, 150, 22);
@@ -3254,9 +3275,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait(30);
         fix.detectChanges();
 
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is not rendered
-        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(0);
+        expect(grid.groupArea).not.toBeDefined();
     }));
 
     it('should add title attribute to chips when column is grouped', fakeAsync(/** height/width setter rAF */() => {
@@ -3280,7 +3300,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // Try to group by a column group
-        const header = fix.debugElement.queryAll(By.css('.igx-grid__thead-title'))[0].nativeElement;
+        const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__title'))[0].nativeElement;
         UIInteractions.simulatePointerEvent('pointerdown', header, 10, 10);
         await wait();
         UIInteractions.simulatePointerEvent('pointermove', header, 150, 22);
@@ -3305,9 +3325,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait(30);
         fix.detectChanges();
 
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is not rendered
-        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(0);
+        expect(grid.groupArea).not.toBeDefined();
     }));
 
     it('should add title attribute to chips when column is grouped', fakeAsync(/** height/width setter rAF */() => {
@@ -3430,6 +3449,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             [dropAreaTemplate]='currentDropArea'
             [data]="data"
             [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
+            <igx-paginator *ngIf="paging"></igx-paginator>
         </igx-grid>
         <ng-template #dropArea>
             <span> Custom template </span>
@@ -3454,6 +3474,7 @@ export class DefaultGridComponent extends DataParent {
     public enableGrouping = true;
     public currentSortExpressions;
     public currentGroupingExpressions = [];
+    public paging = false;
 
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
@@ -3472,8 +3493,7 @@ export class DefaultGridComponent extends DataParent {
         <igx-grid
             [width]='width'
             [height]='height'
-            [data]="data"
-            [paging]="true">
+            [data]="data">
             <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
                 dataType="date"></igx-column>
@@ -3481,6 +3501,7 @@ export class DefaultGridComponent extends DataParent {
                 dataType="number"></igx-column>
             <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-paginator></igx-paginator>
         </igx-grid>
     `
 })
@@ -3619,5 +3640,8 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
 
     public width = '800px';
     public height = '700px';
-    public onGroupByRowClick(_event, _context) {}
+    public groupByRowClick: any;
+    public onGroupByRowClick(_event, _context) {
+        this.groupByRowClick = _event;
+    }
 }

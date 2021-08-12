@@ -35,7 +35,7 @@ const CSS_CLASS_GHOST_ROW = 'igx-grid__tr--ghost';
 const CSS_CLASS_SELECTED_ROW = 'igx-grid__tr--selected';
 const CSS_CLASS_SELECTION_CHECKBOX = '.igx-grid__cbx-selection';
 const CSS_CLASS_VIRTUAL_HSCROLLBAR = '.igx-vhelper--horizontal';
-const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid__th--pinned-last';
+const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid-th--pinned-last';
 const CSS_CLASS_DROPPABLE_AREA = '.droppable-area';
 const CSS_CLASS_NON_DROPPABLE_AREA = '.non-droppable-area';
 
@@ -861,7 +861,7 @@ describe('Row Drag Tests #grid', () => {
             pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
             pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-            const dragCell = dragGrid.getCellByColumn(1, 'Downloads');
+            const dragCell = dragGrid.gridAPI.get_cell_by_index(1, 'Downloads');
             const cacheValue = dragCell.value;
             const cellElement = dragCell.nativeElement;
             let cellInput = null;
@@ -1116,12 +1116,12 @@ describe('Row Drag Tests #tGrid', () => {
 
         rowDragDirective.onPointerDown(pointerDownEvent);
         rowDragDirective.onPointerMove(pointerMoveEvent);
-        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index),
+        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID),
             rowToDrag.nativeElement, rowDragDirective, 1);
         rowDragDirective.onPointerMove(pointerMoveToDropEvent);
         rowDragDirective.onPointerUp(pointerUpEvent);
         fixture.detectChanges();
-        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index),
+        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID),
             rowToDrag.nativeElement, rowDragDirective, false, 1);
 
         // second level row
@@ -1133,11 +1133,11 @@ describe('Row Drag Tests #tGrid', () => {
 
         rowDragDirective.onPointerDown(pointerDownEvent);
         rowDragDirective.onPointerMove(pointerMoveEvent);
-        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, 2);
+        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID), rowToDrag.nativeElement, rowDragDirective, 2);
         rowDragDirective.onPointerMove(pointerMoveToDropEvent);
         rowDragDirective.onPointerUp(pointerUpEvent);
         fixture.detectChanges();
-        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false, 2);
+        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID), rowToDrag.nativeElement, rowDragDirective, false, 2);
 
         // third level row
         dragIndicatorElement = dragIndicatorElements[3].nativeElement;
@@ -1148,12 +1148,12 @@ describe('Row Drag Tests #tGrid', () => {
 
         rowDragDirective.onPointerDown(pointerDownEvent);
         rowDragDirective.onPointerMove(pointerMoveEvent);
-        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index),
+        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID),
             rowToDrag.nativeElement, rowDragDirective, 3);
         rowDragDirective.onPointerMove(pointerMoveToDropEvent);
         rowDragDirective.onPointerUp(pointerUpEvent);
         fixture.detectChanges();
-        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index),
+        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID),
             rowToDrag.nativeElement, rowDragDirective, false, 3);
     });
 });

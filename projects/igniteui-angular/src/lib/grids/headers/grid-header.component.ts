@@ -7,7 +7,6 @@ import {
     HostBinding,
     HostListener,
     Input,
-    NgZone,
     OnDestroy,
     TemplateRef,
     ViewChild
@@ -21,26 +20,23 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { Subject } from 'rxjs';
 import { GridType } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
-import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
+import { DisplayDensity } from '../../core/displayDensity';
 
 /**
  * @hidden
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-header',
-    templateUrl: './grid-header.component.html'
+    templateUrl: 'grid-header.component.html'
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
-    @HostBinding('attr.role')
-    public hostRole = 'columnheader';
 
     @Input()
     public column: IgxColumnComponent;
 
     @Input()
-    public gridID: string;
+    public density: DisplayDensity;
 
     /**
      * @hidden
@@ -56,39 +52,76 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         return this.column.selected;
     }
 
-    @HostBinding('class')
-    get styleClasses(): string {
-        const defaultClasses = [
-            'igx-grid__th--fw',
-            this.column.headerClasses
-        ];
+    @HostBinding('class.igx-grid-th')
+    public get columnGroupStyle() {
+        return !this.column.columnGroup;
+    }
 
-        const classList = {
-            'igx-grid__th': !this.column.columnGroup,
-            asc: this.ascending,
-            desc: this.descending,
-            'igx-grid__th--number': this.column.dataType === GridColumnDataType.Number,
-            'igx-grid__th--sortable': this.column.sortable,
-            'igx-grid__th--selectable': this.selectable,
-            'igx-grid__th--filtrable': this.column.filterable && this.grid.filteringService.isFilterRowVisible,
-            'igx-grid__th--sorted': this.sorted,
-            'igx-grid__th--selected': this.selected
-        };
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid-th--cosy')
+    public get cosyStyle() {
+        return this.density === 'cosy';
+    }
 
-        for (const klass of Object.keys(classList)) {
-            if (classList[klass]) {
-                defaultClasses.push(klass);
-            }
-        }
-        return defaultClasses.join(' ');
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid-th--compact')
+    public get compactStyle() {
+        return this.density === 'compact';
+    }
+
+    @HostBinding('class.asc')
+    public get sortAscendingStyle() {
+        return this.sortDirection === SortingDirection.Asc;
+    }
+
+    @HostBinding('class.desc')
+    public get sortDescendingStyle() {
+        return this.sortDirection === SortingDirection.Desc;
+    }
+
+    @HostBinding('class.igx-grid-th--number')
+    public get numberStyle() {
+        return this.column.dataType === GridColumnDataType.Number;
+    }
+
+    @HostBinding('class.igx-grid-th--sortable')
+    public get sortableStyle() {
+        return this.column.sortable;
+    }
+
+    @HostBinding('class.igx-grid-th--selectable')
+    public get selectableStyle() {
+        return this.selectable;
+    }
+
+    @HostBinding('class.igx-grid-th--filtrable')
+    public get filterableStyle() {
+        return this.column.filterable && this.grid.filteringService.isFilterRowVisible;
+    }
+
+    @HostBinding('class.igx-grid-th--sorted')
+    public get sortedStyle() {
+        return this.sorted;
+    }
+
+    @HostBinding('class.igx-grid-th--selected')
+    public get selectedStyle() {
+        return this.selected;
     }
 
     @HostBinding('style.height.rem')
-    get height() {
-        if (this.grid.hasColumnGroups) {
-            return (this.grid.maxLevelHeaderDepth + 1 - this.column.level) * this.grid.defaultRowHeight / this.grid._baseFontSize;
+    public get height() {
+        if (!this.grid.hasColumnGroups) {
+            return null;
         }
-        return null;
+
+        return (this.grid.maxLevelHeaderDepth + 1 - this.column.level) * this.grid.defaultRowHeight / this.grid._baseFontSize;
     }
 
     /**
@@ -98,61 +131,46 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         return this.grid.excelStyleHeaderIconTemplate || this.defaultESFHeaderIconTemplate;
     }
 
-    get ascending() {
-        return this.sortDirection === SortingDirection.Asc;
-    }
-
-    get descending() {
-        return this.sortDirection === SortingDirection.Desc;
-    }
-
-    get sortingIcon(): string {
-        if (this.sortDirection !== SortingDirection.None) {
-            // arrow_downward and arrow_upward
-            // are material icons ligature strings
-            return this.sortDirection === SortingDirection.Asc ? 'arrow_upward' : 'arrow_downward';
-        }
-        return 'arrow_upward';
-    }
-
-    get sorted() {
+    public get sorted() {
         return this.sortDirection !== SortingDirection.None;
     }
 
-    get filterIconClassName() {
+    public get filterIconClassName() {
         return this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
     }
 
-    get selectable() {
+    public get selectable() {
         return this.grid.columnSelection !== GridSelectionMode.none &&
             this.column.applySelectableClass &&
             !this.column.selected &&
             !this.grid.filteringService.isFilterRowVisible;
     }
 
-    get selected() {
+    public get selected() {
         return this.column.selected
             && (!this.grid.filteringService.isFilterRowVisible || this.grid.filteringService.filteredColumn !== this.column);
     }
 
-    get columnTitle() {
+    public get title() {
         return this.column.title || this.column.header || this.column.field;
     }
 
-    protected sortDirection = SortingDirection.None;
+    public get nativeElement() {
+        return this.ref.nativeElement;
+    }
 
+    public sortDirection = SortingDirection.None;
     private _destroy$ = new Subject<boolean>();
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         public colResizingService: IgxColumnResizingService,
         public cdr: ChangeDetectorRef,
-        public elementRef: ElementRef,
-        public zone: NgZone
+        private ref: ElementRef<HTMLElement>
     ) { }
 
     @HostListener('click', ['$event'])
-    public onClick(event) {
+    public onClick(event: MouseEvent) {
         if (!this.colResizingService.isColumnResizing) {
 
             if (this.grid.filteringService.isFilterRowVisible) {
@@ -200,7 +218,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         this.cdr.markForCheck();
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this._destroy$.next(true);
         this._destroy$.complete();
         this.grid.filteringService.hideExcelFiltering();
@@ -209,10 +227,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     public onFilteringIconClick(event) {
         event.stopPropagation();
-        this.grid.filteringService.toggleFilterDropdown(this.elementRef.nativeElement, this.column, IgxGridExcelStyleFilteringComponent);
+        this.grid.filteringService.toggleFilterDropdown(this.nativeElement, this.column);
     }
 
-    get grid(): any {
+    public get grid(): any {
         return this.gridAPI.grid;
     }
 
@@ -228,7 +246,8 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     private triggerSort() {
         const groupingExpr = this.grid.groupingExpressions ?
-            this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field) : null;
+            this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field) :
+            this.grid.groupArea?.expressions ? this.grid.groupArea?.expressions.find((expr) => expr.fieldName === this.column.field) : null;
         const sortDir = groupingExpr ?
             this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
             : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;

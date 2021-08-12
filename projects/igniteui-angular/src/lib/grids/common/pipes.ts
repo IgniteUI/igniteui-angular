@@ -179,7 +179,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
         const grid = this.gridAPI.grid;
 
         if (grid.hasPinnedRecords && isPinned) {
-            const result = collection.filter(rec => !grid.isSummaryRecord(rec) && grid.isRecordPinned(rec));
+            const result = collection.filter(rec => !grid.isSummaryRow(rec) && grid.isRecordPinned(rec));
             result.sort((rec1, rec2) => grid.getInitialPinnedIndex(rec1) - grid.getInitialPinnedIndex(rec2));
             return result;
         }
@@ -190,7 +190,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
             return isPinned ? [] : collection;
         }
 
-        return collection.map((rec) => !grid.isSummaryRecord(rec) &&
+        return collection.map((rec) => !grid.isSummaryRow(rec) &&
             grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true } : rec);
     }
 }
@@ -313,16 +313,13 @@ export class IgxColumnFormatterPipe implements PipeTransform {
 @Pipe({ name: 'summaryFormatter' })
 export class IgxSummaryFormatterPipe implements PipeTransform {
 
-    transform(summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand,
+    public transform(summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand,
         summaryFormatter: (s: IgxSummaryResult, o: IgxSummaryOperand) => any) {
         return summaryFormatter(summaryResult, summaryOperand);
     }
 }
 
-@Pipe({
-    name: 'gridAddRow',
-    pure: true
-})
+@Pipe({ name: 'gridAddRow' })
 export class IgxGridAddRowPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
@@ -347,5 +344,13 @@ export class IgxGridAddRowPipe implements PipeTransform {
             grid.unpinnedRecords = copy;
         }
         return copy;
+    }
+}
+
+@Pipe({ name: 'igxHeaderGroupWidth' })
+export class IgxHeaderGroupWidthPipe implements PipeTransform {
+
+    public transform(width: any, minWidth: any, hasLayout: boolean ) {
+        return hasLayout ? '' : `${Math.max(parseFloat(width), minWidth)}px`;
     }
 }

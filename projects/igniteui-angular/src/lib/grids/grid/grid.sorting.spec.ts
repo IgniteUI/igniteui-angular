@@ -3,13 +3,13 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
 import { DefaultSortingStrategy, NoopSortingStrategy } from '../../data-operations/sorting-strategy';
-import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { CellType } from '../common/cell.interface';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
 
@@ -61,13 +61,11 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true });
             tick(30);
             fixture.detectChanges();
-
             expect(grid.sorting.emit).toHaveBeenCalledWith({
                 cancel: false,
                 sortingExpressions: grid.sortingExpressions,
                 owner: grid
             });
-
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual('ALex');
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
@@ -349,8 +347,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
                 strategy: new SortByParityComponent()
             });
             fixture.detectChanges();
-            const oddHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(0, 5);
-            const evenHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(5);
+            const oddHalf: CellType[] = grid.getColumnByName('ID').cells.slice(0, 5);
+            const evenHalf: CellType[] = grid.getColumnByName('ID').cells.slice(5);
             const isFirstHalfOdd: boolean = oddHalf.every(cell => cell.value % 2 === 1);
             const isSecondHalfEven: boolean = evenHalf.every(cell => cell.value % 2 === 0);
             expect(isFirstHalfOdd).toEqual(true);
@@ -489,7 +487,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
             UIInteractions.simulateClickAndSelectEvent(firstHeaderCell);
 
-            expect(grid.headerGroups.toArray()[0].isFiltered).toBeTruthy();
+            expect(grid.headerGroupsList[0].isFiltered).toBeTruthy();
 
             GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, false);
 
@@ -504,7 +502,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(secondHeaderCell);
             fixture.detectChanges();
 
-            expect(grid.headerGroups.toArray()[1].isFiltered).toBeTruthy();
+            expect(grid.headerGroupsList[1].isFiltered).toBeTruthy();
         }));
 
         it('Should disable sorting feature when using NoopSortingStrategy.', fakeAsync(() => {

@@ -99,7 +99,6 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.grid2.sortingExpressions = [];
         this.grid3.sortingExpressions = [{ fieldName: 'ProductID', dir: SortingDirection.Desc, ignoreCase: true,
             strategy: DefaultSortingStrategy.instance() }];
-        this.grid3.paging = true;
 
         this.selectionMode = GridSelectionMode.multiple;
     }
@@ -119,9 +118,8 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     public process() {
-        this.toast.message = 'Loading remote data';
         this.toast.position = 'bottom';
-        this.toast.open();
+        this.toast.open('Loading remote data');
         this.remoteService.getData(this.grid3.data, () => {
             this.toast.close();
         });
@@ -137,21 +135,15 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     public onPagination(event) {
-        if (!this.grid2.paging) {
-            return;
-        }
         const total = this.grid2.data.length;
         const state = this.grid2.pagingState;
         if ((state.recordsPerPage * event) >= total) {
             return;
         }
-        this.grid2.paginate(event);
+        this.grid2.paginator.paginate(event);
     }
 
     public onPerPage(event) {
-        if (!this.grid2.paging) {
-            return;
-        }
         const total = this.grid2.data.length;
         const state = this.grid2.pagingState;
         if ((state.index * event) >= total) {
@@ -183,8 +175,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.selectedRow = Object.assign({}, this.selectedCell.Row);
         this.grid1.deleteRow(this.selectedCell.rowIndex);
         this.selectedCell = {};
-        this.snax.message = `Row with ID ${this.selectedRow.record.ID} was deleted`;
-        this.snax.open();
+        this.snax.open(`Row with ID ${this.selectedRow.record.ID} was deleted`);
     }
 
     public restore() {

@@ -207,7 +207,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 this.cdr.detectChanges();
             });
             this._columnMoved = this.grid.columnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this.cdr.detectChanges();
+                this.cdr.markForCheck();
             });
         }
     }
@@ -358,12 +358,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public initialize(column: IgxColumnComponent, overlayService: IgxOverlayService,
-        overlayComponentId: string) {
+    public initialize(column: IgxColumnComponent, overlayService: IgxOverlayService) {
         this.inline = false;
         this.column = column;
         this.overlayService = overlayService;
-        this.overlayComponentId = overlayComponentId;
         if (this._originalDisplay) {
             this.element.nativeElement.style.display = this._originalDisplay;
         }

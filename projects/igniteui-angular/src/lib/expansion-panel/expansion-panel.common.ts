@@ -9,8 +9,10 @@ export interface IgxExpansionPanelBase {
     headerId: string;
     collapsed: boolean;
     animationSettings: { openAnimation: AnimationReferenceMetadata; closeAnimation: AnimationReferenceMetadata };
-    onCollapsed: EventEmitter<any>;
-    onExpanded: EventEmitter<any>;
+    contentCollapsed: EventEmitter<any>;
+    contentCollapsing: EventEmitter<any>;
+    contentExpanded: EventEmitter<any>;
+    contentExpanding: EventEmitter<any>;
     collapse(evt?: Event);
     expand(evt?: Event);
     toggle(evt?: Event);
@@ -21,11 +23,6 @@ export const IGX_EXPANSION_PANEL_COMPONENT = new InjectionToken<IgxExpansionPane
 
 export interface IExpansionPanelEventArgs extends IBaseEventArgs {
     event: Event;
-    /**
-     * @deprecated
-     * To get a reference to the panel, use `owner` instead.
-     */
-    panel?: IgxExpansionPanelBase;
 }
 
 export interface IExpansionPanelCancelableEventArgs  extends IExpansionPanelEventArgs, CancelableEventArgs {}

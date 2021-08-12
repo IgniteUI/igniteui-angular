@@ -21,8 +21,9 @@ import { IgxColumnComponent } from '../tree-grid/public_api';
 
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
-    const COLUMN_HEADER_CLASS = '.igx-grid__th';
-    const COLUMN_GROUP_HEADER_CLASS = '.igx-grid__thead-title';
+    const COLUMN_HEADER_CLASS = '.igx-grid-th';
+    const COLUMN_GROUP_HEADER_CLASS = '.igx-grid-thead__title';
+    const COLUMN_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
     let fixture; let grid: IgxGridComponent;
     configureTestSuite((() => {
@@ -123,7 +124,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             column.move(2);
 
             columnsList = grid.columnList.toArray();
-            const args = { source: grid.columnList.toArray()[2], target: grid.columnList.toArray()[1] };
+            const args = { source: grid.columnList.toArray()[2], target: grid.columnList.toArray()[1], cancel: false };
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledWith(args);
         });
@@ -240,7 +241,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             let columnsList = grid.columnList.toArray();
 
             // step 1 - select a cell from 'ID' column
-            const cell = grid.getCellByColumn(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
@@ -257,7 +258,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 3 - navigate right and verify cell selection is updated
             const gridContent = GridFunctions.getGridContent(fixture);
-            GridFunctions.focusFirstCell(fixture);
+            GridFunctions.focusFirstCell(fixture, grid);
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
@@ -374,7 +375,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait(250);
             fixture.detectChanges();
 
-            const resizer = fixture.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
+            const resizer = fixture.debugElement.queryAll(By.css(COLUMN_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
@@ -455,6 +456,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(fixture.componentInstance.countEnd).toEqual(1);
             expect(fixture.componentInstance.source).toEqual(grid.columnList.toArray()[1]);
             expect(fixture.componentInstance.target).toEqual(grid.columnList.toArray()[0]);
+            expect(fixture.componentInstance.cancel).toBe(false);
         }));
 
         it('Should be able to cancel columnMoving event.', (async () => {
@@ -478,6 +480,35 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture.detectChanges();
 
             // step 2 - verify the event was canceled
+            const columnsList = grid.columnList.toArray();
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+        }));
+
+        it('Should be able to cancel columnMovingEnd event.', (async () => {
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+            // step 1 - subscribe to the columnMovingEnd event in order to cancel it
+            grid.columnMovingEnd.subscribe((e) => {
+                if (fixture.componentInstance.target.field === 'Name') {
+                    e.cancel = true;
+                }
+            });
+
+            // step 2 - try moving a column
+            const header = headers[0].nativeElement;
+            UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
+            await wait(50);
+            fixture.detectChanges();
+
+            // step 3 - verify the event was canceled(in componentInstance)
             const columnsList = grid.columnList.toArray();
             expect(columnsList[0].field).toEqual('ID');
             expect(columnsList[1].field).toEqual('Name');
@@ -632,7 +663,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - select a cell from 'ID' column
-            const cell = grid.getCellByColumn(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
@@ -655,7 +686,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 3 - navigate right and verify cell selection is updated
             const gridContent = GridFunctions.getGridContent(fixture);
-            GridFunctions.focusFirstCell(fixture);
+            GridFunctions.focusFirstCell(fixture, grid);
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
@@ -690,7 +721,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 3 - navigate and verify cell selection is updated
             const gridContent = GridFunctions.getGridContent(fixture);
-            GridFunctions.focusFirstCell(fixture);
+            GridFunctions.focusFirstCell(fixture, grid);
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
@@ -745,29 +776,28 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('Should be able to scroll forwards to reorder columns that are out of view.', (async () => {
-            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - start moving a column and verify columns are scrolled into view,
             // when holding the drag ghost over the right edge of the grid
-            const header = headers[0].nativeElement;
+            const header = grid.headerCellList[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
-            await wait(50);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 485, 30);
             await wait(1000);
             fixture.detectChanges();
 
             // step 2 - verify the column being moved can be reordered among new columns
-            UIInteractions.simulatePointerEvent('pointermove', header, 350, 30);
-            await wait(50);
-            UIInteractions.simulatePointerEvent('pointerup', header, 350, 30);
+            UIInteractions.simulatePointerEvent('pointermove', header, 450, 30);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointerup', header, 450, 30);
             await wait();
             fixture.detectChanges();
 
-            const columnsList = grid.columnList.toArray();
-            expect(columnsList[0].field).toEqual('CompanyName');
-            expect(columnsList[4].field).toEqual('ID');
+            const list = grid.columnList;
+            expect(list.get(0).field).toEqual('CompanyName');
+            expect(list.get(4).field).toEqual('ID');
         }));
 
         it('Should be able to scroll backwards to reorder columns that are out of view.', (async () => {
@@ -779,7 +809,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 2 - start moving a column and verify columns are scrolled into view,
             // when holding the drag ghost over the left edge of the grid
-            const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[4].nativeElement;
+            const header = grid.headerCellList[4].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 356, 56);
@@ -795,9 +825,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait();
             fixture.detectChanges();
 
-            const columnsList = grid.columnList.toArray();
-            expect(columnsList[0].field).toEqual('ID');
-            expect(columnsList[7].field).toEqual('Phone');
+            const list = grid.columnList;
+            expect(list.get(0).field).toEqual('ID');
+            expect(list.get(7).field).toEqual('Region');
         }));
 
         it('Should be able to scroll/reorder columns that are out of view - with pinned columns.', (async () => {
@@ -812,7 +842,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 2 - start moving a column and verify columns are scrolled into view,
             // when holding the drag ghost before pinned area edge
-            const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[5].nativeElement;
+            const header = grid.headerCellList[5].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 450, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 456, 56);
@@ -828,16 +858,16 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait();
             fixture.detectChanges();
 
-            const columnsList = grid.columnList.toArray();
-            expect(columnsList[0].field).toEqual('ID');
-            expect(columnsList[7].field).toEqual('Fax');
+            const list = grid.columnList;
+            expect(list.get(0).field).toEqual('ID');
+            expect(list.get(2).field).toEqual('Fax');
         }));
 
         it('Should preserve cell selection after columns are reordered.', (async () => {
             let headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - select a cell from the 'ID' column
-            const cell = grid.getCellByColumn(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             cell.activate(null);
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
@@ -884,7 +914,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             let columnsList = grid.columnList.toArray();
 
             // step 1 - select a cell from the 'ID' column
-            const cell = grid.getCellByColumn(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             cell.activate(null);
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
@@ -905,7 +935,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - select a visible cell from the 'ID' column
-            const cell = grid.getCellByColumn(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
@@ -943,7 +973,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait(100);
             fixture.detectChanges();
 
-            const cell = grid.getCellByColumn(25, 'Phone');
+            const cell = grid.gridAPI.get_cell_by_index(25, 'Phone');
             const selectedData = [{ Phone: '40.32.21.21'}];
             UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -1853,7 +1883,7 @@ describe('IgxGrid - Column Moving #grid', () => {
         it('MCH - should not break selection and keyboard navigation when reordering columns.', (async () => {
 
             // step 1 - select a cell from 'ContactName' column
-            const cell = grid.getCellByColumn(0, 'ContactName');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 

@@ -1,10 +1,11 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxGridBaseDirective, IgxGridCellComponent } from '../grids/tree-grid/public_api';
+import { IgxTreeGridComponent, IgxGridBaseDirective } from '../grids/tree-grid/public_api';
 import { IGridDataBindable } from '../grids/common/grid.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { GridFunctions } from './grid-functions.spec';
 import { IgxRowDirective } from '../grids/row.directive';
+import { IgxGridCellComponent } from '../grids/cell.component';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
@@ -13,7 +14,7 @@ const DEBOUNCETIME = 30;
 export const TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
 export const TREE_ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
 export const TREE_CELL_SELECTION_CSS_CLASS = 'igx-grid__td--selected';
-export const TREE_HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
+export const TREE_HEADER_ROW_CSS_CLASS = '.igx-grid-thead';
 export const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 export const TREE_CELL_INDICATOR_CSS_CLASS = '.igx-grid__tree-grouping-indicator';
 export const TREE_CELL_LOADING_CSS_CLASS = '.igx-grid__tree-loading-indicator';
@@ -410,7 +411,7 @@ export class TreeGridFunctions {
                 if (selectedCell) {
                     expect(selectedCell.value).toEqual(cell.value);
                     expect(selectedCell.column.field).toEqual(cell.column.field);
-                    expect(selectedCell.rowIndex).toEqual(cell.rowIndex);
+                    expect(selectedCell.row.index).toEqual(cell.row.index);
                     expect(selectedCell.value).toEqual(cell.value);
                 }
             }
@@ -432,7 +433,7 @@ export class TreeGridFunctions {
     }
 
     public static moveCellUpDown(fix, treeGrid: IgxTreeGridComponent, rowIndex: number, columnName: string, moveDown: boolean = true) {
-        const cell = treeGrid.getCellByColumn(rowIndex, columnName);
+        const cell = treeGrid.gridAPI.get_cell_by_index(rowIndex, columnName);
         const newRowIndex = moveDown ? rowIndex + 1 : rowIndex - 1;
         const keyboardEventKey = moveDown ? 'ArrowDown' : 'ArrowUp';
         const gridContent = GridFunctions.getGridContent(fix);
@@ -442,13 +443,13 @@ export class TreeGridFunctions {
 
         TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
 
-        const newCell = treeGrid.getCellByColumn(newRowIndex, columnName);
+        const newCell = treeGrid.gridAPI.get_cell_by_index(newRowIndex, columnName);
         TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
     }
 
     public static moveCellLeftRight(fix, treeGrid: IgxTreeGridComponent, rowIndex: number,
         firstColumnName: string, nextColumnName: string, moveRight: boolean = true) {
-        const cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
+        const cell = treeGrid.gridAPI.get_cell_by_index(rowIndex, firstColumnName);
         const keyboardEventKey = moveRight ? 'ArrowRight' : 'ArrowLeft';
         const gridContent = GridFunctions.getGridContent(fix);
 
@@ -456,7 +457,7 @@ export class TreeGridFunctions {
         fix.detectChanges();
 
         TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
-        const newCell = treeGrid.getCellByColumn(rowIndex, nextColumnName);
+        const newCell = treeGrid.gridAPI.get_cell_by_index(rowIndex, nextColumnName);
         TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
     }
 

@@ -1,0 +1,40 @@
+<igx-paginator #paginator [totalRecords]='20'>
+    <igx-paginator-content>
+        <div id="numberPager" style="justify-content: center;">
+            <button [disabled]="paginator.isFirstPage" (click)="paginator.previousPage()" igxButton="flat">
+                PREV
+            </button>
+            <span>
+               Page {{paginator.page}} of {{paginator.totalPages}}
+            </span>
+            <button [disabled]="paginator.isLastPage" (click)="paginator.nextPage()" igxButton="flat">
+                NEXT
+            </button>
+        </div>
+    </igx-paginator-content>
+</igx-paginator>
+<div style="width: 100%; height: 100px;">
+</div>
+
+<igx-paginator #pag [totalRecords]='20'>
+    <igx-paginator-content>
+        <igx-page-size></igx-page-size>
+        <span style="margin: 0 20px 0 20px;">{{ (pag.page * pag.perPage) + 1}}-{{(pag.page * pag.perPage) + pag.perPage}} of {{ pag.totalRecords}}</span>
+        <button [disabled]="pag.isFirstPageDisabled" (click)="pag.paginate(0)" igxButton="icon" >
+            <igx-icon>first_page</igx-icon>
+        </button>
+        <button [disabled]="pag.isFirstPageDisabled" (click)="pag.previousPage()" igxButton="icon" >
+            <igx-icon>chevron_left</igx-icon>
+        </button>
+        <button [disabled]="pag.isLastPageDisabled" (click)="pag.nextPage()" igxButton="icon">
+            <igx-icon>chevron_right</igx-icon>
+        </button>
+        <button [disabled]="paginator.isLastPageDisabled" (click)="paginator.paginate(paginator.totalPages - 1)" igxButton="icon">
+            <igx-icon>last_page</igx-icon>
+        </button>
+    </igx-paginator-content>
+</igx-paginator>
+
+<div style="width: 100%; height: 100px;"></div>
+
+<igx-paginator [totalRecords]='totalRecords'></igx-paginator>

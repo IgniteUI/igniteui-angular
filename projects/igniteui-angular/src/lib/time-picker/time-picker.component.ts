@@ -53,7 +53,7 @@ import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directiv
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { IBaseEventArgs, isEqual, isDate, PlatformUtil } from '../core/utils';
+import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -737,11 +737,12 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this.subscribeToDateEditorEvents();
         this.subscribeToToggleDirectiveEvents();
 
+        this._defaultDropDownOverlaySettings.excludeFromOutsideClick = [this._inputGroup.element.nativeElement];
+
         fromEvent(this.inputDirective.nativeElement, 'blur')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => {
                 if (this.collapsed) {
-                    this._onTouchedCallback();
                     this.updateValidityOnBlur();
                 }
             });
@@ -1076,12 +1077,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     protected onStatusChanged() {
         if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
             (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            const input = this.inputDirective;
             if (this._inputGroup.isFocused) {
-                input.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
+        } else {
+            // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
+            this.inputDirective.valid = IgxInputState.INITIAL;
         }
 
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
@@ -1240,29 +1243,29 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 this.toggleRef.element.style.width = this._inputGroup.element.nativeElement.getBoundingClientRect().width + 'px';
             }
 
-            const args: IBaseEventArgs = {
-                owner: this
-            };
-
-            this.toggleRef.onOpening.pipe(takeUntil(this._destroy$)).subscribe((event) => {
-                this.opening.emit(event);
-                if (event.cancel) {
+            this.toggleRef.opening.pipe(takeUntil(this._destroy$)).subscribe((e) => {
+                const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: false };
+                this.opening.emit(args);
+                e.cancel = args.cancel;
+                if (args.cancel) {
                     return;
                 }
                 this.initializeContainer();
             });
 
-            this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
-                this.opened.emit(args);
+            this.toggleRef.opened.pipe(takeUntil(this._destroy$)).subscribe(() => {
+                this.opened.emit({ owner: this });
             });
 
-            this.toggleRef.onClosed.pipe(takeUntil(this._destroy$)).subscribe(() => {
-                this.closed.emit(args);
+            this.toggleRef.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
+                this.closed.emit({ owner: this });
             });
 
-            this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
-                this.closing.emit(event);
-                if (event.cancel) {
+            this.toggleRef.closing.pipe(takeUntil(this._destroy$)).subscribe((e) => {
+                const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: false };
+                this.closing.emit(args);
+                e.cancel = args.cancel;
+                if (args.cancel) {
                     return;
                 }
                 const value = this.parseToDate(this.value);
@@ -1271,7 +1274,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 }
                 // Do not focus the input if clicking outside in dropdown mode
                 const input = this.getEditElement();
-                if (input && !(event.event && this.isDropdown)) {
+                if (input && !(e.event && this.isDropdown)) {
                     input.focus();
                 } else {
                     this.updateValidityOnBlur();

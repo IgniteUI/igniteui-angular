@@ -51,7 +51,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 3, 10);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 10);
 
-                spyOn(treeGrid.rowAdded, 'emit');
                 const newRow = {
                     ID: 777,
                     Name: 'New Employee',
@@ -62,8 +61,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow);
                 fix.detectChanges();
 
-                const rowDataEventArgs = /* IRowDataEventArgs */ { data: newRow };
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith(rowDataEventArgs);
                 verifyRowsCount(fix, 4, 11);
                 verifyTreeGridRecordsCount(fix, 4, 11);
                 verifyProcessedTreeGridRecordsCount(fix, 4, 11);
@@ -74,8 +71,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 3, 10);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 10);
 
-                // Add child row on level 2
-                spyOn(treeGrid.rowAdded, 'emit');
                 let newRow = {
                     ID: 777,
                     Name: 'TEST NAME 1',
@@ -86,7 +81,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow, 847);
                 fix.detectChanges();
 
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith({ data: newRow });
                 verifyRowsCount(fix, 3, 11);
                 verifyTreeGridRecordsCount(fix, 3, 11);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 11);
@@ -102,7 +96,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow, 317);
                 fix.detectChanges();
 
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith({ data: newRow });
                 verifyRowsCount(fix, 3, 12);
                 verifyTreeGridRecordsCount(fix, 3, 12);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 12);
@@ -113,8 +106,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 3, 10);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 10);
 
-                // Try adding child row to a non-existing parent row
-                spyOn(treeGrid.rowAdded, 'emit');
                 const newRow = {
                     ID: 383,
                     Name: 'TEST NAME 1',
@@ -131,16 +122,12 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 }
                 expect(error).toMatch('Invalid parent row ID!');
 
-                // Verify treeGrid remains unchanged
-                expect(treeGrid.rowAdded.emit).not.toHaveBeenCalled();
                 verifyRowsCount(fix, 3, 10);
                 verifyTreeGridRecordsCount(fix, 3, 10);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 10);
             });
 
             it('should support adding child row to \'null\' collection through treeGrid API', () => {
-                // Add child row to a row that has a child collection set to 'null'
-                spyOn(treeGrid.rowAdded, 'emit');
                 const newRow = {
                     ID: 888,
                     Name: 'TEST Child',
@@ -151,15 +138,12 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow, 475);
                 fix.detectChanges();
 
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith({ data: newRow });
                 verifyRowsCount(fix, 3, 11);
                 verifyTreeGridRecordsCount(fix, 3, 11);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 11);
             });
 
             it('should support adding child row to \'undefined\' collection through treeGrid API', () => {
-                // Add child row to a row that has a child collection set to 'undefined'
-                spyOn(treeGrid.rowAdded, 'emit');
                 const newRow = {
                     ID: 888,
                     Name: 'TEST Child',
@@ -170,15 +154,12 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow, 957);
                 fix.detectChanges();
 
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith({ data: newRow });
                 verifyRowsCount(fix, 3, 11);
                 verifyTreeGridRecordsCount(fix, 3, 11);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 11);
             });
 
             it('should support adding child row to \'non-existing\' collection through treeGrid API', () => {
-                // Add child row to a row that has a child collection set to 'undefined'
-                spyOn(treeGrid.rowAdded, 'emit');
                 const newRow = {
                     ID: 888,
                     Name: 'TEST Child',
@@ -189,7 +170,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow, 711);
                 fix.detectChanges();
 
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith({ data: newRow });
                 verifyRowsCount(fix, 3, 11);
                 verifyTreeGridRecordsCount(fix, 3, 11);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 11);
@@ -212,7 +192,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
 
-                spyOn(treeGrid.rowAdded, 'emit');
                 const newRow = {
                     ID: 777,
                     ParentID: -1,
@@ -223,8 +202,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow);
                 fix.detectChanges();
 
-                const rowDataEventArgs = /* IRowDataEventArgs */ { data: newRow };
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith(rowDataEventArgs);
                 verifyRowsCount(fix, 9, 9);
                 verifyTreeGridRecordsCount(fix, 4, 9);
                 verifyProcessedTreeGridRecordsCount(fix, 4, 9);
@@ -235,8 +212,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
 
-                // Add child row on level 1
-                spyOn(treeGrid.rowAdded, 'emit');
                 let newRow = {
                     ID: 777,
                     ParentID: 1,
@@ -247,7 +222,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow, 1);
                 fix.detectChanges();
 
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith({ data: newRow });
                 verifyRowsCount(fix, 9, 9);
                 verifyTreeGridRecordsCount(fix, 3, 9);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 9);
@@ -263,7 +237,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow, 4);
                 fix.detectChanges();
 
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith({ data: newRow });
                 verifyRowsCount(fix, 10, 10);
                 verifyTreeGridRecordsCount(fix, 3, 10);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 10);
@@ -274,8 +247,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
 
-                // Try adding child row to a non-existing parent row
-                spyOn(treeGrid.rowAdded, 'emit');
                 let error = '';
                 const newRow = {
                     ID: 777,
@@ -292,8 +263,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 }
                 expect(error).toMatch('Invalid parent row ID!');
 
-                // Verify treeGrid remains unchanged
-                expect(treeGrid.rowAdded.emit).not.toHaveBeenCalled();
                 verifyRowsCount(fix, 8, 8);
                 verifyTreeGridRecordsCount(fix, 3, 8);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
@@ -304,8 +273,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
 
-                // Add child row with ID=0 on root level
-                spyOn(treeGrid.rowAdded, 'emit');
                 let newRow = {
                     ID: 0,
                     Name: 'New Employee 1',
@@ -315,7 +282,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow);
                 fix.detectChanges();
 
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith({ data: newRow });
                 verifyRowsCount(fix, 9, 9);
                 verifyTreeGridRecordsCount(fix, 4, 9);
                 verifyProcessedTreeGridRecordsCount(fix, 4, 9);
@@ -330,7 +296,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.addRow(newRow, 0);
                 fix.detectChanges();
 
-                expect(treeGrid.rowAdded.emit).toHaveBeenCalledWith({ data: newRow });
                 verifyRowsCount(fix, 10, 10);
                 verifyTreeGridRecordsCount(fix, 4, 10);
                 verifyProcessedTreeGridRecordsCount(fix, 4, 10);
@@ -349,14 +314,9 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             }));
 
             it('should support updating a root row through the treeGrid API', fakeAsync(() => {
-                spyOn(treeGrid.rowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 0, 'Name', 'John Winchester');
                 verifyRowsCount(fix, 3, 10);
 
-                // Update row on level 1
-                const oldRow = Object.assign({}, treeGrid.getRowByKey(147).data);
                 const newRow = {
                     ID: 999,
                     Name: 'New Name',
@@ -368,32 +328,13 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
                 tick(16);
 
-                (treeGrid as IgxTreeGridComponent).rowEdit.pipe(first()).subscribe(e => {
-                    expect(e).toEqual(oldRow);
-                    expect(e.rowData).toBe(treeGrid.data.find(x => x.ID === newRow.ID));
-                    expect(e.rowData).toBe(e.oldValue);
-                });
-
-                expect(treeGrid.rowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
-
-                const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData).toBe(treeGrid.data.find(e => e.ID === newRow.ID));
-                expect(spyDoneArgs.newValue).toEqual(newRow);
-                expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 4);
             }));
 
             it('should support updating a child row through the treeGrid API', () => {
-                spyOn(treeGrid.rowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 6, 'Name', 'Peter Lewis');
                 verifyRowsCount(fix, 3, 10);
-
-                // Update row on level 3
-                const oldRow = Object.assign({}, treeGrid.getRowByKey(299).data);
                 const newRow = {
                     ID: 888,
                     Name: 'New Name',
@@ -404,33 +345,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.updateRow(newRow, 299);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).rowEdit.pipe(first()).subscribe(e => {
-                    expect(e).toEqual(oldRow);
-                    expect(e.rowData).toBe(treeGrid.data.find(x => x.ID === newRow.ID));
-                    expect(e.rowData).toBe(e.oldValue);
-                });
-
-                expect(treeGrid.rowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
-
-                const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData).toBe(treeGrid.data[0].Employees[2].Employees[2]);
-                expect(spyDoneArgs.newValue).toEqual(newRow);
-                expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
-
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
             });
 
             it('should support updating a child row through the rowObject API', () => {
-                spyOn(treeGrid.rowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 6, 'Name', 'Peter Lewis');
                 verifyRowsCount(fix, 3, 10);
 
-                // Update row on level 3
-                const oldRow = Object.assign({}, treeGrid.getRowByKey(299).data);
                 const newRow = {
                     ID: 888,
                     Name: 'New Name',
@@ -440,20 +362,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 };
                 treeGrid.getRowByKey(299).update(newRow);
                 fix.detectChanges();
-
-                (treeGrid as IgxTreeGridComponent).rowEdit.pipe(first()).subscribe(e => {
-                    expect(e).toEqual(oldRow);
-                    expect(e.rowData).toBe(treeGrid.data.find(x => x.ID === newRow.ID));
-                    expect(e.rowData).toBe(e.oldValue);
-                });
-
-                expect(treeGrid.rowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
-
-                const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData).toBe(treeGrid.data[0].Employees[2].Employees[2]);
-                expect(spyDoneArgs.newValue).toEqual(newRow);
-                expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
@@ -466,30 +374,13 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
-                spyOn(treeGrid.cellEdit, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 6, 'Age', '25');
                 verifyRowsCount(fix, 3, 10);
 
-                const cellComponent = treeGrid.getCellByKey(299, 'Age');
-                // Update cell on level 3
-                const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
                 const newCellValue = 18;
                 treeGrid.updateCell(newCellValue, 299, 'Age');
                 fix.detectChanges();
 
-                // TODO: cellEdit should emit updated rowData - issue #7304
-                expect(treeGrid.cellEdit.emit).toHaveBeenCalledWith({
-                    rowID: cellComponent.cellID.rowID,
-                    cellID: cellComponent.cellID,
-                    rowData: cellComponent.rowData,
-                    oldValue: oldCellValue,
-                    newValue: newCellValue,
-                    cancel: false,
-                    column: cellComponent.column,
-                    owner: treeGrid,
-                    event: undefined
-                });
                 verifyCellValue(fix, 6, 'Age', '18');
                 verifyRowsCount(fix, 3, 10);
             });
@@ -501,31 +392,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
-                spyOn(treeGrid.cellEdit, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 6, 'Age', '25');
                 verifyRowsCount(fix, 3, 10);
 
-                const cellComponent = treeGrid.getCellByKey(299, 'Age');
-
-                // Update cell on level 3
-                const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
                 const newCellValue = 18;
                 treeGrid.getCellByKey(299, 'Age').update(newCellValue);
                 fix.detectChanges();
 
-                // TODO: cellEdit should emit updated rowData - issue #7304
-                expect(treeGrid.cellEdit.emit).toHaveBeenCalledWith({
-                    rowID: cellComponent.cellID.rowID,
-                    cellID: cellComponent.cellID,
-                    rowData: cellComponent.rowData,
-                    oldValue: oldCellValue,
-                    newValue: newCellValue,
-                    cancel: false,
-                    column: cellComponent.column,
-                    owner: treeGrid,
-                    event: undefined
-                });
                 verifyCellValue(fix, 6, 'Age', '18');
                 verifyRowsCount(fix, 3, 10);
             });
@@ -541,9 +415,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             }));
 
             it('should support updating a root row through the treeGrid API', () => {
-                spyOn(treeGrid.rowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 0, 'Name', 'Casey Houston');
                 verifyRowsCount(fix, 8, 8);
                 verifyTreeGridRecordsCount(fix, 3, 8);
@@ -560,36 +431,17 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.updateRow(newRow, 1);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).rowEdit.pipe(first()).subscribe(e => {
-                    expect(e).toEqual(oldRow);
-                    expect(e.rowData).toBe(treeGrid.data.find(x => x.ID === newRow.ID));
-                    expect(e.rowData).toBe(e.oldValue);
-                });
-
-                expect(treeGrid.rowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
-
-                const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData).toBe(treeGrid.data.find(e => e.ID === newRow.ID));
-                expect(spyDoneArgs.newValue).toEqual(newRow);
-                expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
-
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
                 verifyTreeGridRecordsCount(fix, 3, 8);
             });
 
             it('should support updating a root row by changing its ID (its children should become root rows)', () => {
-                spyOn(treeGrid.rowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 0, 'Name', 'Casey Houston');
                 verifyRowsCount(fix, 8, 8);
                 verifyTreeGridRecordsCount(fix, 3, 8);
                 TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 1, 1); // Second visible row is on level 2 (childrow)
 
-                // Update row on level 1
-                const oldRow = Object.assign({}, treeGrid.getRowByKey(1).data);
                 const newRow = {
                     ID: 999, // Original ID is 1 and the new one is 999, which will transform its child rows into root rows.
                     ParentID: -1,
@@ -600,20 +452,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.updateRow(newRow, 1);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).rowEdit.pipe(first()).subscribe(e => {
-                    expect(e).toEqual(oldRow);
-                    expect(e.rowData).toBe(treeGrid.data.find(x => x.ID === newRow.ID));
-                    expect(e.rowData).toBe(e.oldValue);
-                });
-
-                expect(treeGrid.rowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
-
-                const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData).toBe(treeGrid.data.find(e => e.ID === newRow.ID));
-                expect(spyDoneArgs.newValue).toEqual(newRow);
-                expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
-
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
                 verifyTreeGridRecordsCount(fix, 5, 8); // Root records increment count with 2
@@ -621,14 +459,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             });
 
             it('should support updating a child row through the treeGrid API', () => {
-                spyOn(treeGrid.rowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
-
-                // Update row on level 3
-                const oldRow = Object.assign({}, treeGrid.getRowByKey(7).data);
                 const newRow = {
                     ID: 888,
                     ParentID: 2,
@@ -639,33 +471,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.updateRow(newRow, 7);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).rowEdit.pipe(first()).subscribe(e => {
-                    expect(e).toEqual(oldRow);
-                    expect(e.rowData).toBe(treeGrid.data.find(x => x.ID === newRow.ID));
-                    expect(e.rowData).toBe(e.oldValue);
-                });
-
-                expect(treeGrid.rowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
-
-                const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData).toBe(treeGrid.data.find(e => e.ID === newRow.ID));
-                expect(spyDoneArgs.newValue).toEqual(newRow);
-                expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
-
                 verifyCellValue(fix, 3, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
             });
 
             it('should support updating a child row through the rowObject API', () => {
-                spyOn(treeGrid.rowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
 
-                // Update row on level 3
-                const oldRow = Object.assign({}, treeGrid.getRowByKey(7).data);
                 const newRow = {
                     ID: 888,
                     ParentID: 2,
@@ -676,35 +489,16 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.getRowByKey(7).update(newRow);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).rowEdit.pipe(first()).subscribe(e => {
-                    expect(e).toEqual(oldRow);
-                    expect(e.rowData).toBe(treeGrid.data.find(x => x.ID === newRow.ID));
-                    expect(e.rowData).toBe(e.oldValue);
-                });
-
-                expect(treeGrid.rowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
-
-                const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData).toBe(treeGrid.data.find(e => e.ID === newRow.ID));
-                expect(spyDoneArgs.newValue).toEqual(newRow);
-                expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
-
                 verifyCellValue(fix, 3, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
             });
 
             it('should support updating a child row by changing its original parentID', () => {
-                spyOn(treeGrid.rowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyCellValue(fix, 5, 'Name', 'Erma Walsh');
                 verifyRowsCount(fix, 8, 8);
-                verifyTreeGridRecordsCount(fix, 3, 8);
 
-                // Update row on level 3
-                const oldRow = Object.assign({}, treeGrid.getRowByKey(7).data);
+                verifyTreeGridRecordsCount(fix, 3, 8);
                 const newRow = {
                     ID: 888,
                     ParentID: -1, // Original ID is 2 and the new one is -1, which will make the row a root row.
@@ -714,20 +508,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 };
                 treeGrid.getRowByKey(7).update(newRow);
                 fix.detectChanges();
-
-                (treeGrid as IgxTreeGridComponent).rowEdit.pipe(first()).subscribe(e => {
-                    expect(e).toEqual(oldRow);
-                    expect(e.rowData).toBe(treeGrid.data.find(x => x.ID === newRow.ID));
-                    expect(e.rowData).toBe(e.oldValue);
-                });
-
-                expect(treeGrid.rowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
-
-                const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData).toBe(treeGrid.data.find(e => e.ID === newRow.ID));
-                expect(spyDoneArgs.newValue).toEqual(newRow);
-                expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
                 verifyCellValue(fix, 3, 'Name', 'Jack Simon');
                 verifyCellValue(fix, 5, 'Name', 'New Name');
@@ -742,31 +522,13 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
-                spyOn(treeGrid.cellEdit, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
 
-                const cellComponent = treeGrid.getCellByKey(7, 'Name');
-
-                // Update cell on level 3
-                const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
                 const newCellValue = 'Michael Myers';
                 treeGrid.updateCell(newCellValue, 7, 'Name');
                 fix.detectChanges();
 
-                // TODO: cellEdit should emit updated rowData - issue #7304
-                expect(treeGrid.cellEdit.emit).toHaveBeenCalledWith({
-                    rowID: cellComponent.cellID.rowID,
-                    cellID: cellComponent.cellID,
-                    rowData: cellComponent.rowData,
-                    oldValue: oldCellValue,
-                    newValue: newCellValue,
-                    cancel: false,
-                    column: cellComponent.column,
-                    owner: treeGrid,
-                    event: undefined
-                });
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
             });
@@ -778,32 +540,13 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
-                spyOn(treeGrid.cellEdit, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
-
-                const cellComponent = treeGrid.getCellByKey(7, 'Name');
-
-                // Update cell on level 3
-                const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
                 const newCellValue = 'Michael Myers';
-                // treeGrid.updateCell(newCellValue, 7, 'Name');
+
                 treeGrid.getCellByKey(7, 'Name').update(newCellValue);
                 fix.detectChanges();
 
-                // TODO: cellEdit should emit updated rowData - issue #7304
-                expect(treeGrid.cellEdit.emit).toHaveBeenCalledWith({
-                    rowID: cellComponent.cellID.rowID,
-                    cellID: cellComponent.cellID,
-                    rowData: cellComponent.rowData,
-                    oldValue: oldCellValue,
-                    newValue: newCellValue,
-                    cancel: false,
-                    column: cellComponent.column,
-                    owner: treeGrid,
-                    event: undefined
-                });
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
             });
@@ -827,7 +570,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             it('should be able to enter edit mode of a tree-grid column on dblclick, enter and F2', () => {
                 const cell = treeGrid.getCellByColumn(0, 'ID');
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
@@ -856,7 +599,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', () => {
                 const cell = treeGrid.getCellByColumn(0, 'Name');
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'Name'));
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
@@ -885,7 +628,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cell = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -908,7 +651,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cell = treeGrid.getCellByColumn(0, 'Name');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'Name'));
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -933,7 +676,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     expect(args.newValue).toBe(146);
                 });
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cellComponent);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
                 fix.detectChanges();
 
                 expect(cellComponent.editMode).toBe(true);
@@ -968,7 +711,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             it('should be able to enter edit mode of a tree-grid column on dblclick, enter and F2', () => {
                 const cell = treeGrid.getCellByColumn(0, 'ID');
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
@@ -996,7 +739,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', () => {
                 const cell = treeGrid.getCellByColumn(0, 'Name');
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'Name'));
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
@@ -1025,7 +768,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cell = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -1046,7 +789,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cell = treeGrid.getCellByColumn(0, 'Name');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'Name'));
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -1071,7 +814,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     expect(args.newValue).toBe(146);
                 });
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cellComponent);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
                 fix.detectChanges();
 
                 expect(cellComponent.editMode).toBe(true);
@@ -1086,6 +829,21 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(cellComponent.value).toBe(146);
                 editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeNull();
+            });
+
+            it('should allow changing the row edit mode runtime.', () => {
+                const cell = treeGrid.getCellByColumn(0, 'Name');
+                cell.column.editable = true;
+                treeGrid.rowEditable = true;
+                fix.detectChanges();
+                cell.editMode = true;
+                fix.detectChanges();
+                expect(cell.row.inEditMode).toBeTrue();
+                treeGrid.rowEditable = false;
+                fix.detectChanges();
+                cell.editValue = true;
+                fix.detectChanges();
+                expect(cell.row.inEditMode).toBeFalse();
             });
         });
 
@@ -1173,29 +931,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 3, 6);
             });
 
-            it('should emit an event when deleting row by ID', () => {
-                spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
-
-                const row = treeGrid.data[0];
-                const someRow = treeGrid.getRowByIndex(0);
-                treeGrid.deleteRow(someRow.key);
-                fix.detectChanges();
-
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledWith({ data: row });
-            });
-
-            it('should emit an event when deleting row through the row object', () => {
-                spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
-
-                const row = treeGrid.data[0];
-                const someRow = treeGrid.getRowByIndex(0);
-                someRow.delete();
-                fix.detectChanges();
-
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledWith({ data: row });
-            });
         });
 
         describe('Primary/Foreign key', () => {
@@ -1278,30 +1013,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyRowsCount(fix, 7, 7);
                 verifyTreeGridRecordsCount(fix, 5, 7);
                 verifyProcessedTreeGridRecordsCount(fix, 5, 7);
-            });
-
-            it('should emit an event when deleting row by ID', () => {
-                spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
-
-                const row = treeGrid.data[0];
-                const someRow = treeGrid.getRowByIndex(0);
-                treeGrid.deleteRow(someRow.key);
-                fix.detectChanges();
-
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledWith({ data: row });
-            });
-
-            it('should emit an event when deleting row through the row object', () => {
-                spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
-
-                const row = treeGrid.data[0];
-                const someRow = treeGrid.getRowByIndex(0);
-                someRow.delete();
-                fix.detectChanges();
-
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
 
             it('should delete child rows of a parent row when the "cascadeOnDelete" is set (delete by ID)', () => {

@@ -32,8 +32,12 @@
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
 </igx-input-group>
-<div igxToggle class="igx-drop-down__list" (mousedown)="mousedownHandler($event);" (onOpening)="handleOpening($event)"
-    (onOpened)="handleOpened()" (onClosing)="handleClosing($event)" (onClosed)="handleClosed()">
+<div igxToggle class="igx-drop-down__list" (mousedown)="mousedownHandler($event);"
+    (appended)="onToggleContentAppended($event)"
+    (opening)="handleOpening($event)"
+    (opened)="handleOpened()"
+    (closing)="handleClosing($event)"
+    (closed)="handleClosed()">
 
     <div *ngIf="headerTemplate" class="igx-drop-down__select-header">
         <ng-content *ngTemplateOutlet="headerTemplate"></ng-content>

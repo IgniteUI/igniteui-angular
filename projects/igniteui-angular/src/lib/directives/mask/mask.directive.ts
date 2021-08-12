@@ -5,7 +5,6 @@ import {
     Input, NgModule, OnInit, AfterViewChecked,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { MaskParsingService, MaskOptions } from './mask-parsing.service';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { noop } from 'rxjs';
@@ -23,7 +22,19 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * ```
      */
     @Input('igxMask')
-    public mask: string;
+    public get mask(): string {
+        return this._mask || this.defaultMask;
+    }
+
+    public set mask(val: string) {
+        // B.P. 9th June 2021 #7490
+        if (val !== this._mask) {
+            const cleanInputValue = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
+            this.setPlaceholder(val);
+            this._mask = val;
+            this.updateInputValue(cleanInputValue);
+        }
+    }
 
     /**
      * Sets the character representing a fillable spot in the input mask.
@@ -43,21 +54,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      */
     @Input()
     public includeLiterals: boolean;
-
-    /**
-     * Specifies a placeholder.
-     * ```html
-     * <input placeholder = "enter text...">
-     * ```
-     */
-    @DeprecateProperty('"placeholder" is deprecated, use native placeholder instead.')
-    public set placeholder(val: string) {
-        this.renderer.setAttribute(this.nativeElement, 'placeholder', val);
-    }
-
-    public get placeholder(): string {
-        return this.nativeElement.placeholder;
-    }
 
     /**
      * Specifies a pipe to be used on blur.
@@ -81,11 +77,11 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * Emits an event each time the value changes.
      * Provides `rawValue: string` and `formattedValue: string` as event arguments.
      * ```html
-     * <input (onValueChange) = "onValueChange(rawValue: string, formattedValue: string)">
+     * <input (valueChanged) = "valueChanged(rawValue: string, formattedValue: string)">
      * ```
      */
     @Output()
-    public onValueChange = new EventEmitter<IMaskEventArgs>();
+    public valueChanged = new EventEmitter<IMaskEventArgs>();
 
     /** @hidden */
     public get nativeElement(): HTMLInputElement {
@@ -98,13 +94,13 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     /** @hidden @internal */
-    protected set inputValue(val) {
+    protected set inputValue(val: string) {
         this.nativeElement.value = val;
     }
 
     /** @hidden */
     protected get maskOptions(): MaskOptions {
-        const format = this.mask || 'CCCCCCCCCC';
+        const format = this.mask || this.defaultMask;
         const promptChar = this.promptChar && this.promptChar.substring(0, 1);
         return { format, promptChar };
     }
@@ -132,15 +128,21 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         return this._end;
     }
 
+    protected _composing: boolean;
+    protected _compositionStartIndex: number;
+    private _compositionValue: string;
     private _end = 0;
     private _start = 0;
     private _key: string;
+    private _mask: string;
     private _oldText = '';
     private _dataValue = '';
     private _focused = false;
     private _droppedData: string;
     private _hasDropAction: boolean;
     private _stopPropagation: boolean;
+
+    private readonly defaultMask = 'CCCCCCCCCC';
 
     private _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
@@ -173,8 +175,28 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     /** @hidden @internal */
-    @HostListener('input', ['$event.isComposing'])
-    public onInputChanged(isComposing: boolean): void {
+    @HostListener('compositionstart')
+    public onCompositionStart(): void {
+        if (!this._composing) {
+            this._compositionStartIndex = this._start;
+            this._composing = true;
+        }
+    }
+
+    /** @hidden @internal */
+    @HostListener('compositionend')
+    public onCompositionEnd(): void {
+        this._start = this._compositionStartIndex;
+        const end = this.selectionEnd;
+        const valueToParse = this.inputValue.substring(this._start, end);
+        this.updateInput(valueToParse);
+        this._end = this.selectionEnd;
+        this._compositionValue = this.inputValue;
+    }
+
+    /** @hidden @internal */
+    @HostListener('input', ['$event'])
+    public onInputChanged(event): void {
         /**
          * '!this._focused' is a fix for #8165
          * On page load IE triggers input events before focus events and
@@ -183,6 +205,39 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
          * the end user will be unable to blur the input.
          * https://stackoverflow.com/questions/21406138/input-event-triggered-on-internet-explorer-when-placeholder-changed
          */
+
+        if (this._composing) {
+            if (this.inputValue.length < this._oldText.length) {
+                // software keyboard input delete
+                this._key = this.platform.KEYMAP.BACKSPACE;
+            }
+            return;
+        }
+
+        // After the compositionend event Chromium triggers input events of type 'deleteContentBackward' and
+        // we need to adjust the start and end indexes to include mask literals
+        if (event.inputType === 'deleteContentBackward' && this._key !== this.platform.KEYMAP.BACKSPACE) {
+                const isInputComplete = this._compositionStartIndex === 0 && this._end === this.mask.length;
+                let numberOfMaskLiterals = 0;
+                const literalPos = this.maskParser.getMaskLiterals(this.maskOptions.format).keys();
+                for (const index of literalPos) {
+                    if (index >= this._compositionStartIndex && index <= this._end) {
+                        numberOfMaskLiterals++;
+                    }
+                }
+                this.inputValue = isInputComplete?
+                this.inputValue.substring(0, this.selectionEnd - numberOfMaskLiterals) + this.inputValue.substring(this.selectionEnd)
+                : this._compositionValue.substring(0, this._compositionStartIndex);
+
+                this._start = this.selectionStart;
+                this._end = this.selectionEnd;
+                this.nativeElement.selectionStart = isInputComplete ? this._start - numberOfMaskLiterals : this._compositionStartIndex;
+                this.nativeElement.selectionEnd = this._end - numberOfMaskLiterals;
+                this.nativeElement.selectionEnd = this._end;
+                this._start = this.selectionStart;
+                this._end = this.selectionEnd;
+        }
+
         if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
             this._stopPropagation = false;
             return;
@@ -190,10 +245,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
         if (this._hasDropAction) {
             this._start = this.selectionStart;
-        }
-        if (this.inputValue.length < this._oldText.length && isComposing) {
-            // software keyboard input delete
-            this._key = this.platform.KEYMAP.BACKSPACE;
         }
 
         let valueToParse = '';
@@ -209,20 +260,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                 break;
         }
 
-        const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
-        this.inputValue = replacedData.value;
-        if (this._key === this.platform.KEYMAP.BACKSPACE) {
-            replacedData.end = this._start;
-        }
-        this.setSelectionRange(replacedData.end);
-
-        const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
-        this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
-        this._onChangeCallback(this._dataValue);
-
-        this.onValueChange.emit({ rawValue: rawVal, formattedValue: this.inputValue });
-
-        this.afterInput();
+        this.updateInput(valueToParse);
     }
 
     /** @hidden */
@@ -239,7 +277,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             return;
         }
         this._focused = true;
-        this.showMask(this._dataValue);
+        this.showMask(this.inputValue);
     }
 
     /** @hidden */
@@ -275,9 +313,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     /** @hidden */
     public ngOnInit(): void {
-        if (!this.nativeElement.placeholder) {
-            this.renderer.setAttribute(this.nativeElement, 'placeholder', this.maskOptions.format);
-        }
+        this.setPlaceholder(this.maskOptions.format);
     }
 
     /**
@@ -286,6 +322,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * @hidden
      */
     public ngAfterViewChecked(): void {
+        if (this._composing) {
+            return;
+        }
         this._oldText = this.inputValue;
     }
 
@@ -302,7 +341,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
         this._dataValue = this.includeLiterals ? this.inputValue : value;
 
-        this.onValueChange.emit({ rawValue: value, formattedValue: this.inputValue });
+        this.valueChanged.emit({ rawValue: value, formattedValue: this.inputValue });
     }
 
     /** @hidden */
@@ -316,7 +355,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     /** @hidden */
-    protected showMask(value: string) {
+    protected showMask(value: string): void {
         if (this.focusedValuePipe) {
             if (this.platform.isIE) {
                 this._stopPropagation = true;
@@ -324,7 +363,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             // TODO(D.P.): focusedValuePipe should be deprecated or force-checked to match mask format
             this.inputValue = this.focusedValuePipe.transform(value);
         } else {
-            this.inputValue = this.maskParser.applyMask(this.inputValue, this.maskOptions);
+            this.inputValue = this.maskParser.applyMask(value, this.maskOptions);
         }
 
         this._oldText = this.inputValue;
@@ -336,12 +375,46 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     /** @hidden */
-    protected afterInput() {
+    protected afterInput(): void {
         this._oldText = this.inputValue;
         this._hasDropAction = false;
         this._start = 0;
         this._end = 0;
         this._key = null;
+        this._composing = false;
+    }
+
+    /** @hidden */
+    protected setPlaceholder(value: string): void {
+        const placeholder = this.nativeElement.placeholder;
+        if (!placeholder || placeholder === this.mask) {
+            this.renderer.setAttribute(this.nativeElement, 'placeholder', value || this.defaultMask);
+        }
+    }
+
+    private updateInputValue(value: string) {
+        if (this._focused) {
+            this.showMask(value);
+        } else if (!this.displayValuePipe) {
+            this.inputValue = this.inputValue ? this.maskParser.applyMask(value, this.maskOptions) : '';
+        }
+    }
+
+    private updateInput(valueToParse: string) {
+        const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
+        this.inputValue = replacedData.value;
+        if (this._key === this.platform.KEYMAP.BACKSPACE) {
+            replacedData.end = this._start;
+        };
+
+        this.setSelectionRange(replacedData.end);
+
+        const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
+        this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
+        this._onChangeCallback(this._dataValue);
+
+        this.valueChanged.emit({ rawValue: rawVal, formattedValue: this.inputValue });
+        this.afterInput();
     }
 
     private showDisplayValue(value: string) {

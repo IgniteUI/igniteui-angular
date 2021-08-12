@@ -25,10 +25,12 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { ISearchInfo } from './grid/public_api';
 import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
+import { ISearchInfo } from './common/events';
+import { CellType } from './common/cell.interface';
+import { IgxGridCell } from './grid-public-cell';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -87,7 +89,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @Input()
     public get row(): RowType {
-        return this.grid.createRow(this.intRow.index, this.intRow.rowData);
+        return this.grid.createRow(this.intRow.index);
     }
 
     /**
@@ -163,10 +165,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     public get context(): any {
-        return {
+        const ctx = {
             $implicit: this.value,
-            cell: this
+            additionalTemplateContext: this.column.additionalTemplateContext,
         };
+        /* Turns the `cell` property from the template context object into lazy-evaluated one.
+         * Otherwise on each detection cycle the cell template is recreating N cell instances where
+         * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
+         */
+        Object.defineProperty(ctx, 'cell', {
+            get: () => this.getCellType(true)
+        });
+        return ctx;
     }
 
     /**
@@ -192,9 +202,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Gets the cell template.
+     * Gets the pinned indicator template.
      * ```typescript
-     * let template = this.cell.template;
+     * let template = this.cell.pinnedIndicatorTemplate;
      * ```
      *
      * @memberof IgxGridCellComponent
@@ -256,7 +266,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Gets the visible `index` of the in which the cell is stored.
+     * Returns the column visible index.
      * ```typescript
      * let visibleColumnIndex = this.cell.visibleColumnIndex;
      * ```
@@ -410,7 +420,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public get gridColumnSpan(): number {
         return this.column.gridColumnSpan;
     }
-
 
     public get rowEnd(): number {
         return this.column.rowEnd;
@@ -672,15 +681,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             // prevent double-tap to zoom on iOS
             (event as HammerInput).preventDefault();
         }
-        if (this.grid.rowEditable && this.intRow.addRow) {
-            this.grid.crudService.enterEditMode(this, event as Event);
-        }
         if (this.editable && !this.editMode && !this.intRow.deleted && !this.grid.crudService.rowEditingBlocked) {
             this.grid.crudService.enterEditMode(this, event as Event);
         }
 
         this.grid.doubleClick.emit({
-            cell: this,
+            cell: this.getCellType(),
             event
         });
     };
@@ -692,7 +698,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
         this.grid.cellClick.emit({
-            cell: this,
+            cell: this.getCellType(),
             event
         });
     }
@@ -704,7 +710,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostListener('contextmenu', ['$event'])
     public onContextMenu(event: MouseEvent) {
         this.grid.contextMenu.emit({
-            cell: this,
+            cell: this.getCellType(),
             event
         });
     }
@@ -775,10 +781,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         if (this.editable && value) {
-            this.gridAPI.submit_value();
+            if (this.grid.crudService.cellInEditMode) {
+                this.gridAPI.update_cell(this.grid.crudService.cell);
+                this.grid.crudService.endCellEdit();
+            }
             this.grid.crudService.enterEditMode(this);
         } else {
-            this.grid.crudService.exitCellEdit();
+            this.grid.crudService.endCellEdit();
         }
         this.grid.notifyChanges();
     }
@@ -796,14 +805,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.intRow.deleted) {
             return;
         }
-        const cell = this.grid.crudService.createCell(this);
-        const args = this.gridAPI.update_cell(cell, val);
-        if (this.grid.crudService.cell && this.grid.crudService.sameCell(cell)) {
-            if (args.cancel) {
-                return;
-            }
-            this.grid.crudService.exitCellEdit();
+
+        let cell = this.grid.crudService.cell;
+        if (!cell) {
+            cell = this.grid.crudService.createCell(this);
         }
+        cell.editValue = val;
+        this.gridAPI.update_cell(cell);
+        this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
     }
 
@@ -825,9 +834,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.primaryButton = false;
             // Ensure RMB Click on edited cell does not end cell editing
             if (!this.selected) {
-                this.gridAPI.submit_value(event);
+                this.grid.crudService.updateCell(true, event);
             }
             return;
+        }
+        if (this.platformUtil.isFirefox) {
+            event.preventDefault();
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
         this.activate(event);
@@ -892,7 +904,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         } else {
             this.selectionService.activeElement = null;
             if (this.grid.crudService.cellInEditMode && !this.editMode) {
-                this.gridAPI.submit_value(event);
+                this.grid.crudService.updateCell(true, event);
             }
         }
 
@@ -904,7 +916,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
         }
         if (this.grid.isCellSelectable && shouldEmitSelection) {
-            this.grid.selected.emit({ cell: this, event });
+            this.grid.selected.emit({ cell: this.getCellType(), event });
         }
     }
 
@@ -939,8 +951,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public calculateSizeToFit(range: any): number {
-        return Math.max(...Array.from(this.nativeElement.children)
-            .map((child: HTMLElement) => this.platformUtil.getNodeSizeViaRange(range, child)));
+        return this.platformUtil.getNodeSizeViaRange(range, this.nativeElement);
     }
 
     /**
@@ -962,6 +973,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
+        let editableArgs;
         const crud = this.grid.crudService;
         const editableCell = this.grid.crudService.cell;
         const editMode = !!(crud.row || crud.cell);
@@ -969,10 +981,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.editable && editMode && !this.intRow.deleted) {
             if (editableCell) {
                 if (this.intRow.addRow) {
-                    this.gridAPI.update_add_cell(editableCell, editableCell.editValue, event);
-                    this.intRow.rowData = editableCell.rowData;
+                    editableArgs = this.grid.crudService.updateAddCell(false, event);
                 } else {
-                    this.gridAPI.update_cell(editableCell, editableCell.editValue, event);
+                    editableArgs = this.grid.crudService.updateCell(false, event);
                 }
                 /* This check is related with the following issue #6517:
                  * when edit cell that belongs to a column which is sorted and press tab,
@@ -985,7 +996,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.cdr.detectChanges();
                 }
 
-                if (this.grid.crudService.cellEditingBlocked) {
+                if (editableArgs && editableArgs.cancel) {
                     return true;
                 }
 
@@ -999,10 +1010,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (editableCell && crud.sameRow(this.cellID.rowID)) {
             if (this.intRow.addRow) {
-                this.gridAPI.submit_add_value(event);
-                this.intRow.rowData = editableCell.rowData;
+                const args = this.grid.crudService.updateAddCell(false, event);
+                if (args.cancel) {
+                    this.grid.crudService.endAddRow();
+                } else {
+                    this.grid.crudService.exitCellEdit(event);
+                }
             } else {
-                this.gridAPI.submit_value(event);
+                this.grid.crudService.updateCell(true, event);
             }
         } else if (editMode && !crud.sameRow(this.cellID.rowID)) {
             this.grid.crudService.endEdit(true, event);
@@ -1023,5 +1038,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
+    }
+
+    private getCellType(useRow?: boolean): CellType {
+        const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.rowData) : this.intRow.index;
+        return new IgxGridCell(this.grid, rowID, this.column.field);
     }
 }

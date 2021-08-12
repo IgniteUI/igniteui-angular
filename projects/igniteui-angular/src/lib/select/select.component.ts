@@ -27,19 +27,21 @@ import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs, PlatformUtil } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
 import { OverlaySettings } from '../services/overlay/utilities';
+import { IgxOverlayService } from '../services/public_api';
 import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
 /** @hidden @internal */
 @Directive({
@@ -128,7 +130,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @Input()
-    overlaySettings: OverlaySettings;
+    public overlaySettings: OverlaySettings;
 
     /** @hidden @internal */
     @HostBinding('style.maxHeight')
@@ -138,41 +140,41 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * Emitted before the dropdown is opened
      *
      * ```html
-     * <igx-select onOpening='handleOpening($event)'></igx-select>
+     * <igx-select opening='handleOpening($event)'></igx-select>
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<IBaseCancelableEventArgs>();
+    public opening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
      *
      * ```html
-     * <igx-select (onOpened)='handleOpened()'></igx-select>
+     * <igx-select (opened)='handleOpened($event)'></igx-select>
      * ```
      */
     @Output()
-    public onOpened = new EventEmitter<void>();
+    public opened = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted before the dropdown is closed
      *
      * ```html
-     * <igx-select (onClosing)='handleClosing($event)'></igx-select>
+     * <igx-select (closing)='handleClosing($event)'></igx-select>
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
+    public closing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
      *
      * ```html
-     * <igx-select (onClosed)='handleClosed()'></igx-select>
+     * <igx-select (closed)='handleClosed($event)'></igx-select>
      * ```
      */
     @Output()
-    public onClosed = new EventEmitter<void>();
+    public closed = new EventEmitter<IBaseEventArgs>();
 
     /**
      * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
@@ -325,6 +327,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         protected cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
         protected selection: IgxSelectionAPIService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
@@ -363,15 +366,17 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public selectItem(newSelection: IgxDropDownItemBaseDirective, event?) {
         const oldSelection = this.selectedItem;
 
-        if (event) {
-            this.toggleDirective.close();
+        if (newSelection === null || newSelection.disabled || newSelection.isHeader) {
+            return;
         }
-        if (newSelection === null || newSelection === oldSelection || newSelection.disabled || newSelection.isHeader) {
+
+        if (newSelection === oldSelection) {
+            this.toggleDirective.close();
             return;
         }
 
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
-        this.onSelection.emit(args);
+        this.selectionChanging.emit(args);
 
         if (args.cancel) {
             return;
@@ -379,6 +384,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
         this.setSelection(newSelection);
         this._value = newSelection.value;
+
+        if (event) {
+            this.toggleDirective.close();
+        }
+
         this.cdr.detectChanges();
         this._onChangeCallback(this.value);
     }
@@ -416,7 +426,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 }
 
     /** @hidden @internal */
-    ngAfterContentInit() {
+    public ngAfterContentInit() {
         this._overlayDefaults = {
             target: this.getEditElement(),
             modal: false,
@@ -440,34 +450,42 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      *
      * @hidden @internal
      */
-    public handleOpening(event: CancelableEventArgs) {
-        const args: CancelableEventArgs = { cancel: event.cancel };
-        this.onOpening.emit(args);
+    public handleOpening(e: ToggleViewCancelableEventArgs) {
+        const args: IBaseCancelableBrowserEventArgs = { owner:this, event:e.event, cancel: e.cancel };
+        this.opening.emit(args);
 
-        event.cancel = args.cancel;
+        e.cancel = args.cancel;
         if (args.cancel) {
             return;
         }
-        this.scrollToItem(this.selectedItem);
+    }
+
+    /** @hidden @internal */
+    public onToggleContentAppended(event: ToggleViewEventArgs) {
+        const info = this.overlayService.getOverlayById(event.id);
+        if (info?.settings?.positionStrategy instanceof SelectPositioningStrategy) {
+            return;
+        }
+        super.onToggleContentAppended(event);
     }
 
     /** @hidden @internal */
     public handleOpened() {
         this.updateItemFocus();
-        this.onOpened.emit();
+        this.opened.emit({ owner: this });
     }
 
     /** @hidden @internal */
-    public handleClosing(event) {
-        const args: CancelableEventArgs = { cancel: event.cancel };
-        this.onClosing.emit(args);
-        event.cancel = args.cancel;
+    public handleClosing(e: ToggleViewCancelableEventArgs) {
+        const args: IBaseCancelableBrowserEventArgs = { owner:this, event:e.event, cancel: e.cancel };
+        this.closing.emit(args);
+        e.cancel = args.cancel;
     }
 
     /** @hidden @internal */
     public handleClosed() {
         this.focusItem(false);
-        this.onClosed.emit();
+        this.closed.emit({ owner: this });
     }
 
     /** @hidden @internal */
@@ -528,6 +546,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             } else {
                 this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
             }
+        } else {
+            // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
+            this.input.valid = IgxInputState.INITIAL;
         }
         this.manageRequiredAsterisk();
     }
@@ -556,6 +577,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.cdr.markForCheck();
         }
     }
+
     private setSelection(item: IgxDropDownItemBaseDirective) {
         if (item && item.value !== undefined && item.value !== null) {
             this.selection.set(this.id, new Set([item]));

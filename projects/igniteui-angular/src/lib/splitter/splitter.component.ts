@@ -153,10 +153,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
     public set type(value) {
         this._type = value;
-        if (this.panes) {
-            // if type is changed runtime, should reset sizes.
-            this.panes.forEach(x => x.size = 'auto');
-        }
+        this.resetPaneSizes();
     }
 
     /**
@@ -170,11 +167,9 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
-        this.panes.forEach(pane => pane.owner = this);
-        this.assignFlexOrder();
+        this.initPanes();
         this.panes.changes.subscribe(() => {
-            this.panes.forEach(pane => pane.owner = this);
-            this.assignFlexOrder();
+            this.initPanes();
         });
     }
 
@@ -221,8 +216,17 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     public onMoveEnd(delta: number) {
+        const min = parseInt(this.pane.minSize, 10) || 0;
+        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
+        const minSibling = parseInt(this.sibling.minSize, 10) || 0;
+        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
+
         const paneSize = this.initialPaneSize - delta;
         const siblingSize = this.initialSiblingSize + delta;
+
+        if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
+            return;
+        }
         if (this.pane.isPercentageSize) {
             // handle % resizes
             const totalSize = this.getTotalSize();
@@ -264,6 +268,30 @@ export class IgxSplitterComponent implements AfterContentInit {
         return parseFloat(totalSize);
     }
 
+
+    /**
+     * @hidden @internal
+     * This method inits panes with properties.
+     */
+    private initPanes() {
+        this.panes.forEach(pane => pane.owner = this);
+        this.assignFlexOrder();
+        if (this.panes.filter(x => x.collapsed).length > 0) {
+            // if any panes are collapsed, reset sizes.
+            this.resetPaneSizes();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     * This method reset pane sizes.
+     */
+    private resetPaneSizes() {
+        if (this.panes) {
+            // if type is changed runtime, should reset sizes.
+            this.panes.forEach(x => x.size = 'auto');
+        }
+    }
 
     /**
      * @hidden @internal

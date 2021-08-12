@@ -22,7 +22,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
-import { IgxOverlayService, IgxTransactionService, Transaction, TransactionService, State } from '../../services/public_api';
+import { IgxOverlayService, IgxTransactionService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -35,6 +35,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../core/utils';
+import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -118,8 +119,25 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
-     public set outlet(val: any) {
+    public set outlet(val: any) {
         this._userOutletDirective = val;
+    }
+
+    /** @hidden @internal */
+    public batchEditingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    public get batchEditing(): boolean {
+        return this._batchEditing;
+    }
+
+    public set batchEditing(val: boolean) {
+        if (val !== this._batchEditing) {
+            delete this._transactions;
+            this.switchTransactionService(val);
+            this.subscribeToTransactions();
+            this.batchEditingChange.emit(val);
+            this._batchEditing = val;
+        }
     }
 
     /**
@@ -145,7 +163,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        @Inject(IgxGridTransaction) protected transactionFactory: TransactionService<Transaction, State>,
+        protected transactionFactory: IgxFlatTransactionFactory,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -159,7 +177,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
-        protected platform: PlatformUtil) {
+        protected platform: PlatformUtil,
+        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
         super(
             selectionService,
             colResizingService,
@@ -187,7 +206,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      */
     public createColumnsList(cols: Array<any>) {
         const columns = [];
-        const topLevelCols = this.onlyTopLevel(cols);
+        const topLevelCols = cols.filter(c => c.level === 0);
         topLevelCols.forEach((col) => {
             const ref = this._createColumn(col);
             ref.changeDetectorRef.detectChanges();

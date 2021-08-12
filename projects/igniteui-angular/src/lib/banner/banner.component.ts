@@ -21,6 +21,10 @@ import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 
 export interface BannerEventArgs extends IBaseEventArgs {
+    /**
+     * @deprecated
+     * To get a reference to the banner, use `owner` instead.
+     */
     banner: IgxBannerComponent;
     event?: Event;
 }
@@ -31,7 +35,7 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
  * **Ignite UI for Angular Banner** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html)
  *
- * The Ignite UI Banner provides a highly templateable and easy to use banner that can be shown in your application.
+ * The Ignite UI Banner provides a highly template-able and easy to use banner that can be shown in your application.
  *
  * Usage:
  *
@@ -64,11 +68,11 @@ export class IgxBannerComponent implements IToggleView {
      * }
      * ```
      * ```html
-     * <igx-banner (onOpened)="handleOpened($event)"></igx-banner>
+     * <igx-banner (opened)="handleOpened($event)"></igx-banner>
      * ```
      */
     @Output()
-    public onOpened = new EventEmitter<BannerEventArgs>();
+    public opened = new EventEmitter<BannerEventArgs>();
 
     /**
      * Fires before the banner shows up
@@ -78,11 +82,11 @@ export class IgxBannerComponent implements IToggleView {
      * }
      * ```
      * ```html
-     * <igx-banner (onOpening)="handleOpening($event)"></igx-banner>
+     * <igx-banner (opening)="handleOpening($event)"></igx-banner>
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<BannerCancelEventArgs>();
+    public opening = new EventEmitter<BannerCancelEventArgs>();
 
     /**
      * Fires after the banner hides
@@ -92,11 +96,11 @@ export class IgxBannerComponent implements IToggleView {
      * }
      * ```
      * ```html
-     * <igx-banner (onClosed)="handleClosed($event)"></igx-banner>
+     * <igx-banner (closed)="handleClosed($event)"></igx-banner>
      * ```
      */
     @Output()
-    public onClosed = new EventEmitter<BannerEventArgs>();
+    public closed = new EventEmitter<BannerEventArgs>();
 
     /**
      * Fires before the banner hides
@@ -106,11 +110,11 @@ export class IgxBannerComponent implements IToggleView {
      * }
      * ```
      * ```html
-     * <igx-banner (onClosing)="handleClosing($event)"></igx-banner>
+     * <igx-banner (closing)="handleClosing($event)"></igx-banner>
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<BannerCancelEventArgs>();
+    public closing = new EventEmitter<BannerCancelEventArgs>();
 
     /** @hidden */
     public get useDefaultTemplate(): boolean {
@@ -194,13 +198,14 @@ export class IgxBannerComponent implements IToggleView {
      * ```
      */
     public open(event?: Event) {
-        this._bannerEvent = { banner: this, event };
-        const openingArgs = {
+        this._bannerEvent = { banner: this, owner: this, event};
+        const openingArgs: BannerCancelEventArgs = {
             banner: this,
+            owner: this,
             event,
             cancel: false
         };
-        this.onOpening.emit(openingArgs);
+        this.opening.emit(openingArgs);
         if (openingArgs.cancel) {
             return;
         }
@@ -222,13 +227,14 @@ export class IgxBannerComponent implements IToggleView {
      * ```
      */
     public close(event?: Event) {
-        this._bannerEvent = { banner: this, event };
-        const closingArgs = {
+        this._bannerEvent = { banner: this, owner: this, event};
+        const closingArgs: BannerCancelEventArgs = {
             banner: this,
+            owner: this,
             event,
             cancel: false
         };
-        this.onClosing.emit(closingArgs);
+        this.closing.emit(closingArgs);
         if (closingArgs.cancel) {
             return;
         }
@@ -259,12 +265,12 @@ export class IgxBannerComponent implements IToggleView {
 
     /** @hidden */
     public onExpansionPanelOpen() {
-        this.onOpened.emit(this._bannerEvent);
+        this.opened.emit(this._bannerEvent);
     }
 
     /** @hidden */
     public onExpansionPanelClose() {
-        this.onClosed.emit(this._bannerEvent);
+        this.closed.emit(this._bannerEvent);
     }
 }
 

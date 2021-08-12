@@ -57,7 +57,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
     const changes = new Map<string, FileChange[]>();
     const htmlFiles = update.templateFiles;
     const sassFiles = update.sassFiles;
-    const tsFiles = update.tsFiles;
+    const _tsFiles = update.tsFiles;
     let applyComment = false;
 
     const applyChanges = () => {
@@ -127,7 +127,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
             findElementNodes(parseFile(host, path), comp.tags).
                 map(node => getSourceOffset(node as Element)).
                 forEach(offset => {
-                    const { startTag, endTag, file, node } = offset;
+                    const { startTag, file, node } = offset;
                     // Label content
                     let labelText = '';
                     if (hasAttribute(node, 'label')) {
@@ -248,112 +248,6 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
         }
     }
 
-    // update row components imports and typings with new RowType interface
-    const rowsImports = [
-        'IgxGridRowComponent, ',
-        'IgxGridGroupByRowComponent, ',
-        'IgxTreeGridRowComponent, ',
-        'IgxHierarchicalRowComponent, '];
-
-    const rowsImportsNoSpace = [
-            'IgxGridRowComponent,',
-            'IgxGridGroupByRowComponent,',
-            'IgxTreeGridRowComponent,',
-            'IgxHierarchicalRowComponent,'];
-
-    const rowsImportsEnd = [
-        ', IgxGridRowComponent }',
-        ', IgxGridGroupByRowComponent }',
-        ', IgxTreeGridRowComponent }',
-        ', IgxHierarchicalRowComponent }'];
-
-    const rowsImportsEndNewLIne = [
-        'IgxGridRowComponent }',
-        'IgxGridGroupByRowComponent }',
-        'IgxTreeGridRowComponent }',
-        'IgxHierarchicalRowComponent }'];
-
-    const typyingsToReplace = [
-        'as IgxGridRowComponent;',
-        'as IgxGridRowComponent).',
-        ': IgxGridRowComponent',
-
-        'as IgxGridGroupByRowComponent;',
-        'as IgxGridGroupByRowComponent).',
-        ': IgxGridGroupByRowComponent',
-
-        'as IgxTreeGridRowComponent;',
-        'as IgxTreeGridRowComponent).',
-        ': IgxTreeGridRowComponent',
-
-        'as IgxHierarchicalRowComponent;',
-        'as IgxHierarchicalRowComponent).',
-        ': IgxHierarchicalRowComponent'
-    ];
-
-    const replacements = [
-        'as RowType;',
-        'as RowType).',
-        ': RowType'
-    ];
-
-
-    for (const entryPath of tsFiles) {
-        let content = host.read(entryPath).toString();
-        let importChanged = 0;
-
-        rowsImports.forEach((n, i) => {
-            if (content.indexOf(n) !== -1) {
-                if (importChanged === 0) {
-                    content = content.replace(n, 'RowType, ');
-                    importChanged++;
-                } else {
-                    content = content.split(n).join('');
-                }
-            }
-        });
-
-        rowsImportsNoSpace.forEach((n, i) => {
-            if (content.indexOf(n) !== -1) {
-                if (importChanged === 0) {
-                    content = content.replace(n, 'RowType,');
-                    importChanged++;
-                } else {
-                    content = content.split(n).join('');
-                }
-            }
-        });
-
-        rowsImportsEnd.forEach((n, i) => {
-            if (content.indexOf(n) !== -1) {
-                if (importChanged === 0) {
-                    content = content.replace(n, ', RowType }');
-                    importChanged++;
-                } else {
-                    content = content.split(n).join(' }');
-                }
-            }
-        });
-
-        rowsImportsEndNewLIne.forEach((n, i) => {
-            if (content.indexOf(n) !== -1) {
-                if (importChanged === 0) {
-                    content = content.replace(n, 'RowType }');
-                    importChanged++;
-                } else {
-                    content = content.split(n).join('}');
-                }
-            }
-        });
-
-        typyingsToReplace.forEach((n, i) => {
-            if (content.indexOf(n) !== -1) {
-                content = content.split(n).join(replacements[i % 3]);
-            }
-        });
-        host.overwrite(entryPath, content);
-    }
-
     // igxDatePicker & igxTimePicker migrations
     for (const comp of EDITOR_COMPONENTS) {
         for (const path of htmlFiles) {
@@ -439,29 +333,6 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
                     new FileChange(startTag.end, `\n<label igxLabel>${comp.COMPONENT === 'igx-date-picker' ? 'Date' : 'Time' }</label>`));
                 }
             });
-
-            // Rename InteractionMode to PickerInteractionMode
-            const modeMatches = [{
-                old: ' InteractionMode ',
-                new: ' PickerInteractionMode '
-            },
-            {
-                old: ' InteractionMode,',
-                new: ' PickerInteractionMode,'
-            },
-            {
-                old: ' InteractionMode.',
-                new: ' PickerInteractionMode.'
-            }];
-
-            let content;
-            for (const entryPath of tsFiles) {
-                content = host.read(entryPath).toString();
-                modeMatches.forEach(match => {
-                    content = content.replace(match.old, match.new);
-                });
-                host.overwrite(entryPath, content);
-            }
 
             applyChanges();
             changes.clear();

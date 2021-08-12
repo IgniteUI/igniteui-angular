@@ -1,26 +1,26 @@
 import { ElementRef, EventEmitter, InjectionToken } from '@angular/core';
-import { CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
+import { CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
 /** @hidden @internal TODO: Evaluate */
 export interface IgxComboBase {
     id: string;
-    data: any[];
+    data: any[] | null;
     valueKey: string;
     groupKey: string;
     isRemote: boolean;
-    filteredData: any[];
+    filteredData: any[] | null;
     totalItemCount: number;
     itemsMaxHeight: number;
     itemHeight: number;
     searchValue: string;
     searchInput: ElementRef<HTMLInputElement>;
     comboInput: ElementRef<HTMLInputElement>;
-    onOpened: EventEmitter<void>;
-    onOpening: EventEmitter<CancelableEventArgs>;
-    onClosing: EventEmitter<CancelableBrowserEventArgs>;
-    onClosed: EventEmitter<void>;
+    opened: EventEmitter<IBaseEventArgs>;
+    opening: EventEmitter<CancelableBrowserEventArgs>;
+    closing: EventEmitter<CancelableBrowserEventArgs>;
+    closed: EventEmitter<IBaseEventArgs>;
     focusSearchInput(opening?: boolean): void;
     triggerCheck(): void;
     addItemToCollection(): void;

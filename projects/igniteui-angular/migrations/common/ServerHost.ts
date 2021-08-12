@@ -1,7 +1,12 @@
 import { Tree } from '@angular-devkit/schematics';
+import * as pathFs from 'path';
 import * as ts from 'typescript/lib/tsserverlibrary';
 import { CUSTOM_TS_PLUGIN_NAME, CUSTOM_TS_PLUGIN_PATH } from './tsUtils';
 
+/**
+ * Langauge server host is responsible for **most** of the FS operations / checks
+ * Angular's Ivy LS sometimes bypasses these, calling path methods instead of tsLsHost operations
+ */
 export class ServerHost implements ts.server.ServerHost {
     public readonly args: string[];
     public readonly newLine: string;
@@ -13,8 +18,14 @@ export class ServerHost implements ts.server.ServerHost {
         this.useCaseSensitiveFileNames = ts.sys.useCaseSensitiveFileNames;
     }
 
+    /**
+     * Read a file's content from the Virtual Tree
+     * If file does not exist in virtual tree, check in physical FS
+     */
     public readFile(path: string, encoding?: string): string | undefined {
         let content;
+        // ensure the path is relative, so it can be found in the Tree, reflecting latest state
+        path = pathFs.relative(this.getCurrentDirectory(), path);
         try {
             content = this.host.read(path).toString(encoding);
         } finally {
@@ -41,17 +52,31 @@ export class ServerHost implements ts.server.ServerHost {
         return ts.sys.resolvePath(path);
     }
 
+    /**
+     * Checks for file in Virtual Tree w/ relative path
+     * If file does not exist in virtual tree, check in physical FS
+     */
     public fileExists(path: string): boolean {
-        return this.host.exists(path);
+        // check for file in Tree, as schematics might need for check
+        path = pathFs.relative(this.getCurrentDirectory(), path);
+        let flag = false;
+        try {
+            // Tree.exists throws on invalid paths instead of returning false
+            flag = this.host.exists(path);
+        } finally {
+            // eslint-disable-next-line no-unsafe-finally
+            return flag || ts.sys.fileExists(path);
+        }
     }
 
     public directoryExists(path: string): boolean {
         let exists: boolean;
+        path = pathFs.relative(this.getCurrentDirectory(), path);
         try {
             exists = this.host.getDir(path) !== void 0;
         } finally {
             // eslint-disable-next-line no-unsafe-finally
-            return exists || this.fileExists(path);
+            return exists || ts.sys.directoryExists(path);
         }
     }
 
@@ -60,15 +85,29 @@ export class ServerHost implements ts.server.ServerHost {
     }
 
     public getCurrentDirectory(): string {
-        return this.host.root.path;
+        // both TS and NG lang serves work with absolute paths
+        // we provide cwd instead of tree root so paths can be resolved to absolute ones
+        return process.cwd();
     }
 
+    /**
+     * Get all subdirs of a directory from the Tree mapped to absolute paths
+     */
     public getDirectories(path: string): string[] {
-        return this.host.getDir(path).subdirs;
+        // check directory contents in Tree (w/ relative paths)
+        path = pathFs.relative(this.getCurrentDirectory(), path);
+        // return directory contents w/ absolute paths for LS
+        return this.host.getDir(path).subdirs.map(e => pathFs.resolve(e));
     }
 
+    /**
+     * Get all files of a directory from the Tree mapped to absolute paths
+     */
     public readDirectory(path: string): string[] {
-        return this.host.getDir(path).subfiles;
+        // check directory contents in Tree (w/ relative paths)
+        path = pathFs.relative(this.getCurrentDirectory(), path);
+        // return directory contents w/ absolute paths for LS
+        return this.host.getDir(path).subfiles.map(e => pathFs.resolve(e));
     }
 
     public require(initialPath: string, moduleName: string) {
@@ -105,7 +144,7 @@ export class ServerHost implements ts.server.ServerHost {
 
     //#region Not implemented methods
 
-    public write(data: string): void {
+    public write(_data: string): void {
         throw new Error('Method "write" not implemented.');
         // ts.sys.write(data);
     }
@@ -115,27 +154,27 @@ export class ServerHost implements ts.server.ServerHost {
         // return ts.sys.writeOutputIsTTY();
     }
 
-    public writeFile(path: string, data: string, writeByteOrderMark?: boolean): void {
+    public writeFile(_path: string, _data: string, _writeByteOrderMark?: boolean): void {
         throw new Error('Method "writeFile" not implemented.');
         // return ts.sys.writeFile(path, data, writeByteOrderMark);
     }
 
-    public createDirectory(path: string): void {
+    public createDirectory(_path: string): void {
         throw new Error('Method "createDirectory" not implemented.');
         // return ts.sys.createDirectory(path);
     }
 
-    public setModifiedTime(path: string, time: Date): void {
+    public setModifiedTime(_path: string, _time: Date): void {
         throw new Error('Method "setModifiedTime" not implemented.');
         // return ts.sys.setModifiedTime(path, time);
     }
 
-    public deleteFile(path: string): void {
+    public deleteFile(_path: string): void {
         throw new Error('Method "deleteFile" not implemented.');
         // return ts.sys.deleteFile(path);
     }
 
-    public createHash(data: string): string {
+    public createHash(_data: string): string {
         throw new Error('Method "createHash" not implemented.');
         // return ts.sys.createHash(data);
     }
@@ -145,17 +184,17 @@ export class ServerHost implements ts.server.ServerHost {
         // return ts.sys.getMemoryUsage();
     }
 
-    public exit(exitCode?: number): void {
+    public exit(_exitCode?: number): void {
         throw new Error('Method "exit" not implemented.');
         // return ts.sys.exit(exitCode);
     }
 
-    public setTimeout(callback: (...argsv: any[]) => void, ms: number, ...args: any[]): any {
+    public setTimeout(_callback: (...argsv: any[]) => void, _ms: number, ..._args: any[]): any {
         throw new Error('Method "setTimeout" not implemented.');
         // return ts.sys.setTimeout(callback, ms, ...args);
     }
 
-    public clearTimeout(timeoutId: any): void {
+    public clearTimeout(_timeoutId: any): void {
         throw new Error('Method "clearTimeout" not implemented.');
         // return ts.sys.clearTimeout(timeoutId);
     }
@@ -165,22 +204,22 @@ export class ServerHost implements ts.server.ServerHost {
         // return ts.sys.clearScreen();
     }
 
-    public base64decode(input: string): string {
+    public base64decode(_input: string): string {
         throw new Error('Method "base64decode" not implemented.');
         // return ts.sys.base64decode(input);
     }
 
-    public base64encode(input: string): string {
+    public base64encode(_input: string): string {
         throw new Error('Method "base64encode" not implemented.');
         // return ts.sys.base64encode(input);
     }
 
-    public setImmediate(callback: (...argsv: any[]) => void, ...args: any[]): any {
+    public setImmediate(_callback: (...argsv: any[]) => void, ..._args: any[]): any {
         throw new Error('Method "setImmediate" not implemented.');
         // return setImmediate(callback, ...args);
     }
 
-    public clearImmediate(timeoutId: any): void {
+    public clearImmediate(_timeoutId: any): void {
         throw new Error('Method "clearImmediate" not implemented.');
         // return clearImmediate(timeoutId);
     }
