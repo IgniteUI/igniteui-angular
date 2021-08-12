@@ -274,14 +274,14 @@
     <div class="igx-banner__message" *ngIf="!this.crudService.row?.isAddRow">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="rowEditText ? rowEditText : defaultRowEditText; context: { $implicit: rowChangesCount }">
+                *ngTemplateOutlet="resolveRowEditActions || defaultRowEditActions; context: { $implicit: rowChangesCount }">
             </ng-container>
         </span>
     </div>
     <div class="igx-banner__actions">
         <div class="igx-banner__row">
             <ng-container
-                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: endEdit.bind(this) }">
+                *ngTemplateOutlet="resolveRowEditActions || defaultRowEditActions; context: { $implicit: endEdit.bind(this) }">
             </ng-container>
         </div>
     </div>
