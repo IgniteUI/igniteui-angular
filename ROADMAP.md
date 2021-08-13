@@ -2,7 +2,25 @@
 
 # Current Milestone
 
-## Milestone 17 (Due by August, 2021)
+## Milestone 18 (Due by Oct, 2021)
+
+1. Add row at top of grid [#9675](https://github.com/IgniteUI/igniteui-angular/issues/9675)
+2. Grid "active" state, separate from "selected" [#9969](https://github.com/IgniteUI/igniteui-angular/issues/9969)
+3. Freezing Columns/Rows on Export to Excel (Angular) [#9863](https://github.com/IgniteUI/igniteui-angular/issues/9863)
+4. Stepper control [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
+5. IgxTreeGrid: display only filtered records [#9923](https://github.com/IgniteUI/igniteui-angular/issues/9923)
+
+## Going down the road
+
+1. Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
+2. Grid Cell Merging
+3. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
+4. Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
+5. Themes: Split themes and aid with Grid refactoring [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
+
+# Previous Milestone
+
+## Milestone 17 (Released August 2nd, 2021)
 
 1.  **[DONE]** Accordion component to Ignite UI for Angular [#9559](https://github.com/IgniteUI/igniteui-angular/issues/9559)
 2. **[DONE]** Expose a column input for passing additional data/state in the template contexts of the column [#9020](https://github.com/IgniteUI/igniteui-angular/issues/9020)
@@ -15,16 +33,6 @@
 9. **[DONE]** IgxPaginator Component should be templatable [#9587](https://github.com/IgniteUI/igniteui-angular/issues/9587)
 10. **[DONE]** Editable cell styling support [#9630](https://github.com/IgniteUI/igniteui-angular/issues/9630)
 11. **[DONE]** Excel Export Service - onColumnExport Allow to modify columnIndex Property [#8874](https://github.com/IgniteUI/igniteui-angular/issues/8874)
-
-## Going down the road
-
-1. Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
-2. Grid Cell Merging
-3. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
-4. Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
-5. Themes: Split themes and aid with Grid refactoring [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
-
-# Previous Milestone
 
 ## Milestone 16 (Released May 14th, 2021)
 
