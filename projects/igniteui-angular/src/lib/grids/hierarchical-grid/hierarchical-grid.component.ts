@@ -291,6 +291,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
+    public get resolveRowEditContainer() {
+        return this.rootGrid ? this.rootGrid.rowEditContainer : this.rowEditContainer;
+    }
+
+    /**
+     * @hidden
+     */
     public get resolveRowEditActions() {
         return this.rootGrid ? this.rootGrid.rowEditActions : this.rowEditActions;
     }

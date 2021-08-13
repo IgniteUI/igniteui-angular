@@ -259,7 +259,7 @@
 <div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
     <div [className]="bannerClass">
         <ng-container
-            *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }">
+            *ngTemplateOutlet="resolveRowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }">
         </ng-container>
     </div>
 </div>
