@@ -135,6 +135,21 @@ describe('IgxGrid - Column properties #grid', () => {
         }
     });
 
+    it('should correctly pass row data context for the format callback', () => {
+        const fix = TestBed.createComponent(ColumnCellFormatterComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const formatter = fix.componentInstance.containsY;
+        grid.getColumnByName('ID').formatter = formatter;
+        fix.detectChanges();
+
+        for (let i = 0; i < 2; i++) {
+            const cell = grid.gridAPI.get_cell_by_index(i, 'ID');
+            expect(cell.nativeElement.textContent).toMatch('true');
+        }
+    });
+
     it('should reflect the column in the DOM based on its index', () => {
         const fix = TestBed.createComponent(ColumnCellFormatterComponent);
         fix.detectChanges();
