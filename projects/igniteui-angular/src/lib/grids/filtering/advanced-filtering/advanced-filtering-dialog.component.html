@@ -111,7 +111,7 @@
                         {{
                             isDate(expressionItem.expression.searchVal)
                             ? getFormatter(expressionItem.expression.fieldName)
-                                ? (expressionItem.expression.searchVal | columnFormatter:getFormatter(expressionItem.expression.fieldName))
+                                ? (expressionItem.expression.searchVal | columnFormatter:getFormatter(expressionItem.expression.fieldName):undefined)
                                 : (expressionItem.expression.searchVal | date:getFormat(expressionItem.expression.fieldName):undefined:grid.locale)
                             : expressionItem.expression.searchVal
                         }}
