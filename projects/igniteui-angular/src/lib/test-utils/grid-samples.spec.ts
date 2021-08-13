@@ -159,7 +159,7 @@ export class ColumnCellFormatterComponent extends BasicGridComponent {
         return `${value * value}`;
     }
 
-    public containsY(_: number, data: { ID: number, Name: string }) {
+    public containsY(_: number, data: { ID: number; Name: string }) {
         return data.Name.includes('y') ? 'true' : 'false';
     }
 }
