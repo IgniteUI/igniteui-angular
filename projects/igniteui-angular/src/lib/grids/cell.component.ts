@@ -152,7 +152,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public formatter: (value: any) => any;
+    public formatter: (value: any, data?: any) => any;
 
     /**
      * Gets the cell template context object.
@@ -295,7 +295,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.title')
     public get title() {
-        return this.editMode || this.cellTemplate ? '' : this.column.dataType === GridColumnDataType.Percent ?
+        return this.editMode || this.cellTemplate ? '' : this.formatter ? this.formatter(this.value, this.rowData) :
+            this.column.dataType === GridColumnDataType.Percent ?
             this.grid.percentPipe.transform(this.value, this.column.pipeArgs.digitsInfo, this.grid.locale) :
             this.column.dataType === GridColumnDataType.Currency ?
                 this.grid.currencyPipe.transform(this.value, this.currencyCode, this.column.pipeArgs.display,

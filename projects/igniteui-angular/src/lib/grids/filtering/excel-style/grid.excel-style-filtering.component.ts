@@ -551,11 +551,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         const columnValues = (this.column.dataType === GridColumnDataType.Date) ?
             data.map(record => {
                 const value = (resolveNestedPath(record, columnField));
-                const label = this.getFilterItemLabel(value);
+                const label = this.getFilterItemLabel(value, true, record);
                 return { label, value };
             }) : data.map(record => {
                 const value = resolveNestedPath(record, columnField);
-                return shouldFormatValues ? this.column.formatter(value) : value;
+                return shouldFormatValues ? this.column.formatter(value, record) : value;
             });
 
         this.renderValues(columnValues);
@@ -784,33 +784,33 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.listData.unshift(blanks);
     }
 
-    private getFilterItemLabel(element: any, applyFormatter: boolean = true) {
+    private getFilterItemLabel(element: any, applyFormatter: boolean = true, data?: any) {
         if (this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.Time ||
             this.column.dataType === GridColumnDataType.DateTime) {
             return element && element.label ? element.label : this.column.formatter ?
-                applyFormatter ? this.column.formatter(element) : element :
+                applyFormatter ? this.column.formatter(element, data) : element :
                 this.grid.datePipe.transform(element, this.column.pipeArgs.format, this.column.pipeArgs.timezone,
                     this.grid.locale);
         }
         if (this.column.dataType === GridColumnDataType.Number) {
             return this.column.formatter ?
-                applyFormatter ? this.column.formatter(element) : element :
+                applyFormatter ? this.column.formatter(element, data) : element :
                 this.grid.decimalPipe.transform(element, this.column.pipeArgs.digitsInfo, this.grid.locale);
         }
         if (this.column.dataType === GridColumnDataType.Currency) {
             return this.column.formatter ?
-                applyFormatter ? this.column.formatter(element) : element :
+                applyFormatter ? this.column.formatter(element, data) : element :
                 this.grid.currencyPipe.transform(element, this.column.pipeArgs.currencyCode ?
                     this.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale),
                     this.column.pipeArgs.display, this.column.pipeArgs.digitsInfo, this.grid.locale);
         }
         if (this.column.dataType === GridColumnDataType.Percent) {
             return this.column.formatter ?
-                applyFormatter ? this.column.formatter(element) : element :
+                applyFormatter ? this.column.formatter(element, data) : element :
                 this.grid.percentPipe.transform(element, this.column.pipeArgs.digitsInfo, this.grid.locale);
         }
         return this.column.formatter && applyFormatter ?
-            this.column.formatter(element) :
+            this.column.formatter(element, data) :
             element;
     }
 
