@@ -15,9 +15,10 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { PlatformUtil } from '../core/utils';
 import { DatePart, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { IgxTimeItemDirective } from './time-picker.directives';
+import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { Subscription } from 'rxjs';
+import { HammerGesturesManager } from '../core/touch';
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
@@ -434,6 +435,26 @@ describe('IgxTimePicker', () => {
 
             date.setHours(20);
             expect(timePicker.validate(mockFormControl)).toEqual({ maxValue: true });
+        });
+
+        it('should handle panmove event correctly', () => {
+            const touchManager = new HammerGesturesManager(null, null, new PlatformUtil(1));
+            const itemListDirective = new IgxItemListDirective(timePicker, elementRef, touchManager);
+            spyOn(touchManager, 'addEventListener');
+
+            itemListDirective.ngOnInit();
+            expect(touchManager.addEventListener).toHaveBeenCalledTimes(1);
+            const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 5 }]] };
+            expect(touchManager.addEventListener).toHaveBeenCalledWith(
+                elementRef.nativeElement,
+                'pan',
+                (itemListDirective as any).onPanMove,
+                hammerOptions);
+
+            spyOn<any>(itemListDirective, 'onPanMove').and.callThrough();
+            const event = { type: 'pan' };
+            (itemListDirective as any).onPanMove(event);
+            expect(itemListDirective['onPanMove']).toHaveBeenCalled();
         });
     });
 
