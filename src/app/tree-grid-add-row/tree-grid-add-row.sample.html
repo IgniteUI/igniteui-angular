@@ -1,8 +1,6 @@
 <div>
     <igx-tree-grid [pinning]="pinningConfig" #grid [allowFiltering]="true" [data]="data" primaryKey="employeeID" foreignKey="PID"
-    [width]="'900px'" [height]="'800px'" [rowEditable]="true"
-    (mouseleave)="onMouseLeave(actionstrip)"
-    (mouseover)="onMouseOver($event, grid, actionstrip)">
+    [width]="'900px'" [height]="'800px'" [rowEditable]="true">
     <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
         [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
         [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
@@ -10,7 +8,7 @@
     </igx-column>
     <igx-action-strip #actionstrip>
         <igx-grid-pinning-actions></igx-grid-pinning-actions>
-        <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
+        <igx-grid-editing-actions [addRow]="true" [addChild]="actionstrip.context?.treeRow.level < 1"></igx-grid-editing-actions>
     </igx-action-strip>
 </igx-tree-grid>
 </div>
