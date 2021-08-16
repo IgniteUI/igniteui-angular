@@ -158,6 +158,10 @@ export class ColumnCellFormatterComponent extends BasicGridComponent {
     public multiplier(value: number): string {
         return `${value * value}`;
     }
+
+    public containsY(_: number, data: { ID: number; Name: string }) {
+        return data.Name.includes('y') ? 'true' : 'false';
+    }
 }
 
 @Component({
@@ -1811,6 +1815,8 @@ export class IgxGridPercentColumnComponent extends BasicGridComponent {
 export class IgxGridDateTimeColumnComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductDateTimeData();
     public paging = false;
+
+    public testFormatter = (val: string) => 'test' + val;
 }
 
 @Component({
