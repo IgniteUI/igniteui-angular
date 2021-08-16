@@ -1406,7 +1406,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
     });
 
-    it(`Should apply template to both parent and child grids`, waitForAsync(async () => {
+    it(`Should apply template to both parent and child grids`, async () => {
         const customFixture = TestBed.createComponent(IgxHierarchicalGridCustomRowEditOverlayComponent);
         customFixture.detectChanges();
         hierarchicalGrid = customFixture.componentInstance.hgrid;
@@ -1450,7 +1450,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
         expect(nestedGridOverlayTextContent).toBe(mainGridOverlayTextContent);
         expect(nestedGridOverlayActionsContent).toBe(mainGridOverlayActionsContent);
-    }));
+    });
 
 });
 
