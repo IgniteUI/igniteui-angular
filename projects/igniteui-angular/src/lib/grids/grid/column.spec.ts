@@ -144,7 +144,7 @@ describe('IgxGrid - Column properties #grid', () => {
         fix.detectChanges();
 
         for (let i = 0; i < 2; i++) {
-            const cell = grid.gridAPI.get_cell_by_index(i, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(i, grid.getColumnByName('ID').index);
             expect(cell.nativeElement.textContent).toMatch('true');
         }
     });
