@@ -1369,7 +1369,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         hierarchicalGrid.primaryKey = 'ID';
         hierarchicalGrid.rowEditable = true;
 
-        let cellElem = hierarchicalGrid.hgridAPI.get_cell_by_index(0, 'ProductName');
+        let cellElem = hierarchicalGrid.hgridAPI.get_cell_by_index(0, 1);
         let row = hierarchicalGrid.gridAPI.get_row_by_index(0);
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
@@ -1391,7 +1391,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
         expect(GridFunctions.getRowEditingOverlay(customFixture)).toBeNull();
 
-        cellElem = secondLevelGrid.hgridAPI.get_cell_by_index(0, 'ProductName');
+        cellElem = secondLevelGrid.hgridAPI.get_cell_by_index(0, 1);
         row = secondLevelGrid.gridAPI.get_row_by_index(0);
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
