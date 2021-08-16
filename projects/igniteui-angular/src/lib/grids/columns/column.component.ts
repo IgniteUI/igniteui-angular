@@ -578,7 +578,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @example
      * ```typescript
      * const column = this.grid.getColumnByName('Address');
-     * const addressFormatter = (address: string, data: any) => data.privacyEnabled ? 'unknown' : address;
+     * const addressFormatter = (address: string, rowData: any) => data.privacyEnabled ? 'unknown' : address;
      * column.formatter = addressFormatter;
      * ```
      *
@@ -587,7 +587,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public formatter: (value: any, data?: any) => any;
+    public formatter: (value: any, rowData?: any) => any;
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.

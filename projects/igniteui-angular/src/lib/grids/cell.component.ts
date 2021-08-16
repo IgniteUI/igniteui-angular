@@ -142,7 +142,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public formatter: (value: any, data?: any) => any;
+    public formatter: (value: any, rowData?: any) => any;
 
     /**
      * Gets the cell template context object.
