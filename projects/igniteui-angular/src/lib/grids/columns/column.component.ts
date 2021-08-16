@@ -576,12 +576,17 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @Input()
     public cellStyles = null;
     /**
-     * When autogenerating columns, the formatter is used to format the display of the column data
-     * without modifying the underlying bound values.
+     * Applies display format to cell values in the column. Does not modify the underlying data.
+     *
+     * @remark
+     * Note: As the formatter is used in places like the Excel style filtering dialog, in certain
+     * scenarios (remote filtering for example), the row data argument can be `undefined`.
+     *
      *
      * In this example, we check to see if the column name is Salary, and then provide a method as the column formatter
      * to format the value into a currency string.
      *
+     * @example
      * ```typescript
      * columnInit(column: IgxColumnComponent) {
      *   if (column.field == "Salary") {
@@ -594,12 +599,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * }
      * ```
      *
+     * @example
+     * ```typescript
+     * const column = this.grid.getColumnByName('Address');
+     * const addressFormatter = (address: string, rowData: any) => data.privacyEnabled ? 'unknown' : address;
+     * column.formatter = addressFormatter;
+     * ```
+     *
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public formatter: (value: any) => any;
+    public formatter: (value: any, rowData?: any) => any;
 
     /**
      * The summaryFormatter is used to format the display of the column summaries.
