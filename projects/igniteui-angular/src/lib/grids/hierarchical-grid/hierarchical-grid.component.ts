@@ -477,8 +477,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return new IgxHierarchicalGridRow(this, index, rec);
     }
 
-    // TODO cell
-    // isHier .childGridsData?
     /**
      * @hidden @internal
      */
@@ -649,18 +647,23 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     index: this.dataView.indexOf(rowData)
                 };
             } else {
-                const rowID = this.primaryKey ? rowData.rowID : this.data.indexOf(rowData.rowID);
                 // child rows contain unique grids, hence should have unique templates
                 return {
                     $implicit: rowData,
-                    templateID: 'childRow-' + rowID,
+                    templateID: {
+                        type: 'childRow',
+                        id: rowData.rowID
+                    },
                     index: this.dataView.indexOf(rowData)
                 };
             }
         } else {
             return {
                 $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
-                templateID: 'dataRow',
+                templateID: {
+                    type: 'dataRow',
+                    id: null
+                },
                 index: this.getDataViewIndex(rowIndex, pinned),
                 disabled: this.isGhostRecord(rowData)
             };
@@ -821,9 +824,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public createRow(index: number): RowType {
+    public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        const rec: any = this.dataView[index];
+        const rec: any = data ?? this.dataView[index];
 
         if (!row && rec && !rec.childGridsData) {
             row = new IgxHierarchicalGridRow(this, index, rec);

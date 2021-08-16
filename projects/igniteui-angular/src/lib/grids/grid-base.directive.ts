@@ -5523,7 +5523,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public copyHandler(event) {
         const selectedColumns = this.gridAPI.grid.selectedColumns();
         const columnData = this.getSelectedColumnsData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
-        const selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+        let selectedData;
+        if (event.type === 'copy'){
+            selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+        };
 
         let data = [];
         let result;
@@ -5803,7 +5806,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
         if (this.hasHorizontalScroll()) {
-            const tmplId = args.context.templateID;
+            const tmplId = args.context.templateID.type;
             const index = args.context.index;
             args.view.detectChanges();
             this.zone.onStable.pipe(first()).subscribe(() => {
@@ -6649,12 +6652,52 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let record = {};
         let selectedData = [];
         let keys = [];
+        const selectionCollection = new Map();
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
+
+        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
+            const expansionRowIndexes = Array.from(this.expansionStates.keys());
+            if (this.selectionService.selection.size > 0) {
+                if (expansionRowIndexes.length > 0) {
+                    for (const [key, value] of this.selectionService.selection.entries()) {
+                        let updatedKey = key;
+                        expansionRowIndexes.forEach(row => {
+                            let rowIndex;
+                            if (row.ID) {
+                                rowIndex = Number(row.ID);
+                            }else {
+                                rowIndex = Number(row);
+                            }
+
+                            if (updatedKey > Number(rowIndex)) {
+                                updatedKey--;
+                            }
+                        });
+                        selectionCollection.set(updatedKey, value);
+                    }
+                }
+            } else if (activeEl) {
+                if (expansionRowIndexes.length > 0) {
+                    expansionRowIndexes.forEach(row => {
+                        if (activeEl.row > Number(row)) {
+                            activeEl.row--;
+                        }
+                    });
+                }
+            }
+        }
+
         const totalItems = (this as any).totalItemCount ?? 0;
         const isRemote = totalItems && totalItems > this.dataView.length;
-        const selectionMap = isRemote ? Array.from(this.selectionService.selection) :
+        let selectionMap;
+        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid' && selectionCollection.size > 0) {
+            selectionMap = isRemote ? Array.from(selectionCollection) :
+            Array.from(selectionCollection).filter((tuple) => tuple[0] < source.length);
+        }else {
+            selectionMap = isRemote ? Array.from(this.selectionService.selection) :
             Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
+        }
 
         if (this.cellSelection === GridSelectionMode.single && activeEl) {
             selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
@@ -6681,9 +6724,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 columnsArray.forEach((col) => {
                     if (col) {
                         const key = headers ? col.header || col.field : col.field;
-                        const value = source[row].ghostRecord ?
-                            resolveNestedPath(source[row].recordRef, col.field) : resolveNestedPath(source[row], col.field);
-                        record[key] = formatters && col.formatter ? col.formatter(value) : value;
+                        const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
+                        const value = resolveNestedPath(rowData, col.field);
+                        record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {
                             if (!record[key]) {
                                 record[key] = '';
@@ -6751,7 +6794,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         for (const data of source) {
             selectedColumns.forEach((col) => {
                 const key = headers ? col.header || col.field : col.field;
-                record[key] = formatters && col.formatter ? col.formatter(data[col.field])
+                record[key] = formatters && col.formatter ? col.formatter(data[col.field], data)
                     : data[col.field];
             });
 
@@ -6922,6 +6965,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.hideOverlays();
         this.actionStrip?.hide();
+        if (this.actionStrip) {
+            this.actionStrip.context = null;
+        }
         const args: IGridScrollEventArgs = {
             direction: 'vertical',
             event,
@@ -7148,7 +7194,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
-                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field)) :
+                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field), dataRow) :
                     c.dataType === 'number' ? this.decimalPipe.transform(resolveNestedPath(dataRow, c.field),
                         pipeArgs.digitsInfo, this.locale) :
                         c.dataType === 'date' ? this.datePipe.transform(resolveNestedPath(dataRow, c.field),

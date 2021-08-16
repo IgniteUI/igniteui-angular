@@ -32,6 +32,7 @@ export interface BoundPropertyObject {
 
 /* eslint-disable arrow-parens */
 export class UpdateChanges {
+    protected tsconfigPath = TSCONFIG_PATH;
     protected _projectService: tss.server.ProjectService;
     public get projectService(): tss.server.ProjectService {
         if (!this._projectService) {
@@ -181,7 +182,7 @@ export class UpdateChanges {
 
         // if tsconfig.json was patched, restore it
         if (this._initialTsConfig !== '') {
-            this.host.overwrite(TSCONFIG_PATH, this._initialTsConfig);
+            this.host.overwrite(this.tsconfigPath, this._initialTsConfig);
         }
 
     }
@@ -195,7 +196,8 @@ export class UpdateChanges {
         this.valueTransforms.set(functionName, callback);
     }
 
-    public getDefaultLanguageService(entryPath: string): tss.LanguageService | undefined {
+    /** Path must be absolute. If calling externally, use this.getAbsolutePath */
+    protected getDefaultLanguageService(entryPath: string): tss.LanguageService | undefined {
         const project = this.getDefaultProjectForFile(entryPath);
         return project.getLanguageService();
     }
@@ -479,26 +481,26 @@ export class UpdateChanges {
     }
 
     private patchTsConfig(): void {
-        if (this.serverHost.fileExists(TSCONFIG_PATH)) {
+        this.ensureTsConfigPath();
+        if (this.serverHost.fileExists(this.tsconfigPath)) {
             let originalContent = '';
             try {
-                originalContent = this.serverHost.readFile(TSCONFIG_PATH);
+                originalContent = this.serverHost.readFile(this.tsconfigPath);
             } catch {
                 this.context?.logger
-                .warn(`Could not read ${TSCONFIG_PATH}. Some Angular Ivy features might be unavailable during migrations.`);
+                .warn(`Could not read ${this.tsconfigPath}. Some Angular Ivy features might be unavailable during migrations.`);
                 return;
             }
             let content;
-            try {
-                // there could be comments in the json file and JSON.parse would fail
-                // TODO: use some 3rd party parser or write our own.
-                // @angular-devkit/core.parseJson is deprecated
-                content = JSON.parse(originalContent);
-            } catch (e: any) {
+            // use ts parser as it handles jsonc-style files w/ comments
+            const result = ts.parseConfigFileTextToJson(this.tsconfigPath, originalContent);
+            if (!result.error) {
+                content = result.config;
+            } else {
                 this.context?.logger
-                .warn(`Could not parse ${TSCONFIG_PATH}. Angular Ivy language service might be unavailable during migrations.`);
+                .warn(`Could not parse ${this.tsconfigPath}. Angular Ivy language service might be unavailable during migrations.`);
                 this.context?.logger
-                .warn(`Error:\n${e}`);
+                .warn(`Error:\n${result.error}`);
                 return;
             }
             if (!content.angularCompilerOptions) {
@@ -506,12 +508,38 @@ export class UpdateChanges {
             }
             if (!content.angularCompilerOptions.strictTemplates) {
                 this.context?.logger
-                .info(`Adding 'angularCompilerOptions.strictTemplates' to ${TSCONFIG_PATH} for migration run.`);
+                .info(`Adding 'angularCompilerOptions.strictTemplates' to ${this.tsconfigPath} for migration run.`);
                 content.angularCompilerOptions.strictTemplates = true;
-                this.host.overwrite(TSCONFIG_PATH, JSON.stringify(content));
+                this.host.overwrite(this.tsconfigPath, JSON.stringify(content));
                 // store initial state and restore it once migrations are finished
                 this._initialTsConfig = originalContent;
             }
+        }
+    };
+
+    private ensureTsConfigPath(): void {
+        if (this.host.exists(this.tsconfigPath)) {
+            return;
+        }
+
+        // attempt to find a main tsconfig from workspace:
+        const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+        // technically could be per-project, but assuming there's at least one main tsconfig for IDE support
+        const projectConfig = wsProject.architect?.build?.options['tsConfig'];
+
+        if (!projectConfig || !this.host.exists(projectConfig)) {
+            return;
+        }
+        if (path.posix.basename(projectConfig) === TSCONFIG_PATH) {
+            // not project specific extended tsconfig, use directly
+            this.tsconfigPath = projectConfig;
+            return;
+        }
+
+        // look for base config through extends property
+        const result = ts.parseConfigFileTextToJson(projectConfig, this.serverHost.readFile(projectConfig));
+        if (!result.error && result.config.extends) {
+            this.tsconfigPath = path.posix.join(path.posix.dirname(projectConfig), result.config.extends);
         }
     };
 

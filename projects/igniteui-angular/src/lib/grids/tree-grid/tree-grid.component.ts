@@ -612,7 +612,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return {
             $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
-            templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+            templateID: {
+                type: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+                id: null
+            },
             disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false
         };
     }
@@ -830,9 +833,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public createRow(index: number): RowType {
+    public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        const rec: any = this.dataView[index];
+        const rec: any = data ?? this.dataView[index];
 
         if (this.isSummaryRow(rec)) {
             row = new IgxSummaryRow(this, index, rec.summaries, GridInstanceType.TreeGrid);
@@ -840,9 +843,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         if (!row && rec) {
             const isTreeRow = this.isTreeRow(rec);
-            const data = isTreeRow ? rec.data : rec;
+            const dataRec = isTreeRow ? rec.data : rec;
             const treeRow = isTreeRow ? rec : undefined;
-            row = new IgxTreeGridRow(this, index, data, treeRow);
+            row = new IgxTreeGridRow(this, index, dataRec, treeRow);
         }
 
         return row;
