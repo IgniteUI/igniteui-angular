@@ -1819,7 +1819,7 @@ export class IgxHierarchicalGridHidingPinningColumnsComponent extends IgxHierarc
     [height]="'400px'" [width]="width" [rowEditable]="true" #hierarchicalGrid>
      <igx-column field="ID"></igx-column>
      <igx-column field="ProductName"></igx-column>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowEditable]="true" 
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowEditable]="true"
             #rowIsland>
             <igx-column field="ID"></igx-column>
             <igx-column field="ProductName"></igx-column>
