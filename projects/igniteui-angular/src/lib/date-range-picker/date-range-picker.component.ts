@@ -767,6 +767,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private updateValue(value: DateRange) {
         this._value = value ? value : null;
         this.updateInputs();
+        this.updateCalendar();
     }
 
     private updateValidityOnBlur() {
@@ -847,6 +848,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private updateCalendar(): void {
+        if (!this.calendar) {
+             return;
+        }
         this.calendar.disabledDates = [];
         const minValue = this.parseMinValue(this.minValue);
         if (minValue) {
