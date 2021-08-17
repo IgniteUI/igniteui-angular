@@ -68,7 +68,7 @@ export abstract class IgxExporterOptionsBase {
      public ignoreMultiColumnHeaders = false;
 
     /**
-     * Specifies whether the exported data should have freezed headers.
+     * Specifies whether the exported data should have frozen headers.
      * ```typescript
      * let freezeHeaders = this.exportOptions.freezeHeaders;
      * this.exportOptions.freezeHeaders = true;

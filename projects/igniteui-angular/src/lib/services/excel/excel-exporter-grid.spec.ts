@@ -824,11 +824,11 @@ describe('Excel Exporter', () => {
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithExpandedRows);
         });
 
-        it('should export hierarchical grid data with freezed headers', async () => {
+        it('should export hierarchical grid data with frozen headers', async () => {
             options.freezeHeaders = true;
             fix.detectChanges();
 
-            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithFreezedHeaders);
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithFrozenHeaders);
         });
     });
 
