@@ -306,6 +306,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public get parentRowOutletDirective() {
+        // Targeting parent outlet in order to prevent hiding when outlet
+        // is present at a child grid and is attached to a row.
         return this.parent.rowOutletDirective;
     }
 
