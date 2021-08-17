@@ -6,7 +6,7 @@
         [cssClass]="highlightClass"
         [activeCssClass]="activeHighlightClass"
         [groupName]="gridID"
-        [value]="formatter ? (value | columnFormatter: formatter)
+        [value]="formatter ? (value | columnFormatter:formatter:rowData)
             : column.dataType === 'number'
             ? (value | number:column.pipeArgs.digitsInfo:grid.locale)
             : column.dataType === 'date'
@@ -17,7 +17,7 @@
         [row]="rowData"
         [column]="this.column.field"
         [containerClass]="'igx-grid__td-text'"
-        [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter: formatter) : column.dataType === "number"
+        [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter: formatter:rowData) : column.dataType === "number"
             ? (value | number:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === "date"
             ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : column.dataType === 'currency'
             ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'percent'
@@ -28,7 +28,7 @@
     [cssClass]="highlightClass"
     [activeCssClass]="activeHighlightClass"
     [groupName]="gridID"
-    [value]="formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ?
+    [value]="formatter ? (value | columnFormatter:formatter:rowData) : column.dataType === 'number' ?
         (value | number:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'date' ?
         (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : column.dataType === 'currency'?
         (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'percent' ?
