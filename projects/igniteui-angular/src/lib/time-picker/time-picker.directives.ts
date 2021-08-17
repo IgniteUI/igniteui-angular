@@ -178,13 +178,15 @@ export class IgxItemListDirective implements OnInit {
      * @hidden @internal
      */
     public ngOnInit() {
-        const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 5 }]] };
+        const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 20 }]] };
         this.touchManager.addEventListener(this.elementRef.nativeElement, 'pan', this.onPanMove, hammerOptions);
     }
 
     private onPanMove = (event: HammerInput) => {
-        const delta = event.deltaY < 0 ? -1 : 1;
-        this.nextItem(delta);
+        const delta = event.deltaY < -20 ? -1 : event.deltaY > 20 ? 1 : 0;
+        if (event.deltaY % 20 === 0 && delta !== 0) {
+            this.nextItem(delta);
+        }
     };
 
     private nextItem(delta: number): void {
