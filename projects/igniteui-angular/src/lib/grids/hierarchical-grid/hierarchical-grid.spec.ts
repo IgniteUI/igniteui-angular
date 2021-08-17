@@ -15,8 +15,6 @@ import { IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
-const DEBOUNCETIME = 30;
-
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -1408,7 +1406,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
     });
 
     it(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened 
-            row island with <= 2 data records`, waitForAsync(async () => {
+            row island with <= 2 data records`, async () => {
         hierarchicalGrid.primaryKey = 'ID';
         hierarchicalGrid.rowEditable = true;
         hierarchicalGrid.getRowByIndex(0).expanded = true;
@@ -1433,7 +1431,6 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
         fixture.detectChanges();
         expect(row.inEditMode).toBe(true);
-        cellElem.editMode = true;
         fixture.detectChanges();
 
         let overlay = GridFunctions.getRowEditingOverlay(fixture);
@@ -1441,11 +1438,11 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
         await hierarchicalGrid.dragScroll({ left: 0, top: 10 });
         fixture.detectChanges();
-        await wait(DEBOUNCETIME);
+        await wait(30);
 
         overlay = GridFunctions.getRowEditingOverlay(fixture);
         expect(overlay).not.toBeNull();
-    }));
+    });
 
 });
 
