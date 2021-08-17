@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.1.2
+- `igxGrid`
+    - The column formatter callback signature now accepts the row data as an additional argument:
+    ```typescript formatter(value: any, rowData?: any)```
+    The `rowData` argument may be `undefined` in remote scenarios/applying the callback on filtering labels
+    so make sure to check its availability.
+
 ## 12.1.0
 
 ### New Features
@@ -32,7 +39,7 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added `batchEditing` - an `Input` property for controlling what type of transaction service is provided for the grid.
-    Setting `<igx-grid [batchEditing]="true">` is the same as providing `[{ provide: IgxGridTransaction, useClass: IgxTransactionService }]`. 
+    Setting `<igx-grid [batchEditing]="true">` is the same as providing `[{ provide: IgxGridTransaction, useClass: IgxTransactionService }]`.
     - **Deprecation** - Providing a transaction service for the grid via `providers: [IgxTransactionService]` is now deprecated and will be removed in a future patch.
     Instead, use the new `batchEditing` property to control the grid's Transactions.
 
@@ -46,14 +53,14 @@ All notable changes for each version of this project will be documented in this 
         - `IgxGridCellComponent`,  `IgxTreeGridCellComponent`, `IgxHierarchicalGridCellComponent` are no longer exposed in the public API. Instead, a new class `IgxGridCell` replaces all of these. It is a facade class which exposes only the public API of the above mentioned. Automatic migration will change these imports with `CellType`, which is the interface implemented by `IgxGridCell`
     - **Behavioral changes**
     - `getCellByKey`, `getCellByColumn`, `getCellByColumnVisibleIndex`, `row.cells`, `column.cells`, `grid.selectedCells` now return an `IgxGridCell` the `CellType` interface.
-    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitetd in `cellClick`, `selected`, `contextMenu` and `doubleClick` events. 
+    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitetd in `cellClick`, `selected`, `contextMenu` and `doubleClick` events.
     - `let-cell` property in cell template is now `CellType`.
     - `getCellByColumnVisibleIndex` is now deprecated and will be removed in next major version. Use `getCellByKey`, `getCellByColumn` instead.
 
 - `Transactions`
     - Added `IgxFlatTransactionFactory` - the singleton service instantiates a new `TransactionService<Transaction, State>` given a `transaction type`.
     - Added `IgxHierarchicalTransactionFactory` - the singleton service instantiates a new `HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>` given a `transaction type`.
-    
+
 - `Toolbar Actions`
     - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
 
