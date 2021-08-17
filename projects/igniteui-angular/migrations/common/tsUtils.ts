@@ -247,7 +247,7 @@ const getTypeDefinitions = (langServ: tss.LanguageService, entryPath: string, po
  * Get type information about a TypeScript identifier
  *
  * @param langServ TypeScript/Angular LanguageService
- * @param entryPath path to file
+ * @param entryPath path to file (absolute)
  * @param position Index of identifier
  */
 export const getTypeDefinitionAtPosition =
