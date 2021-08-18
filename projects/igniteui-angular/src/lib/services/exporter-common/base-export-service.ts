@@ -490,9 +490,7 @@ export abstract class IgxBaseExporter {
     private getAllChildColumnsAndData(island: IgxRowIslandComponent,
         childData: any[], expansionStateVal: boolean, grid: IgxHierarchicalGridComponent) {
         const columnList = this._ownersMap.get(island).columns;
-        const columnHeader = columnList
-            .filter(col => col.headerType === HeaderType.ColumnHeader)
-            .map(col => col.header ? col.header : col.field);
+        const columnHeader = columnList.map(col => col.header ? col.header : col.field);
 
         const headerRecord: IExportRecord = {
             data: columnHeader,
@@ -809,17 +807,12 @@ export abstract class IgxBaseExporter {
         const colWidthList = [];
         const keys = Object.keys(data[0]);
 
-        keys.forEach((colKey, i) => {
+        keys.forEach((colKey) => {
             const columnInfo: IColumnInfo = {
                 header: colKey,
                 field: colKey,
                 dataType: 'string',
                 skip: false,
-                headerType: HeaderType.ColumnHeader,
-                columnSpan: 1,
-                level: 0,
-                startIndex: i,
-                pinnedIndex: Number.MAX_VALUE
             };
 
             colList.push(columnInfo);
@@ -829,8 +822,7 @@ export abstract class IgxBaseExporter {
         const result: IColumnList = {
             columns: colList,
             columnWidths: colWidthList,
-            indexOfLastPinnedColumn: -1,
-            maxLevel: 0,
+            indexOfLastPinnedColumn: -1
         };
 
         return result;
