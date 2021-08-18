@@ -67,6 +67,60 @@ export class IgxGridCellStylesPipe implements PipeTransform {
  * @hidden
  * @internal
  */
+ @Pipe({
+    name: 'igxGridRowClasses'
+})
+export class IgxGridRowClassesPipe implements PipeTransform {
+   constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+
+    public transform(cssClasses: { [prop: string]: any }, index: any, __: number): string {
+        if (!cssClasses) {
+            return '';
+        }
+        const result = [];
+        for (const cssClass of Object.keys(cssClasses)) {
+            const callbackOrValue = cssClasses[cssClass];
+             const grid = (this.gridAPI.grid as any);
+             const row = grid.getRowByIndex(index);
+            const apply = typeof callbackOrValue === 'function' ? callbackOrValue(row) : callbackOrValue;
+            if (apply) {
+                result.push(cssClass);
+            }
+        }
+        return result.join(' ');
+    }
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+ @Pipe({
+    name: 'igxGridRowStyles'
+})
+export class IgxGridRowStylesPipe implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+
+    public transform(styles: { [prop: string]: any }, index: number, __: number): { [prop: string]: any } {
+        const css = {};
+        if (!styles) {
+            return css;
+        }
+        const grid = (this.gridAPI.grid as any);
+        for (const prop of Object.keys(styles)) {
+            const cb = styles[prop];
+            const row = grid.getRowByIndex(index);
+            css[prop] = typeof cb === 'function' ? cb(row) : cb;
+        }
+        return css;
+    }
+}
+
+/**
+ * @hidden
+ * @internal
+ */
 @Pipe({
     name: 'igxNotGrouped'
 })
