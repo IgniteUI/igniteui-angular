@@ -11,6 +11,7 @@ import {
     HostListener,
     Inject,
     Input,
+    OnDestroy,
     OnInit,
     TemplateRef
 } from '@angular/core';
@@ -23,7 +24,7 @@ import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.comm
     selector: '[igxItemList]',
     providers: [HammerGesturesManager]
 })
-export class IgxItemListDirective implements OnInit {
+export class IgxItemListDirective implements OnInit, OnDestroy {
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
@@ -180,6 +181,13 @@ export class IgxItemListDirective implements OnInit {
     public ngOnInit() {
         const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 10 }]] };
         this.touchManager.addEventListener(this.elementRef.nativeElement, 'pan', this.onPanMove, hammerOptions);
+    }
+
+    /**
+     * @hidden @internal
+     */
+     public ngOnDestroy() {
+        this.touchManager.destroy();
     }
 
     private onPanMove = (event: HammerInput) => {

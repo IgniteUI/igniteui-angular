@@ -444,7 +444,7 @@ describe('IgxTimePicker', () => {
 
             itemListDirective.ngOnInit();
             expect(touchManager.addEventListener).toHaveBeenCalledTimes(1);
-            const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 5 }]] };
+            const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 10 }]] };
             expect(touchManager.addEventListener).toHaveBeenCalledWith(
                 elementRef.nativeElement,
                 'pan',
