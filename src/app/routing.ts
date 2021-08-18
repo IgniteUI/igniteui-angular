@@ -125,6 +125,7 @@ import { GridLocalizationSampleComponent } from './grid-localization/grid-locali
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
 import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
+import { IgxStepperSampleComponent as StepperSampleComponent } from './stepper/stepper.sample';
 
 const appRoutes = [
     {
@@ -598,6 +599,10 @@ const appRoutes = [
     },{
         path: 'pagination',
         component: PaginationSampleComponent
+    },
+    {
+        path: 'stepper',
+        component: StepperSampleComponent
     }
 ];
 

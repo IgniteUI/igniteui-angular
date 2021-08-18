@@ -153,6 +153,8 @@ import { GridLocalizationSampleComponent } from './grid-localization/grid-locali
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
 import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
+import { IgxStepperModule } from 'projects/igniteui-angular/src/lib/stepper/igx-stepper.component';
+import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -286,7 +288,8 @@ const components = [
     GridNestedPropsSampleComponent,
     IgxColumnGroupingDirective,
     GridColumnTypesSampleComponent,
-    GridLocalizationSampleComponent
+    GridLocalizationSampleComponent,
+    IgxStepperSampleComponent
 ];
 
 @NgModule({
@@ -317,7 +320,8 @@ const components = [
         routing,
         HammerModule,
         IgxDateTimeEditorModule,
-        IgxButtonModule
+        IgxButtonModule,
+        IgxStepperModule
     ],
     providers: [
         LocalService,
