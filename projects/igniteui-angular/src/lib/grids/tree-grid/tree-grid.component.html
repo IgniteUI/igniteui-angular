@@ -69,11 +69,15 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
         <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-isAddRow="addRow">
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow" [addRow]="isAddRow" #row>
+            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow" [addRow]="isAddRow"
+                [ngClass]="rowClasses | igxGridRowClasses:rowIndex:pipeTrigger"
+                [ngStyle]="rowStyles | igxGridRowStyles:rowIndex:pipeTrigger" #row>
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #pinned_record_template let-rowIndex="index" let-rowData let-isAddRow="addRow">
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [addRow]="isAddRow" #row #pinnedRow>
+            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [addRow]="isAddRow"
+                [ngClass]="rowClasses | igxGridRowClasses:rowIndex:pipeTrigger"
+                [ngStyle]="rowStyles | igxGridRowStyles:rowIndex:pipeTrigger"#row #pinnedRow>
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #summary_template let-rowIndex="index" let-rowData>
