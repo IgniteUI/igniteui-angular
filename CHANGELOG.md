@@ -9,6 +9,9 @@ All notable changes for each version of this project will be documented in this 
     The `rowData` argument may be `undefined` in remote scenarios/applying the callback on filtering labels
     so make sure to check its availability.
 
+- `IgxExcelExporterService`
+    - Added support for freezing column headers in **Excel**. By default, the column headers would not be frozen but this behavior can be controlled by the `freezeHeaders` option of the IgxExcelExporterOptions object.
+
 ## 12.1.0
 
 ### New Features
