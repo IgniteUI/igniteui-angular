@@ -196,7 +196,8 @@ export class UpdateChanges {
         this.valueTransforms.set(functionName, callback);
     }
 
-    public getDefaultLanguageService(entryPath: string): tss.LanguageService | undefined {
+    /** Path must be absolute. If calling externally, use this.getAbsolutePath */
+    protected getDefaultLanguageService(entryPath: string): tss.LanguageService | undefined {
         const project = this.getDefaultProjectForFile(entryPath);
         return project.getLanguageService();
     }
