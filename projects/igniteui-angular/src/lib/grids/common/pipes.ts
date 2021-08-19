@@ -7,7 +7,7 @@ import { GridType } from './grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from './enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-import { IgxSummaryOperand, IgxSummaryResult } from '../grid/public_api';
+import { IgxGridRow, IgxSummaryOperand, IgxSummaryResult } from '../grid/public_api';
 
 /**
  * @hidden
@@ -71,17 +71,17 @@ export class IgxGridCellStylesPipe implements PipeTransform {
     name: 'igxGridRowClasses'
 })
 export class IgxGridRowClassesPipe implements PipeTransform {
-   constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    public transform(cssClasses: { [prop: string]: any }, index: any, __: number): string {
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+
+    public transform(cssClasses: { [prop: string]: any }, rowData: any, index: number, __: number): string {
         if (!cssClasses) {
             return '';
         }
         const result = [];
         for (const cssClass of Object.keys(cssClasses)) {
             const callbackOrValue = cssClasses[cssClass];
-             const grid = (this.gridAPI.grid as any);
-             const row = grid.getRowByIndex(index);
+            const row =  new IgxGridRow((this.gridAPI.grid as any), index, rowData);
             const apply = typeof callbackOrValue === 'function' ? callbackOrValue(row) : callbackOrValue;
             if (apply) {
                 result.push(cssClass);
@@ -102,15 +102,14 @@ export class IgxGridRowStylesPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    public transform(styles: { [prop: string]: any }, index: number, __: number): { [prop: string]: any } {
+    public transform(styles: { [prop: string]: any }, rowData: any, index: number, __: number): { [prop: string]: any } {
         const css = {};
         if (!styles) {
             return css;
         }
-        const grid = (this.gridAPI.grid as any);
         for (const prop of Object.keys(styles)) {
             const cb = styles[prop];
-            const row = grid.getRowByIndex(index);
+            const row =  new IgxGridRow((this.gridAPI.grid as any), index, rowData);
             css[prop] = typeof cb === 'function' ? cb(row) : cb;
         }
         return css;

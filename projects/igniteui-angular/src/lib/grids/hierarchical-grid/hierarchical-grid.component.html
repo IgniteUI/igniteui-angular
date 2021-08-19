@@ -68,15 +68,15 @@
         </ng-template>
         <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-isAddRow="addRow">
             <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [rowData]="rowData" [addRow]="isAddRow"
-                [ngClass]="rowClasses | igxGridRowClasses:rowIndex:pipeTrigger"
-                [ngStyle]="rowStyles | igxGridRowStyles:rowIndex:pipeTrigger" #row>
+                [ngClass]="rowClasses | igxGridRowClasses:rowData:rowIndex:pipeTrigger"
+                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
 
         <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData let-isAddRow="addRow">
             <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [addRow]="isAddRow"
-            [ngClass]="rowClasses | igxGridRowClasses:rowIndex:pipeTrigger"
-                [ngStyle]="rowStyles | igxGridRowStyles:rowIndex:pipeTrigger" #row #pinnedRow>
+            [ngClass]="rowClasses | igxGridRowClasses:rowData:rowIndex:pipeTrigger"
+                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row #pinnedRow>
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
