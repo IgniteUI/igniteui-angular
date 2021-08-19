@@ -258,7 +258,7 @@ describe('IgxInputGroup', () => {
         inputGroupDebugElement.triggerEventHandler('click', pointerEvent);
         expect(document.activeElement).toEqual(input.nativeElement);
     });
-
+});
 @Component({
     template: `<igx-input-group #igxInputGroup [suppressInputAutofocus]="suppressInputAutofocus">
                     <igx-prefix>PREFIX</igx-prefix>
