@@ -39,7 +39,8 @@ describe('IgxInput', () => {
                 DataBoundDisabledInputComponent,
                 ReactiveFormComponent,
                 InputsWithSameNameAttributesComponent,
-                ToggleRequiredWithNgModelInputComponent
+                ToggleRequiredWithNgModelInputComponent,
+                InputReactiveFormComponent
             ],
             imports: [
                 IgxInputGroupModule,
@@ -649,7 +650,7 @@ describe('IgxInput', () => {
         expect(igxInput.value).toBe('Test');
     });
 
-    it('Should properly initialize when used as a reactive form control - without initial validators/toggle validators', fakeAsync(() => {
+    fit('Should properly initialize when used as a reactive form control - without initial validators/toggle validators', fakeAsync(() => {
         const fix = TestBed.createComponent(InputReactiveFormComponent);
         fix.detectChanges();
         // 1) check if label's --required class and its asterisk are applied

@@ -9,7 +9,6 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxPrefixDirective, IgxSuffixDirective } from '../chips/public_api';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
@@ -36,7 +35,7 @@ describe('IgxInputGroup', () => {
 
             ],
             imports: [
-                IgxInputGroupModule, IgxIconModule, ReactiveFormsModule
+                IgxInputGroupModule, IgxIconModule
             ]
         })
         .compileComponents();
