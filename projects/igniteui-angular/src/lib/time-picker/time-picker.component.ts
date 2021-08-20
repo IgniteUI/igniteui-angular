@@ -953,7 +953,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this._selectedDate = this.validateDropdownValue(this._selectedDate);
         this._selectedDate = new Date(this._selectedDate);
         this.updateEditorValue();
-        console.log(this._selectedDate);
     }
 
     /** @hidden @internal */
@@ -1292,7 +1291,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     ],
     imports: [
         CommonModule,
-        HammerModule,
         IgxDateTimeEditorModule,
         IgxInputGroupModule,
         IgxIconModule,
@@ -1301,11 +1299,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         IgxToggleModule,
         IgxTextSelectionModule
     ],
-    providers: [
-        {
-            provide: HAMMER_GESTURE_CONFIG,
-            useClass: TimePickerHammerConfig
-        }
-    ]
+    providers: []
 })
 export class IgxTimePickerModule { }
