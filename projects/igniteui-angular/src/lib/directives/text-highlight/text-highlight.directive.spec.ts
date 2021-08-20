@@ -289,6 +289,19 @@ describe('IgxHighlight', () => {
         expect(spans.length).toBe(4);
         expect(activeSpans.length).toBe(1);
     });
+
+    fit('Should not throw error when active highlight is not set', () => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        fix.detectChanges();
+
+        const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
+        component.highlight.row = undefined;
+        component.highlight.column = undefined;
+        component.highlightText('a');
+
+        expect(() => component.highlight.activateIfNecessary()).not.toThrowError();
+    });
+
 });
 
 @Component({
