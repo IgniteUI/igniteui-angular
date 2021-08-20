@@ -287,7 +287,7 @@ describe('IgxHighlight', () => {
         expect(activeSpans.length).toBe(1);
     });
 
-    fit('Should not throw error when active highlight is not set', () => {
+    it('Should not throw error when active highlight is not set', () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
         fix.detectChanges();
 
