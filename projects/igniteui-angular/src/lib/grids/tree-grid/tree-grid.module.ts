@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxGridCommonModule } from '../grid-common.module';
-import { IgxTreeGridHierarchizingPipe, IgxTreeGridNormalizeRecordsPipe } from './tree-grid.pipes';
+import { IgxTreeGridHierarchizingPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe } from './tree-grid.pipes';
 import { IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe } from './tree-grid.pipes';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
@@ -28,7 +28,8 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
     IgxRowLoadingIndicatorTemplateDirective,
     IgxTreeGridNormalizeRecordsPipe,
     IgxTreeGridGroupingPipe,
-    IgxTreeGridGroupByAreaComponent
+    IgxTreeGridGroupByAreaComponent,
+    IgxTreeGridAddRowPipe
   ],
   exports: [
     IgxTreeGridComponent,
@@ -37,7 +38,8 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
     IgxRowLoadingIndicatorTemplateDirective,
     IgxGridCommonModule,
     IgxTreeGridGroupingPipe,
-    IgxTreeGridGroupByAreaComponent
+    IgxTreeGridGroupByAreaComponent,
+    IgxTreeGridAddRowPipe
   ],
   imports: [
     IgxGridCommonModule,
