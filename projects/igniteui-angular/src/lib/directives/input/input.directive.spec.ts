@@ -1002,27 +1002,31 @@ class InputReactiveFormComponent {
     public onSubmitReactive() { }
 
     public removeValidators(form: FormGroup) {
-        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
-            form.get(key).clearValidators();
-            form.get(key).updateValueAndValidity();
+            if (form.controls.hasOwnProperty(key)) {
+                form.get(key).clearValidators();
+                form.get(key).updateValueAndValidity();
+            }
         }
     }
 
     public addValidators(form: FormGroup) {
-        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
-            form.get(key).setValidators(this.validationType[key]);
-            form.get(key).updateValueAndValidity();
+            if (form.controls.hasOwnProperty(key)) {
+                form.get(key).setValidators(this.validationType[key]);
+                form.get(key).updateValueAndValidity();
+            }
         }
     }
 
     public markAsTouched() {
         if (!this.reactiveForm.valid) {
             for (const key in this.reactiveForm.controls) {
-                if (this.reactiveForm.controls[key]) {
-                    this.reactiveForm.controls[key].markAsTouched();
-                    this.reactiveForm.controls[key].updateValueAndValidity();
+                if (this.reactiveForm.controls.hasOwnProperty(key)) {
+                    if (this.reactiveForm.controls[key]) {
+                        this.reactiveForm.controls[key].markAsTouched();
+                        this.reactiveForm.controls[key].updateValueAndValidity();
+                    }
                 }
             }
         }
