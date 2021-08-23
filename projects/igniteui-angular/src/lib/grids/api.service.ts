@@ -8,7 +8,7 @@ import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxRowDirective } from './row.directive';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
-import { IgxCell, IgxGridCRUDService, IgxRow } from './common/crud.service';
+import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
@@ -122,23 +122,6 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    public update_add_cell(cell: IgxCell): IGridEditEventArgs  {
-        if (!cell) {
-            return;
-        }
-
-        const args = cell.createEditEventArgs(true);
-
-        const data = cell.rowData;
-        if (cell.column.hasNestedPath) {
-            mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
-        } else {
-            data[cell.column.field] = args.newValue;
-        }
-        mergeObjects(this.crudService.row.data, data);
-        return args;
-    }
-
     public update_cell(cell: IgxCell): IGridEditEventArgs {
         if (!cell) {
             return;
@@ -167,7 +150,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
     }
 
     // TODO: CRUD refactor to not emit editing evts.
-    public update_row(row: IgxRow, value: any, event?: Event) {
+    public update_row(row: IgxEditRow, value: any, event?: Event) {
         const grid = this.grid;
         const selected = grid.selectionService.isRowSelected(row.id);
         const rowInEditMode = this.crudService.row;
@@ -270,10 +253,11 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         return this.grid.filteredData;
     }
 
-    public addRowToData(rowData: any, _parentRowID?) {
+    public addRowToData(rowData: any, parentID?) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;
+
         if (grid.transactions.enabled) {
             const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
             const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
