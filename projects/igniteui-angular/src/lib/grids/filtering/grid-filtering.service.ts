@@ -496,7 +496,7 @@ export class IgxFilteringService implements OnDestroy {
             const column = this.grid.getColumnByName(expression.fieldName);
             const formatter = column.formatter;
             if (formatter) {
-                return formatter(expression.searchVal);
+                return formatter(expression.searchVal, undefined);
             }
             const pipeArgs = column.pipeArgs;
             return this.grid.datePipe.transform(expression.searchVal, pipeArgs.format, undefined, this.grid.locale);

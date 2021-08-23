@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 11.1.18
+- `igxGrid`
+    - The column formatter callback signature now accepts the row data as an additional argument:
+    ```typescript formatter(value: any, rowData?: any)```
+    The `rowData` argument may be `undefined` in remote scenarios/applying the callback on filtering labels
+    so make sure to check its availability.
+
 ## 11.1.17
 ### New Features
 - `igxGrid`
@@ -45,10 +52,10 @@ All notable changes for each version of this project will be documented in this 
     - Added support for exporting grouped data.
 - `IgxTreeGrid`
     - Added `multipleCascade` row selection mode. In this mode, selecting a record results in the selection of all its children recursively. When only some children are selected, their parent's checkbox is in an indeterminate state.
- 
+
 
         ```html
-        <igx-tree-grid [rowSelection]="'multipleCascade'">           
+        <igx-tree-grid [rowSelection]="'multipleCascade'">
         </igx-tree-grid>
         ```
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -62,7 +69,7 @@ All notable changes for each version of this project will be documented in this 
     - `Column Resizing` now does not exit edit mode.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.
    _Note: validation of file type input is not yet supported._
-- `igxSplitter` now has the following additional outputs: 
+- `igxSplitter` now has the following additional outputs:
     - `resizeStart` - Emits when pane resizing starts.
     - `resizing`- Emits while panes are being resized.
     - `resizeEnd` - Emits when pane resizing ends.

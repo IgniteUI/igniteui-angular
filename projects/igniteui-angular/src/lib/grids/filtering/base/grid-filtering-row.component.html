@@ -67,7 +67,7 @@
                        autocomplete="off"
                        [value]="
                             column.formatter
-                            ? (value | columnFormatter:column.formatter)
+                            ? (value | columnFormatter:column.formatter:undefined)
                             : (value | date:column.pipeArgs.format:undefined:filteringService.grid.locale)
                         "
                        [readonly]="true"
