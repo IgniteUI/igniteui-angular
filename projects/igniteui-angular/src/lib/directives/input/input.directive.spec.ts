@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxIconModule } from 'igniteui-angular';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const TEXTAREA_CSS_CLASS = 'igx-input-group__textarea';
@@ -45,7 +46,8 @@ describe('IgxInput', () => {
             imports: [
                 IgxInputGroupModule,
                 FormsModule,
-                ReactiveFormsModule
+                ReactiveFormsModule,
+                IgxIconModule
             ]
         })
         .compileComponents();
@@ -720,24 +722,6 @@ describe('IgxInput', () => {
         // interaction test - expect actual asterisk
         asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
         expect(asterisk).toBe('"*"');
-
-        // 4) edge case - Should NOT remove asterisk & styles, when dynamically remove validators,
-        // BUT here is a required HTML attribute set on the input (could be set in the HTML template on the input element)
-        input.nativeElement.setAttribute('required', '');
-        // Re-add all Validators
-        fix.componentInstance.addValidators(formGroup);
-        fix.detectChanges();
-        // update and clear validators
-        fix.componentInstance.removeValidators(formGroup);
-        fix.detectChanges();
-        tick();
-        // expect asterisk
-        asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
-        expect(asterisk).toBe('"*"');
-        inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-        expect(inputGroupIsRequiredClass).toBeDefined();
-        expect(inputGroupIsRequiredClass).not.toBeNull();
-        expect(inputGroupIsRequiredClass).not.toBeUndefined();
     }));
 });
 
