@@ -412,6 +412,11 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
     /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
+
+    /** @hidden @internal */
     public getEditElement() {
         return this.nativeCheckbox.nativeElement;
     }
