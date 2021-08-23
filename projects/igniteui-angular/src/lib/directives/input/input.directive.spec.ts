@@ -5,7 +5,6 @@ import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxIconModule } from 'igniteui-angular';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const TEXTAREA_CSS_CLASS = 'igx-input-group__textarea';
@@ -46,8 +45,7 @@ describe('IgxInput', () => {
             imports: [
                 IgxInputGroupModule,
                 FormsModule,
-                ReactiveFormsModule,
-                IgxIconModule
+                ReactiveFormsModule
             ]
         })
         .compileComponents();
