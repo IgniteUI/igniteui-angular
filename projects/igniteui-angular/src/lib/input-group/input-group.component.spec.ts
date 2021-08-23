@@ -32,6 +32,7 @@ describe('IgxInputGroup', () => {
                 InputGroupCosyDisplayDensityComponent,
                 InputGroupCompactDisplayDensityComponent,
                 InputGroupInputDisplayDensityComponent
+
             ],
             imports: [
                 IgxInputGroupModule, IgxIconModule
@@ -257,7 +258,6 @@ describe('IgxInputGroup', () => {
         expect(document.activeElement).toEqual(input.nativeElement);
     });
 });
-
 @Component({
     template: `<igx-input-group #igxInputGroup [suppressInputAutofocus]="suppressInputAutofocus">
                     <igx-prefix>PREFIX</igx-prefix>
