@@ -1382,6 +1382,9 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         const mainGridOverlayTextContent = mainGridOverlay.querySelector('.igx-banner__text').textContent;
         const mainGridOverlayActionsContent = mainGridOverlay.querySelector('.igx-banner__actions').textContent;
 
+        expect(mainGridOverlayTextContent).toBe(' You have 0 changes in this row\n');
+        expect(mainGridOverlayActionsContent).toBe('CancelDone');
+
         hierarchicalGrid.expandRow(hierarchicalGrid.getRowByIndex(0).rowID);
         customFixture.detectChanges();
 
@@ -1404,8 +1407,8 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         const nestedGridOverlayTextContent = nestedGridOverlay.querySelector('.igx-banner__text').textContent;
         const nestedGridOverlayActionsContent = nestedGridOverlay.querySelector('.igx-banner__actions').textContent;
 
-        expect(nestedGridOverlayTextContent).toBe(mainGridOverlayTextContent);
-        expect(nestedGridOverlayActionsContent).toBe(mainGridOverlayActionsContent);
+        expect(nestedGridOverlayTextContent).toBe('Row Edit Text');
+        expect(nestedGridOverlayActionsContent).toBe('Row Edit Actions');
     });
 
 });
