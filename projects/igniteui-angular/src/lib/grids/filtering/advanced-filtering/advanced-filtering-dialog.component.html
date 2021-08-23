@@ -174,9 +174,9 @@
 
                 <igx-input-group *ngIf="!selectedColumn || selectedColumn.dataType !== 'date'"
                                  type="box"
-                                 [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"
                                  [displayDensity]="'compact'">
                     <input #searchValueInput
+                           [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"
                            igxInput
                            [type]="selectedColumn && selectedColumn.dataType === 'number' ? 'number' : 'text'"
                            [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_value_placeholder"
