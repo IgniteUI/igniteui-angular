@@ -356,7 +356,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * @hidden
      * @internal
-    */
+     */
     public setDisabledState(isDisabled: boolean) { this.disabled = isDisabled; }
 }
 
