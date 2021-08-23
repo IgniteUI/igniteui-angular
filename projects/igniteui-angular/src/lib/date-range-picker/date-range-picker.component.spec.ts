@@ -758,6 +758,18 @@ describe('IgxDateRangePicker', () => {
 
                 disabled$.complete();
             }));
+
+            it('should update the calendar while it\'s open and the value has been updated', fakeAsync(() => {
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                const range = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 1)) };
+                dateRange.value = range;
+                fixture.detectChanges();
+
+                expect((dateRange as any).calendar.selectedDates.length).toBeGreaterThan(0);
+            }));
         });
 
         describe('Two Inputs', () => {
@@ -1168,6 +1180,18 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange.projectedInputs.last.inputDirective.disabled).toBeTrue();
 
                 disabled$.complete();
+            }));
+
+            it('should update the calendar while it\'s open and the value has been updated', fakeAsync(() => {
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                const range = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 1)) };
+                dateRange.value = range;
+                fixture.detectChanges();
+
+                expect((dateRange as any).calendar.selectedDates.length).toBeGreaterThan(0);
             }));
 
             describe('Data binding', () => {
