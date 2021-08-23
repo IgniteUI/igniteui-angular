@@ -300,10 +300,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                     //  with the input or when form/control is reset
                     this._valid = IgxInputState.INITIAL;
                 }
-            }
-            // If validator is dynamically cleared and no required HTML attribute is set,
-            // reset label's required class(asterisk) and IgxInputState #10010
-            if (!this.ngControl.control.validator && this.inputGroup.isRequired && !this._hasValidators()) {
+            } else {
+                // If validator is dynamically cleared, reset label's required class(asterisk) and IgxInputState #10010
                 this._valid = IgxInputState.INITIAL;
                 this.inputGroup.isRequired = false;
             }
