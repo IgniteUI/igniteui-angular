@@ -686,12 +686,12 @@ describe('IgxInput', () => {
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
 
         // interaction test - focus&blur, so the --invalid and --required classes are applied
+        fix.debugElement.componentInstance.markAsTouched();
         input.nativeElement.dispatchEvent(new Event('focus'));
         input.nativeElement.dispatchEvent(new Event('blur'));
         tick();
         fix.detectChanges();
 
-        fix.debugElement.componentInstance.markAsTouched();
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
 
