@@ -438,6 +438,11 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     }
 
     /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
+
+    /** @hidden @internal */
     public getEditElement() {
         return this.nativeCheckbox.nativeElement;
     }

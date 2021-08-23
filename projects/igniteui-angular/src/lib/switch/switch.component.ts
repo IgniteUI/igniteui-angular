@@ -329,6 +329,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         this._value = value;
         this.checked = !!this._value;
     }
+
     /**
      * @hidden
      * @internal
@@ -355,15 +356,19 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @internal
      */
     public registerOnChange(fn: (_: any) => void) {
- this._onChangeCallback = fn;
-}
+        this._onChangeCallback = fn;
+    }
     /**
      * @hidden
      * @internal
      */
     public registerOnTouched(fn: () => void) {
- this._onTouchedCallback = fn;
-}
+        this._onTouchedCallback = fn;
+    }
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
 }
 
 export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
