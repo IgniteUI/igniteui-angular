@@ -740,24 +740,6 @@ describe('IgxInput', () => {
         // interaction test - expect actual asterisk
         asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
         expect(asterisk).toBe('"*"');
-
-        // 4) edge case - Should NOT remove asterisk & styles, when dynamically remove validators,
-        // BUT here is a required HTML attribute set on the input (could be set in the HTML template on the input element)
-        input.nativeElement.setAttribute('required', '');
-        // Re-add all Validators
-        fix.componentInstance.addValidators(formGroup);
-        fix.detectChanges();
-        // update and clear validators
-        fix.componentInstance.removeValidators(formGroup);
-        fix.detectChanges();
-        tick();
-        // expect asterisk
-        asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
-        expect(asterisk).toBe('"*"');
-        inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-        expect(inputGroupIsRequiredClass).toBeDefined();
-        expect(inputGroupIsRequiredClass).not.toBeNull();
-        expect(inputGroupIsRequiredClass).not.toBeUndefined();
     }));
 });
 
@@ -1044,27 +1026,31 @@ class InputReactiveFormComponent {
     public onSubmitReactive() { }
 
     public removeValidators(form: FormGroup) {
-        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
-            form.get(key).clearValidators();
-            form.get(key).updateValueAndValidity();
+            if (form.controls.hasOwnProperty(key)) {
+                form.get(key).clearValidators();
+                form.get(key).updateValueAndValidity();
+            }
         }
     }
 
     public addValidators(form: FormGroup) {
-        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
-            form.get(key).setValidators(this.validationType[key]);
-            form.get(key).updateValueAndValidity();
+            if (form.controls.hasOwnProperty(key)) {
+                form.get(key).setValidators(this.validationType[key]);
+                form.get(key).updateValueAndValidity();
+            }
         }
     }
 
     public markAsTouched() {
         if (!this.reactiveForm.valid) {
             for (const key in this.reactiveForm.controls) {
-                if (this.reactiveForm.controls[key]) {
-                    this.reactiveForm.controls[key].markAsTouched();
-                    this.reactiveForm.controls[key].updateValueAndValidity();
+                if (this.reactiveForm.controls.hasOwnProperty(key)) {
+                    if (this.reactiveForm.controls[key]) {
+                        this.reactiveForm.controls[key].markAsTouched();
+                        this.reactiveForm.controls[key].updateValueAndValidity();
+                    }
                 }
             }
         }
