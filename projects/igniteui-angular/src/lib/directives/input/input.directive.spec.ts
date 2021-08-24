@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, FormBuilder, ReactiveFormsModule, Validators  } from '@angular/forms';
+import { FormsModule, FormBuilder, ReactiveFormsModule, Validators, FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
@@ -9,6 +9,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const TEXTAREA_CSS_CLASS = 'igx-input-group__textarea';
 
+const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_FOCUSED_CSS_CLASS = 'igx-input-group--focused';
 const INPUT_GROUP_PLACEHOLDER_CSS_CLASS = 'igx-input-group--placeholder';
 const INPUT_GROUP_FILLED_CSS_CLASS = 'igx-input-group--filled';
@@ -17,6 +18,10 @@ const INPUT_GROUP_DISABLED_CSS_CLASS = 'igx-input-group--disabled';
 const INPUT_GROUP_REQUIRED_CSS_CLASS = 'igx-input-group--required';
 const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
+
+const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid ';
+const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 
 describe('IgxInput', () => {
     configureTestSuite();
@@ -34,7 +39,8 @@ describe('IgxInput', () => {
                 DataBoundDisabledInputComponent,
                 ReactiveFormComponent,
                 InputsWithSameNameAttributesComponent,
-                ToggleRequiredWithNgModelInputComponent
+                ToggleRequiredWithNgModelInputComponent,
+                InputReactiveFormComponent
             ],
             imports: [
                 IgxInputGroupModule,
@@ -648,6 +654,78 @@ describe('IgxInput', () => {
         igxInput.value = 'Test';
         expect(igxInput.value).toBe('Test');
     });
+
+    it('Should properly initialize when used as a reactive form control - without initial validators/toggle validators', fakeAsync(() => {
+        const fix = TestBed.createComponent(InputReactiveFormComponent);
+        fix.detectChanges();
+        // 1) check if label's --required class and its asterisk are applied
+        const dom = fix.debugElement;
+        const input = fix.componentInstance.input;
+        const formGroup: FormGroup = fix.componentInstance.reactiveForm;
+        let inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+        let inputGroupInvalidClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
+        // interaction test - expect actual asterisk
+        // The only way to get a pseudo elements like :before OR :after is to use getComputedStyle(element [, pseudoElt]),
+        // as these are not in the actual DOM
+        let asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
+        expect(asterisk).toBe('"*"');
+        expect(inputGroupIsRequiredClass).toBeDefined();
+        expect(inputGroupIsRequiredClass).not.toBeNull();
+
+        // 2) check that input group's --invalid class is NOT applied
+        expect(inputGroupInvalidClass).toBeNull();
+
+        // interaction test - markAsTouched + focus&blur, so the --invalid and --required classes are applied
+        fix.debugElement.componentInstance.markAsTouched();
+        const inputGroup = fix.debugElement.query(By.css('.' + INPUT_GROUP_CSS_CLASS));
+        inputGroup.nativeElement.click();
+        document.documentElement.dispatchEvent(new Event('click'));
+        tick();
+        fix.detectChanges();
+
+        inputGroupInvalidClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
+        expect(inputGroupInvalidClass).not.toBeNull();
+        expect(inputGroupInvalidClass).not.toBeUndefined();
+
+        inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+        expect(inputGroupIsRequiredClass).not.toBeNull();
+        expect(inputGroupIsRequiredClass).not.toBeUndefined();
+
+        // 3) Check if the input group's --invalid and --required classes are removed when validator is dynamically cleared
+        fix.componentInstance.removeValidators(formGroup);
+        fix.detectChanges();
+        tick();
+
+        inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+        const formReference = fix.componentInstance.reactiveForm.controls.fullName;
+        // interaction test - expect no asterisk
+        asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
+        expect(formReference).toBeDefined();
+        expect(input).toBeDefined();
+        expect(input.nativeElement.value).toEqual('');
+        expect(inputGroupIsRequiredClass).toBeNull();
+        expect(asterisk).toBe('none');
+        expect(input.valid).toEqual(IgxInputState.INITIAL);
+
+        // interact with the input and expect no changes
+        inputGroup.nativeElement.click();
+        document.documentElement.dispatchEvent(new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(input.valid).toEqual(IgxInputState.INITIAL);
+
+        // Re-add all Validators
+        fix.componentInstance.addValidators(formGroup);
+        fix.detectChanges();
+
+        inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+        expect(inputGroupIsRequiredClass).toBeDefined();
+        expect(inputGroupIsRequiredClass).not.toBeNull();
+        expect(inputGroupIsRequiredClass).not.toBeUndefined();
+        // interaction test - expect actual asterisk
+        asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
+        expect(asterisk).toBe('"*"');
+    }));
 });
 
 @Component({ template: `
@@ -878,6 +956,68 @@ class ToggleRequiredWithNgModelInputComponent {
     public data = '';
     public data1 = '';
     public isRequired = false;
+}
+
+@Component({
+    template: `
+        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+            <igx-input-group #igxInputGroup>
+                <input igxInput #inputReactive name="fullName" type="text" formControlName="fullName" />
+                <label igxLabel for="fullName">Full Name</label>
+                <igx-suffix>
+                    <igx-icon>person</igx-icon>
+                </igx-suffix>
+            </igx-input-group>
+        </form>
+`
+})
+
+class InputReactiveFormComponent {
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('inputReactive', { read: IgxInputDirective }) public input: IgxInputDirective;
+    public reactiveForm: FormGroup;
+
+    public validationType = {
+        fullName: [Validators.required]
+    };
+
+    constructor(fb: FormBuilder) {
+        this.reactiveForm = fb.group({
+            fullName: new FormControl('', Validators.required)
+        });
+    }
+    public onSubmitReactive() { }
+
+    public removeValidators(form: FormGroup) {
+        for (const key in form.controls) {
+            if (form.controls.hasOwnProperty(key)) {
+                form.get(key).clearValidators();
+                form.get(key).updateValueAndValidity();
+            }
+        }
+    }
+
+    public addValidators(form: FormGroup) {
+        for (const key in form.controls) {
+            if (form.controls.hasOwnProperty(key)) {
+                form.get(key).setValidators(this.validationType[key]);
+                form.get(key).updateValueAndValidity();
+            }
+        }
+    }
+
+    public markAsTouched() {
+        if (!this.reactiveForm.valid) {
+            for (const key in this.reactiveForm.controls) {
+                if (this.reactiveForm.controls.hasOwnProperty(key)) {
+                    if (this.reactiveForm.controls[key]) {
+                        this.reactiveForm.controls[key].markAsTouched();
+                        this.reactiveForm.controls[key].updateValueAndValidity();
+                    }
+                }
+            }
+        }
+    }
 }
 
 const testRequiredValidation = (inputElement, fixture) => {
