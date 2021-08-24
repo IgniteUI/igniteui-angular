@@ -174,9 +174,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     public get disabled() {
-        if (this.ngControl && this.ngControl.disabled !== null) {
-            return this.ngControl.disabled;
-        }
         return this._disabled;
     }
 
@@ -268,6 +265,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute(
             'placeholder'
         );
+
+        if (this.ngControl && this.ngControl.disabled !== null) {
+            this.disabled = this.ngControl.disabled;
+        }
         this.inputGroup.disabled =
             this.inputGroup.disabled ||
             this.nativeElement.hasAttribute('disabled');
@@ -466,8 +467,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private checkNativeValidity() {
         if (!this.disabled && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ?
-                            this.focused ? IgxInputState.VALID : IgxInputState.INITIAL :
-                            IgxInputState.INVALID;
+                this.focused ? IgxInputState.VALID : IgxInputState.INITIAL :
+                IgxInputState.INVALID;
         }
     }
 
