@@ -274,7 +274,7 @@
     <div class="igx-banner__message" *ngIf="!this.crudService.row?.isAddRow">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="resolveRowEditActions || defaultRowEditActions; context: { $implicit: rowChangesCount }">
+                *ngTemplateOutlet="resolveRowEditText || defaultRowEditText; context: { $implicit: rowChangesCount }">
             </ng-container>
         </span>
     </div>
