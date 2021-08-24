@@ -287,16 +287,23 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     protected updateValidityState() {
         if (this.ngControl) {
             if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
+                // Run the validation with empty object to check if required is enabled.
+                const error = this.ngControl.control.validator({} as AbstractControl);
+                this.inputGroup.isRequired = error && error.required;
                 if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                     // the control is not disabled and is touched or dirty
                     this._valid = this.ngControl.invalid ?
-                                  IgxInputState.INVALID : this.focused ? IgxInputState.VALID :
-                                  IgxInputState.INITIAL;
+                        IgxInputState.INVALID : this.focused ? IgxInputState.VALID :
+                            IgxInputState.INITIAL;
                 } else {
                     //  if control is untouched, pristine, or disabled its state is initial. This is when user did not interact
                     //  with the input or when form/control is reset
                     this._valid = IgxInputState.INITIAL;
                 }
+            } else {
+                // If validator is dynamically cleared, reset label's required class(asterisk) and IgxInputState #10010
+                this._valid = IgxInputState.INITIAL;
+                this.inputGroup.isRequired = false;
             }
         } else {
             this.checkNativeValidity();
