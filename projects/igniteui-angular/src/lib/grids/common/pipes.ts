@@ -8,6 +8,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from './enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxSummaryOperand, IgxSummaryResult } from '../grid/public_api';
+import { IgxAddRow } from './crud.service';
 
 /**
  * @hidden
@@ -305,8 +306,8 @@ export class IgxGridTransactionStatePipe implements PipeTransform {
 @Pipe({ name: 'columnFormatter' })
 export class IgxColumnFormatterPipe implements PipeTransform {
 
-    public transform(value: any, formatter: (v: any) => any) {
-        return formatter(value);
+    public transform(value: any, formatter: (v: any, data: any) => any, rowData: any) {
+        return formatter(value, rowData);
     }
 }
 
@@ -326,23 +327,13 @@ export class IgxGridAddRowPipe implements PipeTransform {
 
     public transform(collection: any, isPinned = false, _pipeTrigger: number) {
         const grid = this.gridAPI.grid;
-        if (!grid.rowEditable || !grid.gridAPI.crudService.addRowParent || grid.gridAPI.crudService.cancelAddMode ||
-            isPinned !== grid.gridAPI.crudService.addRowParent.isPinned) {
+        if (!grid.rowEditable || !grid.crudService.row || grid.crudService.row.getClassName() !== IgxAddRow.name ||
+            !grid.gridAPI.crudService.addRowParent || isPinned !== grid.gridAPI.crudService.addRowParent.isPinned) {
             return collection;
         }
         const copy = collection.slice(0);
-        const parentIndex = grid.gridAPI.crudService.addRowParent.index;
-        const row = grid.getEmptyRecordObjectFor(collection[parentIndex]);
-        const rec = {
-            recordRef: row,
-            addRow: true
-        };
-        copy.splice(parentIndex + 1, 0, rec);
-        if (isPinned) {
-            grid.pinnedRecords = copy;
-        } else {
-            grid.unpinnedRecords = copy;
-        }
+        const rec = (grid.crudService.row as IgxAddRow).recordRef;
+        copy.splice(grid.crudService.row.index, 0, rec);
         return copy;
     }
 }

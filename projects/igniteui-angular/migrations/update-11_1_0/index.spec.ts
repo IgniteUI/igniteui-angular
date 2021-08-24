@@ -749,4 +749,49 @@ export class CsvExportComponent {
             )
         ).toEqual(expectedContent);
     });
+
+    it('should update GridPagingMode enum from lowerCase to TitleCase', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/paging-test.component.ts',
+`import { Component } from '@angular/core';
+import { GridPagingMode } from "igniteui-angular";
+
+@Component({
+    selector: "app-paging-test",
+    styleUrls: ["./paging-test.component.scss"],
+    templateUrl: "./paging-test.component.html"
+})
+export class PagingComponent {
+    public pagingLocal: GridPagingMode = GridPagingMode.Local;
+    public pagingRemote: GridPagingMode = GridPagingMode.Remote;
+    constructor(){}
+}
+`);
+
+        const tree = await runner
+            .runSchematicAsync('migration-19', {}, appTree)
+            .toPromise();
+
+        const expectedContent =
+`import { Component } from '@angular/core';
+import { GridPagingMode } from "igniteui-angular";
+
+@Component({
+    selector: "app-paging-test",
+    styleUrls: ["./paging-test.component.scss"],
+    templateUrl: "./paging-test.component.html"
+})
+export class PagingComponent {
+    public pagingLocal: GridPagingMode = GridPagingMode.local;
+    public pagingRemote: GridPagingMode = GridPagingMode.remote;
+    constructor(){}
+}
+`;
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/paging-test.component.ts'
+            )
+        ).toEqual(expectedContent);
+    });
 });
