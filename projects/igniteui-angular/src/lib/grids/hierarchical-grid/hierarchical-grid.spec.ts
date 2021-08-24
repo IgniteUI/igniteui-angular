@@ -1455,6 +1455,45 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         expect(nestedGridOverlayActionsContent).toBe('Row Edit Actions');
     });
 
+    it(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened 
+            row island with <= 2 data records`, async () => {
+        hierarchicalGrid.primaryKey = 'ID';
+        hierarchicalGrid.rowEditable = true;
+        hierarchicalGrid.getRowByIndex(0).expanded = true;
+        fixture.detectChanges();
+
+        const secondLevelGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
+        expect(secondLevelGrid).not.toBeNull();
+        secondLevelGrid.getRowByIndex(0).expanded = true;
+        fixture.detectChanges();
+
+        const thirdLevelGrid = secondLevelGrid.hgridAPI.getChildGrids()[0];
+        thirdLevelGrid.primaryKey = 'ID';
+        thirdLevelGrid.rowEditable = true;
+        fixture.detectChanges();
+
+        expect(thirdLevelGrid).not.toBeNull();
+        expect(thirdLevelGrid.data.length).toBe(2);
+
+        const cellElem = thirdLevelGrid.gridAPI.get_cell_by_index(0, 'ChildLevels');
+        const row = thirdLevelGrid.gridAPI.get_row_by_index(0);
+
+        UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+        fixture.detectChanges();
+        expect(row.inEditMode).toBe(true);
+        fixture.detectChanges();
+
+        let overlay = GridFunctions.getRowEditingOverlay(fixture);
+        expect(overlay).not.toBeNull();
+
+        await hierarchicalGrid.dragScroll({ left: 0, top: 10 });
+        fixture.detectChanges();
+        await wait(30);
+
+        overlay = GridFunctions.getRowEditingOverlay(fixture);
+        expect(overlay).not.toBeNull();
+    });
+
 });
 
 describe('IgxHierarchicalGrid custom template #hGrid', () => {

@@ -367,6 +367,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
+    public get parentRowOutletDirective() {
+        // Targeting parent outlet in order to prevent hiding when outlet
+        // is present at a child grid and is attached to a row.
+        return this.parent ? this.parent.rowOutletDirective : this.outlet;
+    }
+
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         // this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
         //     const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
@@ -683,14 +692,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             }
         } else {
             return {
-                $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
+                $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
                 templateID: {
                     type: 'dataRow',
                     id: null
                 },
                 index: this.getDataViewIndex(rowIndex, pinned),
-                disabled: this.isGhostRecord(rowData),
-                addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
+                disabled: this.isGhostRecord(rowData)
             };
         }
     }
