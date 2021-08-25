@@ -1123,14 +1123,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
-    public rowEditCustom: TemplateRef<any>;
+    @ContentChildren(IgxRowEditTemplateDirective, { descendants: false, read: TemplateRef })
+    public rowEditCustomDirectives: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef })
-    public rowEditText: TemplateRef<any>;
+    @ContentChildren(IgxRowEditTextDirective, { descendants: false, read: TemplateRef })
+    public rowEditTextDirectives: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden @internal
@@ -1141,8 +1141,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef })
-    public rowEditActions: TemplateRef<any>;
+    @ContentChildren(IgxRowEditActionsDirective, { descendants: false, read: TemplateRef })
+    public rowEditActionsDirectives: QueryList<TemplateRef<any>>;
 
 
     /**
@@ -2195,6 +2195,36 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get parentRowOutletDirective() {
         return this.outlet;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get rowEditCustom(): TemplateRef<any> {
+        if (this.rowEditCustomDirectives && this.rowEditCustomDirectives.first) {
+            return this.rowEditCustomDirectives.first;
+        }
+        return null;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get rowEditText(): TemplateRef<any> {
+        if (this.rowEditTextDirectives && this.rowEditTextDirectives.first) {
+            return this.rowEditTextDirectives.first;
+        }
+        return null;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get rowEditActions(): TemplateRef<any> {
+        if (this.rowEditActionsDirectives && this.rowEditActionsDirectives.first) {
+            return this.rowEditActionsDirectives.first;
+        }
+        return null;
     }
 
     /**
