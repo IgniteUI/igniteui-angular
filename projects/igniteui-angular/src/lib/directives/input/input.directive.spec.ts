@@ -8,9 +8,9 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxIconModule } from 'igniteui-angular';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
+const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const TEXTAREA_CSS_CLASS = 'igx-input-group__textarea';
 
-const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_FOCUSED_CSS_CLASS = 'igx-input-group--focused';
 const INPUT_GROUP_PLACEHOLDER_CSS_CLASS = 'igx-input-group--placeholder';
 const INPUT_GROUP_FILLED_CSS_CLASS = 'igx-input-group--filled';
@@ -19,10 +19,6 @@ const INPUT_GROUP_DISABLED_CSS_CLASS = 'igx-input-group--disabled';
 const INPUT_GROUP_REQUIRED_CSS_CLASS = 'igx-input-group--required';
 const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
-
-const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
-const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid ';
-const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 
 describe('IgxInput', () => {
     configureTestSuite();
@@ -652,61 +648,55 @@ describe('IgxInput', () => {
         expect(igxInput.value).toBe('Test');
     });
 
-    it('Should properly initialize when used as a reactive form control - without initial validators/toggle validators', fakeAsync(() => {
+    it('Should properly initialize when used as a reactive form control - toggle validators', fakeAsync(() => {
         const fix = TestBed.createComponent(InputReactiveFormComponent);
         fix.detectChanges();
         // 1) check if label's --required class and its asterisk are applied
         const dom = fix.debugElement;
         const input = fix.componentInstance.input;
+        const inputGroup = fix.componentInstance.igxInputGroup.element.nativeElement;
         const formGroup: FormGroup = fix.componentInstance.reactiveForm;
-        let inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-        let inputGroupInvalidClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
+
         // interaction test - expect actual asterisk
         // The only way to get a pseudo elements like :before OR :after is to use getComputedStyle(element [, pseudoElt]),
         // as these are not in the actual DOM
         let asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
         expect(asterisk).toBe('"*"');
-        expect(inputGroupIsRequiredClass).toBeDefined();
-        expect(inputGroupIsRequiredClass).not.toBeNull();
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
 
         // 2) check that input group's --invalid class is NOT applied
-        expect(inputGroupInvalidClass).toBeNull();
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
 
-        // interaction test - markAsTouched + focus&blur, so the --invalid and --required classes are applied
+        // interaction test - focus&blur, so the --invalid and --required classes are applied
+        // *Use markAsTouched() instead of user interaction ( calling focus + blur) because:
+        // Angular handles blur and marks the component as touched, however:
+        // in order to ensure  Angular handles blur prior to our blur handler (where we check touched),
+        // we have to call blur twice.
         fix.debugElement.componentInstance.markAsTouched();
-        const inputGroup = fix.debugElement.query(By.css('.' + INPUT_GROUP_CSS_CLASS));
-        inputGroup.nativeElement.click();
-        document.documentElement.dispatchEvent(new Event('click'));
         tick();
         fix.detectChanges();
 
-        inputGroupInvalidClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
-        expect(inputGroupInvalidClass).not.toBeNull();
-        expect(inputGroupInvalidClass).not.toBeUndefined();
-
-        inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-        expect(inputGroupIsRequiredClass).not.toBeNull();
-        expect(inputGroupIsRequiredClass).not.toBeUndefined();
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
 
         // 3) Check if the input group's --invalid and --required classes are removed when validator is dynamically cleared
         fix.componentInstance.removeValidators(formGroup);
         fix.detectChanges();
         tick();
 
-        inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
         const formReference = fix.componentInstance.reactiveForm.controls.fullName;
         // interaction test - expect no asterisk
         asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
         expect(formReference).toBeDefined();
         expect(input).toBeDefined();
         expect(input.nativeElement.value).toEqual('');
-        expect(inputGroupIsRequiredClass).toBeNull();
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toEqual(false);
         expect(asterisk).toBe('none');
         expect(input.valid).toEqual(IgxInputState.INITIAL);
 
         // interact with the input and expect no changes
-        inputGroup.nativeElement.click();
-        document.documentElement.dispatchEvent(new Event('click'));
+        input.nativeElement.dispatchEvent(new Event('focus'));
+        input.nativeElement.dispatchEvent(new Event('blur'));
         tick();
         fix.detectChanges();
         expect(input.valid).toEqual(IgxInputState.INITIAL);
@@ -715,10 +705,7 @@ describe('IgxInput', () => {
         fix.componentInstance.addValidators(formGroup);
         fix.detectChanges();
 
-        inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-        expect(inputGroupIsRequiredClass).toBeDefined();
-        expect(inputGroupIsRequiredClass).not.toBeNull();
-        expect(inputGroupIsRequiredClass).not.toBeUndefined();
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
         // interaction test - expect actual asterisk
         asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
         expect(asterisk).toBe('"*"');
