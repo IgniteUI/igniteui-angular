@@ -691,9 +691,11 @@ describe('IgxInput', () => {
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
 
         // interaction test - focus&blur, so the --invalid and --required classes are applied
+        // *Use markAsTouched() instead of user interaction ( calling focus + blur) because:
+        // Angular handles blur and marks the component as touched, however:
+        // in order to ensure Angular handles blur prior to our blur handler (where we check touched),
+        // we have to call blur twice.
         fix.debugElement.componentInstance.markAsTouched();
-        input.nativeElement.dispatchEvent(new Event('focus'));
-        input.nativeElement.dispatchEvent(new Event('blur'));
         tick();
         fix.detectChanges();
 
