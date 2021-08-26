@@ -1,4 +1,4 @@
-<ng-content select='igx-icon'></ng-content>
-<ng-content select='[igxLabel]'></ng-content>
+<ng-content *ngIf="isIndicatorVisible" select='[igxStepIcon]'></ng-content>
+<ng-content  *ngIf="isLabelVisible" select='[igxStepLabel]'></ng-content>
 
 <ng-content *ngIf="active"></ng-content>

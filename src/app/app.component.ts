@@ -450,6 +450,11 @@ export class AppComponent implements OnInit {
             name: 'Snackbar'
         },
         {
+            link: '/stepper',
+            icon: 'format_list_bulleted',
+            name: 'Stepper'
+        },
+        {
             link: '/tabs',
             icon: 'tab',
             name: 'Tabs'
