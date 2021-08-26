@@ -7,10 +7,9 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
     IgxStepperLabelPosition, IgxStepperOrienatation,
-    IgxStepType, IStepperCancelableEventArgs, IStepperEventArgs
+    IgxStepType, IGX_STEPPER_COMPONENT, IStepperCancelableEventArgs, IStepperEventArgs
 } from './common';
-import { IgxStepComponent } from './step/igx-step.component';
-
+import { IgxStepComponent, IgxStepIconDirective, IgxStepLabelDirective } from './step/igx-step.component';
 
 let NEXT_ID = 0;
 
@@ -19,7 +18,6 @@ let NEXT_ID = 0;
 })
 export class IgxStepValidIconDirective {
 }
-
 
 @Directive({
     selector: '[igxStepInvalidIcon]'
@@ -30,7 +28,10 @@ export class IgxStepInvalidIconDirective {
 
 @Component({
     selector: 'igx-stepper',
-    templateUrl: 'igx-stepper.component.html'
+    templateUrl: 'igx-stepper.component.html',
+    providers: [
+        { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
+    ]
 })
 export class IgxStepperComponent implements AfterContentInit, OnDestroy {
     /**
@@ -87,45 +88,55 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
     public set labelPosition(value: IgxStepperLabelPosition) {
         if (value !== this._labelPosition) {
             this._labelPosition = value;
-            this._steps.forEach(step => step.labelClass = this.labelPositionClass);
+            this._steps.forEach(step => step.label.position = this.labelPosition);
         }
-    }
-
-    /** @hidden */
-    public get labelPositionClass() {
-        return `igx-step_label--${this.labelPosition}`;
     }
 
     @Input()
     public linear = false;
 
+    /**
+     * Emitted when the stepper's active step is changing.
+     *
+     *```html
+     * <igx-stepper (activeStepChanging)="handleActiveStepChanging($event)">
+     * </igx-stepper>
+     * ```
+     *
+     *```typescript
+     * public handleActiveStepChanging(event: IStepperCancelableEventArgs) {
+     *  if (event.newIndex < event.oldIndex) {
+     *      event.cancel = true;
+     *  }
+     * }
+     *```
+     */
     @Output()
     public activeStepChanging = new EventEmitter<IStepperCancelableEventArgs>();
 
+    /**
+     * Emitted when the active step is changed.
+     *
+     * @example
+     * ```
+     * <igx-stepper (activeStepChanged)="handleActiveStepChanged($event)"></igx-stepper>
+     * ```
+     */
     @Output()
     public activeStepChanged = new EventEmitter<IStepperEventArgs>();
 
     @ContentChildren(IgxStepComponent)
     private _steps: QueryList<IgxStepComponent>;
 
+    /** @hidden @internal */
+    public _activeStep: IgxStepComponent = null;
+
     private _orientation = IgxStepperOrienatation.Horizontal;
     private _stepType = IgxStepType.Full;
     private _labelPosition = IgxStepperLabelPosition.Bottom;
-    private _activeStep: IgxStepComponent = null;
-
     private destroy$ = new Subject();
 
-    public navigateTo(id: number) {
-        if (!this._activeStep) {
-            this.steps.filter(s => s.id === id)[0].active = true;
-        }
-        if (this._activeStep && this._activeStep.id !== id) {
-            this._activeStep.active = false;
-            this.steps.filter(s => s.id === id)[0].active = true;
-        }
-        // this.activeStepChanged.emit({index: id, owner: this});
-    }
-
+    /** @hidden @internal */
     public ngAfterContentInit() {
         this.steps.forEach(s => {
             s.activeChanged.pipe(takeUntil(this.destroy$)).subscribe((e) => {
@@ -133,21 +144,31 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
                     if (this._activeStep) {
                         this._activeStep.active = false;
                     }
-                    this.steps.filter(_s => _s.id === s.id)[0].active = true;
+                    this.steps.filter(_s => _s.index === s.index)[0].active = true;
                     this._activeStep = s;
 
-                    const evArgs: IStepperEventArgs = { index: s.id, owner: this };
+                    const evArgs: IStepperEventArgs = { index: s.index, owner: this };
                     this.activeStepChanged.emit(evArgs);
                 }
             });
         });
     }
 
+    /** @hidden @internal */
     public ngOnDestroy() {
         this.destroy$.next();
         this.destroy$.complete();
     }
 
+    public navigateTo(index: number) {
+        if (!this._activeStep) {
+            this.steps.filter(s => s.index === index)[0].active = true;
+        }
+        if (this._activeStep && this._activeStep.index !== index) {
+            this._activeStep.active = false;
+            this.steps.filter(s => s.index === index)[0].active = true;
+        }
+    }
 }
 
 @NgModule({
@@ -156,11 +177,15 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
     ],
     declarations: [
         IgxStepComponent,
-        IgxStepperComponent
+        IgxStepperComponent,
+        IgxStepLabelDirective,
+        IgxStepIconDirective
     ],
     exports: [
         IgxStepComponent,
-        IgxStepperComponent
+        IgxStepperComponent,
+        IgxStepLabelDirective,
+        IgxStepIconDirective
     ]
 })
 export class IgxStepperModule { }

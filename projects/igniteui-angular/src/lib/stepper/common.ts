@@ -1,3 +1,4 @@
+import { InjectionToken } from '@angular/core';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxStepperComponent } from './igx-stepper.component';
 
@@ -36,3 +37,6 @@ export enum IgxStepperProgressLine {
     Solid,
     Dashed
 }
+
+// Token
+export const IGX_STEPPER_COMPONENT = new InjectionToken<IgxStepperComponent>('IgxStepperToken');

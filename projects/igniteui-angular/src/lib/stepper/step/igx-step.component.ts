@@ -1,5 +1,6 @@
-import { Component, ContentChild, Directive, EventEmitter, HostBinding, HostListener, Input, Output } from '@angular/core';
-import { IgxStepperProgressLine } from '../common';
+import { Component, ContentChild, Directive, EventEmitter, HostBinding, HostListener, Inject, Input, Output } from '@angular/core';
+import { IgxStepperLabelPosition, IgxStepperProgressLine, IGX_STEPPER_COMPONENT, IStepperCancelableEventArgs } from '../common';
+import { IgxStepperComponent } from '../igx-stepper.component';
 
 let NEXT_ID = 0;
 
@@ -7,58 +8,191 @@ let NEXT_ID = 0;
     selector: '[igxStepIcon]'
 })
 export class IgxStepIconDirective {
+    @HostBinding('class.igx-step__icon')
+    public defaultClass = true;
 }
 
 @Directive({
     selector: '[igxStepLabel]'
 })
 export class IgxStepLabelDirective {
-    @HostBinding('class.igx-step-label')
-    public cssClass = 'igx-step-label';
-}
+    @Input() public position = IgxStepperLabelPosition.Bottom;
 
+    @HostBinding('class.igx-step__label')
+    public defaultClass = true;
+
+    @HostBinding('class.igx-step__label--bottom')
+    public get bottomClass() {
+        return this.position === IgxStepperLabelPosition.Bottom;
+    }
+
+    @HostBinding('class.igx-step__label--top')
+    public get topClass() {
+        return this.position === IgxStepperLabelPosition.Top;
+    }
+
+    @HostBinding('class.igx-step__label--end')
+    public get endClass() {
+        return this.position === IgxStepperLabelPosition.End;
+    }
+
+    @HostBinding('class.igx-step__label--start')
+    public get startClass() {
+        return this.position === IgxStepperLabelPosition.Start;
+    }
+}
 
 @Component({
     selector: 'igx-step',
     templateUrl: 'igx-step.component.html'
 })
 export class IgxStepComponent {
+    /**
+     * Get/Set the `id` of the step component.
+     * Default value is `"igx-step-0"`;
+     * ```html
+     * <igx-step id="my-first-step"></igx-step>
+     * ```
+     * ```typescript
+     * const stepId = this.step.id;
+     * ```
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-step-${NEXT_ID++}`;
+
+    /** @hidden @internal **/
     @HostBinding('class.igx-step')
     public cssClass = 'igx-step';
 
+    /**
+     * Get the step index inside of the stepper.
+     *
+     * ```typescript
+     * const step = this.stepper.steps[1];
+     * const stepIndex: number = step.index;
+     * ```
+     */
     @Input()
-    public id = NEXT_ID++;
+    public get index(): number {
+        return this._index;
+    }
 
+    /**
+     * Get/Set whether the step should be skipped. It could be activated on click.
+     *
+     * ```html
+     * <igx-stepper>
+     * ...
+     *     <igx-step [skip]="true"></igx-step>
+     * ...
+     * </igx-stepper>
+     * ```
+     *
+     * ```typescript
+     * this.stepper.steps[1].skip = true;
+     * ```
+     */
     @Input()
     public skip = false;
 
+    /**
+     * Get/Set whether the step is interactable.
+     *
+     * ```html
+     * <igx-stepper>
+     * ...
+     *     <igx-step [disabled]="true"></igx-step>
+     * ...
+     * </igx-stepper>
+     * ```
+     *
+     * ```typescript
+     * this.stepper.steps[1].disabled = true;
+     * ```
+     */
     @Input()
     @HostBinding('class.igx-step--disabled')
     public disabled = false;
 
+    /**
+     * Get/Set whether the step is activated.
+     *
+     * ```html
+     * <igx-stepper>
+     * ...
+     *     <igx-step [active]="true"></igx-step>
+     * ...
+     * </igx-stepper>
+     * ```
+     *
+     * ```typescript
+     * this.stepper.steps[1].active = true;
+     * ```
+     */
     @Input()
     @HostBinding('class.igx-step--active')
-    public get active() {
+    public get active(): boolean {
         return this._active;
     }
 
     public set active(value: boolean) {
-        if (this._active !== value) {
+        if (this._active !== value && this.accessible) {
             this._active = value;
             this.activeChanged.emit(this._active);
         }
     }
 
+    /**
+     * Get/Set whether the step is optional.
+     *
+     * ```html
+     * <igx-stepper>
+     * ...
+     *     <igx-step [optional]="true"></igx-step>
+     * ...
+     * </igx-stepper>
+     * ```
+     *
+     * ```typescript
+     * this.stepper.steps[1].optional = true;
+     * ```
+     */
     @Input()
-    public optional = false;
+    public get optional(): boolean {
+        return this._optional;
+    };
+
+    public set optonal(value: boolean) {
+        if (!this.disabled) {
+            this._optional = value;
+        }
+    }
 
     @Input()
     @HostBinding('class.igx-step--complete')
     public complete = false;
 
+    /**
+     * Get/Set whether the step is valid.
+     *
+     */
     @Input()
     public isValid = true;
 
+    /** @hidden */
+    @HostBinding('class.igx-step--invalid')
+    public get invalidClass(): boolean {
+        return !this.isValid;
+    }
+
+    /**
+     * Get/Set whether the step the progress indicator type.
+     *
+     * ```typescript
+     * this.stepper.steps[1].completedStyle = IgxStepperProgressLine.Dashed;
+     * ```
+     */
     @Input()
     public completedStyle = IgxStepperProgressLine.Solid;
 
@@ -68,35 +202,62 @@ export class IgxStepComponent {
     @ContentChild(IgxStepLabelDirective)
     public label: IgxStepLabelDirective;
 
+    /**
+     * Emitted when the step's `active` property is changed.
+     *
+     * ```html
+     * <igx-stepper>
+     *      <igx-step *ngFor="let step of steps" [(active)]="step.isActive">
+     *      </igx-step>
+     * </igx-steper>
+     * ```
+     *
+     * ```typescript
+     * const step: IgxStepComponent = this.stepper.step[0];
+     * step.activeChanged.pipe(takeUntil(this.destroy$)).subscribe((e: boolean) => console.log("Step active state changed to ", e))
+     * ```
+     */
     @Output()
     public activeChanged = new EventEmitter<boolean>();
+
+    private get accessible() {
+        return (this.stepper.linear && this.stepper._activeStep?.isValid) || !this.disabled;
+    }
 
     /** @hidden @internal */
     public isLabelVisible = true;
     /** @hidden @internal */
     public isIndicatorVisible = true;
-    /** @hidden @internal */
-    public labelClass = '';
 
+    private _index = NEXT_ID - 1;
     private _active = false;
+    private _optional = false;
 
-    private get inactive() {
-        return this.skip || this.disabled;
-    }
+
+    constructor(@Inject(IGX_STEPPER_COMPONENT) public stepper: IgxStepperComponent) { }
 
     @HostListener('click')
     public onClick() {
-        if (this.inactive) {
+        if (!this.accessible) {
             return;
         }
-        this.active = true;
-    }
-
-    public toggleActive(id: number) {
-        if (this.inactive) {
-            return;
+        const evArgs: IStepperCancelableEventArgs = {
+            oldIndex: this.stepper._activeStep?.index,
+            newIndex: this.index,
+            owner: this.stepper,
+            cancel: false
+        };
+        this.stepper.activeStepChanging.emit(evArgs);
+        if (!evArgs.cancel) {
+            this.active = true;
         }
-
-        this.active = id === this.id;
     }
+
+    // public toggleActive(id: number) {
+    //     if (this.inactive) {
+    //         return;
+    //     }
+
+    //     this.active = id === this.index;
+    // }
 }

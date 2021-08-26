@@ -39,4 +39,10 @@ export class IgxStepperSampleComponent {
         console.log('ACTIVE STEP CHANGED');
         console.log(ev);
     }
+
+    public activeStepChanging(ev){
+        // ev.cancel = true;
+        console.log('ACTIVE STEP CHANGING');
+        console.log(ev);
+    }
 }

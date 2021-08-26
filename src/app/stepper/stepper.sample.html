@@ -9,7 +9,8 @@
 
 <hr>
 
-<igx-stepper [stepType]="stepType" [labelPosition]="labelPos" (activeStepChanged)="activeStepChanged($event)"
+<igx-stepper [stepType]="stepType" [labelPosition]="labelPos" 
+(activeStepChanged)="activeStepChanged($event)" (activeStepChanging)="activeStepChanging($event)"
 style="display: flex; flex-flow: row;" #stepper>
     <igx-step #step style="margin-right: 100px;" (activeChanged)="activeChanged($event, step)">
         <igx-icon igxStepIcon>done</igx-icon>
