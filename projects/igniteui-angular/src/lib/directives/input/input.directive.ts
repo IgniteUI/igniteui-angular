@@ -211,9 +211,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     public ngAfterViewInit() {
         this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute('placeholder');
-        if (this.ngControl && this.ngControl.disabled !== null) {
-            this.disabled = this.ngControl.disabled;
-        }
         this.inputGroup.disabled = this.inputGroup.disabled || this.nativeElement.hasAttribute('disabled');
         this.inputGroup.isRequired = this.nativeElement.hasAttribute('required');
 
@@ -278,7 +275,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     protected onStatusChanged() {
         // Enable/Disable control based on ngControl #7086
-        if (this.disabled !== this.ngControl.disabled) {
+        if (this.disabled !== this.ngControl.disabled ||
+            this.inputGroup.disabled !== this.ngControl.disabled) {
             this.disabled = this.ngControl.disabled;
         }
         this.updateValidityState();
