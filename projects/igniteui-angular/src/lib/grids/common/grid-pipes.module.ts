@@ -19,7 +19,8 @@ import {
     IgxColumnFormatterPipe,
     IgxSummaryFormatterPipe,
     IgxGridAddRowPipe,
-    IgxHeaderGroupWidthPipe
+    IgxHeaderGroupWidthPipe,
+    IgxHeaderGroupStylePipe
 } from './pipes';
 export * from './pipes';
 
@@ -43,7 +44,8 @@ export * from './pipes';
         IgxGridAddRowPipe,
         IgxColumnFormatterPipe,
         IgxSummaryFormatterPipe,
-        IgxHeaderGroupWidthPipe
+        IgxHeaderGroupWidthPipe,
+        IgxHeaderGroupStylePipe
     ],
     exports: [
         IgxGridFilterConditionPipe,
@@ -64,7 +66,8 @@ export * from './pipes';
         IgxGridAddRowPipe,
         IgxColumnFormatterPipe,
         IgxSummaryFormatterPipe,
-        IgxHeaderGroupWidthPipe
+        IgxHeaderGroupWidthPipe,
+        IgxHeaderGroupStylePipe
     ],
     imports: [
         CommonModule
