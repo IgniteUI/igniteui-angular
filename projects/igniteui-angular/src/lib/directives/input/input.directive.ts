@@ -95,6 +95,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @HostBinding('class.igx-input-group__textarea')
     public isTextArea = false;
 
+    private _disabled = false;
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
     private _fileNames: string;
@@ -151,11 +152,15 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * </input-group>
      * ```
      */
-    @Input()
-    public set disabled(value: boolean) {
-        this.nativeElement.disabled = value;
-        this.inputGroup.disabled = value;
-    }
+     @Input()
+     @HostBinding('disabled')
+     public set disabled(value: boolean) {
+         this._disabled = this.inputGroup.disabled = !!((value as any === '') || value);
+         if (this.focused && this._disabled) {
+             // Browser focus may not fire in good time and mess with change detection, adjust here in advance:
+             this.inputGroup.isFocused = false;
+         }
+     }
     /**
      * Gets the `disabled` property
      *
@@ -167,7 +172,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     public get disabled() {
-        return this.nativeElement.hasAttribute('disabled');
+        return this._disabled;
     }
 
     /**
