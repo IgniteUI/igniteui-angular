@@ -53,7 +53,7 @@
 
             <ng-container *ngIf="pinnedColumns.length > 0 && isPinningToStart">
                 <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
-                    <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)"
+                    <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)" [ngClass]="col.headerGroupClasses" [ngStyle]="col.headerGroupStyles | igxHeaderGroupStyle:col:pipeTrigger"
                                            [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
                 </ng-template>
             </ng-container>
@@ -61,13 +61,15 @@
                          [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
                          [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'
                          [igxForSizePropName]='"calcPixelWidth"' #hContainer>
-                <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)"
+                <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)" [ngClass]="col.headerGroupClasses" [ngStyle]="col.headerGroupStyles | igxHeaderGroupStyle:col:pipeTrigger"
                                        [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
             <ng-container *ngIf="pinnedColumns.length > 0 && !isPinningToStart">
                 <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
                     <igx-grid-header-group
                             [column]="col"
+                            [ngClass]="col.headerGroupClasses"
+                            [ngStyle]="col.headerGroupStyles | igxHeaderGroupStyle:col:pipeTrigger"
                             [gridID]="id"
                             [style.min-width]="getHeaderGroupWidth(col)"
                             [style.flex-basis]="getHeaderGroupWidth(col)"

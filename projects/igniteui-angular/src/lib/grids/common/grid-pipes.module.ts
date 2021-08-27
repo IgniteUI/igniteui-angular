@@ -17,7 +17,8 @@ import {
     IgxStringReplacePipe,
     IgxGridTransactionStatePipe,
     IgxColumnFormatterPipe,
-    IgxGridAddRowPipe
+    IgxGridAddRowPipe,
+    IgxHeaderGroupStylePipe
 } from './pipes';
 
 @NgModule({
@@ -38,7 +39,8 @@ import {
         IgxStringReplacePipe,
         IgxGridTransactionStatePipe,
         IgxGridAddRowPipe,
-        IgxColumnFormatterPipe
+        IgxColumnFormatterPipe,
+        IgxHeaderGroupStylePipe
     ],
     exports: [
         IgxGridFilterConditionPipe,
@@ -57,7 +59,8 @@ import {
         IgxStringReplacePipe,
         IgxGridTransactionStatePipe,
         IgxGridAddRowPipe,
-        IgxColumnFormatterPipe
+        IgxColumnFormatterPipe,
+        IgxHeaderGroupStylePipe
     ],
     imports: [
         CommonModule
