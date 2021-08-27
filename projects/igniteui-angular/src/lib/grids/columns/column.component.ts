@@ -524,7 +524,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```typescript
      * styles = {
      *  background: 'royalblue',
-     *  color: (column) => column.pinned : 'red': 'inherit'
+     *  color: (column) => column.pinned ? 'red': 'inherit'
      * }
      * ```
      * ```html
@@ -561,7 +561,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```typescript
      * styles = {
      *  background: 'royalblue',
-     *  color: (column) => column.pinned : 'red': 'inherit'
+     *  color: (column) => column.pinned ? 'red': 'inherit'
      * }
      * ```
      * ```html
@@ -605,7 +605,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```typescript
      * styles = {
      *  background: 'royalblue',
-     *  color: (rowData, columnKey, cellValue, rowIndex) => value.startsWith('Important') : 'red': 'inherit'
+     *  color: (rowData, columnKey, cellValue, rowIndex) => value.startsWith('Important') ? 'red': 'inherit'
      * }
      * ```
      * ```html
