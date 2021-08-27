@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IgxGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-add-row',
@@ -6,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: `grid-add-row.sample.html`
 })
 export class GridAddRowSampleComponent implements OnInit {
+
+    @ViewChild(IgxGridComponent)
+    public grid: IgxGridComponent;
+
     public data: any[];
     public dataFull: any[];
     public columns: any[];
@@ -68,5 +73,15 @@ export class GridAddRowSampleComponent implements OnInit {
 
         this.data = [];
         /* eslint-enable max-len */
+    }
+
+    public beginAddRowAtIndex(index: string) {
+        const numeric = parseInt(index, 10);
+        const PK = this.grid.dataView[numeric]['ID'];
+        this.grid.beginAddRow(PK);
+    }
+
+    public beginAddRowStart() {
+        this.grid.beginAddRow(null);
     }
 }

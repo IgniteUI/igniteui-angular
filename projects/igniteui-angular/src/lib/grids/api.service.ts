@@ -393,6 +393,14 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         return this.grid.primaryKey ? this.getRowData(rowID) : rowID;
     }
 
+    /**
+     * Returns the index of the record in the data view by pk or -1 if not found or primaryKey is not set.
+     * @param pk
+     */
+    public get_rec_index_by_id(pk: string | number): number {
+        return this.grid.primaryKey ? this.grid.dataView.findIndex(rec => rec[this.grid.primaryKey] === pk) : -1;
+    }
+
     public allow_expansion_state_change(rowID, expanded) {
         return this.grid.expansionStates.get(rowID) !== expanded;
     }

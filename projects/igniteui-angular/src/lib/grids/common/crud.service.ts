@@ -436,7 +436,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
      * @hidden @internal
      */
     public createAddRowParent(row: IgxRowDirective<IgxGridBaseDirective & GridType>, newRowAsChild?: boolean) {
-        const rowIndex = row ? row.index : this.grid.rowList.length - 1;
+        const rowIndex = row ? row.index : -1;
         const rowId = row ? row.rowID : (rowIndex >= 0 ? this.grid.rowList.last.rowID : null);
 
         const isInPinnedArea = this.grid.isRecordPinnedByViewIndex(rowIndex);
@@ -580,6 +580,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         this.grid.navigateTo(this.row.index, -1);
         const dummyRow = this.grid.gridAPI.get_row_by_index(this.row.index);
         dummyRow.triggerAddAnimation();
+        dummyRow.cdr.detectChanges();
         dummyRow.addAnimationEnd.pipe(first()).subscribe(() => {
             const cell = dummyRow.cells.find(c => c.editable);
             if (cell) {
