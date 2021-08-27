@@ -336,3 +336,22 @@ export class IgxGridAddRowPipe implements PipeTransform {
         return copy;
     }
 }
+
+@Pipe({ name: 'igxHeaderGroupStyle' })
+export class IgxHeaderGroupStylePipe implements PipeTransform {
+
+    public transform(styles: { [prop: string]: any }, column: IgxColumnComponent, _: number): { [prop: string]: any } {
+        const css = {};
+
+        if (!styles) {
+            return css;
+        }
+
+        for (const prop of Object.keys(styles)) {
+            const res = styles[prop];
+            css[prop] = typeof res === 'function' ? res(column) : res;
+        }
+
+        return css;
+    }
+}
