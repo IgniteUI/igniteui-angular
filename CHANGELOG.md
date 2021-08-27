@@ -2,12 +2,24 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+
+## 12.1.5
+
+### New Features
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - Added a public method that spawns the add row UI for an arbitrary record in the current data view. It accepts a rowID (PK when one is defined, index otherwise). You can also pass `null` to spawn the UI as the very first record. Please, note that the new record is still added at the end of the data view, after the end-user submits it.
+    ```typescript
+    this.grid.beginAddRow('ALFKI'); // spawns the add row UI under the row with PK 'ALFKI'
+    this.grid.beginAddRow(null);    // spawns the add row UI as the first record
+    ```
+
 ## 12.1.3
 
 ### New Features
 - `igxGrid`
     - Added `headerStyles` and `headerGroupStyles` inputs to the column component.
     Similar to `cellStyles` is exposes a way to bind CSS properties and style the grid headers.
+
 
 ## 12.1.2
 - `igxGrid`
@@ -60,7 +72,7 @@ All notable changes for each version of this project will be documented in this 
         - `IgxGridCellComponent`,  `IgxTreeGridCellComponent`, `IgxHierarchicalGridCellComponent` are no longer exposed in the public API. Instead, a new class `IgxGridCell` replaces all of these. It is a facade class which exposes only the public API of the above mentioned. Automatic migration will change these imports with `CellType`, which is the interface implemented by `IgxGridCell`
     - **Behavioral changes**
     - `getCellByKey`, `getCellByColumn`, `getCellByColumnVisibleIndex`, `row.cells`, `column.cells`, `grid.selectedCells` now return an `IgxGridCell` the `CellType` interface.
-    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitetd in `cellClick`, `selected`, `contextMenu` and `doubleClick` events.
+    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitted in `cellClick`, `selected`, `contextMenu` and `doubleClick` events.
     - `let-cell` property in cell template is now `CellType`.
     - `getCellByColumnVisibleIndex` is now deprecated and will be removed in next major version. Use `getCellByKey`, `getCellByColumn` instead.
 
