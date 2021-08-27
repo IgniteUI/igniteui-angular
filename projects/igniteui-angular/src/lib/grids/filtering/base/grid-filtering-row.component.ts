@@ -322,7 +322,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             return;
         }
         if (this.platform.isEdge && target.type !== 'number'
-            || this.isKeyPressed && this.platform.isIE || target.value || target.checkValidity()) {
+            || this.isKeyPressed || target.value || target.checkValidity()) {
             this.value = target.value;
         }
     }

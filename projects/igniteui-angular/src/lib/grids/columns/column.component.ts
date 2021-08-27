@@ -1759,12 +1759,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    public getGridTemplate(isRow: boolean, isIE: boolean): string {
+    public getGridTemplate(isRow: boolean): string {
         if (isRow) {
             const rowsCount = this.grid.multiRowLayoutRowSize;
-            return isIE ?
-                `(1fr)[${rowsCount}]` :
-                `repeat(${rowsCount},1fr)`;
+            return `repeat(${rowsCount},1fr)`;
         } else {
             return this.getColumnSizesString(this.children);
         }

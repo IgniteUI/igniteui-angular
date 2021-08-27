@@ -5,10 +5,8 @@
          'igx-grid-th--pinned-last': hasLastPinnedChildColumn,
          'igx-grid-th--pinned-first': hasFirstPinnedChildColumn
         }"
-     [ngStyle]="{'grid-template-rows':column.getGridTemplate(true, false),
-     'grid-template-columns':column.getGridTemplate(false, false),
-     '-ms-grid-rows':column.getGridTemplate(true, true),
-     '-ms-grid-columns':column.getGridTemplate(false, true)}">
+     [ngStyle]="{'grid-template-rows':column.getGridTemplate(true),
+     'grid-template-columns':column.getGridTemplate(false)}">
         <ng-container *ngFor="let child of column.children" >
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
                 [ngClass]="child.headerGroupClasses"

@@ -48,7 +48,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         if (!this.platformUtil.isBrowser) {
             return;
         }
-        const delayTime = this.platformUtil.isIE ? 40 : 0;
+        const delayTime = 0;
         this._zone.runOutsideAngular(() => {
             resizeObservable(this.nativeElement).pipe(
                 throttleTime(delayTime),

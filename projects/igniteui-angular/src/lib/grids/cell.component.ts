@@ -727,14 +727,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('pointerdown', this.pointerdown);
             this.addPointerListeners(this.cellSelectionMode);
-            // IE 11 workarounds
-            if (this.platformUtil.isIE) {
-                this.compositionStartHandler = () => this.grid.crudService.isInCompositionMode = true;
-                this.compositionEndHandler = () => this.grid.crudService.isInCompositionMode = false;
-                // Hitting Enter with IME submits and exits from edit mode instead of first closing the IME dialog
-                this.nativeElement.addEventListener('compositionstart', this.compositionStartHandler);
-                this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
-            }
         });
         if (this.platformUtil.isIOS) {
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
@@ -751,10 +743,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
             this.removePointerListeners(this.cellSelectionMode);
-            if (this.platformUtil.isIE) {
-                this.nativeElement.removeEventListener('compositionstart', this.compositionStartHandler);
-                this.nativeElement.removeEventListener('compositionend', this.compositionEndHandler);
-            }
         });
         this.touchManager.destroy();
     }
@@ -862,9 +850,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const dragMode = this.selectionService.pointerEnter(this.selectionNode, event);
         if (dragMode) {
             this.grid.cdr.detectChanges();
-            if (this.platformUtil.isIE) {
-                this.grid.tbody.nativeElement.focus({ preventScroll: true });
-            }
         }
     };
 
@@ -880,9 +865,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.rangeSelected)) {
             this.grid.cdr.detectChanges();
-            if (this.platformUtil.isIE) {
-                this.grid.tbody.nativeElement.focus({ preventScroll: true });
-            }
         }
     };
 

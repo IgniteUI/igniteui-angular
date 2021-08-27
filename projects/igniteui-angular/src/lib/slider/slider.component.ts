@@ -1272,7 +1272,7 @@ export class IgxSliderComponent implements
         }
 
         const renderCallbackExecution = !this.continuous ? this.generateTickMarks(
-            this.platform.isIE ? 'white' : 'var(--igx-slider-track-step-color, var(--track-step-color, white))', interval) : null;
+            'var(--igx-slider-track-step-color, var(--track-step-color, white))', interval) : null;
         this.renderer.setStyle(this.ticks.nativeElement, 'background', renderCallbackExecution);
     }
 

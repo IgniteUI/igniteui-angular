@@ -51,7 +51,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private _totalMovedX;
     private _offsetRecorded;
     private _offsetDirection;
-    private _touchPrevented;
     private _lastMovedX;
     private _lastMovedY;
     private _gestureObject;
@@ -68,7 +67,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private baseDeltaMultiplier = 1 / 120;
     private firefoxDeltaMultiplier = 1 / 30;
 
-    constructor(private element: ElementRef, private _zone: NgZone, private platform: PlatformUtil) { }
+    constructor(private element: ElementRef, private _zone: NgZone) { }
 
     public ngOnInit(): void {
         this._zone.runOutsideAngular(() => {
@@ -118,14 +117,11 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         if (evt.ctrlKey) {
             return;
         }
-        if (evt.shiftKey && this.platform.isIE) {
-            evt.preventDefault();
-        }
         let scrollDeltaX;
         let scrollDeltaY;
         const scrollStep = this.wheelStep;
         const minWheelStep = 1 / this.wheelStep;
-        const smoothing = this.smoothingDuration !== 0 && !this.platform.isIE;
+        const smoothing = this.smoothingDuration !== 0;
 
         this._startX = this.IgxScrollInertiaScrollContainer.scrollLeft;
         this._startY = this.IgxScrollInertiaScrollContainer.scrollTop;
@@ -239,7 +235,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         this._offsetRecorded = false;
         this._offsetDirection = 0;
 
-        this._touchPrevented = false;
         if (this.IgxScrollInertiaDirection === 'vertical') {
             this.preventParentScroll(event, false);
         }
@@ -251,7 +246,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
      */
     protected onTouchMove(event) {
         if (typeof MSGesture === 'function') {
-            this._touchPrevented = false;
             return false;
         }
         if (!this.IgxScrollInertiaScrollContainer) {
@@ -260,7 +254,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
         const touch = event.touches[0];
         const destX = this._startX + (this._touchStartX - touch.pageX) * Math.sign(this.inertiaStep);
-        const destY = this._startY + (this._touchStartY - touch.pageY) * Math.sign(this.inertiaStep);
 
         /* Handle complex touchmoves when swipe stops but the toch doesn't end and then a swipe is initiated again */
         /* **********************************************************/
@@ -295,26 +288,11 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
         this._totalMovedX += this._lastMovedX;
 
-        let scrolledXY; // Object: {x, y}
-        /*	Do not scroll using touch untill out of the swipeToleranceX bounds */
-        if (Math.abs(this._totalMovedX) < this.swipeToleranceX && !this._offsetRecorded) {
-            scrolledXY = this._scrollTo(this._startX, destY);
-        } else {
-            /*	Record the direction the first time we are out of the swipeToleranceX bounds.
-            *	That way we know which direction we apply the offset so it doesn't hickup when moving out of the swipeToleranceX bounds */
-            if (!this._offsetRecorded) {
-                this._offsetDirection = Math.sign(destX - this._startX);
-                this._offsetRecorded = true;
-            }
-
-            /*	Scroll with offset ammout of swipeToleranceX in the direction we have exited the bounds and
-            don't change it after that ever until touchend and again touchstart */
-            scrolledXY = this._scrollTo(destX - this._offsetDirection * this.swipeToleranceX,
-                destY);
-        }
-
-        if (scrolledXY.x === 0 && scrolledXY.y === 0) {
-            this._touchPrevented = true;
+        /*	Record the direction the first time we are out of the swipeToleranceX bounds.
+        *	That way we know which direction we apply the offset so it doesn't hickup when moving out of the swipeToleranceX bounds */
+        if (!this._offsetRecorded) {
+            this._offsetDirection = Math.sign(destX - this._startX);
+            this._offsetRecorded = true;
         }
 
         // On Safari preventing the touchmove would prevent default page scroll behaviour even if there is the element doesn't have overflow
