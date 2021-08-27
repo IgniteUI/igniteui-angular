@@ -37,7 +37,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @hidden
      */
     @Output()
-    addAnimationEnd = new EventEmitter<IgxRowDirective<T>>();
+    public addAnimationEnd = new EventEmitter<IgxRowDirective<T>>();
 
     /**
      * @hidden
@@ -145,7 +145,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
     @HostBinding('style.min-height.px')
-    get rowHeight() {
+    public get rowHeight() {
         let height = this.grid.rowHeight || 32;
         if (this.grid.hasColumnLayouts) {
             const maxRowSpan = this.grid.multiRowLayoutRowSize;
@@ -154,7 +154,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         return this.addRowUI ? height : null;
     }
 
-    get cellHeight() {
+    public get cellHeight() {
         return this.addRowUI && !this.inEditMode ? null : this.grid.rowHeight || 32;
     }
 
@@ -207,7 +207,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
     @HostBinding('attr.data-rowIndex')
-    get dataRowIndex() {
+    public get dataRowIndex() {
         return this.index;
     }
 
@@ -215,7 +215,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @hidden
      */
     @HostBinding('class')
-    get styleClasses(): string {
+    public get styleClasses(): string {
         return this.resolveClasses();
     }
 
@@ -224,11 +224,11 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     @Input()
     @HostBinding('attr.aria-selected')
-    get selected(): boolean {
+    public get selected(): boolean {
         return this.selectionService.isRowSelected(this.rowID);
     }
 
-    set selected(value: boolean) {
+    public set selected(value: boolean) {
         if (value) {
             this.selectionService.selectRowsWithNoEvent([this.rowID]);
         } else {
@@ -240,7 +240,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    get columns(): IgxColumnComponent[] {
+     public get columns(): IgxColumnComponent[] {
         return this.grid.visibleColumns;
     }
 
@@ -248,7 +248,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @hidden
      * @internal
      */
-    get viewIndex(): number {
+    public get viewIndex(): number {
         if ((this.grid as any).groupingExpressions.length) {
             return this.grid.filteredSortedData.indexOf(this.rowData);
         }
@@ -258,7 +258,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    get pinnedColumns(): IgxColumnComponent[] {
+    public get pinnedColumns(): IgxColumnComponent[] {
         return this.grid.pinnedColumns;
     }
 
@@ -279,7 +279,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    get unpinnedColumns(): IgxColumnComponent[] {
+    public get unpinnedColumns(): IgxColumnComponent[] {
         return this.grid.unpinnedColumns;
     }
 
@@ -356,7 +356,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      *  </igx-grid>
      * ```
      */
-    get grid(): T {
+    public get grid(): T {
         return this.gridAPI.grid;
     }
 
@@ -383,7 +383,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * let selectedRowNativeElement = this.grid.selectedRows[1].nativeElement;
      * ```
      */
-    get nativeElement() {
+    public get nativeElement() {
         return this.element.nativeElement;
     }
 
@@ -535,7 +535,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    get rowCheckboxAriaLabel() {
+    public get rowCheckboxAriaLabel() {
         return this.grid.primaryKey ?
             this.selected ? 'Deselect row with key ' + this.rowID : 'Select row with key ' + this.rowID :
             this.selected ? 'Deselect row' : 'Select row';
