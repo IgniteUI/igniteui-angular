@@ -445,6 +445,43 @@ describe('IgxGrid - Column properties #grid', () => {
         row.cells.forEach(cell => expect(cell.nativeElement.getAttribute('style')).toMatch('background: black'));
     });
 
+    it('should apply custom CSS bindings to grid headers', () => {
+        const fix = TestBed.createComponent(ColumnHaederClassesComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+
+
+        const styles = {
+            background: 'rebeccapurple',
+            color: 'white'
+        };
+
+        grid.columns.forEach(col => col.headerStyles = styles);
+        fix.detectChanges();
+
+        grid.headerCellList.forEach(header => expect(header.elementRef.nativeElement.getAttribute('style'))
+            .toMatch('background: rebeccapurple'));
+
+    });
+
+    it('should apply custom CSS bindings to grid header groups', () => {
+        const fix = TestBed.createComponent(ColumnHaederClassesComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+
+
+        const styles = {
+            background: 'rebeccapurple',
+            color: 'white'
+        };
+
+        grid.columns.forEach(col => col.headerGroupStyles = styles);
+        fix.detectChanges();
+
+        grid.headerGroups.forEach(hGroup => expect(hGroup.element.nativeElement.getAttribute('style'))
+            .toMatch('background: rebeccapurple'));
+    });
+
     it('should set title attribute on column header spans', () => {
         const fix = TestBed.createComponent(ColumnsFromIterableComponent);
         fix.detectChanges();

@@ -6,6 +6,7 @@ import { IgxColumnMovingModule } from '../moving/moving.module';
 import { IgxGridFilteringModule } from '../filtering/base/filtering.module';
 import { IgxGridResizingModule } from '../resizing/resize.module';
 import { SortingIndexPipe } from './sorting-index.pipe';
+import { IgxGridPipesModule } from '../common/grid-pipes.module';
 
 @NgModule({
     declarations: [
@@ -17,7 +18,8 @@ import { SortingIndexPipe } from './sorting-index.pipe';
         IgxGridSharedModules,
         IgxGridFilteringModule,
         IgxColumnMovingModule,
-        IgxGridResizingModule
+        IgxGridResizingModule,
+        IgxGridPipesModule
     ],
     exports: [
         IgxGridHeaderComponent,

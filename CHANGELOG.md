@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 11.1.24
+
+### New Features
+- `igxGrid`
+    - Added `headerStyles` and `headerGroupStyles` inputs to the column component.
+    Similar to `cellStyles` is exposes a way to bind CSS properties and style the grid headers.
+
 ## 11.1.18
 - `igxGrid`
     - The column formatter callback signature now accepts the row data as an additional argument:
