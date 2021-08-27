@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
-import { IgxStepperLabelPosition, IgxStepType } from 'projects/igniteui-angular/src/lib/stepper/common';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { IgxStepperLabelPosition, IgxStepperProgressLine, IgxStepType } from 'projects/igniteui-angular/src/lib/stepper/common';
+import { IgxStepperComponent } from 'projects/igniteui-angular/src/lib/stepper/igx-stepper.component';
 
 @Component({
     templateUrl: 'stepper.sample.html',
     styleUrls: ['stepper.sample.scss']
 })
-export class IgxStepperSampleComponent {
+export class IgxStepperSampleComponent implements AfterViewInit {
+    @ViewChild('stepper', { static: true }) public stepper: IgxStepperComponent;
     public stepType = IgxStepType.Full;
     public labelPos = IgxStepperLabelPosition.Bottom;
     public stepTypes = [
@@ -23,6 +25,11 @@ export class IgxStepperSampleComponent {
         { label: 'Start', labelPos: IgxStepperLabelPosition.Start,
             selected: this.labelPos === IgxStepperLabelPosition.Start, togglable: true }
     ];
+    public ngAfterViewInit(){
+        requestAnimationFrame(() => {
+            this.stepper.steps[1].completedStyle = IgxStepperProgressLine.Dashed;
+        });
+    }
     public toggleStepTypes(event){
         this.stepType = this.stepTypes[event.index].stepType;
     }

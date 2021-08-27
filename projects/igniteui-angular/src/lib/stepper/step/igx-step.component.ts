@@ -1,46 +1,9 @@
-import { Component, ContentChild, Directive, EventEmitter, HostBinding, HostListener, Inject, Input, Output } from '@angular/core';
-import { IgxStepperLabelPosition, IgxStepperProgressLine, IGX_STEPPER_COMPONENT, IStepperCancelableEventArgs } from '../common';
+import { Component, ContentChild, EventEmitter, HostBinding, HostListener, Inject, Input, Output } from '@angular/core';
+import { IgxStepperProgressLine, IGX_STEPPER_COMPONENT, IStepperCancelableEventArgs } from '../common';
 import { IgxStepperComponent } from '../igx-stepper.component';
+import { IgxStepIconDirective, IgxStepLabelDirective } from '../igx-stepper.directive';
 
 let NEXT_ID = 0;
-
-@Directive({
-    selector: '[igxStepIcon]'
-})
-export class IgxStepIconDirective {
-    @HostBinding('class.igx-step__icon')
-    public defaultClass = true;
-}
-
-@Directive({
-    selector: '[igxStepLabel]'
-})
-export class IgxStepLabelDirective {
-    @Input() public position = IgxStepperLabelPosition.Bottom;
-
-    @HostBinding('class.igx-step__label')
-    public defaultClass = true;
-
-    @HostBinding('class.igx-step__label--bottom')
-    public get bottomClass() {
-        return this.position === IgxStepperLabelPosition.Bottom;
-    }
-
-    @HostBinding('class.igx-step__label--top')
-    public get topClass() {
-        return this.position === IgxStepperLabelPosition.Top;
-    }
-
-    @HostBinding('class.igx-step__label--end')
-    public get endClass() {
-        return this.position === IgxStepperLabelPosition.End;
-    }
-
-    @HostBinding('class.igx-step__label--start')
-    public get startClass() {
-        return this.position === IgxStepperLabelPosition.Start;
-    }
-}
 
 @Component({
     selector: 'igx-step',
@@ -196,6 +159,18 @@ export class IgxStepComponent {
     @Input()
     public completedStyle = IgxStepperProgressLine.Solid;
 
+    /** @hidden @internal */
+    @HostBinding('class.igx-step--solid')
+    public get solidClass() {
+        return this.complete && this.completedStyle === IgxStepperProgressLine.Solid;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-step--dashed')
+    public get dashedClass() {
+        return this.complete && this.completedStyle === IgxStepperProgressLine.Dashed;
+    }
+
     @ContentChild(IgxStepIconDirective)
     public icon: IgxStepIconDirective;
 
@@ -232,7 +207,6 @@ export class IgxStepComponent {
     private _index = NEXT_ID - 1;
     private _active = false;
     private _optional = false;
-
 
     constructor(@Inject(IGX_STEPPER_COMPONENT) public stepper: IgxStepperComponent) { }
 

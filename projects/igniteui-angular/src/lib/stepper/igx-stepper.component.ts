@@ -1,30 +1,21 @@
+import { CommonModule } from '@angular/common';
 import {
-    AfterContentInit, Component, ContentChildren, Directive, EventEmitter,
+    AfterContentInit, Component, ContentChildren, EventEmitter,
     HostBinding, Input, NgModule, OnDestroy, Output, QueryList
 } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
     IgxStepperLabelPosition, IgxStepperOrienatation,
     IgxStepType, IGX_STEPPER_COMPONENT, IStepperCancelableEventArgs, IStepperEventArgs
 } from './common';
-import { IgxStepComponent, IgxStepIconDirective, IgxStepLabelDirective } from './step/igx-step.component';
+import {
+    IgxStepValidIconDirective, IgxStepInvalidIconDirective,
+    IgxStepIconDirective, IgxStepLabelDirective
+} from './igx-stepper.directive';
+import { IgxStepComponent } from './step/igx-step.component';
 
 let NEXT_ID = 0;
-
-@Directive({
-    selector: '[igxStepValidIcon]'
-})
-export class IgxStepValidIconDirective {
-}
-
-@Directive({
-    selector: '[igxStepInvalidIcon]'
-})
-export class IgxStepInvalidIconDirective {
-}
-
 
 @Component({
     selector: 'igx-stepper',
@@ -52,19 +43,41 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
     @HostBinding('class.igx-stepper')
     public cssClass = 'igx-stepper';
 
+    /**
+     * Get all steps.
+     *
+     * ```typescript
+     * const steps: IgxStepComponent[] = this.stepper.steps;
+     * ```
+     */
     @Input()
     public get steps(): IgxStepComponent[] {
-        return this._steps.toArray();
+        return this._steps?.toArray();
     }
 
+    /**
+     * Get/Set the stepper orientation.
+     *
+     * ```typescript
+     * this.stepper.orientation = IgxStepperOrienatation.Vertical;
+     * ```
+     */
     @Input()
     public get orientation(): IgxStepperOrienatation {
         return this._orientation;
     }
 
     public set orientation(value: IgxStepperOrienatation) {
+        if (this._orientation !== value) { }
     }
 
+    /**
+     * Get/Set the type of the steps.
+     *
+     * ```typescript
+     * this.stepper.stepType = IgxStepType.Indicator;
+     * ```
+     */
     @Input()
     public get stepType(): IgxStepType {
         return this._stepType;
@@ -73,13 +86,20 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
     public set stepType(value: IgxStepType) {
         if (value !== this._stepType) {
             this._stepType = value;
-            this._steps.forEach(step => {
+            this._steps?.forEach(step => {
                 step.isLabelVisible = !(this._stepType === IgxStepType.Indicator);
                 step.isIndicatorVisible = !(this._stepType === IgxStepType.Label);
             });
         }
     }
 
+    /**
+     * Get/Set the position of the steps label.
+     *
+     * ```typescript
+     * this.stepper.labelPosition = IgxStepperLabelPosition.Top;
+     * ```
+     */
     @Input()
     public get labelPosition(): IgxStepperLabelPosition {
         return this._labelPosition;
@@ -88,12 +108,36 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
     public set labelPosition(value: IgxStepperLabelPosition) {
         if (value !== this._labelPosition) {
             this._labelPosition = value;
-            this._steps.forEach(step => step.label.position = this.labelPosition);
+            this._steps?.forEach(step => step.label.position = this.labelPosition);
         }
     }
 
+    /**
+     * Get/Set whether the stepper is linear.
+     * Only if the active step is valid the user is able to move forward.
+     *
+     * ```html
+     * <igx-stepper [linear]="true"></igx-stepper>
+     * ```
+     */
     @Input()
     public linear = false;
+
+    /**
+     * Get/Set the animation settings.
+     *
+     * ```html
+     * <igx-stepper [animationSettings]="customAnimationSettings"></igx-stepper>
+     * ```
+     */
+    @Input()
+    public get animationSettings() {
+        return this._animationSettings;
+    }
+
+    public set animationSettings(value: any) {
+        this._animationSettings = value;
+    }
 
     /**
      * Emitted when the stepper's active step is changing.
@@ -134,11 +178,12 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
     private _orientation = IgxStepperOrienatation.Horizontal;
     private _stepType = IgxStepType.Full;
     private _labelPosition = IgxStepperLabelPosition.Bottom;
+    private _animationSettings;
     private destroy$ = new Subject();
 
     /** @hidden @internal */
     public ngAfterContentInit() {
-        this.steps.forEach(s => {
+        this.steps?.forEach(s => {
             s.activeChanged.pipe(takeUntil(this.destroy$)).subscribe((e) => {
                 if (e) {
                     if (this._activeStep) {
@@ -161,31 +206,55 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
     }
 
     public navigateTo(index: number) {
-        if (!this._activeStep) {
-            this.steps.filter(s => s.index === index)[0].active = true;
+        const step = this._steps.filter(s => s.index === index)[0];
+        if (!step || step.disabled) {
+            return;
         }
+
+        if (!this._activeStep) {
+            step.active = true;
+        }
+
         if (this._activeStep && this._activeStep.index !== index) {
             this._activeStep.active = false;
-            this.steps.filter(s => s.index === index)[0].active = true;
+            step.active = true;
+        }
+    }
+
+    private getNextStep() {
+        if (this._activeStep) {
+            return this._activeStep.index === this.steps.length - 1 ? this._activeStep :
+                this._steps.find(s => s.index > this._activeStep.index && !s.disabled && !s.skip);
+        }
+    }
+
+    private getPrevStep() {
+        if (this._activeStep) {
+            return this._activeStep.index === 0 ? this._activeStep :
+                this._steps.find(s => s.index < this._activeStep.index && !s.disabled && !s.skip);
         }
     }
 }
 
 @NgModule({
     imports: [
-        BrowserAnimationsModule
+        CommonModule
     ],
     declarations: [
         IgxStepComponent,
         IgxStepperComponent,
         IgxStepLabelDirective,
-        IgxStepIconDirective
+        IgxStepIconDirective,
+        IgxStepValidIconDirective,
+        IgxStepInvalidIconDirective
     ],
     exports: [
         IgxStepComponent,
         IgxStepperComponent,
         IgxStepLabelDirective,
-        IgxStepIconDirective
+        IgxStepIconDirective,
+        IgxStepValidIconDirective,
+        IgxStepInvalidIconDirective
     ]
 })
 export class IgxStepperModule { }
