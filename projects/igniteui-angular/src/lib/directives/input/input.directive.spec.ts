@@ -505,11 +505,16 @@ describe('IgxInput', () => {
         fixture.detectChanges();
         const igxInput = fixture.componentInstance.strIgxInput;
 
+        expect(igxInput.disabled).toBe(false);
+        expect(igxInput.inputGroup.disabled).toBe(false);
+
         fixture.componentInstance.form.disable();
         expect(igxInput.disabled).toBe(true);
+        expect(igxInput.inputGroup.disabled).toBe(true);
 
         fixture.componentInstance.form.get('str').enable();
         expect(igxInput.disabled).toBe(false);
+        expect(igxInput.inputGroup.disabled).toBe(false);
     }));
 
     it('should style input when required is toggled dynamically.', () => {
