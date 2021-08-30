@@ -21,7 +21,8 @@ import {
     AfterViewChecked,
     ContentChildren,
     QueryList,
-    Renderer2
+    Renderer2,
+    AfterContentChecked
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl, NG_VALIDATORS, ValidationErrors } from '@angular/forms';
 import {
@@ -159,7 +160,7 @@ export type PredefinedFormatOptions = (typeof PredefinedFormatOptions)[keyof typ
     `]
 })
 export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor,
-    EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+    EditorProvider, OnInit, AfterViewInit, AfterContentChecked, OnDestroy, AfterViewChecked {
     /**
      * Gets/Sets the `IgxDatePickerComponent` label.
      *
@@ -945,7 +946,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                     this._updateValidityOnBlur();
                 }
             });
-
         if (this.mode === InteractionMode.DropDown) {
             this.dateFormatParts = DatePickerUtil.parseDateFormat(this.mask, this.locale);
             if (this.mask === undefined) {
@@ -974,6 +974,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             this.attachTemplateBlur();
         });
         this.attachTemplateBlur();
+    }
+
+    public ngAfterContentChecked() {
+        // B.P. 27 Aug. 2021 - #10057
+        // igxMask updates the input's value when its mask property is set
+        // this is an expected behavior of the mask since it needs to be able to update the input's value
+        // during runtime change of placeholder or format
+        // this issue is not reproducible after #7199
+        if (this.inputDirective && !this._inputGroupUserTemplate
+            && this.format.length < this.inputDirective.value.length) {
+            this.inputDirective.value = this.transformedDate;
+        }
     }
 
     public ngAfterViewChecked() {

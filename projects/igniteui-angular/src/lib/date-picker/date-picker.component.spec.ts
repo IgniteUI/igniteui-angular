@@ -1215,12 +1215,13 @@ describe('IgxDatePicker', () => {
 
             UIInteractions.clickAndSendInputElementValue(input, '28-02-19');
             fixture.detectChanges();
+            expect(input.nativeElement.value).toBe('28-02-19');
 
             UIInteractions.clickAndSendInputElementValue(input, '29-02-19');
             fixture.detectChanges();
 
             // invalid date
-            expect(input.nativeElement.value).toBe('29-02-19');
+            expect(input.nativeElement.value).toBe('28-02-19');
             expect(datePicker.onValidationFailed.emit).toHaveBeenCalledTimes(1);
         });
 
@@ -1245,11 +1246,11 @@ describe('IgxDatePicker', () => {
             // disabled date
             UIInteractions.clickAndSendInputElementValue(input, '03-09-18');
             fixture.detectChanges();
-            expect(input.nativeElement.value).toBe('03-09-18');
+            expect(input.nativeElement.value).toBe('03-05-19');
 
             UIInteractions.clickAndSendInputElementValue(input, '07-09-18');
             fixture.detectChanges();
-            expect(input.nativeElement.value).toBe('07-09-18');
+            expect(input.nativeElement.value).toBe('03-05-19');
 
             expect(datePicker.onDisabledDate.emit).toHaveBeenCalledTimes(2);
         }));
