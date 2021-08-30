@@ -5,7 +5,7 @@
 ## Milestone 18 (Due by Oct, 2021)
 
 1. Add row at top of grid [#9675](https://github.com/IgniteUI/igniteui-angular/issues/9675)
-2. Grid "active" state, separate from "selected" [#9969](https://github.com/IgniteUI/igniteui-angular/issues/9969)
+2. Grid row styles and classes [#9969](https://github.com/IgniteUI/igniteui-angular/issues/9969)
 3. Freezing Columns/Rows on Export to Excel (Angular) [#9863](https://github.com/IgniteUI/igniteui-angular/issues/9863)
 4. Stepper control [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
 5. IgxTreeGrid: display only filtered records [#9923](https://github.com/IgniteUI/igniteui-angular/issues/9923)
