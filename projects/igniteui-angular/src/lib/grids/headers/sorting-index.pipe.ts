@@ -6,11 +6,9 @@ import { ISortingExpression } from '../../data-operations/sorting-expression.int
   pure: true
 })
 export class SortingIndexPipe implements PipeTransform {
-
-  transform(columnField: string, sortingExpressions: ISortingExpression[]): number {
-    let sortIndex = sortingExpressions.findIndex(expression => expression.fieldName === columnField);
-    return sortIndex !== -1 ? ++sortIndex : null;
-  }
-
+    public transform(columnField: string, sortingExpressions: ISortingExpression[]): number {
+        let sortIndex = sortingExpressions.findIndex(expression => expression.fieldName === columnField);
+        return sortIndex !== -1 ? ++sortIndex : null;
+    }
 }
 
