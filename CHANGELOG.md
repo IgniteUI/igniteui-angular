@@ -2,7 +2,9 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 13.0.0
+## 12.1.5
+
+### New Features
 - `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
     - Added a public method that spawns the add row UI for an arbitrary record in the current data view. It accepts a rowID (PK when one is defined, index otherwise). You can also pass `null` to spawn the UI as the very first record. Please, note that the new record is still added at the end of the data view, after the end-user submits it.
     ```typescript
@@ -10,12 +12,22 @@ All notable changes for each version of this project will be documented in this 
     this.grid.beginAddRow(null);    // spawns the add row UI as the first record
     ```
 
+## 12.1.3
+
+### New Features
+- `igxGrid`
+    - Added `headerStyles` and `headerGroupStyles` inputs to the column component.
+    Similar to `cellStyles` is exposes a way to bind CSS properties and style the grid headers.
+
 ## 12.1.2
 - `igxGrid`
     - The column formatter callback signature now accepts the row data as an additional argument:
     ```typescript formatter(value: any, rowData?: any)```
     The `rowData` argument may be `undefined` in remote scenarios/applying the callback on filtering labels
     so make sure to check its availability.
+
+- `IgxExcelExporterService`
+    - Added support for freezing column headers in **Excel**. By default, the column headers would not be frozen but this behavior can be controlled by the `freezeHeaders` option of the IgxExcelExporterOptions object.
 
 ## 12.1.0
 
