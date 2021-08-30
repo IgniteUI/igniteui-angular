@@ -254,6 +254,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
         const touch = event.touches[0];
         const destX = this._startX + (this._touchStartX - touch.pageX) * Math.sign(this.inertiaStep);
+        const destY = this._startY + (this._touchStartY - touch.pageY) * Math.sign(this.inertiaStep);
 
         /* Handle complex touchmoves when swipe stops but the toch doesn't end and then a swipe is initiated again */
         /* **********************************************************/
@@ -288,11 +289,20 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
         this._totalMovedX += this._lastMovedX;
 
-        /*	Record the direction the first time we are out of the swipeToleranceX bounds.
-        *	That way we know which direction we apply the offset so it doesn't hickup when moving out of the swipeToleranceX bounds */
-        if (!this._offsetRecorded) {
-            this._offsetDirection = Math.sign(destX - this._startX);
-            this._offsetRecorded = true;
+        /*	Do not scroll using touch untill out of the swipeToleranceX bounds */
+        if (Math.abs(this._totalMovedX) < this.swipeToleranceX && !this._offsetRecorded) {
+            this._scrollTo(this._startX, destY);
+        } else {
+            /*	Record the direction the first time we are out of the swipeToleranceX bounds.
+            *	That way we know which direction we apply the offset so it doesn't hickup when moving out of the swipeToleranceX bounds */
+            if (!this._offsetRecorded) {
+                this._offsetDirection = Math.sign(destX - this._startX);
+                this._offsetRecorded = true;
+            }
+
+            /*	Scroll with offset ammout of swipeToleranceX in the direction we have exited the bounds and
+            don't change it after that ever until touchend and again touchstart */
+            this._scrollTo(destX - this._offsetDirection * this.swipeToleranceX, destY);
         }
 
         // On Safari preventing the touchmove would prevent default page scroll behaviour even if there is the element doesn't have overflow
