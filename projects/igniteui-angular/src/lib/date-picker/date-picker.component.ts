@@ -976,6 +976,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.attachTemplateBlur();
     }
 
+    /** @hidden @internal */
     public ngAfterContentChecked() {
         // B.P. 27 Aug. 2021 - #10057
         // igxMask updates the input's value when its mask property is set
