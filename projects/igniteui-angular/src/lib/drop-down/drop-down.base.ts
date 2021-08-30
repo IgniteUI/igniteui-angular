@@ -7,7 +7,6 @@ import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { PlatformUtil } from '../core/utils';
 
 let NEXT_ID = 0;
 
@@ -179,7 +178,6 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
         }

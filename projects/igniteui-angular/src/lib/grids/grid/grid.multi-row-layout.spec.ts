@@ -103,8 +103,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         // verify block style
-        expect(grid.columnList.first.getGridTemplate(false, false)).toBe('200px 200px 200px');
-        expect(grid.columnList.first.getGridTemplate(true, false)).toBe('repeat(3,1fr)');
+        expect(grid.columnList.first.getGridTemplate(false)).toBe('200px 200px 200px');
+        expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
 
         // creating an incomplete layout 2
         fixture.componentInstance.colGroups = [{
@@ -119,8 +119,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
 
-        expect(grid.columnList.first.getGridTemplate(false, false)).toBe('200px 200px 200px');
-        expect(grid.columnList.first.getGridTemplate(true, false)).toBe('repeat(3,1fr)');
+        expect(grid.columnList.first.getGridTemplate(false)).toBe('200px 200px 200px');
+        expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
 
     }));
     it('should initialize correctly when no column widths are set.', fakeAsync(() => {
@@ -810,13 +810,13 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // check group block and column header height
         const firstLayout = grid.columnList.toArray()[0];
         expect(grid.multiRowLayoutRowSize).toEqual(2);
-        expect(firstLayout.getGridTemplate(true, false)).toEqual('repeat(2,1fr)');
+        expect(firstLayout.getGridTemplate(true)).toEqual('repeat(2,1fr)');
         expect(firstLayout.headerGroup.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
         expect(grid.getColumnByName('Fax').headerCell.nativeElement.offsetHeight).toBe(grid.rowHeight + 1);
 
         const secondLayout = grid.columnList.toArray()[2];
         const contactNameColumn = grid.getColumnByName('ContactName');
-        expect(contactNameColumn.getGridTemplate(true, false)).toEqual('repeat(2,1fr)');
+        expect(contactNameColumn.getGridTemplate(true)).toEqual('repeat(2,1fr)');
         expect(secondLayout.headerGroup.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
 
         // check cell height in row. By default should span 1 row

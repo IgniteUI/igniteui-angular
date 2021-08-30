@@ -140,7 +140,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _focused = false;
     private _droppedData: string;
     private _hasDropAction: boolean;
-    private _stopPropagation: boolean;
 
     private readonly defaultMask = 'CCCCCCCCCC';
 
@@ -159,10 +158,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const key = event.key;
         if (!key) {
             return;
-        }
-
-        if (this.platform.isIE && this._stopPropagation) {
-            this._stopPropagation = false;
         }
 
         if ((event.ctrlKey && (key === this.platform.KEYMAP.Z || key === this.platform.KEYMAP.Y))) {
@@ -236,11 +231,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                 this.nativeElement.selectionEnd = this._end;
                 this._start = this.selectionStart;
                 this._end = this.selectionEnd;
-        }
-
-        if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
-            this._stopPropagation = false;
-            return;
         }
 
         if (this._hasDropAction) {
@@ -357,9 +347,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     protected showMask(value: string): void {
         if (this.focusedValuePipe) {
-            if (this.platform.isIE) {
-                this._stopPropagation = true;
-            }
             // TODO(D.P.): focusedValuePipe should be deprecated or force-checked to match mask format
             this.inputValue = this.focusedValuePipe.transform(value);
         } else {

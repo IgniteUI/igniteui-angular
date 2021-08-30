@@ -49,5 +49,5 @@ export interface ColumnType {
     defaultTimeFormat: string;
     defaultDateTimeFormat: string;
     additionalTemplateContext: any;
-    getGridTemplate(isRow: boolean, isIE: boolean): string;
+    getGridTemplate(isRow: boolean): string;
 }

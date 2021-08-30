@@ -3327,9 +3327,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            if (this.selectionService.dragMode && this.platform.isIE) {
-                return;
-            }
             if (!this.crudService.cell &&
                 !!this.navigation.activeNode &&
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
@@ -5575,12 +5572,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 result = this.prepareCopyData(event, data);
             }
 
-            if (this.platform.isIE) {
-                (window as any).clipboardData.setData('Text', result);
-                return;
-            }
             navigator.clipboard.writeText(result).then().catch(e => console.error(e));
-        } else if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || (!this.platform.isIE && event.type === 'keydown')) {
+        } else if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || event.type === 'keydown') {
             return;
         } else {
             if (selectedColumns.length) {
@@ -5592,10 +5585,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 result = this.prepareCopyData(event, data);
             }
 
-            if (this.platform.isIE) {
-                (window as any).clipboardData.setData('Text', result);
-                return;
-            }
             event.clipboardData.setData('text/plain', result);
         }
     }

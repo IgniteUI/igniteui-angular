@@ -35,17 +35,6 @@ const Z_INDEX = 9999;
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
 
-    @HostBinding('style.-ms-grid-row-span')
-    public get gridRowSpan(): number {
-        return this.column.gridRowSpan;
-    }
-
-    @HostBinding('style.-ms-grid-column-span')
-    public get gridColumnSpan(): number {
-        return this.column.gridColumnSpan;
-    }
-
-
     @HostBinding('style.grid-row-end')
     public get rowEnd(): number {
         return this.column.rowEnd;
@@ -56,13 +45,11 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.column.colEnd;
     }
 
-    @HostBinding('style.-ms-grid-row')
     @HostBinding('style.grid-row-start')
     public get rowStart(): number {
         return this.column.rowStart;
     }
 
-    @HostBinding('style.-ms-grid-column')
     @HostBinding('style.grid-column-start')
     public get colStart(): number {
         return this.column.colStart;
@@ -202,7 +189,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @HostBinding('style.display')
     public get groupDisplayStyle(): string {
-        return this.grid.hasColumnLayouts && this.column.children && !this.platform.isIE ? 'flex' : '';
+        return this.grid.hasColumnLayouts && this.column.children ? 'flex' : '';
     }
 
     /**

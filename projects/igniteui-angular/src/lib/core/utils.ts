@@ -193,18 +193,17 @@ export class PlatformUtil {
     public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
     public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
-    public isIE = this.isBrowser && navigator.appVersion.indexOf('Trident/') > 0;
     public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
     /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
 
     public KEYMAP = mkenum({
         ENTER: 'Enter',
-        SPACE: this.isIE ? 'Spacebar' : ' ',
-        ESCAPE: this.isIE ? 'Esc' : 'Escape',
-        ARROW_DOWN: this.isIE ? 'Down' : 'ArrowDown',
-        ARROW_UP: this.isIE ? 'Up' : 'ArrowUp',
-        ARROW_LEFT: this.isIE ? 'Left' : 'ArrowLeft',
-        ARROW_RIGHT: this.isIE ? 'Right' : 'ArrowRight',
+        SPACE: ' ',
+        ESCAPE: 'Escape',
+        ARROW_DOWN: 'ArrowDown',
+        ARROW_UP: 'ArrowUp',
+        ARROW_LEFT: 'ArrowLeft',
+        ARROW_RIGHT: 'ArrowRight',
         END: 'End',
         HOME: 'Home',
         PAGE_DOWN: 'PageDown',
@@ -213,7 +212,7 @@ export class PlatformUtil {
         TAB: 'Tab',
         SEMICOLON: ';',
         // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values#editing_keys
-        DELETE: this.isIE ? 'Del' : 'Delete',
+        DELETE: 'Delete',
         BACKSPACE: 'Backspace',
         CONTROL: 'Control',
         X: 'x',

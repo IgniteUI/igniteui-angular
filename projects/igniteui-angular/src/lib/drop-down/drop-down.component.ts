@@ -23,7 +23,7 @@ import { IgxDropDownBaseDirective } from './drop-down.base';
 import { DropDownActionKey, Navigate } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs } from './drop-down.common';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
@@ -218,10 +218,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil,
         protected selection: IgxSelectionAPIService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(elementRef, cdr, platform, _displayDensityOptions);
+        super(elementRef, cdr, _displayDensityOptions);
     }
 
     /**
@@ -566,19 +565,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     protected scrollToItem(item: IgxDropDownItemBaseDirective) {
-        const itemPosition = this.calculateScrollPosition(item);
-
-        //  in IE11 setting sctrollTop is somehow slow and forces dropdown
-        //  to appear on screen before animation start. As a result dropdown
-        //  flickers badly. This is why we set scrollTop just a little later
-        //  allowing animation to start and prevent dropdown flickering
-        if (this.platform.isIE) {
-            setTimeout(() => {
-                this.scrollContainer.scrollTop = (itemPosition);
-            }, 1);
-        } else {
-            this.scrollContainer.scrollTop = (itemPosition);
-        }
+        this.scrollContainer.scrollTop = this.calculateScrollPosition(item);
     }
 
     protected focusItem(value: boolean) {

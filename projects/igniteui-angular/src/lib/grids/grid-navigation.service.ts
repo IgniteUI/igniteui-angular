@@ -49,7 +49,7 @@ export class IgxGridNavigationService {
 
     constructor(protected platform: PlatformUtil) { }
 
-    handleNavigation(event: KeyboardEvent) {
+    public handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) {
             return;
@@ -64,7 +64,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    dispatchEvent(event: KeyboardEvent) {
+    public dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
             !this.grid.crudService.rowEditingBlocked && !this.grid.crudService.rowInEditMode) {
@@ -99,13 +99,13 @@ export class IgxGridNavigationService {
         this.grid.cdr.detectChanges();
     }
 
-    summaryNav(event: KeyboardEvent) {
+    public summaryNav(event: KeyboardEvent) {
         if (this.grid.hasSummarizedColumns) {
             this.horizontalNav(event, event.key.toLowerCase(), this.grid.dataView.length, 'summaryCell');
         }
     }
 
-    headerNavigation(event: KeyboardEvent) {
+    public headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!HEADER_KEYS.has(key)) {
             return;
@@ -127,7 +127,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    focusTbody(event) {
+    public focusTbody(event) {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
         if (gridRows < 1) {
             this.activeNode = null; return;
@@ -152,7 +152,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    focusFirstCell(header = true) {
+    public focusFirstCell(header = true) {
         if ((header || this.grid.dataView.length) && this.activeNode &&
             (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length ||
             (!header && !this.grid.hasSummarizedColumns))) {
@@ -466,16 +466,16 @@ export class IgxGridNavigationService {
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
-    get lastColumnIndex() {
+    public get lastColumnIndex() {
         return Math.max(...this.grid.visibleColumns.map(col => col.visibleIndex));
     }
-    get displayContainerWidth() {
+    public get displayContainerWidth() {
         return Math.round(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth);
     }
-    get displayContainerScrollLeft() {
+    public get displayContainerScrollLeft() {
         return Math.ceil(this.grid.headerContainer.scrollPosition);
     }
-    get containerTopOffset() {
+    public get containerTopOffset() {
         return parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
     }
 
