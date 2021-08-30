@@ -494,6 +494,27 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public headerClasses = '';
 
     /**
+     * Sets conditional style properties on the column header.
+     * Similar to `ngStyle` it accepts an object literal where the keys are
+     * the style properties and the value is the expression to be evaluated.
+     * ```typescript
+     * styles = {
+     *  background: 'royalblue',
+     *  color: (column) => column.pinned ? 'red': 'inherit'
+     * }
+     * ```
+     * ```html
+     * <igx-column [headerStyles]="styles"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+     @notifyChanges()
+     @WatchColumnChanges()
+     @Input()
+     public headerStyles = null;
+
+    /**
      * Sets/gets the class selector of the column group header.
      * ```typescript
      * let columnHeaderClass = this.column.headerGroupClasses;
@@ -508,6 +529,28 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @WatchColumnChanges()
     @Input()
     public headerGroupClasses = '';
+
+    /**
+     * Sets conditional style properties on the column header group wrapper.
+     * Similar to `ngStyle` it accepts an object literal where the keys are
+     * the style properties and the value is the expression to be evaluated.
+     * ```typescript
+     * styles = {
+     *  background: 'royalblue',
+     *  color: (column) => column.pinned ? 'red': 'inherit'
+     * }
+     * ```
+     * ```html
+     * <igx-column [headerGroupStyles]="styles"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+     @notifyChanges()
+     @WatchColumnChanges()
+     @Input()
+     public headerGroupStyles = null;
+
     /**
      * Sets a conditional class selector of the column cells.
      * Accepts an object literal, containing key-value pairs,
@@ -538,7 +581,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```typescript
      * styles = {
      *  background: 'royalblue',
-     *  color: (rowData, columnKey, cellValue, rowIndex) => value.startsWith('Important') : 'red': 'inherit'
+     *  color: (rowData, columnKey, cellValue, rowIndex) => value.startsWith('Important') ? 'red': 'inherit'
      * }
      * ```
      * ```html
