@@ -395,6 +395,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
 
     /**
      * Returns the index of the record in the data view by pk or -1 if not found or primaryKey is not set.
+     *
      * @param pk
      */
     public get_rec_index_by_id(pk: string | number): number {
