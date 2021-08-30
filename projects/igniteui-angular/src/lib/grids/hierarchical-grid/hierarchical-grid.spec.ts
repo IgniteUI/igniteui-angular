@@ -1322,7 +1322,8 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
     configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxHierarchicalGridToggleRIComponent
+                IgxHierarchicalGridToggleRIComponent,
+                IgxHierarchicalGridCustomRowEditOverlayComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
@@ -1403,6 +1404,55 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         expect(hGrids.length).toBe(3);
         expect(childGrid.hgridAPI.getChildGrids().length).toBe(1);
 
+    });
+
+    it(`Should apply template to both parent and child grids`, async () => {
+        const customFixture = TestBed.createComponent(IgxHierarchicalGridCustomRowEditOverlayComponent);
+        customFixture.detectChanges();
+        hierarchicalGrid = customFixture.componentInstance.hgrid;
+        hierarchicalGrid.primaryKey = 'ID';
+        hierarchicalGrid.rowEditable = true;
+
+        let cellElem = hierarchicalGrid.hgridAPI.get_cell_by_index(0, 'ProductName');
+        let row = hierarchicalGrid.gridAPI.get_row_by_index(0);
+
+        UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+        customFixture.detectChanges();
+        expect(row.inEditMode).toBe(true);
+
+        const mainGridOverlay = GridFunctions.getRowEditingOverlay(customFixture);
+        expect(mainGridOverlay).not.toBeNull();
+
+        const mainGridOverlayTextContent = mainGridOverlay.querySelector('.igx-banner__text').textContent;
+        const mainGridOverlayActionsContent = mainGridOverlay.querySelector('.igx-banner__actions').textContent;
+
+        expect(mainGridOverlayTextContent).toBe(' You have 0 changes in this row\n');
+        expect(mainGridOverlayActionsContent).toBe('CancelDone');
+
+        hierarchicalGrid.expandRow(hierarchicalGrid.getRowByIndex(0).rowID);
+        customFixture.detectChanges();
+
+        const secondLevelGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
+        expect(secondLevelGrid).not.toBeNull();
+        customFixture.detectChanges();
+
+        expect(GridFunctions.getRowEditingOverlay(customFixture)).toBeNull();
+
+        cellElem = secondLevelGrid.hgridAPI.get_cell_by_index(0, 'ProductName');
+        row = secondLevelGrid.gridAPI.get_row_by_index(0);
+
+        UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+        customFixture.detectChanges();
+        expect(row.inEditMode).toBe(true);
+
+        const nestedGridOverlay = GridFunctions.getRowEditingOverlay(customFixture);
+        expect(nestedGridOverlay).not.toBeNull();
+
+        const nestedGridOverlayTextContent = nestedGridOverlay.querySelector('.igx-banner__text').textContent;
+        const nestedGridOverlayActionsContent = nestedGridOverlay.querySelector('.igx-banner__actions').textContent;
+
+        expect(nestedGridOverlayTextContent).toBe('Row Edit Text');
+        expect(nestedGridOverlayActionsContent).toBe('Row Edit Actions');
     });
 
     it(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened 
@@ -1845,3 +1895,26 @@ export class IgxHierarchicalGridHidingPinningColumnsComponent extends IgxHierarc
         col.hidden = true;
     }
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="false"
+    [height]="'400px'" [width]="width" [rowEditable]="true" #hierarchicalGrid>
+     <igx-column field="ID"></igx-column>
+     <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowEditable]="true"
+            #rowIsland>
+            <igx-column field="ID"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
+            </igx-row-island>
+            <ng-template igxRowEditText let-rowChangesCount>
+                <span>Row Edit Text</span>
+            </ng-template>
+            <ng-template igxRowEditActions let-endRowEdit>
+                <span>Row Edit Actions</span>
+            </ng-template>
+        </igx-row-island>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarchicalGridTestBaseComponent { }
