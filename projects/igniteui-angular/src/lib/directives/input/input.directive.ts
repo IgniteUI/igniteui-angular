@@ -49,6 +49,7 @@ export enum IgxInputState {
     exportAs: 'igxInput'
 })
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
+    private _disabled = false;
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
 
@@ -101,9 +102,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     @Input()
+    @HostBinding('disabled')
     public set disabled(value: boolean) {
-        this.nativeElement.disabled = value;
-        this.inputGroup.disabled = value;
+        this._disabled = this.inputGroup.disabled = !!((value as any === '') || value);
+        if (this.focused && this._disabled) {
+            // Browser focus may not fire in good time and mess with change detection, adjust here in advance:
+            this.inputGroup.isFocused = false;
+        }
     }
     /**
      * Gets the `disabled` property
@@ -116,7 +121,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     public get disabled() {
-        return this.nativeElement.hasAttribute('disabled');
+        return this._disabled;
     }
 
     /**
@@ -211,6 +216,11 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     public ngAfterViewInit() {
         this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute('placeholder');
+
+        if (this.ngControl && this.ngControl.disabled !== null) {
+            this.disabled = this.ngControl.disabled;
+        }
+
         this.inputGroup.disabled = this.inputGroup.disabled || this.nativeElement.hasAttribute('disabled');
         this.inputGroup.isRequired = this.nativeElement.hasAttribute('required');
 
@@ -404,8 +414,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private checkNativeValidity() {
         if (!this.disabled && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ?
-                            this.focused ? IgxInputState.VALID : IgxInputState.INITIAL :
-                            IgxInputState.INVALID;
+                this.focused ? IgxInputState.VALID : IgxInputState.INITIAL :
+                IgxInputState.INVALID;
         }
     }
 }
