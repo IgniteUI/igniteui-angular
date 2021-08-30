@@ -646,8 +646,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     /** @hidden @internal @deprecated */
     public focused = this.active;
-    protected compositionStartHandler;
-    protected compositionEndHandler;
     protected _lastSearchInfo: ISearchInfo;
     private _highlight: IgxTextHighlightDirective;
     private _cellSelection = GridSelectionMode.multiple;
