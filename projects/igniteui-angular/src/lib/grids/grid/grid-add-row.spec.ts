@@ -487,7 +487,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             grid.navigateTo(20, 0);
-            
+
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
 

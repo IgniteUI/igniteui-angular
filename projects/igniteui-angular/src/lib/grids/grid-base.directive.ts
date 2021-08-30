@@ -5976,7 +5976,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let index = rowID;
         if (rowID == null) {
             if (asChild) {
-                console.warn("The record cannot be added as a child to an unspecified record.");
+                console.warn('The record cannot be added as a child to an unspecified record.');
                 return;
             }
             index = 0;
@@ -5984,10 +5984,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             // find the index of the record with that PK
             index = this.gridAPI.get_rec_index_by_id(rowID);
             rowID = index;
-            if (index == -1) {
-                console.warn("No row with the specified PK was found.");
+            if (index === -1) {
+                console.warn('No row with the specified PK was found.');
                 return;
-            } 
+            }
         }
         // check if the index is valid - won't support anything outside the data view
         if (index >= 0 && index < this.dataView.length) {
@@ -6005,7 +6005,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             this.beginAddRowForIndex(rowID, asChild);
         } else {
-            console.warn("The row with the specified PK or index is outside of the current data view.");
+            console.warn('The row with the specified PK or index is outside of the current data view.');
         }
     }
 
@@ -6015,7 +6015,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (row !== undefined) {
             this.crudService.enterAddRowMode(row, asChild);
         } else {
-            console.warn("No row with the specified PK or index was found.");
+            console.warn('No row with the specified PK or index was found.');
         }
     }
 
