@@ -40,7 +40,8 @@ describe('IgxDatePicker', () => {
                 IgxDatePickerOpeningComponent,
                 IgxDatePickerReactiveFormComponent,
                 IgxDatePickerDropdownButtonsComponent,
-                IgxDatePickerInFormComponent
+                IgxDatePickerInFormComponent,
+                IgxDatePickerDefaultComponent
             ],
             imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
                 IgxButtonModule, IgxTextSelectionModule, IgxIconModule]
@@ -1336,6 +1337,49 @@ describe('IgxDatePicker', () => {
             expect(disabledGroup).toBeDefined();
             expect(inputGroup.nativeElement.classList.contains('igx-input-group--disabled')).toBeTruthy();
         });
+
+        it('should not display broken mask on init if the format is M/d/yyyy', () => {
+            let fix = TestBed.createComponent(IgxDatePickerDefaultComponent);
+            let picker = fix.componentInstance.datePicker;
+            fix.detectChanges();
+            fix.detectChanges(); // trigger change detection a second time now that content has been populated
+            expect(picker.inputDirective.value).toEqual('4/2/2010');
+
+            fix = TestBed.createComponent(IgxDatePickerDefaultComponent);
+            fix.componentInstance.format = 'd/M/yyyy';
+            picker = fix.componentInstance.datePicker;
+            fix.detectChanges();
+            fix.detectChanges();
+            expect(picker.inputDirective.value).toEqual('2/4/2010');
+
+            fix = TestBed.createComponent(IgxDatePickerDefaultComponent);
+            fix.componentInstance.format = 'dd/M/yyyy';
+            picker = fix.componentInstance.datePicker;
+            fix.detectChanges();
+            fix.detectChanges();
+            expect(picker.inputDirective.value).toEqual('02/4/2010');
+
+            fix = TestBed.createComponent(IgxDatePickerDefaultComponent);
+            fix.componentInstance.format = 'd/MM/yyyy';
+            picker = fix.componentInstance.datePicker;
+            fix.detectChanges();
+            fix.detectChanges();
+            expect(picker.inputDirective.value).toEqual('2/04/2010');
+
+            fix = TestBed.createComponent(IgxDatePickerDefaultComponent);
+            fix.componentInstance.format = 'dd/MM/yyyy';
+            picker = fix.componentInstance.datePicker;
+            fix.detectChanges();
+            fix.detectChanges();
+            expect(picker.inputDirective.value).toEqual('02/04/2010');
+
+            fix = TestBed.createComponent(IgxDatePickerDefaultComponent);
+            fix.componentInstance.format = 'd/M/yy';
+            picker = fix.componentInstance.datePicker;
+            fix.detectChanges();
+            fix.detectChanges();
+            expect(picker.inputDirective.value).toEqual('2/4/10');
+        });
     });
 
     describe('EditorProvider', () => {
@@ -1716,6 +1760,17 @@ export class IgxDropDownDatePickerRetemplatedComponent {
 export class IgxDatePickerEditableComponent {
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
     public date: Date = new Date(2011, 9, 20);
+}
+
+@Component({
+    template: `
+        <igx-date-picker [value]="date" mode="dropdown" [format]="format"></igx-date-picker>
+    `
+})
+export class IgxDatePickerDefaultComponent {
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+    public date: Date = new Date(2010, 3, 2);
+    public format = 'M/d/yyyy';
 }
 
 @Component({
