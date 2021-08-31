@@ -820,7 +820,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (this.value) {
             this.value = null;
         }
-        if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
+        if (this.expressionsList.find(item => item.expression === this.expression) === undefined && this.expression.condition) {
             this.addExpression(true);
         }
         this.filter();
