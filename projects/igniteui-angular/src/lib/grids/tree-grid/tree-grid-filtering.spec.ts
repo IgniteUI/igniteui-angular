@@ -7,7 +7,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringStrategy } from '../../data-operations/filtering-strategy';
-import { TreeGridFormattedValuesFilteringStrategy } from './tree-grid.filtering.strategy';
+import { MatchingRecordsOnlyFilteringStrategy, TreeGridFormattedValuesFilteringStrategy } from './tree-grid.filtering.strategy';
 import { FilterMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
@@ -483,6 +483,26 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
                 expect(treeGrid.rowList.length).toBe(4);
                 expect(treeGrid.filteredData.map(rec => rec.ID)).toEqual([ 847, 225, 663, 141]);
+            }));
+
+            it('should display only the filtered records when using MatchingRecordsOnlyFilteringStrategy', fakeAsync(() => {
+                expect(treeGrid.filterStrategy).toBeUndefined();
+                treeGrid.filter('Name', 'Trevor', IgxStringFilteringOperand.instance().condition('contains'), true);
+                tick(30);
+                fix.detectChanges();
+
+                expect(treeGrid.rowList.length).toBe(3);
+
+                const filterStrategy = new MatchingRecordsOnlyFilteringStrategy();
+                treeGrid.filterStrategy = filterStrategy;
+                fix.detectChanges();
+
+                treeGrid.filter('Name', 'Trevor', IgxStringFilteringOperand.instance().condition('contains'), true);
+                tick(30);
+                fix.detectChanges();
+
+                expect(treeGrid.rowList.length).toBe(1);
+                expect(treeGrid.filteredData.map(rec => rec.ID)).toEqual([141]);
             }));
     });
     class CustomTreeGridFilterStrategy  extends FilteringStrategy {

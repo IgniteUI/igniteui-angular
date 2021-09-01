@@ -74,3 +74,46 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
         return value;
     }
 }
+
+export class MatchingRecordsOnlyFilteringStrategy extends TreeGridFilteringStrategy {
+    public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
+        advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): ITreeGridRecord[] {
+        return this.filterImplementation(data, expressionsTree, advancedExpressionsTree, undefined, grid);
+    }
+
+    private filterImplementation(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
+        advancedExpressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord, grid?: GridType): ITreeGridRecord[] {
+        let i: number;
+        let rec: ITreeGridRecord;
+        const len = data.length;
+        const res: ITreeGridRecord[] = [];
+        if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree)) || !len) {
+            return data;
+        }
+        for (i = 0; i < len; i++) {
+            rec = DataUtil.cloneTreeGridRecord(data[i]);
+            rec.parent = parent;
+            if (rec.children) {
+                const filteredChildren = this.filterImplementation(rec.children, expressionsTree, advancedExpressionsTree, rec, grid);
+                rec.children = filteredChildren.length > 0 ? filteredChildren : null;
+            }
+            if (this.matchRecord(rec, expressionsTree, grid) && this.matchRecord(rec, advancedExpressionsTree, grid)) {
+                res.push(rec);
+            } else if (rec.children && rec.children.length > 0) {
+                rec = this.setCorrectLevelToFilteredRecords(rec);
+                res.push(...rec.children);
+            }
+        }
+        return res;
+    }
+
+    private setCorrectLevelToFilteredRecords(rec: ITreeGridRecord): ITreeGridRecord {
+        if (rec.children && rec.children.length > 0) {
+            rec.children.map(child => {
+                child.level = child.level - 1;
+                return this.setCorrectLevelToFilteredRecords(child);
+            });
+        }
+        return rec;
+    }
+}
