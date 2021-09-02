@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.1.5
+
+### New Features
+- `igxTreeGrid`
+    - Added `MatchingRecordsOnlyFilteringStrategy`, which allows you to display only the records matching particular filtering condition without any trace for their parents.
+
 ## 12.1.3
 
 ### New Features
