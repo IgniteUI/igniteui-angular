@@ -435,7 +435,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     private _selectRadioButton() {
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
-                if (!this._value) {
+                if (this._value === null) {
                     // no value - uncheck all radio buttons
                     if (button.checked) {
                         button.checked = false;

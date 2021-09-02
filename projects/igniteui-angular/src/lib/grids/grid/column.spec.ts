@@ -134,6 +134,21 @@ describe('IgxGrid - Column properties #grid', () => {
         }
     });
 
+    it('should correctly pass row data context for the format callback', () => {
+        const fix = TestBed.createComponent(ColumnCellFormatterComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const formatter = fix.componentInstance.containsY;
+        grid.getColumnByName('ID').formatter = formatter;
+        fix.detectChanges();
+
+        for (let i = 0; i < 2; i++) {
+            const cell = grid.gridAPI.get_cell_by_index(i, 'ID');
+            expect(cell.nativeElement.textContent).toMatch('true');
+        }
+    });
+
     it('should reflect the column in the DOM based on its index', () => {
         const fix = TestBed.createComponent(ColumnCellFormatterComponent);
         fix.detectChanges();
@@ -426,6 +441,41 @@ describe('IgxGrid - Column properties #grid', () => {
 
         const row = grid.gridAPI.get_row_by_index(0);
         row.cells.forEach(cell => expect(cell.nativeElement.getAttribute('style')).toMatch('background: black'));
+    });
+
+    it('should apply custom CSS bindings to grid headers', () => {
+        const fix = TestBed.createComponent(ColumnHaederClassesComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+
+
+        const styles = {
+            background: 'rebeccapurple',
+            color: 'white'
+        };
+
+        grid.columns.forEach(col => col.headerStyles = styles);
+        fix.detectChanges();
+
+        grid.headerCellList.forEach(header => expect(header.nativeElement.getAttribute('style')).toMatch('background: rebeccapurple'));
+
+    });
+
+    it('should apply custom CSS bindings to grid header groups', () => {
+        const fix = TestBed.createComponent(ColumnHaederClassesComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+
+
+        const styles = {
+            background: 'rebeccapurple',
+            color: 'white'
+        };
+
+        grid.columns.forEach(col => col.headerGroupStyles = styles);
+        fix.detectChanges();
+
+        grid.headerGroupsList.forEach(hGroup => expect(hGroup.nativeElement.getAttribute('style')).toMatch('background: rebeccapurple'));
     });
 
     it('should set title attribute on column header spans', () => {
