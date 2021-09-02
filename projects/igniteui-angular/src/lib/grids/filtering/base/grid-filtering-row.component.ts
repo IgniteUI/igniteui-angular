@@ -203,7 +203,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 this.cdr.markForCheck();
             });
 
-        this.focusEditElement();
+        requestAnimationFrame(() => this.focusEditElement());
     }
 
     public get disabled(): boolean {
@@ -820,7 +820,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (this.value) {
             this.value = null;
         }
-        if (this.expressionsList.find(item => item.expression === this.expression) === undefined && this.expression.condition) {
+        if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
             this.addExpression(true);
         }
         this.filter();
