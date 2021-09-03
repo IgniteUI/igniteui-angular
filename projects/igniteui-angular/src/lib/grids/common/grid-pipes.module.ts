@@ -21,7 +21,8 @@ import {
     IgxGridAddRowPipe,
     IgxHeaderGroupWidthPipe,
     IgxGridRowClassesPipe,
-    IgxGridRowStylesPipe
+    IgxGridRowStylesPipe,
+    IgxHeaderGroupStylePipe
 } from './pipes';
 
 @NgModule({
@@ -46,7 +47,8 @@ import {
         IgxSummaryFormatterPipe,
         IgxHeaderGroupWidthPipe,
         IgxGridRowClassesPipe,
-        IgxGridRowStylesPipe
+        IgxGridRowStylesPipe,
+        IgxHeaderGroupStylePipe
     ],
     exports: [
         IgxGridFilterConditionPipe,
@@ -69,7 +71,8 @@ import {
         IgxSummaryFormatterPipe,
         IgxHeaderGroupWidthPipe,
         IgxGridRowClassesPipe,
-        IgxGridRowStylesPipe
+        IgxGridRowStylesPipe,
+        IgxHeaderGroupStylePipe
     ],
     imports: [
         CommonModule

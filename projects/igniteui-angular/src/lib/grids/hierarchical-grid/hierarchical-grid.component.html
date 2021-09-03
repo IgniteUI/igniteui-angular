@@ -31,10 +31,10 @@
             <ng-container *ngIf="data
             | gridTransaction:id:pipeTrigger
             | visibleColumns:hasVisibleColumns
+            | gridAddRow:true:pipeTrigger
             | gridRowPinning:id:true:pipeTrigger
             | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-            | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true
-            | gridAddRow:true:pipeTrigger as pinnedData">
+            | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
                 <div #pinContainer *ngIf='pinnedData.length > 0' class='igx-grid__tr--pinned'
                     [ngClass]="{ 'igx-grid__tr--pinned-bottom':  !isRowPinningToTop, 'igx-grid__tr--pinned-top': isRowPinningToTop }"
                     [style.width.px]='calcWidth'>
@@ -54,8 +54,8 @@
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:paginator?.page:paginator?.perPage:id:pipeTrigger
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
-        | gridRowPinning:id:false:pipeTrigger
-        | gridAddRow:false:pipeTrigger"
+        | gridAddRow:false:pipeTrigger
+        | gridRowPinning:id:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (chunkPreload)="dataLoading($event)">
@@ -66,16 +66,16 @@
             </ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>
-        <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-isAddRow="addRow">
-            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [rowData]="rowData" [addRow]="isAddRow"
+        <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData>
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [rowData]="rowData"
                 [ngClass]="rowClasses | igxGridRowClasses:rowData:rowIndex:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
 
-        <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData let-isAddRow="addRow">
-            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [addRow]="isAddRow"
-            [ngClass]="rowClasses | igxGridRowClasses:rowData:rowIndex:pipeTrigger"
+        <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData>
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData"
+                [ngClass]="rowClasses | igxGridRowClasses:rowData:rowIndex:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row #pinnedRow>
             </igx-hierarchical-grid-row>
         </ng-template>
@@ -165,7 +165,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)="beginAddRowByIndex(null, -1, false, $event)">
+    <button igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
@@ -188,7 +188,7 @@
 <div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
     <div [className]="bannerClass">
         <ng-container
-            *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this) }">
+            *ngTemplateOutlet="resolveRowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this) }">
         </ng-container>
     </div>
 </div>
@@ -203,15 +203,15 @@
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.isAddRow ? rowAddText : rowEditText ? rowEditText : defaultRowEditText;
-                context: { $implicit: !this.crudService.row?.isAddRow ? rowChangesCount : null }">
+                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddText : resolveRowEditText || defaultRowEditText;
+                context: { $implicit: this.crudService.row?.getClassName() !== 'IgxAddRow' ? rowChangesCount : null }">
             </ng-container>
         </span>
     </div>
     <div class="igx-banner__actions">
         <div class="igx-banner__row">
             <ng-container
-                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: this.endEdit.bind(this) }">
+                *ngTemplateOutlet="resolveRowEditActions || defaultRowEditActions; context: { $implicit: this.endEdit.bind(this) }">
             </ng-container>
         </div>
     </div>
