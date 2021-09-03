@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, noop } from 'rxjs';
+import { Subject, pipe, fromEvent } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -139,8 +139,7 @@ import {
     IFilteringEventArgs,
     IColumnVisibilityChangedEventArgs,
     IColumnVisibilityChangingEventArgs,
-    IPinColumnCancellableEventArgs,
-    IColumnResizingEventArgs
+    IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -2983,6 +2982,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: this.rowEditPositioningStrategy
     };
 
+    private _rendered = false;
+
     /**
      * @hidden @internal
      */
@@ -3625,7 +3626,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         // Keep the stream open for future subscribers
-        this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(noop);
+        this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this._rendered = true;
+        });
         Promise.resolve().then(() => this.rendered.next(true));
     }
 
@@ -3985,15 +3988,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public get columns(): IgxColumnComponent[] {
+        return this._columns;
+    }
+
+    /**
      * Gets an array of `IgxColumnComponent`s.
      *
      * @example
      * ```typescript
-     * const colums = this.grid.columns.
+     * const colums = this.grid.columnsCollection.
      * ```
      */
-    public get columns(): IgxColumnComponent[] {
-        return this._columns;
+    public get columnsCollection(): IgxColumnComponent[] {
+        return this._rendered ?  this._columns : [];
     }
 
     /**
