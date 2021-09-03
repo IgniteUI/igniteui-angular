@@ -203,6 +203,8 @@ export class IgxStepComponent {
     public isLabelVisible = true;
     /** @hidden @internal */
     public isIndicatorVisible = true;
+    /** @hidden @internal */
+    public isHorizontal = true;
 
     private _index = NEXT_ID - 1;
     private _active = false;

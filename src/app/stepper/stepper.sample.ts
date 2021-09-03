@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { IgxStepperLabelPosition, IgxStepperProgressLine, IgxStepType } from 'projects/igniteui-angular/src/lib/stepper/common';
+import {
+    IgxStepperLabelPosition, IgxStepperOrienatation, IgxStepperProgressLine, IgxStepType
+} from 'projects/igniteui-angular/src/lib/stepper/common';
 import { IgxStepperComponent } from 'projects/igniteui-angular/src/lib/stepper/igx-stepper.component';
 
 @Component({
@@ -51,5 +53,13 @@ export class IgxStepperSampleComponent implements AfterViewInit {
         // ev.cancel = true;
         console.log('ACTIVE STEP CHANGING');
         console.log(ev);
+    }
+
+    public changeOrientation() {
+        if (this.stepper.orientation === IgxStepperOrienatation.Horizontal) {
+            this.stepper.orientation = IgxStepperOrienatation.Vertical;
+        } else {
+            this.stepper.orientation = IgxStepperOrienatation.Horizontal;
+        }
     }
 }

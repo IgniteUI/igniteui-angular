@@ -1,4 +1,13 @@
-<ng-content *ngIf="isIndicatorVisible" select='[igxStepIcon]'></ng-content>
-<ng-content  *ngIf="isLabelVisible" select='[igxStepLabel]'></ng-content>
-
-<ng-content *ngIf="active"></ng-content>
+<ng-template #label>
+    <div>
+        <ng-content *ngIf="isLabelVisible" select='[igxStepLabel]'></ng-content>
+    </div>
+</ng-template>
+<div>
+    <ng-content *ngIf="isIndicatorVisible" select='[igxStepIcon]'></ng-content>
+    <ng-container *ngTemplateOutlet="isHorizontal ? label : null"></ng-container>
+</div>
+<div>
+    <ng-container *ngTemplateOutlet="!isHorizontal ? label : null"></ng-container>
+    <ng-content *ngIf="active"></ng-content>
+</div>

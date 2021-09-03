@@ -68,7 +68,12 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
     }
 
     public set orientation(value: IgxStepperOrienatation) {
-        if (this._orientation !== value) { }
+        if (this._orientation !== value) {
+            this._orientation = value;
+            this._steps?.forEach(step => {
+                step.isHorizontal = (this._orientation === IgxStepperOrienatation.Horizontal);
+            });
+        }
     }
 
     /**
@@ -232,6 +237,14 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
         if (this._activeStep) {
             return this._activeStep.index === 0 ? this._activeStep :
                 this._steps.find(s => s.index < this._activeStep.index && !s.disabled && !s.skip);
+        }
+    }
+
+    private getOrientationDisplay() {
+        if (this._orientation === IgxStepperOrienatation.Horizontal) {
+            return 'flex';
+        } else {
+            return 'block';
         }
     }
 }
