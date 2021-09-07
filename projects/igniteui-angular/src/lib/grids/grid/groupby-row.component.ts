@@ -282,7 +282,8 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public get selectedRowsInTheGroup(): any[] {
-        return this.groupRow.records.filter(rowID => this.gridSelection.filteredSelectedRowIds.indexOf(this.getRowID(rowID)) > -1);
+        const selectedIds = this.gridSelection.filteredSelectedRowIds;
+        return this.groupRow.records.filter(rowID => selectedIds.indexOf(this.getRowID(rowID)) > -1);
     }
 
     /**
