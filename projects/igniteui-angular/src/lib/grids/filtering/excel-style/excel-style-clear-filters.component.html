@@ -1,5 +1,6 @@
 <div *ngIf="esf.column"
     tabindex="0"
+    role="button"
     [ngClass]="clearFilterClass()"
     (keydown)="onClearFilterKeyDown($event)"
     (click)="clearFilter()">
