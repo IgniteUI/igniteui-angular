@@ -748,7 +748,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
-                const h = rNode.offsetHeight || parseInt(this.igxForItemSize, 10);
+                const styles = window.getComputedStyle(rNode);
+                const margin = parseFloat(styles['marginTop']) +
+                    parseFloat(styles['marginBottom']);
+                const h = rNode.offsetHeight + margin || parseInt(this.igxForItemSize, 10);
                 const index = this.state.startIndex + i;
                 if (!this.isRemote && !this.igxForOf[index]) {
                     continue;
