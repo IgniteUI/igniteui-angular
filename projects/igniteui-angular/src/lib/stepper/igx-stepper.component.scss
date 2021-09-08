@@ -1,0 +1,15 @@
+.igx-stepper {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+}
+
+.igx-stepper--horizontal {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.igx-stepper--vertical {
+    flex-direction: column;
+    gap: 20px;
+}

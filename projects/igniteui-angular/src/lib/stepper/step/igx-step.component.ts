@@ -1,15 +1,25 @@
-import { Component, ContentChild, EventEmitter, HostBinding, HostListener, Inject, Input, Output } from '@angular/core';
-import { IgxStepperProgressLine, IGX_STEPPER_COMPONENT, IStepperCancelableEventArgs } from '../common';
+import { AnimationBuilder } from '@angular/animations';
+import {
+    AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef,
+    EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, ViewChild
+} from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
+import { DisplayDensity } from '../../core/displayDensity';
+import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
+import { IgxStepperOrienatation, IGX_STEPPER_COMPONENT, IStepTogglingEventArgs } from '../common';
 import { IgxStepperComponent } from '../igx-stepper.component';
-import { IgxStepIconDirective, IgxStepLabelDirective } from '../igx-stepper.directive';
+import { IgxStepContentDirective } from '../igx-stepper.directive';
+import { IgxStepperService } from '../stepper.service';
 
 let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-step',
-    templateUrl: 'igx-step.component.html'
+    templateUrl: 'igx-step.component.html',
+    styleUrls: ['igx-step.component.scss']
 })
-export class IgxStepComponent {
+export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, AfterViewInit, OnDestroy {
+
     /**
      * Get/Set the `id` of the step component.
      * Default value is `"igx-step-0"`;
@@ -24,9 +34,20 @@ export class IgxStepComponent {
     @Input()
     public id = `igx-step-${NEXT_ID++}`;
 
-    /** @hidden @internal **/
-    @HostBinding('class.igx-step')
-    public cssClass = 'igx-step';
+    //  /**
+    //   * To be used for load-on-demand scenarios in order to specify whether the node is loading data.
+    //   *
+    //   * @remarks
+    //   * Loading nodes do not render children.
+    //   */
+    //  @Input()
+    //  public loading = false;
+
+
+    /** @hidden @internal */
+    public get animationSettings(): ToggleAnimationSettings {
+        return this.stepper.animationSettings;
+    }
 
     /**
      * Get the step index inside of the stepper.
@@ -36,204 +57,280 @@ export class IgxStepComponent {
      * const stepIndex: number = step.index;
      * ```
      */
-    @Input()
     public get index(): number {
         return this._index;
     }
 
     /**
-     * Get/Set whether the step should be skipped. It could be activated on click.
+     * Gets/Sets the active state of the node
      *
-     * ```html
-     * <igx-stepper>
-     * ...
-     *     <igx-step [skip]="true"></igx-step>
-     * ...
-     * </igx-stepper>
-     * ```
-     *
-     * ```typescript
-     * this.stepper.steps[1].skip = true;
-     * ```
+     * @param value: boolean
      */
     @Input()
-    public skip = false;
-
-    /**
-     * Get/Set whether the step is interactable.
-     *
-     * ```html
-     * <igx-stepper>
-     * ...
-     *     <igx-step [disabled]="true"></igx-step>
-     * ...
-     * </igx-stepper>
-     * ```
-     *
-     * ```typescript
-     * this.stepper.steps[1].disabled = true;
-     * ```
-     */
-    @Input()
-    @HostBinding('class.igx-step--disabled')
-    public disabled = false;
-
-    /**
-     * Get/Set whether the step is activated.
-     *
-     * ```html
-     * <igx-stepper>
-     * ...
-     *     <igx-step [active]="true"></igx-step>
-     * ...
-     * </igx-stepper>
-     * ```
-     *
-     * ```typescript
-     * this.stepper.steps[1].active = true;
-     * ```
-     */
-    @Input()
-    @HostBinding('class.igx-step--active')
-    public get active(): boolean {
-        return this._active;
-    }
-
     public set active(value: boolean) {
-        if (this._active !== value && this.accessible) {
-            this._active = value;
-            this.activeChanged.emit(this._active);
+        if (value) {
+            this.stepperService.expand(this, false);
+        } else {
+            this.stepperService.collapse(this);
         }
     }
 
+    public get active(): boolean {
+        return this.stepperService.activeStep === this;
+    }
+
+
     /**
-     * Get/Set whether the step is optional.
+     * Emitted when the node's `expanded` property changes.
      *
      * ```html
-     * <igx-stepper>
-     * ...
-     *     <igx-step [optional]="true"></igx-step>
-     * ...
-     * </igx-stepper>
+     * <igx-tree>
+     *      <igx-tree-node *ngFor="let node of data" [data]="node" [(expanded)]="node.expanded">
+     *      </igx-tree-node>
+     * </igx-tree>
      * ```
      *
      * ```typescript
-     * this.stepper.steps[1].optional = true;
-     * ```
-     */
-    @Input()
-    public get optional(): boolean {
-        return this._optional;
-    };
-
-    public set optonal(value: boolean) {
-        if (!this.disabled) {
-            this._optional = value;
-        }
-    }
-
-    @Input()
-    @HostBinding('class.igx-step--complete')
-    public complete = false;
-
-    /**
-     * Get/Set whether the step is valid.
-     *
-     */
-    @Input()
-    public isValid = true;
-
-    /** @hidden */
-    @HostBinding('class.igx-step--invalid')
-    public get invalidClass(): boolean {
-        return !this.isValid;
-    }
-
-    /**
-     * Get/Set whether the step the progress indicator type.
-     *
-     * ```typescript
-     * this.stepper.steps[1].completedStyle = IgxStepperProgressLine.Dashed;
-     * ```
-     */
-    @Input()
-    public completedStyle = IgxStepperProgressLine.Solid;
-
-    /** @hidden @internal */
-    @HostBinding('class.igx-step--solid')
-    public get solidClass() {
-        return this.complete && this.completedStyle === IgxStepperProgressLine.Solid;
-    }
-
-    /** @hidden @internal */
-    @HostBinding('class.igx-step--dashed')
-    public get dashedClass() {
-        return this.complete && this.completedStyle === IgxStepperProgressLine.Dashed;
-    }
-
-    @ContentChild(IgxStepIconDirective)
-    public icon: IgxStepIconDirective;
-
-    @ContentChild(IgxStepLabelDirective)
-    public label: IgxStepLabelDirective;
-
-    /**
-     * Emitted when the step's `active` property is changed.
-     *
-     * ```html
-     * <igx-stepper>
-     *      <igx-step *ngFor="let step of steps" [(active)]="step.isActive">
-     *      </igx-step>
-     * </igx-steper>
-     * ```
-     *
-     * ```typescript
-     * const step: IgxStepComponent = this.stepper.step[0];
-     * step.activeChanged.pipe(takeUntil(this.destroy$)).subscribe((e: boolean) => console.log("Step active state changed to ", e))
+     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
+     * node.expandedChange.pipe(takeUntil(this.destroy$)).subscribe((e: boolean) => console.log("Node expansion state changed to ", e))
      * ```
      */
     @Output()
-    public activeChanged = new EventEmitter<boolean>();
+    public expandedChange = new EventEmitter<boolean>();
 
-    private get accessible() {
-        return (this.stepper.linear && this.stepper._activeStep?.isValid) || !this.disabled;
+    // /** @hidden @internal */
+    // public get focused() {
+    //     return this.isFocused &&
+    //         this.navService.focusedStep === this;
+    // }
+
+    //  // TODO: bind to disabled state when node is dragged
+    //  /**
+    //   * Gets/Sets the disabled state of the node
+    //   *
+    //   * @param value: boolean
+    //   */
+    //  @Input()
+    //  @HostBinding('class.igx-tree-node--disabled')
+    //  public get disabled(): boolean {
+    //      return this._disabled;
+    //  }
+
+    //  public set disabled(value: boolean) {
+    //      if (value !== this._disabled) {
+    //          this._disabled = value;
+    //          this.tree.disabledChange.emit(this);
+    //      }
+    //  }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-step')
+    public cssClass = 'igx-step';
+
+    //  // TODO: will be used in Drag and Drop implementation
+    //  /** @hidden @internal */
+    //  @ViewChild('ghostTemplate', { read: ElementRef })
+    //  public header: ElementRef;
+
+    //  @ViewChild('defaultIndicator', { read: TemplateRef, static: true })
+    //  private _defaultExpandIndicatorTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChild(IgxStepContentDirective)
+    public contentDirective: IgxStepContentDirective;
+
+    public get contentTemplate() {
+        return this.contentDirective.templateRef;
+    }
+
+    @ViewChild('verticalContent', { read: ElementRef })
+    public contentContainer: ElementRef;
+
+    /** @hidden @internal */
+    public get isCompact(): boolean {
+        return this.stepper?.displayDensity === DisplayDensity.compact;
     }
 
     /** @hidden @internal */
-    public isLabelVisible = true;
-    /** @hidden @internal */
-    public isIndicatorVisible = true;
-    /** @hidden @internal */
-    public isHorizontal = true;
+    public get isCosy(): boolean {
+        return this.stepper?.displayDensity === DisplayDensity.cosy;
+    }
 
+    /** @hidden @internal */
+    public isFocused: boolean;
+
+    public horizontalContainer: ElementRef;
+
+    //  private _disabled = false;
     private _index = NEXT_ID - 1;
-    private _active = false;
-    private _optional = false;
 
-    constructor(@Inject(IGX_STEPPER_COMPONENT) public stepper: IgxStepperComponent) { }
+    constructor(
+        @Inject(IGX_STEPPER_COMPONENT) public stepper: IgxStepperComponent,
+        protected stepperService: IgxStepperService,
+        protected cdr: ChangeDetectorRef,
+        protected builder: AnimationBuilder,
+        private element: ElementRef<HTMLElement>
+    ) {
+        super(builder);
+    }
 
-    @HostListener('click')
-    public onClick() {
-        if (!this.accessible) {
+    public get isHorizontal() {
+        return this.stepper.orientation === IgxStepperOrienatation.Horizontal;
+    }
+
+    /**
+     * The native DOM element representing the node. Could be null in certain environments.
+     *
+     * ```typescript
+     * // get the nativeElement of the second node
+     * const node: IgxTreeNode = this.tree.nodes.first();
+     * const nodeElement: HTMLElement = node.nativeElement;
+     * ```
+     */
+    /** @hidden @internal */
+    public get nativeElement() {
+        return this.element.nativeElement;
+    }
+
+    /** @hidden @internal */
+    public ngOnInit() {
+        this.openAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(
+            () => {
+                this.stepper.stepExpanded.emit({ owner: this.stepper, activeStep: this });
+            }
+        );
+        this.closeAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.stepper.stepCollapsed.emit({ owner: this.stepper, activeStep: this });
+            this.stepperService.collapse(this);
+            this.cdr.markForCheck();
+        });
+    }
+
+    /** @hidden @internal */
+    public ngAfterViewInit() { }
+
+    // /**
+    //  * @hidden @internal
+    //  * Sets the focus to the node's <a> child, if present
+    //  * Sets the node as the tree service's focusedNode
+    //  * Marks the node as the current active element
+    //  */
+    // public handleFocus(): void {
+    //     //  if (this.disabled) {
+    //     //      return;
+    //     //  }
+    //     if (this.navService.focusedStep !== this) {
+    //         this.navService.focusedStep = this;
+    //     }
+    //     this.isFocused = true;
+    // }
+
+    /**
+     * @hidden @internal
+     * Clear the node's focused status
+     */
+    public clearFocus(): void {
+        this.isFocused = false;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onPointerDown(event) {
+        event.stopPropagation();
+        if (this.stepperService.activeStep === this) {
             return;
         }
-        const evArgs: IStepperCancelableEventArgs = {
-            oldIndex: this.stepper._activeStep?.index,
-            newIndex: this.index,
+        // this.navService.focusedStep = this;
+        this.expand();
+    }
+
+    public ngOnDestroy() {
+        super.ngOnDestroy();
+    }
+
+    /**
+     * Expands the node, triggering animation
+     *
+     * ```html
+     * <igx-tree>
+     *      <igx-tree-node #node>My Node</igx-tree-node>
+     * </igx-tree>
+     * <button igxButton (click)="node.expand()">Expand Node</button>
+     * ```
+     *
+     * ```typescript
+     * const myNode: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
+     * myNode.expand();
+     * ```
+     */
+    public expand() {
+        const args: IStepTogglingEventArgs = {
             owner: this.stepper,
+            activeStep: this,
+            previousActiveStep: this.stepperService.previousActiveStep,
             cancel: false
+
         };
-        this.stepper.activeStepChanging.emit(evArgs);
-        if (!evArgs.cancel) {
-            this.active = true;
+        this.stepper.stepExpanding.emit(args);
+        if (!args.cancel) {
+            this.stepperService.expand(this, true);
+            this.cdr.detectChanges();
+            if (!this.isHorizontal) {
+                this.playOpenAnimation(
+                    this.contentContainer
+                );
+            } else {
+                this.playOpenAnimation(
+                    this.horizontalContainer
+                );
+            }
+
         }
     }
 
-    // public toggleActive(id: number) {
-    //     if (this.inactive) {
-    //         return;
-    //     }
+    /**
+     * Collapses the node, triggering animation
+     *
+     * ```html
+     * <igx-tree>
+     *      <igx-tree-node #node>My Node</igx-tree-node>
+     * </igx-tree>
+     * <button igxButton (click)="node.collapse()">Collapse Node</button>
+     * ```
+     *
+     * ```typescript
+     * const myNode: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
+     * myNode.collapse();
+     * ```
+     */
+    public collapse() {
+        const args: IStepTogglingEventArgs = {
+            owner: this.stepper,
+            activeStep: this,
+            previousActiveStep: this.stepperService.previousActiveStep,
+            cancel: false
 
-    //     this.active = id === this.index;
-    // }
+        };
+        this.stepper.stepCollapsing.emit(args);
+        if (!args.cancel) {
+            this.stepperService.collapsing(this);
+            if (!this.isHorizontal) {
+                this.playCloseAnimation(
+                    this.contentContainer
+                );
+            } else {
+                this.playCloseAnimation(
+                    this.horizontalContainer
+                );
+            }
+        }
+    }
+
+    public get collapsing() {
+        return this.stepperService.collapsingSteps.has(this);
+    }
 }

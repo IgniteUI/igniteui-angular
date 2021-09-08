@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, TemplateRef } from '@angular/core';
 import { IgxStepperLabelPosition } from './common';
 
 @Directive({
@@ -22,6 +22,16 @@ export class IgxStepInvalidIconDirective {
 export class IgxStepIconDirective {
     @HostBinding('class.igx-step__icon')
     public defaultClass = true;
+}
+
+@Directive({
+    selector: '[igxStepContent]'
+})
+export class IgxStepContentDirective {
+    @HostBinding('class.igx-step__content')
+    public defaultClass = true;
+
+    constructor(public templateRef: TemplateRef<any>, public elementRef: ElementRef<any>) { }
 }
 
 @Directive({

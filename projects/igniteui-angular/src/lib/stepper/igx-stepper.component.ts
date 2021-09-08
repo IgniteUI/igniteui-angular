@@ -1,59 +1,61 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterContentInit, Component, ContentChildren, EventEmitter,
-    HostBinding, Input, NgModule, OnDestroy, Output, QueryList
+    AfterViewInit, Component, HostBinding, OnDestroy, OnInit,
+    Input, Output, EventEmitter, ContentChildren, QueryList, ElementRef, Optional, Inject, NgModule, ViewChild
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { growVerIn, growVerOut } from '../animations/grow';
+import { slideInLeft, slideInRight, slideOutLeft, slideOutRight } from '../animations/slide';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
+import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
+import { IgxStepperOrienatation, IGX_STEPPER_COMPONENT, IStepToggledEventArgs, IStepTogglingEventArgs } from './common';
 import {
-    IgxStepperLabelPosition, IgxStepperOrienatation,
-    IgxStepType, IGX_STEPPER_COMPONENT, IStepperCancelableEventArgs, IStepperEventArgs
-} from './common';
-import {
-    IgxStepValidIconDirective, IgxStepInvalidIconDirective,
-    IgxStepIconDirective, IgxStepLabelDirective
+    IgxStepContentDirective,
+    IgxStepIconDirective, IgxStepInvalidIconDirective,
+    IgxStepLabelDirective, IgxStepValidIconDirective
 } from './igx-stepper.directive';
 import { IgxStepComponent } from './step/igx-step.component';
+import { IgxStepperService } from './stepper.service';
 
-let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-stepper',
     templateUrl: 'igx-stepper.component.html',
+    styleUrls: ['igx-stepper.component.scss'],
     providers: [
+        IgxStepperService,
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
     ]
 })
-export class IgxStepperComponent implements AfterContentInit, OnDestroy {
-    /**
-     * Get/Set the `id` of the stepper component.
-     * Default value is `"igx-stepper-0"`;
-     * ```html
-     * <igx-stepper id="my-first-stepper"></igx-stepper>
-     * ```
-     * ```typescript
-     * const stepperId = this.stepper.id;
-     * ```
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-stepper-${NEXT_ID++}`;
+export class IgxStepperComponent extends DisplayDensityBase implements OnInit, AfterViewInit, OnDestroy {
 
-    /** @hidden @internal **/
+    @ViewChild('contentTemplate') public contentTemplate: ElementRef;
+
     @HostBinding('class.igx-stepper')
     public cssClass = 'igx-stepper';
 
-    /**
-     * Get all steps.
+    /** Get/Set the animation settings that branches should use when expanding/collpasing.
+     *
+     * ```html
+     * <igx-tree [animationSettings]="customAnimationSettings">
+     * </igx-tree>
+     * ```
      *
      * ```typescript
-     * const steps: IgxStepComponent[] = this.stepper.steps;
+     * const animationSettings: ToggleAnimationSettings = {
+     *      openAnimation: growVerIn,
+     *      closeAnimation: growVerOut
+     * };
+     *
+     * this.tree.animationSettings = animationSettings;
      * ```
      */
     @Input()
-    public get steps(): IgxStepComponent[] {
-        return this._steps?.toArray();
-    }
+    public animationSettings: ToggleAnimationSettings = {
+        openAnimation: growVerIn,
+        closeAnimation: growVerOut
+    };
 
     /**
      * Get/Set the stepper orientation.
@@ -63,188 +65,231 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
      * ```
      */
     @Input()
-    public get orientation(): IgxStepperOrienatation {
+    public get orientation(): IgxStepperOrienatation | string {
         return this._orientation;
     }
 
-    public set orientation(value: IgxStepperOrienatation) {
-        if (this._orientation !== value) {
-            this._orientation = value;
-            this._steps?.forEach(step => {
-                step.isHorizontal = (this._orientation === IgxStepperOrienatation.Horizontal);
-            });
+    public set orientation(value: IgxStepperOrienatation | string) {
+        if (this._orientation === value) {
+            return;
         }
-    }
-
-    /**
-     * Get/Set the type of the steps.
-     *
-     * ```typescript
-     * this.stepper.stepType = IgxStepType.Indicator;
-     * ```
-     */
-    @Input()
-    public get stepType(): IgxStepType {
-        return this._stepType;
-    }
-
-    public set stepType(value: IgxStepType) {
-        if (value !== this._stepType) {
-            this._stepType = value;
-            this._steps?.forEach(step => {
-                step.isLabelVisible = !(this._stepType === IgxStepType.Indicator);
-                step.isIndicatorVisible = !(this._stepType === IgxStepType.Label);
-            });
+        if (value === IgxStepperOrienatation.Horizontal) {
+            this.animationSettings = {
+                openAnimation: slideInLeft,
+                closeAnimation: slideOutRight
+            };
+        } else {
+            this.animationSettings = {
+                openAnimation: growVerIn,
+                closeAnimation: growVerOut
+            };
         }
+        this._orientation = value;
     }
 
-    /**
-     * Get/Set the position of the steps label.
-     *
-     * ```typescript
-     * this.stepper.labelPosition = IgxStepperLabelPosition.Top;
-     * ```
-     */
-    @Input()
-    public get labelPosition(): IgxStepperLabelPosition {
-        return this._labelPosition;
-    }
-
-    public set labelPosition(value: IgxStepperLabelPosition) {
-        if (value !== this._labelPosition) {
-            this._labelPosition = value;
-            this._steps?.forEach(step => step.label.position = this.labelPosition);
-        }
-    }
-
-    /**
-     * Get/Set whether the stepper is linear.
-     * Only if the active step is valid the user is able to move forward.
+    /** Emitted when a node is expanding, before it finishes
      *
      * ```html
-     * <igx-stepper [linear]="true"></igx-stepper>
-     * ```
-     */
-    @Input()
-    public linear = false;
-
-    /**
-     * Get/Set the animation settings.
-     *
-     * ```html
-     * <igx-stepper [animationSettings]="customAnimationSettings"></igx-stepper>
-     * ```
-     */
-    @Input()
-    public get animationSettings() {
-        return this._animationSettings;
-    }
-
-    public set animationSettings(value: any) {
-        this._animationSettings = value;
-    }
-
-    /**
-     * Emitted when the stepper's active step is changing.
-     *
-     *```html
-     * <igx-stepper (activeStepChanging)="handleActiveStepChanging($event)">
-     * </igx-stepper>
+     * <igx-tree (nodeExpanding)="handleNodeExpanding($event)">
+     * </igx-tree>
      * ```
      *
      *```typescript
-     * public handleActiveStepChanging(event: IStepperCancelableEventArgs) {
-     *  if (event.newIndex < event.oldIndex) {
+     * public handleNodeExpanding(event: ITreeNodeTogglingEventArgs) {
+     *  const expandedNode: IgxTreeNode<any> = event.node;
+     *  if (expandedNode.disabled) {
      *      event.cancel = true;
      *  }
      * }
      *```
      */
     @Output()
-    public activeStepChanging = new EventEmitter<IStepperCancelableEventArgs>();
+    public stepExpanding = new EventEmitter<IStepTogglingEventArgs>();
 
-    /**
-     * Emitted when the active step is changed.
+    /** Emitted when a node is expanded, after it finishes
+     *
+     * ```html
+     * <igx-tree (nodeExpanded)="handleNodeExpanded($event)">
+     * </igx-tree>
+     * ```
+     *
+     *```typescript
+     * public handleNodeExpanded(event: ITreeNodeToggledEventArgs) {
+     *  const expandedNode: IgxTreeNode<any> = event.node;
+     *  console.log("Node is expanded: ", expandedNode.data);
+     * }
+     *```
+     */
+    @Output()
+    public stepExpanded = new EventEmitter<IStepToggledEventArgs>();
+
+    /** Emitted when a node is collapsing, before it finishes
+     *
+     * ```html
+     * <igx-tree (nodeCollapsing)="handleNodeCollapsing($event)">
+     * </igx-tree>
+     * ```
+     *
+     *```typescript
+     * public handleNodeCollapsing(event: ITreeNodeTogglingEventArgs) {
+     *  const collapsedNode: IgxTreeNode<any> = event.node;
+     *  if (collapsedNode.alwaysOpen) {
+     *      event.cancel = true;
+     *  }
+     * }
+     *```
+     */
+    @Output()
+    public stepCollapsing = new EventEmitter<IStepTogglingEventArgs>();
+
+    /** Emitted when a node is collapsed, after it finishes
      *
      * @example
+     * ```html
+     * <igx-tree (nodeCollapsed)="handleNodeCollapsed($event)">
+     * </igx-tree>
      * ```
-     * <igx-stepper (activeStepChanged)="handleActiveStepChanged($event)"></igx-stepper>
+     * ```typescript
+     * public handleNodeCollapsed(event: ITreeNodeToggledEventArgs) {
+     *  const collapsedNode: IgxTreeNode<any> = event.node;
+     *  console.log("Node is collapsed: ", collapsedNode.data);
+     * }
      * ```
      */
     @Output()
-    public activeStepChanged = new EventEmitter<IStepperEventArgs>();
+    public stepCollapsed = new EventEmitter<IStepToggledEventArgs>();
 
-    @ContentChildren(IgxStepComponent)
-    private _steps: QueryList<IgxStepComponent>;
+    /**
+     * Emitted when the active node is changed.
+     *
+     * @example
+     * ```
+     * <igx-tree (activeNodeChanged)="activeNodeChanged($event)"></igx-tree>
+     * ```
+     */
+    @Output()
+    public activeStepChanged = new EventEmitter<IgxStepComponent>();
 
     /** @hidden @internal */
-    public _activeStep: IgxStepComponent = null;
+    @ContentChildren(IgxStepComponent, { descendants: false })
+    public steps: QueryList<IgxStepComponent>;
 
-    private _orientation = IgxStepperOrienatation.Horizontal;
-    private _stepType = IgxStepType.Full;
-    private _labelPosition = IgxStepperLabelPosition.Bottom;
-    private _animationSettings;
-    private destroy$ = new Subject();
+    // /** @hidden @internal */
+    // public disabledChange = new EventEmitter<IgxStepComponent>();
+
+    private destroy$ = new Subject<void>();
+    private unsubChildren$ = new Subject<void>();
+    private _orientation: IgxStepperOrienatation | string = IgxStepperOrienatation.Vertical;
+
+    constructor(
+        public stepperService: IgxStepperService,
+        private element: ElementRef<HTMLElement>,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
+        this.stepperService.register(this);
+        // this.navService.register(this);
+    }
 
     /** @hidden @internal */
-    public ngAfterContentInit() {
-        this.steps?.forEach(s => {
-            s.activeChanged.pipe(takeUntil(this.destroy$)).subscribe((e) => {
-                if (e) {
-                    if (this._activeStep) {
-                        this._activeStep.active = false;
-                    }
-                    this.steps.filter(_s => _s.index === s.index)[0].active = true;
-                    this._activeStep = s;
+    public get nativeElement() {
+        return this.element.nativeElement;
+    }
 
-                    const evArgs: IStepperEventArgs = { index: s.index, owner: this };
-                    this.activeStepChanged.emit(evArgs);
-                }
-            });
+    /** @hidden @internal */
+    public handleKeydown(event: KeyboardEvent) {
+        // this.navService.handleKeydown(event);
+    }
+
+    /** @hidden @internal */
+    public ngOnInit() {
+        super.ngOnInit();
+        // this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
+        //     this.navService.update_disabled_cache(e);
+        // });
+
+
+        //dali ni trqbva
+        // this.activeNodeBindingChange.pipe(takeUntil(this.destroy$)).subscribe((node) => {
+        //     this.expandToNode(this.navService.activeNode);
+        //     this.scrollNodeIntoView(node?.header?.nativeElement);
+        // });
+
+
+
+        // this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        //     requestAnimationFrame(() => {
+        //         this.scrollNodeIntoView(this.navService.activeStep?.header.nativeElement);
+        //     });
+        // });
+        this.subToCollapsing();
+    }
+
+    /** @hidden @internal */
+    public ngAfterViewInit() {
+        this.steps.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.subToChanges();
+        });
+        // this.scrollNodeIntoView(this.navService.activeNode?.header?.nativeElement);
+        this.subToChanges();
+        this.steps.forEach(s => {
+            s.horizontalContainer = this.contentTemplate;
         });
     }
 
     /** @hidden @internal */
     public ngOnDestroy() {
+        this.unsubChildren$.next();
+        this.unsubChildren$.complete();
         this.destroy$.next();
         this.destroy$.complete();
     }
 
-    public navigateTo(index: number) {
-        const step = this._steps.filter(s => s.index === index)[0];
-        if (!step || step.disabled) {
+    private subToCollapsing() {
+        this.stepCollapsing.pipe(takeUntil(this.destroy$)).subscribe(event => {
+            if (event.cancel) {
+                return;
+            }
+            // this.navService.update_visible_cache(event.node, false);
+        });
+        this.stepExpanding.pipe(takeUntil(this.destroy$)).subscribe(event => {
+            if (event.cancel) {
+                return;
+            }
+            // this.navService.update_visible_cache(event.node, true);
+        });
+    }
+
+    private subToChanges() {
+        this.unsubChildren$.next();
+        this.steps.forEach(step => {
+            step.expandedChange.pipe(takeUntil(this.unsubChildren$)).subscribe(nodeState => {
+                // this.navService.update_visible_cache(node, nodeState);
+            });
+            step.closeAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
+                // const targetElement = this.navService.focusedNode?.header.nativeElement;
+                // this.scrollNodeIntoView(targetElement);
+            });
+            step.openAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
+                // const targetElement = this.navService.focusedNode?.header.nativeElement;
+                // this.scrollNodeIntoView(targetElement);
+            });
+        });
+        // this.navService.init_invisible_cache();
+    }
+
+    private scrollNodeIntoView(el: HTMLElement) {
+        if (!el) {
             return;
         }
-
-        if (!this._activeStep) {
-            step.active = true;
-        }
-
-        if (this._activeStep && this._activeStep.index !== index) {
-            this._activeStep.active = false;
-            step.active = true;
-        }
-    }
-
-    private getNextStep() {
-        if (this._activeStep) {
-            return this._activeStep.index === this.steps.length - 1 ? this._activeStep :
-                this._steps.find(s => s.index > this._activeStep.index && !s.disabled && !s.skip);
-        }
-    }
-
-    private getPrevStep() {
-        if (this._activeStep) {
-            return this._activeStep.index === 0 ? this._activeStep :
-                this._steps.find(s => s.index < this._activeStep.index && !s.disabled && !s.skip);
-        }
-    }
-
-    private getOrientationDisplay() {
-        if (this._orientation === IgxStepperOrienatation.Horizontal) {
-            return 'flex';
-        } else {
-            return 'block';
+        const nodeRect = el.getBoundingClientRect();
+        const treeRect = this.nativeElement.getBoundingClientRect();
+        const topOffset = treeRect.top > nodeRect.top ? nodeRect.top - treeRect.top : 0;
+        const bottomOffset = treeRect.bottom < nodeRect.bottom ? nodeRect.bottom - treeRect.bottom : 0;
+        const shouldScroll = !!topOffset || !!bottomOffset;
+        if (shouldScroll && this.nativeElement.scrollHeight > this.nativeElement.clientHeight) {
+            // this.nativeElement.scrollTop = nodeRect.y - treeRect.y - nodeRect.height;
+            this.nativeElement.scrollTop =
+                this.nativeElement.scrollTop + bottomOffset + topOffset + (topOffset ? -1 : +1) * nodeRect.height;
         }
     }
 }
@@ -259,7 +304,8 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
         IgxStepLabelDirective,
         IgxStepIconDirective,
         IgxStepValidIconDirective,
-        IgxStepInvalidIconDirective
+        IgxStepInvalidIconDirective,
+        IgxStepContentDirective
     ],
     exports: [
         IgxStepComponent,
@@ -267,7 +313,8 @@ export class IgxStepperComponent implements AfterContentInit, OnDestroy {
         IgxStepLabelDirective,
         IgxStepIconDirective,
         IgxStepValidIconDirective,
-        IgxStepInvalidIconDirective
+        IgxStepInvalidIconDirective,
+        IgxStepContentDirective
     ]
 })
 export class IgxStepperModule { }

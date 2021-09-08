@@ -1,1 +1,11 @@
-<div [ngStyle]="{'display':getOrientationDisplay()}"><ng-content select='igx-step'></ng-content></div>
+<!-- <div class="igx-tree__root" role="tree" (keydown)="handleKeydown($event)"> -->
+<div class="igx-stepper" [ngClass]="orientation === 'Horizontal' ? 'igx-stepper--horizontal' : 'igx-stepper--vertical'">
+    <ng-content select="igx-step"></ng-content>
+</div>
+
+<div #contentTemplate>
+    <div *ngIf="orientation === 'Horizontal'">
+        <ng-container *ngTemplateOutlet="this.stepperService.activeStep?.contentTemplate"></ng-container>
+    </div>
+</div>
+<!-- </div> -->
