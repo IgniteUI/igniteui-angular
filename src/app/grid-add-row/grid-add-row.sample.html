@@ -49,6 +49,11 @@
                 <label igxLabel for="index">Index</label>
             </igx-input-group>
             <button igxButton="raised" (click)="beginAddRowStart()">Add Row At Start</button>
+            <igx-input-group>
+                <input igxInput name="string" type="string" #stringInput value="CENTC"/>
+                <label igxLabel for="string">PK</label>
+            </igx-input-group>
+            <button igxButton="raised" (click)="beginAddRowById(stringInput.value)">Add Row For ID</button>
         </igx-card-content>
     </igx-card>
 </div>
