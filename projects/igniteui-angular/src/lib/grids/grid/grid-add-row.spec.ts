@@ -491,7 +491,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
 
-            grid.beginAddRow(null);
+            grid.beginAddRowById(null);
 
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
@@ -503,7 +503,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
 
-            grid.beginAddRow('FAMIA');
+            grid.beginAddRowById('FAMIA');
 
             await wait(DEBOUNCETIME);
             fixture.detectChanges();

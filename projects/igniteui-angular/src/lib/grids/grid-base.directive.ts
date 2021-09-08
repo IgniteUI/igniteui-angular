@@ -156,6 +156,7 @@ import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
+import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from 'constants';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -5967,7 +5968,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Enters add mode for the specified rowID (primary key if one is defined, index otherwise)
+     * Enters add mode by spawning the UI under the specified row by rowID.
      *
      * @remarks
      * If null is passed as rowID, the row adding UI is spawned as the first record in the data view
@@ -5975,13 +5976,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Spawning the UI to add a child for a record only works if you provide a rowID
      * @example
      * ```typescript
-     * this.grid.beginAddRow('ALFKI');
-     * this.grid.beginAddRow(null);
+     * this.grid.beginAddRowById('ALFKI');
+     * this.grid.beginAddRowById('ALFKI', true);
+     * this.grid.beginAddRowById(null);
      * ```
-     * @param rowID - The PK or index to spawn the add row UI for, or null to spawn it as the first record in the data view
+     * @param rowID - The rowID to spawn the add row UI for, or null to spawn it as the first record in the data view
      * @param asChild - Whether the record should be added as a child. Only applicable to igxTreeGrid.
      */
-    public beginAddRow(rowID: any, asChild?: boolean): void {
+    public beginAddRowById(rowID: any, asChild?: boolean): void {
         let index = rowID;
         if (rowID == null) {
             if (asChild) {
@@ -5989,20 +5991,25 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 return;
             }
             index = 0;
-        } else if (this.primaryKey !== null) {
+        } else {
             // find the index of the record with that PK
             index = this.gridAPI.get_rec_index_by_id(rowID);
             rowID = index;
             if (index === -1) {
-                console.warn('No row with the specified PK was found.');
+                console.warn('No row with the specified ID was found.');
                 return;
             }
+        }
+        if (!this.dataView.length) {
+            this.beginAddRowForIndex(rowID, asChild);
+            return;
         }
         // check if the index is valid - won't support anything outside the data view
         if (index >= 0 && index < this.dataView.length) {
             // check if the index is in the view port
-            if (index < this.virtualizationState.startIndex ||
-                index >= this.virtualizationState.startIndex + this.virtualizationState.chunkSize) {
+            if ((index < this.virtualizationState.startIndex ||
+                index >= this.virtualizationState.startIndex + this.virtualizationState.chunkSize) &&
+                !this.isRecordPinnedByViewIndex(index)) {
                 this.verticalScrollContainer.chunkLoad
                     .pipe(first(), takeUntil(this.destroy$))
                     .subscribe(() => {
@@ -6016,6 +6023,30 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             console.warn('The row with the specified PK or index is outside of the current data view.');
         }
+    }
+
+    /**
+     * Enters add mode by spawning the UI at the specified index.
+     *
+     * @remarks
+     * Accepted values for index are integers from 0 to this.grid.dataView.length
+     * @remarks
+     * When adding the row as a child, the parent row is the one at the previous index. You cannot add a child at index 0.
+     * @example
+     * ```typescript
+     * this.grid.beginAddRowByIndex(10);
+     * this.grid.beginAddRowByIndex(10, true);
+     * this.grid.beginAddRowByIndex(0);
+     * ```
+     * @param index - The index to spawn the UI at. Accepts integers from 0 to this.grid.dataView.length
+     * @param asChild - Whether the record should be added as a child. Only applicable to igxTreeGrid.
+     */
+    public beginAddRowByIndex(index: number, asChild?: boolean): void {
+        if (index === 0) {
+            return this.beginAddRowById(null, asChild);
+        }
+        const record = this.dataView[index - 1];
+        return this.beginAddRowById(this.primaryKey ? record[this.primaryKey] : record, asChild);
     }
 
     protected beginAddRowForIndex(index: number, asChild: boolean = false) {

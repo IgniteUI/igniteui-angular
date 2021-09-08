@@ -2,15 +2,18 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-
-## 12.1.5
+## 12.1.6
 
 ### New Features
 - `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
-    - Added a public method that spawns the add row UI for an arbitrary record in the current data view. It accepts a rowID (PK when one is defined, index otherwise). You can also pass `null` to spawn the UI as the very first record. Please, note that the new record is still added at the end of the data view, after the end-user submits it.
+    - Added two public methods that spawn the add row UI for an arbitrary record in the current data view. One that accepts a rowID to use as the row the UI spawns under and the other specifying the index at which to spawn it. Please, note that the new record is still added at the end of the data view, after the end-user submits it.
     ```typescript
-    this.grid.beginAddRow('ALFKI'); // spawns the add row UI under the row with PK 'ALFKI'
-    this.grid.beginAddRow(null);    // spawns the add row UI as the first record
+    this.grid.beginAddRowById('ALFKI');         // spawns the add row UI under the row with PK 'ALFKI'
+    this.grid.beginAddRowById('ALFKI', true);   // spawns the add row UI to add a child for the row with PK 'ALFKI'
+    this.grid.beginAddRowById(null);            // spawns the add row UI as the first record
+    this.grid.beginAddRowByIndex(10);           // spawns the add row UI at index 10
+    this.grid.beginAddRowByIndex(10, true);     // spawns the add row UI to add a child for the row at index 9
+    this.grid.beginAddRowByIndex(0);            // spawns the add row UI as the first record
     ```
 
 ## 12.1.3

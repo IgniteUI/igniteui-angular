@@ -77,11 +77,14 @@ export class GridAddRowSampleComponent implements OnInit {
 
     public beginAddRowAtIndex(index: string) {
         const numeric = parseInt(index, 10);
-        const PK = this.grid.dataView[numeric]['ID'];
-        this.grid.beginAddRow(PK);
+        this.grid.beginAddRowByIndex(numeric);
     }
 
     public beginAddRowStart() {
-        this.grid.beginAddRow(null);
+        this.grid.beginAddRowById(null);
+    }
+
+    public beginAddRowById(string: string) {
+        this.grid.beginAddRowById(string);
     }
 }
