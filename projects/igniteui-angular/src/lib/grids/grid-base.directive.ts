@@ -156,7 +156,6 @@ import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
-import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from 'constants';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
