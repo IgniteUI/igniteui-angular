@@ -3,8 +3,9 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef,
     EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild
 } from '@angular/core';
+import { IgxSlideComponentBase } from 'igniteui-angular';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensity } from '../../core/displayDensity';
+import { Direction } from '../../carousel/carousel-base';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
 import { IgxStepperOrienatation, IGX_STEPPER_COMPONENT, IStepTogglingEventArgs } from '../common';
 import { IgxStepperComponent } from '../igx-stepper.component';
@@ -17,7 +18,7 @@ let NEXT_ID = 0;
     templateUrl: 'igx-step.component.html',
     styleUrls: ['igx-step.component.scss']
 })
-export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, AfterViewInit, OnDestroy {
+export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, AfterViewInit, OnDestroy, IgxSlideComponentBase {
 
     /**
      * Get/Set the `id` of the step component.
@@ -146,18 +147,22 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
 
     public horizontalContentContainer: ElementRef;
 
-    /** @hidden @internal */
-    public get isCompact(): boolean {
-        return this.stepper?.displayDensity === DisplayDensity.compact;
-    }
+    // /** @hidden @internal */
+    // public get isCompact(): boolean {
+    //     return this.stepper?.displayDensity === DisplayDensity.compact;
+    // }
 
-    /** @hidden @internal */
-    public get isCosy(): boolean {
-        return this.stepper?.displayDensity === DisplayDensity.cosy;
-    }
+    // /** @hidden @internal */
+    // public get isCosy(): boolean {
+    //     return this.stepper?.displayDensity === DisplayDensity.cosy;
+    // }
 
     /** @hidden @internal */
     public isFocused: boolean;
+
+    public direction: Direction = Direction.NONE;
+    public previous: boolean;
+
 
     //  private _disabled = false;
     private _index = NEXT_ID - 1;
@@ -279,9 +284,10 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
                     this.verticalContentContainer
                 );
             } else {
-                this.playOpenAnimation(
-                    this.horizontalContentContainer
-                );
+                // this.playOpenAnimation(
+                //     this.horizontalContentContainer
+                // );
+                this.stepper.dummy();
             }
 
         }
@@ -316,10 +322,6 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
             if (!this.isHorizontal) {
                 this.playCloseAnimation(
                     this.verticalContentContainer
-                );
-            } else {
-                this.playCloseAnimation(
-                    this.horizontalContentContainer
                 );
             }
         }

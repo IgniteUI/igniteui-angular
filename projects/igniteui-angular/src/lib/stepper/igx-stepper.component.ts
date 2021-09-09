@@ -1,13 +1,14 @@
+import { AnimationBuilder } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, Component, HostBinding, OnDestroy, OnInit,
-    Input, Output, EventEmitter, ContentChildren, QueryList, ElementRef, Optional, Inject, NgModule, ViewChild
+    Input, Output, EventEmitter, ContentChildren, QueryList, ElementRef, NgModule, ViewChild
 } from '@angular/core';
+import { IgxCarouselComponentBase } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { growVerIn, growVerOut } from '../animations/grow';
 import { slideInLeft, slideOutRight } from '../animations/slide';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxStepperOrienatation, IGX_STEPPER_COMPONENT, IStepToggledEventArgs, IStepTogglingEventArgs } from './common';
 import {
@@ -16,6 +17,9 @@ import {
 } from './igx-stepper.directive';
 import { IgxStepComponent } from './step/igx-step.component';
 import { IgxStepperService } from './stepper.service';
+
+
+// TO DO: common interface between IgxCarouselComponentBase and ToggleAnimationPlayer?
 
 
 @Component({
@@ -27,7 +31,7 @@ import { IgxStepperService } from './stepper.service';
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
     ]
 })
-export class IgxStepperComponent extends DisplayDensityBase implements OnInit, AfterViewInit, OnDestroy {
+export class IgxStepperComponent extends IgxCarouselComponentBase implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild('horizontalContentContainer') public horizontalContentContainer: ElementRef;
 
@@ -171,7 +175,7 @@ export class IgxStepperComponent extends DisplayDensityBase implements OnInit, A
 
     /** @hidden @internal */
     @ContentChildren(IgxStepComponent, { descendants: false })
-    public steps: QueryList<IgxStepComponent>;
+    private _steps: QueryList<IgxStepComponent>;
 
     // /** @hidden @internal */
     // public disabledChange = new EventEmitter<IgxStepComponent>();
@@ -181,12 +185,16 @@ export class IgxStepperComponent extends DisplayDensityBase implements OnInit, A
     private _orientation: IgxStepperOrienatation | string = IgxStepperOrienatation.Vertical;
 
     constructor(
+        builder: AnimationBuilder,
         public stepperService: IgxStepperService,
-        private element: ElementRef<HTMLElement>,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
-        this.stepperService.register(this);
-        // this.navService.register(this);
+        private element: ElementRef<HTMLElement>) {
+            super(builder);
+            this.stepperService.register(this);
+            // this.navService.register(this);
+    }
+
+    public get steps(): IgxStepComponent[] {
+        return this._steps.toArray();
     }
 
     /** @hidden @internal */
@@ -201,7 +209,6 @@ export class IgxStepperComponent extends DisplayDensityBase implements OnInit, A
 
     /** @hidden @internal */
     public ngOnInit() {
-        super.ngOnInit();
         // this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
         //     this.navService.update_disabled_cache(e);
         // });
@@ -225,7 +232,7 @@ export class IgxStepperComponent extends DisplayDensityBase implements OnInit, A
 
     /** @hidden @internal */
     public ngAfterViewInit() {
-        this.steps.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this._steps.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.subToChanges();
         });
         // this.scrollNodeIntoView(this.navService.activeNode?.header?.nativeElement);
@@ -241,6 +248,20 @@ export class IgxStepperComponent extends DisplayDensityBase implements OnInit, A
         this.unsubChildren$.complete();
         this.destroy$.next();
         this.destroy$.complete();
+    }
+
+    public dummy() {
+        this.previousItem = this.stepperService.previousActiveStep;
+        this.currentItem = this.stepperService.activeStep;
+        this.triggerAnimations();
+    }
+
+    protected getPreviousElement(): HTMLElement {
+        return this.stepperService.previousActiveStep.horizontalContentContainer.nativeElement;
+    }
+
+    protected getCurrentElement(): HTMLElement {
+        return this.stepperService.activeStep.horizontalContentContainer.nativeElement;
     }
 
     private subToCollapsing() {

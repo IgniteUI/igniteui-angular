@@ -4,8 +4,10 @@
 </div>
 
 <div #horizontalContentContainer>
-    <div *ngIf="orientation === 'Horizontal'">
-        <ng-container *ngTemplateOutlet="this.stepperService.activeStep?.contentTemplate"></ng-container>
+    <div *ngIf="orientation === 'Horizontal'" style="display: flex; flex-direction: row;">
+        <ng-container *ngFor="let step of steps">
+            <ng-container *ngTemplateOutlet="step?.contentTemplate"></ng-container>
+        </ng-container>
     </div>
 </div>
 <!-- </div> -->
