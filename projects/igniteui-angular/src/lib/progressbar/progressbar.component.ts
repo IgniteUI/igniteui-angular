@@ -668,7 +668,7 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
 
 export const valueInRange = (value: number, max: number, min = 0): number => Math.max(Math.min(value, max), min);
 
-export const toPercent = (value: number, max: number) => Math.floor(100 * (value / max));
+export const toPercent = (value: number, max: number) => Math.floor(100 * value / max);
 
 /**
  * @hidden
