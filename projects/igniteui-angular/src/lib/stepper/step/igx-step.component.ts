@@ -1,14 +1,13 @@
 import { AnimationBuilder } from '@angular/animations';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef,
-    EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, ViewChild
+    AfterViewInit, ChangeDetectorRef, Component, ElementRef,
+    EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensity } from '../../core/displayDensity';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
 import { IgxStepperOrienatation, IGX_STEPPER_COMPONENT, IStepTogglingEventArgs } from '../common';
 import { IgxStepperComponent } from '../igx-stepper.component';
-import { IgxStepContentDirective } from '../igx-stepper.directive';
 import { IgxStepperService } from '../stepper.service';
 
 let NEXT_ID = 0;
@@ -139,15 +138,13 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
      * @hidden
      * @internal
      */
-    @ContentChild(IgxStepContentDirective)
-    public contentDirective: IgxStepContentDirective;
+    @ViewChild('contentTemplate',)
+    public contentTemplate: TemplateRef<any>;
 
-    public get contentTemplate() {
-        return this.contentDirective.templateRef;
-    }
+    @ViewChild('verticalContentContainer', { read: ElementRef })
+    public verticalContentContainer: ElementRef;
 
-    @ViewChild('verticalContent', { read: ElementRef })
-    public contentContainer: ElementRef;
+    public horizontalContentContainer: ElementRef;
 
     /** @hidden @internal */
     public get isCompact(): boolean {
@@ -161,8 +158,6 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
 
     /** @hidden @internal */
     public isFocused: boolean;
-
-    public horizontalContainer: ElementRef;
 
     //  private _disabled = false;
     private _index = NEXT_ID - 1;
@@ -281,11 +276,11 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
             this.cdr.detectChanges();
             if (!this.isHorizontal) {
                 this.playOpenAnimation(
-                    this.contentContainer
+                    this.verticalContentContainer
                 );
             } else {
                 this.playOpenAnimation(
-                    this.horizontalContainer
+                    this.horizontalContentContainer
                 );
             }
 
@@ -320,11 +315,11 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
             this.stepperService.collapsing(this);
             if (!this.isHorizontal) {
                 this.playCloseAnimation(
-                    this.contentContainer
+                    this.verticalContentContainer
                 );
             } else {
                 this.playCloseAnimation(
-                    this.horizontalContainer
+                    this.horizontalContentContainer
                 );
             }
         }

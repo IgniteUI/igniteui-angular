@@ -12,48 +12,38 @@
     <igx-step #step>
         <igx-icon igxStepIcon>done</igx-icon>
         <label igxStepLabel>Step No 1</label>
-        <ng-template igxStepContent>
-            <div>Test me daddy</div>
-        </ng-template>
+        <div>Test me daddy</div>
     </igx-step>
 
-    <igx-step #step2>
+    <igx-step #step2 [active]="true">
         <igx-icon igxStepIcon>calendar_today</igx-icon>
         <label igxStepLabel>Step No 2</label>
-        <ng-template igxStepContent>
-            <igx-date-picker></igx-date-picker>
-        </ng-template>
+        <igx-date-picker></igx-date-picker>
     </igx-step>
 
     <igx-step #step3>
         <igx-icon igxStepIcon>alarm</igx-icon>
         <label igxStepLabel>Step No 3</label>
-        <ng-template igxStepContent>
-            <igx-time-picker></igx-time-picker>
-        </ng-template>
+        <igx-time-picker></igx-time-picker>
     </igx-step>
 
-    <igx-step #step4>
+    <igx-step #step4 [active]="true">
         <igx-icon igxStepIcon>check_circle</igx-icon>
         <label igxStepLabel>Step No 4</label>
-        <ng-template igxStepContent>
-            <igx-select [placeholder]="'Pick One'">
-                <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
-                <igx-select-item [value]="'Orange'">Orange</igx-select-item>
-                <igx-select-item [value]="'Grapes'">Grapes</igx-select-item>
-                <igx-select-item [value]="'Banana'">Banana</igx-select-item>
-            </igx-select>
-        </ng-template>
+        <igx-select [placeholder]="'Pick One'">
+            <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
+            <igx-select-item [value]="'Orange'">Orange</igx-select-item>
+            <igx-select-item [value]="'Grapes'">Grapes</igx-select-item>
+            <igx-select-item [value]="'Banana'">Banana</igx-select-item>
+        </igx-select>
     </igx-step>
 
     <igx-step #step5>
         <igx-icon igxStepIcon>delete</igx-icon>
         <label igxStepLabel>Step No 5</label>
-        <ng-template igxStepContent>
-            <div>
-                <button igxButton>Click me</button>
-            </div>
-        </ng-template>
+        <div>
+            <button igxButton>Click me</button>
+        </div>
     </igx-step>
 </igx-stepper>
 <br>

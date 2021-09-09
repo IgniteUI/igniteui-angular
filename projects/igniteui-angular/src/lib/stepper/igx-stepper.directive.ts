@@ -25,16 +25,6 @@ export class IgxStepIconDirective {
 }
 
 @Directive({
-    selector: '[igxStepContent]'
-})
-export class IgxStepContentDirective {
-    @HostBinding('class.igx-step__content')
-    public defaultClass = true;
-
-    constructor(public templateRef: TemplateRef<any>, public elementRef: ElementRef<any>) { }
-}
-
-@Directive({
     selector: '[igxStepLabel]'
 })
 

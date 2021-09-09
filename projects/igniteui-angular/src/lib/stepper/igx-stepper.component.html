@@ -3,7 +3,7 @@
     <ng-content select="igx-step"></ng-content>
 </div>
 
-<div #contentTemplate>
+<div #horizontalContentContainer>
     <div *ngIf="orientation === 'Horizontal'">
         <ng-container *ngTemplateOutlet="this.stepperService.activeStep?.contentTemplate"></ng-container>
     </div>

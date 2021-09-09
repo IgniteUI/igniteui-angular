@@ -6,12 +6,11 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { growVerIn, growVerOut } from '../animations/grow';
-import { slideInLeft, slideInRight, slideOutLeft, slideOutRight } from '../animations/slide';
+import { slideInLeft, slideOutRight } from '../animations/slide';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxStepperOrienatation, IGX_STEPPER_COMPONENT, IStepToggledEventArgs, IStepTogglingEventArgs } from './common';
 import {
-    IgxStepContentDirective,
     IgxStepIconDirective, IgxStepInvalidIconDirective,
     IgxStepLabelDirective, IgxStepValidIconDirective
 } from './igx-stepper.directive';
@@ -30,7 +29,7 @@ import { IgxStepperService } from './stepper.service';
 })
 export class IgxStepperComponent extends DisplayDensityBase implements OnInit, AfterViewInit, OnDestroy {
 
-    @ViewChild('contentTemplate') public contentTemplate: ElementRef;
+    @ViewChild('horizontalContentContainer') public horizontalContentContainer: ElementRef;
 
     @HostBinding('class.igx-stepper')
     public cssClass = 'igx-stepper';
@@ -232,7 +231,7 @@ export class IgxStepperComponent extends DisplayDensityBase implements OnInit, A
         // this.scrollNodeIntoView(this.navService.activeNode?.header?.nativeElement);
         this.subToChanges();
         this.steps.forEach(s => {
-            s.horizontalContainer = this.contentTemplate;
+            s.horizontalContentContainer = this.horizontalContentContainer;
         });
     }
 
@@ -305,7 +304,6 @@ export class IgxStepperComponent extends DisplayDensityBase implements OnInit, A
         IgxStepIconDirective,
         IgxStepValidIconDirective,
         IgxStepInvalidIconDirective,
-        IgxStepContentDirective
     ],
     exports: [
         IgxStepComponent,
@@ -314,7 +312,6 @@ export class IgxStepperComponent extends DisplayDensityBase implements OnInit, A
         IgxStepIconDirective,
         IgxStepValidIconDirective,
         IgxStepInvalidIconDirective,
-        IgxStepContentDirective
     ]
 })
 export class IgxStepperModule { }
