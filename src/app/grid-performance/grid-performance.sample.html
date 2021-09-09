@@ -12,6 +12,9 @@
     </igx-grid>
     <div>
         <button (click)="toggleVis()">Show/Hide</button>
-        <input type='number' #input/><button (click)='scrollTo(grid1, input.value)'>Go To Index</button>
+        <input type='number' #input/><button (click)='scrollTo(grid1, input.value)'>Go To Index Vertically</button>
+    </div>
+    <div>
+        <p>Vertical Scroll Time: {{verticalScrollTime}}</p>
     </div>
 </div>

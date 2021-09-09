@@ -14,6 +14,9 @@ export class GridPerformanceSampleComponent implements OnInit {
     public localData: any[] = [];
     public columns;
     public selectionMode;
+    public verticalScrollTime: number;
+    public horizontalScrollTime: number;
+    protected startTime;
 
     public ngOnInit() {
         this.selectionMode = GridSelectionMode.none;
@@ -74,6 +77,10 @@ export class GridPerformanceSampleComponent implements OnInit {
     }
 
     public scrollTo(grid, index) {
+        this.verticalScrollTime = 0;
+        this.startTime = performance.now();
         grid.verticalScrollContainer.scrollTo(parseInt(index, 10));
+        const endTime = performance.now();
+        this.verticalScrollTime = (endTime - this.startTime);
     }
 }

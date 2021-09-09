@@ -1,4 +1,4 @@
-﻿/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
+﻿/* eslint-disable no-console @angular-eslint/no-conflicting-lifecycle */
 import { CommonModule, DOCUMENT, NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
@@ -379,7 +379,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     ) { }
 
     public verticalScrollHandler(event) {
+        const startTime = performance.now();
         this.onScroll(event);
+        const endTime = performance.now();
+        const verticalScrollTime = endTime - startTime;
+        console.log("Scroll Vertically took: ", verticalScrollTime); 
     }
 
     public isScrollable() {
@@ -749,15 +753,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const rNode = rNodes[i];
             if (rNode) {
                 const styles = window.getComputedStyle(rNode);
-                const margin = parseFloat(styles['marginTop']) +
+                const marginVer = parseFloat(styles['marginTop']) +
                     parseFloat(styles['marginBottom']);
-                const h = rNode.offsetHeight + margin || parseInt(this.igxForItemSize, 10);
+                const h = rNode.offsetHeight + marginVer || parseInt(this.igxForItemSize, 10);
                 const index = this.state.startIndex + i;
                 if (!this.isRemote && !this.igxForOf[index]) {
                     continue;
                 }
+                const marginHor = parseFloat(styles['marginLeft']) +
+                    parseFloat(styles['marginRight']);
                 const oldVal = dimension === 'height' ? this.heightCache[index] : this.igxForOf[index][dimension];
-                const newVal = dimension === 'height' ? h : rNode.clientWidth;
+                const newVal = dimension === 'height' ? h : rNode.clientWidth + marginHor;
                 if (dimension === 'height') {
                     this.heightCache[index] = newVal;
                 } else {
