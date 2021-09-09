@@ -1597,11 +1597,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @WatchChanges()
     @HostBinding('style.height')
     @Input()
-    public get height() {
+    public get height(): string | null {
         return this._height;
     }
 
-    public set height(value: string) {
+    public set height(value: string | null) {
         if (this._height !== value) {
             this._height = value;
             this.nativeElement.style.height = value;
@@ -1627,11 +1627,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @WatchChanges()
     @Input()
-    public get width() {
+    public get width(): string | null {
         return this._width;
     }
 
-    public set width(value) {
+    public set width(value: string | null) {
         if (this._width !== value) {
             this._width = value;
             this.nativeElement.style.width = value;
@@ -2942,8 +2942,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private rowListDiffer;
     private _hiddenColumnsText = '';
     private _pinnedColumnsText = '';
-    private _height = '100%';
-    private _width = '100%';
+    private _height: string | null = '100%';
+    private _width: string | null = '100%';
     private _rowHeight;
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
@@ -2987,7 +2987,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     };
 
     private transactionChange$ = new Subject<void>();
-
+    private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
 
     /**
@@ -3672,6 +3672,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.paginator.totalRecords = this.totalRecords;
                 this.paginator.overlaySettings = { outlet: this.outlet };
             }
+            this._rendered = true;
         });
         Promise.resolve().then(() => this.rendered.next(true));
     }
@@ -4027,15 +4028,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public get columns(): IgxColumnComponent[] {
+        return this._columns;
+    }
+
+    /**
      * Gets an array of `IgxColumnComponent`s.
      *
      * @example
      * ```typescript
-     * const colums = this.grid.columns.
+     * const colums = this.grid.columnsCollection.
      * ```
      */
-    public get columns(): IgxColumnComponent[] {
-        return this._columns;
+    public get columnsCollection(): IgxColumnComponent[] {
+        return this._rendered ?  this._columns : [];
     }
 
     /**

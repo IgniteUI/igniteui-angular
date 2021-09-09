@@ -5,19 +5,33 @@
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-angular/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-angular?branch=master)
 [![npm version](https://badge.fury.io/js/igniteui-angular.svg)](https://badge.fury.io/js/igniteui-angular)
 
-[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch UI kits and supporting directives for [Angular](https://angular.io/) by Infragistics.  Ignite UI for Angular is designed to enable developers to build the most modern, high-performance HTML5 & JavaScript apps for modern desktop browsers, mobile experiences and progressive web apps (PWA’s) targeting Google's Angular framework.
+[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch UI kits, supporting directives for [Angular](https://angular.io/) by Infragistics. Ignite UI for Angular is designed to enable developers to build enterprise-ready, high-performance HTML5 & JavaScript apps for modern desktop browsers. With the use of all features, the world’s fastest Angular grid, 60+ real-time Angular charts, and more, you are empowered to engineer excellent mobile experiences and deliver progressive web apps (PWA’s) targeting Google's Angular framework. 
 
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 
-#### [**View running samples here**](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
-#### [**Install our VSCode Toolbox extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-toolbox)
+ 
+### Angular Data Grid Overview
+
+The Ignite UI for [Angular Data Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) equips you with all the necessary features for manipulating and visualizing tabular data in a series of rows and columns with ease. You can find powerful grid elements for no-lag scrolling while rendering and going through millions of data points. 
+
+Built for optimization and speed, our [Angular grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) component lets you quickly bind data with very little code and allows you to implement a variety of events in order to tailor different behaviors. 
+
+#### [View running Grid samples here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
+
+### Angular Charts & Graphs Overview
+
+Ignite UI for Angular arrives with an extensive library of data visualizations that enable stunning, interactive charts and dashboards for your modern web and mobile apps. All of them are designed to work flawlessly on every modern browser and provide complete touch as well as interactivity. Our comprehensive [Angular Charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/chart-overview) component supports more than 65 chart types that let you display all sorts of data representations and statistics. And with the rich and easy-to-use API, you can plot various types of charts. 
+
+Some of the Angular chart types included are: [Polar chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart), [Pie chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart), [Donut chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart), [Bubble chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart), [Area chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/area-chart), [Treemap chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart), and many others. And if you look for [Angular financial charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart), with Ignite UI you can get the same features as the ones you come across with Google Finance and Yahoo Finance Charts. 
+
+### [**Install our VSCode Toolbox extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-toolbox)
 ![](https://dl.infragistics.com/tools/extensions/angular-toolbox/toolbox.gif)
-#### [**Install our VSCode tooltip extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-tooltips)
+### [**Install our VSCode tooltip extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-tooltips)
 ![](https://dl.infragistics.com/tools/extensions/angular-tooltips/tooltip_preview.gif)
 
 **IMPORTANT** The repository has been renamed from `igniteui-js-blocks` to `igniteui-angular`. Read more on our new [naming convention](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-github-repo-name-changes).
  
-#### Current List of Components Include:
+### Current List of Components Include:
 
 |Components|Status|||Directives|Status|||
 |:--|:--:|:--|:--|:--|:--:|:--|:--|
@@ -25,13 +39,13 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 |avatar|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/avatar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar)|autocomplete|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/autocomplete/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete)|
 |badge|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/badge/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/badge)|button|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/button/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)|
 |banner|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/banner/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner)|date time editor|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/directives/date-time-editor/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-time-editor)|
-|bottom navigation|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tabbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar)|divider|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/button/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)|
-|button group|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/buttonGroup/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/buttongroup)|dragdrop|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/directives/divider/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/divider)|
+|bottom navigation|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tabs/bottom-nav/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar)|divider|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/button/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)|
+|button group|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/buttonGroup/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button-group)|dragdrop|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/directives/divider/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/divider)|
 |calendar|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/calendar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar)|filter|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/filter/README-FILTER.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list)|
 |card|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/card/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card)|forOf|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/for-of/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/for-of)|
 |carousel|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/carousel/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel)|hint|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|
 |checkbox|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/checkbox/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox)|input|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/input/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|
-|chips|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/chips/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip)|label|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/label/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|
+|chips|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/chips/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip)|label|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/label/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/label-input)|
 |circular progress|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/progressbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/circular-progress)|layout|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/layout/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/layout)|
 |combo|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/combo/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo)|mask|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/mask/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/mask)|
 |date picker|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/date-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-picker)|prefix|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|
@@ -53,35 +67,35 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 |slider|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/slider/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider/slider)|||||
 |snackbar|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/snackbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar)|||||
 |switch|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/switch/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch)|||||
-|tabs|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tabs/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)|||||
+|tabs|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tabs/tabs/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)|||||
 |time picker|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/time-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker)|||||
 |toast|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/toast/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast)|||||
 |tree|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tree/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree)|||||
 |tree grid|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/tree-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid)|||||
 
-#### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)
+### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)
 |Components||
 |:---|:---|
-|Category Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/categorychart)|
-|Data Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/datachart)|
-|Financial Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/financialchart)|
-|Doughnut Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/doughnutchart)|
-|Pie Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/piechart)|
+|Bar Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bar-chart)|
+|Line Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/line-chart)|
+|Financial Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart)|
+|Doughnut Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart)|
+|Pie Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart)|
 
-#### Components available in [igniteui-angular-gauges](https://www.npmjs.com/package/igniteui-angular-gauges)
+### Components available in [igniteui-angular-gauges](https://www.npmjs.com/package/igniteui-angular-gauges)
 |Components||
 |:---|:---|
-|Bullet Graph|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/bulletgraph)|
-|Linear Gauge|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/lineargauge)|
-|Radial Gauge|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radialgauge)|
+|Bullet Graph|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/bullet-graph)|
+|Linear Gauge|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/linear-gauge)|
+|Radial Gauge|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radial-gauge)|
 
-#### Components available in [igniteui-angular-excel](https://www.npmjs.com/package/igniteui-angular-excel)
+### Components available in [igniteui-angular-excel](https://www.npmjs.com/package/igniteui-angular-excel)
 |Components||
 |:---|:---|
 |Excel Library|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/excel-library)|
 
 
-#### Components available in [igniteui-angular-spreadsheet](https://www.npmjs.com/package/igniteui-angular-spreadsheet)
+### Components available in [igniteui-angular-spreadsheet](https://www.npmjs.com/package/igniteui-angular-spreadsheet)
 |Components||
 |:---|:---|
 |Spreadsheet|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/spreadsheet-overview)|
