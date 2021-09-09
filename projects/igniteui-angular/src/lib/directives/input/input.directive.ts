@@ -9,6 +9,7 @@ import {
     Input,
     OnDestroy,
     Optional,
+    Renderer2,
     Self,
 } from '@angular/core';
 import {
@@ -110,7 +111,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         @Inject(FormControlName)
         protected formControl: FormControlName,
         protected element: ElementRef<HTMLInputElement>,
-        protected cdr: ChangeDetectorRef
+        protected cdr: ChangeDetectorRef,
+        protected renderer: Renderer2
     ) { }
 
     private get ngControl(): NgControl {
@@ -348,10 +350,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @internal
      */
     protected updateValidityState() {
+        let requiredLabel = 'false';
         if (this.ngControl) {
             if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
                 // Run the validation with empty object to check if required is enabled.
                 const error = this.ngControl.control.validator({} as AbstractControl);
+                requiredLabel = error.required ? 'true' : 'false';
                 this.inputGroup.isRequired = error && error.required;
                 if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                     // the control is not disabled and is touched or dirty
@@ -368,9 +372,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 this._valid = IgxInputState.INITIAL;
                 this.inputGroup.isRequired = false;
             }
+            this.renderer.setAttribute(this.nativeElement, 'aria-required', requiredLabel);
         } else {
             this.checkNativeValidity();
         }
+
+        const invalidLabel = this.valid === IgxInputState.INVALID ? 'true' : 'false';
+        this.renderer.setAttribute(this.nativeElement, 'aria-invalid', invalidLabel);
     }
     /**
      * Gets whether the igxInput has a placeholder.
