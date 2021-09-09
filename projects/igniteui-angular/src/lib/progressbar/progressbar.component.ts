@@ -671,7 +671,7 @@ export function valueInRange(value: number, max: number, min = 0): number {
     return Math.max(Math.min(value, max), min);
 }
 
-export const toPercent = (value: number, max: number) => Math.floor(100 * (value / max));
+export const toPercent = (value: number, max: number) => Math.floor(100 * value / max);
 
 /**
  * @hidden
