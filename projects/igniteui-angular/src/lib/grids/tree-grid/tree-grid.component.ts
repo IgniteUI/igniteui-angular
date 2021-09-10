@@ -613,7 +613,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @remarks
      * When adding the row as a child, the parent row is the specified row.
      * @remarks
-     * To spawn the UI on top, call the function with index = null or a negative number. In this case trying to add this row as a child will result in error.
+     * To spawn the UI on top, call the function with index = null or a negative number.
+     * In this case trying to add this row as a child will result in error.
      * @example
      * ```typescript
      * this.grid.beginAddRowByIndex(10);
