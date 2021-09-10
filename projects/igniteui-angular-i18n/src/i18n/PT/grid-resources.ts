@@ -56,6 +56,7 @@ const GridResourceStringsPT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: 'Média',
     igx_grid_summary_earliest: 'Primeiros',
     igx_grid_summary_latest: 'Últimos',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: 'mover para a esquerda',
     igx_grid_excel_filter_moving_left_short: 'esquerda',
     igx_grid_excel_filter_moving_right: 'mover para a direita',

@@ -56,6 +56,7 @@ const GridResourceStringsNL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: 'Gem',
     igx_grid_summary_earliest: 'Vroegste',
     igx_grid_summary_latest: 'Nieuwste',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: 'naar links verplaatsen',
     igx_grid_excel_filter_moving_left_short: 'links',
     igx_grid_excel_filter_moving_right: 'naar rechts verplaatsen',

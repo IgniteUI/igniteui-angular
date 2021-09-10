@@ -3,7 +3,9 @@
         class="igx-excel-filter__actions-filter"
         (keydown)="onTextFilterKeyDown($event)"
         (click)="onTextFilterClick($event)"
-        [igxDropDownItemNavigation]="subMenu">
+        [igxDropDownItemNavigation]="subMenu"
+        role="menuitem"
+        aria-haspopup="true">
         <span>{{ subMenuText }}</span>
         <igx-icon>keyboard_arrow_right</igx-icon>
     </div>

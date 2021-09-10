@@ -56,6 +56,7 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: 'Ort.',
     igx_grid_summary_earliest: 'En erken',
     igx_grid_summary_latest: 'En geç',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: 'sola taşı',
     igx_grid_excel_filter_moving_left_short: 'sol',
     igx_grid_excel_filter_moving_right: 'sağa taşı',

@@ -56,6 +56,7 @@ const GridResourceStringsSV_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: 'Genomsnitt',
     igx_grid_summary_earliest: 'Tidigast',
     igx_grid_summary_latest: 'Senast',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: 'flytta vänster',
     igx_grid_excel_filter_moving_left_short: 'vänster',
     igx_grid_excel_filter_moving_right: 'flytta höger',

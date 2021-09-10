@@ -53,6 +53,7 @@ export interface IGridResourceStrings {
     igx_grid_summary_average?: string;
     igx_grid_summary_earliest?: string;
     igx_grid_summary_latest?: string;
+    igx_grid_excel_filter_menu?: string;
     igx_grid_excel_filter_moving_left?: string;
     igx_grid_excel_filter_moving_left_short?: string;
     igx_grid_excel_filter_moving_right?: string;
@@ -187,6 +188,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_summary_average: 'Avg',
     igx_grid_summary_earliest: 'Earliest',
     igx_grid_summary_latest: 'Latest',
+    igx_grid_excel_filter_menu: 'Open excel style filter menu',
     igx_grid_excel_filter_moving_left: 'move left',
     igx_grid_excel_filter_moving_left_short: 'left',
     igx_grid_excel_filter_moving_right: 'move right',

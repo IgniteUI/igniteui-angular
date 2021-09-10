@@ -56,6 +56,7 @@ const GridResourceStringsRO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: 'Media',
     igx_grid_summary_earliest: 'Cel mai devreme',
     igx_grid_summary_latest: 'Cele mai recente',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: 'mută la stânga',
     igx_grid_excel_filter_moving_left_short: 'stânga',
     igx_grid_excel_filter_moving_right: 'mută la dreapta',

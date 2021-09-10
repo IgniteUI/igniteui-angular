@@ -54,6 +54,7 @@ const GridResourceStringsZHHANS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: '平均',
     igx_grid_summary_earliest: '最早',
     igx_grid_summary_latest: '最新',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: '向左移动',
     igx_grid_excel_filter_moving_left_short: '左',
     igx_grid_excel_filter_moving_right: '向右移动',

@@ -56,6 +56,7 @@ const GridResourceStringsDA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: 'Gns',
     igx_grid_summary_earliest: 'Tidligst',
     igx_grid_summary_latest: 'Senest',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: 'Flyt til venstre',
     igx_grid_excel_filter_moving_left_short: 'venstre',
     igx_grid_excel_filter_moving_right: 'Flyt til højre',

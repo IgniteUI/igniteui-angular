@@ -54,6 +54,7 @@ const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: '平均',
     igx_grid_summary_earliest: '最も早い日',
     igx_grid_summary_latest: '最も遅い日',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: '左へ移動',
     igx_grid_excel_filter_moving_left_short: '左',
     igx_grid_excel_filter_moving_right: '右へ移動',

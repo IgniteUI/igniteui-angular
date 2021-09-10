@@ -1,7 +1,9 @@
 <div *ngIf="esf.column"
     [ngClass]="esf.selectedClass()"
     tabindex="0"
-    (click)="esf.onSelect()">
+    (click)="esf.onSelect()"
+    role="button"
+    [attr.aria-pressed]="esf.column.selected">
     <span>{{esf.grid.resourceStrings.igx_grid_excel_select }}</span>
     <igx-icon>done</igx-icon>
 </div>

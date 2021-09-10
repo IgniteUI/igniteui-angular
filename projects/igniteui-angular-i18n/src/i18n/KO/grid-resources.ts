@@ -54,6 +54,7 @@ const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: '평균',
     igx_grid_summary_earliest: '가장 빠른',
     igx_grid_summary_latest: '최신',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: '왼쪽으로 이동',
     igx_grid_excel_filter_moving_left_short: '왼쪽',
     igx_grid_excel_filter_moving_right: '오른쪽으로 이동',

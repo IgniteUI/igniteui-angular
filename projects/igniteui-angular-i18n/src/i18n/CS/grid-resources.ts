@@ -56,6 +56,7 @@ const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: 'Prům',
     igx_grid_summary_earliest: 'Nejdříve',
     igx_grid_summary_latest: 'Nejnovější',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: 'pohyb doleva',
     igx_grid_excel_filter_moving_left_short: 'vlevo, odjet',
     igx_grid_excel_filter_moving_right: 'pohyb vpravo',

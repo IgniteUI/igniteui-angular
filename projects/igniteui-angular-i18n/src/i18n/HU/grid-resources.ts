@@ -57,6 +57,7 @@ const GridResourceStringsHU_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: 'Átlag',
     igx_grid_summary_earliest: 'Legkorábbi',
     igx_grid_summary_latest: 'Legkésőbbi',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: 'mozgatás balra',
     igx_grid_excel_filter_moving_left_short: 'bal',
     igx_grid_excel_filter_moving_right: 'mozgatás jobbra',

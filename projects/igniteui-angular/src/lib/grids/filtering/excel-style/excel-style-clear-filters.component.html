@@ -2,7 +2,8 @@
     tabindex="0"
     [ngClass]="clearFilterClass()"
     (keydown)="onClearFilterKeyDown($event)"
-    (click)="clearFilter()">
+    (click)="clearFilter()"
+    role="menuitem">
     <span>{{ esf.grid.resourceStrings.igx_grid_excel_filter_clear }}</span>
     <igx-icon>clear</igx-icon>
 </div>

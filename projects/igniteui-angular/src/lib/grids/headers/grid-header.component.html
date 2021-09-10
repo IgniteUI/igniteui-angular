@@ -21,7 +21,8 @@
             </igx-icon>
         </ng-container>
         <ng-container *ngIf="grid.allowFiltering && column.filterable && grid.filterMode === 'excelStyleFilter'">
-            <div [ngClass]="filterIconClassName" (click)="onFilteringIconClick($event)" (pointerdown)="$event.stopPropagation()">
+            <div [ngClass]="filterIconClassName" (click)="onFilteringIconClick($event)" (pointerdown)="$event.stopPropagation()"
+                aria-haspopup="menu" [attr.aria-label]="grid?.resourceStrings.igx_grid_excel_filter_menu">
                 <ng-container *ngTemplateOutlet="esfIconTemplate; context: { $implicit:  this }"></ng-container>
             </div>
         </ng-container>

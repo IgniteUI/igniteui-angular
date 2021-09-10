@@ -56,6 +56,7 @@ const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_summary_average: 'Средно',
     igx_grid_summary_earliest: 'Най-стара',
     igx_grid_summary_latest: 'Най-нова',
+    igx_grid_excel_filter_menu: '',
     igx_grid_excel_filter_moving_left: 'Премести наляво',
     igx_grid_excel_filter_moving_left_short: 'Ляво',
     igx_grid_excel_filter_moving_right: 'Премести надясно',
