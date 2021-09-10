@@ -169,6 +169,32 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return this.grid.records.get(rowID);
     }
 
+    /**
+     * Gets the rowID of the record at the specified data view index
+     *
+     * @param index
+     * @param dataCollection
+     */
+     public get_rec_id_by_index(index: number, dataCollection?: any[]): any {
+        dataCollection = dataCollection || this.grid.data;
+        if (index >= 0 && index < this.grid.dataView.length) {
+            const rec = this.grid.dataView[index];
+            return this.grid.primaryKey ? rec.data[this.grid.primaryKey] : rec.data;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the index of the record in the data view by pk or -1 if not found or primaryKey is not set.
+     *
+     * @param pk
+     * @param dataCollection
+     */
+    public get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number {
+        dataCollection = dataCollection || this.grid.data;
+        return this.grid.primaryKey ? this.grid.dataView.findIndex(rec => rec.data[this.grid.primaryKey] === pk) : -1;
+    }
+
     public addRowToData(data: any, parentRowID?: any) {
         if (parentRowID !== undefined && parentRowID !== null) {
 

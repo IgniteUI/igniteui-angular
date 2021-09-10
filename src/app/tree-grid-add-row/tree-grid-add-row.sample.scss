@@ -1,0 +1,16 @@
+.three-columns {
+    display: flex;
+    width: 900px;
+}
+
+.column {
+    flex-grow: 1;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.column + .column {
+    margin-left: 2%;
+}
