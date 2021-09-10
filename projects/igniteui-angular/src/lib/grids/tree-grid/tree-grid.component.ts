@@ -606,6 +606,31 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * Enters add mode by spawning the UI with the context of the specified row by index.
+     *
+     * @remarks
+     * Accepted values for index are integers from 0 to this.grid.dataView.length
+     * @remarks
+     * When adding the row as a child, the parent row is the specified row.
+     * @remarks
+     * To spawn the UI on top, call the function with index = null or a negative number. In this case trying to add this row as a child will result in error.
+     * @example
+     * ```typescript
+     * this.grid.beginAddRowByIndex(10);
+     * this.grid.beginAddRowByIndex(10, true);
+     * this.grid.beginAddRowByIndex(null);
+     * ```
+     * @param index - The index to spawn the UI at. Accepts integers from 0 to this.grid.dataView.length
+     * @param asChild - Whether the record should be added as a child. Only applicable to igxTreeGrid.
+     */
+    public beginAddRowByIndex(index: number, asChild?: boolean): void {
+        if (index === null || index < 0) {
+            return this.beginAddRowById(null, asChild);
+        }
+        return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index, this.dataView), asChild);
+    }
+
+    /**
      * @hidden
      */
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {

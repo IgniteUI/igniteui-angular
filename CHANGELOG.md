@@ -6,15 +6,18 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
-    - Added two public methods that spawn the add row UI for an arbitrary record in the current data view. One that accepts a rowID to use as the row the UI spawns under and the other specifying the index at which to spawn it. Please, note that the new record is still added at the end of the data view, after the end-user submits it.
-    ```typescript
-    this.grid.beginAddRowById('ALFKI');         // spawns the add row UI under the row with PK 'ALFKI'
-    this.grid.beginAddRowById('ALFKI', true);   // spawns the add row UI to add a child for the row with PK 'ALFKI'
-    this.grid.beginAddRowById(null);            // spawns the add row UI as the first record
-    this.grid.beginAddRowByIndex(10);           // spawns the add row UI at index 10
-    this.grid.beginAddRowByIndex(10, true);     // spawns the add row UI to add a child for the row at index 9
-    this.grid.beginAddRowByIndex(0);            // spawns the add row UI as the first record
-    ```
+    - Added two public methods that spawn the add row UI for an arbitrary record in the current data view. One that accepts a rowID to use as the row the UI spawns under and the other accepting an index that has a distinct implementation for `IgxTreeGrid`. Please, refer to the official documentation for more information:[Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-adding) and [Tree Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/row-adding).
+
+        _Note:_ That the new record is still added at the end of the data view, after the end-user submits it.
+        ```typescript
+        this.grid.beginAddRowById('ALFKI');             // spawns the add row UI under the row with PK 'ALFKI'
+        this.grid.beginAddRowById(null);                // spawns the add row UI as the first record
+        this.grid.beginAddRowByIndex(10);               // spawns the add row UI at index 10
+        this.grid.beginAddRowByIndex(0);                // spawns the add row UI as the first record
+        this.treeGrid.beginAddRowById('ALFKI', true);   // spawns the add row UI to add a child for the row with PK 'ALFKI'
+        this.treeGrid.beginAddRowByIndex(10, true);     // spawns the add row UI to add a child for the row at index 10
+        this.treeGrid.beginAddRowByIndex(null);         // spawns the add row UI as the first record
+        ```
 
 ## 12.1.3
 
