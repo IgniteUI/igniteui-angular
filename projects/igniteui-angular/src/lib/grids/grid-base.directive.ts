@@ -5992,7 +5992,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             index = 0;
         } else {
             // find the index of the record with that PK
-            index = this.gridAPI.get_rec_index_by_id(rowID);
+            index = this.gridAPI.get_rec_index_by_id(rowID, this.dataView);
             rowID = index;
             if (index === -1) {
                 console.warn('No row with the specified ID was found.');
@@ -6044,8 +6044,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (index === 0) {
             return this.beginAddRowById(null, asChild);
         }
-        const record = this.dataView[index - 1];
-        return this.beginAddRowById(this.primaryKey ? record[this.primaryKey] : record, asChild);
+        return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index - 1, this.dataView), asChild);
     }
 
     protected beginAddRowForIndex(index: number, asChild: boolean = false) {
