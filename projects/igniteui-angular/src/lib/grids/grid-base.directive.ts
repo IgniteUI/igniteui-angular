@@ -3026,7 +3026,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     };
 
     private transactionChange$ = new Subject<void>();
-
+    private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
 
     /**
@@ -3711,6 +3711,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.paginator.totalRecords = this.totalRecords;
                 this.paginator.overlaySettings = { outlet: this.outlet };
             }
+            this._rendered = true;
         });
         Promise.resolve().then(() => this.rendered.next(true));
     }
@@ -4066,15 +4067,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public get columns(): IgxColumnComponent[] {
+        return this._columns;
+    }
+
+    /**
      * Gets an array of `IgxColumnComponent`s.
      *
      * @example
      * ```typescript
-     * const colums = this.grid.columns.
+     * const colums = this.grid.columnsCollection.
      * ```
      */
-    public get columns(): IgxColumnComponent[] {
-        return this._columns;
+    public get columnsCollection(): IgxColumnComponent[] {
+        return this._rendered ?  this._columns : [];
     }
 
     /**
