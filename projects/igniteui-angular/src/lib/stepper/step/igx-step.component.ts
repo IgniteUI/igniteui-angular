@@ -70,8 +70,6 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
     public set active(value: boolean) {
         if (value) {
             this.stepperService.expand(this, false);
-        } else {
-            this.stepperService.collapse(this);
         }
     }
 
@@ -79,24 +77,12 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
         return this.stepperService.activeStep === this;
     }
 
+    public get collapsing(): boolean {
+        return this.stepperService.collapsingSteps.has(this);
+    }
 
-    /**
-     * Emitted when the node's `expanded` property changes.
-     *
-     * ```html
-     * <igx-tree>
-     *      <igx-tree-node *ngFor="let node of data" [data]="node" [(expanded)]="node.expanded">
-     *      </igx-tree-node>
-     * </igx-tree>
-     * ```
-     *
-     * ```typescript
-     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * node.expandedChange.pipe(takeUntil(this.destroy$)).subscribe((e: boolean) => console.log("Node expansion state changed to ", e))
-     * ```
-     */
     @Output()
-    public expandedChange = new EventEmitter<boolean>();
+    public activeChanged = new EventEmitter<boolean>();
 
     // /** @hidden @internal */
     // public get focused() {
@@ -170,7 +156,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
     constructor(
         @Inject(IGX_STEPPER_COMPONENT) public stepper: IgxStepperComponent,
         protected stepperService: IgxStepperService,
-        protected cdr: ChangeDetectorRef,
+        public cdr: ChangeDetectorRef,
         protected builder: AnimationBuilder,
         private element: ElementRef<HTMLElement>
     ) {
@@ -199,12 +185,13 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
     public ngOnInit() {
         this.openAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(
             () => {
-                this.stepper.stepExpanded.emit({ owner: this.stepper, activeStep: this });
+                this.activeChanged.emit(true);
+                this.stepper.activeStepChanged.emit({ owner: this.stepper, activeStep: this });
             }
         );
         this.closeAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.stepper.stepCollapsed.emit({ owner: this.stepper, activeStep: this });
-            this.stepperService.collapse(this);
+            this.stepperService.collapsingSteps.delete(this);
+            this.activeChanged.emit(false);
             this.cdr.markForCheck();
         });
     }
@@ -241,93 +228,11 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
      */
     public onPointerDown(event) {
         event.stopPropagation();
-        if (this.stepperService.activeStep === this) {
-            return;
-        }
-        // this.navService.focusedStep = this;
-        this.expand();
+        this.stepperService.expand(this, true);
     }
 
     public ngOnDestroy() {
         super.ngOnDestroy();
     }
 
-    /**
-     * Expands the node, triggering animation
-     *
-     * ```html
-     * <igx-tree>
-     *      <igx-tree-node #node>My Node</igx-tree-node>
-     * </igx-tree>
-     * <button igxButton (click)="node.expand()">Expand Node</button>
-     * ```
-     *
-     * ```typescript
-     * const myNode: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * myNode.expand();
-     * ```
-     */
-    public expand() {
-        const args: IStepTogglingEventArgs = {
-            owner: this.stepper,
-            activeStep: this,
-            previousActiveStep: this.stepperService.previousActiveStep,
-            cancel: false
-
-        };
-        this.stepper.stepExpanding.emit(args);
-        if (!args.cancel) {
-            this.stepperService.expand(this, true);
-            this.cdr.detectChanges();
-            if (!this.isHorizontal) {
-                this.playOpenAnimation(
-                    this.verticalContentContainer
-                );
-            } else {
-                // this.playOpenAnimation(
-                //     this.horizontalContentContainer
-                // );
-                this.stepper.dummy();
-            }
-
-        }
-    }
-
-    /**
-     * Collapses the node, triggering animation
-     *
-     * ```html
-     * <igx-tree>
-     *      <igx-tree-node #node>My Node</igx-tree-node>
-     * </igx-tree>
-     * <button igxButton (click)="node.collapse()">Collapse Node</button>
-     * ```
-     *
-     * ```typescript
-     * const myNode: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * myNode.collapse();
-     * ```
-     */
-    public collapse() {
-        const args: IStepTogglingEventArgs = {
-            owner: this.stepper,
-            activeStep: this,
-            previousActiveStep: this.stepperService.previousActiveStep,
-            cancel: false
-
-        };
-        this.stepper.stepCollapsing.emit(args);
-        if (!args.cancel) {
-            this.stepperService.collapsing(this);
-            if (!this.isHorizontal) {
-                this.playCloseAnimation(
-                    this.verticalContentContainer
-                );
-            }
-        }
-    }
-
-    public get collapsing() {
-        return this.stepperService.collapsingSteps.has(this);
-    }
 }

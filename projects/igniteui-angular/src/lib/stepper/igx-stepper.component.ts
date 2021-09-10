@@ -90,88 +90,11 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements OnI
         this._orientation = value;
     }
 
-    /** Emitted when a node is expanding, before it finishes
-     *
-     * ```html
-     * <igx-tree (nodeExpanding)="handleNodeExpanding($event)">
-     * </igx-tree>
-     * ```
-     *
-     *```typescript
-     * public handleNodeExpanding(event: ITreeNodeTogglingEventArgs) {
-     *  const expandedNode: IgxTreeNode<any> = event.node;
-     *  if (expandedNode.disabled) {
-     *      event.cancel = true;
-     *  }
-     * }
-     *```
-     */
     @Output()
-    public stepExpanding = new EventEmitter<IStepTogglingEventArgs>();
+    public activeStepChanging = new EventEmitter<IStepTogglingEventArgs>();
 
-    /** Emitted when a node is expanded, after it finishes
-     *
-     * ```html
-     * <igx-tree (nodeExpanded)="handleNodeExpanded($event)">
-     * </igx-tree>
-     * ```
-     *
-     *```typescript
-     * public handleNodeExpanded(event: ITreeNodeToggledEventArgs) {
-     *  const expandedNode: IgxTreeNode<any> = event.node;
-     *  console.log("Node is expanded: ", expandedNode.data);
-     * }
-     *```
-     */
     @Output()
-    public stepExpanded = new EventEmitter<IStepToggledEventArgs>();
-
-    /** Emitted when a node is collapsing, before it finishes
-     *
-     * ```html
-     * <igx-tree (nodeCollapsing)="handleNodeCollapsing($event)">
-     * </igx-tree>
-     * ```
-     *
-     *```typescript
-     * public handleNodeCollapsing(event: ITreeNodeTogglingEventArgs) {
-     *  const collapsedNode: IgxTreeNode<any> = event.node;
-     *  if (collapsedNode.alwaysOpen) {
-     *      event.cancel = true;
-     *  }
-     * }
-     *```
-     */
-    @Output()
-    public stepCollapsing = new EventEmitter<IStepTogglingEventArgs>();
-
-    /** Emitted when a node is collapsed, after it finishes
-     *
-     * @example
-     * ```html
-     * <igx-tree (nodeCollapsed)="handleNodeCollapsed($event)">
-     * </igx-tree>
-     * ```
-     * ```typescript
-     * public handleNodeCollapsed(event: ITreeNodeToggledEventArgs) {
-     *  const collapsedNode: IgxTreeNode<any> = event.node;
-     *  console.log("Node is collapsed: ", collapsedNode.data);
-     * }
-     * ```
-     */
-    @Output()
-    public stepCollapsed = new EventEmitter<IStepToggledEventArgs>();
-
-    /**
-     * Emitted when the active node is changed.
-     *
-     * @example
-     * ```
-     * <igx-tree (activeNodeChanged)="activeNodeChanged($event)"></igx-tree>
-     * ```
-     */
-    @Output()
-    public activeStepChanged = new EventEmitter<IgxStepComponent>();
+    public activeStepChanged = new EventEmitter<IStepToggledEventArgs>();
 
     /** @hidden @internal */
     @ContentChildren(IgxStepComponent, { descendants: false })
@@ -188,9 +111,9 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements OnI
         builder: AnimationBuilder,
         public stepperService: IgxStepperService,
         private element: ElementRef<HTMLElement>) {
-            super(builder);
-            this.stepperService.register(this);
-            // this.navService.register(this);
+        super(builder);
+        this.stepperService.register(this);
+        // this.navService.register(this);
     }
 
     public get steps(): IgxStepComponent[] {
@@ -208,27 +131,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements OnI
     }
 
     /** @hidden @internal */
-    public ngOnInit() {
-        // this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
-        //     this.navService.update_disabled_cache(e);
-        // });
-
-
-        //dali ni trqbva
-        // this.activeNodeBindingChange.pipe(takeUntil(this.destroy$)).subscribe((node) => {
-        //     this.expandToNode(this.navService.activeNode);
-        //     this.scrollNodeIntoView(node?.header?.nativeElement);
-        // });
-
-
-
-        // this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        //     requestAnimationFrame(() => {
-        //         this.scrollNodeIntoView(this.navService.activeStep?.header.nativeElement);
-        //     });
-        // });
-        this.subToCollapsing();
-    }
+    public ngOnInit() { }
 
     /** @hidden @internal */
     public ngAfterViewInit() {
@@ -237,9 +140,6 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements OnI
         });
         // this.scrollNodeIntoView(this.navService.activeNode?.header?.nativeElement);
         this.subToChanges();
-        this.steps.forEach(s => {
-            s.horizontalContentContainer = this.horizontalContentContainer;
-        });
     }
 
     /** @hidden @internal */
@@ -257,42 +157,25 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements OnI
     }
 
     protected getPreviousElement(): HTMLElement {
-        return this.stepperService.previousActiveStep.horizontalContentContainer.nativeElement;
+        return this.stepperService.previousActiveStep?.horizontalContentContainer.nativeElement;
     }
 
     protected getCurrentElement(): HTMLElement {
         return this.stepperService.activeStep.horizontalContentContainer.nativeElement;
     }
 
-    private subToCollapsing() {
-        this.stepCollapsing.pipe(takeUntil(this.destroy$)).subscribe(event => {
-            if (event.cancel) {
-                return;
-            }
-            // this.navService.update_visible_cache(event.node, false);
-        });
-        this.stepExpanding.pipe(takeUntil(this.destroy$)).subscribe(event => {
-            if (event.cancel) {
-                return;
-            }
-            // this.navService.update_visible_cache(event.node, true);
-        });
-    }
-
     private subToChanges() {
         this.unsubChildren$.next();
         this.steps.forEach(step => {
-            step.expandedChange.pipe(takeUntil(this.unsubChildren$)).subscribe(nodeState => {
-                // this.navService.update_visible_cache(node, nodeState);
-            });
-            step.closeAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
-                // const targetElement = this.navService.focusedNode?.header.nativeElement;
-                // this.scrollNodeIntoView(targetElement);
-            });
-            step.openAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
-                // const targetElement = this.navService.focusedNode?.header.nativeElement;
-                // this.scrollNodeIntoView(targetElement);
-            });
+            step.horizontalContentContainer = this.horizontalContentContainer;
+            // step.closeAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
+            //     const targetElement = this.navService.focusedNode?.header.nativeElement;
+            //     this.scrollNodeIntoView(targetElement);
+            // });
+            // step.openAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
+            //     const targetElement = this.navService.focusedNode?.header.nativeElement;
+            //     this.scrollNodeIntoView(targetElement);
+            // });
         });
         // this.navService.init_invisible_cache();
     }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IgxStepperOrienatation, IStepTogglingEventArgs } from './common';
 import { IgxStepperComponent } from './igx-stepper.component';
 import { IgxStepComponent } from './step/igx-step.component';
 
@@ -20,48 +21,68 @@ export class IgxStepperService {
      * @returns void
      */
     public expand(step: IgxStepComponent, uiTrigger?: boolean): void {
-        this.collapsingSteps.delete(step);
-
         if (this.activeStep === step) {
             return;
         }
-        step.expandedChange.emit(true);
-        this.previousActiveStep = this.activeStep;
-        this.activeStep = step;
+
+        //TODO: consider emitting cancelable events through API
+
+        let argsCanceled = false;
         if (uiTrigger) {
-            this.previousActiveStep?.collapse();
-        } else {
-            if (this.previousActiveStep) {
-                this.previousActiveStep.active = false;
+            argsCanceled = this.emitActivatingEvent(step);
+        }
+
+        if (!argsCanceled) {
+            this.collapsingSteps.delete(step);
+
+            this.previousActiveStep = this.activeStep;
+            this.activeStep = step;
+
+            if (uiTrigger) {
+
+                this.collapsingSteps.add(this.previousActiveStep);
+
+                if (this.stepper.orientation === IgxStepperOrienatation.Vertical) {
+                    this.previousActiveStep.playCloseAnimation(
+                        this.previousActiveStep.verticalContentContainer
+                    );
+                    this.activeStep.cdr.detectChanges();
+
+                    this.activeStep.playOpenAnimation(
+                        this.activeStep.verticalContentContainer
+                    );
+                } else {
+                    this.activeStep.cdr.detectChanges();
+                    this.stepper.dummy();
+                }
+            } else {
+                this.collapsingSteps.delete(this.previousActiveStep);
+                this.activeStep.cdr.detectChanges();
+                this.previousActiveStep?.cdr.detectChanges();
+
+                this.previousActiveStep?.activeChanged.emit(false);
+                this.activeStep.activeChanged.emit(true);
+
+                this.stepper.activeStepChanged.emit({ owner: this.stepper, activeStep: this.activeStep });
             }
-        }
-    }
 
-    /**
-     * Adds a step to the `collapsing` collection
-     *
-     * @param step target step
-     */
-    public collapsing(step: IgxStepComponent): void {
-        this.collapsingSteps.add(step);
-    }
-
-    /**
-     * Removes the step from the 'expandedSteps' set and emits the step's change event
-     *
-     * @param step target step
-     * @returns void
-     */
-    public collapse(step: IgxStepComponent): void {
-        this.collapsingSteps.delete(step);
-        if (this.activeStep === step) {
-            step.expandedChange.emit(false);
-            this.previousActiveStep = step;
-            this.activeStep = null;
         }
+
     }
 
     public register(stepper: IgxStepperComponent) {
         this.stepper = stepper;
+    }
+
+    private emitActivatingEvent(step: IgxStepComponent): boolean {
+        const args: IStepTogglingEventArgs = {
+            owner: this.stepper,
+            activeStep: step,
+            previousActiveStep: this.activeStep,
+            cancel: false
+        };
+
+        this.stepper.activeStepChanging.emit(args);
+        return args.cancel;
     }
 }
