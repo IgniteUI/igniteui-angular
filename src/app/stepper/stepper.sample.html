@@ -8,14 +8,14 @@
 
 <hr>
 
-<igx-stepper #stepper>
+<igx-stepper #stepper (activeStepChanged)="activeStepChanged($event)" (activeStepChanging)="activeStepChanging($event)">
     <igx-step #step>
         <igx-icon igxStepIcon>done</igx-icon>
         <label igxStepLabel>Step No 1</label>
         <div>Test me daddy</div>
     </igx-step>
 
-    <igx-step #step2 [active]="true">
+    <igx-step #step2 [active]="true" (activeChanged)="activeStepChanged($event)">
         <igx-icon igxStepIcon>calendar_today</igx-icon>
         <label igxStepLabel>Step No 2</label>
         <igx-date-picker></igx-date-picker>
@@ -27,7 +27,7 @@
         <igx-time-picker></igx-time-picker>
     </igx-step>
 
-    <igx-step #step4 [active]="true">
+    <igx-step #step4 [active]="true" (activeChanged)="activeStepChanged($event)">
         <igx-icon igxStepIcon>check_circle</igx-icon>
         <label igxStepLabel>Step No 4</label>
         <igx-select [placeholder]="'Pick One'">

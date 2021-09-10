@@ -10,6 +10,8 @@ import { IgxStepperComponent } from 'projects/igniteui-angular/src/lib/stepper/i
 })
 export class IgxStepperSampleComponent implements AfterViewInit {
     @ViewChild('stepper', { static: true }) public stepper: IgxStepperComponent;
+
+    public activeProp = true;
     // public stepType = IgxStepType.Full;
     // public labelPos = IgxStepperLabelPosition.Bottom;
     // public stepTypes = [
@@ -50,6 +52,7 @@ export class IgxStepperSampleComponent implements AfterViewInit {
     }
 
     public activeStepChanging(ev) {
+        ev.cancel = true;
         // ev.cancel = true;
         console.log('ACTIVE STEP CHANGING');
         console.log(ev);
