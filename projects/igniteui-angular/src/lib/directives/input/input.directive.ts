@@ -283,16 +283,18 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this._valid = IgxInputState.INITIAL;
         }
         // Also check the control's validators for required
-        if (
-            !this.inputGroup.isRequired &&
-            this.ngControl &&
-            this.ngControl.control.validator
-        ) {
-            const validation = this.ngControl.control.validator(
-                {} as AbstractControl
-            );
-            this.inputGroup.isRequired = validation && validation.required;
+        let requiredLabel = this.required? 'true' : 'false';
+        if (this.ngControl && this.ngControl.control.validator) {
+            const validation = this.ngControl.control.validator({} as AbstractControl);
+            requiredLabel = validation.required ? 'true' : requiredLabel;
+            if (!this.inputGroup.isRequired) {
+                this.inputGroup.isRequired = validation && validation.required;
+            }
         }
+
+        this.renderer.setAttribute(this.nativeElement, 'aria-required', requiredLabel);
+        const invalidLabel = this.valid === IgxInputState.INVALID || (requiredLabel === 'true' && this.value === '') ? 'true' : 'false';
+        this.renderer.setAttribute(this.nativeElement, 'aria-invalid', invalidLabel);
 
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
@@ -377,7 +379,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this.checkNativeValidity();
         }
 
-        const invalidLabel = this.valid === IgxInputState.INVALID ? 'true' : 'false';
+        const invalidLabel = this.valid === IgxInputState.INVALID || (requiredLabel === 'true' && this.value === '') ? 'true' : 'false';
         this.renderer.setAttribute(this.nativeElement, 'aria-invalid', invalidLabel);
     }
     /**

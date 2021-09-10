@@ -369,8 +369,10 @@ describe('IgxInput', () => {
 
         const inputGroupElement = fixture.componentInstance.igxInputGroup.element.nativeElement;
         const igxInput = fixture.componentInstance.igxInput;
+        const inputElement = igxInput.nativeElement;
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
 
         fixture.componentInstance.user.firstName = 'Bobby';
 
@@ -380,6 +382,7 @@ describe('IgxInput', () => {
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('false');
 
         igxInput.value = '';
         fixture.detectChanges();
@@ -388,6 +391,7 @@ describe('IgxInput', () => {
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
 
         igxInput.value = undefined;
         fixture.detectChanges();
@@ -396,6 +400,7 @@ describe('IgxInput', () => {
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
     }));
 
     it('should correctly update state of input when value is changed via reactive, no user interactions', fakeAsync(() => {
@@ -405,33 +410,39 @@ describe('IgxInput', () => {
         const igxInputGroups = fixture.debugElement.queryAll(By.css('igx-input-group'));
         const inputGroupElement = igxInputGroups[0].nativeElement;
         const igxInput = fixture.componentInstance.strIgxInput;
+        const inputElement = igxInput.nativeElement;
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
 
         fixture.componentInstance.form.patchValue({ str: 'Bobby' });
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('false');
 
         fixture.componentInstance.form.patchValue({ str: '' });
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
 
         fixture.componentInstance.form.patchValue({ str: undefined });
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
 
         fixture.componentInstance.form.reset();
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
     }));
 
     it('should correctly update state of input when updated through ngModel, with user interactions', fakeAsync(() => {
@@ -442,6 +453,8 @@ describe('IgxInput', () => {
         const igxInput = fixture.componentInstance.igxInput;
         const inputElement = igxInput.nativeElement;
 
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
+
         dispatchInputEvent('focus', inputElement, fixture);
         dispatchInputEvent('blur', inputElement, fixture);
 
@@ -450,6 +463,7 @@ describe('IgxInput', () => {
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
 
         fixture.componentInstance.user.firstName = 'Bobby';
 
@@ -459,6 +473,7 @@ describe('IgxInput', () => {
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('false');
 
         fixture.componentInstance.user.firstName = '';
         fixture.detectChanges();
@@ -467,6 +482,7 @@ describe('IgxInput', () => {
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
 
         fixture.componentInstance.user.firstName = undefined;
         fixture.detectChanges();
@@ -475,6 +491,7 @@ describe('IgxInput', () => {
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
     }));
 
     it('should correctly update state of input when value is changed via reactive, with user interactions', fakeAsync(() => {
@@ -486,36 +503,43 @@ describe('IgxInput', () => {
         const igxInput = fixture.componentInstance.strIgxInput;
         const input = igxInput.nativeElement;
 
+        expect(input.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
+
         dispatchInputEvent('focus', input, fixture);
         dispatchInputEvent('blur', input, fixture);
         dispatchInputEvent('input', input, fixture);
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(input.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
 
         fixture.componentInstance.form.patchValue({ str: 'Bobby' });
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(input.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('false');
 
         fixture.componentInstance.form.patchValue({ str: '' });
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(input.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
 
         fixture.componentInstance.form.patchValue({ str: undefined });
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(input.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
 
         fixture.componentInstance.form.reset();
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(input.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
     }));
 
     it('should correctly update enabled/disabled state of igxInput when changed via reactive form', fakeAsync(() => {
@@ -686,6 +710,7 @@ describe('IgxInput', () => {
         let asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
         expect(asterisk).toBe('"*"');
         expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+        expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
 
         // 2) check that input group's --invalid class is NOT applied
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
@@ -701,6 +726,7 @@ describe('IgxInput', () => {
 
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+        expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
 
         // 3) Check if the input group's --invalid and --required classes are removed when validator is dynamically cleared
         fix.componentInstance.removeValidators(formGroup);
@@ -713,6 +739,7 @@ describe('IgxInput', () => {
         expect(formReference).toBeDefined();
         expect(input).toBeDefined();
         expect(input.nativeElement.value).toEqual('');
+        expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('false');
         expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toEqual(false);
         expect(asterisk).toBe('none');
         expect(input.valid).toEqual(IgxInputState.INITIAL);
@@ -732,6 +759,7 @@ describe('IgxInput', () => {
         // interaction test - expect actual asterisk
         asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
         expect(asterisk).toBe('"*"');
+        expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
     }));
 });
 
