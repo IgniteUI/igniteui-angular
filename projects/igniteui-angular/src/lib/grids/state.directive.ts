@@ -211,21 +211,11 @@ export class IgxGridStateDirective {
                         const ref = factory.create(context.viewRef.injector);
                         Object.assign(ref.instance, colState);
                         if (ref.instance.parent) {
-                            let columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref.instance.parent);
-                            if (!columnGroup) {
-                                // eslint-disable-next-line @typescript-eslint/prefer-for-of
-                                for (let i = 0; i < newColumns.length; i++) {
-                                    if (newColumns[i].children){
-                                        const match = context.findColumnGroupParent(newColumns[i].children.toArray(), ref.instance.parent);
-                                        if (match){
-                                            columnGroup = match;
-                                            break;
-                                        }
-                                    }
-                                }
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref.instance.parent);
+                            if (columnGroup) {
+                                ref.instance.parent = columnGroup;
+                                columnGroup.children.reset([...columnGroup.children.toArray(), ref.instance]);
                             }
-                            ref.instance.parent = columnGroup;
-                            columnGroup.children.reset([...columnGroup.children.toArray(), ref.instance]);
                         }
                         ref.changeDetectorRef.detectChanges();
                         newColumns.push(ref.instance);
@@ -526,24 +516,6 @@ export class IgxGridStateDirective {
         } else {
             this.featureKeys.push(keys);
         }
-    }
-
-    /**
-     * Returns columns parent column group component
-     */
-    private findColumnGroupParent(children: IgxColumnComponent[], parentHeader: string){
-        let parentComponent;
-        // eslint-disable-next-line @typescript-eslint/prefer-for-of
-        for (let i = 0; i < children.length; i++) {
-            if (children[i].children){
-                this.findColumnGroupParent(children[i].children.toArray(), parentHeader);
-            }
-            parentComponent = children.find(e => e.header === parentHeader);
-            if (parentComponent) {
-                break;
-            }
-        }
-        return parentComponent;
     }
 
     /**
