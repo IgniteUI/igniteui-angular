@@ -67,7 +67,6 @@ export abstract class BaseProgressDirective {
 
     protected _initValue = 0;
     protected _contentInit = false;
-    protected _valueInPercent = MIN_VALUE;
     protected _max = 100;
     protected _value = MIN_VALUE;
     protected _newVal = MIN_VALUE;
@@ -145,7 +144,6 @@ export abstract class BaseProgressDirective {
     @Input()
     public set max(maxNum: number) {
         this._max = maxNum;
-        this.valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
@@ -174,7 +172,7 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public set valueInPercent(value: number) {
-        this._valueInPercent = value;
+        value = toValue(value, this._max);
     }
 
     /**
@@ -189,7 +187,7 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public get valueInPercent(): number {
-        return this._valueInPercent;
+        return toPercent(this._value, this._max);
     }
 
     protected triggerProgressTransition(oldVal, newVal) {
@@ -403,6 +401,19 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     constructor() {
         super();
     }
+   
+    public set valueInPercent(value: number) {
+        const val = toValue(value, this._max);
+        if (value < 100) {
+            this.value = val;
+        } else {
+            this.value = 100;
+        }
+    }
+
+    public get valueInPercent(): number {
+        return toPercent(this._value, this._max);
+    }
 
    /**
     * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
@@ -432,13 +443,13 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
         if (isNaN(valInRange) || this._value === val || this.indeterminate) {
             return;
         }
-
+        
         if (this._contentInit) {
             this.triggerProgressTransition(this._value, valInRange);
         } else {
             this._initValue = valInRange;
         }
-
+        this._value = valInRange;
     }
 
     /**
@@ -670,6 +681,7 @@ export const valueInRange = (value: number, max: number, min = 0): number => Mat
 
 export const toPercent = (value: number, max: number) => Math.floor(100 * (value / max));
 
+export const toValue = (value: number, max: number) => Math.floor(max * value / 100  )
 /**
  * @hidden
  */
