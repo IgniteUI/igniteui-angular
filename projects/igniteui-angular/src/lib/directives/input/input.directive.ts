@@ -286,7 +286,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         let requiredLabel = this.required? 'true' : 'false';
         if (this.ngControl && this.ngControl.control.validator) {
             const validation = this.ngControl.control.validator({} as AbstractControl);
-            requiredLabel = validation.required ? 'true' : requiredLabel;
+            requiredLabel = validation && validation.required ? 'true' : requiredLabel;
             if (!this.inputGroup.isRequired) {
                 this.inputGroup.isRequired = validation && validation.required;
             }
@@ -357,7 +357,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
                 // Run the validation with empty object to check if required is enabled.
                 const error = this.ngControl.control.validator({} as AbstractControl);
-                requiredLabel = error.required ? 'true' : 'false';
+                requiredLabel = error && error.required ? 'true' : 'false';
                 this.inputGroup.isRequired = error && error.required;
                 if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                     // the control is not disabled and is touched or dirty
