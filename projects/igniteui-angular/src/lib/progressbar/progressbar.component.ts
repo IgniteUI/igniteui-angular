@@ -443,13 +443,11 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
         if (isNaN(valInRange) || this._value === val || this.indeterminate) {
             return;
         }
-        
         if (this._contentInit) {
             this.triggerProgressTransition(this._value, valInRange);
         } else {
             this._initValue = valInRange;
         }
-        
         this._value = valInRange;
     }
 
@@ -682,7 +680,7 @@ export const valueInRange = (value: number, max: number, min = 0): number => Mat
 
 export const toPercent = (value: number, max: number) => Math.floor(100 * value / max);
 
-export const toValue = (value: number, max: number) => Math.floor(max * value / 100  )
+export const toValue = (value: number, max: number) => Math.floor(max * value / 100);
 /**
  * @hidden
  */
