@@ -177,8 +177,8 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
      */
      public get_rec_id_by_index(index: number, dataCollection?: any[]): any {
         dataCollection = dataCollection || this.grid.data;
-        if (index >= 0 && index < this.grid.dataView.length) {
-            const rec = this.grid.dataView[index];
+        if (index >= 0 && index < dataCollection.length) {
+            const rec = dataCollection[index];
             return this.grid.primaryKey ? rec.data[this.grid.primaryKey] : rec.data;
         }
         return null;
@@ -192,7 +192,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
      */
     public get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number {
         dataCollection = dataCollection || this.grid.data;
-        return this.grid.primaryKey ? this.grid.dataView.findIndex(rec => rec.data[this.grid.primaryKey] === pk) : -1;
+        return this.grid.primaryKey ? dataCollection.findIndex(rec => rec.data[this.grid.primaryKey] === pk) : -1;
     }
 
     public addRowToData(data: any, parentRowID?: any) {
