@@ -6029,22 +6029,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @remarks
      * Accepted values for index are integers from 0 to this.grid.dataView.length
-     * @remarks
-     * When adding the row as a child, the parent row is the one at the previous index. You cannot add a child at index 0.
      * @example
      * ```typescript
-     * this.grid.beginAddRowByIndex(10);
-     * this.grid.beginAddRowByIndex(10, true);
      * this.grid.beginAddRowByIndex(0);
      * ```
      * @param index - The index to spawn the UI at. Accepts integers from 0 to this.grid.dataView.length
-     * @param asChild - Whether the record should be added as a child. Only applicable to igxTreeGrid.
      */
-    public beginAddRowByIndex(index: number, asChild?: boolean): void {
+    public beginAddRowByIndex(index: number): void {
         if (index === 0) {
-            return this.beginAddRowById(null, asChild);
+            return this.beginAddRowById(null);
         }
-        return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index - 1, this.dataView), asChild);
+        return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index - 1, this.dataView));
     }
 
     protected beginAddRowForIndex(index: number, asChild: boolean = false) {
