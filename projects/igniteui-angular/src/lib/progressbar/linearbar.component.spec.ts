@@ -482,7 +482,7 @@ describe('IgLinearBar', () => {
 
             const bar = fix.componentInstance.linearBar;
             const maxVal = 3.25;
-            const val =  2.55;
+            const val =  3.55;
 
             bar.max = maxVal;
             bar.value = val;

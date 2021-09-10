@@ -449,6 +449,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
         } else {
             this._initValue = valInRange;
         }
+        
         this._value = valInRange;
     }
 
