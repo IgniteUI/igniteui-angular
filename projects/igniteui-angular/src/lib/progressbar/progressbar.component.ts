@@ -401,7 +401,6 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     constructor() {
         super();
     }
-   
     public set valueInPercent(value: number) {
         const val = toValue(value, this._max);
         if (value < 100) {
