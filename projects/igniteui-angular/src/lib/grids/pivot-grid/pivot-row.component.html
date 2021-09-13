@@ -1,0 +1,86 @@
+    <!-- Row Dimension -->
+    <div #rowDimension>
+            <!-- TODO: Render headers based on hierarchy here -->
+    </div>
+
+    <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
+        <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-template>
+    </ng-container>
+
+    <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForSizePropName]='"calcPixelWidth"' [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
+        <igx-grid-cell
+            class="igx-grid__td igx-grid__td--fw"
+            [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
+            [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
+            [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
+            [class.igx-grid__td--bool]="col.dataType === 'boolean'"
+            [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
+            [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
+            [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
+            [column]="col"
+            [formatter]="col.formatter"
+            [intRow]="this"
+            [active]="isCellActive(col.visibleIndex)"
+            [style.min-height.px]="cellHeight"
+            [rowData]="rowData"
+            [style.min-width]="col.width"
+            [style.max-width]="col.width"
+            [style.flex-basis]="col.width"
+            [width]="col.getCellWidth()"
+            [visibleColumnIndex]="col.visibleIndex"
+            [value]="rowData | dataMapper:col.field:grid.pipeTrigger:rowData[col.field]:col.hasNestedPath"
+            [cellTemplate]="col.bodyTemplate"
+            [lastSearchInfo]="grid.lastSearchInfo"
+            [cellSelectionMode]="grid.cellSelection"
+            [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
+        </igx-grid-cell>
+    </ng-template>
+
+    <ng-container *ngIf="pinnedColumns.length > 0 && !grid.isPinningToStart">
+        <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-template>
+    </ng-container>
+
+    <ng-template #rowSelectorBaseTemplate>
+        <div class="igx-grid__cbx-padding">
+            <igx-checkbox
+                [tabindex]="-1"
+                [readonly]="true"
+                [checked]="selected"
+                [disableRipple]="true"
+                [disabled]="deleted"
+                [disableTransitions]="grid.disableTransitions"
+                [aria-label]="rowCheckboxAriaLabel">
+            </igx-checkbox>
+        </div>
+    </ng-template>
+
+    <ng-template #pinnedCellsTemplate let-col>
+        <igx-grid-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
+            class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
+            [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
+            [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
+            [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
+            [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
+            [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
+            [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
+            [column]="col"
+            [formatter]="col.formatter"
+            [intRow]="this"
+            [active]="isCellActive(col.visibleIndex)"
+            [firstPinned]="col.isFirstPinned"
+            [lastPinned]="col.isLastPinned"
+            [style.min-height.px]="cellHeight"
+            [rowData]="rowData"
+            [style.min-width]="col.width"
+            [style.max-width]="col.width"
+            [style.flex-basis]="col.width"
+            [style.left]="col.rightPinnedOffset"
+            [width]="col.getCellWidth()"
+            [visibleColumnIndex]="col.visibleIndex"
+            [value]="rowData | dataMapper:col.field:grid.pipeTrigger:rowData[col.field]:col.hasNestedPath"
+            [cellTemplate]="col.bodyTemplate"
+            [lastSearchInfo]="grid.lastSearchInfo"
+            [cellSelectionMode]="grid.cellSelection"
+            [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
+        </igx-grid-cell>
+    </ng-template>
