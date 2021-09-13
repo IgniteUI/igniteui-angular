@@ -11,7 +11,7 @@
 </ng-template>
 
 
-<div class="igx-step__header" (click)="onPointerDown($event)">
+<div class="igx-step__header" [ngClass]="getStepHeaderClasses()" (click)="onPointerDown($event)">
     <ng-content select='[igxStepIcon]'></ng-content>
     <ng-container *ngTemplateOutlet="defaultLabel"></ng-container>
 </div>

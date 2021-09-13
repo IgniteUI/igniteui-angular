@@ -7,7 +7,7 @@ import { IgxSlideComponentBase } from 'igniteui-angular';
 import { takeUntil } from 'rxjs/operators';
 import { Direction } from '../../carousel/carousel-base';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
-import { IgxStepperOrienatation, IGX_STEPPER_COMPONENT, IStepTogglingEventArgs } from '../common';
+import { IgxStepperOrienatation, IgxStepperProgressLine, IGX_STEPPER_COMPONENT, IStepTogglingEventArgs } from '../common';
 import { IgxStepperComponent } from '../igx-stepper.component';
 import { IgxStepperService } from '../stepper.service';
 
@@ -60,6 +60,100 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
     public get index(): number {
         return this._index;
     }
+
+    /**
+     * Get/Set whether the step should be skipped. It could be activated on click.
+     *
+     * ```html
+     * <igx-stepper>
+     * ...
+     *     <igx-step [skip]="true"></igx-step>
+     * ...
+     * </igx-stepper>
+     * ```
+     *
+     * ```typescript
+     * this.stepper.steps[1].skip = true;
+     * ```
+     */
+    @Input()
+    public skip = false;
+
+    /**
+     * Get/Set whether the step is interactable.
+     *
+     * ```html
+     * <igx-stepper>
+     * ...
+     *     <igx-step [disabled]="true"></igx-step>
+     * ...
+     * </igx-stepper>
+     * ```
+     *
+     * ```typescript
+     * this.stepper.steps[1].disabled = true;
+     * ```
+     */
+    @Input()
+    @HostBinding('class.igx-step--disabled')
+    public disabled = false;
+
+    @Input()
+    @HostBinding('class.igx-step--complete')
+    public complete = false;
+
+    /**
+     * Get/Set whether the step is valid.
+     *
+     */
+    @Input()
+    public isValid = true;
+
+    /** @hidden */
+    @HostBinding('class.igx-step--invalid')
+    public get invalidClass(): boolean {
+        return !this.isValid;
+    }
+
+    /**
+     * Get/Set whether the step the progress indicator type.
+     *
+     * ```typescript
+     * this.stepper.steps[1].completedStyle = IgxStepperProgressLine.Dashed;
+     * ```
+     */
+    @Input()
+    public completedStyle = IgxStepperProgressLine.Solid;
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-step--solid')
+    public get solidClass() {
+        return this.complete && this.completedStyle === IgxStepperProgressLine.Solid;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-step--dashed')
+    public get dashedClass() {
+        return this.complete && this.completedStyle === IgxStepperProgressLine.Dashed;
+    }
+
+    /**
+     * Get/Set whether the step is optional.
+     *
+     * ```html
+     * <igx-stepper>
+     * ...
+     *     <igx-step [optional]="true"></igx-step>
+     * ...
+     * </igx-stepper>
+     * ```
+     *
+     * ```typescript
+     * this.stepper.steps[1].optional = true;
+     * ```
+     */
+    @Input()
+    public optional = false;
 
     /**
      * Gets/Sets the active state of the node
@@ -198,6 +292,18 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
 
     /** @hidden @internal */
     public ngAfterViewInit() { }
+
+    public getStepHeaderClasses() {
+        if(this.active) {
+            return 'igx-step__header--active';
+        }
+        if (this.disabled) {
+            return 'igx-step__header--disabled';
+        }
+        if (this.skip) {
+            return 'igx-step__header--skip';
+        }
+    }
 
     // /**
     //  * @hidden @internal

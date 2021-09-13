@@ -1,3 +1,27 @@
+.igx-step__header {
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    padding: 16px;
+}
+
+.igx-step__header:hover {
+    background-color: rgba($color: #ccc, $alpha: 0.5);
+}
+
+.igx-step__header--active {
+    pointer-events: none;
+    background-color:  rgba($color: green, $alpha: 0.5);
+}
+
+.igx-step__header--disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.igx-step__header--skip {
+    opacity: 0.5;
+}
+
 .igx-step__content {
     display: flex;
 }

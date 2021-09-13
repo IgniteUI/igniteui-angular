@@ -61,6 +61,17 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements OnI
     };
 
     /**
+     * Get/Set whether the stepper is linear.
+     * Only if the active step is valid the user is able to move forward.
+     *
+     * ```html
+     * <igx-stepper [linear]="true"></igx-stepper>
+     * ```
+     */
+    @Input()
+    public linear = false;
+
+    /**
      * Get/Set the stepper orientation.
      *
      * ```typescript
