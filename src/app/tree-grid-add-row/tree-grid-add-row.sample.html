@@ -1,14 +1,33 @@
 <div>
-    <igx-tree-grid [pinning]="pinningConfig" #grid [allowFiltering]="true" [data]="data" primaryKey="employeeID" foreignKey="PID"
-    [width]="'900px'" [height]="'800px'" [rowEditable]="true">
-    <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
-        [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
-        [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
-        [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
-    </igx-column>
-    <igx-action-strip #actionstrip>
-        <igx-grid-pinning-actions></igx-grid-pinning-actions>
-        <igx-grid-editing-actions [addRow]="true" [addChild]="actionstrip.context?.treeRow.level < 1"></igx-grid-editing-actions>
-    </igx-action-strip>
-</igx-tree-grid>
-</div>
+    <igx-tree-grid [pinning]="pinningConfig" #grid [allowFiltering]="true" [data]="data" primaryKey="employeeID"
+        foreignKey="PID" [width]="'900px'" [height]="'800px'" [rowEditable]="true">
+        <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
+            [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
+            [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [minWidth]="c.minWidth"
+            [maxWidth]="c.maxWidth">
+        </igx-column>
+        <igx-action-strip #actionstrip>
+            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+            <igx-grid-editing-actions [addRow]="true" [addChild]="actionstrip.context?.treeRow.level < 1">
+            </igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-tree-grid>
+    <div class="three-columns">
+        <div class="column">
+            <button igxButton="raised" (click)="beginAddRowStart()">Add Row At Start</button>
+        </div>
+        <div class="column">
+            <igx-input-group>
+                <input igxInput name="index" type="number" #indexInput />
+                <label igxLabel for="index">Index</label>
+            </igx-input-group>
+            <button igxButton="raised" (click)="beginAddRowAtIndex(indexInput.value)">Add Row At Index</button>
+        </div>
+        <div class="column">
+            <igx-input-group>
+                <input igxInput name="string" type="number" #idInput value="10" />
+                <label igxLabel for="string">PK</label>
+            </igx-input-group>
+            <button igxButton="raised" (click)="beginAddRowById(idInput.value)">Add Row For ID</button>
+        </div>
+    </div>
