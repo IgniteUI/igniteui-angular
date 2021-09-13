@@ -8,6 +8,12 @@ All notable changes for each version of this project will be documented in this 
 - `igxTreeGrid`
     - Added `TreeGridMatchingRecordsOnlyFilteringStrategy`, which allows you to display only the records matching particular filtering condition without any trace for their parents.
 
+## 12.1.6
+
+### New Features
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - Added capability to restore the state of multi column headers with `IgxGridStateDirective`.
+
 ## 12.1.3
 
 ### New Features
