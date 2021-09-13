@@ -84,6 +84,9 @@
     <div class="igx-grid__scroll-end" [style.float]='"right"' [style.width.px]='pinnedWidth' [style.min-width.px]='pinnedWidth' [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
 </div>
 
+<div class="igx-grid__tfoot" role="rowgroup" #tfoot>
+</div>
+
 <div class="igx-grid__footer" #footer>
     <ng-content select="igx-grid-footer"></ng-content>
 </div>

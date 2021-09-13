@@ -12,6 +12,8 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { IgxGridCRUDService } from '../common/crud.service';
+import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 let NEXT_ID = 0;
 @Component({
@@ -20,6 +22,8 @@ let NEXT_ID = 0;
     selector: 'igx-pivot-grid',
     templateUrl: 'pivot-grid.component.html',
     providers: [
+        IgxGridCRUDService,
+        IgxGridSummaryService,
         IgxGridSelectionService,
         GridBaseAPIService,
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxPivotGridComponent) },
@@ -106,7 +110,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective
         }
 
 
-            /**
+    /**
      * @hidden
      */
     public getContext(rowData, rowIndex): any {
