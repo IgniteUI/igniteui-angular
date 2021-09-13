@@ -1,122 +1,28 @@
-<section class="sample-content">
-    <article class="linear-samples sample-column">
-        <h4 class="sample-title">Linear progress bar</h4>
-        <div class="linear-container">
-            <igx-linear-bar [striped]="false" [value]="currentValue" max="100">
-            </igx-linear-bar>
-        </div>
+<div class="linear-container">
+    <igx-linear-bar #progressbar [value]="currentValue" [max]="500"></igx-linear-bar>
 
-        <div class="linear-container">
-            <igx-linear-bar type="success" [textAlign]="positionEnd" [striped]="false" [value]="currentValue">
-            </igx-linear-bar>
-        </div>
+    <div class="button-container">
+        change value
+        <button igxButton="icon" (click)="decrementProgress()">
+            <igx-icon family="material">remove</igx-icon>
+        </button>
+        <button igxButton="icon" (click)="incrementProgress()">
+            <igx-icon family="material">add</igx-icon>
+        </button>
+    </div>
+    <div class="button-container">
+        change max
+        <button igxButton="icon" (click)="decrementMax()">
+            <igx-icon family="material">remove</igx-icon>
+        </button>
+        <button igxButton="icon" (click)="incrementMax()">
+            <igx-icon family="material">add</igx-icon>
+        </button>
 
-        <div class="linear-container">
-            <igx-linear-bar type="danger" [textAlign]="positionCenter" [striped]="false" [value]="currentValue">
-            </igx-linear-bar>
-        </div>
-
-        <div class="linear-container">
-            <igx-linear-bar type="warning" [textTop]="true" [value]="20">
-            </igx-linear-bar>
-        </div>
-
-        <div class="linear-container">
-            <igx-linear-bar type="info" [striped]="false" [value]="currentValue">
-            </igx-linear-bar>
-        </div>
-
-        <div class="linear-container">
-            <igx-linear-bar [indeterminate]="true">
-            </igx-linear-bar>
-        </div>
-    </article>
-
-    <article class="linear-samples sample-column">
-        <h4 class="sample-title">Striped linear progress bar</h4>
-        <div class="linear-container">
-            <igx-linear-bar striped="true" [value]="currentValue">
-            </igx-linear-bar>
-        </div>
-
-        <div class="linear-container">
-            <igx-linear-bar type="success" striped="true" [value]="currentValue">
-            </igx-linear-bar>
-        </div>
-
-        <div class="linear-container">
-            <igx-linear-bar type="danger" striped="true" [value]="currentValue">
-            </igx-linear-bar>
-        </div>
-
-        <div class="linear-container">
-            <igx-linear-bar type="warning" [striped]="true" [max]="100" [value]="currentValue">
-            </igx-linear-bar>
-        </div>
-
-        <div class="linear-container">
-            <igx-linear-bar type="info" [striped]="true" [max]="100" [value]="currentValue">
-            </igx-linear-bar>
-        </div>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">Circular progress indicator</h4>
-        <div class="circular-samples">
-            <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [indeterminate]="true"></igx-circular-bar>
-            </div>
-            <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="24"></igx-circular-bar>
-            </div>
-            <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="32"></igx-circular-bar>
-            </div>
-        </div>
-        <div class="circular-samples">
-            <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="43"></igx-circular-bar>
-            </div>
-            <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="53"></igx-circular-bar>
-            </div>
-            <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="30"></igx-circular-bar>
-            </div>
-            <div class="circular-container">
-                <igx-circular-bar class="circular-sample custom-gradient" [indeterminate]="true"></igx-circular-bar>
-            </div>
-        </div>
-        <div class="circular-samples">
-            <div class="circular-container">
-                 <igx-circular-bar class="circular-sample" [value]="currentValue" [textVisibility]="true">
-                    <ng-template igxProcessBarText let-process>
-                        <svg:tspan x="50" dy="-25" >Value is:</tspan>
-                        <svg:tspan x="50" dy="25" font-weight="bold" font-size="30">{{process.value}}</tspan>
-                    </ng-template>
-                </igx-circular-bar>
-            </div>
-            <div class="circular-container" #gradient>
-                <igx-circular-bar class="circular-sample" [value]="77" [text]="'Test'">
-                    <ng-template igxProgressBarGradient let-id>
-                        <svg:linearGradient [id]="id" gradientTransform="rotate(90)">
-                            <stop offset="0%"   stop-color="#ff9a40"/>
-                            <stop offset="50%" stop-color="#1eccd4"/>
-                            <stop offset="100%" stop-color="#ff0079"/>
-                        </svg:linearGradient>
-                    </ng-template>
-                </igx-circular-bar>
-            </div>
-            <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="44"></igx-circular-bar>
-            </div>
-        </div>
-    </article>
-</section>
-
-<div class="button-container">
-    <button igxButton="fab" igxRipple="" (click)="generateNewProgressValues()">
-        <igx-icon fontSet="material">refresh</igx-icon>
-    </button>
+        <button igxButton="icon" (click)="progressbar.valueInPercent = 50">
+            valueInPercent
+        </button>
+    </div>
+    <div>value: {{progressbar.value}}</div>
+    <div>max: {{progressbar.max}}</div>
 </div>
-

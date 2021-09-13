@@ -143,9 +143,12 @@ export abstract class BaseProgressDirective {
      */
     @HostBinding('attr.aria-valuemax')
     @Input()
-    set max(maxNum: number) {
+    public set max(maxNum: number) {
+        if(maxNum < this._value) {
+            return;
+        }
         this._max = maxNum;
-        this.valueInPercent = toPercent(this._value, this._max);
+        this._valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
@@ -174,7 +177,11 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public set valueInPercent(value: number) {
+        if (value < 0 || value > 100) {
+            return;
+        }
         this._valueInPercent = value;
+        this._value = toValue(value, this._max);
     }
 
     /**
@@ -234,7 +241,7 @@ export abstract class BaseProgressDirective {
             this.updateProgress(val);
             cancelAnimationFrame(this.requestAnimationId);
         } else {
-            this.valueInPercent = progressValue;
+            this._valueInPercent = progressValue;
             this.requestAnimationId = requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, step));
         }
     }
@@ -244,7 +251,7 @@ export abstract class BaseProgressDirective {
      */
     protected updateProgressDirectly(val: number) {
         this._value = valueInRange(val, this._max);
-        this.valueInPercent = toPercent(this._value, this._max);
+        this._valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
@@ -290,7 +297,7 @@ export abstract class BaseProgressDirective {
      */
     private updateProgress(val: number) {
         this._value = valueInRange(val, this._max);
-        this.valueInPercent = toPercent(this._value, this._max);
+        this._valueInPercent = toPercent(this._value, this._max);
     }
 }
 let NEXT_LINEAR_ID = 0;
@@ -430,7 +437,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
      */
     set value(val) {
         const valInRange = valueInRange(val, this.max);
-        if (isNaN(valInRange) || this._value === val || this.indeterminate) {
+        if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
             return;
         }
 
@@ -672,6 +679,8 @@ export function valueInRange(value: number, max: number, min = 0): number {
 }
 
 export const toPercent = (value: number, max: number) => Math.floor(100 * value / max);
+
+export const toValue = (value: number, max: number) => Math.floor(max * value / 100);
 
 /**
  * @hidden
