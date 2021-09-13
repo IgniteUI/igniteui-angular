@@ -351,6 +351,12 @@ export class IgxRowCrudState extends IgxCellCrudState {
             rowEditArgs = this.grid.gridAPI.update_row(this.row, this.row.newData, event);
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
         } else {
+            const rowAddArgs = this.row.createEditEventArgs(true, event);
+            this.grid.rowAdd.emit(rowAddArgs);
+            if (rowAddArgs.cancel) {
+                return rowAddArgs;
+            }
+
             this.grid.transactions.endPending(false);
 
             const parentId = this.getParentRowId();
@@ -468,6 +474,9 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         }
 
         const args = super.endRowTransaction(commit, event);
+        if (args.cancel) {
+            return args;
+        }
 
         this.endAddRow();
         if (commit) {

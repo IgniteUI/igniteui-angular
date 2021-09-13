@@ -703,10 +703,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     /**
-     * Emmited when deleting a row
+     * Emmited when deleting a row.
      *
      * @remarks
-     * Returns an `IRowDataEventArgs` object
+     * This event is cancelable.
+     * Returns an `IGridEditEventArgs` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (rowDelete)="rowDelete($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -714,6 +715,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public rowDelete = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * Emmited just before the newly added row is commited.
+     *
+     * @remarks
+     * This event is cancelable.
+     * Returns an `IGridEditEventArgs` object.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+     @Output()
+     public rowAdd = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after column is resized.
