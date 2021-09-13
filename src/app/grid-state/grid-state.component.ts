@@ -61,6 +61,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     public gridId = 'grid1';
     public hGridId = 'hGrid1';
     public treeGridId = 'treeGrid1';
+    public mcGridId = 'mcGrid1';
     public treeGridHierId = 'treeGridH1';
     public gridState: IGridState;
     public serialize = true;

@@ -18,6 +18,7 @@ All notable changes for each version of this project will be documented in this 
         this.treeGrid.beginAddRowByIndex(10, true);     // spawns the add row UI to add a child for the row at index 10
         this.treeGrid.beginAddRowByIndex(null);         // spawns the add row UI as the first record
         ```
+    - Added capability to restore the state of multi column headers with `IgxGridStateDirective`.
 
 ## 12.1.3
 
