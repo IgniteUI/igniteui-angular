@@ -131,7 +131,15 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements OnI
     }
 
     /** @hidden @internal */
-    public ngOnInit() { }
+    public ngOnInit() {
+        this.enterAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.activeStepChanged.emit({ owner: this, activeStep: this.stepperService.activeStep });
+        });
+        this.leaveAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.stepperService.collapse(this.stepperService.previousActiveStep);
+            this.stepperService.previousActiveStep.cdr.markForCheck();
+        });
+    }
 
     /** @hidden @internal */
     public ngAfterViewInit() {

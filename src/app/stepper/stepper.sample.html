@@ -8,7 +8,7 @@
 
 <hr>
 
-<igx-stepper #stepper (activeStepChanged)="activeStepChanged($event)" (activeStepChanging)="activeStepChanging($event)">
+<igx-stepper #stepper (activeStepChanged)="activeStepChanged($event)" (activeStepChanging)="activeStepChanging($event)" [orientation]="'Horizontal'">
     <igx-step #step>
         <igx-icon igxStepIcon>done</igx-icon>
         <label igxStepLabel>Step No 1</label>

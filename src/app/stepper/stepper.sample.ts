@@ -1,7 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import {
-    IgxStepperLabelPosition, IgxStepperOrienatation, IgxStepperProgressLine, IgxStepType
-} from 'projects/igniteui-angular/src/lib/stepper/common';
+import { IgxStepperOrienatation } from 'projects/igniteui-angular/src/lib/stepper/common';
 import { IgxStepperComponent } from 'projects/igniteui-angular/src/lib/stepper/igx-stepper.component';
 
 @Component({
@@ -52,7 +50,6 @@ export class IgxStepperSampleComponent implements AfterViewInit {
     }
 
     public activeStepChanging(ev) {
-        ev.cancel = true;
         // ev.cancel = true;
         console.log('ACTIVE STEP CHANGING');
         console.log(ev);

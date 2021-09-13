@@ -20,54 +20,68 @@ export class IgxStepperService {
      * @param uiTrigger is the event triggered by a ui interraction (so we know if we should animate)
      * @returns void
      */
-    public expand(step: IgxStepComponent, uiTrigger?: boolean): void {
+    public expand(step: IgxStepComponent): void {
         if (this.activeStep === step) {
             return;
         }
 
         //TODO: consider emitting cancelable events through API
 
-        let argsCanceled = false;
-        if (uiTrigger) {
-            argsCanceled = this.emitActivatingEvent(step);
-        }
+        const argsCanceled = this.emitActivatingEvent(step);
 
         if (!argsCanceled) {
             this.collapsingSteps.delete(step);
 
             this.previousActiveStep = this.activeStep;
             this.activeStep = step;
+            this.activeStep.activeChange.emit(true);
 
-            if (uiTrigger) {
+            this.collapsingSteps.add(this.previousActiveStep);
 
-                this.collapsingSteps.add(this.previousActiveStep);
-
-                if (this.stepper.orientation === IgxStepperOrienatation.Vertical) {
-                    this.previousActiveStep.playCloseAnimation(
-                        this.previousActiveStep.verticalContentContainer
-                    );
-                    this.activeStep.cdr.detectChanges();
-
-                    this.activeStep.playOpenAnimation(
-                        this.activeStep.verticalContentContainer
-                    );
-                } else {
-                    this.activeStep.cdr.detectChanges();
-                    this.stepper.dummy();
-                }
-            } else {
-                this.collapsingSteps.delete(this.previousActiveStep);
+            if (this.stepper.orientation === IgxStepperOrienatation.Vertical) {
+                this.previousActiveStep.playCloseAnimation(
+                    this.previousActiveStep.verticalContentContainer
+                );
                 this.activeStep.cdr.detectChanges();
-                this.previousActiveStep?.cdr.detectChanges();
 
-                this.previousActiveStep?.activeChanged.emit(false);
-                this.activeStep.activeChanged.emit(true);
-
-                this.stepper.activeStepChanged.emit({ owner: this.stepper, activeStep: this.activeStep });
+                this.activeStep.playOpenAnimation(
+                    this.activeStep.verticalContentContainer
+                );
+            } else {
+                this.activeStep.cdr.detectChanges();
+                this.stepper.dummy();
             }
 
         }
+    }
 
+    public expandThroughApi(step: IgxStepComponent) {
+        if (this.activeStep === step) {
+            return;
+        }
+
+        this.collapsingSteps.clear();
+
+        this.previousActiveStep = this.activeStep;
+        this.activeStep = step;
+
+        // TODO: Should the user call detectChanges manually?
+        this.activeStep.cdr.detectChanges();
+        this.previousActiveStep?.cdr.detectChanges();
+
+        this.activeStep.activeChange.emit(true);
+        this.previousActiveStep?.activeChange.emit(false);
+
+        // TODO: Should the activeStepChanged be emitted when activating node through API
+        // this.stepper.activeStepChanged.emit({ owner: this.stepper, activeStep: this.activeStep });
+    }
+
+    public collapse(step: IgxStepComponent) {
+        if (this.activeStep === step) {
+            return;
+        }
+        step.activeChange.emit(false);
+        this.collapsingSteps.delete(step);
     }
 
     public register(stepper: IgxStepperComponent) {

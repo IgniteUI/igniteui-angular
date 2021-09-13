@@ -69,7 +69,9 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
     @Input()
     public set active(value: boolean) {
         if (value) {
-            this.stepperService.expand(this, false);
+            this.stepperService.expandThroughApi(this);
+        } else {
+            this.stepperService.collapse(this);
         }
     }
 
@@ -82,7 +84,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
     }
 
     @Output()
-    public activeChanged = new EventEmitter<boolean>();
+    public activeChange = new EventEmitter<boolean>();
 
     // /** @hidden @internal */
     // public get focused() {
@@ -185,13 +187,11 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
     public ngOnInit() {
         this.openAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(
             () => {
-                this.activeChanged.emit(true);
                 this.stepper.activeStepChanged.emit({ owner: this.stepper, activeStep: this });
             }
         );
         this.closeAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.stepperService.collapsingSteps.delete(this);
-            this.activeChanged.emit(false);
+            this.stepperService.collapse(this);
             this.cdr.markForCheck();
         });
     }
@@ -228,7 +228,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
      */
     public onPointerDown(event) {
         event.stopPropagation();
-        this.stepperService.expand(this, true);
+        this.stepperService.expand(this);
     }
 
     public ngOnDestroy() {

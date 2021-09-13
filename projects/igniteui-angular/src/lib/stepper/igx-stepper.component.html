@@ -4,7 +4,7 @@
 </div>
 
 <div #horizontalContentContainer>
-    <div *ngIf="orientation === 'Horizontal'" style="display: flex; flex-direction: row;">
+    <div *ngIf="orientation === 'Horizontal'" style="display: flex; flex-direction: row; overflow: hidden; position: relative;">
         <ng-container *ngFor="let step of steps">
             <ng-container *ngTemplateOutlet="step?.contentTemplate"></ng-container>
         </ng-container>
