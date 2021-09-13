@@ -1441,6 +1441,16 @@
             padding-top: 0 !important;
         }
 
+        .igx-input-group__bundle {
+            border: none !important;
+        }
+
+        igx-prefix,
+        igx-suffix {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
         igx-date-range-picker {
             height: 100%;
         }
