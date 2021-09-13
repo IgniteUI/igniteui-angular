@@ -1211,10 +1211,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             originalEvent
         };
 
-        const elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
+        let elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
+
+        // Check for shadowRoot instance and use it if present
+        for (const elFromPoint of elementsFromPoint) {
+            if (elFromPoint?.shadowRoot !== null) {
+                elementsFromPoint = elFromPoint.shadowRoot.elementsFromPoint(pageX, pageY);
+            }
+        }
+
         for (const element of elementsFromPoint) {
             if (element.getAttribute('droppable') === 'true' &&
-                element !== this.ghostElement && element !== this.element.nativeElement) {
+            element !== this.ghostElement && element !== this.element.nativeElement) {
                 topDropArea = element;
                 break;
             }
