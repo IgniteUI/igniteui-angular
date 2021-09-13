@@ -86,7 +86,7 @@ import {
     IgxGridSelectionService,
     GridSelectionRange
 } from './selection/selection.service';
-import { IgxRow, IgxCell } from './common/crud.service';
+import { IgxEditRow, IgxCell, IgxAddRow } from './common/crud.service';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
@@ -1123,14 +1123,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
-    public rowEditCustom: TemplateRef<any>;
+    @ContentChildren(IgxRowEditTemplateDirective, { descendants: false, read: TemplateRef })
+    public rowEditCustomDirectives: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef })
-    public rowEditText: TemplateRef<any>;
+    @ContentChildren(IgxRowEditTextDirective, { descendants: false, read: TemplateRef })
+    public rowEditTextDirectives: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden @internal
@@ -1141,8 +1141,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef })
-    public rowEditActions: TemplateRef<any>;
+    @ContentChildren(IgxRowEditActionsDirective, { descendants: false, read: TemplateRef })
+    public rowEditActionsDirectives: QueryList<TemplateRef<any>>;
 
 
     /**
@@ -1597,11 +1597,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @WatchChanges()
     @HostBinding('style.height')
     @Input()
-    public get height() {
+    public get height(): string | null {
         return this._height;
     }
 
-    public set height(value: string) {
+    public set height(value: string | null) {
         if (this._height !== value) {
             this._height = value;
             this.nativeElement.style.height = value;
@@ -1627,11 +1627,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @WatchChanges()
     @Input()
-    public get width() {
+    public get width(): string | null {
         return this._width;
     }
 
-    public set width(value) {
+    public set width(value: string | null) {
         if (this._width !== value) {
             this._width = value;
             this.nativeElement.style.width = value;
@@ -2180,6 +2180,36 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get parentRowOutletDirective() {
         return this.outlet;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get rowEditCustom(): TemplateRef<any> {
+        if (this.rowEditCustomDirectives && this.rowEditCustomDirectives.first) {
+            return this.rowEditCustomDirectives.first;
+        }
+        return null;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get rowEditText(): TemplateRef<any> {
+        if (this.rowEditTextDirectives && this.rowEditTextDirectives.first) {
+            return this.rowEditTextDirectives.first;
+        }
+        return null;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get rowEditActions(): TemplateRef<any> {
+        if (this.rowEditActionsDirectives && this.rowEditActionsDirectives.first) {
+            return this.rowEditActionsDirectives.first;
+        }
+        return null;
     }
 
     /**
@@ -2897,8 +2927,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private rowListDiffer;
     private _hiddenColumnsText = '';
     private _pinnedColumnsText = '';
-    private _height = '100%';
-    private _width = '100%';
+    private _height: string | null = '100%';
+    private _width: string | null = '100%';
     private _rowHeight;
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
@@ -2942,7 +2972,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     };
 
     private transactionChange$ = new Subject<void>();
-
+    private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
 
     /**
@@ -2988,6 +3018,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             result.push(...this.transactions.getAggregatedChanges(true)
                 .filter(t => t.type === TransactionType.ADD)
                 .map(t => t.newValue));
+        }
+
+        if (this.crudService.row && this.crudService.row.getClassName() === IgxAddRow.name) {
+            result.splice(this.crudService.row.index, 0, this.crudService.row.data);
         }
 
         return result;
@@ -3623,6 +3657,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.paginator.totalRecords = this.totalRecords;
                 this.paginator.overlaySettings = { outlet: this.outlet };
             }
+            this._rendered = true;
         });
         Promise.resolve().then(() => this.rendered.next(true));
     }
@@ -3978,15 +4013,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public get columns(): IgxColumnComponent[] {
+        return this._columns;
+    }
+
+    /**
      * Gets an array of `IgxColumnComponent`s.
      *
      * @example
      * ```typescript
-     * const colums = this.grid.columns.
+     * const colums = this.grid.columnsCollection.
      * ```
      */
-    public get columns(): IgxColumnComponent[] {
-        return this._columns;
+    public get columnsCollection(): IgxColumnComponent[] {
+        return this._rendered ?  this._columns : [];
     }
 
     /**
@@ -4331,55 +4374,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     * TODO: eventually move to CRUD
-     */
-    public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean, event?: Event) {
-        if (!this.rowEditable) {
-            console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
-            return;
-        }
-        this.crudService.endEdit(true, event);
-        this.crudService.cancelAddMode = false;
-        const isInPinnedArea = this.isRecordPinnedByViewIndex(index);
-        const pinIndex = this.pinnedRecords.findIndex(x => x[this.primaryKey] === rowID);
-        const unpinIndex = this.getUnpinnedIndexById(rowID);
-
-        if (this.expansionStates.get(rowID)) {
-            this.collapseRow(rowID);
-        }
-
-        this.crudService.addRowParent = {
-            rowID,
-            index: isInPinnedArea ? pinIndex : unpinIndex,
-            asChild,
-            isPinned: isInPinnedArea
-        };
-        this.pipeTrigger++;
-        this.cdr.detectChanges();
-        if (isInPinnedArea) {
-            this.calculateGridHeight();
-        }
-        const newRowIndex = this.crudService.addRowParent.index + 1;
-        // ensure adding row is in view.
-        const shouldScroll = this.navigation.shouldPerformVerticalScroll(newRowIndex, -1);
-        if (shouldScroll) {
-            this.navigateTo(newRowIndex, -1);
-        }
-        const row = this.gridAPI.get_row_by_index(index + 1);
-        row.animateAdd = true;
-        row.onAnimationEnd.pipe(first()).subscribe(() => {
-            row.animateAdd = false;
-            const cell = row.cells.find(c => c.editable);
-            if (cell) {
-                this.gridAPI.update_cell(this.crudService.cell);
-                this.crudService.enterEditMode(cell, event);
-                cell.activate();
-            }
-        });
-    }
-
-    /**
      * Creates a new `IgxGridRowComponent` and adds the data record to the end of the data source.
      *
      * @example
@@ -4482,7 +4476,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (editableCell && editableCell.id.rowID === rowSelector) {
                 this.crudService.endCellEdit();
             }
-            const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
+            const row = new IgxEditRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
             this.gridAPI.update_row(row, value);
 
             // TODO: fix for #5934 and probably break for #5763
@@ -5889,11 +5883,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    public getEmptyRecordObjectFor(rec) {
-        const row = { ...rec };
+    /**
+     * @hidden @internal
+     */
+    public getEmptyRecordObjectFor(inRow: IgxRowDirective<IgxGridBaseDirective & GridType>) {
+        const row = { ...inRow?.rowData };
         Object.keys(row).forEach(key => row[key] = undefined);
-        row[this.primaryKey] = this.generateRowID();
-        return row;
+        const id = this.generateRowID();
+        row[this.primaryKey] = id;
+        return { rowID: id, data: row, recordRef: row };
     }
 
     /**
@@ -5927,6 +5925,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this.verticalScrollContainer.scrollPrev();
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getUnpinnedIndexById(id) {
+        return this.unpinnedRecords.findIndex(x => x[this.primaryKey] === id);
     }
 
     /**
@@ -5982,10 +5987,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);
-    }
-
-    protected getUnpinnedIndexById(id) {
-        return this.unpinnedRecords.findIndex(x => x[this.primaryKey] === id);
     }
 
     protected _restoreVirtState(row) {
@@ -6747,9 +6748,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 columnsArray.forEach((col) => {
                     if (col) {
                         const key = headers ? col.header || col.field : col.field;
-                        const value = source[row].ghostRecord ?
-                            resolveNestedPath(source[row].recordRef, col.field) : resolveNestedPath(source[row], col.field);
-                        record[key] = formatters && col.formatter ? col.formatter(value) : value;
+                        const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
+                        const value = resolveNestedPath(rowData, col.field);
+                        record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {
                             if (!record[key]) {
                                 record[key] = '';
@@ -6817,7 +6818,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         for (const data of source) {
             selectedColumns.forEach((col) => {
                 const key = headers ? col.header || col.field : col.field;
-                record[key] = formatters && col.formatter ? col.formatter(data[col.field])
+                record[key] = formatters && col.formatter ? col.formatter(data[col.field], data)
                     : data[col.field];
             });
 
@@ -6988,6 +6989,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.hideOverlays();
         this.actionStrip?.hide();
+        if (this.actionStrip) {
+            this.actionStrip.context = null;
+        }
         const args: IGridScrollEventArgs = {
             direction: 'vertical',
             event,
@@ -7214,7 +7218,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
-                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field)) :
+                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field), dataRow) :
                     c.dataType === 'number' ? this.decimalPipe.transform(resolveNestedPath(dataRow, c.field),
                         pipeArgs.digitsInfo, this.locale) :
                         c.dataType === 'date' ? this.datePipe.transform(resolveNestedPath(dataRow, c.field),

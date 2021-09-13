@@ -58,7 +58,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostBinding('class.igx-grid__td--new')
     public get isEmptyAddRowCell() {
-        return this.intRow.addRow && (this.value === undefined || this.value === null);
+        return this.intRow.addRowUI && (this.value === undefined || this.value === null);
     }
 
     /**
@@ -154,7 +154,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public formatter: (value: any) => any;
+    public formatter: (value: any, rowData?: any) => any;
 
     /**
      * Gets the cell template context object.
@@ -195,7 +195,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.cellTemplate) {
             return this.cellTemplate;
         }
-        if (this.grid.rowEditable && this.intRow.addRow) {
+        if (this.grid.rowEditable && this.intRow.addRowUI) {
             return this.addRowCellTemplate;
         }
         return this.defaultCellTemplate;
@@ -304,7 +304,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.title')
     public get title() {
-        return this.editMode || this.cellTemplate ? '' : this.formatter ? this.formatter(this.value) :
+        return this.editMode || this.cellTemplate ? '' : this.formatter ? this.formatter(this.value, this.rowData) :
             this.column.dataType === GridColumnDataType.Percent ?
             this.grid.percentPipe.transform(this.value, this.column.pipeArgs.digitsInfo, this.grid.locale) :
             this.column.dataType === GridColumnDataType.Currency ?
@@ -984,11 +984,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (this.editable && editMode && !this.intRow.deleted) {
             if (editableCell) {
-                if (this.intRow.addRow) {
-                    editableArgs = this.grid.crudService.updateAddCell(false, event);
-                } else {
-                    editableArgs = this.grid.crudService.updateCell(false, event);
-                }
+                editableArgs = this.grid.crudService.updateCell(false, event);
+
                 /* This check is related with the following issue #6517:
                  * when edit cell that belongs to a column which is sorted and press tab,
                  * the next cell in edit mode is with wrong value /its context is not updated/;
@@ -1013,16 +1010,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (editableCell && crud.sameRow(this.cellID.rowID)) {
-            if (this.intRow.addRow) {
-                const args = this.grid.crudService.updateAddCell(false, event);
-                if (args.cancel) {
-                    this.grid.crudService.endAddRow();
-                } else {
-                    this.grid.crudService.exitCellEdit(event);
-                }
-            } else {
-                this.grid.crudService.updateCell(true, event);
-            }
+            this.grid.crudService.updateCell(true, event);
         } else if (editMode && !crud.sameRow(this.cellID.rowID)) {
             this.grid.crudService.endEdit(true, event);
         }
