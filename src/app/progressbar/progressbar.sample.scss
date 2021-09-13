@@ -35,3 +35,6 @@
     @include igx-progress-circular($circ-theme);
 }
 
+.button-container {
+    position: relative;
+}

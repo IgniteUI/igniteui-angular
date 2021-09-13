@@ -72,6 +72,7 @@ export abstract class BaseProgressDirective {
     protected _newVal = MIN_VALUE;
     protected _animate = true;
     protected _step;
+    protected _valueInPercent = MIN_VALUE;
 
     private requestAnimationId: number = undefined;
 
@@ -143,7 +144,12 @@ export abstract class BaseProgressDirective {
     @HostBinding('attr.aria-valuemax')
     @Input()
     public set max(maxNum: number) {
+        if(maxNum < this._value) {
+            return;
+        }
+        
         this._max = maxNum;
+        this._valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
@@ -172,7 +178,12 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public set valueInPercent(value: number) {
-        value = toValue(value, this._max);
+        if (value < 0 || value > 100) {
+            return;
+        }
+        
+        this._valueInPercent = value;
+        this._value = toValue(value, this._max)
     }
 
     /**
@@ -187,7 +198,7 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public get valueInPercent(): number {
-        return toPercent(this._value, this._max);
+        return this._valueInPercent;
     }
 
     protected triggerProgressTransition(oldVal, newVal) {
@@ -232,7 +243,7 @@ export abstract class BaseProgressDirective {
             this.updateProgress(val);
             cancelAnimationFrame(this.requestAnimationId);
         } else {
-            this.valueInPercent = progressValue;
+            this._valueInPercent = progressValue;
             this.requestAnimationId = requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, step));
         }
     }
@@ -242,7 +253,7 @@ export abstract class BaseProgressDirective {
      */
     protected updateProgressDirectly(val: number) {
         this._value = valueInRange(val, this._max);
-        this.valueInPercent = toPercent(this._value, this._max);
+        this._valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
@@ -288,7 +299,7 @@ export abstract class BaseProgressDirective {
      */
     private updateProgress(val: number) {
         this._value = valueInRange(val, this._max);
-        this.valueInPercent = toPercent(this._value, this._max);
+        this._valueInPercent = toPercent(this._value, this._max);
     }
 }
 let NEXT_LINEAR_ID = 0;
@@ -401,19 +412,6 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     constructor() {
         super();
     }
-    public set valueInPercent(value: number) {
-        const val = toValue(value, this._max);
-        if (value < 100) {
-            this.value = val;
-        } else {
-            this.value = 100;
-        }
-    }
-
-    public get valueInPercent(): number {
-        return toPercent(this._value, this._max);
-    }
-
    /**
     * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
     * ```typescript
@@ -439,7 +437,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
      */
     public set value(val) {
         const valInRange = valueInRange(val, this.max);
-        if (isNaN(valInRange) || this._value === val || this.indeterminate) {
+        if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
             return;
         }
         if (this._contentInit) {

@@ -476,7 +476,7 @@ describe('IgLinearBar', () => {
             expect(bar.classList.contains(INDETERMINATE_CLASS)).toEqual(true);
         });
 
-        it('Check if current value in % changes dynamically when max is increased', () => {
+        it('Check if current value in % changes dynamically when max is increased', fakeAsync(() => {
             const fix = TestBed.createComponent(InitLinearProgressBarComponent);
             fix.detectChanges();
 
@@ -491,7 +491,7 @@ describe('IgLinearBar', () => {
             tick(tickTime);
             fix.detectChanges();
             expect(valueInPercent).toBe(bar.valueInPercent);
-        });
+        }));
     });
 });
 
