@@ -1,20 +1,25 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { IgxPivotGridComponent } from './pivot-grid.component';
+import { IPivotDimension, IPivotValue } from './pivot-grid.interface';
 
 /**
  * @hidden
  */
 @Pipe({
-    name: 'gridPivotData',
+    name: 'gridPivotRow',
     pure: true
 })
-export class IgxGridPivotDataPipe implements PipeTransform {
+export class IgxPivotRowPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxPivotGridComponent>) { }
 
     public transform(
-        collection: any
+        collection: any,
+        rows: IPivotDimension[],
+        values?: IPivotValue[]
         ): any[] {
         return collection;
     }
@@ -24,15 +29,17 @@ export class IgxGridPivotDataPipe implements PipeTransform {
  * @hidden
  */
  @Pipe({
-    name: 'gridPivotColumns',
+    name: 'gridPivotColumn',
     pure: true
 })
-export class IgxGridPivotColumnsPipe implements PipeTransform {
+export class IgxPivotColumnPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxPivotGridComponent>) { }
 
     public transform(
-        collection: any
+        collection: any,
+        columns: IPivotDimension[],
+        values?: IPivotValue[]
         ): any[] {
         return collection;
     }
@@ -49,7 +56,10 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxPivotGridComponent>) { }
 
-    public transform(collection: any[]): any[] {
+    public transform(collection: any[],
+        expressionsTree: IFilteringExpressionsTree,
+        filterStrategy: IFilteringStrategy,
+        advancedExpressionsTree: IFilteringExpressionsTree): any[] {
         return collection;
     }
 }

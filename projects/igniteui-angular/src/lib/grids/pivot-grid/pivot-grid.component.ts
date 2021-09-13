@@ -3,7 +3,8 @@ import {
     Component,
     forwardRef,
     HostBinding,
-    Input
+    Input,
+    OnInit
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
@@ -14,6 +15,7 @@ import { GridType } from '../common/grid.interface';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
+import { IPivotConfiguration } from './pivot-grid.interface';
 
 let NEXT_ID = 0;
 @Component({
@@ -33,8 +35,19 @@ let NEXT_ID = 0;
         IgxForOfScrollSyncService
     ]
 })
-export class IgxPivotGridComponent extends IgxGridBaseDirective
-    implements GridType {
+export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit,
+    GridType {
+
+    @Input()
+    /**
+     * Gets/Sets the pivot configuration with all related dimensions and values.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-grid [pivotConfiguration]="config"></igx-pivot-grid>
+     * ```
+     */
+    public pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
 
     /**
      * @hidden @internal
@@ -44,6 +57,16 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective
     private _data;
     private _filteredData;
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
+
+    /**
+     * @hidden
+     */
+    public ngOnInit() {
+        // pivot grid always generates columns automatically.
+        this.autoGenerate = true;
+        this.columnList.reset([]);
+        super.ngOnInit();
+    }
 
     /**
      * Gets/Sets the value of the `id` attribute.
@@ -123,4 +146,5 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective
             index: this.getDataViewIndex(rowIndex, false)
         };
     }
+
 }
