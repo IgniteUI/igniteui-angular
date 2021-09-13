@@ -219,5 +219,9 @@
         @include igx-type-style($type-scale, $content) {
             margin: 0;
         }
+
+        > * {
+            letter-spacing: normal;
+        }
     }
 }
