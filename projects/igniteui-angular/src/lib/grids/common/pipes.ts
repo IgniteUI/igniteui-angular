@@ -88,23 +88,26 @@ export class IgxGridRowClassesPipe implements PipeTransform {
     public transform(
         cssClasses: CSSProp,
         row: _RowType,
-        rowData: any,
+        editMode: boolean,
         selected: boolean,
         dirty: boolean,
         deleted: boolean,
         dragging: boolean,
         index: number,
         mrl: boolean,
+        filteredOut: boolean,
         _: number
     ) {
         const result = new Set(['igx-grid__tr', index % 2 ? row.grid.evenRowCSS : row.grid.oddRowCSS]);
         const mapping = [
             [selected, 'igx-grid__tr--selected'],
-            [row.inEditMode, 'igx-grid_-tr--edit'],
+            [editMode, 'igx-grid__tr--edit'],
             [dirty, 'igx-grid__tr--edited'],
             [deleted, 'igx-grid__tr--deleted'],
             [dragging, 'igx-grid__tr--drag'],
-            [mrl, 'igx-grid__tr--mrl']
+            [mrl, 'igx-grid__tr--mrl'],
+            // Tree grid only
+            [filteredOut, 'igx-grid__tr--filtered']
         ];
 
         for (const [state, _class] of mapping) {
@@ -113,14 +116,10 @@ export class IgxGridRowClassesPipe implements PipeTransform {
             }
         }
 
-        if (row instanceof IgxTreeGridRowComponent && row.treeRow.isFilteredOutParent) {
-            result.add('igx-grid__tr--filtered');
-        }
-
         for (const cssClass of Object.keys(cssClasses ?? {})) {
             const callbackOrValue = cssClasses[cssClass];
             this.row.index = index;
-            (this.row as any)._data = rowData;
+            (this.row as any)._data = row.rowData;
             const apply = typeof callbackOrValue === 'function' ? callbackOrValue(this.row) : callbackOrValue;
             if (apply) {
                 result.add(cssClass);

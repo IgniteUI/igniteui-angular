@@ -70,13 +70,13 @@
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
         <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData>
             <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow"
-                [ngClass]="rowClasses | igxGridRowClasses:row:rowData:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:pipeTrigger"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:row.treeRow.isFilteredOutParent:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #pinned_record_template let-rowIndex="index" let-rowData>
             <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:rowData:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:pipeTrigger"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:row.treeRow.isFilteredOutParent:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger"#row #pinnedRow>
             </igx-tree-grid-row>
         </ng-template>
