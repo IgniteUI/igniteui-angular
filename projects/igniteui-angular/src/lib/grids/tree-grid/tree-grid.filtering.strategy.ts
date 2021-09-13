@@ -75,7 +75,7 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
     }
 }
 
-export class MatchingRecordsOnlyFilteringStrategy extends TreeGridFilteringStrategy {
+export class TreeGridMatchingRecordsOnlyFilteringStrategy extends TreeGridFilteringStrategy {
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): ITreeGridRecord[] {
         return this.filterImplementation(data, expressionsTree, advancedExpressionsTree, undefined, grid);
