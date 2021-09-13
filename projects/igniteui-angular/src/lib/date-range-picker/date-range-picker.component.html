@@ -28,7 +28,7 @@
         <!-- only set mask placeholder when empty, otherwise input group might use it as label if none is set -->
         <input #singleInput igxInput type="text" readonly [disabled]="this.disabled" [placeholder]="this.value ? '' : singleInputFormat"
             role="combobox" aria-haspopup="grid" [attr.aria-expanded]="!this.collapsed"
-            [attr.aria-labelledby]="this.label?.id"
+            [attr.aria-labelledby]="this.label?.id" [required]="this.required"
             [value]="this.value | dateRange: this.appliedFormat : this.locale : this.formatter" />
 
         <igx-prefix *ngIf="!this.toggleComponents.length">

@@ -283,17 +283,19 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this._valid = IgxInputState.INITIAL;
         }
         // Also check the control's validators for required
-        let requiredLabel = this.required? 'true' : 'false';
+        let requiredLabel = this.required ? true : false;
         if (this.ngControl && this.ngControl.control.validator) {
             const validation = this.ngControl.control.validator({} as AbstractControl);
-            requiredLabel = validation && validation.required ? 'true' : requiredLabel;
+            requiredLabel = validation && validation.required ? true : requiredLabel;
             if (!this.inputGroup.isRequired) {
                 this.inputGroup.isRequired = validation && validation.required;
             }
         }
 
-        this.renderer.setAttribute(this.nativeElement, 'aria-required', requiredLabel);
-        const invalidLabel = this.valid === IgxInputState.INVALID || (requiredLabel === 'true' && this.value === '') ? 'true' : 'false';
+        if (requiredLabel) {
+            this.renderer.setAttribute(this.nativeElement, 'aria-required', 'true');
+        }
+        const invalidLabel = this.valid === IgxInputState.INVALID || (requiredLabel && this.value === '') ? 'true' : 'false';
         this.renderer.setAttribute(this.nativeElement, 'aria-invalid', invalidLabel);
 
         const elTag = this.nativeElement.tagName.toLowerCase();
@@ -352,12 +354,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @internal
      */
     protected updateValidityState() {
-        let requiredLabel = 'false';
+        let requiredLabel = false;
         if (this.ngControl) {
             if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
                 // Run the validation with empty object to check if required is enabled.
                 const error = this.ngControl.control.validator({} as AbstractControl);
-                requiredLabel = error && error.required ? 'true' : 'false';
+                requiredLabel = error && error.required ? true : requiredLabel;
                 this.inputGroup.isRequired = error && error.required;
                 if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                     // the control is not disabled and is touched or dirty
@@ -374,12 +376,16 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 this._valid = IgxInputState.INITIAL;
                 this.inputGroup.isRequired = false;
             }
-            this.renderer.setAttribute(this.nativeElement, 'aria-required', requiredLabel);
+            if (requiredLabel) {
+                this.renderer.setAttribute(this.nativeElement, 'aria-required', 'true');
+            } else {
+                this.renderer.removeAttribute(this.nativeElement, 'aria-required');
+            }
         } else {
             this.checkNativeValidity();
         }
 
-        const invalidLabel = this.valid === IgxInputState.INVALID || (requiredLabel === 'true' && this.value === '') ? 'true' : 'false';
+        const invalidLabel = this.valid === IgxInputState.INVALID || (requiredLabel && this.value === '') ? 'true' : 'false';
         this.renderer.setAttribute(this.nativeElement, 'aria-invalid', invalidLabel);
     }
     /**

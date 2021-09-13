@@ -739,7 +739,7 @@ describe('IgxInput', () => {
         expect(formReference).toBeDefined();
         expect(input).toBeDefined();
         expect(input.nativeElement.value).toEqual('');
-        expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('false');
+        expect(input.nativeElement.attributes.getNamedItem('aria-required')).toBeNull();
         expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toEqual(false);
         expect(asterisk).toBe('none');
         expect(input.valid).toEqual(IgxInputState.INITIAL);

@@ -5,7 +5,7 @@
             : pickerResourceStrings.igx_date_picker_choose_date">today</igx-icon>
     </igx-prefix>
 
-    <input class="igx-date-picker__input-date" [displayValuePipe]="this.formatter ? displayValue : null" igxInput
+    <input class="igx-date-picker__input-date" [displayValuePipe]="this.formatter ? displayValue : null" igxInput [required]="this.required"
         [igxDateTimeEditor]="this.inputFormat" [minValue]="this.minValue" [maxValue]="this.maxValue"
         [spinDelta]="this.spinDelta" [spinLoop]="this.spinLoop" [displayFormat]="this.displayFormat"
         [disabled]="this.disabled" [placeholder]="this.placeholder" [readonly]="!this.isDropdown || this.readOnly"

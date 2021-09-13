@@ -3,7 +3,7 @@
     <input [displayValuePipe]="this.formatter ? displayValue : null" igxInput [igxDateTimeEditor]="this.inputFormat"
         type="text" [readonly]="!this.isDropdown || this.readOnly" [minValue]="this.minValue" [maxValue]="this.maxValue"
         [locale]="this.locale" [spinDelta]="this.itemsDelta" [spinLoop]="this.spinLoop" [placeholder]="this.placeholder"
-        [disabled]="this.disabled" [displayFormat]="this.displayFormat"
+        [disabled]="this.disabled" [displayFormat]="this.displayFormat" [required]="this.required"
         [igxTextSelection]="this.isDropdown && !this.readOnly" role="combobox" aria-haspopup="dialog"
         [attr.aria-expanded]="!this.toggleDirective.collapsed" [attr.aria-labelledby]="this.label?.id" />
 
