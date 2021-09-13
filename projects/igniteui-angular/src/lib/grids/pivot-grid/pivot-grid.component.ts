@@ -4,7 +4,9 @@ import {
     forwardRef,
     HostBinding,
     Input,
-    OnInit
+    OnInit,
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
@@ -54,6 +56,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @HostBinding('attr.role')
     public role = 'grid';
+
+    /**
+     * @hidden @internal
+     */
+     @ViewChild('record_template', { read: TemplateRef, static: true })
+     protected recordTemplate: TemplateRef<any>;
+
     private _data;
     private _filteredData;
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
@@ -106,6 +115,16 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.notifyChanges(true);
         }
     }
+
+    /**
+     * Returns an array of data set to the component.
+     * ```typescript
+     * let data = this.grid.data;
+     * ```
+     */
+    public get data(): any[] | null {
+        return this._data;
+        }
 
     /**
      * Sets an array of objects containing the filtered data.

@@ -8,11 +8,19 @@ import { IgxRowDirective } from '../row.directive';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'igx-pivot-grid-row',
+    selector: 'igx-pivot-row',
     templateUrl: './pivot-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }]
 })
 export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent> {
+
+    /**
+     * @hidden
+     * @internal
+     */
+     get viewIndex(): number {
+        return this.index;
+    }
 
 }
 
