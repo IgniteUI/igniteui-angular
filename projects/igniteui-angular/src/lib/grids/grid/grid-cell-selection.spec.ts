@@ -668,7 +668,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             } finally {
                 fix.detectChanges();
             }
-            expect(errorMessage).toEqual('Cannot read property \'visibleIndex\' of undefined');
+            expect(errorMessage).toContain('visibleIndex');
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.getSelectedData()).toEqual([]);
             expect(grid.getSelectedRanges()).toEqual([]);
@@ -700,7 +700,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             } finally {
                 fix.detectChanges();
             }
-            expect(errorMessage).toEqual('Cannot read property \'visibleIndex\' of undefined');
+            expect(errorMessage).toContain('visibleIndex');
             GridSelectionFunctions.verifySelectedRange(grid, 1, 2, 0, 1);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.getSelectedData()).toEqual(expectedData);
@@ -719,7 +719,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             } finally {
                 fix.detectChanges();
             }
-            expect(errorMessage).toEqual('Cannot read property \'visibleIndex\' of undefined');
+            expect(errorMessage).toContain('visibleIndex');
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.getSelectedData()).toEqual([]);
             expect(grid.getSelectedRanges()).toEqual([]);
