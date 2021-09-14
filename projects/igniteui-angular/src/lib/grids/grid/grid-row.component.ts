@@ -1,4 +1,4 @@
-import { Component, forwardRef, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, forwardRef, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridComponent } from './grid.component';
 import { IgxRowDirective } from '../row.directive';
 
@@ -9,11 +9,6 @@ import { IgxRowDirective } from '../row.directive';
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxGridRowComponent) }]
 })
 export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
-
-    @HostBinding('class.igx-grid__tr--mrl')
-    public get hasColumnLayouts(): boolean {
-        return this.grid.hasColumnLayouts;
-    }
 
     public getContext(col, row) {
         return {

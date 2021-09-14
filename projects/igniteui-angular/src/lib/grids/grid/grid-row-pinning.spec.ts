@@ -10,13 +10,12 @@ import { IPinningConfig } from '../grid.common';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxGridTransaction } from '../tree-grid/public_api';
-import { IgxTransactionService } from '../../services/public_api';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { GridRowConditionalStylingComponent } from '../../test-utils/grid-base-components.spec';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -33,7 +32,8 @@ describe('Row Pinning #grid', () => {
                 GridRowPinningWithMRLComponent,
                 GridRowPinningWithMDVComponent,
                 GridRowPinningWithTransactionsComponent,
-                GridRowPinningWithInitialPinningComponent
+                GridRowPinningWithInitialPinningComponent,
+                GridRowConditionalStylingComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1264,6 +1264,50 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             expect(grid.hasPinnedRecords).toBeTrue();
         });
+    });
+
+    describe('Conditional row styling', () => {
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridRowConditionalStylingComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            tick();
+            fix.detectChanges();
+        }));
+
+        it('Shoud be able to conditionally style rows. Check is the class present in the row native element class list', () => {
+            fix.detectChanges();
+            const firstRow = grid.gridAPI.get_row_by_index(0);
+            const fourthRow = grid.gridAPI.get_row_by_index(3);
+
+            expect(firstRow).toBeDefined();
+            expect(firstRow.element.nativeElement.classList.contains('eventRow')).toBeTrue();
+            expect(firstRow.element.nativeElement.classList.contains('oddRow')).toBeFalse();
+            expect(fourthRow.element.nativeElement.classList.contains('eventRow')).toBeFalse();
+            expect(fourthRow.element.nativeElement.classList.contains('oddRow')).toBeTrue();
+        });
+
+        it('Should apply custom CSS bindings to the grid cells/rows. Check the style attribute to match each binding', () => {
+            const  evenColStyles = {
+                background: (row) => row.index % 2 === 0 ? 'gray' : 'white',
+                animation: '0.75s popin'
+            };
+
+            fix.detectChanges();
+            grid.rowStyles = evenColStyles;
+            grid.notifyChanges(true);
+            fix.detectChanges();
+            const firstRow = grid.gridAPI.get_row_by_index(0);
+            const fourthRow = grid.gridAPI.get_row_by_index(3);
+
+            const expectedEvenStyles = 'background: gray; animation: 0.75s ease 0s 1 normal none running popin;';
+            const expectedOddStyles = 'background: white; animation: 0.75s ease 0s 1 normal none running popin;';
+
+            expect(firstRow.element.nativeElement.style.cssText).toEqual(expectedEvenStyles);
+            expect(fourthRow.element.nativeElement.style.cssText).toEqual(expectedOddStyles);
+        });
+
     });
 });
 

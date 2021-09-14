@@ -159,13 +159,4 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     public beginAddChild() {
         this.grid.crudService.enterAddRowMode(this, true);
     }
-
-    /**
-     * @hidden
-     */
-    protected resolveClasses(): string {
-        const classes = super.resolveClasses();
-        const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
-        return `${classes} ${filteredClass}`;
-    }
 }

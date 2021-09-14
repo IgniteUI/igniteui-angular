@@ -2,7 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 12.1.6
+## 12.2.0
+
+### General
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - 'oddRowCSS' and 'evenRowCSS' properties has been deprecated
 
 ### New Features
 - `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
@@ -19,6 +23,7 @@ All notable changes for each version of this project will be documented in this 
         this.treeGrid.beginAddRowByIndex(null);         // spawns the add row UI as the first record
         ```
     - Added capability to restore the state of multi column headers with `IgxGridStateDirective`.
+    - Introduced new 'rowStyles' and 'rowClasses' grid properties which allows to define a custom styling on each grid row
 
 ## 12.1.3
 

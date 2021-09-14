@@ -38,4 +38,14 @@
         font-weight: 900;
         background-color: greenyellow;
     }
+
+    .pinnedClass{
+        color: #000;
+        background: #fcc5de;
+        border: 1px solid black;
+    }
+    .selected {
+        background: #3B3B3B;
+        border: 2px solid #2874A6;
+    }
 }
