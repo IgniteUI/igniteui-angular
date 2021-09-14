@@ -6010,6 +6010,92 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endEdit(commit, event);
     }
 
+    /**
+     * Enters add mode by spawning the UI under the specified row by rowID.
+     *
+     * @remarks
+     * If null is passed as rowID, the row adding UI is spawned as the first record in the data view
+     * @remarks
+     * Spawning the UI to add a child for a record only works if you provide a rowID
+     * @example
+     * ```typescript
+     * this.grid.beginAddRowById('ALFKI');
+     * this.grid.beginAddRowById('ALFKI', true);
+     * this.grid.beginAddRowById(null);
+     * ```
+     * @param rowID - The rowID to spawn the add row UI for, or null to spawn it as the first record in the data view
+     * @param asChild - Whether the record should be added as a child. Only applicable to igxTreeGrid.
+     */
+    public beginAddRowById(rowID: any, asChild?: boolean): void {
+        let index = rowID;
+        if (rowID == null) {
+            if (asChild) {
+                console.warn('The record cannot be added as a child to an unspecified record.');
+                return;
+            }
+            index = 0;
+        } else {
+            // find the index of the record with that PK
+            index = this.gridAPI.get_rec_index_by_id(rowID, this.dataView);
+            rowID = index;
+            if (index === -1) {
+                console.warn('No row with the specified ID was found.');
+                return;
+            }
+        }
+        if (!this.dataView.length) {
+            this.beginAddRowForIndex(rowID, asChild);
+            return;
+        }
+        // check if the index is valid - won't support anything outside the data view
+        if (index >= 0 && index < this.dataView.length) {
+            // check if the index is in the view port
+            if ((index < this.virtualizationState.startIndex ||
+                index >= this.virtualizationState.startIndex + this.virtualizationState.chunkSize) &&
+                !this.isRecordPinnedByViewIndex(index)) {
+                this.verticalScrollContainer.chunkLoad
+                    .pipe(first(), takeUntil(this.destroy$))
+                    .subscribe(() => {
+                        this.beginAddRowForIndex(rowID, asChild);
+                    });
+                this.navigateTo(index);
+                this.notifyChanges(true);
+                return;
+            }
+            this.beginAddRowForIndex(rowID, asChild);
+        } else {
+            console.warn('The row with the specified PK or index is outside of the current data view.');
+        }
+    }
+
+    /**
+     * Enters add mode by spawning the UI at the specified index.
+     *
+     * @remarks
+     * Accepted values for index are integers from 0 to this.grid.dataView.length
+     * @example
+     * ```typescript
+     * this.grid.beginAddRowByIndex(0);
+     * ```
+     * @param index - The index to spawn the UI at. Accepts integers from 0 to this.grid.dataView.length
+     */
+    public beginAddRowByIndex(index: number): void {
+        if (index === 0) {
+            return this.beginAddRowById(null);
+        }
+        return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index - 1, this.dataView));
+    }
+
+    protected beginAddRowForIndex(index: number, asChild: boolean = false) {
+        const row: IgxRowDirective<IgxGridBaseDirective & GridType> = index == null ?
+            null : this.rowList.find(r => r.index === index);
+        if (row !== undefined) {
+            this.crudService.enterAddRowMode(row, asChild);
+        } else {
+            console.warn('No row with the specified PK or index was found.');
+        }
+    }
+
     protected switchTransactionService(val: boolean) {
         if (val) {
             this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base);

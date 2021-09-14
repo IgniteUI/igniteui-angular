@@ -1,6 +1,6 @@
 import { IgxGridModule, IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
@@ -21,6 +21,8 @@ import { TransactionType } from '../../services/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+
+const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Adding #grid', () => {
         const GRID_ROW = 'igx-grid-row';
@@ -478,6 +480,35 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
+        });
+
+        it('Should scroll and start adding a row as the first one when using the public API method', async () => {
+            await wait(DEBOUNCETIME);
+            fixture.detectChanges();
+
+            grid.navigateTo(20, 0);
+
+            await wait(DEBOUNCETIME);
+            fixture.detectChanges();
+
+            grid.beginAddRowById(null);
+
+            await wait(DEBOUNCETIME);
+            fixture.detectChanges();
+
+            expect(grid.gridAPI.get_row_by_index(0).addRowUI).toBeTrue();
+        });
+
+        xit('Should scroll and start adding a row as for a row that is not in view', async () => {
+            await wait(DEBOUNCETIME);
+            fixture.detectChanges();
+
+            grid.beginAddRowById('FAMIA');
+
+            await wait(DEBOUNCETIME);
+            fixture.detectChanges();
+
+            expect(grid.gridAPI.get_row_by_index(8).addRowUI).toBeTrue();
         });
     });
 
