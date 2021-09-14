@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 13.0.0
+## 12.2.0
 
 ### General
 - `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
