@@ -214,14 +214,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    @HostBinding('class')
-    get styleClasses(): string {
-        return this.resolveClasses();
-    }
-
-    /**
-     * @hidden
-     */
     @Input()
     @HostBinding('attr.aria-selected')
     get selected(): boolean {
@@ -581,21 +573,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public animationEndHandler() {
         this.triggerAddAnimationClass = false;
         this.addAnimationEnd.emit(this);
-    }
-
-    /**
-     * @hidden
-     */
-    protected resolveClasses(): string {
-        const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
-        const selectedClass = this.selected ? 'igx-grid__tr--selected' : '';
-        const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
-        const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
-        const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
-        const mrlClass = this.grid.hasColumnLayouts ? 'igx-grid__tr--mrl' : '';
-        const dragClass = this.dragging ? 'igx-grid__tr--drag' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}
-         ${deletedClass} ${mrlClass} ${dragClass}`.trim();
     }
 
     /**
