@@ -162,7 +162,7 @@ export abstract class BaseProgressDirective {
      * }
      * ```
      */
-    get max() {
+    public get max() {
         return this._max;
     }
 
