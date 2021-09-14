@@ -18,6 +18,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IPivotConfiguration } from './pivot-grid.interface';
+import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 
 let NEXT_ID = 0;
 @Component({
@@ -39,6 +40,11 @@ let NEXT_ID = 0;
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit,
     GridType {
+
+
+    /** @hidden @internal */
+    @ViewChild(IgxPivotHeaderRowComponent, { static: true })
+    public theadRow: IgxPivotHeaderRowComponent;
 
     @Input()
     /**
@@ -184,5 +190,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         // TODO - resolve member if member is not string.
         const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
         return this.columns.filter(x => rowKeys.indexOf(x.field) === -1);
+    }
+
+    public get unpinnedColumns(){
+        const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
+        const cols = super.unpinnedColumns.filter(x => rowKeys.indexOf(x.field) === -1);
+        return cols;
+    }
+
+    public get pinnedColumns(){
+        const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
+        const cols = super.pinnedColumns.filter(x => rowKeys.indexOf(x.field) === -1);
+        return cols;
     }
 }

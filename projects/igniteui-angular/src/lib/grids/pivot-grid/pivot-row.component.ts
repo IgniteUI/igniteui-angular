@@ -37,19 +37,5 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         });
         return width;
     }
-
-    public get unpinnedDataColumns(){
-        const rowKeys = this.grid.pivotConfiguration.rows.map(x => x.member);
-        let cols = this.grid.unpinnedColumns;
-        cols = cols.filter(x => rowKeys.indexOf(x.field) === -1);
-        return cols;
-    }
-
-    public get pinnedDataColumns(){
-        const rowKeys = this.grid.pivotConfiguration.rows.map(x => x.member);
-        let cols = this.grid.pinnedColumns;
-        cols = cols.filter(x => rowKeys.indexOf(x.field) === -1);
-        return cols;
-    }
 }
 

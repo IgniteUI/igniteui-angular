@@ -4,6 +4,7 @@ import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
 import { IgxPivotRowPipe, IgxPivotColumnPipe, IgxPivotGridFilterPipe } from './pivot-grid.pipes';
 import { IgxGridComponent } from '../grid/grid.component';
+import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 
 /**
  * @hidden
@@ -12,6 +13,7 @@ import { IgxGridComponent } from '../grid/grid.component';
   declarations: [
     IgxPivotGridComponent,
     IgxPivotRowComponent,
+    IgxPivotHeaderRowComponent,
     IgxPivotRowPipe,
     IgxPivotColumnPipe,
     IgxPivotGridFilterPipe
@@ -19,7 +21,8 @@ import { IgxGridComponent } from '../grid/grid.component';
   exports: [
     IgxGridModule,
     IgxPivotGridComponent,
-    IgxPivotRowComponent
+    IgxPivotRowComponent,
+    IgxPivotHeaderRowComponent
   ],
   imports: [
     IgxGridModule,

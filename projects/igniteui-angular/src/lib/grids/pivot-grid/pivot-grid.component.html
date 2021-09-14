@@ -2,7 +2,7 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 
 <!-- Grid table head row area -->
-<igx-grid-header-row class="igx-grid-thead" tabindex="0"
+<igx-pivot-header-row class="igx-grid-thead" tabindex="0"
     [grid]="this"
     [hasMRL]="hasColumnLayouts"
     [density]="displayDensity"
@@ -17,7 +17,7 @@
     (scroll)="preventHeaderScroll($event)"
     (focus)="navigation.focusFirstCell()"
 >
-</igx-grid-header-row>
+</igx-pivot-header-row>
 
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
     <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"

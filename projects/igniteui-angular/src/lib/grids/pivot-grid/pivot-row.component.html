@@ -10,14 +10,15 @@
             [unpinnedColumnCollection]="getRowColumns(rowData, grid.pivotRows)"
             (scroll)="grid.preventHeaderScroll($event)"
         >
-    </igx-grid-header-row>
+        </igx-grid-header-row>
     </div>
 
-    <ng-container *ngIf="pinnedDataColumns.length > 0 && grid.isPinningToStart">
+
+    <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
         <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-template>
     </ng-container>
 
-    <ng-template igxGridFor let-col [igxGridForOf]="unpinnedDataColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForSizePropName]='"calcPixelWidth"' [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
+    <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForSizePropName]='"calcPixelWidth"' [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
         <igx-grid-cell
             class="igx-grid__td igx-grid__td--fw"
             [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
@@ -46,7 +47,7 @@
         </igx-grid-cell>
     </ng-template>
 
-    <ng-container *ngIf="pinnedDataColumns.length > 0 && !grid.isPinningToStart">
+    <ng-container *ngIf="pinnedColumns.length > 0 && !grid.isPinningToStart">
         <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-template>
     </ng-container>
 
@@ -65,7 +66,7 @@
     </ng-template>
 
     <ng-template #pinnedCellsTemplate let-col>
-        <igx-grid-cell *ngFor="let col of pinnedDataColumns | igxNotGrouped"
+        <igx-grid-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
             class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
             [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
             [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
