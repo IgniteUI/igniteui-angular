@@ -19,7 +19,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      * @hidden
      * @internal
      */
-     get viewIndex(): number {
+     public get viewIndex(): number {
         return this.index;
     }
 
