@@ -166,4 +166,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         };
     }
 
+    public get pivotRows() {
+        // TODO - resolve member if member is not string.
+        const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
+        return this.columns.filter(x => rowKeys.indexOf(x.field) !== -1);
+    }
+
+    public get pivotRowWidths() {
+        let width = 0;
+        this.pivotRows.forEach(col => {
+            width += col.calcWidth;
+        });
+        return width;
+    }
+
+    public get pivotColumns() {
+        // TODO - resolve member if member is not string.
+        const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
+        return this.columns.filter(x => rowKeys.indexOf(x.field) === -1);
+    }
 }
