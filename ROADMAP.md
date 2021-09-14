@@ -7,7 +7,7 @@
 1. Add row at top of grid [#9675](https://github.com/IgniteUI/igniteui-angular/issues/9675)
 2. Grid row styles and classes [#9969](https://github.com/IgniteUI/igniteui-angular/issues/9969)
 3. Freezing Columns/Rows on Export to Excel (Angular) [#9863](https://github.com/IgniteUI/igniteui-angular/issues/9863)
-4. Stepper component [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
+4. Persistent State directive for column group [#8516](https://github.com/IgniteUI/igniteui-angular/issues/8516)
 5. IgxTreeGrid: display only filtered records [#9923](https://github.com/IgniteUI/igniteui-angular/issues/9923)
 
 ## Going down the road
@@ -17,6 +17,7 @@
 3. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
 4. Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
 5. Themes: Split themes and aid with Grid refactoring [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
+6. Stepper component [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
 
 # Previous Milestone
 
