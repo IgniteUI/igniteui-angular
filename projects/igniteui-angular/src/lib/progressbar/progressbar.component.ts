@@ -147,7 +147,6 @@ export abstract class BaseProgressDirective {
         if(maxNum < this._value) {
             return;
         }
-        
         this._max = maxNum;
         this._valueInPercent = toPercent(this._value, this._max);
     }
@@ -181,9 +180,8 @@ export abstract class BaseProgressDirective {
         if (value < 0 || value > 100) {
             return;
         }
-        
         this._valueInPercent = value;
-        this._value = toValue(value, this._max)
+        this._value = toValue(value, this._max);
     }
 
     /**
