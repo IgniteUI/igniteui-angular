@@ -10,6 +10,18 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - Added two public methods that spawn the add row UI for an arbitrary record in the current data view. One that accepts a rowID to use as the row the UI spawns under and the other accepting an index that has a distinct implementation for `IgxTreeGrid`. Please, refer to the official documentation for more information:[Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-adding) and [Tree Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/row-adding).
+
+        _Note:_ That the new record is still added at the end of the data view, after the end-user submits it.
+        ```typescript
+        this.grid.beginAddRowById('ALFKI');             // spawns the add row UI under the row with PK 'ALFKI'
+        this.grid.beginAddRowById(null);                // spawns the add row UI as the first record
+        this.grid.beginAddRowByIndex(10);               // spawns the add row UI at index 10
+        this.grid.beginAddRowByIndex(0);                // spawns the add row UI as the first record
+        this.treeGrid.beginAddRowById('ALFKI', true);   // spawns the add row UI to add a child for the row with PK 'ALFKI'
+        this.treeGrid.beginAddRowByIndex(10, true);     // spawns the add row UI to add a child for the row at index 10
+        this.treeGrid.beginAddRowByIndex(null);         // spawns the add row UI as the first record
+        ```
     - Added capability to restore the state of multi column headers with `IgxGridStateDirective`.
     - Introduced new 'rowStyles' and 'rowClasses' grid properties which allows to define a custom styling on each grid row
 
@@ -74,7 +86,7 @@ All notable changes for each version of this project will be documented in this 
         - `IgxGridCellComponent`,  `IgxTreeGridCellComponent`, `IgxHierarchicalGridCellComponent` are no longer exposed in the public API. Instead, a new class `IgxGridCell` replaces all of these. It is a facade class which exposes only the public API of the above mentioned. Automatic migration will change these imports with `CellType`, which is the interface implemented by `IgxGridCell`
     - **Behavioral changes**
     - `getCellByKey`, `getCellByColumn`, `getCellByColumnVisibleIndex`, `row.cells`, `column.cells`, `grid.selectedCells` now return an `IgxGridCell` the `CellType` interface.
-    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitetd in `cellClick`, `selected`, `contextMenu` and `doubleClick` events.
+    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitted in `cellClick`, `selected`, `contextMenu` and `doubleClick` events.
     - `let-cell` property in cell template is now `CellType`.
     - `getCellByColumnVisibleIndex` is now deprecated and will be removed in next major version. Use `getCellByKey`, `getCellByColumn` instead.
 
