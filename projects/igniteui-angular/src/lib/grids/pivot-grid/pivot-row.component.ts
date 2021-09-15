@@ -28,6 +28,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
             col.header = rowData[col.field];
             col.field =  rowData[col.field];
             col.title = rowData[col.field];
+            (col as any)._vIndex = this.grid.columns.length + this.index;
         });
         return cols;
     }
