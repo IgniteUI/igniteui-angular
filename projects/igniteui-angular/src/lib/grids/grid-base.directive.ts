@@ -343,6 +343,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="Data" [evenRowCSS]="'igx-grid--my-even-class'" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @DeprecateProperty('`evenRowCSS` is deprecated. We suggest using `rowClasses` property instead.')
     @Input()
     public evenRowCSS = 'igx-grid__tr--even';
 
@@ -354,8 +355,46 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="Data" [evenRowCSS]="'igx-grid--my-odd-class'" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @DeprecateProperty('`oddRowCSS` is deprecated. We suggest using `rowClasses` property instead.')
     @Input()
     public oddRowCSS = 'igx-grid__tr--odd';
+
+    /**
+     * Sets a conditional class selector to the grid's row element.
+     * Accepts an object literal, containing key-value pairs,
+     * where the key is the name of the CSS class and the value is
+     * either a callback function that returns a boolean, or boolean, like so:
+     * ```typescript
+     * callback = (row: RowType) => { return row.selected > 6; }
+     * rowClasses = { 'className' : this.callback };
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="Data" [rowClasses] = "rowClasses" [autoGenerate]="true"></igx-grid>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public rowClasses: any;
+
+    /**
+     * Sets conditional style properties on the grid row element.
+     * It accepts an object literal where the keys are
+     * the style properties and the value is an expression to be evaluated.
+     * ```typescript
+     * styles = {
+     *  background: 'yellow',
+     *  color: (row: RowType) => row.selected : 'red': 'white'
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="Data" [rowStyles]="styles" [autoGenerate]="true"></igx-grid>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public rowStyles = null;
 
     /**
      * Gets/Sets the primary key.
