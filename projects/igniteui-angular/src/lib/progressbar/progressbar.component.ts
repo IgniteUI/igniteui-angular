@@ -235,7 +235,6 @@ export abstract class BaseProgressDirective {
         const passedValue = toPercent(val, this._max);
         const progressValue = toPercent(this._value, this._max);
         if (this.valueInPercent === passedValue) {
-             console.log(passedValue)
             this.updateProgress(val);
             cancelAnimationFrame(this.requestAnimationId);
         } else if (this.isInLimitRange(progressValue, passedValue, step)) {
