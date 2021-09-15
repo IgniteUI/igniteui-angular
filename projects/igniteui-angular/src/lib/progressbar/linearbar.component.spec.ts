@@ -476,21 +476,29 @@ describe('IgLinearBar', () => {
             expect(bar.classList.contains(INDETERMINATE_CLASS)).toEqual(true);
         });
 
-        it('Check if current value in % changes dynamically when max is increased', fakeAsync(() => {
+        fit('Check if current value in % changes dynamically when max is increased', fakeAsync(() => {
             const fix = TestBed.createComponent(InitLinearProgressBarComponent);
             fix.detectChanges();
 
             const bar = fix.componentInstance.linearBar;
-            const maxVal = 3.25;
-            const val =  3.55;
+            let maxVal = 100;
+            const val =  50;
 
             bar.max = maxVal;
             bar.value = val;
-            const valueInPercent = Common.calcPercentage(bar.value, bar.max);
+            let valueInPercent = Common.calcPercentage(bar.value, bar.max);
 
             tick(tickTime);
             fix.detectChanges();
-            expect(valueInPercent).toBe(bar.valueInPercent);
+            expect(valueInPercent).toBe(50);
+        
+            maxVal = 200;
+            bar.max = maxVal;
+            valueInPercent = Common.calcPercentage(val, bar.max);
+
+            tick(tickTime);
+            fix.detectChanges();
+            expect(valueInPercent).toBe(25);
         }));
     });
 });

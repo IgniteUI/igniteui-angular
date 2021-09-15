@@ -145,7 +145,7 @@ export abstract class BaseProgressDirective {
     @Input()
     public set max(maxNum: number) {
         if (maxNum < this._value) {
-            this.valueInPercent = maxNum;
+            this._value = maxNum;
         }
         this._max = maxNum;
         this._valueInPercent = toPercent(this._value, this._max);
