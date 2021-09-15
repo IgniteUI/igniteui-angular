@@ -4,6 +4,8 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent, IgxSnackbarModule } from './snackbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { HorizontalAlignment, PositionSettings, slideInLeft, slideInRight, VerticalAlignment } from 'igniteui-angular';
+import { useAnimation } from '@angular/animations';
 
 describe('IgxSnackbar', () => {
     configureTestSuite();
@@ -160,6 +162,30 @@ describe('IgxSnackbar', () => {
         expect(snackbar.textMessage).toBe('Custom Message');
         snackbar.close();
     }));
+    it('should be able to set custom positionSettings', () => {
+        const defaultPositionSettings = snackbar.positionSettings;
+        const defaulOpenAnimationParams = {duration: '.35s', easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+         fromPosition: 'translateY(100%)', toPosition: 'translateY(0)'};
+        expect(defaultPositionSettings.horizontalDirection).toBe(-0.5);
+        expect(defaultPositionSettings.verticalDirection).toBe(0);
+        expect(defaultPositionSettings.openAnimation.options.params).toEqual(defaulOpenAnimationParams);
+        const newPositionSettings: PositionSettings = {
+            openAnimation: useAnimation(slideInLeft, { params: { duration: '1000ms' } }),
+            closeAnimation: useAnimation(slideInRight, { params: { duration: '1000ms' } }),
+            horizontalDirection: HorizontalAlignment.Center,
+            verticalDirection: VerticalAlignment.Middle,
+            horizontalStartPoint: HorizontalAlignment.Center,
+            verticalStartPoint: VerticalAlignment.Middle,
+            minSize: { height: 100, width: 100 }
+        };
+        snackbar.positionSettings = newPositionSettings;
+        fixture.detectChanges();
+        const customPositionSettings = snackbar.positionSettings;
+        expect(customPositionSettings.horizontalDirection).toBe(-0.5);
+        expect(customPositionSettings.verticalDirection).toBe(-0.5);
+        expect(customPositionSettings.openAnimation.options.params).toEqual({duration: '1000ms'});
+        expect(customPositionSettings.minSize).toEqual({height: 100, width: 100});
+    });
 });
 
 describe('IgxSnackbar with custom content', () => {

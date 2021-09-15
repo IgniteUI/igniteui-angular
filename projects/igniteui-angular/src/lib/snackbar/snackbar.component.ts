@@ -101,6 +101,53 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      */
     @Output() public animationDone = new EventEmitter<ToggleViewEventArgs>();
 
+
+    /**
+     * Get the position and animation settings used by the snackbar.
+     * ```typescript
+     * @ViewChild('snackbar', { static: true }) public snackbar: IgxSnackbarComponent;
+     * let currentPosition: PositionSettings = this.snackbar.positionSettings
+     * ```
+     */
+    @Input()
+    public get positionSettings(): PositionSettings {
+        return this._positionSettings;
+    }
+
+    /**
+     * Set the position and animation settings used by the snackbar.
+     * ```html
+     * <igx-snackbar [positionSettings]="newPositionSettings"></igx-snackbar>
+     * ```
+     * ```typescript
+     * import { slideInTop, slideOutBottom } from 'igniteui-angular';
+     * ...
+     * @ViewChild('snackbar', { static: true }) public snackbar: IgxSnackbarComponent;
+     *  public newPositionSettings: PositionSettings = {
+     *      openAnimation: useAnimation(slideInTop, { params: { duration: '1000ms', fromPosition: 'translateY(100%)'}}),
+     *      closeAnimation: useAnimation(slideOutBottom, { params: { duration: '1000ms', fromPosition: 'translateY(0)'}}),
+     *      horizontalDirection: HorizontalAlignment.Left,
+     *      verticalDirection: VerticalAlignment.Middle,
+     *      horizontalStartPoint: HorizontalAlignment.Left,
+     *      verticalStartPoint: VerticalAlignment.Middle,
+     *      minSize: { height: 100, width: 100 }
+     *  };
+     * this.snackbar.positionSettings = this.newPositionSettings;
+     * ```
+     */
+    public set positionSettings(settings: PositionSettings) {
+        this._positionSettings = settings;
+    }
+
+    private _positionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Center,
+        verticalDirection: VerticalAlignment.Bottom,
+        openAnimation: useAnimation(slideInBottom, { params: { duration: '.35s', easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+            fromPosition: 'translateY(100%)', toPosition: 'translateY(0)'} }),
+        closeAnimation: useAnimation(slideOutBottom, {  params: { duration: '.2s', easing: 'cubic-bezier(0.4, 0.0, 1, 1)',
+            fromPosition: 'translateY(0)', toPosition: 'translateY(100%)'} }),
+    };
+
     /**
      * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
      * ```typescript
@@ -112,30 +159,9 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
             this.textMessage = message;
         }
 
-        const snackbarSettings: PositionSettings = {
-            horizontalDirection: HorizontalAlignment.Center,
-            verticalDirection: VerticalAlignment.Bottom,
-            openAnimation: useAnimation(slideInBottom, {
-                params: {
-                    duration: '.35s',
-                    easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
-                    fromPosition: 'translateY(100%)',
-                    toPosition: 'translateY(0)'
-                }
-            }),
-            closeAnimation: useAnimation(slideOutBottom, {
-                params: {
-                    duration: '.2s',
-                    easing: 'cubic-bezier(0.4, 0.0, 1, 1)',
-                    fromPosition: 'translateY(0)',
-                    toOpacity: 1,
-                    toPosition: 'translateY(100%)'
-                }
-            })
-        };
 
-        this.strategy = this.outlet ? new ContainerPositionStrategy(snackbarSettings)
-            : new GlobalPositionStrategy(snackbarSettings);
+        this.strategy = this.outlet ? new ContainerPositionStrategy(this.positionSettings)
+            : new GlobalPositionStrategy(this.positionSettings);
         super.open();
     }
 
