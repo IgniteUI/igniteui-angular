@@ -43,6 +43,17 @@
             <igx-select [(ngModel)]="perPage">
                 <igx-select-item *ngFor="let value of selectOptions" [value]="value">{{value}}</igx-select-item>
             </igx-select>
+            <button igxButton="raised" (click)="beginAddRowAtIndex(indexInput.value)">Add Row At Index</button>
+            <igx-input-group>
+                <input igxInput name="index" type="number" #indexInput/>
+                <label igxLabel for="index">Index</label>
+            </igx-input-group>
+            <button igxButton="raised" (click)="beginAddRowStart()">Add Row At Start</button>
+            <igx-input-group>
+                <input igxInput name="string" type="string" #stringInput value="CENTC"/>
+                <label igxLabel for="string">PK</label>
+            </igx-input-group>
+            <button igxButton="raised" (click)="beginAddRowById(stringInput.value)">Add Row For ID</button>
         </igx-card-content>
     </igx-card>
 </div>
