@@ -7,6 +7,6 @@ const TreeResourceStringsNB_: ExpandRequire<ITreeResourceStrings> = {
 };
 
 /**
- * Portuguese resource strings for IgxTree
+ * Norwegian resource strings for IgxTree
  */
 export const TreeResourceStringsNB = TreeResourceStringsNB_ as ExpandRequire<ITreeResourceStrings>;
