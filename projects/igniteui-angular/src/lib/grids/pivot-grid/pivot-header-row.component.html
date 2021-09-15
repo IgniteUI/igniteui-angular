@@ -4,7 +4,7 @@
     <!-- Column headers area -->
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
 
-        <ng-container *ngIf="grid.pivotConfiguration?.rows.length > 0 ">
+        <ng-container *ngIf="!row">
             <div #pivotContainer class="igx-grid__tr-action" [style.min-width] = "grid.pivotRowWidths" 
                 (pointerdown)="$event.preventDefault()">
                 

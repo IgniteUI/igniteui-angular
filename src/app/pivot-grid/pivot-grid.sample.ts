@@ -19,7 +19,7 @@ export class PivotGridSampleComponent {
             childLevels:[]
         }],
         rows: [{
-            member: 'ProductCategory',
+            member: (data) => data.ProductCategory,
             enabled: true,
             childLevels:[]
         }],

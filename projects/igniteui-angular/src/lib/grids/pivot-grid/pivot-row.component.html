@@ -1,16 +1,16 @@
     <!-- Row Dimension -->
-    <div #rowDimension>
-            <!-- TODO: Render headers based on hierarchy here -->
-            <igx-grid-header-row class="igx-grid-thead" tabindex="0"
+    <div #rowDimensionContainer>
+            <igx-pivot-header-row class="igx-grid-thead" tabindex="0"
             [grid]="grid"
             [hasMRL]="grid.hasColumnLayouts"
             [density]="grid.displayDensity"
             [activeDescendant]="grid.activeDescendant"
-            [width]="getRowColumnWidth(grid.pivotRows)"
-            [unpinnedColumnCollection]="getRowColumns(rowData, grid.pivotRows)"
+            [width]="pivotRowWidths"
+            [unpinnedColumnCollection]="rowDimension"
             (scroll)="grid.preventHeaderScroll($event)"
+            [row]="this"
         >
-        </igx-grid-header-row>
+        </igx-pivot-header-row>
     </div>
 
 

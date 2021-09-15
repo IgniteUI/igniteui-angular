@@ -1,11 +1,17 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
-    forwardRef
+    ComponentFactoryResolver,
+    ElementRef,
+    forwardRef,
+    OnInit,
+    ViewContainerRef
 } from '@angular/core';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxRowDirective } from '../row.directive';
-import { IgxColumnComponent } from '../hierarchical-grid/public_api';
+import { GridBaseAPIService, IgxColumnComponent } from '../hierarchical-grid/public_api';
+import { IgxGridSelectionService } from '../selection/selection.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,7 +19,21 @@ import { IgxColumnComponent } from '../hierarchical-grid/public_api';
     templateUrl: './pivot-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }]
 })
-export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent> {
+export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent> implements OnInit {
+
+
+    public rowDimension: IgxColumnComponent[] = [];
+
+    constructor(
+        public gridAPI: GridBaseAPIService<IgxPivotGridComponent>,
+        public selectionService: IgxGridSelectionService,
+        public element: ElementRef<HTMLElement>,
+        public cdr: ChangeDetectorRef,
+        protected resolver: ComponentFactoryResolver,
+        protected viewRef: ViewContainerRef
+    ){
+        super(gridAPI, selectionService, element, cdr);
+    }
 
     /**
      * @hidden
@@ -23,22 +43,34 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         return this.index;
     }
 
-    public getRowColumns(rowData, cols: IgxColumnComponent[]) {
-        cols.forEach(col => {
-            col.header = rowData[col.field];
-            col.field =  rowData[col.field];
-            col.title = rowData[col.field];
-            (col as any)._vIndex = this.grid.columns.length + this.index;
-        });
-        return cols;
-    }
-
-    public getRowColumnWidth(cols: IgxColumnComponent[]) {
+    public get pivotRowWidths() {
         let width = 0;
-        cols.forEach(col => {
+        this.rowDimension.forEach(col => {
             width += col.calcWidth;
         });
         return width;
+    }
+
+    public ngOnInit() {
+        // generate rowDimension
+        const rowDimConfig = this.grid.pivotConfiguration.rows;
+        let field = null;
+        for (const dim of rowDimConfig) {
+            if (typeof dim.member === 'string') {
+                field = this.rowData[dim.member];
+            } else if (typeof dim.member === 'function'){
+                field = dim.member.call(this, this.rowData);
+            }
+            const col = this._createColComponent(field);
+            this.rowDimension.push(col);
+        }
+    }
+
+    protected _createColComponent(field: string) {
+        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
+        const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
+        ref.instance.field = field;
+        return ref.instance;
     }
 }
 
