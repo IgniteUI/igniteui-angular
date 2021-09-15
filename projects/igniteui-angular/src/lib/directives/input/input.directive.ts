@@ -5,14 +5,18 @@ import {
     ElementRef,
     HostBinding,
     HostListener,
-    Injector,
+    Inject,
     Input,
     OnDestroy,
+    Optional,
     Renderer2,
+    Self,
 } from '@angular/core';
 import {
     AbstractControl,
+    FormControlName,
     NgControl,
+    NgModel,
     ValidationErrors,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -102,14 +106,18 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     constructor(
         public inputGroup: IgxInputGroupBase,
+        @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
+        @Optional()
+        @Self()
+        @Inject(FormControlName)
+        protected formControl: FormControlName,
         protected element: ElementRef<HTMLInputElement>,
         protected cdr: ChangeDetectorRef,
-        protected renderer: Renderer2,
-        private _injector: Injector,
+        protected renderer: Renderer2
     ) { }
 
     private get ngControl(): NgControl {
-        return this._injector.get<NgControl>(NgControl, null);
+        return this.ngModel ? this.ngModel : this.formControl;
     }
 
     private get errors(): ValidationErrors | null {
@@ -206,7 +214,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     public get required() {
-        return this.nativeElement.hasAttribute('required');
+        const validation = this.ngControl ? this.errors : null;
+        return validation && validation.required || this.nativeElement.hasAttribute('required');
     }
     /**
      * @hidden
@@ -286,18 +295,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this._valid = IgxInputState.INITIAL;
         }
         // Also check the control's validators for required
-        let ariaRequired = this.required;
-        if (this.ngControl) {
-            const validation = this.errors;
-            ariaRequired = validation && validation.required;
-            if (!this.inputGroup.isRequired) {
-                this.inputGroup.isRequired = ariaRequired;
-            }
+        if (this.required && !this.inputGroup.isRequired) {
+            this.inputGroup.isRequired = this.required;
         }
 
-        this.renderer.setAttribute(this.nativeElement, 'aria-required', ariaRequired?.toString() || 'false');
-        const ariaInvalid = this.valid === IgxInputState.INVALID || ariaRequired && !this.value;
-        this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid?.toString() || 'false');
+        this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
+        //const ariaInvalid = this.valid === IgxInputState.INVALID || this.required && !this.value;
+        // this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid?.toString());
 
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
@@ -355,11 +359,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @internal
      */
     protected updateValidityState() {
-        let ariaRequired = false;
         if (this.ngControl) {
             const errors = this.errors;
             if (errors) {
-                ariaRequired = errors.required;
                 this.inputGroup.isRequired = errors && errors.required;
                 if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                     // the control is not disabled and is touched or dirty
@@ -376,13 +378,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 this._valid = IgxInputState.INITIAL;
                 this.inputGroup.isRequired = false;
             }
+            this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
+            const ariaInvalid = this.valid === IgxInputState.INVALID;
+            this.renderer.setAttribute(this.nativeElement, 'aria-invalid',ariaInvalid.toString());
         } else {
             this.checkNativeValidity();
         }
-
-        this.renderer.setAttribute(this.nativeElement, 'aria-required', ariaRequired?.toString() || 'false');
-        const ariaInvalid = this.valid === IgxInputState.INVALID || ariaRequired && !this.value;
-        this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid?.toString() || 'false');
     }
     /**
      * Gets whether the igxInput has a placeholder.
