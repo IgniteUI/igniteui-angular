@@ -203,13 +203,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public get unpinnedColumns(){
         const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
-        const cols = super.unpinnedColumns.filter(x => rowKeys.indexOf(x.field) === -1);
+        const cols = this._unpinnedColumns.filter(x => rowKeys.indexOf(x.field) === -1);
         return cols;
     }
 
     public get pinnedColumns(){
         const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
-        const cols = super.pinnedColumns.filter(x => rowKeys.indexOf(x.field) === -1);
+        const cols = this._pinnedColumns.filter(x => rowKeys.indexOf(x.field) === -1);
         return cols;
     }
 }
