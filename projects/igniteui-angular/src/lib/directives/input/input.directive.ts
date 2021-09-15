@@ -120,15 +120,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         return this.ngModel ? this.ngModel : this.formControl;
     }
 
-    private get errors(): ValidationErrors | null {
-        if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
-            // Run the validation with empty object to check if required is enabled.
-            return this.ngControl.control.validator({} as AbstractControl);
-        }
-
-        return null;
-    }
-
     /**
      * Sets the `value` property.
      *
@@ -214,7 +205,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     public get required() {
-        const validation = this.ngControl ? this.errors : null;
+        let validation;
+        if (this.ngControl && (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            validation = this.ngControl.control.validator({} as AbstractControl);
+        }
         return validation && validation.required || this.nativeElement.hasAttribute('required');
     }
     /**
@@ -360,9 +354,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     protected updateValidityState() {
         if (this.ngControl) {
-            const errors = this.errors;
-            if (errors) {
-                this.inputGroup.isRequired = errors && errors.required;
+            if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
+                // Run the validation with empty object to check if required is enabled.
+                const error = this.ngControl.control.validator({} as AbstractControl);
+                this.inputGroup.isRequired = error && error.required;
                 if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                     // the control is not disabled and is touched or dirty
                     this._valid = this.ngControl.invalid ?
@@ -380,7 +375,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             }
             this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
             const ariaInvalid = this.valid === IgxInputState.INVALID;
-            this.renderer.setAttribute(this.nativeElement, 'aria-invalid',ariaInvalid.toString());
+            this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid.toString());
         } else {
             this.checkNativeValidity();
         }
