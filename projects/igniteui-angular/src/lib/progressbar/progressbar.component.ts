@@ -144,8 +144,8 @@ export abstract class BaseProgressDirective {
     @HostBinding('attr.aria-valuemax')
     @Input()
     public set max(maxNum: number) {
-        if(maxNum < this._value) {
-            return;
+        if (maxNum < this._value) {
+            this.valueInPercent = maxNum;
         }
         this._max = maxNum;
         this._valueInPercent = toPercent(this._value, this._max);
@@ -251,7 +251,7 @@ export abstract class BaseProgressDirective {
      */
     protected updateProgressDirectly(val: number) {
         this._value = valueInRange(val, this._max);
-        this._valueInPercent = toPercent(this._value, this._max);
+        this.valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
