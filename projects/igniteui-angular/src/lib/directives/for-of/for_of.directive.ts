@@ -1410,10 +1410,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const styles = window.getComputedStyle(node);
         if (dimension === 'height') {
             return parseFloat(styles['marginTop']) +
-                parseFloat(styles['marginBottom']);
+                parseFloat(styles['marginBottom']) || 0;
         }
         return parseFloat(styles['marginLeft']) +
-            parseFloat(styles['marginRight']);
+            parseFloat(styles['marginRight']) || 0;
     }
 }
 
