@@ -55,7 +55,7 @@ import {
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { ISummaryExpression } from './summaries/grid-summary';
+import { IgxSummaryOperand, ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxRowDirective } from './row.directive';
@@ -5964,6 +5964,53 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     public endEdit(commit = true, event?: Event) {
         this.crudService.endEdit(commit, event);
+    }
+
+    
+
+    protected _createColumn(col) {
+        let ref;
+        if (col instanceof IgxColumnGroupComponent) {
+            ref = this._createColGroupComponent(col);
+        } else {
+            ref = this._createColComponent(col);
+        }
+        return ref;
+    }
+
+    protected _createColGroupComponent(col: IgxColumnGroupComponent) {
+        const factoryGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
+        const ref = this.viewRef.createComponent(factoryGroup, null, this.viewRef.injector);
+        ref.changeDetectorRef.detectChanges();
+        factoryGroup.inputs.forEach((input) => {
+            const propName = input.propName;
+            ref.instance[propName] = col[propName];
+        });
+        if (col.children.length > 0) {
+            const newChildren = [];
+            col.children.forEach(child => {
+                const newCol = this._createColumn(child).instance;
+                newCol.parent = ref.instance;
+                newChildren.push(newCol);
+            });
+            ref.instance.children.reset(newChildren);
+            ref.instance.children.notifyOnChanges();
+        }
+        return ref;
+    }
+
+    protected _createColComponent(col) {
+        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
+        const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
+        factoryColumn.inputs.forEach((input) => {
+            const propName = input.propName;
+            if (!(col[propName] instanceof IgxSummaryOperand)) {
+                ref.instance[propName] = col[propName];
+            } else {
+                ref.instance[propName] = col[propName].constructor;
+            }
+        });
+        return ref;
     }
 
     protected switchTransactionService(val: boolean) {

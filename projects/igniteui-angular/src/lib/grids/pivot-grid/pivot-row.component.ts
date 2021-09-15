@@ -23,9 +23,11 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         return this.index;
     }
 
-    public getRowColumns(rowData, cols) {
+    public getRowColumns(rowData, cols: IgxColumnComponent[]) {
         cols.forEach(col => {
             col.header = rowData[col.field];
+            col.field =  rowData[col.field];
+            col.title = rowData[col.field];
         });
         return cols;
     }
