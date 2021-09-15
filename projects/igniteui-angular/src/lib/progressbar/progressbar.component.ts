@@ -144,11 +144,11 @@ export abstract class BaseProgressDirective {
     @HostBinding('attr.aria-valuemax')
     @Input()
     public set max(maxNum: number) {
-        if(maxNum < this._value) {
-            this._value = maxNum;
+        if (maxNum < this._value) {
+            this.valueInPercent = maxNum;
         }
         this._max = maxNum;
-        this.valueInPercent = toPercent(this._value, this._max);
+        this._valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
@@ -235,6 +235,7 @@ export abstract class BaseProgressDirective {
         const passedValue = toPercent(val, this._max);
         const progressValue = toPercent(this._value, this._max);
         if (this.valueInPercent === passedValue) {
+             console.log(passedValue)
             this.updateProgress(val);
             cancelAnimationFrame(this.requestAnimationId);
         } else if (this.isInLimitRange(progressValue, passedValue, step)) {
@@ -251,7 +252,7 @@ export abstract class BaseProgressDirective {
      */
     protected updateProgressDirectly(val: number) {
         this._value = valueInRange(val, this._max);
-        this._valueInPercent = toPercent(this._value, this._max);
+        this.valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
