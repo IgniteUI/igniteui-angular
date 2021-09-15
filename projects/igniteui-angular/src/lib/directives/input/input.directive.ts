@@ -5,18 +5,15 @@ import {
     ElementRef,
     HostBinding,
     HostListener,
-    Inject,
+    Injector,
     Input,
     OnDestroy,
-    Optional,
     Renderer2,
-    Self,
 } from '@angular/core';
 import {
     AbstractControl,
-    FormControlName,
     NgControl,
-    NgModel,
+    ValidationErrors,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IgxInputGroupBase } from '../../input-group/input-group.common';
@@ -105,19 +102,25 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     constructor(
         public inputGroup: IgxInputGroupBase,
-        @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
-        @Optional()
-        @Self()
-        @Inject(FormControlName)
-        protected formControl: FormControlName,
         protected element: ElementRef<HTMLInputElement>,
         protected cdr: ChangeDetectorRef,
-        protected renderer: Renderer2
+        protected renderer: Renderer2,
+        private _injector: Injector,
     ) { }
 
     private get ngControl(): NgControl {
-        return this.ngModel ? this.ngModel : this.formControl;
+        return this._injector.get<NgControl>(NgControl, null);
     }
+
+    private get errors(): ValidationErrors | null {
+        if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
+            // Run the validation with empty object to check if required is enabled.
+            return this.ngControl.control.validator({} as AbstractControl);
+        }
+
+        return null;
+    }
+
     /**
      * Sets the `value` property.
      *
@@ -283,20 +286,18 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this._valid = IgxInputState.INITIAL;
         }
         // Also check the control's validators for required
-        let requiredLabel = this.required ? true : false;
-        if (this.ngControl && this.ngControl.control.validator) {
-            const validation = this.ngControl.control.validator({} as AbstractControl);
-            requiredLabel = validation && validation.required ? true : requiredLabel;
+        let ariaRequired = this.required;
+        if (this.ngControl) {
+            const validation = this.errors;
+            ariaRequired = validation && validation.required;
             if (!this.inputGroup.isRequired) {
-                this.inputGroup.isRequired = validation && validation.required;
+                this.inputGroup.isRequired = ariaRequired;
             }
         }
 
-        if (requiredLabel) {
-            this.renderer.setAttribute(this.nativeElement, 'aria-required', 'true');
-        }
-        const invalidLabel = this.valid === IgxInputState.INVALID || (requiredLabel && this.value === '') ? 'true' : 'false';
-        this.renderer.setAttribute(this.nativeElement, 'aria-invalid', invalidLabel);
+        this.renderer.setAttribute(this.nativeElement, 'aria-required', ariaRequired?.toString() || 'false');
+        const ariaInvalid = this.valid === IgxInputState.INVALID || ariaRequired && !this.value;
+        this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid?.toString() || 'false');
 
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
@@ -354,13 +355,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @internal
      */
     protected updateValidityState() {
-        let requiredLabel = false;
+        let ariaRequired = false;
         if (this.ngControl) {
-            if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
-                // Run the validation with empty object to check if required is enabled.
-                const error = this.ngControl.control.validator({} as AbstractControl);
-                requiredLabel = error && error.required ? true : requiredLabel;
-                this.inputGroup.isRequired = error && error.required;
+            const errors = this.errors;
+            if (errors) {
+                ariaRequired = errors.required;
+                this.inputGroup.isRequired = errors && errors.required;
                 if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                     // the control is not disabled and is touched or dirty
                     this._valid = this.ngControl.invalid ?
@@ -376,17 +376,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 this._valid = IgxInputState.INITIAL;
                 this.inputGroup.isRequired = false;
             }
-            if (requiredLabel) {
-                this.renderer.setAttribute(this.nativeElement, 'aria-required', 'true');
-            } else {
-                this.renderer.removeAttribute(this.nativeElement, 'aria-required');
-            }
         } else {
             this.checkNativeValidity();
         }
 
-        const invalidLabel = this.valid === IgxInputState.INVALID || (requiredLabel && this.value === '') ? 'true' : 'false';
-        this.renderer.setAttribute(this.nativeElement, 'aria-invalid', invalidLabel);
+        this.renderer.setAttribute(this.nativeElement, 'aria-required', ariaRequired?.toString() || 'false');
+        const ariaInvalid = this.valid === IgxInputState.INVALID || ariaRequired && !this.value;
+        this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid?.toString() || 'false');
     }
     /**
      * Gets whether the igxInput has a placeholder.
