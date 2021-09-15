@@ -36,8 +36,7 @@
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
-            [igxForTrackBy]='trackChanges'
-            #verticalScrollContainer (chunkPreload)="dataLoading($event)">
+            #verticalScrollContainer>
             <ng-template
                 [igxTemplateOutlet]='recordTemplate'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
@@ -93,18 +92,12 @@
 <ng-template #emptyFilteredGrid>
     <span class="igx-grid__tbody-message" role="cell">
         <span>{{emptyFilteredGridMessage}}</span>
-        <span *ngIf='showAddButton'>
-            <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
-        </span>
     </span>
 </ng-template>
 
 <ng-template #defaultEmptyGrid>
     <span class="igx-grid__tbody-message" role="cell">
         <span>{{emptyGridMessage}}</span>
-        <span *ngIf='showAddButton'>
-            <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
-        </span>
     </span>
 </ng-template>
 

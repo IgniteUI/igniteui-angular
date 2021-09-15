@@ -13,6 +13,7 @@ import { IgxTreeGridRowComponent } from '../tree-grid/tree-grid-row.component';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
 import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
+import { IgxPivotRowComponent } from '../pivot-grid/pivot-row.component';
 
 interface CSSProp {
     [prop: string]: any;
@@ -71,7 +72,7 @@ export class IgxGridCellStylesPipe implements PipeTransform {
     }
 }
 
-type _RowType = IgxGridRowComponent | IgxTreeGridRowComponent | IgxHierarchicalRowComponent;
+type _RowType = IgxGridRowComponent | IgxTreeGridRowComponent | IgxHierarchicalRowComponent | IgxPivotRowComponent;
 
 /**
  * @hidden

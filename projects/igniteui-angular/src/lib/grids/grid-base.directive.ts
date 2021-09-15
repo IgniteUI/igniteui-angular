@@ -6081,6 +6081,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index - 1, this.dataView));
     }
 
+    /**
+     * @hidden
+     */
+    public preventHeaderScroll(args) {
+        if (args.target.scrollLeft !== 0) {
+            (this.navigation as any).forOfDir().getScroll().scrollLeft = args.target.scrollLeft;
+            args.target.scrollLeft = 0;
+        }
+    }
+
     protected beginAddRowForIndex(index: number, asChild: boolean = false) {
         const row: IgxRowDirective<IgxGridBaseDirective & GridType> = index == null ?
             null : this.rowList.find(r => r.index === index);
@@ -6090,8 +6100,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             console.warn('No row with the specified PK or index was found.');
         }
     }
-
-    
 
     protected _createColumn(col) {
         let ref;

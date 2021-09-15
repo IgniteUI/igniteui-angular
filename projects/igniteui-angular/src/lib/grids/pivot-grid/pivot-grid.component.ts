@@ -67,7 +67,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
      @ViewChild('record_template', { read: TemplateRef, static: true })
-     protected recordTemplate: TemplateRef<any>;
+     public recordTemplate: TemplateRef<any>;
 
     private _data;
     private _filteredData;
