@@ -15,8 +15,7 @@ let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-step',
-    templateUrl: 'igx-step.component.html',
-    styleUrls: ['igx-step.component.scss']
+    templateUrl: 'igx-step.component.html'
 })
 export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, AfterViewInit, OnDestroy, IgxSlideComponentBase {
 
@@ -206,8 +205,8 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
     //  }
 
     /** @hidden @internal */
-    @HostBinding('class.igx-step')
-    public cssClass = 'igx-step';
+    @HostBinding('class.igx-stepper__header-step')
+    public cssClass = 'igx-stepper__header-step';
 
     //  // TODO: will be used in Drag and Drop implementation
     //  /** @hidden @internal */
@@ -295,13 +294,13 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements OnInit, A
 
     public getStepHeaderClasses() {
         if(this.active) {
-            return 'igx-step__header--active';
+            return 'igx-stepper__header-step-content--active';
         }
         if (this.disabled) {
-            return 'igx-step__header--disabled';
+            return 'igx-stepper__header-step-content--disabled';
         }
         if (this.skip) {
-            return 'igx-step__header--skip';
+            return 'igx-stepper__header-step-content--skip';
         }
     }
 

@@ -1,0 +1,85 @@
+@use 'sass:math';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+
+/// @example scss Set custom track and thumb on colors
+/// $my-stepper-theme: igx-stepper-theme();
+/// @include igx-stepper($my-stepper-theme);
+@function igx-stepper-theme(
+    $palette: null,
+    $schema: $light-schema,
+    $title-color: null,
+    $subtitle-color: null,
+    $incomplete-color: null,
+    $complete-color: null,
+    $error-color: null,
+    $optional-color: null,
+    $current-color: null,
+    $disabled-color: null,
+) {
+    $name: 'igx-switch';
+    $switch-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $switch-schema: map-get($schema, $name);
+    } @else {
+        $switch-schema: $schema;
+    }
+
+    $theme: apply-palette($switch-schema, $palette);
+
+    @return extend($theme, (
+        name: $name,
+        palette: $palette,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-css-vars
+/// @requires em
+/// @requires --var
+@mixin igx-stepper($theme) {
+    @include igx-css-vars($theme);
+
+    $variant: map-get($theme, variant);
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
+    %stepper-display {
+        display: flex;
+        width: 100%;
+        overflow: hidden;
+    }
+}
+
+/// Adds typography styles for the igx-stepper component.
+/// Uses the 'subtitle-1' category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-switch-typography(
+    $type-scale,
+    $categories: (label: 'subtitle-1')
+) {
+    $label: map-get($categories, 'label');
+
+    %switch-label {
+        @include igx-type-style($type-scale, $label) {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+}

@@ -5,9 +5,6 @@
     </igx-step>
 </igx-stepper>
 <button (click)="stepperNg.navigateTo(2)">Navigate to 2 Step</button> -->
-
-<hr>
-
 <igx-stepper #stepper (activeStepChanged)="activeStepChanged($event)" (activeStepChanging)="activeStepChanging($event)" [orientation]="'Horizontal'">
     <igx-step [active]="true" #step>
         <igx-icon igxStepIcon>done</igx-icon>
@@ -46,8 +43,11 @@
         </div>
     </igx-step>
 </igx-stepper>
-<br>
-<!-- <button (click)="stepper.navigateTo(1)">Navigate to 2 Step</button> -->
-<!-- <igx-buttongroup [values]="stepTypes" (selected)="toggleStepTypes($event)"></igx-buttongroup> -->
-<!-- <igx-buttongroup [values]="labelPositions" (selected)="toggleLabelPos($event)"></igx-buttongroup> -->
-<button (click)="changeOrientation()">Change Orientation</button>
+
+<div class="sample-actions">
+    <!-- <button (click)="stepper.navigateTo(1)">Navigate to 2 Step</button> -->
+    <!-- <igx-buttongroup [values]="stepTypes" (selected)="toggleStepTypes($event)"></igx-buttongroup> -->
+    <!-- <igx-buttongroup [values]="labelPositions" (selected)="toggleLabelPos($event)"></igx-buttongroup> -->
+    <button igxButton="outlined" (click)="changeOrientation()">Change Orientation</button>
+</div>
+

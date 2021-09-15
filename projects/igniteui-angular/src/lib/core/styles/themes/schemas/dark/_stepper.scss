@@ -1,0 +1,37 @@
+@import '../light/stepper';
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark stepper schema.
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @requires $_light-stepper
+/// @see $default-palette
+$_dark-stepper: extend($_light-stepper);
+
+/// Generates a dark fluent stepper schema
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @requires $_fluent-stepper
+/// @requires $_base-dark-stepper
+$_dark-fluent-stepper: extend($_fluent-stepper);
+
+/// Generates a dark bootstrap stepper schema.
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @requires $_bootstrap-stepper
+/// @requires $_base-dark-stepper
+$_dark-bootstrap-stepper: extend($_bootstrap-stepper);
+
+/// Generates a dark indigo stepper schema.
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @requires $_indigo-stepper
+$_dark-indigo-stepper: extend($_indigo-stepper);

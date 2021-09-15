@@ -5,13 +5,13 @@
 </ng-template>
 
 <ng-template #contentTemplate>
-    <div class="igx-step__content" [ngClass]="active ? 'igx-step__content--active' : ''">
-        <ng-content></ng-content>
+    <div class="igx-stepper__body-content" [ngClass]="active ? 'igx-stepper__body-content--active' : ''">
+        <ng-content *ngIf="active || collapsing && !isHorizontal"></ng-content>
     </div>
 </ng-template>
 
 
-<div class="igx-step__header" [ngClass]="getStepHeaderClasses()" (click)="onPointerDown($event)">
+<div class="igx-stepper__header-step-content" [ngClass]="getStepHeaderClasses()" (click)="onPointerDown($event)">
     <ng-content select='[igxStepIcon]'></ng-content>
     <ng-container *ngTemplateOutlet="defaultLabel"></ng-container>
 </div>

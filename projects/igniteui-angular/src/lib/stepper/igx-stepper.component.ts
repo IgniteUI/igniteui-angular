@@ -25,7 +25,6 @@ import { IgxStepperService } from './stepper.service';
 @Component({
     selector: 'igx-stepper',
     templateUrl: 'igx-stepper.component.html',
-    styleUrls: ['igx-stepper.component.scss'],
     providers: [
         IgxStepperService,
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },

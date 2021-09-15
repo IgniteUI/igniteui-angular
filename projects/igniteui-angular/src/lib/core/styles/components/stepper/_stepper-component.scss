@@ -1,0 +1,77 @@
+////
+/// @group components
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-stepper) {
+    $block: bem--selector-to-string(&);
+    @include register-component(igx-stepper);
+
+    @extend %stepper-display !optional;
+
+    @include e(header) {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+
+    @include e(body) {
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        position: relative
+    }
+
+    @include e(body-contnet) {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: -1;
+    }
+
+    @include e(body-contnet, $m: active) {
+        z-index: 1;
+        position: relative;
+    }
+}
+
+// TODO THIS SHOULD GO ON THE HOST ELEMENT
+.igx-stepper__header--horizontal {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+// content
+.igx-stepper__header-step-content {
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    padding: 16px;
+}
+
+.igx-stepper__header-step-content:hover {
+    background-color: rgba($color: #ccc, $alpha: .5);
+}
+
+.igx-stepper__header-step-content--active {
+    pointer-events: none;
+    background-color: rgba($color: green, $alpha: .5);
+}
+
+.igx-stepper__header-step-content--disabled {
+    pointer-events: none;
+    opacity: .5;
+}
+
+.igx-stepper__header-step-content--skip {
+    opacity: .5;
+}

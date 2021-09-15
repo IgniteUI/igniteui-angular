@@ -1,0 +1,51 @@
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light stepper schema.
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @see $default-palette
+$_light-stepper: extend(
+    (
+        variant: 'material',
+    )
+);
+
+/// Generates a fluent stepper schema.
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @requires {Map} $_light-stepper
+$_fluent-stepper: extend(
+    $_light-stepper
+    (
+        variant: 'fluent',
+    )
+);
+
+/// Generates a bootstrap stepper schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-stepper
+$_bootstrap-stepper: extend(
+    $_light-stepper,
+    (
+        variant: 'bootstrap',
+    )
+);
+
+/// Generates an indigo stepper schema.
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @requires $_light-stepper
+$_indigo-stepper: extend(
+    $_light-stepper,
+    (
+        variant: 'indigo-design',
+    )
+);
