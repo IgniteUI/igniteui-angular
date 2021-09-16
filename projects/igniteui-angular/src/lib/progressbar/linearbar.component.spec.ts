@@ -491,7 +491,6 @@ describe('IgLinearBar', () => {
             tick(tickTime);
             fix.detectChanges();
             expect(valueInPercent).toBe(50);
-        
             maxVal = 200;
             bar.max = maxVal;
             valueInPercent = Common.calcPercentage(val, bar.max);
