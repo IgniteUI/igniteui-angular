@@ -71,7 +71,7 @@ export abstract class BaseProgressDirective {
      * <igx-linear-bar [indeterminate]="true"></igx-linear-bar>
      * ```
      */
-    @HostBinding('class.igx-linear-bar--indeterminate')
+    @Input()
     public indeterminate = false;
 
     protected _initValue = 0;
@@ -205,6 +205,17 @@ export abstract class BaseProgressDirective {
         return toPercent(this._value, this._max);
     }
 
+    /**
+     * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent;
+     * public getValue(event) {
+     *     let value = this.progressBar.value;
+     *     alert(value);
+     * }
+     * ```
+     */
     @HostBinding('attr.aria-valuenow')
     @Input()
     public get value(): number {
@@ -356,13 +367,14 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     public striped = false;
 
     /**
+     * @hidden
      * Set `IgxLinearProgressBarComponent` to have indeterminate. By default it is set to false.
      * ```html
      * <igx-linear-bar [indeterminate]="true"></igx-linear-bar>
      * ```
      */
     @HostBinding('class.igx-linear-bar--indeterminate')
-    public get isIndeterminate(): boolean {
+    get isIndeterminate(): boolean {
         return this.indeterminate;
     }
 
@@ -502,13 +514,14 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     public id = `igx-circular-bar-${NEXT_CIRCULAR_ID++}`;
 
     /**
+     * @hidden
      * An @Input property that sets the value of the `indeterminate` attribute. If not provided it will be automatically set to false.
      * ```html
      * <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
      * ```
      */
     @HostBinding('class.igx-circular-bar--indeterminate')
-    public get isIndeterminate(): boolean {
+    get isIndeterminate(): boolean {
         return this.indeterminate;
     }
 

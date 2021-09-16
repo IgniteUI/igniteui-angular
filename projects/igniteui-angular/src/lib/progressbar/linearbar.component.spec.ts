@@ -476,7 +476,7 @@ describe('IgLinearBar', () => {
             expect(bar.classList.contains(INDETERMINATE_CLASS)).toEqual(true);
         });
 
-        fit('Check if current value in % changes dynamically when max is increased', fakeAsync(() => {
+        it('Check if current value in % changes dynamically when max is increased', fakeAsync(() => {
             const fix = TestBed.createComponent(InitLinearProgressBarComponent);
             fix.detectChanges();
 
