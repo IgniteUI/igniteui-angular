@@ -198,3 +198,14 @@ export * from './i18n/TR/carousel-resources';
 export * from './i18n/TR/list-resources';
 export * from './i18n/TR/tree-resources';
 export * from './i18n/TR/resources';
+// Norwegian (NB)
+export * from './i18n/NB/calendar-resources';
+export * from './i18n/NB/grid-resources';
+export * from './i18n/NB/paginator-resources';
+export * from './i18n/NB/time-picker-resources';
+export * from './i18n/NB/date-picker-resources';
+export * from './i18n/NB/date-range-picker-resources';
+export * from './i18n/NB/carousel-resources';
+export * from './i18n/NB/list-resources';
+export * from './i18n/NB/tree-resources';
+export * from './i18n/NB/resources';
