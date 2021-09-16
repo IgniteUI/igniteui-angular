@@ -7,8 +7,16 @@ import { GridType } from './grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from './enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-import { IgxSummaryOperand, IgxSummaryResult } from '../grid/public_api';
 import { IgxAddRow } from './crud.service';
+import { IgxGridRow } from '../grid-public-row';
+import { IgxTreeGridRowComponent } from '../tree-grid/tree-grid-row.component';
+import { IgxGridRowComponent } from '../grid/grid-row.component';
+import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
+import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
+
+interface CSSProp {
+    [prop: string]: any;
+}
 
 /**
  * @hidden
@@ -19,7 +27,7 @@ import { IgxAddRow } from './crud.service';
 })
 export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
-    public transform(cssClasses: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): string {
+    public transform(cssClasses: CSSProp, _: any, data: any, field: string, index: number, __: number): string {
         if (!cssClasses) {
             return '';
         }
@@ -48,8 +56,7 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 })
 export class IgxGridCellStylesPipe implements PipeTransform {
 
-    public transform(styles: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number):
-     { [prop: string]: any } {
+    public transform(styles: CSSProp, _: any, data: any, field: string, index: number, __: number): CSSProp {
         const css = {};
         if (!styles) {
             return css;
@@ -60,6 +67,87 @@ export class IgxGridCellStylesPipe implements PipeTransform {
             css[prop] = typeof res === 'function' ? res(data, field, resolveNestedPath(data, field), index) : res;
         }
 
+        return css;
+    }
+}
+
+type _RowType = IgxGridRowComponent | IgxTreeGridRowComponent | IgxHierarchicalRowComponent;
+
+/**
+ * @hidden
+ * @internal
+ */
+@Pipe({ name: 'igxGridRowClasses' })
+export class IgxGridRowClassesPipe implements PipeTransform {
+    public row: IgxGridRow;
+
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
+        this.row = new IgxGridRow(this.gridAPI.grid as any, -1, {});
+    }
+
+    public transform(
+        cssClasses: CSSProp,
+        row: _RowType,
+        editMode: boolean,
+        selected: boolean,
+        dirty: boolean,
+        deleted: boolean,
+        dragging: boolean,
+        index: number,
+        mrl: boolean,
+        filteredOut: boolean,
+        _: number
+    ) {
+        const result = new Set(['igx-grid__tr', index % 2 ? row.grid.evenRowCSS : row.grid.oddRowCSS]);
+        const mapping = [
+            [selected, 'igx-grid__tr--selected'],
+            [editMode, 'igx-grid__tr--edit'],
+            [dirty, 'igx-grid__tr--edited'],
+            [deleted, 'igx-grid__tr--deleted'],
+            [dragging, 'igx-grid__tr--drag'],
+            [mrl, 'igx-grid__tr--mrl'],
+            // Tree grid only
+            [filteredOut, 'igx-grid__tr--filtered']
+        ];
+
+        for (const [state, _class] of mapping) {
+            if (state) {
+                result.add(_class as string);
+            }
+        }
+
+        for (const cssClass of Object.keys(cssClasses ?? {})) {
+            const callbackOrValue = cssClasses[cssClass];
+            this.row.index = index;
+            (this.row as any)._data = row.rowData;
+            const apply = typeof callbackOrValue === 'function' ? callbackOrValue(this.row) : callbackOrValue;
+            if (apply) {
+                result.add(cssClass);
+            }
+        }
+        return result;
+    }
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+@Pipe({ name: 'igxGridRowStyles' })
+export class IgxGridRowStylesPipe implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+
+    public transform(styles: CSSProp, rowData: any, index: number, __: number): CSSProp {
+        const css = {};
+        if (!styles) {
+            return css;
+        }
+        for (const prop of Object.keys(styles)) {
+            const cb = styles[prop];
+            const row = new IgxGridRow((this.gridAPI.grid as any), index, rowData);
+            css[prop] = typeof cb === 'function' ? cb(row) : cb;
+        }
         return css;
     }
 }
@@ -341,7 +429,7 @@ export class IgxGridAddRowPipe implements PipeTransform {
 @Pipe({ name: 'igxHeaderGroupWidth' })
 export class IgxHeaderGroupWidthPipe implements PipeTransform {
 
-    public transform(width: any, minWidth: any, hasLayout: boolean ) {
+    public transform(width: any, minWidth: any, hasLayout: boolean) {
         return hasLayout ? '' : `${Math.max(parseFloat(width), minWidth)}px`;
     }
 }

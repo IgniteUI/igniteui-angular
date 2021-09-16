@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, IPinningConfig, RowPinningPosition, RowType } from 'igniteui-angular';
 import { SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
@@ -22,6 +22,8 @@ export class GridCellStylingSampleComponent implements OnInit {
         'text-shadow': '1px 1px 2px rgba(25,25,25,.25)',
         animation: '0.25s ease-in-out forwards alternate popin'
     };
+    public selectedRowId = '';
+    public pinningConfig: IPinningConfig = { rows: RowPinningPosition.Top };
 
     public cellClasses1 = {
         test1: this.condition1,
@@ -33,6 +35,14 @@ export class GridCellStylingSampleComponent implements OnInit {
         test1: this.condition4,
         test2: this.condition5,
         test3: this.condition6
+    };
+
+    public selectedRowCondition = (row: RowType) => row.cells.some(s => s.active);
+
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    public rowClasses = {
+        pinnedClass: this.rowCondition,
+        selected: this.selectedRowCondition
     };
 
     public condition(rowData: any): boolean {
@@ -55,6 +65,10 @@ export class GridCellStylingSampleComponent implements OnInit {
     }
     public condition6(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] > 6;
+    }
+
+    public rowCondition(row: RowType) {
+        return row.pinned;
     }
 
     public ngOnInit(): void {
