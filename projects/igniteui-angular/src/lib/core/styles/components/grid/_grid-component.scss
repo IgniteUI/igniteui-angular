@@ -184,6 +184,10 @@
         @extend %igx-grid__tr--inner !optional;
     }
 
+    @include e(tr, $m: header) {
+        @extend %igx-grid__tr--header !optional;
+    }
+
     @include e(tr, $m: group) {
         @extend %grid-row--group !optional;
     }

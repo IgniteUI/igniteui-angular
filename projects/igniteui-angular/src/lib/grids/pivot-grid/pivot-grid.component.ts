@@ -21,7 +21,7 @@ import { IPivotConfiguration, IPivotDimension } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 
 let NEXT_ID = 0;
-const MINIMUM_COLUMN_WIDTH = 136;
+const MINIMUM_COLUMN_WIDTH = 200;
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
