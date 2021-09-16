@@ -35,9 +35,13 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [{
-            member: 'Country',
+            member: () => 'All',
             enabled: true,
-            childLevels:[]
+            childLevels: [{
+                member: 'Country',
+                enabled: true,
+                childLevels:[]
+            }]
         }],
         rows: [{
             member: () => 'All',
@@ -79,15 +83,15 @@ export class PivotGridSampleComponent {
     ];
 
     public dataHierarchical =  [
-        { ProductCategory: 'All', Bulgaria: 774, USA: 829, Uruguay: 524, level: 0, records: [
+        { ProductCategory: 'All', All: 1000, Bulgaria: 774, USA: 829, Uruguay: 524, level: 0, records: [
             { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
             { ProductCategory: 'Bikes', Uruguay: 68, level: 1  },
             { ProductCategory: 'Accessories', USA: 293, level: 1  },
             { ProductCategory: 'Components', USA: 240, level: 1  }
         ] },
-        { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
-        { ProductCategory: 'Bikes', Uruguay: 68, level: 1  },
-        { ProductCategory: 'Accessories', USA: 293, level: 1  },
-        { ProductCategory: 'Components', USA: 240, level: 1  }
+        { ProductCategory: 'Clothing', All: 1000, Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
+        { ProductCategory: 'Bikes', All: 1000, Uruguay: 68, level: 1  },
+        { ProductCategory: 'Accessories', All: 1000, USA: 293, level: 1  },
+        { ProductCategory: 'Components', All: 1000, USA: 240, level: 1  }
     ];
 }

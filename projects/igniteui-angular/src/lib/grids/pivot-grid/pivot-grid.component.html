@@ -110,3 +110,13 @@
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
+
+<ng-template #headerTemplate let-column>
+    <div class="igx-grid__tr--header">
+        <igx-icon [attr.draggable]="false"
+                  (click)="toggleColumn(column)"
+                  style='cursor: pointer;'>
+                  {{columnGroupStates.get(column) ? 'expand_more' : 'expand_less'}}</igx-icon>
+        {{column.header}}
+    </div>
+</ng-template>
