@@ -166,6 +166,21 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
     }
 
     /**
+     * Opens or closes the snackbar, depending on its current state.
+     *
+     * ```typescript
+     * this.snackbar.toggle();
+     * ```
+     */
+     public toggle() {
+        if (this.collapsed || this.isClosing) {
+            this.open();
+        } else {
+            this.close();
+        }
+    }
+
+    /**
      * @hidden
      */
     public triggerAction(): void {

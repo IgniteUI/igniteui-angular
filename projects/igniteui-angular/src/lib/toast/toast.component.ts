@@ -19,7 +19,6 @@ import {
     HorizontalAlignment,
     VerticalAlignment,
     GlobalPositionStrategy,
-    OverlaySettings,
     PositionSettings
 } from '../services/public_api';
 import { mkenum } from '../core/utils';
@@ -150,7 +149,7 @@ export class IgxToastComponent extends IgxNotificationsDirective
      * this.toast.open();
      * ```
      */
-    public open(message?: string | OverlaySettings) {
+    public open(message?: string) {
         if (message !== undefined) {
             this.textMessage = message;
         }
@@ -167,6 +166,21 @@ export class IgxToastComponent extends IgxNotificationsDirective
 
         this.strategy = new GlobalPositionStrategy(toastSettings);
         super.open();
+    }
+
+    /**
+     * Opens or closes the toast, depending on its current state.
+     *
+     * ```typescript
+     * this.toast.toggle();
+     * ```
+     */
+     public toggle() {
+        if (this.collapsed || this.isClosing) {
+            this.open();
+        } else {
+            this.close();
+        }
     }
 
     /**
