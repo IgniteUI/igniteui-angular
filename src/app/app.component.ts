@@ -529,6 +529,11 @@ export class AppComponent implements OnInit {
             link: '/grid-nested-props',
             icon: 'view_column',
             name: 'Grid nested properties data source'
+        },
+        {
+            link: '/pivot',
+            icon: 'view_column',
+            name: 'Pivot Grid'
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 

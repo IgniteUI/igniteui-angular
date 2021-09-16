@@ -95,6 +95,7 @@ import { GridLocalizationSampleComponent } from './grid-localization/grid-locali
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
 import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
+import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 
 const appRoutes = [
     {
@@ -446,6 +447,10 @@ const appRoutes = [
     {
         path: 'pagination',
         Comment: PaginationSampleComponent
+    },
+    {
+        path: 'pivot',
+        component: PivotGridSampleComponent
     }
 ];
 

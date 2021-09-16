@@ -10,7 +10,8 @@ import {
     IgxIconService, DisplayDensityToken, DisplayDensity,
     IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService, IgxButtonGroupModule,
     IgxListModule,
-    IgxTextSelectionModule
+    IgxTextSelectionModule,
+    IgxPivotGridModule
 } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
@@ -153,6 +154,7 @@ import { GridLocalizationSampleComponent } from './grid-localization/grid-locali
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
 import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
+import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -286,7 +288,8 @@ const components = [
     GridNestedPropsSampleComponent,
     IgxColumnGroupingDirective,
     GridColumnTypesSampleComponent,
-    GridLocalizationSampleComponent
+    GridLocalizationSampleComponent,
+    PivotGridSampleComponent
 ];
 
 @NgModule({
@@ -317,7 +320,8 @@ const components = [
         routing,
         HammerModule,
         IgxDateTimeEditorModule,
-        IgxButtonModule
+        IgxButtonModule,
+        IgxPivotGridModule
     ],
     providers: [
         LocalService,

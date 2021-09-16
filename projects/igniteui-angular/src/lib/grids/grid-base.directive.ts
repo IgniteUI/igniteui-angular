@@ -55,7 +55,7 @@ import {
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { ISummaryExpression } from './summaries/grid-summary';
+import { IgxSummaryOperand, ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxRowDirective } from './row.directive';
@@ -6081,6 +6081,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index - 1, this.dataView));
     }
 
+    /**
+     * @hidden
+     */
+    public preventHeaderScroll(args) {
+        if (args.target.scrollLeft !== 0) {
+            (this.navigation as any).forOfDir().getScroll().scrollLeft = args.target.scrollLeft;
+            args.target.scrollLeft = 0;
+        }
+    }
+
     protected beginAddRowForIndex(index: number, asChild: boolean = false) {
         const row: IgxRowDirective<IgxGridBaseDirective & GridType> = index == null ?
             null : this.rowList.find(r => r.index === index);
@@ -6089,6 +6099,51 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             console.warn('No row with the specified PK or index was found.');
         }
+    }
+
+    protected _createColumn(col) {
+        let ref;
+        if (col instanceof IgxColumnGroupComponent) {
+            ref = this._createColGroupComponent(col);
+        } else {
+            ref = this._createColComponent(col);
+        }
+        return ref;
+    }
+
+    protected _createColGroupComponent(col: IgxColumnGroupComponent) {
+        const factoryGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
+        const ref = this.viewRef.createComponent(factoryGroup, null, this.viewRef.injector);
+        ref.changeDetectorRef.detectChanges();
+        factoryGroup.inputs.forEach((input) => {
+            const propName = input.propName;
+            ref.instance[propName] = col[propName];
+        });
+        if (col.children.length > 0) {
+            const newChildren = [];
+            col.children.forEach(child => {
+                const newCol = this._createColumn(child).instance;
+                newCol.parent = ref.instance;
+                newChildren.push(newCol);
+            });
+            ref.instance.children.reset(newChildren);
+            ref.instance.children.notifyOnChanges();
+        }
+        return ref;
+    }
+
+    protected _createColComponent(col) {
+        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
+        const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
+        factoryColumn.inputs.forEach((input) => {
+            const propName = input.propName;
+            if (!(col[propName] instanceof IgxSummaryOperand)) {
+                ref.instance[propName] = col[propName];
+            } else {
+                ref.instance[propName] = col[propName].constructor;
+            }
+        });
+        return ref;
     }
 
     protected switchTransactionService(val: boolean) {
