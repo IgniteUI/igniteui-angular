@@ -10,7 +10,7 @@ import {
     Output
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { slideInBottom, slideOutBottom } from '../animations/main';
+import { fadeIn, fadeOut } from '../animations/main';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
     PositionSettings, VerticalAlignment } from '../services/public_api';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
@@ -142,9 +142,9 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
     private _positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Center,
         verticalDirection: VerticalAlignment.Bottom,
-        openAnimation: useAnimation(slideInBottom, { params: { duration: '.35s', easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+        openAnimation: useAnimation(fadeIn, { params: { duration: '.35s', easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
             fromPosition: 'translateY(100%)', toPosition: 'translateY(0)'} }),
-        closeAnimation: useAnimation(slideOutBottom, {  params: { duration: '.2s', easing: 'cubic-bezier(0.4, 0.0, 1, 1)',
+        closeAnimation: useAnimation(fadeOut, {  params: { duration: '.2s', easing: 'cubic-bezier(0.4, 0.0, 1, 1)',
             fromPosition: 'translateY(0)', toPosition: 'translateY(100%)'} }),
     };
 
