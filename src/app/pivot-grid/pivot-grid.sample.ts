@@ -33,6 +33,33 @@ export class PivotGridSampleComponent {
         filters: null
     };
 
+    public pivotConfigHierarchy: IPivotConfiguration = {
+        columns: [{
+            member: 'Country',
+            enabled: true,
+            childLevels:[]
+        }],
+        rows: [{
+            member: () => 'All',
+            enabled: true,
+            childLevels:[
+                {
+                    member: (data) => data.ProductCategory,
+                    enabled: true,
+                    childLevels:[]
+                }
+            ]
+        }],
+        values: [
+            {
+                member: 'UnitsSold',
+                aggregate: IgxNumberSummaryOperand.sum,
+                enabled: true
+            }
+        ],
+        filters: null
+    };
+
     public origData = [
         { ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley', Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282 },
         { ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa', Country: 'USA', Date: '01/05/2019', UnitsSold: 296 },
@@ -52,10 +79,15 @@ export class PivotGridSampleComponent {
     ];
 
     public dataHierarchical =  [
-        { ProductCategory: 'All', Bulgaria: 774, USA: 829, Uruguay: 524 },
-        { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456 },
-        { ProductCategory: 'Bikes', Uruguay: 68 },
-        { ProductCategory: 'Accessories', USA: 293 },
-        { ProductCategory: 'Components', USA: 240 }
+        { ProductCategory: 'All', Bulgaria: 774, USA: 829, Uruguay: 524, level: 0, records: [
+            { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
+            { ProductCategory: 'Bikes', Uruguay: 68, level: 1  },
+            { ProductCategory: 'Accessories', USA: 293, level: 1  },
+            { ProductCategory: 'Components', USA: 240, level: 1  }
+        ] },
+        { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
+        { ProductCategory: 'Bikes', Uruguay: 68, level: 1  },
+        { ProductCategory: 'Accessories', USA: 293, level: 1  },
+        { ProductCategory: 'Components', USA: 240, level: 1  }
     ];
 }

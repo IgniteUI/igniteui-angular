@@ -95,3 +95,15 @@
             [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
         </igx-grid-cell>
     </ng-template>
+
+
+    <ng-template #headerTemplate let-column>
+        <div class="header-group-template__container">
+            <igx-icon [attr.draggable]="false"
+                      (click)="grid.toggleRow(rowID)"
+                      style='cursor: pointer;'
+                      class="header-group-template__icon">
+                      {{grid.expansionStates.get(rowID) ? 'expand_more' : 'expand_less'}}</igx-icon>
+            {{column.header}}
+        </div>
+    </ng-template>
