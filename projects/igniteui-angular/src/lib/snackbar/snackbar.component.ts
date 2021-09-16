@@ -12,7 +12,7 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { slideInBottom, slideOutBottom } from '../animations/main';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
-    OverlaySettings, PositionSettings, VerticalAlignment } from '../services/public_api';
+    PositionSettings, VerticalAlignment } from '../services/public_api';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
 import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
@@ -154,7 +154,7 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      * this.snackbar.open();
      * ```
      */
-    public open(message?: string | OverlaySettings) {
+    public open(message?: string) {
         if (message !== undefined) {
             this.textMessage = message;
         }
