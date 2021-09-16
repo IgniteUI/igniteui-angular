@@ -31,6 +31,35 @@
                 >
                 </igx-column>
             </igx-grid>
+            <h3>Grid sample with rowClasses property applied based on row ID</h3>
+            <igx-grid style="margin-bottom: 10vh;"
+                [allowFiltering]="true"
+                filterMode="excelStyleFilter"
+                #grid1 [data]="data"
+                primaryKey="ID"
+                width="80%"
+                height="600px"
+                [rowClasses]="rowClasses"
+                [pinning]='pinningConfig'
+                (cellClick)="selectedRowId = $event.cell.row.key"
+            >
+                <igx-column *ngFor="let c of columns"
+                    [field]="c.field"
+                    [header]="c.field"
+                    [movable]="true"
+                    [groupable]="true"
+                    [resizable]="true"
+                    [sortable]="true"
+                    [editable]="true"
+                    [cellClasses]="c.cellClasses"
+                    [cellStyles]="c.cellStyles"
+                >
+                </igx-column>
+                <igx-action-strip #actionStrip1>
+                    <igx-grid-pinning-actions></igx-grid-pinning-actions>
+                    <igx-grid-editing-actions></igx-grid-editing-actions>
+                </igx-action-strip>
+            </igx-grid>
             <igx-tree-grid
                 [allowFiltering]="true"
                 filterMode="excelStyleFilter"

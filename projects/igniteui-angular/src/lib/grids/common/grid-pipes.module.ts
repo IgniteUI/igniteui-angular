@@ -20,6 +20,8 @@ import {
     IgxSummaryFormatterPipe,
     IgxGridAddRowPipe,
     IgxHeaderGroupWidthPipe,
+    IgxGridRowClassesPipe,
+    IgxGridRowStylesPipe,
     IgxHeaderGroupStylePipe
 } from './pipes';
 export * from './pipes';
@@ -45,6 +47,8 @@ export * from './pipes';
         IgxColumnFormatterPipe,
         IgxSummaryFormatterPipe,
         IgxHeaderGroupWidthPipe,
+        IgxGridRowClassesPipe,
+        IgxGridRowStylesPipe,
         IgxHeaderGroupStylePipe
     ],
     exports: [
@@ -67,6 +71,8 @@ export * from './pipes';
         IgxColumnFormatterPipe,
         IgxSummaryFormatterPipe,
         IgxHeaderGroupWidthPipe,
+        IgxGridRowClassesPipe,
+        IgxGridRowStylesPipe,
         IgxHeaderGroupStylePipe
     ],
     imports: [
