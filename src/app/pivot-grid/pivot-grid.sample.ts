@@ -50,4 +50,12 @@ export class PivotGridSampleComponent {
         { ProductCategory: 'Accessories', USA: 293 },
         { ProductCategory: 'Components', USA: 240 }
     ];
+
+    public dataHierarchical =  [
+        { ProductCategory: 'All', Bulgaria: 774, USA: 829, Uruguay: 524 },
+        { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456 },
+        { ProductCategory: 'Bikes', Uruguay: 68 },
+        { ProductCategory: 'Accessories', USA: 293 },
+        { ProductCategory: 'Components', USA: 240 }
+    ];
 }

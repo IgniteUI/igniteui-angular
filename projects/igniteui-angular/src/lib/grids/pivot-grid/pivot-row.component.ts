@@ -13,6 +13,8 @@ import { IgxRowDirective } from '../row.directive';
 import { GridBaseAPIService, IgxColumnComponent } from '../hierarchical-grid/public_api';
 import { IgxGridSelectionService } from '../selection/selection.service';
 
+
+const MINIMUM_COLUMN_WIDTH = 136;
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row',
@@ -43,14 +45,6 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         return this.index;
     }
 
-    public get pivotRowWidths() {
-        let width = 0;
-        this.rowDimension.forEach(col => {
-            width += col.calcWidth;
-        });
-        return width;
-    }
-
     public ngOnInit() {
         // generate rowDimension
         const rowDimConfig = this.grid.pivotConfiguration.rows;
@@ -70,6 +64,8 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
         ref.instance.field = field;
+        ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
+        (ref as any).instance._vIndex = this.grid.columns.length + this.index;
         return ref.instance;
     }
 }
