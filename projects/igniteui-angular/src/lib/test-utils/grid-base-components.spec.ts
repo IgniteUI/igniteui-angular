@@ -119,6 +119,22 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
 }
 
 @Component({
+    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true" [rowClasses]="rowClasses"`,
+        '', '')
+})
+export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
+
+    public data = SampleTestData.contactInfoData();
+    public evenRowCondition = (row) => row.index % 2 === 0;
+    public oddRowCondition = (row) => row.index % 2 !== 0;
+
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    public rowClasses = {
+        eventRow: this.evenRowCondition,
+        oddRow: this.oddRowCondition
+    };
+}
+@Component({
     template: `<div>
     <igx-column-actions igxColumnHiding [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable,
