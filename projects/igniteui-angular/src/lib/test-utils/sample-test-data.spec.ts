@@ -141,9 +141,9 @@ export class SampleTestData {
 
     /* Data fields: ID: number, Name: string; 3 items. */
     public static personIDNameData = () => ([
-        { ID: 1, Name: 'Johny' },
-        { ID: 2, Name: 'Sally' },
-        { ID: 3, Name: 'Tim' }
+        { ID: 1, IsDev: true, Name: 'Johny' },
+        { ID: 2, IsDev: true, Name: 'Sally' },
+        { ID: 3, IsDev: false, Name: 'Tim' },
     ]);
 
     /* Data fields: FirstName: string, LastName: string, age:number; 3 items. */
