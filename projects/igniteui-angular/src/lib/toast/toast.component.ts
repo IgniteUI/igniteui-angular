@@ -24,6 +24,8 @@ import {
 import { mkenum } from '../core/utils';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
 import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
+import { useAnimation } from '@angular/animations';
+import { fadeIn, fadeOut } from '../animations/fade';
 
 let NEXT_ID = 0;
 
@@ -164,6 +166,8 @@ export class IgxToastComponent extends IgxNotificationsDirective
                 : this.position === 'middle'
                     ? VerticalAlignment.Middle
                     : VerticalAlignment.Top,
+        openAnimation: useAnimation(fadeIn),
+        closeAnimation: useAnimation(fadeOut),
     };
 
     /**
