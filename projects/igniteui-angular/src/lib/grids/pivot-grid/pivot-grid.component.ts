@@ -243,7 +243,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         let columns = [];
         fields.forEach((value, key) => {
-            if (value.children == null) {
+            if (value.children == null || value.children.size === 0) {
                 const ref = factoryColumn.create(this.viewRef.injector);
                 ref.instance.header = key;
                 ref.instance.field = key;
