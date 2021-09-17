@@ -202,7 +202,7 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public get valueInPercent(): number {
-        return toPercent(this._value, this._max);
+        return Math.round(toPercent(this._value, this._max));
     }
 
     /**
@@ -644,7 +644,7 @@ export const toValue = (value: number, max: number) => max * value / 100;
  * @hidden
  */
 @NgModule({
-    declarations: [
+    declarations: [ 
         IgxLinearProgressBarComponent,
         IgxCircularProgressBarComponent,
         IgxProcessBarTextTemplateDirective,
