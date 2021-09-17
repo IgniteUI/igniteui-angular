@@ -64,7 +64,7 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      * @hidden
      * @internal
      */
-    public textMessage: string | OverlaySettings = '';
+    public textMessage = '';
 
     /**
      * @hidden
