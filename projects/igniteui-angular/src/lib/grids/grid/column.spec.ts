@@ -134,6 +134,7 @@ describe('IgxGrid - Column properties #grid', () => {
             const cell = grid.gridAPI.get_cell_by_index(i, 'ID');
             expect(cell.nativeElement.textContent).toMatch(formatter(cell.value));
 
+<<<<<<< HEAD
             const cellBool = grid.gridAPI.get_cell_by_index(i, 'IsEmployed');
             expect(cellBool.nativeElement.textContent).toMatch(boolFormatter(cellBool.value));
         }
@@ -172,11 +173,19 @@ describe('IgxGrid - Column properties #grid', () => {
         grid.moveColumn(grid.columnList.first, grid.columnList.last);
         fix.detectChanges();
 
+<<<<<<< HEAD
         expect(grid.columnList.first.field).toMatch('IsEmployed');
         expect(grid.columnList.last.field).toMatch('ID');
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.textContent).toMatch('IsEmployed');
+=======
+        expect(grid.columnList.first.field).toMatch('IsDev');
+        expect(grid.columnList.last.field).toMatch('ID');
+
+        headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].nativeElement.textContent).toMatch('IsDev');
+>>>>>>> 43949224fa (fix(grid): use formattter function for boolean columns #8978)
         expect(headers[1].nativeElement.textContent).toMatch('Name');
     });
 

@@ -141,6 +141,7 @@ export class SampleTestData {
 
     /* Data fields: ID: number, Name: string; 3 items. */
     public static personIDNameData = () => ([
+<<<<<<< HEAD
         { ID: 1, IsEmployed: true, Name: 'Johny' },
         { ID: 2, IsEmployed: true, Name: 'Sally' },
         { ID: 3, IsEmployed: false, Name: 'Tim' },
