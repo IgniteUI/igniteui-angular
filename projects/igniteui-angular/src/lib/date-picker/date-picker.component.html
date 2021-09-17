@@ -6,7 +6,7 @@
     </igx-prefix>
 
     <input class="igx-date-picker__input-date" [displayValuePipe]="this.formatter ? displayValue : null" igxInput
-        [required]="this.required" [igxDateTimeEditor]="this.inputFormat" [displayFormat]="this.displayFormat"
+        [igxDateTimeEditor]="this.inputFormat" [displayFormat]="this.displayFormat"
         [minValue]="this.minValue" [maxValue]="this.maxValue" [spinDelta]="this.spinDelta" [spinLoop]="this.spinLoop" 
         [disabled]="this.disabled" [placeholder]="this.placeholder" [readonly]="!this.isDropdown || this.readOnly"
         [igxTextSelection]="this.isDropdown && !this.readOnly" [locale]="this.locale" [attr.aria-expanded]="!this.collapsed"

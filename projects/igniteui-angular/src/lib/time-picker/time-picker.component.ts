@@ -418,8 +418,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return this._dateMaxValue;
     }
 
-    /** @hidden @internal */
-    public get required(): boolean {
+    private get required(): boolean {
         if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
             // Run the validation with empty object to check if required is enabled.
             const error = this._ngControl.control.validator({} as AbstractControl);

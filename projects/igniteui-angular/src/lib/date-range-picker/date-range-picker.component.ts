@@ -392,8 +392,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return this.getComponentDensityClass('igx-date-range-picker__label');
     }
 
-    /** @hidden @internal */
-    public get required(): boolean {
+    private get required(): boolean {
         if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
             const error = this._ngControl.control.validator({} as AbstractControl);
             return (error && error.required) ? true : false;
@@ -401,7 +400,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
         return false;
     }
-
 
     private get calendar(): IgxCalendarComponent {
         return this._calendar;
