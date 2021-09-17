@@ -218,7 +218,11 @@ export class ColumnDefinitions {
     public static idNameFormatter = `
         <igx-column field="ID" [formatter]="multiplier"></igx-column>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <igx-column field="IsEmployed" [dataType]="'boolean'"></igx-column>
+=======
+        <igx-column field="IsDev" [dataType]="'boolean'"></igx-column>
+>>>>>>> 43949224fa (fix(grid): use formattter function for boolean columns #8978)
         <igx-column field="Name"></igx-column>
     `;
 
