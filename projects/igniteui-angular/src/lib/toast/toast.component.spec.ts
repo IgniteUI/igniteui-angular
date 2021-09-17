@@ -11,6 +11,8 @@ import {
     IgxToastModule,
 } from './toast.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { useAnimation } from '@angular/animations';
+import { HorizontalAlignment, PositionSettings, slideInLeft, slideInRight, VerticalAlignment } from 'igniteui-angular';
 
 describe('IgxToast', () => {
     configureTestSuite();
@@ -42,6 +44,28 @@ describe('IgxToast', () => {
 
         expect(toast.id).toBe('customToast');
         expect(domToast.id).toBe('customToast');
+    });
+
+    it('should be able to set custom positionSettings', () => {
+        const defaultPositionSettings = toast.positionSettings;
+        expect(defaultPositionSettings.horizontalDirection).toBe(-0.5);
+        expect(defaultPositionSettings.verticalDirection).toBe(0);
+        const newPositionSettings: PositionSettings = {
+            openAnimation: useAnimation(slideInLeft, { params: { duration: '1000ms' } }),
+            closeAnimation: useAnimation(slideInRight, { params: { duration: '1000ms' } }),
+            horizontalDirection: HorizontalAlignment.Center,
+            verticalDirection: VerticalAlignment.Middle,
+            horizontalStartPoint: HorizontalAlignment.Center,
+            verticalStartPoint: VerticalAlignment.Middle,
+            minSize: { height: 100, width: 100 }
+        };
+        toast.positionSettings = newPositionSettings;
+        fixture.detectChanges();
+        const customPositionSettings = toast.positionSettings;
+        expect(customPositionSettings.horizontalDirection).toBe(-0.5);
+        expect(customPositionSettings.verticalDirection).toBe(-0.5);
+        expect(customPositionSettings.openAnimation.options.params).toEqual({duration: '1000ms'});
+        expect(customPositionSettings.minSize).toEqual({height: 100, width: 100});
     });
 });
 

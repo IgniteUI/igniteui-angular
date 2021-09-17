@@ -1,7 +1,8 @@
 <div *ngIf="esf.column"
     class="igx-excel-filter__actions-hide"
     tabindex="0"
-    (click)="esf.onHideToggle()">
+    (click)="esf.onHideToggle()"
+    role="menuitem">
     <span>{{ esf.column.hidden ? esf.grid.resourceStrings.igx_grid_excel_show : esf.grid.resourceStrings.igx_grid_excel_hide }}</span>
     <igx-icon>{{ esf.column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
 </div>
