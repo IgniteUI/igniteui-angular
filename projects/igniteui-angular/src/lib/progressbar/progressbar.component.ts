@@ -187,7 +187,7 @@ export abstract class BaseProgressDirective {
         if (value < 0 || value > 100) {
             return;
         }
-        this._value = toValue(value, this._max);
+        this.value = toValue(value, this._max);
     }
 
     /**
@@ -234,7 +234,7 @@ export abstract class BaseProgressDirective {
             return;
         }
         if (this._contentInit) {
-            this.triggerProgressTransition(val, valInRange);
+            this.triggerProgressTransition(this._value, valInRange);
         } else {
             this._initValue = valInRange;
         }
@@ -645,9 +645,9 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
 
 export const valueInRange = (value: number, max: number, min = 0): number => Math.max(Math.min(value, max), min);
 
-export const toPercent = (value: number, max: number) => Math.floor(100 * value / max);
+export const toPercent = (value: number, max: number) => 100 * value / max;
 
-export const toValue = (value: number, max: number) => Math.floor(max * value / 100);
+export const toValue = (value: number, max: number) => max * value / 100;
 /**
  * @hidden
  */

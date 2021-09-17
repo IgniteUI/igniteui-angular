@@ -22,7 +22,7 @@
 
     <ng-template #defaultTextTemplate>
         <svg:tspan class="igx-circular-bar__text">
-            {{textContent ? textContent: valueInPercent + '%'}}
+            {{textContent ? textContent: (valueInPercent | number: '1.0-0') + '%'}}
         </svg:tspan>
     </ng-template>
 

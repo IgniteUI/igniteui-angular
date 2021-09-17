@@ -249,17 +249,16 @@ describe('IgLinearBar', () => {
     it('Value should not exceed the max limit when operating with floating numbers', fakeAsync(() => {
         const fix = TestBed.createComponent(LinearBarComponent);
         const compInstance = fix.componentInstance;
+        fix.detectChanges();
         let value = 2.67;
         const max = 2.5;
 
         compInstance.max = max;
-        fix.detectChanges();
-
         compInstance.value = value;
+        tick(tickTime);
         fix.detectChanges();
 
         const bar = compInstance.progressbar;
-        tick(tickTime);
         expect(bar.value).toBe(max);
         expect(bar.valueInPercent).toBe(100);
 
