@@ -17,10 +17,11 @@ import { GridType } from '../common/grid.interface';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IPivotConfiguration } from './pivot-grid.interface';
+import { IPivotConfiguration, IPivotDimension } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 
 let NEXT_ID = 0;
+const MINIMUM_COLUMN_WIDTH = 136;
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -72,6 +73,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private _data;
     private _filteredData;
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
+    private _origData = [];
 
     /**
      * @hidden
@@ -81,6 +83,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.autoGenerate = true;
         this.columnList.reset([]);
         super.ngOnInit();
+    }
+
+    /** @hidden */
+    public featureColumnsWidth() {
+        return this.pivotRowWidths;
     }
 
     /**
@@ -128,9 +135,31 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * let data = this.grid.data;
      * ```
      */
-    public get data(): any[] | null {
+     public get data(): any[] | null {
         return this._data;
-        }
+    }
+
+    /**
+     * Returns an array of data set to the component.
+     * ```typescript
+     * let processedData = this.grid.processedData;
+     * ```
+     */
+    public get originalData(): any[] | null {
+        return this._origData;
+    }
+
+
+    /**
+     * An @Input property that lets you fill the `IgxPivotGridComponent` with an array of data.
+     * ```html
+     * <igx-pivot-grid [processedData]="Data"></igx-pivot-grid>
+     * ```
+     */
+    @Input()
+    public set originalData(value: any[] | null) {
+        this._origData = value || [];
+    }
 
     /**
      * Sets an array of objects containing the filtered data.
@@ -172,44 +201,31 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         };
     }
 
-    public get pivotRows() {
-        // TODO - resolve member if member is not string.
-        const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
-        const cols = this.columns.filter(x => rowKeys.indexOf(x.field) !== -1);
-        // create copies in order to not pollute the original column.
-        const columns = [];
-        const topLevelCols = cols.filter(c => c.level === 0);
-        topLevelCols.forEach((col) => {
-            const ref = this._createColumn(col);
-            ref.changeDetectorRef.detectChanges();
-            columns.push(ref.instance);
-        });
-        return columns;
-    }
-
     public get pivotRowWidths() {
-        let width = 0;
-        this.pivotRows.forEach(col => {
-            width += col.calcWidth;
-        });
-        return width;
+        const rowDimCount = this.pivotConfiguration.rows.length;
+        return MINIMUM_COLUMN_WIDTH * rowDimCount;
     }
 
-    public get pivotColumns() {
-        // TODO - resolve member if member is not string.
-        const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
-        return this.columns.filter(x => rowKeys.indexOf(x.field) === -1);
+    // TODO: should work on original data, before pipes.
+    // That should be data, but for this poc since we have no pipes use a different prop.
+    protected generateDataFields(data: any[]): string[] {
+        let fields = new Map<string, string>();
+        for (const rec of this.originalData) {
+            const vals = this.extractValuesFromDimension(this.pivotConfiguration.columns, rec);
+            for (const val of vals) {
+                fields = fields.set(val, val);
+            }
+        }
+        const keys = Array.from(fields.keys());
+        return keys;
     }
 
-    public get unpinnedColumns(){
-        const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
-        const cols = this._unpinnedColumns.filter(x => rowKeys.indexOf(x.field) === -1);
-        return cols;
-    }
-
-    public get pinnedColumns(){
-        const rowKeys = this.pivotConfiguration.rows.map(x => x.member);
-        const cols = this._pinnedColumns.filter(x => rowKeys.indexOf(x.field) === -1);
-        return cols;
+    private extractValuesFromDimension(dims: IPivotDimension[], recData: any){
+        const vals = [];
+        for (const col of dims) {
+            const value = typeof col.member === 'string' ? recData[col.member] : col.member.call(this, recData);
+            vals.push(value);
+        }
+        return vals;
     }
 }

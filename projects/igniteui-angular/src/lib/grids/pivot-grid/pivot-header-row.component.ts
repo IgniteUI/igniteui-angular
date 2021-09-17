@@ -1,8 +1,10 @@
 import {
     ChangeDetectionStrategy,
-    Component
+    Component,
+    Input
 } from '@angular/core';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { IgxPivotRowComponent } from './pivot-row.component';
 
 export interface IgxGridRowSelectorsTemplateContext {
     $implicit: {
@@ -27,4 +29,6 @@ export interface IgxGridRowSelectorsTemplateContext {
     templateUrl: './pivot-header-row.component.html'
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
+    @Input()
+    public row: IgxPivotRowComponent;
 }
