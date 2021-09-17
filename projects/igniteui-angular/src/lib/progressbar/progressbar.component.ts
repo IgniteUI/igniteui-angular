@@ -368,13 +368,9 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 
     /**
      * @hidden
-     * Set `IgxLinearProgressBarComponent` to have indeterminate. By default it is set to false.
-     * ```html
-     * <igx-linear-bar [indeterminate]="true"></igx-linear-bar>
-     * ```
      */
     @HostBinding('class.igx-linear-bar--indeterminate')
-    get isIndeterminate(): boolean {
+    public get isIndeterminate(): boolean {
         return this.indeterminate;
     }
 
@@ -515,13 +511,9 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
 
     /**
      * @hidden
-     * An @Input property that sets the value of the `indeterminate` attribute. If not provided it will be automatically set to false.
-     * ```html
-     * <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
-     * ```
      */
     @HostBinding('class.igx-circular-bar--indeterminate')
-    get isIndeterminate(): boolean {
+    public get isIndeterminate(): boolean {
         return this.indeterminate;
     }
 
