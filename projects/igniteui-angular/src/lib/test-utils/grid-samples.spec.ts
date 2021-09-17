@@ -165,6 +165,10 @@ export class ColumnCellFormatterComponent extends BasicGridComponent {
     public containsY(_: number, data: { ID: number; Name: string }) {
         return data.Name.includes('y') ? 'true' : 'false';
     }
+
+    public boolFormatter(value: boolean): string {
+        return value ? 'true' : 'false';
+    }
 }
 
 @Component({
