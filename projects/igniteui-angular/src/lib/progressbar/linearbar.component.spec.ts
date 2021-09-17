@@ -486,6 +486,7 @@ describe('IgLinearBar', () => {
             bar.max = maxVal;
             bar.value = val;
             let valueInPercent = Common.calcPercentage(bar.value, bar.max);
+            expect(valueInPercent).toBe(bar.valueInPercent);
 
             tick(tickTime);
             fix.detectChanges();
