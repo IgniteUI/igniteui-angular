@@ -15,7 +15,6 @@
 9. IgxLinearProgressBar: animate initial progress [#10068](https://github.com/IgniteUI/igniteui-angular/issues/10068)
 10. Getting only one sort and one filter event after changing the state of grid using setState function [#8064](https://github.com/IgniteUI/igniteui-angular/issues/8064)
 
-
 ## Going down the road
 
 1. Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
