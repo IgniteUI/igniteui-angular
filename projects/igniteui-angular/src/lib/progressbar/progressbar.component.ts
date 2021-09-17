@@ -644,7 +644,7 @@ export const toValue = (value: number, max: number) => max * value / 100;
  * @hidden
  */
 @NgModule({
-    declarations: [ 
+    declarations: [
         IgxLinearProgressBarComponent,
         IgxCircularProgressBarComponent,
         IgxProcessBarTextTemplateDirective,
