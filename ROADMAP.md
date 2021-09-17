@@ -24,7 +24,6 @@
 5. Themes: Split themes and aid with Grid refactoring [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
 6. Stepper component [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
 7. Make IgxDropDownBaseToken public [#10103](https://github.com/IgniteUI/igniteui-angular/issues/10103)
-8. 
 
 # Previous Milestone
 
