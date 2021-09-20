@@ -24,7 +24,10 @@ All notable changes for each version of this project will be documented in this 
         ```
     - Added capability to restore the state of multi column headers with `IgxGridStateDirective`.
     - Introduced new 'rowStyles' and 'rowClasses' grid properties which allows to define a custom styling on each grid row
-
+- `IgxSnackbarComponent`
+    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
+- `IgxToastComponent`
+    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
 ## 12.1.3
 
 ### New Features
