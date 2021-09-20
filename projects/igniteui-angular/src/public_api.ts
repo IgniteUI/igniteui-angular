@@ -3,8 +3,6 @@
  * Public API Surface of igniteui-angular
  */
 
-import { from } from 'rxjs';
-
 /**
  * Animations
  */
