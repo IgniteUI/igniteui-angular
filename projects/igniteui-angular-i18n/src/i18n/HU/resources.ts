@@ -7,6 +7,8 @@ import { CarouselResourceStringsHU } from './carousel-resources';
 import { ListResourceStringsHU } from './list-resources';
 import { CalendarResourceStringsHU } from './calendar-resources';
 import { TreeResourceStringsHU } from './tree-resources';
+import { InputResourceStringsHU } from './input-resources';
+import { ChipResourceStringsHU } from './chip-resources';
 
 /**
  * Hungarian resource strings for all components
@@ -20,5 +22,7 @@ export const IgxResourceStringsHU = {
     ...CarouselResourceStringsHU,
     ...ListResourceStringsHU,
     ...CalendarResourceStringsHU,
-    ...TreeResourceStringsHU
+    ...TreeResourceStringsHU,
+    ...InputResourceStringsHU,
+    ...ChipResourceStringsHU
 };

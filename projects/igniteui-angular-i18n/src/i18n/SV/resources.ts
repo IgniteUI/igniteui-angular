@@ -7,6 +7,8 @@ import { CarouselResourceStringsSV } from './carousel-resources';
 import { ListResourceStringsSV } from './list-resources';
 import { CalendarResourceStringsSV } from './calendar-resources';
 import { TreeResourceStringsSV } from './tree-resources';
+import { InputResourceStringsSV } from './input-resources';
+import { ChipResourceStringsSV } from 'igniteui-angular-i18n';
 
 /**
  * Swedish resource strings for all components
@@ -20,5 +22,7 @@ export const IgxResourceStringsSV = {
     ...CarouselResourceStringsSV,
     ...ListResourceStringsSV,
     ...CalendarResourceStringsSV,
-    ...TreeResourceStringsSV
+    ...TreeResourceStringsSV,
+    ...InputResourceStringsSV,
+    ...ChipResourceStringsSV
 };
