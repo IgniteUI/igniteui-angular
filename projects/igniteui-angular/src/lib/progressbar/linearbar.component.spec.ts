@@ -249,17 +249,16 @@ describe('IgLinearBar', () => {
     it('Value should not exceed the max limit when operating with floating numbers', fakeAsync(() => {
         const fix = TestBed.createComponent(LinearBarComponent);
         const compInstance = fix.componentInstance;
+        fix.detectChanges();
         let value = 2.67;
         const max = 2.5;
 
         compInstance.max = max;
-        fix.detectChanges();
-
         compInstance.value = value;
+        tick(tickTime);
         fix.detectChanges();
 
         const bar = compInstance.progressbar;
-        tick(tickTime);
         expect(bar.value).toBe(max);
         expect(bar.valueInPercent).toBe(100);
 
@@ -481,16 +480,24 @@ describe('IgLinearBar', () => {
             fix.detectChanges();
 
             const bar = fix.componentInstance.linearBar;
-            const maxVal = 3.25;
-            const val =  3.55;
+            let maxVal = 100;
+            const val =  50;
 
             bar.max = maxVal;
             bar.value = val;
-            const valueInPercent = Common.calcPercentage(bar.value, bar.max);
+            let valueInPercent = Common.calcPercentage(bar.value, bar.max);
+            expect(valueInPercent).toBe(bar.valueInPercent);
 
             tick(tickTime);
             fix.detectChanges();
-            expect(valueInPercent).toBe(bar.valueInPercent);
+            expect(valueInPercent).toBe(50);
+            maxVal = 200;
+            bar.max = maxVal;
+            valueInPercent = Common.calcPercentage(val, bar.max);
+
+            tick(tickTime);
+            fix.detectChanges();
+            expect(valueInPercent).toBe(25);
         }));
     });
 });

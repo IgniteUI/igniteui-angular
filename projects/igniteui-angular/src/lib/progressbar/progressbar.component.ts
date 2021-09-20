@@ -58,16 +58,24 @@ export abstract class BaseProgressDirective {
      *  //...
      * ```
      * ```html
-     * <igx-circular-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-circular-bar>
-     * <igx-linear-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-linear-bar>
+     * <igx-circular-bar [value]="currentValue" (progressChanged)="progressChange($event)"></igx-circular-bar>
+     * <igx-linear-bar [value]="currentValue" (progressChanged)="progressChange($event)"></igx-linear-bar>
      * ```
      */
     @Output()
-    public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
+    public progressChanged = new EventEmitter<IChangeProgressEventArgs>();
+
+    /**
+     * Set `IgxLinearProgressBarComponent` to have indeterminate. By default it is set to false.
+     * ```html
+     * <igx-linear-bar [indeterminate]="true"></igx-linear-bar>
+     * ```
+     */
+    @Input()
+    public indeterminate = false;
 
     protected _initValue = 0;
     protected _contentInit = false;
-    protected _valueInPercent = MIN_VALUE;
     protected _max = 100;
     protected _value = MIN_VALUE;
     protected _newVal = MIN_VALUE;
@@ -88,7 +96,7 @@ export abstract class BaseProgressDirective {
      * ```
      */
     @Input()
-    get step(): number {
+    public get step(): number {
         if (this._step) {
             return this._step;
         }
@@ -103,7 +111,7 @@ export abstract class BaseProgressDirective {
      * <igx-circular-bar [max]="200" [value]="0" [step]="1"></igx-circular-bar>
      * ```
      */
-    set step(val: number) {
+    public set step(val: number) {
         this._step = Number(val);
     }
 
@@ -145,10 +153,9 @@ export abstract class BaseProgressDirective {
     @Input()
     public set max(maxNum: number) {
         if (maxNum < this._value) {
-            this.valueInPercent = maxNum;
+            this._value = maxNum;
         }
         this._max = maxNum;
-        this._valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
@@ -180,8 +187,7 @@ export abstract class BaseProgressDirective {
         if (value < 0 || value > 100) {
             return;
         }
-        this._valueInPercent = value;
-        this._value = toValue(value, this._max);
+        this.value = toValue(value, this._max);
     }
 
     /**
@@ -196,7 +202,43 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public get valueInPercent(): number {
-        return this._valueInPercent;
+        return Math.round(toPercent(this._value, this._max));
+    }
+
+    /**
+     * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent;
+     * public getValue(event) {
+     *     let value = this.progressBar.value;
+     *     alert(value);
+     * }
+     * ```
+     */
+    @HostBinding('attr.aria-valuenow')
+    @Input()
+    public get value(): number {
+        return this._value;
+    }
+
+    /**
+     * Set value that indicates the current `IgxLinearProgressBarComponent` position.
+     * ```html
+     * <igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
+     * ```
+     */
+    public set value(val) {
+        const valInRange = valueInRange(val, this.max);
+        if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
+            return;
+        }
+        if (this._contentInit) {
+            this.triggerProgressTransition(this._value, valInRange);
+        } else {
+            this._initValue = valInRange;
+        }
+        this._value = valInRange;
     }
 
     protected triggerProgressTransition(oldVal, newVal) {
@@ -216,7 +258,7 @@ export abstract class BaseProgressDirective {
             this.updateProgressDirectly(newVal);
         }
 
-        this.onProgressChanged.emit(changedValues);
+        this.progressChanged.emit(changedValues);
     }
 
     /**
@@ -241,7 +283,7 @@ export abstract class BaseProgressDirective {
             this.updateProgress(val);
             cancelAnimationFrame(this.requestAnimationId);
         } else {
-            this._valueInPercent = progressValue;
+            this.valueInPercent = progressValue;
             this.requestAnimationId = requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, step));
         }
     }
@@ -297,7 +339,7 @@ export abstract class BaseProgressDirective {
      */
     private updateProgress(val: number) {
         this._value = valueInRange(val, this._max);
-        this._valueInPercent = toPercent(this._value, this._max);
+        this.valueInPercent = toPercent(this._value, this._max);
     }
 }
 let NEXT_LINEAR_ID = 0;
@@ -325,14 +367,12 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     public striped = false;
 
     /**
-     * Set `IgxLinearProgressBarComponent` to have indeterminate. By default it is set to false.
-     * ```html
-     * <igx-linear-bar [indeterminate]="true"></igx-linear-bar>
-     * ```
+     * @hidden
      */
     @HostBinding('class.igx-linear-bar--indeterminate')
-    @Input()
-    public indeterminate = false;
+    public get isIndeterminate(): boolean {
+        return this.indeterminate;
+    }
 
     /**
      * An @Input property that sets the value of the `role` attribute. If not provided it will be automatically set to `progressbar`.
@@ -410,42 +450,6 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     constructor() {
         super();
     }
-   /**
-    * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
-    * ```typescript
-    *  @ViewChild("MyProgressBar")
-    * public progressBar: IgxLinearProgressBarComponent;
-    * public getValue(event) {
-    *     let value = this.progressBar.value;
-    *     alert(value);
-    * }
-    * ```
-    */
-    @HostBinding('attr.aria-valuenow')
-    @Input()
-    get value(): number {
-        return this._value;
-    }
-
-    /**
-     * Set value that indicates the current `IgxLinearProgressBarComponent` position.
-     * ```html
-     * <igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
-     * ```
-     */
-    set value(val) {
-        const valInRange = valueInRange(val, this.max);
-        if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
-            return;
-        }
-
-        if (this._contentInit) {
-            this.triggerProgressTransition(this._value, valInRange);
-        } else {
-            this._initValue = valInRange;
-        }
-
-    }
 
     /**
      * @hidden
@@ -506,14 +510,12 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     public id = `igx-circular-bar-${NEXT_CIRCULAR_ID++}`;
 
     /**
-     * An @Input property that sets the value of the `indeterminate` attribute. If not provided it will be automatically set to false.
-     * ```html
-     * <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
-     * ```
+     * @hidden
      */
     @HostBinding('class.igx-circular-bar--indeterminate')
-    @Input()
-    public indeterminate = false;
+    public get isIndeterminate(): boolean {
+        return this.indeterminate;
+    }
 
     /**
      * Sets the text visibility. By default it is set to true.
@@ -557,45 +559,6 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
         return {
             $implicit: { value: this.value, valueInPercent: this.valueInPercent, max: this.max }
         };
-    }
-
-    /**
-     * Returns value that indicates the current `IgxCircularProgressBarComponent` position.
-     * ```typescript
-     *  @ViewChild("MyProgressBar")
-     * public progressBar: IgxCircularProgressBarComponent;
-     * public getValue(event) {
-     *     let value = this.progressBar.value;
-     *     alert(value);
-     * }
-     * ```
-     * ```html
-     * <button igxButton="fab" igxRipple="" (click)="getValue()">Click</button>
-     * ```
-     */
-    @Input()
-    get value(): number {
-        return this._value;
-    }
-
-    /**
-     * Set value that indicates the current `IgxCircularProgressBarComponent` position.
-     * ```html
-     * <igx-circular-bar [value]="50"></igx-circular-bar>
-     * ```
-     */
-    set value(val: number) {
-        const valInRange = valueInRange(val, this.max);
-        if (isNaN(valInRange) || this._value === val || this.indeterminate) {
-            return;
-        }
-
-        if (this._contentInit) {
-            this.triggerProgressTransition(this._value, valInRange);
-        } else {
-            this._initValue = valInRange;
-        }
-
     }
 
     private _circleRadius = 46;
@@ -674,10 +637,9 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
 
 export const valueInRange = (value: number, max: number, min = 0): number => Math.max(Math.min(value, max), min);
 
-export const toPercent = (value: number, max: number) => Math.floor(100 * value / max);
+export const toPercent = (value: number, max: number) => 100 * value / max;
 
-export const toValue = (value: number, max: number) => Math.floor(max * value / 100);
-
+export const toValue = (value: number, max: number) => max * value / 100;
 /**
  * @hidden
  */
@@ -697,4 +659,3 @@ export const toValue = (value: number, max: number) => Math.floor(max * value / 
     imports: [CommonModule]
 })
 export class IgxProgressBarModule { }
-

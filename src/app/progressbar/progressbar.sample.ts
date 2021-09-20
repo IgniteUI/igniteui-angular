@@ -8,15 +8,40 @@ import { IgxTextAlign } from 'igniteui-angular';
     templateUrl: 'progressbar.sample.html'
 })
 
-export class ProgressbarSampleComponent {
-    public currentValue = 10;
+export class ProgressbarSampleComponent implements OnInit {
+    public positionCenter: IgxTextAlign;
+    public positionEnd: IgxTextAlign;
+    public currentValue: number;
+    public type: string;
+    public dynamicCurrentValue = 10;
     public max = 100;
+
+    constructor() {
+        this.currentValue = 0;
+        this.generateNewProgressValues();
+    }
+    public generateNewProgressValues() {
+        const value = this.randomIntFromInterval(this.currentValue, 100);
+
+        this.currentValue = value;
+    }
+
+    public randomIntFromInterval(min: number, max: number) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+
+    }
+
+    public ngOnInit() {
+        this.positionCenter = IgxTextAlign.CENTER;
+        this.positionEnd = IgxTextAlign.END;
+    }
+
     public incrementProgress() {
-        this.currentValue += 10;
+        this.dynamicCurrentValue += 10;
     }
 
     public decrementProgress() {
-        this.currentValue -= 10;
+        this.dynamicCurrentValue -= 10;
     }
 
     public incrementMax() {
