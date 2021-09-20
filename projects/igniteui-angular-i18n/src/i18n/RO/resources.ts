@@ -7,6 +7,7 @@ import { CarouselResourceStringsRO } from './carousel-resources';
 import { ListResourceStringsRO } from './list-resources';
 import { CalendarResourceStringsRO } from './calendar-resources';
 import { TreeResourceStringsRO } from './tree-resources';
+import { InputResourceStringsRO } from './input-resources';
 
 /**
  * Romanian resource strings for all components
@@ -20,5 +21,6 @@ export const IgxResourceStringsRO = {
     ...CarouselResourceStringsRO,
     ...ListResourceStringsRO,
     ...CalendarResourceStringsRO,
-    ...TreeResourceStringsRO
+    ...TreeResourceStringsRO,
+    ...InputResourceStringsRO
 };

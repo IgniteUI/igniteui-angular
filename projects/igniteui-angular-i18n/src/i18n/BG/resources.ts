@@ -7,6 +7,7 @@ import { CarouselResourceStringsBG } from './carousel-resources';
 import { ListResourceStringsBG } from './list-resources';
 import { CalendarResourceStringsBG } from './calendar-resources';
 import { TreeResourceStringsBG } from './tree-resources';
+import { InputResourceStringsBG } from './input-resources';
 
 /**
  * Bulgarian resource strings for all components
@@ -20,5 +21,6 @@ export const IgxResourceStringsBG = {
     ...CarouselResourceStringsBG,
     ...ListResourceStringsBG,
     ...CalendarResourceStringsBG,
-    ...TreeResourceStringsBG
+    ...TreeResourceStringsBG,
+    ...InputResourceStringsBG
 };

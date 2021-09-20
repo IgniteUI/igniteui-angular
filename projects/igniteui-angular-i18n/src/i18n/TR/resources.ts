@@ -7,6 +7,7 @@ import { CarouselResourceStringsTR } from './carousel-resources';
 import { ListResourceStringsTR } from './list-resources';
 import { CalendarResourceStringsTR } from './calendar-resources';
 import { TreeResourceStringsTR } from './tree-resources';
+import { InputResourceStringsTR } from './input-resources';
 
 /**
  * Turkish resource strings for all components
@@ -20,5 +21,6 @@ export const IgxResourceStringsTR = {
     ...CarouselResourceStringsTR,
     ...ListResourceStringsTR,
     ...CalendarResourceStringsTR,
-    ...TreeResourceStringsTR
+    ...TreeResourceStringsTR,
+    ...InputResourceStringsTR
 };

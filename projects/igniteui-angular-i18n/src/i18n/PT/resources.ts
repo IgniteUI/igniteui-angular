@@ -7,6 +7,7 @@ import { CarouselResourceStringsPT } from './carousel-resources';
 import { ListResourceStringsPT } from './list-resources';
 import { CalendarResourceStringsPT } from './calendar-resources';
 import { TreeResourceStringsPT } from './tree-resources';
+import { InputResourceStringsPT } from './input-resources';
 
 /**
  * Portuguese resource strings for all components
@@ -20,5 +21,6 @@ export const IgxResourceStringsPT = {
     ...CarouselResourceStringsPT,
     ...ListResourceStringsPT,
     ...CalendarResourceStringsPT,
-    ...TreeResourceStringsPT
+    ...TreeResourceStringsPT,
+    ...InputResourceStringsPT
 };

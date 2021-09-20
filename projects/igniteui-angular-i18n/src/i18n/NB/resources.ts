@@ -7,6 +7,7 @@ import { CarouselResourceStringsNB } from './carousel-resources';
 import { ListResourceStringsNB } from './list-resources';
 import { CalendarResourceStringsNB } from './calendar-resources';
 import { TreeResourceStringsNB } from './tree-resources';
+import { InputResourceStringsNB } from './input-resources';
 
 /**
  * Norwegian resource strings for all components
@@ -20,5 +21,6 @@ export const IgxResourceStringsNB = {
     ...CarouselResourceStringsNB,
     ...ListResourceStringsNB,
     ...CalendarResourceStringsNB,
-    ...TreeResourceStringsNB
+    ...TreeResourceStringsNB,
+    ...InputResourceStringsNB
 };
