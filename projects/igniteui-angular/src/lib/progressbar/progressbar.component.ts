@@ -143,39 +143,6 @@ export abstract class BaseProgressDirective {
         return this._animate;
     }
 
-    /**
-     * Set maximum value that can be passed. By default it is set to 100.
-     * ```html
-     * <igx-linear-bar [max]="200" [value]="0"></igx-linear-bar>
-     * <igx-circular-bar [max]="200" [value]="0"></igx-circular-bar>
-     * ```
-     */
-    @HostBinding('attr.aria-valuemax')
-    @Input()
-    public set max(maxNum: number) {
-    if (maxNum < this._value) {
-        this._value = maxNum;
-    }
-
-    this._valueInPercent = toPercent(this._value, maxNum);
-    this._max = maxNum;
-    }
-
-    /**
-     * Returns the the maximum progress value of the `progress bar`.
-     * ```typescript
-     *  @ViewChild("MyProgressBar")
-     * public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
-     * public maxValue(event) {
-     *     let max = this.progressBar.max;
-     *     alert(max);
-     * }
-     * ```
-     */
-    public get max() {
-        return this._max;
-    }
-
     protected triggerProgressTransition(oldVal, newVal) {
         if (oldVal === newVal) {
             return;
@@ -363,6 +330,40 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
         } else {
             this._initValue = valInRange;
         }
+    }
+
+
+    /**
+     * Set maximum value that can be passed. By default it is set to 100.
+     * ```html
+     * <igx-linear-bar [max]="200" [value]="0"></igx-linear-bar>
+     * <igx-circular-bar [max]="200" [value]="0"></igx-circular-bar>
+     * ```
+     */
+    @HostBinding('attr.aria-valuemax')
+    @Input()
+    public set max(maxNum: number) {
+        if (maxNum < this._value) {
+            this._value = maxNum;
+        }
+
+        this._valueInPercent = toPercent(this._value, maxNum);
+        this._max = maxNum;
+    }
+
+    /**
+     * Returns the the maximum progress value of the `progress bar`.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
+     * public maxValue(event) {
+     *     let max = this.progressBar.max;
+     *     alert(max);
+     * }
+     * ```
+     */
+    public get max() {
+        return this._max;
     }
 
     /**
@@ -559,6 +560,40 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
             this._initValue = valInRange;
         }
     }
+
+
+    /**
+     * Set maximum value that can be passed. By default it is set to 100.
+     * ```html
+     * <igx-linear-bar [max]="200" [value]="0"></igx-linear-bar>
+     * <igx-circular-bar [max]="200" [value]="0"></igx-circular-bar>
+     * ```
+     */
+     @HostBinding('attr.aria-valuemax')
+     @Input()
+     public set max(maxNum: number) {
+         if (maxNum < this._value) {
+             this._value = maxNum;
+         }
+
+         this._valueInPercent = toPercent(this._value, maxNum);
+         this._max = maxNum;
+     }
+
+     /**
+      * Returns the the maximum progress value of the `progress bar`.
+      * ```typescript
+      *  @ViewChild("MyProgressBar")
+      * public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
+      * public maxValue(event) {
+      *     let max = this.progressBar.max;
+      *     alert(max);
+      * }
+      * ```
+      */
+     public get max() {
+         return this._max;
+     }
 
     /**
      * Sets the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
