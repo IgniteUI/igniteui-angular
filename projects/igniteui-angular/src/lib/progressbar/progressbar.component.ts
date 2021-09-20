@@ -81,6 +81,7 @@ export abstract class BaseProgressDirective {
     protected _newVal = MIN_VALUE;
     protected _animate = true;
     protected _step;
+    protected _valueInPercent = MIN_VALUE;
 
     private requestAnimationId: number = undefined;
 
@@ -152,10 +153,12 @@ export abstract class BaseProgressDirective {
     @HostBinding('attr.aria-valuemax')
     @Input()
     public set max(maxNum: number) {
-        if (maxNum < this._value) {
-            this._value = maxNum;
-        }
-        this._max = maxNum;
+    if (maxNum < this._value) {
+        this._value = maxNum;
+    }
+
+    this._valueInPercent = toPercent(this._value, maxNum);
+    this._max = maxNum;
     }
 
     /**
@@ -171,74 +174,6 @@ export abstract class BaseProgressDirective {
      */
     public get max() {
         return this._max;
-    }
-
-    /**
-     * Sets the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
-     * ```typescript
-     *  @ViewChild("MyProgressBar")
-     * public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
-     *     public setValue(event){
-     *     this.progressBar.valueInPercent = 56;
-     * }
-     * ```
-     */
-    public set valueInPercent(value: number) {
-        if (value < 0 || value > 100) {
-            return;
-        }
-        this.value = toValue(value, this._max);
-    }
-
-    /**
-     * Returns the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
-     * ```typescript
-     *  @ViewChild("MyProgressBar")
-     * public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
-     * public valuePercent(event){
-     *     let percentValue = this.progressBar.valueInPercent;
-     *     alert(percentValue);
-     * }
-     * ```
-     */
-    public get valueInPercent(): number {
-        return Math.round(toPercent(this._value, this._max));
-    }
-
-    /**
-     * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
-     * ```typescript
-     *  @ViewChild("MyProgressBar")
-     * public progressBar: IgxLinearProgressBarComponent;
-     * public getValue(event) {
-     *     let value = this.progressBar.value;
-     *     alert(value);
-     * }
-     * ```
-     */
-    @HostBinding('attr.aria-valuenow')
-    @Input()
-    public get value(): number {
-        return this._value;
-    }
-
-    /**
-     * Set value that indicates the current `IgxLinearProgressBarComponent` position.
-     * ```html
-     * <igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
-     * ```
-     */
-    public set value(val) {
-        const valInRange = valueInRange(val, this.max);
-        if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
-            return;
-        }
-        if (this._contentInit) {
-            this.triggerProgressTransition(this._value, valInRange);
-        } else {
-            this._initValue = valInRange;
-        }
-        this._value = valInRange;
     }
 
     protected triggerProgressTransition(oldVal, newVal) {
@@ -272,18 +207,18 @@ export abstract class BaseProgressDirective {
     /**
      * @hidden
      */
-    protected updateProgressSmoothly(val: number, step: number) {
+     protected updateProgressSmoothly(val: number, step: number) {
         this._value = valueInRange(this._value, this._max) + step;
         const passedValue = toPercent(val, this._max);
         const progressValue = toPercent(this._value, this._max);
-        if (this.valueInPercent === passedValue) {
+        if (this._valueInPercent === passedValue) {
             this.updateProgress(val);
             cancelAnimationFrame(this.requestAnimationId);
         } else if (this.isInLimitRange(progressValue, passedValue, step)) {
             this.updateProgress(val);
             cancelAnimationFrame(this.requestAnimationId);
         } else {
-            this.valueInPercent = progressValue;
+            this._valueInPercent = progressValue;
             this.requestAnimationId = requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, step));
         }
     }
@@ -293,7 +228,7 @@ export abstract class BaseProgressDirective {
      */
     protected updateProgressDirectly(val: number) {
         this._value = valueInRange(val, this._max);
-        this.valueInPercent = toPercent(this._value, this._max);
+        this._valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
@@ -339,7 +274,7 @@ export abstract class BaseProgressDirective {
      */
     private updateProgress(val: number) {
         this._value = valueInRange(val, this._max);
-        this.valueInPercent = toPercent(this._value, this._max);
+        this._valueInPercent = toPercent(this._value, this._max);
     }
 }
 let NEXT_LINEAR_ID = 0;
@@ -393,6 +328,78 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     @HostBinding('attr.id')
     @Input()
     public id = `igx-linear-bar-${NEXT_LINEAR_ID++}`;
+
+    /**
+     * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent;
+     * public getValue(event) {
+     *     let value = this.progressBar.value;
+     *     alert(value);
+     * }
+     * ```
+     */
+     @HostBinding('attr.aria-valuenow')
+     @Input()
+     public get value(): number {
+         return this._value;
+     }
+
+     /**
+      * Set value that indicates the current `IgxLinearProgressBarComponent` position.
+      * ```html
+      * <igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
+      * ```
+      */
+      public set value(val) {
+        const valInRange = valueInRange(val, this.max);
+        if (isNaN(valInRange) || this._value === val || this.indeterminate) {
+            return;
+        }
+
+        if (this._contentInit) {
+            this.triggerProgressTransition(this._value, valInRange);
+        } else {
+            this._initValue = valInRange;
+        }
+    }
+
+    /**
+     * Sets the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
+     *     public setValue(event){
+     *     this.progressBar.valueInPercent = 56;
+     * }
+     * ```
+     */
+    public set valueInPercent(value: number) {
+        if (value < 0 || value > 100) {
+            return;
+        }
+
+        const newValue = toValue(value, this.max);
+        this.triggerProgressTransition(this.value, newValue);
+    }
+
+
+    /**
+     * Returns the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
+     * public valuePercent(event){
+     *     let percentValue = this.progressBar.valueInPercent;
+     *     alert(percentValue);
+     * }
+     * ```
+     */
+    public get valueInPercent(): number {
+        return this._valueInPercent;
+    }
+
 
     /**
      * Set the position that defines where the text is aligned.
@@ -518,6 +525,76 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     }
 
     /**
+     * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent;
+     * public getValue(event) {
+     *     let value = this.progressBar.value;
+     *     alert(value);
+     * }
+     * ```
+     */
+     @HostBinding('attr.aria-valuenow')
+     @Input()
+     public get value(): number {
+         return this._value;
+     }
+
+     /**
+      * Set value that indicates the current `IgxLinearProgressBarComponent` position.
+      * ```html
+      * <igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
+      * ```
+      */
+    public set value(val) {
+        const valInRange = valueInRange(val, this.max);
+        if (isNaN(valInRange) || this._value === val || this.indeterminate) {
+            return;
+        }
+
+        if (this._contentInit) {
+            this.triggerProgressTransition(this._value, valInRange);
+        } else {
+            this._initValue = valInRange;
+        }
+    }
+
+    /**
+     * Sets the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
+     *     public setValue(event){
+     *     this.progressBar.valueInPercent = 56;
+     * }
+     * ```
+     */
+    public set valueInPercent(value: number) {
+        if (value < 0 || value > 100) {
+            return;
+        }
+
+        const newValue = toValue(value, this.max);
+        this.triggerProgressTransition(this.value, newValue);
+    }
+
+    /**
+     * Returns the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
+     * public valuePercent(event){
+     *     let percentValue = this.progressBar.valueInPercent;
+     *     alert(percentValue);
+     * }
+     * ```
+     */
+    public get valueInPercent(): number {
+        return this._valueInPercent;
+    }
+
+    /**
      * Sets the text visibility. By default it is set to true.
      * ```html
      * <igx-circular-bar [textVisibility]="false"></igx-circular-bar>
@@ -637,9 +714,9 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
 
 export const valueInRange = (value: number, max: number, min = 0): number => Math.max(Math.min(value, max), min);
 
-export const toPercent = (value: number, max: number) => 100 * value / max;
+export const toPercent = (value: number, max: number) => Math.round(100 * value / max);
 
-export const toValue = (value: number, max: number) => max * value / 100;
+export const toValue = (value: number, max: number) => Math.round(max * value / 100);
 /**
  * @hidden
  */

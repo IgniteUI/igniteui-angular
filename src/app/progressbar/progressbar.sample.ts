@@ -1,5 +1,5 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { IgxTextAlign } from 'igniteui-angular';
+import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
+import { IgxLinearProgressBarComponent, IgxTextAlign } from 'igniteui-angular';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -11,10 +11,13 @@ import { IgxTextAlign } from 'igniteui-angular';
 export class ProgressbarSampleComponent implements OnInit {
     public positionCenter: IgxTextAlign;
     public positionEnd: IgxTextAlign;
-    public currentValue: number;
+    public currentValue: number;p;
     public type: string;
     public dynamicCurrentValue = 10;
     public max = 100;
+
+    @ViewChild('progressbar')
+    public progressbar: IgxLinearProgressBarComponent;
 
     constructor() {
         this.currentValue = 0;
@@ -37,18 +40,18 @@ export class ProgressbarSampleComponent implements OnInit {
     }
 
     public incrementProgress() {
-        this.dynamicCurrentValue += 10;
+        this.progressbar.value += 10;
     }
 
     public decrementProgress() {
-        this.dynamicCurrentValue -= 10;
+        this.progressbar.value -= 10;
     }
 
     public incrementMax() {
-        this.max += 10;
+        this.progressbar.max += 10;
     }
 
     public decrementMax() {
-        this.max -= 10;
+        this.progressbar.max -= 10;
     }
 }
