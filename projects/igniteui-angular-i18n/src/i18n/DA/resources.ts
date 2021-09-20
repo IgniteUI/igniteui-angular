@@ -8,6 +8,7 @@ import { ListResourceStringsDA } from './list-resources';
 import { CalendarResourceStringsDA } from './calendar-resources';
 import { TreeResourceStringsDA } from './tree-resources';
 import { InputResourceStringsDA } from './input-resources';
+import { ChipResourceStringsDA } from './chip-resources';
 
 /**
  * Danish resource strings for all components
@@ -22,5 +23,6 @@ export const IgxResourceStringsDA = {
     ...ListResourceStringsDA,
     ...CalendarResourceStringsDA,
     ...TreeResourceStringsDA,
-    ...InputResourceStringsDA
+    ...InputResourceStringsDA,
+    ...ChipResourceStringsDA
 };

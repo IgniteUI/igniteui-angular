@@ -8,6 +8,7 @@ import { ListResourceStringsPL } from './list-resources';
 import { CalendarResourceStringsPL } from './calendar-resources';
 import { TreeResourceStringsPL } from './tree-resources';
 import { InputResourceStringsPL } from './input-resources';
+import { ChipResourceStringsPL } from './chip-resources';
 
 /**
  * Polish resource strings for all components
@@ -22,5 +23,6 @@ export const IgxResourceStringsPL = {
     ...ListResourceStringsPL,
     ...CalendarResourceStringsPL,
     ...TreeResourceStringsPL,
-    ...InputResourceStringsPL
+    ...InputResourceStringsPL,
+    ...ChipResourceStringsPL
 };

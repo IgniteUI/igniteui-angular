@@ -8,6 +8,7 @@ import { CarouselResourceStringsIT } from './carousel-resources';
 import { ListResourceStringsIT } from './list-resources';
 import { TreeResourceStringsIT } from './tree-resources';
 import { InputResourceStringsIT } from './input-resources';
+import { ChipResourceStringsIT } from './chip-resources';
 
 /**
  * Italian resource strings for all components
@@ -22,5 +23,6 @@ export const IgxResourceStringsIT = {
     ...CarouselResourceStringsIT,
     ...ListResourceStringsIT,
     ...TreeResourceStringsIT,
-    ...InputResourceStringsIT
+    ...InputResourceStringsIT,
+    ...ChipResourceStringsIT
 };

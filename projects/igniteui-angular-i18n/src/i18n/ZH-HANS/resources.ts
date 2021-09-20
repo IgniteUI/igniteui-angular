@@ -8,6 +8,7 @@ import { CarouselResourceStringsZHHANS } from './carousel-resources';
 import { ListResourceStringsZHHANS } from './list-resources';
 import { TreeResourceStringsZHHANS } from './tree-resources';
 import { InputResourceStringsZHHANS } from './input-resources';
+import { ChipResourceStringsZHHANS } from './chip-resources';
 
 /**
  * Simplified Chinese (zh-Hans) resource strings for all components
@@ -22,5 +23,6 @@ export const IgxResourceStringsZHHANS = {
     ...CarouselResourceStringsZHHANS,
     ...ListResourceStringsZHHANS,
     ...TreeResourceStringsZHHANS,
-    ...InputResourceStringsZHHANS
+    ...InputResourceStringsZHHANS,
+    ...ChipResourceStringsZHHANS
 };

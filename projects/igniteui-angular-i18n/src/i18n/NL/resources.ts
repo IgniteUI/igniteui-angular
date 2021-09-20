@@ -8,6 +8,7 @@ import { ListResourceStringsNL } from './list-resources';
 import { CalendarResourceStringsNL } from './calendar-resources';
 import { TreeResourceStringsNL } from './tree-resources';
 import { InputResourceStringsNL } from './input-resources';
+import { ChipResourceStringsNL } from './chip-resources';
 
 /**
  * Dutch resource strings for all components
@@ -22,5 +23,6 @@ export const IgxResourceStringsNL = {
     ...ListResourceStringsNL,
     ...CalendarResourceStringsNL,
     ...TreeResourceStringsNL,
-    ...InputResourceStringsNL
+    ...InputResourceStringsNL,
+    ...ChipResourceStringsNL
 };

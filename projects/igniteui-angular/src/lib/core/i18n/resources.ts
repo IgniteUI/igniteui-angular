@@ -38,7 +38,7 @@ export const CurrentResourceStrings = {
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
     ListResStrings: cloneValue(ListResourceStringsEN),
     InputResStrings: cloneValue(InputResourceStringsEN),
-    TreeResStrings: cloneValue(TreeResourceStringsEN),
+    TreeResStrings: cloneValue(TreeResourceStringsEN)
 };
 
 const updateResourceStrings = (currentStrings: IResourceStrings, newStrings: IResourceStrings) => {

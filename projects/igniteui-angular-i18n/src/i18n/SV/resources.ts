@@ -8,6 +8,7 @@ import { ListResourceStringsSV } from './list-resources';
 import { CalendarResourceStringsSV } from './calendar-resources';
 import { TreeResourceStringsSV } from './tree-resources';
 import { InputResourceStringsSV } from './input-resources';
+import { ChipResourceStringsSV } from 'igniteui-angular-i18n';
 
 /**
  * Swedish resource strings for all components
@@ -22,5 +23,6 @@ export const IgxResourceStringsSV = {
     ...ListResourceStringsSV,
     ...CalendarResourceStringsSV,
     ...TreeResourceStringsSV,
-    ...InputResourceStringsSV
+    ...InputResourceStringsSV,
+    ...ChipResourceStringsSV
 };
