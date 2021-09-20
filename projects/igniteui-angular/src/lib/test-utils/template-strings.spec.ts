@@ -217,7 +217,7 @@ export class ColumnDefinitions {
 
     public static idNameFormatter = `
         <igx-column field="ID" [formatter]="multiplier"></igx-column>
-        <igx-column field="IsDev" [dataType]="'boolean'"></igx-column>
+        <igx-column field="IsEmployed" [dataType]="'boolean'"></igx-column>
         <igx-column field="Name"></igx-column>
     `;
 
