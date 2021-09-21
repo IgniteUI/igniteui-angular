@@ -4,7 +4,7 @@ import { IInputResourceStrings } from 'igniteui-angular';
 const InputResourceStringsTR_: ExpandRequire<IInputResourceStrings> = {
     igx_input_upload_button: 'Dosya yükle',
     igx_input_clear_button: 'Temizle',
-    igx_input_file_placeholder: 'Dosya seçilmedi',
+    igx_input_file_placeholder: 'Dosya seçilmedi'
 };
 
 /**

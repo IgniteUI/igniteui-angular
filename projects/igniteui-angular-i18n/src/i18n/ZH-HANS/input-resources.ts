@@ -4,7 +4,7 @@ import { IInputResourceStrings } from 'igniteui-angular';
 const InputResourceStringsZHHANS_: ExpandRequire<IInputResourceStrings> = {
     igx_input_upload_button: '上传文件',
     igx_input_clear_button: '清除',
-    igx_input_file_placeholder: '未选择文件',
+    igx_input_file_placeholder: '未选择文件'
 };
 
 /**
