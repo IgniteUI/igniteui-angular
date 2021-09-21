@@ -4,7 +4,7 @@ import { IInputResourceStrings } from 'igniteui-angular';
 const InputResourceStringsDA_: ExpandRequire<IInputResourceStrings> = {
     igx_input_upload_button: 'Upload fil',
     igx_input_clear_button: 'Ryd',
-    igx_input_file_placeholder: 'Der er ikke valgt nogen fil',
+    igx_input_file_placeholder: 'Der er ikke valgt nogen fil'
 };
 
 /**

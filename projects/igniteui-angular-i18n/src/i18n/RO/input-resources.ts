@@ -4,7 +4,7 @@ import { IInputResourceStrings } from 'igniteui-angular';
 const InputResourceStringsRO_: ExpandRequire<IInputResourceStrings> = {
     igx_input_upload_button: 'Încărcare fişier',
     igx_input_clear_button: 'Șterge',
-    igx_input_file_placeholder: 'Niciun fișier ales',
+    igx_input_file_placeholder: 'Niciun fișier ales'
 };
 
 /**
