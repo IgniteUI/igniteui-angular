@@ -144,7 +144,7 @@ export class SampleTestData {
         { ID: 1, IsEmployed: true, Name: 'Johny' },
         { ID: 2, IsEmployed: true, Name: 'Sally' },
         { ID: 3, IsEmployed: false, Name: 'Tim' },
-    ]);
+    ])
 
     /* Data fields: FirstName: string, LastName: string, age:number; 3 items. */
     public static personNameAgeData = () => ([
