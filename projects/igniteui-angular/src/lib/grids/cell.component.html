@@ -26,6 +26,8 @@
                 ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
                 : column.dataType === 'percent'
                 ? (value | percent:column.pipeArgs.digitsInfo:grid.locale)
+                : column.dataType === 'boolean' && !this.formatter
+                ? ''
                 : value
         "
         [row]="rowData"
@@ -43,6 +45,8 @@
                 ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
                 : column.dataType === 'percent'
                 ? (value | percent:column.pipeArgs.digitsInfo:grid.locale)
+                : column.dataType === 'boolean' && !this.formatter
+                ? ''
                 : value
         }}</div>
     <igx-icon
@@ -60,7 +64,8 @@
         (value | number:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'date' ?
         (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : column.dataType === 'currency' ?
         (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'percent' ?
-        (value | percent:column.pipeArgs.digitsInfo:grid.locale) : value"
+        (value | percent:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'boolean' && !this.formatter ?
+         '' : value"
     [row]="rowData"
     [column]="this.column.field"
     [containerClass]="'igx-grid__td-text'"
