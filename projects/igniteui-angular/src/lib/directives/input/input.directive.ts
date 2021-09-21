@@ -16,8 +16,7 @@ import {
     AbstractControl,
     FormControlName,
     NgControl,
-    NgModel,
-    ValidationErrors,
+    NgModel
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IgxInputGroupBase } from '../../input-group/input-group.common';
@@ -294,8 +293,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
 
         this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
-        //const ariaInvalid = this.valid === IgxInputState.INVALID || this.required && !this.value;
-        // this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid?.toString());
 
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
