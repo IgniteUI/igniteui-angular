@@ -658,6 +658,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public clearGrouping(name?: string | Array<string>): void {
         this._gridAPI.clear_groupby(name);
+        this.calculateGridSizes();
         this.notifyChanges(true);
     }
 
