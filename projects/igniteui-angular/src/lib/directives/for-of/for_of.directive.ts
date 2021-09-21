@@ -856,6 +856,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
+        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
             this.chunkLoad.emit(this.state);
