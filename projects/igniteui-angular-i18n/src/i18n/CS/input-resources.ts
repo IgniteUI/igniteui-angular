@@ -2,9 +2,9 @@ import { IInputResourceStrings } from 'igniteui-angular';
 
 // exported below as re-cast to create declaration type with expanded properties
 const InputResourceStringsCS_: ExpandRequire<IInputResourceStrings> = {
-    igx_input_upload_button: 'Upload File',
-    igx_input_clear_button: 'clear',
-    igx_input_file_placeholder: 'No file chosen',
+    igx_input_upload_button: 'Nahrát soubor',
+    igx_input_clear_button: 'Vymazat',
+    igx_input_file_placeholder: 'Není zvolený žádný soubor',
 };
 
 /**
