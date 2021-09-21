@@ -4,7 +4,7 @@
 [![Build Status](https://dev.azure.com/IgniteUI/igniteui-angular/_apis/build/status/IgniteUI.igniteui-angular)](https://dev.azure.com/IgniteUI/igniteui-angular/_build/latest?definitionId=3)
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-angular/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-angular?branch=master)
 [![npm version](https://badge.fury.io/js/igniteui-angular.svg)](https://badge.fury.io/js/igniteui-angular)
-![Discord](https://img.shields.io/discord/836634487483269200)
+[![Discord](https://img.shields.io/discord/836634487483269200?logo=discord&logoColor=ffffff)](https://discord.gg/39MjrTRqds)
 
 [Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch UI kits, supporting directives for [Angular](https://angular.io/) by Infragistics. Ignite UI for Angular is designed to enable developers to build enterprise-ready, high-performance HTML5 & JavaScript apps for modern desktop browsers. With the use of all features, the world’s fastest Angular grid, 60+ real-time Angular charts, and more, you are empowered to engineer excellent mobile experiences and deliver progressive web apps (PWA’s) targeting Google's Angular framework. 
 
