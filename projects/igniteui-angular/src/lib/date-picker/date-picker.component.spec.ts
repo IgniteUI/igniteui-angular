@@ -392,6 +392,7 @@ describe('IgxDatePicker', () => {
         let overlay: IgxOverlayService;
         let mockOverlayEventArgs: OverlayEventArgs & OverlayCancelableEventArgs;
         let mockInjector;
+        let mockCdr;
         let mockInputGroup: Partial<IgxInputGroupComponent>;
         let datePicker: IgxDatePickerComponent;
         let mockDateEditor: any;
@@ -455,6 +456,8 @@ describe('IgxDatePicker', () => {
             mockInjector = jasmine.createSpyObj('Injector', {
                 get: mockNgControl
             });
+
+            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
 
             mockCalendar = { selected: new EventEmitter<any>() };
             const mockComponentInstance = {
@@ -565,7 +568,7 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, null, overlay, mockModuleRef, mockInjector, renderer2, null, null);
+            datePicker = new IgxDatePickerComponent(elementRef, null, overlay, mockModuleRef, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
