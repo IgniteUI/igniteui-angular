@@ -6,8 +6,8 @@
     </igx-prefix>
 
     <input class="igx-date-picker__input-date" [displayValuePipe]="this.formatter ? displayValue : null" igxInput
-        [igxDateTimeEditor]="this.inputFormat" [minValue]="this.minValue" [maxValue]="this.maxValue"
-        [spinDelta]="this.spinDelta" [spinLoop]="this.spinLoop" [displayFormat]="this.displayFormat"
+        [igxDateTimeEditor]="this.inputFormat" [displayFormat]="this.displayFormat"
+        [minValue]="this.minValue" [maxValue]="this.maxValue" [spinDelta]="this.spinDelta" [spinLoop]="this.spinLoop" 
         [disabled]="this.disabled" [placeholder]="this.placeholder" [readonly]="!this.isDropdown || this.readOnly"
         [igxTextSelection]="this.isDropdown && !this.readOnly" [locale]="this.locale" [attr.aria-expanded]="!this.collapsed"
         [attr.aria-labelledby]="this.label?.id" aria-haspopup="dialog" aria-autocomplete="none" role="combobox">
