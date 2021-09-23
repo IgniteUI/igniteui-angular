@@ -9,13 +9,14 @@ import {
     Input,
     OnDestroy,
     Optional,
+    Renderer2,
     Self,
 } from '@angular/core';
 import {
     AbstractControl,
     FormControlName,
     NgControl,
-    NgModel,
+    NgModel
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IgxInputGroupBase } from '../../input-group/input-group.common';
@@ -110,12 +111,14 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         @Inject(FormControlName)
         protected formControl: FormControlName,
         protected element: ElementRef<HTMLInputElement>,
-        protected cdr: ChangeDetectorRef
+        protected cdr: ChangeDetectorRef,
+        protected renderer: Renderer2
     ) { }
 
     private get ngControl(): NgControl {
         return this.ngModel ? this.ngModel : this.formControl;
     }
+
     /**
      * Sets the `value` property.
      *
@@ -201,7 +204,11 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     public get required() {
-        return this.nativeElement.hasAttribute('required');
+        let validation;
+        if (this.ngControl && (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            validation = this.ngControl.control.validator({} as AbstractControl);
+        }
+        return validation && validation.required || this.nativeElement.hasAttribute('required');
     }
     /**
      * @hidden
@@ -281,16 +288,11 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this._valid = IgxInputState.INITIAL;
         }
         // Also check the control's validators for required
-        if (
-            !this.inputGroup.isRequired &&
-            this.ngControl &&
-            this.ngControl.control.validator
-        ) {
-            const validation = this.ngControl.control.validator(
-                {} as AbstractControl
-            );
-            this.inputGroup.isRequired = validation && validation.required;
+        if (this.required && !this.inputGroup.isRequired) {
+            this.inputGroup.isRequired = this.required;
         }
+
+        this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
 
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
@@ -368,6 +370,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 this._valid = IgxInputState.INITIAL;
                 this.inputGroup.isRequired = false;
             }
+            this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
+            const ariaInvalid = this.valid === IgxInputState.INVALID;
+            this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid.toString());
         } else {
             this.checkNativeValidity();
         }
