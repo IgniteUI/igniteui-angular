@@ -167,7 +167,7 @@ export class ColumnCellFormatterComponent extends BasicGridComponent {
     }
 
     public boolFormatter(value: boolean): string {
-        return value ? 'true' : 'false';
+        return value ? 'check' : 'close';
     }
 }
 
