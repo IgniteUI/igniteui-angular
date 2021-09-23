@@ -2,5 +2,5 @@
     <!-- <igx-pivot-grid #grid1 [data]="data" [pivotConfiguration]="pivotConfig">
     </igx-pivot-grid> -->
 
-    <pre>{{origData | gridPivotRow:pivotConfig.rows:pivotConfig.values | json}}</pre>
+    <pre>{{origData | gridPivotRow:pivotConfig.rows:pivotConfig.values | gridPivotColumn:pivotConfig.columns:pivotConfig.values | json}}</pre>
 </div>

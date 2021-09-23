@@ -21,8 +21,6 @@ export class IgxPivotRowPipe implements PipeTransform {
         rows: IPivotDimension[],
         values?: IPivotValue[]
     ): any[] {
-
-
         // build hierarchies - groups and subgroups
         const hierarchies = PivotUtil.getFieldsHierarchy(collection, rows);
         // apply aggregations based on the created groups
@@ -47,13 +45,32 @@ export class IgxPivotColumnPipe implements PipeTransform {
         columns: IPivotDimension[],
         values?: IPivotValue[]
     ): any[] {
-        // build hierarchies - groups and subgroups
-        const hierarchies = PivotUtil.getFieldsHierarchy(collection, columns);
-        // apply aggregations based on the created groups
-        PivotUtil.applyAggregations(hierarchies, values);
-        // generate column fields based on the hierarchies
+        // build hierarchies - groups and subgroups by columns
+        const result = [];
+        collection.forEach(hierarchy => {
+            // apply aggregations based on the created groups and generate column fields based on the hierarchies
+            this.groupColumns(hierarchy, columns, values);
+            if (hierarchy['children']) {
+                let flatCols = {};
+                PivotUtil.flattenColumnHierarchy(hierarchy['children'], values).forEach(o => {
+                    delete o['records'];
+                    flatCols = {...flatCols, ...o};
+                });
+                result.push({...hierarchy, ...flatCols});
+            }
+        });
 
-        return [];
+        return result;
+    }
+
+    private groupColumns(hierarchy, columns, values) {
+        const children = hierarchy['children'];
+        if (children) {
+            this.groupColumns(children, columns, values);
+        } else if (hierarchy['records']) {
+            hierarchy['children'] = PivotUtil.getFieldsHierarchy(hierarchy['records'], columns);
+            PivotUtil.applyAggregations(hierarchy['children'], values);
+        }
     }
 
 
@@ -159,6 +176,23 @@ export class PivotUtil {
             flatData.push(obj);
             if (h['children']) {
                 flatData = [...flatData, ...this.flattenHierarchy(h['children'], rec)];
+            }
+        });
+
+        return flatData;
+    }
+
+    public static flattenColumnHierarchy(hierarchies, values) {
+        let flatData = [];
+        hierarchies.forEach((h, key) => {
+            const obj = {};
+            for (const value of values) {
+                obj[key] = h['aggregations'][value.member];
+                obj['records'] = h['records'];
+                flatData.push(obj);
+                if (h['children']) {
+                    flatData = [...flatData, ...this.flattenColumnHierarchy(h['children'], values)];
+                }
             }
         });
 
