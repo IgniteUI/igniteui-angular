@@ -24,3 +24,10 @@ export interface IPivotValue {
     // Enables/Disables a particular value from pivot aggregation.
     enabled: boolean;
 }
+
+export interface IPivotKeys {
+    children: string;
+    records: string;
+    aggregations: string;
+    level: string;
+}
