@@ -5,6 +5,7 @@ import { TimePickerResourceStringsZHHANS} from './time-picker-resources';
 import { DateRangePickerResourceStringsZHHANS} from './date-range-picker-resources';
 import { CarouselResourceStringsZHHANS} from './carousel-resources';
 import { ListResourceStringsZHHANS} from './list-resources';
+import { InputResourceStringsZHHANS } from './input-resources';
 
 /**
  * Simplified Chinese (zh-Hans) resource strings for all components
@@ -16,5 +17,6 @@ export const IgxResourceStringsZHHANS = {
     ...TimePickerResourceStringsZHHANS,
     ...DateRangePickerResourceStringsZHHANS,
     ...CarouselResourceStringsZHHANS,
-    ...ListResourceStringsZHHANS
+    ...ListResourceStringsZHHANS,
+    ...InputResourceStringsZHHANS
 };

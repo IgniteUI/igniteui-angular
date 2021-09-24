@@ -5,6 +5,7 @@ import { DateRangePickerResourceStringsBG } from './date-range-picker-resources'
 import { CarouselResourceStringsBG } from './carousel-resources';
 import { ListResourceStringsBG } from './list-resources';
 import { CalendarResourceStringsBG } from './calendar-resources';
+import { InputResourceStringsBG } from './input-resources';
 
 /**
  * Bulgarian resource strings for all components
@@ -16,5 +17,6 @@ export const IgxResourceStringsBG = {
     ...DateRangePickerResourceStringsBG,
     ...CarouselResourceStringsBG,
     ...ListResourceStringsBG,
-    ...CalendarResourceStringsBG
+    ...CalendarResourceStringsBG,
+    ...InputResourceStringsBG
 };

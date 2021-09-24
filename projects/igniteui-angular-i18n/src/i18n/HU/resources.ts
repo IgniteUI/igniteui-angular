@@ -5,6 +5,7 @@ import { DateRangePickerResourceStringsHU } from './date-range-picker-resources'
 import { CarouselResourceStringsHU } from './carousel-resources';
 import { ListResourceStringsHU } from './list-resources';
 import { CalendarResourceStringsHU } from './calendar-resources';
+import { InputResourceStringsHU } from './input-resources';
 
 /**
  * Hungarian resource strings for all components
@@ -16,5 +17,6 @@ export const IgxResourceStringsHU = {
     ...DateRangePickerResourceStringsHU,
     ...CarouselResourceStringsHU,
     ...ListResourceStringsHU,
-    ...CalendarResourceStringsHU
+    ...CalendarResourceStringsHU,
+    ...InputResourceStringsHU
 };

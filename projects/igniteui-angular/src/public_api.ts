@@ -117,5 +117,6 @@ export { ICalendarResourceStrings } from './lib/core/i18n/calendar-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
 export { IDateRangePickerResourceStrings } from './lib/core/i18n/date-range-picker-resources';
 export { IListResourceStrings } from './lib/core/i18n/list-resources';
+export { IInputResourceStrings } from './lib/core/i18n/input-resources';
 export { InteractionMode } from './lib/core/enums';
 export { SplitterType } from './lib/splitter/splitter.component';
