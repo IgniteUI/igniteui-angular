@@ -7,7 +7,7 @@ import { slideInLeft, slideOutRight } from '../animations/slide';
 import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IgxAccordionComponent } from './accordion.component';
+import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionComponent } from './accordion.component';
 import { IgxAccordionModule } from './accordion.module';
 
 const ACCORDION_CLASS = 'igx-accordion';
@@ -179,16 +179,14 @@ describe('Rendering Tests', () => {
             accordion.singleBranchExpand = false;
             fix.detectChanges();
 
-            let argsEd;
-            let argsIng;
-            const subsExpanded = accordion.panels[0].contentExpanded.subscribe(evt => {
-                argsEd = evt;
-                argsEd.owner = accordion;
+            let argsEd: IAccordionEventArgs;
+            let argsIng: IAccordionCancelableEventArgs;
+            const subsExpanded = accordion.panels[0].contentExpanded.subscribe(expArgs => {
+                argsEd = { event: expArgs.event, owner: accordion, panel: expArgs.owner };
             });
 
-            const subsExpanding = accordion.panels[0].contentExpanding.subscribe(evt => {
-                argsIng = evt;
-                argsIng.owner = accordion;
+            const subsExpanding = accordion.panels[0].contentExpanding.subscribe(expArgs => {
+                argsIng = { event: expArgs.event, cancel: expArgs.cancel, owner: accordion, panel: expArgs.owner };
             });
             accordion.panels[0].expand();
             tick();
@@ -202,14 +200,12 @@ describe('Rendering Tests', () => {
             subsExpanded.unsubscribe();
             subsExpanding.unsubscribe();
 
-            const subsCollapsed = accordion.panels[0].contentCollapsed.subscribe(evt => {
-                argsEd = evt;
-                argsEd.owner = accordion;
+            const subsCollapsed = accordion.panels[0].contentCollapsed.subscribe(expArgs => {
+                argsEd = { event: expArgs.event, owner: accordion, panel: expArgs.owner };
             });
 
-            const subsCollapsing = accordion.panels[0].contentCollapsing.subscribe(evt => {
-                argsIng = evt;
-                argsIng.owner = accordion;
+            const subsCollapsing = accordion.panels[0].contentCollapsing.subscribe(expArgs => {
+                argsIng = { event: expArgs.event, cancel: expArgs.cancel, owner: accordion, panel: expArgs.owner };
             });
             accordion.panels[0].collapse();
             tick();

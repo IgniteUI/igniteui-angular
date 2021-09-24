@@ -52,6 +52,8 @@ import { DropPosition } from '../moving/moving.service';
 import { IgxColumnGroupComponent } from './column-group.component';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { PlatformUtil } from '../../core/utils';
+import { CellType } from '../common/cell.interface';
+import { IgxGridCell } from '../grid-public-cell';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -516,6 +518,27 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public headerClasses = '';
 
     /**
+     * Sets conditional style properties on the column header.
+     * Similar to `ngStyle` it accepts an object literal where the keys are
+     * the style properties and the value is the expression to be evaluated.
+     * ```typescript
+     * styles = {
+     *  background: 'royalblue',
+     *  color: (column) => column.pinned ? 'red': 'inherit'
+     * }
+     * ```
+     * ```html
+     * <igx-column [headerStyles]="styles"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public headerStyles = null;
+
+    /**
      * Sets/gets the class selector of the column group header.
      * ```typescript
      * let columnHeaderClass = this.column.headerGroupClasses;
@@ -530,6 +553,28 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @WatchColumnChanges()
     @Input()
     public headerGroupClasses = '';
+
+    /**
+     * Sets conditional style properties on the column header group wrapper.
+     * Similar to `ngStyle` it accepts an object literal where the keys are
+     * the style properties and the value is the expression to be evaluated.
+     * ```typescript
+     * styles = {
+     *  background: 'royalblue',
+     *  color: (column) => column.pinned ? 'red': 'inherit'
+     * }
+     * ```
+     * ```html
+     * <igx-column [headerGroupStyles]="styles"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public headerGroupStyles = null;
+
     /**
      * Sets a conditional class selector of the column cells.
      * Accepts an object literal, containing key-value pairs,
@@ -560,7 +605,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```typescript
      * styles = {
      *  background: 'royalblue',
-     *  color: (rowData, columnKey, cellValue, rowIndex) => value.startsWith('Important') : 'red': 'inherit'
+     *  color: (rowData, columnKey, cellValue, rowIndex) => value.startsWith('Important') ? 'red': 'inherit'
      * }
      * ```
      * ```html
@@ -574,12 +619,17 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @Input()
     public cellStyles = null;
     /**
-     * When autogenerating columns, the formatter is used to format the display of the column data
-     * without modifying the underlying bound values.
+     * Applies display format to cell values in the column. Does not modify the underlying data.
+     *
+     * @remark
+     * Note: As the formatter is used in places like the Excel style filtering dialog, in certain
+     * scenarios (remote filtering for example), the row data argument can be `undefined`.
+     *
      *
      * In this example, we check to see if the column name is Salary, and then provide a method as the column formatter
      * to format the value into a currency string.
      *
+     * @example
      * ```typescript
      * columnInit(column: IgxColumnComponent) {
      *   if (column.field == "Salary") {
@@ -592,12 +642,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * }
      * ```
      *
+     * @example
+     * ```typescript
+     * const column = this.grid.getColumnByName('Address');
+     * const addressFormatter = (address: string, rowData: any) => data.privacyEnabled ? 'unknown' : address;
+     * column.formatter = addressFormatter;
+     * ```
+     *
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public formatter: (value: any) => any;
+    public formatter: (value: any, rowData?: any) => any;
 
     /**
      * The summaryFormatter is used to format the display of the column summaries.
@@ -1202,19 +1259,35 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * Gets the cells of the column.
      * ```typescript
-     * let columnCells =  this.column.cells;
+     * let columnCells = this.column._cells;
      * ```
      *
-     * @memberof IgxColumnComponent
      */
-    public get cells(): IgxGridCellComponent[] {
+    public get cells(): CellType[] {
+        // TODO calclulate index for remote data scenarios
+        // check indexes in this.dataRowList.first and this.dataRowList.last
+        return this.grid.dataView
+            .map((rec, index) => {
+                if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
+                    const cell = new IgxGridCell(this.grid as any, index, this.field);
+                    return cell;
+                }
+            }).filter(cell => cell);
+    }
+
+
+    /**
+     * @hidden @internal
+     */
+    public get _cells(): IgxGridCellComponent[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowDirective)
             .map((row) => {
-                if (row.cells) {
-                    return row.cells.filter((cell) => cell.columnIndex === this.index);
+                if (row._cells) {
+                    return row._cells.filter((cell) => cell.columnIndex === this.index);
                 }
             }).reduce((a, b) => a.concat(b), []);
     }
+
     /**
      * Gets the column visible index.
      * If the column is not visible, returns `-1`.
@@ -2247,12 +2320,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const range = this.grid.document.createRange();
         const largest = new Map<number, number>();
 
-        if (this.cells.length > 0) {
+        if (this._cells.length > 0) {
             const cellsContentWidths = [];
-            this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
+            this._cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
 
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
-            const cellStyle = this.grid.document.defaultView.getComputedStyle(this.cells[index].nativeElement);
+            const cellStyle = this.grid.document.defaultView.getComputedStyle(this._cells[index].nativeElement);
             const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
                 parseFloat(cellStyle.borderLeftWidth) + parseFloat(cellStyle.borderRightWidth);
 

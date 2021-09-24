@@ -1,8 +1,7 @@
 import { TransactionService, Transaction, State, StateUpdateEvent } from './transaction';
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
-@Injectable()
 export class IgxBaseTransactionService<T extends Transaction, S extends State> implements TransactionService<T, S> {
     /**
      * @inheritdoc
@@ -88,7 +87,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         if (!state) {
             return null;
         }
-        if (mergeChanges) {
+        if (mergeChanges && state.recordRef) {
             return this.updateValue(state);
         }
         return state.value;

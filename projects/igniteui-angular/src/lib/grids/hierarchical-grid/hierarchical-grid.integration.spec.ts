@@ -15,7 +15,8 @@ import { take } from 'rxjs/operators';
 import { IgxIconModule } from '../../icon/public_api';
 import {
     IgxHierarchicalGridTestBaseComponent,
-    IgxHierarchicalGridTestCustomToolbarComponent
+    IgxHierarchicalGridTestCustomToolbarComponent,
+    IgxHierarchicalGridWithTransactionProviderComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
@@ -36,7 +37,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
-                IgxHierarchicalGridTestCustomToolbarComponent
+                IgxHierarchicalGridTestCustomToolbarComponent,
+                IgxHierarchicalGridWithTransactionProviderComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule]
@@ -157,6 +159,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.childLayoutList.first.gridCreated.pipe(take(2)).subscribe((args) => {
                 firstLayoutInstances.push(args.grid);
             });
+            hierarchicalGrid.batchEditing = true;
+            tick();
+            fixture.detectChanges();
             const dataRows = hierarchicalGrid.dataRowList.toArray();
             // expand 1st row
             hierarchicalGrid.expandRow(dataRows[0].rowID);
@@ -175,6 +180,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should remove expand indicator for uncommitted added rows', fakeAsync(() => {
+            hierarchicalGrid.batchEditing = true;
+            fixture.detectChanges();
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
@@ -189,6 +196,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
         it('should now allow expanding uncommitted added rows', fakeAsync(() => {
             /* using the API here assumes keyboard interactions to expand/collapse would also be blocked */
+            hierarchicalGrid.batchEditing = true;
+            fixture.detectChanges();
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
@@ -210,6 +219,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should revert changes when transactions are cleared for child grids', fakeAsync(() => {
+            hierarchicalGrid.batchEditing = true;
+            fixture.detectChanges();
             let childGrid;
             hierarchicalGrid.childLayoutList.first.gridCreated.pipe(take(1)).subscribe((args) => {
                 childGrid = args.grid;
@@ -218,10 +229,10 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
             childGrid.updateRow({ ProductName: 'Changed' }, '00');
             fixture.detectChanges();
-            expect(childGrid.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Changed');
+            expect(childGrid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.innerText).toEqual('Changed');
             childGrid.transactions.clear();
             fixture.detectChanges();
-            expect(childGrid.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Product: A0');
+            expect(childGrid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.innerText).toEqual('Product: A0');
         }));
 
         it('should return correctly the rowData', () => {
@@ -243,6 +254,25 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
             expect(hierarchicalGrid.getRowData('101')).toEqual({});
         });
+
+        it('should respect transaction service that is provided in the providers array', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridWithTransactionProviderComponent);
+            tick();
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            expect(hierarchicalGrid.transactions.enabled).toBeTruthy();
+            expect(hierarchicalGrid.batchEditing).toBeFalsy();
+            let childGrid: IgxHierarchicalGridComponent;
+            hierarchicalGrid.childLayoutList.first.gridCreated.pipe(take(1)).subscribe((args) => {
+                childGrid = args.grid;
+            });
+            // expand first row
+            hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
+            expect(childGrid).toBeDefined();
+            expect(childGrid.transactions.enabled).toBeTruthy();
+            childGrid.updateRow({ ProductName: 'Changed' }, '00');
+            expect(childGrid.transactions.getAggregatedChanges(false).length).toBe(1);
+        }));
     });
 
     describe('Sorting', () => {
@@ -792,13 +822,13 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrid.unpinnedColumns.length).toBe(1);
             // check cells
             expect(childGrid.gridAPI.get_row_by_index(0).cells.length).toBe(3);
-            let cell = childGrid.getCellByColumn(0, 'ChildLevels');
+            let cell = childGrid.gridAPI.get_cell_by_index(0, 'ChildLevels');
             expect(cell.visibleColumnIndex).toEqual(0);
             expect(GridFunctions.isCellPinned(cell)).toBeTruthy();
-            cell = childGrid.getCellByColumn(0, 'ProductName');
+            cell = childGrid.gridAPI.get_cell_by_index(0, 'ProductName');
             expect(cell.visibleColumnIndex).toEqual(1);
             expect(GridFunctions.isCellPinned(cell)).toBeTruthy();
-            cell = childGrid.getCellByColumn(0, 'ID');
+            cell = childGrid.gridAPI.get_cell_by_index(0, 'ID');
             expect(cell.visibleColumnIndex).toEqual(2);
             expect(GridFunctions.isCellPinned(cell)).toBeFalsy();
         }));
@@ -812,7 +842,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             const rightMostGridPart = hierarchicalGrid.nativeElement.getBoundingClientRect().right;
             const leftMostGridPart = hierarchicalGrid.nativeElement.getBoundingClientRect().left;
-            const leftMostRightPinnedCellsPart = hierarchicalGrid.getCellByColumn(0, 'ID').nativeElement.getBoundingClientRect().left;
+            const leftMostRightPinnedCellsPart = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ID')
+                .nativeElement.getBoundingClientRect().left;
             const pinnedCellWidth = hierarchicalGrid.getCellByColumn(0, 'ID').width;
             // Expects that right pinning has been in action
             expect(leftMostGridPart).not.toEqual(leftMostRightPinnedCellsPart);
@@ -836,8 +867,16 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         it('should pin rows to top ', (() => {
             hierarchicalGrid.pinRow('0');
             fixture.detectChanges();
-
             expect(hierarchicalGrid.pinnedRows.length).toBe(1);
+
+            hierarchicalGrid.unpinRow('0');
+            fixture.detectChanges();
+            expect(hierarchicalGrid.pinnedRows.length).toBe(0);
+
+            hierarchicalGrid.pinRow('0');
+            fixture.detectChanges();
+            expect(hierarchicalGrid.pinnedRows.length).toBe(1);
+
             let pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].nativeElement.classList.contains(FIXED_ROW_CONTAINER_TOP)).toBeTruthy();

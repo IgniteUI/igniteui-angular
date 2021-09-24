@@ -3,6 +3,7 @@ import { ISortingExpression } from '../data-operations/sorting-expression.interf
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
+import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IPagingState } from '../data-operations/paging-state.interface';
 import { GridColumnDataType } from '../data-operations/data-util';
@@ -76,6 +77,8 @@ export interface IColumnState {
     header: string;
     resizable: boolean;
     searchable: boolean;
+    columnGroup: boolean;
+    parent: any;
 }
 
 export type GridFeatures = keyof IGridStateOptions;
@@ -162,37 +165,61 @@ export class IgxGridStateDirective {
         columns: {
             getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => ({
-                        pinned: c.pinned,
-                        sortable: c.sortable,
-                        filterable: c.filterable,
-                        editable: c.editable,
-                        sortingIgnoreCase: c.sortingIgnoreCase,
-                        filteringIgnoreCase: c.filteringIgnoreCase,
-                        headerClasses: c.headerClasses,
-                        headerGroupClasses: c.headerGroupClasses,
-                        maxWidth: c.maxWidth,
-                        groupable: c.groupable,
-                        movable: c.movable,
-                        hidden: c.hidden,
-                        dataType: c.dataType,
-                        hasSummary: c.hasSummary,
-                        field: c.field,
-                        width: c.width,
-                        header: c.header,
-                        resizable: c.resizable,
-                        searchable: c.searchable,
-                        selectable: c.selectable
-                    }));
+                    pinned: c.pinned,
+                    sortable: c.sortable,
+                    filterable: c.filterable,
+                    editable: c.editable,
+                    sortingIgnoreCase: c.sortingIgnoreCase,
+                    filteringIgnoreCase: c.filteringIgnoreCase,
+                    headerClasses: c.headerClasses,
+                    headerGroupClasses: c.headerGroupClasses,
+                    maxWidth: c.maxWidth,
+                    groupable: c.groupable,
+                    movable: c.movable,
+                    hidden: c.hidden,
+                    dataType: c.dataType,
+                    hasSummary: c.hasSummary,
+                    field: c.field,
+                    width: c.width,
+                    header: c.header,
+                    resizable: c.resizable,
+                    searchable: c.searchable,
+                    selectable: c.selectable,
+                    parent: c.parent ? c.parent.header : null,
+                    columnGroup: c.columnGroup
+                }));
                 return { columns: gridColumns };
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[]): void => {
                 const newColumns = [];
                 const factory = context.resolver.resolveComponentFactory(IgxColumnComponent);
+                const groupFactory = context.resolver.resolveComponentFactory(IgxColumnGroupComponent);
                 state.forEach((colState) => {
-                    const ref = factory.create(context.viewRef.injector);
-                    Object.assign(ref.instance, colState);
-                    ref.changeDetectorRef.detectChanges();
-                    newColumns.push(ref.instance);
+                    const hasColumnGroup = colState.columnGroup;
+                    delete colState.columnGroup;
+                    if (hasColumnGroup) {
+                        const ref1 = groupFactory.create(context.viewRef.injector);
+                        Object.assign(ref1.instance, colState);
+                        if (ref1.instance.parent) {
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref1.instance.parent);
+                            columnGroup.children.reset([...columnGroup.children.toArray(), ref1.instance]);
+                            ref1.instance.parent = columnGroup;
+                        }
+                        ref1.changeDetectorRef.detectChanges();
+                        newColumns.push(ref1.instance);
+                    } else {
+                        const ref = factory.create(context.viewRef.injector);
+                        Object.assign(ref.instance, colState);
+                        if (ref.instance.parent) {
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref.instance.parent);
+                            if (columnGroup) {
+                                ref.instance.parent = columnGroup;
+                                columnGroup.children.reset([...columnGroup.children.toArray(), ref.instance]);
+                            }
+                        }
+                        ref.changeDetectorRef.detectChanges();
+                        newColumns.push(ref.instance);
+                    }
                 });
                 context.currGrid.columnList.reset(newColumns);
                 context.currGrid.columnList.notifyOnChanges();

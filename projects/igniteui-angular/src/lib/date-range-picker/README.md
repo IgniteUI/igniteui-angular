@@ -122,13 +122,13 @@ With projected inputs:
 | weekStart        | number             | Sets the start day of the week. Can be assigned to a numeric value or to `WEEKDAYS` enum value. |
 
 ### Outputs
-| Name             | Type                  | Description |
-|:-----------------|:----------------------|:------------|
-| valueChange      | DateRange             | Emitted when the picker's value changes. Used for two-way binding. |
-| opening        | IBaseCancelableBrowserEventArgs | Emitted when the calendar starts opening, cancelable. |
-| opened         | IBaseEventArgs        | Emitted when the `IgxDateRangePickerComponent` is opened.                    |
-| closing        | IBaseCancelableBrowserEventArgs | Emitted when the calendar starts closing, cancelable. | 
-| closed         | IBaseEventArgs        | Emitted when the `IgxDateRangePickerComponent` is closed.                    |
+| Name        | Description                                                        | Cancelable | Emitted with                    |
+|:------------|:-------------------------------------------------------------------|------------|:--------------------------------|
+| valueChange | Emitted when the picker's value changes. Used for two-way binding. | false      | DateRange                       |
+| opening     | Emitted when the calendar starts opening, cancelable.              | true       | IBaseCancelableBrowserEventArgs |
+| opened      | Emitted when the `IgxDateRangePickerComponent` is opened.          | false      | IBaseEventArgs                  |
+| closing     | Emitted when the calendar starts closing, cancelable.              | true       | IBaseCancelableBrowserEventArgs |
+| closed      | Emitted when the `IgxDateRangePickerComponent` is closed.          | false      | IBaseEventArgs                  |
 
 ### Methods
 | Name        | Arguments     | Return Type | Description |

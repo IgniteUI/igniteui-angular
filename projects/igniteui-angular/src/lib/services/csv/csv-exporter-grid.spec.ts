@@ -10,7 +10,10 @@ import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
-import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent } from '../../test-utils/grid-samples.spec';
+import { ReorderedColumnsComponent,
+        GridIDNameJobTitleComponent,
+        ProductsComponent,
+        ColumnsAddedOnInitComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
@@ -33,7 +36,8 @@ describe('CSV Grid Exporter', () => {
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
-                ProductsComponent
+                ProductsComponent,
+                ColumnsAddedOnInitComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         })
@@ -363,6 +367,16 @@ describe('CSV Grid Exporter', () => {
         expect(grid.filteredData.length).toBe(4);
         const wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.gridWithAdvancedFilters, 'Should export only filtered data.');
+    });
+
+    it('should map dynamically added data & columns properly (#9872).', async () => {
+        const fix = TestBed.createComponent(ColumnsAddedOnInitComponent);
+        fix.detectChanges();
+        await wait();
+
+        const grid = fix.componentInstance.grid;
+        const wrapper = await getExportedData(grid, options);
+        wrapper.verifyData(wrapper.gridColumnsAddedOnInit, 'Columns should be exported in the same order as in the grid!');
     });
 
     describe('', () => {

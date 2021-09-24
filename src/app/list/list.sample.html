@@ -304,8 +304,8 @@
     </section>
 </div>
 
-<igx-dialog #addFruitDialog title="Add Fruit" leftButtonLabel="Cancel" (onLeftButtonSelect)="addFruitDialog.close()" rightButtonLabel="Add"
-            rightButtonBackgroundColor="#0375be" rightButtonColor="white" (onRightButtonSelect)="onAddFruitButtonClicked(newFruitName.value);newFruitName.value='';"
+<igx-dialog #addFruitDialog title="Add Fruit" leftButtonLabel="Cancel" (leftButtonSelect)="addFruitDialog.close()" rightButtonLabel="Add"
+            rightButtonBackgroundColor="#0375be" rightButtonColor="white" (rightButtonSelect)="onAddFruitButtonClicked(newFruitName.value);newFruitName.value='';"
             backgroundClick="true" [closeOnOutsideSelect]="true">
     <igx-input-group>
         <label igxLabel for="newFruit">Fruit Name</label>

@@ -17,10 +17,12 @@ export class GridGroupBySampleComponent implements OnInit {
     private grid1: IgxGridComponent;
 
     public data: Array<any>;
+    public data2: any[] = [];
     public hideGroupedColumns = false;
     public expState = [];
     public columns: Array<any>;
     public groupingExpressions: Array<ISortingExpression>;
+    public perfGrpExpr = [ { fieldName: 'FIELD', dir: SortingDirection.Asc } ];
     public summaryMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootLevelOnly;
     public summaryModes = [];
     public selectionModes: any[];
@@ -31,6 +33,13 @@ export class GridGroupBySampleComponent implements OnInit {
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) { }
 
     public ngOnInit(): void {
+        for (let i = 0; i < 60; i++) {
+            this.data2.push(...Array(10).fill({ STATUS: 'A', FIELD: 'some text' }));
+            this.data2.push(...Array(10).fill({ STATUS: 'B', FIELD: 'some text' }));
+            this.data2.push(...Array(10).fill({ STATUS: 'C', FIELD: 'some text' }));
+            this.data2.push(...Array(10).fill({ STATUS: 'D', FIELD: 'some text' }));
+        }
+        this.data2 = this.data2.map((rec, index) => ({...rec, ID: index}));
         this.columns = [
             { dataType: 'string', field: 'ID', width: 100, hidden: true },
             { dataType: 'string', field: 'CompanyName', width: 300, groupable: true },

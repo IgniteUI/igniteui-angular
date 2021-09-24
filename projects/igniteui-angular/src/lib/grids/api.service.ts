@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray, isEqual, reverseMapper, mergeObjects } from '../core/utils';
+import { cloneArray, reverseMapper, mergeObjects } from '../core/utils';
 import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
@@ -8,7 +8,7 @@ import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxRowDirective } from './row.directive';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
-import { IgxCell, IgxGridCRUDService, IgxRow } from './common/crud.service';
+import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
@@ -96,6 +96,21 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         return this.grid.rowList.find((row) => row.index === rowIndex);
     }
 
+    /**
+     * Gets the rowID of the record at the specified data view index
+     *
+     * @param index
+     * @param dataCollection
+     */
+    public get_rec_id_by_index(index: number, dataCollection?: any[]): any {
+        dataCollection = dataCollection || this.grid.data;
+        if (index >= 0 && index < dataCollection.length) {
+            const rec = dataCollection[index];
+            return this.grid.primaryKey ? rec[this.grid.primaryKey] : rec;
+        }
+        return null;
+    }
+
     public get_cell_by_key(rowSelector: any, field: string): IgxGridCellComponent {
         const row = this.get_row_by_key(rowSelector);
         if (row && row.cells) {
@@ -103,11 +118,16 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    public get_cell_by_index(rowIndex: number, columnIndex: number): IgxGridCellComponent {
+    public get_cell_by_index(rowIndex: number, columnID: number | string): IgxGridCellComponent {
         const row = this.get_row_by_index(rowIndex);
-        if (row && row.cells) {
-            return row.cells.find((cell) => cell.columnIndex === columnIndex);
+        const hasCells = row && row.cells;
+        if (hasCells && typeof columnID === 'number') {
+            return row.cells.find((cell) => cell.column.index === columnID);
         }
+        if (hasCells && typeof columnID === 'string'){
+            return row.cells.find((cell) => cell.column.field === columnID);
+        }
+
     }
 
     public get_cell_by_visible_index(rowIndex: number, columnIndex: number): IgxGridCellComponent {
@@ -115,23 +135,6 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         if (row && row.cells) {
             return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
         }
-    }
-
-    public update_add_cell(cell: IgxCell): IGridEditEventArgs  {
-        if (!cell) {
-            return;
-        }
-
-        const args = cell.createEditEventArgs(true);
-
-        const data = cell.rowData;
-        if (cell.column.hasNestedPath) {
-            mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
-        } else {
-            data[cell.column.field] = args.newValue;
-        }
-        mergeObjects(this.crudService.row.data, data);
-        return args;
     }
 
     public update_cell(cell: IgxCell): IGridEditEventArgs {
@@ -162,7 +165,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
     }
 
     // TODO: CRUD refactor to not emit editing evts.
-    public update_row(row: IgxRow, value: any, event?: Event) {
+    public update_row(row: IgxEditRow, value: any, event?: Event) {
         const grid = this.grid;
         const selected = grid.selectionService.isRowSelected(row.id);
         const rowInEditMode = this.crudService.row;
@@ -265,10 +268,11 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         return this.grid.filteredData;
     }
 
-    public addRowToData(rowData: any, _parentRowID?) {
+    public addRowToData(rowData: any, parentID?) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;
+
         if (grid.transactions.enabled) {
             const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
             const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
@@ -402,6 +406,17 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
 
     public get_rec_by_id(rowID) {
         return this.grid.primaryKey ? this.getRowData(rowID) : rowID;
+    }
+
+    /**
+     * Returns the index of the record in the data view by pk or -1 if not found or primaryKey is not set.
+     *
+     * @param pk
+     * @param dataCollection
+     */
+    public get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number {
+        dataCollection = dataCollection || this.grid.data;
+        return this.grid.primaryKey ? dataCollection.findIndex(rec => rec[this.grid.primaryKey] === pk) : -1;
     }
 
     public allow_expansion_state_change(rowID, expanded) {

@@ -65,6 +65,7 @@
             <ng-container *ngFor="let column of pinnedColumnCollection | igxTopLevel">
                 <igx-grid-header-group
                     [ngClass]="column.headerGroupClasses"
+                    [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
                     [column]="column"
                     [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                     [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
@@ -83,6 +84,7 @@
         >
             <igx-grid-header-group
                 [ngClass]="column.headerGroupClasses"
+                [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
                 [column]="column"
                 [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
@@ -94,6 +96,7 @@
             <ng-container *ngFor="let column of pinnedColumnCollection | igxTopLevel">
                 <igx-grid-header-group
                     [ngClass]="column.headerGroupClasses"
+                    [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
                     [column]="column"
                     [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                     [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"

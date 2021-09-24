@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule, Component, ViewChild, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
 import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/public_api';
+import { IBaseEventArgs } from '../../core/utils';
 import { PickerInteractionMode } from '../../date-common/types';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
@@ -17,10 +18,10 @@ export class IgxCalendarContainerComponent {
     public calendar: IgxCalendarComponent;
 
     @Output()
-    public calendarClose = new EventEmitter();
+    public calendarClose = new EventEmitter<IBaseEventArgs>();
 
     @Output()
-    public todaySelection = new EventEmitter();
+    public todaySelection = new EventEmitter<IBaseEventArgs>();
 
     @HostBinding('class.igx-date-picker')
     public styleClass = 'igx-date-picker';

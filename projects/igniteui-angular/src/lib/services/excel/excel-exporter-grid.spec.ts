@@ -16,7 +16,8 @@ import {
     GridHireDateComponent,
     GridExportGroupedDataComponent,
     MultiColumnHeadersExportComponent,
-    GridWithEmptyColumnsComponent
+    GridWithEmptyColumnsComponent,
+    ColumnsAddedOnInitComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -59,7 +60,8 @@ describe('Excel Exporter', () => {
                 GridExportGroupedDataComponent,
                 IgxHierarchicalGridExportComponent,
                 MultiColumnHeadersExportComponent,
-                IgxHierarchicalGridMultiColumnHeadersExportComponent
+                IgxHierarchicalGridMultiColumnHeadersExportComponent,
+                ColumnsAddedOnInitComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -231,6 +233,33 @@ describe('Excel Exporter', () => {
             const wrapper = await getExportedData(grid, options);
             wrapper.verifyStructure();
             await wrapper.verifyDataFilesContent(actualData.gridJobTitleIdFrozen, 'Not all pinned columns are frozen in the export!');
+        });
+
+        it('should honor \'freezeHeaders\' option.', async () => {
+            const result = await TestMethods.createGridAndPinColumn([1]);
+            const fix = result.fixture;
+            const grid = result.grid;
+
+            options.ignorePinning = false;
+            options.freezeHeaders = true;
+            fix.detectChanges();
+
+            let wrapper = await getExportedData(grid, options);
+            wrapper.verifyStructure();
+            await wrapper.verifyDataFilesContent(actualData.gridNameFrozenHeaders,
+                'One frozen column and frozen headers should have been exported!');
+
+            options.ignorePinning = true;
+            fix.detectChanges();
+            wrapper = await getExportedData(grid, options);
+            await wrapper.verifyDataFilesContent(actualData.gridFrozenHeaders,
+                'No frozen columns and frozen headers should have been exported!');
+
+            options.freezeHeaders = false;
+            fix.detectChanges();
+            wrapper = await getExportedData(grid, options);
+            await wrapper.verifyDataFilesContent(actualData.gridNameIDJobTitle,
+                'No frozen columns and no frozen headers should have been exported!');
         });
 
         it('should honor applied sorting.', async () => {
@@ -628,11 +657,11 @@ describe('Excel Exporter', () => {
 
             fix.detectChanges();
 
-            const groupRows = grid.groupsRowList.toArray();
+            const groupRows = grid.groupsRecords;
 
-            grid.toggleGroup(groupRows[2].groupRow);
-            grid.toggleGroup(groupRows[3].groupRow);
-            grid.toggleGroup(groupRows[6].groupRow);
+            grid.toggleGroup(groupRows[0].groups[1]);
+            grid.toggleGroup(groupRows[1]);
+            grid.toggleGroup(groupRows[1].groups[2]);
 
             fix.detectChanges();
 
@@ -690,6 +719,15 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             await exportAndVerify(grid, options, actualData.exportGroupedDataWithIgnoreGrouping);
+        });
+
+        it('should map dynamically added data & columns properly (#9872).', async () => {
+            const fix = TestBed.createComponent(ColumnsAddedOnInitComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            await exportAndVerify(grid, options, actualData.columnsAddedOnInit);
         });
     });
 
@@ -784,6 +822,13 @@ describe('Excel Exporter', () => {
             expect(thirdChildRow.expanded).toBe(true);
 
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithExpandedRows);
+        });
+
+        it('should export hierarchical grid data with frozen headers', async () => {
+            options.freezeHeaders = true;
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithFrozenHeaders);
         });
     });
 
@@ -1031,6 +1076,12 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersDataWithoutMultiColumnHeaders);
+        });
+
+        it('should export grid with frozen multi column headers', async () => {
+            options.freezeHeaders = true;
+            fix.detectChanges();
+            await exportAndVerify(grid, options, actualData.exportFrozenMultiColumnHeadersData, false);
         });
     });
 
