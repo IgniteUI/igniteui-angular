@@ -51,7 +51,7 @@ import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './inter
 import { DropPosition } from '../moving/moving.service';
 import { IgxColumnGroupComponent } from './column-group.component';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
-import { PlatformUtil } from '../../core/utils';
+import { isConstructor, PlatformUtil } from '../../core/utils';
 import { CellType } from '../common/cell.interface';
 import { IgxGridCell } from '../grid-public-cell';
 
@@ -1011,7 +1011,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     public set summaries(classRef: any) {
-        this._summaries = new classRef();
+        if (isConstructor(classRef)) {
+            this._summaries = new classRef();
+        }
 
         if (this.grid) {
             this.grid.summaryService.removeSummariesCachePerColumn(this.field);
