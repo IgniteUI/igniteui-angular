@@ -238,9 +238,9 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    public get getSvgKey(): string {
+    public get getSvg(): string {
         if (this.iconService.isSvgIconCached(this.name, this.family)) {
-            return '#' + this.iconService.getSvgIconKey(this.name, this.family);
+            return this.iconService.getSvgIcon(this.name, this.family);
         }
 
         return null;

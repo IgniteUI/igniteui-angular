@@ -5,9 +5,7 @@
 </ng-template>
 
 <ng-template #svgImage>
-    <svg>
-        <use [attr.href]="getSvgKey"></use>
-    </svg>
+    <svg [innerHTML]="getSvg"></svg>
 </ng-template>
 
 <ng-container *ngTemplateOutlet="template"></ng-container>

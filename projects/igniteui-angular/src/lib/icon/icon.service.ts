@@ -1,4 +1,4 @@
-import { Injectable, SecurityContext, Inject, OnDestroy, Optional } from '@angular/core';
+import { Injectable, SecurityContext, Inject, Optional } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -32,7 +32,7 @@ export interface IgxIconLoadedEvent {
 @Injectable({
     providedIn: 'root'
 })
-export class IgxIconService implements OnDestroy {
+export class IgxIconService {
     /**
      * Observable that emits when an icon is successfully loaded
      * through a HTTP request.
@@ -46,8 +46,7 @@ export class IgxIconService implements OnDestroy {
 
     private _family = 'material-icons';
     private _familyAliases = new Map<string, string>();
-    private _svgContainer: HTMLElement;
-    private _cachedSvgIcons: Set<string> = new Set<string>();
+    private _cachedSvgIcons = new Map<string, Map<string, string>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
 
     constructor(
@@ -56,14 +55,6 @@ export class IgxIconService implements OnDestroy {
         @Optional() @Inject(DOCUMENT) private _document: any
     ) {
         this.iconLoaded = this._iconLoaded.asObservable();
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public ngOnDestroy(): void {
-        this.cleanSvgContainer();
     }
 
     /**
@@ -162,18 +153,25 @@ export class IgxIconService implements OnDestroy {
      * ```
      */
     public isSvgIconCached(name: string, family: string = ''): boolean {
-        const iconKey = this.getSvgIconKey(name, family);
-        return this._cachedSvgIcons.has(iconKey);
+        if(this._cachedSvgIcons.has(family)) {
+            const familyRegistry = this._cachedSvgIcons.get(family) as Map<string, string>;
+            return familyRegistry.has(name);
+        }
+
+        return false;
     }
 
     /**
      *  Returns the key of a cached SVG image.
      * ```typescript
-     *   const svgIconKey = this.iconService.getSvgIconKey('aruba', 'svg-flags');
+     *   const svgIcon = this.iconService.getSvgIcon('aruba', 'svg-flags');
      * ```
      */
-    public getSvgIconKey(name: string, family: string = '') {
-        return family + '_' + name;
+    public getSvgIcon(name: string, family: string = '') {
+        if(this._cachedSvgIcons.has(family)) {
+            const familyRegistry = this._cachedSvgIcons.get(family) as Map<string, string>;
+            return familyRegistry.get(name);
+        }
     }
 
     /**
@@ -184,15 +182,17 @@ export class IgxIconService implements OnDestroy {
         return req;
     }
 
-    /**
-     * @hidden
-     */
-    private cleanSvgContainer() {
-        const container = this._document.documentElement.querySelector('.igx-svg-container');
+    private getOrCreateIconFamily(name: string) {
+        let family: Map<string, string>;
 
-        while (container.firstChild) {
-            container.removeChild(container.firstChild);
+        if(this._cachedSvgIcons.has(name)) {
+            family = this._cachedSvgIcons.get(name) as Map<string, string>;
+        } else {
+            family = new Map<string, string>();
+            this._cachedSvgIcons.set(name, family);
         }
+
+        return family;
     }
 
     /**
@@ -200,41 +200,17 @@ export class IgxIconService implements OnDestroy {
      */
     private cacheSvgIcon(name: string, value: string, family: string = '') {
         if (name && value) {
-            this.ensureSvgContainerCreated();
-
-            const div = this._document.createElement('DIV');
+            const div = this._document.createElement('div');
             div.innerHTML = value;
             const svg = div.querySelector('svg') as SVGElement;
 
-            if (svg) {
-                const iconKey = this.getSvgIconKey(name, family);
-
-                svg.setAttribute('id', iconKey);
+            if(svg) {
                 svg.setAttribute('fit', '');
                 svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-                svg.setAttribute('focusable', 'false'); // Disable IE11 default behavior to make SVGs focusable.
+                const svgText = svg.outerHTML;
 
-                if (this.isSvgIconCached(name, family)) {
-                    const oldChild = this._svgContainer.querySelector(`svg[id='${iconKey}']`);
-                    this._svgContainer.removeChild(oldChild);
-                }
-
-                this._svgContainer.appendChild(svg);
-                this._cachedSvgIcons.add(iconKey);
-            }
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    private ensureSvgContainerCreated() {
-        if (!this._svgContainer) {
-            this._svgContainer = this._document.documentElement.querySelector('.igx-svg-container');
-            if (!this._svgContainer) {
-                this._svgContainer = this._document.createElement('DIV');
-                this._svgContainer.classList.add('igx-svg-container');
-                this._document.body.appendChild(this._svgContainer);
+                const familyRegistry = this.getOrCreateIconFamily(family);
+                familyRegistry.set(name, svgText);
             }
         }
     }
