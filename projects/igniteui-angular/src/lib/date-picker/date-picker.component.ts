@@ -2,7 +2,7 @@ import {
     Component, ContentChild, EventEmitter, HostBinding, Input,
     OnDestroy, Output, ViewChild, ElementRef, Inject, HostListener,
     NgModuleRef, OnInit, AfterViewInit, Injector, AfterViewChecked, ContentChildren,
-    QueryList, LOCALE_ID, Renderer2, Optional, PipeTransform
+    QueryList, LOCALE_ID, Renderer2, Optional, PipeTransform, ChangeDetectorRef
 } from '@angular/core';
 import {
     ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl,
@@ -481,6 +481,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         private _injector: Injector,
         private _renderer: Renderer2,
         private platform: PlatformUtil,
+        private cdr: ChangeDetectorRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
@@ -750,6 +751,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         if (this._ngControl) {
             this._statusChanges$ =
                 this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+                if (this._ngControl.control.validator) {
+                    this.inputGroup.isRequired = this.required;
+                    this.cdr.detectChanges();
+                }
         }
     }
 
