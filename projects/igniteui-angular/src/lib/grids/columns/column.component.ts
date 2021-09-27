@@ -34,7 +34,7 @@ import { GridType } from '../common/grid.interface';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { getNodeSizeViaRange } from '../../core/utils';
+import { getNodeSizeViaRange, isConstructor } from '../../core/utils';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
@@ -743,7 +743,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     public set summaries(classRef: any) {
-        this._summaries = new classRef();
+        if (isConstructor(classRef)) {
+            this._summaries = new classRef();
+        }
 
         if (this.grid) {
             this.grid.summaryService.removeSummariesCachePerColumn(this.field);

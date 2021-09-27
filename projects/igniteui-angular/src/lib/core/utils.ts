@@ -488,6 +488,8 @@ export function yieldingLoop(count: number, chunkSize: number, callback: (index:
         }
     };
     chunk();
-}
+};
+
+export const isConstructor = (ref: any) => typeof ref === 'function' && Boolean(ref.prototype) && Boolean(ref.prototype.constructor);
 
 export function mkenum<T extends { [index: string]: U }, U extends string>(x: T) { return x; }
