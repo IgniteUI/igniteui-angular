@@ -231,15 +231,14 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     }
 
     /**
-     *  An accessor that returns the key of the SVG image.
-     *  The key consists of the font-family and the name separated by underscore.
+     *  An accessor that returns the underlying SVG image as SafeHtml.
      *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
      * public icon: IgxIconComponent;
      * ngAfterViewInit() {
-     *    let svgKey = this.icon.getSvgKey;
+     *    let svg: SafeHtml = this.icon.getSvg;
      * }
      * ```
      */

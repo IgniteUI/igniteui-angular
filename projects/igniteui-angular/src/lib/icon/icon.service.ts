@@ -162,7 +162,7 @@ export class IgxIconService {
     }
 
     /**
-     *  Returns the key of a cached SVG image.
+     *  Returns the cached SVG image as string.
      * ```typescript
      *   const svgIcon = this.iconService.getSvgIcon('aruba', 'svg-flags');
      * ```
