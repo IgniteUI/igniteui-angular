@@ -1,8 +1,20 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    HostBinding,
+    Input,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    ChangeDetectorRef,
+    OnDestroy,
+    AfterViewInit
+} from '@angular/core';
 import { IgxIconService } from './icon.service';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 /**
  * Icon provides a way to include material icons to markup
@@ -30,7 +42,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
     selector: 'igx-icon',
     templateUrl: 'icon.component.html'
 })
-export class IgxIconComponent implements OnInit, OnDestroy {
+export class IgxIconComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      *  This allows you to change the value of `class.igx-icon`. By default it's `igx-icon`.
      *
@@ -114,16 +126,20 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     private destroy$ = new Subject<void>();
 
-    constructor(public el: ElementRef,
-                private iconService: IgxIconService,
-                private ref: ChangeDetectorRef) {
+    constructor(
+        public el: ElementRef,
+        private iconService: IgxIconService,
+        private ref: ChangeDetectorRef,
+        private sanitizer: DomSanitizer
+    ) {
         this.family = this.iconService.defaultFamily;
         this.iconService.registerFamilyAlias('material', 'material-icons');
-        this.iconService.iconLoaded.pipe(
-            first(e => e.name === this.name && e.family === this.family),
-            takeUntil(this.destroy$)
-        )
-        .subscribe(() => this.ref.detectChanges());
+        this.iconService.iconLoaded
+            .pipe(
+                first((e) => e.name === this.name && e.family === this.family),
+                takeUntil(this.destroy$)
+            )
+            .subscribe(() => this.ref.detectChanges());
     }
 
     /**
@@ -132,6 +148,14 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      */
     public ngOnInit() {
         this.updateIconClass();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngAfterViewInit() {
+        console.log(this.getSvg);
     }
 
     /**
@@ -238,9 +262,11 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    public get getSvg(): string {
+    public get getSvg(): SafeHtml {
         if (this.iconService.isSvgIconCached(this.name, this.family)) {
-            return this.iconService.getSvgIcon(this.name, this.family);
+            const svgText = this.iconService.getSvgIcon(this.name, this.family);
+            const svg = this.sanitizer.bypassSecurityTrustHtml(svgText);
+            return svg;
         }
 
         return null;
