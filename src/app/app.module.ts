@@ -29,6 +29,7 @@ import { ChipsSampleComponent } from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
+import { ShadowGridSampleComponent } from './drag-drop/shadow-dom-grid/shadow-grid-sample';
 import { MaskSampleComponent, DisplayFormatPipe, InputFormatPipe } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
@@ -178,6 +179,7 @@ const components = [
     DisplayDensityDropDownComponent,
     DropDownVirtualComponent,
     DragDropSampleComponent,
+    ShadowGridSampleComponent,
     ComboSampleComponent,
     IconSampleComponent,
     InputSampleComponent,

@@ -117,7 +117,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     @HostBinding('style.height.rem')
     public get height() {
-        if (!this.grid.hasColumnGroups) {
+        if (!this.grid.hasColumnGroups || this.grid.isPivot) {
             return null;
         }
 

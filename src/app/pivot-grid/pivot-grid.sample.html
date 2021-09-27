@@ -1,6 +1,4 @@
 <div class="sample-column">
-    <!-- <igx-pivot-grid #grid1 [data]="data" [pivotConfiguration]="pivotConfig">
-    </igx-pivot-grid> -->
-
-    <pre>{{origData | pivotGridRow:pivotConfig.rows:pivotConfig.values | pivotGridColumn:pivotConfig.columns:pivotConfig.values | json}}</pre>
+    <igx-pivot-grid #grid1 [data]="origData" [originalData]="origData" [pivotConfiguration]="pivotConfigHierarchy">
+    </igx-pivot-grid>
 </div>

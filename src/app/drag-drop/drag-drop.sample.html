@@ -173,3 +173,50 @@
         </div>
     </article>
 </section>
+
+
+<section class="sample-content">
+    <article class="sample-column">
+        <h4>Drag and drop elements overlapping grid in shadow dom:</h4>
+
+        <button #buttonElement igxButton="raised" (click)="openOverlappingDialog()">Show Dialog</button>
+
+        <div igxToggle #toggleForm1="toggle" class="igx-dialog" [style.width.px]="320" igxDrag [ghost]="false"
+            [dragTolerance]="0" [dragChannel]="'dialog'">
+            <div class="igx-dialog__window">
+                <div class="igx-dialog__window-content">
+                    <div class="dialogHeader">
+                        <span [style.margin.px]="10">Draggable Dialog</span>
+                        <igx-icon igxDragHandle class="dialogHandle">control_camera</igx-icon>
+                    </div>
+                    <p>Drop Area 1</p>
+                    <div igxDrop (dropped)="onItemDropped($event)" style="border-style:solid;height:150px;">
+                        <igx-input-group igxDrag>
+                            <igx-prefix>
+                                <igx-icon>person</igx-icon>
+                            </igx-prefix>
+                            <input type="text" igxInput />
+                            <label igxLabel>Username</label>
+                        </igx-input-group>
+                        <igx-input-group igxDrag>
+                            <igx-prefix>
+                                <igx-icon>lock</igx-icon>
+                            </igx-prefix>
+                            <label igxLabel>Password</label>
+                            <input type="password" igxInput />
+                        </igx-input-group>
+                    </div>
+                </div>
+                <div class="igx-dialog__window-actions">
+                    <button igxButton="flat" type="button" igxRipple (click)="toggleForm1.close()"> Cancel </button>
+                </div>
+                <div class="igx-dialog__window-content">
+                    <p>Drop Area 2</p>
+                    <div igxDrop id="droppable" style="border-style:solid;height:150px;"
+                        (dropped)="onItemDropped($event)"></div>
+                </div>
+            </div>
+        </div>
+        <app-shadow-grid-sample></app-shadow-grid-sample>
+    </article>
+</section>

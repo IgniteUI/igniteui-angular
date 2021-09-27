@@ -1,16 +1,16 @@
     <!-- Row Dimension -->
-    <div #rowDimension>
-            <!-- TODO: Render headers based on hierarchy here -->
-            <igx-grid-header-row class="igx-grid-thead" tabindex="0"
+    <div #rowDimensionContainer>
+            <igx-pivot-header-row class="igx-grid-thead" tabindex="0"
             [grid]="grid"
             [hasMRL]="grid.hasColumnLayouts"
             [density]="grid.displayDensity"
             [activeDescendant]="grid.activeDescendant"
-            [width]="getRowColumnWidth(grid.pivotRows)"
-            [unpinnedColumnCollection]="getRowColumns(rowData, grid.pivotRows)"
+            [width]="grid.pivotRowWidths"
+            [unpinnedColumnCollection]="rowDimension"
             (scroll)="grid.preventHeaderScroll($event)"
+            [row]="this"
         >
-        </igx-grid-header-row>
+        </igx-pivot-header-row>
     </div>
 
 
@@ -94,4 +94,15 @@
             [cellSelectionMode]="grid.cellSelection"
             [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
         </igx-grid-cell>
+    </ng-template>
+
+
+    <ng-template #headerTemplate let-column>
+        <div class="igx-grid__tr--header igx-grid__row-indentation--level-{{ level }}">
+            <igx-icon *ngIf="hasChild" [attr.draggable]="false"
+                      (click)="grid.toggleRow(rowID)"
+                      style='cursor: pointer;'>
+                      {{grid.expansionStates.get(rowID) ? 'expand_more' : 'expand_less'}}</igx-icon>
+            {{column.header}}
+        </div>
     </ng-template>
