@@ -8,7 +8,7 @@
     >
 </ng-template>
 <ng-template #defaultCell>
-    <div
+    <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
         igxTextHighlight
         class="igx-grid__td-text"
         style="pointer-events: none;"
@@ -43,8 +43,6 @@
                 ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
                 : column.dataType === 'percent'
                 ? (value | percent:column.pipeArgs.digitsInfo:grid.locale)
-                : column.dataType === 'boolean'
-                ? ''
                 : value
         }}</div>
     <igx-icon
@@ -54,7 +52,9 @@
     >
 </ng-template>
 <ng-template #addRowCell let-cell="cell">
-    <div igxTextHighlight class="igx-grid__td-text" style="pointer-events: none"
+    <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
+    igxTextHighlight class="igx-grid__td-text"
+    style="pointer-events: none"
     [cssClass]="highlightClass"
     [activeCssClass]="activeHighlightClass"
     [groupName]="gridID"
@@ -62,8 +62,7 @@
         (value | number:column.pipeArgs.digitsInfo:grid.locale) : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime') ?
         (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : column.dataType === 'currency'?
         (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'percent' ?
-        (value | percent:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'boolean' ?
-        '' : value"
+        (value | percent:column.pipeArgs.digitsInfo:grid.locale) : value"
     [row]="rowData"
     [column]="this.column.field"
     [containerClass]="'igx-grid__td-text'"
