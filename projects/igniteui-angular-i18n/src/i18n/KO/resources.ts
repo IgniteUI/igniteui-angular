@@ -5,6 +5,7 @@ import { DateRangePickerResourceStringsKO } from './date-range-picker-resources'
 import { CarouselResourceStringsKO } from './carousel-resources';
 import { ListResourceStringsKO } from './list-resources';
 import { CalendarResourceStringsKO } from './calendar-resources';
+import { InputResourceStringsKO } from './input-resources';
 
 /**
  * Korean resource strings for all components
@@ -16,5 +17,6 @@ export const IgxResourceStringsKO = {
     ...DateRangePickerResourceStringsKO,
     ...CarouselResourceStringsKO,
     ...ListResourceStringsKO,
-    ...CalendarResourceStringsKO
+    ...CalendarResourceStringsKO,
+    ...InputResourceStringsKO
 };
