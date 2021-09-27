@@ -2,7 +2,8 @@
     <igx-chip *ngIf="displayPinnedChip" class="igx-grid__td--pinned-chip" [disabled]="true" [displayDensity]="'compact'">{{ grid.resourceStrings.igx_grid_pinned_row_indicator }}</igx-chip>
 </ng-template>
 <ng-template #defaultCell>
-    <div igxTextHighlight class="igx-grid__td-text" style="pointer-events: none"
+    <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
+        igxTextHighlight class="igx-grid__td-text" style="pointer-events: none"
         [cssClass]="highlightClass"
         [activeCssClass]="activeHighlightClass"
         [groupName]="gridID"
@@ -13,7 +14,8 @@
         [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | number:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'date' ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : value }}</div>
 </ng-template>
 <ng-template #addRowCell let-cell="cell">
-    <div igxTextHighlight class="igx-grid__td-text" style="pointer-events: none"
+    <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
+        igxTextHighlight class="igx-grid__td-text" style="pointer-events: none"
     [cssClass]="highlightClass"
     [activeCssClass]="activeHighlightClass"
     [groupName]="gridID"
