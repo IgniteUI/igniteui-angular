@@ -1,15 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    HostBinding,
-    Input,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-    ChangeDetectorRef,
-    OnDestroy,
-    AfterViewInit
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { IgxIconService } from './icon.service';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -42,7 +31,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     selector: 'igx-icon',
     templateUrl: 'icon.component.html'
 })
-export class IgxIconComponent implements OnInit, AfterViewInit, OnDestroy {
+export class IgxIconComponent implements OnInit, OnDestroy {
     /**
      *  This allows you to change the value of `class.igx-icon`. By default it's `igx-icon`.
      *
@@ -148,14 +137,6 @@ export class IgxIconComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     public ngOnInit() {
         this.updateIconClass();
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public ngAfterViewInit() {
-        console.log(this.getSvg);
     }
 
     /**
