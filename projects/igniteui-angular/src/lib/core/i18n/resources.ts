@@ -17,6 +17,15 @@ export interface IResourceStrings extends IGridResourceStrings, ITimePickerResou
 
 /**
  * @hidden
+ * IF YOU EDIT THIS OBJECT, DO NOT FORGET TO UPDATE
+ * projects/igniteui-angular-i18n as well (create the appropriately named files,
+ * containing the new/updated component string keys and EN strings for values + create a separate issue + pending-localization label)
+ *
+ * TODO Add automation tests:
+ * 1) each of the folders/languages under \projects\igniteui-angular-i18n\src\ contain resources.ts file with matching components count.
+ *    \projects\igniteui-angular-i18n\src\BG\resources.ts contains IgxResourceStringsBG.count matching this.CurrentResourceStrings.count
+ * 2) \igniteui-angular\projects\igniteui-angular\src\public_api.ts --> Check if the new interface is added
+ *    to IInputResourceStrings (just a proxy as it is later on imported in the angular-i18n package)
  */
 export const CurrentResourceStrings = {
     GridResStrings: cloneValue(GridResourceStringsEN),
@@ -29,7 +38,7 @@ export const CurrentResourceStrings = {
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
     ListResStrings: cloneValue(ListResourceStringsEN),
     InputResStrings: cloneValue(InputResourceStringsEN),
-    TreeResStrings: cloneValue(TreeResourceStringsEN),
+    TreeResStrings: cloneValue(TreeResourceStringsEN)
 };
 
 const updateResourceStrings = (currentStrings: IResourceStrings, newStrings: IResourceStrings) => {
