@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { IgxIconService } from './icon.service';
-import { DOCUMENT } from '@angular/common';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
@@ -55,11 +54,9 @@ describe('Icon Service', () => {
 
     it('should add custom svg icon from url', () => {
         const iconService = TestBed.inject(IgxIconService) as IgxIconService;
-        const document = TestBed.inject(DOCUMENT);
 
         const name = 'test';
         const family = 'svg-icons';
-        const iconKey = family + '_' + name;
 
         spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
         spyOn(XMLHttpRequest.prototype, 'send');
@@ -68,26 +65,17 @@ describe('Icon Service', () => {
 
         expect(XMLHttpRequest.prototype.open).toHaveBeenCalledTimes(1);
         expect(XMLHttpRequest.prototype.send).toHaveBeenCalledTimes(1);
-
-        const svgElement = document.querySelector(`svg[id='${iconKey}']`);
-        expect(svgElement).toBeDefined();
+        expect(iconService.isSvgIconCached(name, family)).toBeTruthy();
     });
 
     it('should add custom svg icon from text', () => {
         const iconService = TestBed.inject(IgxIconService) as IgxIconService;
-        const document = TestBed.inject(DOCUMENT);
 
         const name = 'test';
         const family = 'svg-icons';
-        const iconKey = family + '_' + name;
 
         iconService.addSvgIconFromText(name, svgText, family);
-
         expect(iconService.isSvgIconCached(name, family)).toBeTruthy();
-        expect(iconService.getSvgIconKey(name, family)).toEqual(iconKey);
-
-        const svgElement = document.querySelector(`svg[id='${iconKey}']`);
-        expect(svgElement).toBeDefined();
     });
 
     it('should emit loading event for a custom svg icon from url', done => {
@@ -112,18 +100,5 @@ describe('Icon Service', () => {
         });
 
         iconService.addSvgIcon(name, 'test.svg', family);
-    });
-
-    it('should create svg container inside the body', () => {
-        const iconService = TestBed.inject(IgxIconService) as IgxIconService;
-        const document = TestBed.inject(DOCUMENT);
-
-        const name = 'test';
-        const family = 'svg-icons';
-
-        iconService.addSvgIconFromText(name, svgText, family);
-
-        const svgContainer = document.body.querySelector('.igx-svg-container');
-        expect(svgContainer).not.toBeNull();
     });
 });
