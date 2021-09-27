@@ -742,6 +742,34 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     /**
+     * Emmited when deleting a row.
+     *
+     * @remarks
+     * This event is cancelable.
+     * Returns an `IGridEditEventArgs` object.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" (rowDelete)="rowDelete($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public rowDelete = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * Emmited just before the newly added row is commited.
+     *
+     * @remarks
+     * This event is cancelable.
+     * Returns an `IGridEditEventArgs` object.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+     @Output()
+     public rowAdd = new EventEmitter<IGridEditEventArgs>();
+
+    /**
      * Emitted after column is resized.
      *
      * @remarks
@@ -4466,7 +4494,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden */
     public deleteRowById(rowId: any): any {
-        return this.gridAPI.deleteRowById(rowId);
+        const args = {
+            rowID: rowId,
+            cancel: false,
+            rowData: this.getRowData(rowId),
+            oldValue: null
+        };
+        this.rowDelete.emit(args);
+        if (args.cancel) {
+            return;
+        }
+
+        const record = this.gridAPI.deleteRowById(rowId);
+        if (record !== null && record !== undefined) {
+            //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
+            this.rowDeleted.emit({ data: record });
+        }
+        return record;
     }
 
     /**

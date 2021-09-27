@@ -1,5 +1,5 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
@@ -33,6 +33,9 @@ const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 const DATE_PICKER_TOGGLE_ICON = 'today';
 const DATE_PICKER_CLEAR_ICON = 'clear';
 
+const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid ';
+const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 
 describe('IgxDatePicker', () => {
     describe('Integration tests', () => {
@@ -44,7 +47,8 @@ describe('IgxDatePicker', () => {
                     IgxDatePickerTestComponent,
                     IgxDatePickerNgModelComponent,
                     IgxDatePickerWithProjectionsComponent,
-                    IgxDatePickerInFormComponent
+                    IgxDatePickerInFormComponent,
+                    IgxDatePickerReactiveFormComponent
                 ],
                 imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
                     NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
@@ -193,7 +197,9 @@ describe('IgxDatePicker', () => {
         });
 
         describe('NgControl integration', () => {
-            let fixture: ComponentFixture<IgxDatePickerNgModelComponent | IgxDatePickerInFormComponent>;
+            let fixture: ComponentFixture<IgxDatePickerNgModelComponent |
+                IgxDatePickerInFormComponent |
+                IgxDatePickerReactiveFormComponent>;
             let datePicker: IgxDatePickerComponent;
 
             beforeEach(fakeAsync(() => {
@@ -238,6 +244,53 @@ describe('IgxDatePicker', () => {
                 tick();
                 expect((datePicker as any).inputDirective.valid).toEqual(IgxInputState.INITIAL);
             }));
+
+            it('should apply asterix properly when required validator is set dynamically', () => {
+                fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+
+                let inputGroupRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+                let inputGroupInvalidClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
+                let asterisk = window.
+                    getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').
+                    content;
+                expect(asterisk).toBe('"*"');
+                expect(inputGroupRequiredClass).toBeDefined();
+                expect(inputGroupRequiredClass).not.toBeNull();
+
+                datePicker.clear();
+                fixture.detectChanges();
+
+                inputGroupInvalidClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
+                expect(inputGroupInvalidClass).not.toBeNull();
+                expect(inputGroupInvalidClass).not.toBeUndefined();
+
+                inputGroupRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+                expect(inputGroupRequiredClass).not.toBeNull();
+                expect(inputGroupRequiredClass).not.toBeUndefined();
+
+                (fixture.componentInstance as IgxDatePickerReactiveFormComponent).removeValidators();
+                fixture.detectChanges();
+
+                inputGroupRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+                asterisk = window.
+                    getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').
+                    content;
+                expect(inputGroupRequiredClass).toBeNull();
+                expect(asterisk).toBe('none');
+
+                (fixture.componentInstance as IgxDatePickerReactiveFormComponent).addValidators();
+                fixture.detectChanges();
+
+                inputGroupRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+                asterisk = window.
+                    getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').
+                    content;
+                expect(inputGroupRequiredClass).toBeDefined();
+                expect(inputGroupRequiredClass).not.toBeNull();
+                expect(asterisk).toBe('"*"');
+            });
         });
 
         describe('Projected elements', () => {
@@ -339,6 +392,7 @@ describe('IgxDatePicker', () => {
         let overlay: IgxOverlayService;
         let mockOverlayEventArgs: OverlayEventArgs & OverlayCancelableEventArgs;
         let mockInjector;
+        let mockCdr;
         let mockInputGroup: Partial<IgxInputGroupComponent>;
         let datePicker: IgxDatePickerComponent;
         let mockDateEditor: any;
@@ -402,6 +456,8 @@ describe('IgxDatePicker', () => {
             mockInjector = jasmine.createSpyObj('Injector', {
                 get: mockNgControl
             });
+
+            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
 
             mockCalendar = { selected: new EventEmitter<any>() };
             const mockComponentInstance = {
@@ -512,7 +568,7 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, null, overlay, mockModuleRef, mockInjector, renderer2, null);
+            datePicker = new IgxDatePickerComponent(elementRef, null, overlay, mockModuleRef, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
@@ -1250,4 +1306,36 @@ export class IgxDatePickerInFormComponent {
     public datePicker: IgxDatePickerComponent;
 
     public date: Date = new Date(2012, 5, 3);
+}
+
+@Component({
+    template: `
+   <form [formGroup]="form">
+    <div class="date-picker-wrapper">
+        <igx-date-picker formControlName="date" [value]="date">
+            <label igxLabel>Date </label>
+        </igx-date-picker>
+    </div>
+</form>
+    `
+})
+export class IgxDatePickerReactiveFormComponent {
+    @ViewChild(IgxDatePickerComponent)
+    public datePicker: IgxDatePickerComponent;
+
+    public date: Date = new Date(2012, 5, 3);
+
+    public form: FormGroup = new FormGroup({
+        date: new FormControl(null, Validators.required)
+    });
+
+    public removeValidators() {
+        this.form.get('date').clearValidators();
+        this.form.get('date').updateValueAndValidity();
+    }
+
+    public addValidators() {
+        this.form.get('date').setValidators(Validators.required);
+        this.form.get('date').updateValueAndValidity();
+    }
 }
