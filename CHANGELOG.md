@@ -4,6 +4,12 @@ All notable changes for each version of this project will be documented in this 
 
 ## 12.2.0
 
+### New Features
+- `igxTreeGrid`
+    - Added `TreeGridMatchingRecordsOnlyFilteringStrategy`, which allows you to display only the records matching particular filtering condition without any trace for their parents.
+
+## 12.1.6
+
 ### General
 - `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
     - 'oddRowCSS' and 'evenRowCSS' properties has been deprecated
@@ -24,10 +30,15 @@ All notable changes for each version of this project will be documented in this 
         ```
     - Added capability to restore the state of multi column headers with `IgxGridStateDirective`.
     - Introduced new 'rowStyles' and 'rowClasses' grid properties which allows to define a custom styling on each grid row
+    - Introduced two new *cancellable* outputs related to CRUD - `rowDelete` and `rowAdd`. Both use an `IGridEditEventArgs` object as an event argument.
+        ```html
+        <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" (rowDelete)="rowDelete($event)" [autoGenerate]="true"></igx-grid>
+        ```
 - `IgxSnackbarComponent`
     - Introduced new 'positionSettings' input which allows to define a custom animation and position.
 - `IgxToastComponent`
     - Introduced new 'positionSettings' input which allows to define a custom animation and position.
+
 ## 12.1.3
 
 ### New Features
