@@ -61,6 +61,10 @@ export class IgxPivotColumnPipe implements PipeTransform {
                 });
                 delete hierarchy[pivotKeys.children]; /* or we can keep it
                 and use when creating the columns in pivot grid instead of recreating it */
+                if (this.isLeaf(hierarchy, pivotKeys)) {
+                    delete hierarchy[pivotKeys.records]; /* remove the helper records of the actual records so that
+                expand indicators can be rendered properly */
+                }
                 result.push({...hierarchy, ...flatCols});
             }
         });
@@ -73,9 +77,26 @@ export class IgxPivotColumnPipe implements PipeTransform {
         if (children) {
             this.groupColumns(children, columns, values, pivotKeys);
         } else if (hierarchy[pivotKeys.records]) {
-            hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(hierarchy[pivotKeys.records], columns, pivotKeys);
+            const leafRecords = this.getLeafs(hierarchy[pivotKeys.records], pivotKeys);
+            hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, pivotKeys);
             PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
         }
+    }
+
+    private getLeafs(records, pivotKeys) {
+        let leafs = [];
+        for (const rec of records) {
+            if (rec[pivotKeys.records]) {
+                leafs = leafs.concat(this.getLeafs(rec[pivotKeys.records], pivotKeys));
+            } else {
+                leafs.push(rec);
+            }
+        }
+        return leafs;
+    }
+
+    private isLeaf(record, pivotKeys) {
+        return record[pivotKeys.records] && record[pivotKeys.records].some(r => r[pivotKeys.records]);
     }
 
 
@@ -170,7 +191,7 @@ export class PivotUtil {
         return result;
     }
 
-    public static flattenHierarchy(hierarchies, rec, pivotKeys) {
+    public static flattenHierarchy(hierarchies, rec, pivotKeys, level = 0) {
         let flatData = [];
         const field = this.generateFieldValue(rec);
         hierarchies.forEach((h, key) => {
@@ -178,12 +199,11 @@ export class PivotUtil {
             obj[field] = key;
             obj[pivotKeys.records] = h[pivotKeys.records];
             obj = {...obj, ...h[pivotKeys.aggregations]};
+            obj[pivotKeys.level] = level;
             flatData.push(obj);
             if (h[pivotKeys.children]) {
-                let childRecords = [];
-                h[pivotKeys.children].forEach(c => childRecords = [...childRecords, ...c[pivotKeys.records]]);
-                obj[pivotKeys.records] = obj[pivotKeys.records] ? [...obj[pivotKeys.records], ...childRecords] : childRecords;
-                flatData = [...flatData, ...this.flattenHierarchy(h[pivotKeys.children], rec, pivotKeys)];
+                obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec, pivotKeys, level + 1);
+                flatData = [...flatData, ...obj[pivotKeys.records]];
             }
         });
 
