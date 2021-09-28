@@ -490,9 +490,9 @@ function testMerging() {
     describe('Test merging', () => {
         it('Should merge add transactions correctly', () => {
             const data = SampleTestData.personIDNameData();
-            const addRow4 = { ID: 4, Name: 'Peter' };
-            const addRow5 = { ID: 5, Name: 'Mimi' };
-            const addRow6 = { ID: 6, Name: 'Pedro' };
+            const addRow4 = { ID: 4, IsEmployed: true, Name: 'Peter' };
+            const addRow5 = { ID: 5, IsEmployed: true, Name: 'Mimi' };
+            const addRow6 = { ID: 6, IsEmployed: false, Name: 'Pedro' };
             const transactions: Transaction[] = [
                 { id: addRow4.ID, newValue: addRow4, type: TransactionType.ADD },
                 { id: addRow5.ID, newValue: addRow5, type: TransactionType.ADD },
