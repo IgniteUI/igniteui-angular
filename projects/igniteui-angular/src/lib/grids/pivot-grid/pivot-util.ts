@@ -21,7 +21,7 @@ export class PivotUtil {
     }
 
     public static extractValueFromDimension(dim: IPivotDimension, recData: any) {
-        return typeof dim.member === 'string' ? recData[dim.member] : dim.member.call(recData);
+        return typeof dim.member === 'string' ? recData[dim.member] : dim.member.call(null, recData);
     }
 
     public static extractValuesFromDimension(dims: IPivotDimension[], recData: any){
@@ -61,21 +61,23 @@ export class PivotUtil {
         return result;
     }
 
-    public static flattenHierarchy(hierarchies, rec, pivotKeys, level = 0) {
+    public static flattenHierarchy(hierarchies, rec, dims, pivotKeys, level = 0) {
         let flatData = [];
-        const field = this.generateFieldValue(rec);
-        hierarchies.forEach((h, key) => {
-            let obj = {};
-            obj[field] = key;
-            obj[pivotKeys.records] = h[pivotKeys.records];
-            obj = {...obj, ...h[pivotKeys.aggregations]};
-            obj[pivotKeys.level] = level;
-            flatData.push(obj);
-            if (h[pivotKeys.children]) {
-                obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec, pivotKeys, level + 1);
-                flatData = [...flatData, ...obj[pivotKeys.records]];
-            }
-        });
+        for (const dim of dims) {
+            hierarchies.forEach((h, key) => {
+                const field = (dim && dim.fieldName) ?? this.generateFieldValue(rec);
+                let obj = {};
+                obj[field] = key;
+                obj[pivotKeys.records] = h[pivotKeys.records];
+                obj = {...obj, ...h[pivotKeys.aggregations]};
+                obj[pivotKeys.level] = level;
+                flatData.push(obj);
+                if (h[pivotKeys.children]) {
+                    obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec, dim.childLevels, pivotKeys, level + 1);
+                    flatData = [...flatData, ...obj[pivotKeys.records]];
+                }
+            });
+        }
 
         return flatData;
     }

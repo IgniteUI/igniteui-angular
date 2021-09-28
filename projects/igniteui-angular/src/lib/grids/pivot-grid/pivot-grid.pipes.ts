@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { cloneArray, cloneValue } from '../../core/utils';
+import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
@@ -28,7 +28,7 @@ export class IgxPivotRowPipe implements PipeTransform {
         // apply aggregations based on the created groups
         PivotUtil.applyAggregations(hierarchies, values, pivotKeys);
         // generate flat data from the hierarchies
-        const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], pivotKeys);
+        const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], rows, pivotKeys);
         return data;
     }
 }
