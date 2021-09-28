@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { IgxIconService } from './icon.service';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -52,7 +52,7 @@ describe('Icon Service', () => {
         expect(iconService.familyClassName(ALIAS)).toBe(MY_FONT);
     });
 
-    it('should add custom svg icon from url', () => {
+    it('should add custom svg icon from url', fakeAsync((done) => {
         const iconService = TestBed.inject(IgxIconService) as IgxIconService;
 
         const name = 'test';
@@ -65,8 +65,12 @@ describe('Icon Service', () => {
 
         expect(XMLHttpRequest.prototype.open).toHaveBeenCalledTimes(1);
         expect(XMLHttpRequest.prototype.send).toHaveBeenCalledTimes(1);
-        expect(iconService.isSvgIconCached(name, family)).toBeTruthy();
-    });
+
+        iconService.iconLoaded.pipe().subscribe(() => {
+            expect(iconService.isSvgIconCached(name, family)).toBeTruthy();
+            done();
+        });
+    }));
 
     it('should add custom svg icon from text', () => {
         const iconService = TestBed.inject(IgxIconService) as IgxIconService;
