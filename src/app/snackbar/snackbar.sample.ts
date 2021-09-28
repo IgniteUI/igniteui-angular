@@ -1,5 +1,7 @@
+import { useAnimation } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxSnackbarComponent } from 'igniteui-angular';
+// eslint-disable-next-line max-len
+import { HorizontalAlignment, IgxSnackbarComponent, PositionSettings, slideInLeft, slideInRight, VerticalAlignment } from 'igniteui-angular';
 
 @Component({
     selector: 'app-snackbar-sample',
@@ -12,6 +14,16 @@ export class SnackbarSampleComponent implements OnInit {
 
     public color: string;
     public actionName: string;
+    public newPositionSettings: PositionSettings = {
+        openAnimation: useAnimation(slideInLeft, { params: { duration: '1000ms' } }),
+        closeAnimation: useAnimation(slideInRight, { params: { duration: '1000ms' } }),
+        horizontalDirection: HorizontalAlignment.Center,
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalStartPoint: HorizontalAlignment.Center,
+        verticalStartPoint: VerticalAlignment.Middle,
+        minSize: { height: 100, width: 100 }
+    };
+
     private _colors: string[];
 
     public ngOnInit() {
@@ -50,5 +62,9 @@ export class SnackbarSampleComponent implements OnInit {
 
     public toggleSnackbar() {
         this.snackbar.toggle();
+    }
+
+    public close(element) {
+        element.close();
     }
 }
