@@ -1806,6 +1806,40 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(rows.length).toEqual(3, 'Wrong filtered rows count');
         }));
 
+        it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy with rowData', fakeAsync(() => {
+            const formattedStrategy = new FormattedValuesFilteringStrategy(['ProductName']);
+            grid.filterStrategy = formattedStrategy;
+            const anotherFieldFormatter = (value: any, rowData: any) => rowData.ID + ':' + value;
+            grid.columns[1].formatter = anotherFieldFormatter;
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            tick(200);
+            fix.detectChanges();
+
+            // Add root group.
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Add a new expression
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '1:', fix); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            const rows = GridFunctions.getRows(fix);
+            expect(rows.length).toEqual(1, 'Wrong filtered rows count');
+        }));
+
         describe('Context Menu - ', () => {
             it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
                 // Open Advanced Filtering dialog.

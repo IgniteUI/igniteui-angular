@@ -2184,6 +2184,25 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(rows.length).toEqual(2);
         }));
 
+        it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy with rowData', fakeAsync(() => {
+            const formattedStrategy = new FormattedValuesFilteringStrategy(['ProductName']);
+            grid.filterStrategy = formattedStrategy;
+            const anotherFieldFormatter = (value: any, rowData: any) => rowData.ID + ':' + value;
+            grid.columns[1].formatter = anotherFieldFormatter;
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            fix.detectChanges();
+
+            GridFunctions.typeValueInFilterRowInput('1:', fix);
+            tick(DEBOUNCETIME);
+            GridFunctions.closeFilterRow(fix);
+            fix.detectChanges();
+
+            const rows = GridFunctions.getRows(fix);
+            expect(rows.length).toEqual(1);
+        }));
+
         it('Should remove pending chip via its close button #9333', fakeAsync(() => {
             GridFunctions.clickFilterCellChipUI(fix, 'Downloads');
             fix.detectChanges();
