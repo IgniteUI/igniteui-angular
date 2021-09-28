@@ -185,35 +185,20 @@ export class IgxIconService {
     /**
      * @hidden
      */
-    private getOrCreateIconFamily(name: string) {
-        let family: Map<string, string>;
-
-        if(this._cachedSvgIcons.has(name)) {
-            family = this._cachedSvgIcons.get(name) as Map<string, string>;
-        } else {
-            family = new Map<string, string>();
-            this._cachedSvgIcons.set(name, family);
-        }
-
-        return family;
-    }
-
-    /**
-     * @hidden
-     */
     private cacheSvgIcon(name: string, value: string, family: string = '') {
         if (name && value) {
             const div = this._document.createElement('div');
             div.innerHTML = value;
             const svg = div.querySelector('svg') as SVGElement;
 
-            if(svg) {
+            if (!this._cachedSvgIcons.has(family)) {
+                this._cachedSvgIcons.set(family, new Map<string, string>());
+            }
+
+            if (svg) {
                 svg.setAttribute('fit', '');
                 svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-                const svgText = svg.outerHTML;
-
-                const familyRegistry = this.getOrCreateIconFamily(family);
-                familyRegistry.set(name, svgText);
+                this._cachedSvgIcons.get(family).set(name, svg.outerHTML);
             }
         }
     }
