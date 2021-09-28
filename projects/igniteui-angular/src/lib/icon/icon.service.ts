@@ -182,6 +182,9 @@ export class IgxIconService {
         return req;
     }
 
+    /**
+     * @hidden
+     */
     private getOrCreateIconFamily(name: string) {
         let family: Map<string, string>;
 
