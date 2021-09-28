@@ -5,10 +5,19 @@ All notable changes for each version of this project will be documented in this 
 ## 12.2.0
 
 ### New Features
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - Added capability to restore the state of multi column headers with `IgxGridStateDirective`.
+    - Introduced new 'rowStyles' and 'rowClasses' grid properties which allows to define a custom styling on each grid row
+    - Introduced two new *cancellable* outputs related to CRUD - `rowDelete` and `rowAdd`. Both use an `IGridEditEventArgs` object as an event argument.
+        ```html
+        <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" (rowDelete)="rowDelete($event)" [autoGenerate]="true"></igx-grid>
+        ```
 - `igxTreeGrid`
     - Added `TreeGridMatchingRecordsOnlyFilteringStrategy`, which allows you to display only the records matching particular filtering condition without any trace for their parents.
-
-## 12.1.6
+- `IgxSnackbarComponent`
+    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
+- `IgxToastComponent`
+    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
 
 ### General
 - `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
@@ -18,9 +27,11 @@ All notable changes for each version of this project will be documented in this 
 
 ## 12.1.6
 
+## 12.1.6
+
 ### New Features
 - `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
-    - Added two public methods that spawn the add row UI for an arbitrary record in the current data view. One that accepts a rowID to use as the row the UI spawns under and the other accepting an index that has a distinct implementation for `IgxTreeGrid`. Please, refer to the official documentation for more information:[Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-adding) and [Tree Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/row-adding).
+    - Added two public methods that spawn the add row UI for an arbitrary record in the current data view. One that accepts a rowID to use as the row the UI spawns under and the other accepting an index that has a distinct implementation for `IgxTreeGrid`. Please, refer to the official documentation for more information: [Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-adding) and [Tree Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/row-adding).
 
         _Note:_ That the new record is still added at the end of the data view, after the end-user submits it.
         ```typescript
@@ -32,16 +43,6 @@ All notable changes for each version of this project will be documented in this 
         this.treeGrid.beginAddRowByIndex(10, true);     // spawns the add row UI to add a child for the row at index 10
         this.treeGrid.beginAddRowByIndex(null);         // spawns the add row UI as the first record
         ```
-    - Added capability to restore the state of multi column headers with `IgxGridStateDirective`.
-    - Introduced new 'rowStyles' and 'rowClasses' grid properties which allows to define a custom styling on each grid row
-    - Introduced two new *cancellable* outputs related to CRUD - `rowDelete` and `rowAdd`. Both use an `IGridEditEventArgs` object as an event argument.
-        ```html
-        <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" (rowDelete)="rowDelete($event)" [autoGenerate]="true"></igx-grid>
-        ```
-- `IgxSnackbarComponent`
-    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
-- `IgxToastComponent`
-    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
 
 ## 12.1.3
 
