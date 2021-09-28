@@ -50,8 +50,10 @@ export class IgxGridNavigationService {
 
     handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) {
+        if (NAVIGATION_KEYS.has(key)) {
             event.stopPropagation();
+        }
+        if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) {
             return;
         }
         if (event.repeat && SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) {
