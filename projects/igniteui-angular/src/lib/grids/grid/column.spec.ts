@@ -127,11 +127,16 @@ describe('IgxGrid - Column properties #grid', () => {
         const grid = fix.componentInstance.grid;
         const formatter = fix.componentInstance.multiplier;
 
+        const boolFormatter = fix.componentInstance.boolFormatter;
+
         expect(grid.columnList.first.formatter).toBeDefined();
 
         for (let i = 0; i < 3; i++) {
             const cell = grid.getCellByColumn(i, 'ID');
             expect(cell.nativeElement.textContent).toMatch(formatter(cell.value));
+
+            const cellBool = grid.getCellByColumn(i, 'IsEmployed');
+            expect(cellBool.nativeElement.textContent).toMatch(boolFormatter(cellBool.value));
         }
     });
 
@@ -162,18 +167,18 @@ describe('IgxGrid - Column properties #grid', () => {
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.textContent).toMatch('ID');
-        expect(headers[1].nativeElement.textContent).toMatch('Name');
+        expect(headers[2].nativeElement.textContent).toMatch('Name');
 
         // Swap columns
         grid.moveColumn(grid.columnList.first, grid.columnList.last);
         fix.detectChanges();
 
-        expect(grid.columnList.first.field).toMatch('Name');
+        expect(grid.columnList.first.field).toMatch('IsEmployed');
         expect(grid.columnList.last.field).toMatch('ID');
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        expect(headers[0].nativeElement.textContent).toMatch('Name');
-        expect(headers[1].nativeElement.textContent).toMatch('ID');
+        expect(headers[0].nativeElement.textContent).toMatch('IsEmployed');
+        expect(headers[1].nativeElement.textContent).toMatch('Name');
     });
 
     it('should support adding and removing columns through a declared iterable', fakeAsync(/** columnList.changes rAF */() => {
