@@ -5,6 +5,7 @@ import { DateRangePickerResourceStringsSV } from './date-range-picker-resources'
 import { CarouselResourceStringsSV } from './carousel-resources';
 import { ListResourceStringsSV } from './list-resources';
 import { CalendarResourceStringsSV } from './calendar-resources';
+import { InputResourceStringsSV } from './input-resources';
 
 /**
  * Swedish resource strings for all components
@@ -16,5 +17,6 @@ export const IgxResourceStringsSV = {
     ...DateRangePickerResourceStringsSV,
     ...CarouselResourceStringsSV,
     ...ListResourceStringsSV,
-    ...CalendarResourceStringsSV
+    ...CalendarResourceStringsSV,
+    ...InputResourceStringsSV
 };

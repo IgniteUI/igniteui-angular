@@ -5,6 +5,7 @@ import { DateRangePickerResourceStringsDE } from './date-range-picker-resources'
 import { CarouselResourceStringsDE } from './carousel-resources';
 import { ListResourceStringsDE } from './list-resources';
 import { CalendarResourceStringsDE } from './calendar-resources';
+import { InputResourceStringsDE } from './input-resources';
 
 /**
  * German resource strings for all components
@@ -16,5 +17,6 @@ export const IgxResourceStringsDE = {
     ...DateRangePickerResourceStringsDE,
     ...CarouselResourceStringsDE,
     ...ListResourceStringsDE,
-    ...CalendarResourceStringsDE
+    ...CalendarResourceStringsDE,
+    ...InputResourceStringsDE
 };

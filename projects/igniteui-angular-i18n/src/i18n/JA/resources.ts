@@ -5,6 +5,7 @@ import { DateRangePickerResourceStringsJA } from './date-range-picker-resources'
 import { CarouselResourceStringsJA } from './carousel-resources';
 import { ListResourceStringsJA } from './list-resources';
 import { CalendarResourceStringsJA } from './calendar-resources';
+import { InputResourceStringsJA } from './input-resources';
 
 /**
  * Japanese resource strings for all components
@@ -16,5 +17,6 @@ export const IgxResourceStringsJA = {
     ...DateRangePickerResourceStringsJA,
     ...CarouselResourceStringsJA,
     ...ListResourceStringsJA,
-    ...CalendarResourceStringsJA
+    ...CalendarResourceStringsJA,
+    ...InputResourceStringsJA
 };
