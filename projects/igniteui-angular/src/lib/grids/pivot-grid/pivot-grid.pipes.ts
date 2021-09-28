@@ -96,7 +96,7 @@ export class IgxPivotColumnPipe implements PipeTransform {
     }
 
     private isLeaf(record, pivotKeys) {
-        return record[pivotKeys.records] && record[pivotKeys.records].some(r => r[pivotKeys.records]);
+        return !(record[pivotKeys.records] && record[pivotKeys.records].some(r => r[pivotKeys.records]));
     }
 
 
