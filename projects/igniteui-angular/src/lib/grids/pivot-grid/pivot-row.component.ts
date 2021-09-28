@@ -34,7 +34,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
 
     public rowDimension: IgxColumnComponent[] = [];
     public level = 0;
-    protected hasChild = false;
+    public hasChild = false;
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxPivotGridComponent>,
