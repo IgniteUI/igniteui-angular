@@ -11,7 +11,20 @@
         [row]="rowData"
         [column]="this.column.field"
         [containerClass]="'igx-grid__td-text'"
-        [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | number:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'date' ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : value }}</div>
+        [metadata]="searchMetadata"
+    >{{ formatter
+        ? (value | columnFormatter:formatter)
+        : column.dataType === 'number'
+        ? (value | number:column.pipeArgs.digitsInfo:grid.locale) 
+        : column.dataType === 'date'
+        ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
+        : value
+    }}</div>
+    <igx-icon
+        *ngIf="column.dataType === 'boolean' && !this.formatter"
+        [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }"
+        >{{ value ? "check" : "close" }}</igx-icon
+    >
 </ng-template>
 <ng-template #addRowCell let-cell="cell">
     <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
