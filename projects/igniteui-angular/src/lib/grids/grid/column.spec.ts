@@ -122,7 +122,7 @@ describe('IgxGrid - Column properties #grid', () => {
             const cell = grid.getCellByColumn(i, 'ID');
             expect(cell.nativeElement.textContent).toMatch(formatter(cell.value));
 
-            const cellBool = grid.gridAPI.get_cell_by_index(i, 'IsEmployed');
+            const cellBool = grid.gridAPI.get_cell_by_index(i, 1);
             expect(cellBool.nativeElement.textContent).toMatch(boolFormatter(cellBool.value));
         }
     });
