@@ -26,7 +26,7 @@ export class IgxPivotRowPipe implements PipeTransform {
         // build hierarchies - groups and subgroups
         const hierarchies = PivotUtil.getFieldsHierarchy(collection, rows, pivotKeys);
         // apply aggregations based on the created groups
-        PivotUtil.applyAggregations(hierarchies, values, pivotKeys);
+        // PivotUtil.applyAggregations(hierarchies, values, pivotKeys);
         // generate flat data from the hierarchies
         const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], rows, pivotKeys);
         return data;

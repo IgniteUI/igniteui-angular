@@ -52,16 +52,16 @@ describe('Pivot pipes', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy.rows, pivotConfigHierarchy.values);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfigHierarchy.columns, pivotConfigHierarchy.values);
         expect(columnPipeResult).toEqual([
-            { field1: 'All', All: 1000, Bulgaria: 774, USA: 829, Uruguay: 524, level: 0, records: [
+            { field1: 'All', All: 2127, Bulgaria: 774, USA: 829, Uruguay: 524, level: 0, records: [
                 { field1: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
                 { field1: 'Bikes', Uruguay: 68, level: 1  },
                 { field1: 'Accessories', USA: 293, level: 1  },
                 { field1: 'Components', USA: 240, level: 1  }
             ] },
-            { field1: 'Clothing', All: 1000, Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
-            { field1: 'Bikes', All: 1000, Uruguay: 68, level: 1  },
-            { field1: 'Accessories', All: 1000, USA: 293, level: 1  },
-            { field1: 'Components', All: 1000, USA: 240, level: 1  }
+            { field1: 'Clothing', All: 1526, Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
+            { field1: 'Bikes', All: 68, Uruguay: 68, level: 1  },
+            { field1: 'Accessories', All: 293, USA: 293, level: 1  },
+            { field1: 'Components', All: 240, USA: 240, level: 1  }
         ]);
     });
 
