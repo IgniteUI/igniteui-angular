@@ -7,6 +7,8 @@ import { CarouselResourceStringsJA } from './carousel-resources';
 import { ListResourceStringsJA } from './list-resources';
 import { CalendarResourceStringsJA } from './calendar-resources';
 import { TreeResourceStringsJA } from './tree-resources';
+import { InputResourceStringsJA } from './input-resources';
+import { ChipResourceStringsJA } from './chip-resources';
 
 /**
  * Japanese resource strings for all components
@@ -20,5 +22,7 @@ export const IgxResourceStringsJA = {
     ...CarouselResourceStringsJA,
     ...ListResourceStringsJA,
     ...CalendarResourceStringsJA,
-    ...TreeResourceStringsJA
+    ...TreeResourceStringsJA,
+    ...InputResourceStringsJA,
+    ...ChipResourceStringsJA
 };

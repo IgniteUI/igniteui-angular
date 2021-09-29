@@ -7,6 +7,8 @@ import { CarouselResourceStringsFR } from './carousel-resources';
 import { ListResourceStringsFR } from './list-resources';
 import { CalendarResourceStringsFR } from './calendar-resources';
 import { TreeResourceStringsFR } from './tree-resources';
+import { InputResourceStringsFR } from './input-resources';
+import { ChipResourceStringsFR } from './chip-resources';
 
 /**
  * French resource strings for all components
@@ -20,5 +22,7 @@ export const IgxResourceStringsFR = {
     ...CarouselResourceStringsFR,
     ...ListResourceStringsFR,
     ...CalendarResourceStringsFR,
-    ...TreeResourceStringsFR
+    ...TreeResourceStringsFR,
+    ...InputResourceStringsFR,
+    ...ChipResourceStringsFR
 };
