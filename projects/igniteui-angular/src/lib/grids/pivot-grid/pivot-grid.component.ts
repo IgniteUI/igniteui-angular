@@ -225,15 +225,28 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.field = key;
                 ref.instance.dataType = this.resolveDataTypes(data[0][key]);
                 ref.instance.parent = parent;
+                ref.instance.visibleWhenCollapsed = false;
                 ref.changeDetectorRef.detectChanges();
                 columns.push(ref.instance);
             } else {
                 const ref = factoryColumnGroup.create(this.viewRef.injector);
                 ref.instance.header = key;
-                ref.instance.headerTemplate = this.headerTemplate;
+                //ref.instance.headerTemplate = this.headerTemplate;
                 const children = this.generateColumnHierarchy(value.children, data, ref.instance);
+
+                const refChild = factoryColumn.create(this.viewRef.injector);
+                refChild.instance.header = key;
+                refChild.instance.field = key;
+                refChild.instance.dataType = this.resolveDataTypes(data[0][key]);
+                refChild.instance.parent = ref.instance;
+                refChild.instance.visibleWhenCollapsed = true;
+
+                children.push(refChild.instance);
+
                 ref.changeDetectorRef.detectChanges();
                 ref.instance.children.reset(children);
+                ref.instance.collapsible = true;
+
                 columns.push(ref.instance);
                 columns = columns.concat(children);
             }
