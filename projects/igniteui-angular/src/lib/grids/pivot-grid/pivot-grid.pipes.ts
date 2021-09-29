@@ -65,7 +65,12 @@ export class IgxPivotColumnPipe implements PipeTransform {
                     delete hierarchy[pivotKeys.records]; /* remove the helper records of the actual records so that
                 expand indicators can be rendered properly */
                 }
-                result.push({...hierarchy, ...flatCols});
+                for (const property in flatCols) {
+                    if (flatCols.hasOwnProperty(property)) {
+                        hierarchy[property] = flatCols[property];
+                    }
+                }
+                result.push(hierarchy);
             }
         });
 
