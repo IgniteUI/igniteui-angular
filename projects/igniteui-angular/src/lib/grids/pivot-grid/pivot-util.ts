@@ -62,7 +62,7 @@ export class PivotUtil {
     }
 
     public static flattenHierarchy(hierarchies, rec, dims, pivotKeys, level = 0) {
-        let flatData = [];
+        const flatData = [];
         for (const dim of dims) {
             hierarchies.forEach((h, key) => {
                 const field = (dim && dim.fieldName) ?? this.generateFieldValue(rec);
@@ -74,7 +74,9 @@ export class PivotUtil {
                 flatData.push(obj);
                 if (h[pivotKeys.children]) {
                     obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec, dim.childLevels, pivotKeys, level + 1);
-                    flatData = [...flatData, ...obj[pivotKeys.records]];
+                    for (const record of obj[pivotKeys.records]) {
+                        flatData.push(record);
+                    }
                 }
             });
         }
@@ -83,7 +85,7 @@ export class PivotUtil {
     }
 
     public static flattenColumnHierarchy(hierarchies, values, pivotKeys) {
-        let flatData = [];
+        const flatData = [];
         hierarchies.forEach((h, key) => {
             const obj = {};
             for (const value of values) {
@@ -91,7 +93,10 @@ export class PivotUtil {
                 obj[pivotKeys.records] = h[pivotKeys.records];
                 flatData.push(obj);
                 if (h[pivotKeys.children]) {
-                    flatData = [...flatData, ...this.flattenColumnHierarchy(h[pivotKeys.children], values, pivotKeys)];
+                    const records = this.flattenColumnHierarchy(h[pivotKeys.children], values, pivotKeys);
+                    for (const record of records) {
+                        flatData.push(record);
+                    }
                 }
             }
         });
