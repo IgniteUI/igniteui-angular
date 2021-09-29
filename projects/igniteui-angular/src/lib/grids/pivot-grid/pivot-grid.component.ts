@@ -85,7 +85,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private _data;
     private _filteredData;
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
-    private _origData = [];
 
     /**
      * @hidden
@@ -150,29 +149,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      public get data(): any[] | null {
         return this._data;
     }
-
-    /**
-     * Returns an array of data set to the component.
-     * ```typescript
-     * let processedData = this.grid.processedData;
-     * ```
-     */
-    public get originalData(): any[] | null {
-        return this._origData;
-    }
-
-
-    /**
-     * An @Input property that lets you fill the `IgxPivotGridComponent` with an array of data.
-     * ```html
-     * <igx-pivot-grid [processedData]="Data"></igx-pivot-grid>
-     * ```
-     */
-    @Input()
-    public set originalData(value: any[] | null) {
-        this._origData = value || [];
-    }
-
     /**
      * Sets an array of objects containing the filtered data.
      * ```typescript
@@ -267,7 +243,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected getFieldsHierarchy(data){
         const hierarchy = new Map<string, any>();
-        for (const rec of this.originalData) {
+        for (const rec of data) {
             const vals = this.extractValuesFromDimension(this.pivotConfiguration.columns, rec);
             for (const val of vals) {
                 if (hierarchy.get(val.value) != null && val.children) {
