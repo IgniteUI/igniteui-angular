@@ -1217,6 +1217,11 @@
         background: inherit;
     }
 
+    %igx-grid__tr--header {
+        display: flex; 
+        align-items: center;
+    }
+
     %igx-grid__tr--add-animate {
         @include animation(scale-in-ver-center .2s $ease-in-out-quad);
     }
