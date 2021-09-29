@@ -251,9 +251,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                         hierarchy.get(val.value).children.set(child.value, child);
                     }
                 } else {
+                    const children = val.children;
                     hierarchy.set(val.value, val);
                     hierarchy.get(val.value).children = new Map<string, any>();
-                    for (const child of val.children) {
+                    for (const child of children) {
                         hierarchy.get(val.value).children.set(child.value, child);
                     }
                 }
@@ -267,7 +268,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         let i = 0;
         for (const col of dims) {
             const value = typeof col.member === 'string' ? recData[col.member] : col.member.call(this, recData);
-            vals.push({ value });
+            if (vals.length > 0) {
+                const newChildVal = vals[0].value + '-' + value;
+                if(!vals[0].children) {
+                    vals[0].children = [];
+                }
+                vals[0].children.push({ value });
+            } else {
+                vals.push({ value });
+            }
             if (col.childLevels != null && col.childLevels.length > 0) {
                 const childValues = this.extractValuesFromDimension(col.childLevels, recData);
                 vals[i].children = childValues;
