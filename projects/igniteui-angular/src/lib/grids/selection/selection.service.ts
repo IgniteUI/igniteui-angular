@@ -539,12 +539,13 @@ export class IgxGridSelectionService {
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
         const currSelection = this.getSelectedRows();
+        const filteredDataRecord = this.grid.data.find(record => record[this.grid.primaryKey] === newSelection[newSelection.length - 1]);
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
         }
 
         const args = {
-            oldSelection: currSelection, newSelection,
+            oldSelection: currSelection, newSelection, rowData: filteredDataRecord,
             added, removed, event, cancel: false
         };
         this.grid.rowSelected.emit(args);

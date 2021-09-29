@@ -88,6 +88,7 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
     added: any[];
     removed: any[];
     event?: Event;
+    rowData?: any;
 }
 
 export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
