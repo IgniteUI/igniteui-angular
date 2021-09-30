@@ -45,6 +45,7 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         groupBy: true,
         columns: false,
         rowPinning: true,
+        rowPinned: true,
         pinningConfig: true
     };
     public selectionMode;
@@ -178,6 +179,11 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         ];
         this.selectionMode = GridSelectionMode.multiple;
         /* eslint-enable max-len */
+
+        this.grid1.rowPinned.subscribe((event) => {
+            debugger
+            const row = this.state.getState(true, ['rowPinning']); // return value doesn't include the pinned row
+        });
     }
 
     public ngAfterViewInit() {

@@ -177,6 +177,34 @@ describe('Row Pinning #grid', () => {
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
         });
 
+        it('should emit rowPinned on pin/unpin.', () => {
+            spyOn(grid.rowPinned, 'emit').and.callThrough();
+
+            let row = grid.getRowByIndex(0);
+            const rowID = row.key;
+            row.pin();
+            fix.detectChanges();
+
+            // Check pinned state with getRowByIndex after pin action
+            expect(row.pinned).toBe(true);
+
+            expect(grid.rowPinned.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowPinned.emit).toHaveBeenCalledWith({
+                rowID,
+                insertAtIndex: undefined,
+                isPinned: true,
+                row
+            });
+
+            row = grid.getRowByIndex(0);
+            row.unpin();
+            fix.detectChanges();
+            // Check pinned state with getRowByIndex after unpin action
+            expect(row.pinned).toBe(false);
+
+            expect(grid.rowPinned.emit).toHaveBeenCalledTimes(2);
+        });
+
         it('should pin/unpin via grid API methods.', () => {
             // pin 2nd row
             grid.pinRow(fix.componentInstance.data[1]);
@@ -433,13 +461,13 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
 
             expect(grid.gridAPI.get_row_by_index(0).rowID).toBe(fix.componentInstance.data[1]);
-            expect(grid.gridAPI.get_row_by_index(1).rowID).toBe(fix.componentInstance.data[5]);
+            expect(grid.gridAPI.get_row_by_index(1).rowID).toBe(fix.componentInstance.data[4]);
 
             grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
             fix.detectChanges();
 
             // check pinned rows data is sorted
-            expect(grid.gridAPI.get_row_by_index(0).rowID).toBe(fix.componentInstance.data[5]);
+            expect(grid.gridAPI.get_row_by_index(0).rowID).toBe(fix.componentInstance.data[4]);
             expect(grid.gridAPI.get_row_by_index(1).rowID).toBe(fix.componentInstance.data[1]);
 
             // check unpinned rows data is sorted
