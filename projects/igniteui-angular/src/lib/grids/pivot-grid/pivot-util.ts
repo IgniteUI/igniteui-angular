@@ -74,7 +74,8 @@ export class PivotUtil {
                 flatData.push(obj);
                 const isExpanded = expansionStates.get(key);
                 if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
-                    obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec, dim.childLevels, pivotKeys, level + 1);
+                    obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec,
+                         dim.childLevels, pivotKeys, level + 1, expansionStates);
                     if (isExpanded) {
                         for (const record of obj[pivotKeys.records]) {
                             flatData.push(record);

@@ -2,11 +2,11 @@ import { IgxNumberSummaryOperand } from '../summaries/grid-summary';
 import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotColumnPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 
-describe('Pivot pipes', () => {
+fdescribe('Pivot pipes', () => {
     // This pipe is a pure, stateless function so no need for BeforeEach
     const rowPipe = new IgxPivotRowPipe();
     const columnPipe = new IgxPivotColumnPipe();
-
+    const expansionStates = new Map<any, boolean>();
     const data = [
         { ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley', Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282 },
         { ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa', Country: 'USA', Date: '01/05/2019', UnitsSold: 296 },
@@ -49,7 +49,7 @@ describe('Pivot pipes', () => {
     };
 
     it('transforms flat data to pivot data', () => {
-        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy.rows, pivotConfigHierarchy.values);
+        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy.rows, expansionStates, pivotConfigHierarchy.values);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfigHierarchy.columns, pivotConfigHierarchy.values);
         expect(columnPipeResult).toEqual([
             {
@@ -72,7 +72,7 @@ describe('Pivot pipes', () => {
             member: 'ProductCategory',
             enabled: true,
             childLevels: []
-        }], pivotConfigHierarchy.values);
+        }], expansionStates, pivotConfigHierarchy.values);
         expect(rowPipeResult).toEqual([
             {
                 ProductCategory: 'Clothing', level: 0, records: [
@@ -116,7 +116,7 @@ describe('Pivot pipes', () => {
             member: 'Date',
             enabled: true,
             childLevels: []
-        }], pivotConfigHierarchy.values);
+        }], expansionStates, pivotConfigHierarchy.values);
 
         expect(rowPipeResult).toEqual([
             {
