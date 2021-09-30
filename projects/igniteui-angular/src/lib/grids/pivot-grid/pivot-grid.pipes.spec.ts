@@ -2,7 +2,7 @@ import { IgxNumberSummaryOperand } from '../summaries/grid-summary';
 import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotColumnPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 
-fdescribe('Pivot pipes', () => {
+describe('Pivot pipes', () => {
     // This pipe is a pure, stateless function so no need for BeforeEach
     const rowPipe = new IgxPivotRowPipe();
     const columnPipe = new IgxPivotColumnPipe();
