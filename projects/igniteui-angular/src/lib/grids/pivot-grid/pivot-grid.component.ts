@@ -82,6 +82,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
     public isPivot = true;
+    protected _defaultExpandState = true;
     private _data;
     private _filteredData;
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;

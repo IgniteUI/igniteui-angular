@@ -29,7 +29,7 @@ export class IgxPivotRowPipe implements PipeTransform {
         // apply aggregations based on the created groups
         // PivotUtil.applyAggregations(hierarchies, values, pivotKeys);
         // generate flat data from the hierarchies
-        const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], rows, pivotKeys, 0, expansionStates);
+        const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], rows, pivotKeys, 0, expansionStates, true);
         return data;
     }
 }

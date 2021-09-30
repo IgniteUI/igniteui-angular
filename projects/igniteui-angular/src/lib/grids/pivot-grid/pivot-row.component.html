@@ -102,7 +102,7 @@
             <igx-icon *ngIf="hasChild" [attr.draggable]="false"
                       (click)="grid.toggleRow(rowDimensionKey)"
                       style='cursor: pointer;'>
-                      {{grid.expansionStates.get(rowDimensionKey) ? 'expand_more' : 'expand_less'}}</igx-icon>
+                      {{ expandState ? 'expand_more' : 'expand_less'}}</igx-icon>
             {{column.header}}
         </div>
     </ng-template>
