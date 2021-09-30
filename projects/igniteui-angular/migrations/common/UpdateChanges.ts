@@ -169,9 +169,11 @@ export class UpdateChanges {
         this.updateTsFiles();
         this.updateMembers();
         /** Sass files */
+        // Take out in a new method
         if (this.themePropsChanges && this.themePropsChanges.changes.length) {
             for (const entryPath of this.sassFiles) {
                 this.updateThemeProps(entryPath);
+                this.updateSassVariables(entryPath);
             }
         }
 
@@ -415,6 +417,29 @@ export class UpdateChanges {
                 }
             }
         }
+        if (overwrite) {
+            this.host.overwrite(entryPath, fileContent);
+        }
+    }
+
+    protected updateSassVariables(entryPath: string) {
+        let fileContent = this.host.read(entryPath).toString();
+        let overwrite = false;
+        const allowedEndCharacters = new RegExp('[;:), ]', 'i');
+            for (const change of this.themePropsChanges.changes) {
+                if (!change.owner) {
+                    const occurrences = findMatches(fileContent, change.name);
+                    if (occurrences.length > 0) {
+                        for (let i = occurrences.length - 1; i >= 0; i--) {
+                            if (fileContent[fileContent.indexOf(change.name) + change.name.length].match(allowedEndCharacters)) {
+                                fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
+                                overwrite = true;
+                            }
+                        }
+                    }
+                }
+            }
+
         if (overwrite) {
             this.host.overwrite(entryPath, fileContent);
         }
