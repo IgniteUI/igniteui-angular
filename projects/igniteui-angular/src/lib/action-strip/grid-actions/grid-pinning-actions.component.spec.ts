@@ -60,7 +60,7 @@ describe('igxGridPinningActions #grid ', () => {
             expect(grid.pinnedRows.length).toBe(0);
         });
 
-        fit('should allow navigating to disabled row in unpinned area', async () => {
+        it('should allow navigating to disabled row in unpinned area', async () => {
             grid.pinRow('FAMIA');
             fixture.detectChanges();
 
