@@ -20,6 +20,7 @@ export class IgxPivotRowPipe implements PipeTransform {
     public transform(
         collection: any,
         rows: IPivotDimension[],
+        expansionStates: Map<any, boolean>,
         values?: IPivotValue[],
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
@@ -28,7 +29,7 @@ export class IgxPivotRowPipe implements PipeTransform {
         // apply aggregations based on the created groups
         // PivotUtil.applyAggregations(hierarchies, values, pivotKeys);
         // generate flat data from the hierarchies
-        const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], rows, pivotKeys);
+        const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], rows, pivotKeys, 0, expansionStates);
         return data;
     }
 }

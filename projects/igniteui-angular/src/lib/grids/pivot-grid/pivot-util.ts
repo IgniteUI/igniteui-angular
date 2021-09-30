@@ -61,7 +61,7 @@ export class PivotUtil {
         return result;
     }
 
-    public static flattenHierarchy(hierarchies, rec, dims, pivotKeys, level = 0) {
+    public static flattenHierarchy(hierarchies, rec, dims, pivotKeys, level = 0, expansionStates: Map<any, boolean>) {
         const flatData = [];
         for (const dim of dims) {
             hierarchies.forEach((h, key) => {
@@ -72,11 +72,15 @@ export class PivotUtil {
                 obj = {...obj, ...h[pivotKeys.aggregations]};
                 obj[pivotKeys.level] = level;
                 flatData.push(obj);
+                const isExpanded = expansionStates.get(key);
                 if (h[pivotKeys.children]) {
-                    obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec, dim.childLevels, pivotKeys, level + 1);
-                    for (const record of obj[pivotKeys.records]) {
-                        flatData.push(record);
-                    }
+                        obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec,
+                         dim.childLevels, pivotKeys, level + 1, expansionStates);
+                         if (isExpanded) {
+                            for (const record of obj[pivotKeys.records]) {
+                                flatData.push(record);
+                            }
+                         }
                 }
             });
         }

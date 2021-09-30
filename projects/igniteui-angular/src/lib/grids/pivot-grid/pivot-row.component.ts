@@ -54,6 +54,14 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         return this.index;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public get rowDimensionKey(){
+        return this.rowDimension.map(x => x.header).join('_');
+    }
+
     public ngOnInit() {
         // generate rowDimension
         const rowDimConfig = this.grid.pivotConfiguration.rows;
