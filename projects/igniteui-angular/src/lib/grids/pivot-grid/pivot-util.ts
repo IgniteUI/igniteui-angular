@@ -25,18 +25,21 @@ export class PivotUtil {
     }
 
     public static extractValuesFromDimension(dims: IPivotDimension[], recData: any) {
-        const vals = [];
+        const values: any[] = [];
         let i = 0;
         for (const col of dims) {
             const value = this.extractValueFromDimension(col, recData);
-            vals.push({ value });
+            const objValue = {};
+            objValue['value'] = value;
+            objValue['dimension'] = col;
+            values.push(objValue);
             if (col.childLevels != null && col.childLevels.length > 0) {
                 const childValues = this.extractValuesFromDimension(col.childLevels, recData);
-                vals[i].children = childValues;
+                values[i].children = childValues;
             }
             i++;
         }
-        return vals;
+        return values;
     }
 
     public static applyAggregations(hierarchies, values, pivotKeys) {
@@ -61,25 +64,23 @@ export class PivotUtil {
         return result;
     }
 
-    public static flattenHierarchy(hierarchies, rec, dims, pivotKeys, level = 0) {
+    public static flattenHierarchy(hierarchies, rec, pivotKeys, level = 0) {
         const flatData = [];
-        for (const dim of dims) {
-            hierarchies.forEach((h, key) => {
-                const field = this.resolveFieldName(dim, rec);
-                let obj = {};
-                obj[field] = key;
-                obj[pivotKeys.records] = h[pivotKeys.records];
-                obj = { ...obj, ...h[pivotKeys.aggregations] };
-                obj[pivotKeys.level] = level;
-                flatData.push(obj);
-                if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
-                    obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec, dim.childLevels, pivotKeys, level + 1);
-                    for (const record of obj[pivotKeys.records]) {
-                        flatData.push(record);
-                    }
+        hierarchies.forEach((h, key) => {
+            const field = this.resolveFieldName(h.dimension, rec);
+            let obj = {};
+            obj[field] = key;
+            obj[pivotKeys.records] = h[pivotKeys.records];
+            obj = { ...obj, ...h[pivotKeys.aggregations] };
+            obj[pivotKeys.level] = level;
+            flatData.push(obj);
+            if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
+                obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec, pivotKeys, level + 1);
+                for (const record of obj[pivotKeys.records]) {
+                    flatData.push(record);
                 }
-            });
-        }
+            }
+        });
 
         return flatData;
     }

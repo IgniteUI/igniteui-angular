@@ -23,12 +23,30 @@ export class IgxPivotRowPipe implements PipeTransform {
         values?: IPivotValue[],
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
-        // build hierarchies - groups and subgroups
-        const hierarchies = PivotUtil.getFieldsHierarchy(collection, rows, pivotKeys);
-        // apply aggregations based on the created groups
-        // PivotUtil.applyAggregations(hierarchies, values, pivotKeys);
-        // generate flat data from the hierarchies
-        const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], rows, pivotKeys);
+        let hierarchies;
+        let data;
+        for (const row of rows) {
+            if (!data) {
+                // build hierarchies - groups and subgroups
+                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], pivotKeys);
+                // generate flat data from the hierarchies
+                data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], pivotKeys);
+            } else {
+                const newData = [...data];
+                for (let i = 0; i < newData.length; i++) {
+                    const hierarchyFields = PivotUtil.getFieldsHierarchy(newData[i][pivotKeys.records], [row], pivotKeys);
+                    const siblingData = PivotUtil.flattenHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys);
+                    for (const property in newData[i]) {
+                        if (newData[i].hasOwnProperty(property)) {
+                            siblingData.forEach(s => s[property] = newData[i][property]);
+                        }
+                    }
+                    newData.splice(i, 1, ...siblingData);
+                    i+=siblingData.length - 1;
+                }
+                data = newData;
+            }
+        }
         return data;
     }
 }
