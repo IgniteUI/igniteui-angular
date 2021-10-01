@@ -3,16 +3,16 @@ import { cloneValue } from '../../core/utils';
 import { IPivotDimension, IPivotKeys, IPivotValue } from './pivot-grid.interface';
 
 export class PivotUtil {
-    public static getFieldsHierarchy(data: any[], columns: IPivotDimension[], pivotKeys: IPivotKeys, isColumn = false): Map<string, any> {
+    public static getFieldsHierarchy(data: any[], columns: IPivotDimension[], pivotKeys: IPivotKeys): Map<string, any> {
         const hierarchy = new Map<string, any>();
         for (const rec of data) {
             const vals = this.extractValuesFromDimension(columns, rec);
             for (const val of vals) { // this should go in depth also vals.children
                 if (hierarchy.get(val.value) != null) {
-                    this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys.records, isColumn);
+                    this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys.records);
                 } else {
                     hierarchy.set(val.value, cloneValue(val));
-                    this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys.records, isColumn);
+                    this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys.records);
                 }
             }
         }
@@ -138,7 +138,7 @@ export class PivotUtil {
         return result;
     }
 
-    private static applyHierarchyChildren(hierarchy, val, rec, recordsKey, isColumn = false) {
+    private static applyHierarchyChildren(hierarchy, val, rec, recordsKey) {
         const childCollection = val.children;
         if (Array.isArray(hierarchy.get(val.value).children)) {
             hierarchy.get(val.value).children = new Map<string, any>();
@@ -161,7 +161,7 @@ export class PivotUtil {
                     hierarchy.get(val.value).children.get(child.value)[recordsKey] = [rec];
                 }
 
-                if (child.children && isColumn) {
+                if (child.children && child.children.length > 0) {
                     this.applyHierarchyChildren( hierarchy.get(val.value).children, child, rec, recordsKey);
                 }
             }

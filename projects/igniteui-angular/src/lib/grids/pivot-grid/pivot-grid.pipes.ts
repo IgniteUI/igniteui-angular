@@ -83,7 +83,7 @@ export class IgxPivotColumnPipe implements PipeTransform {
             this.groupColumns(children, columns, values, pivotKeys);
         } else if (hierarchy[pivotKeys.records]) {
             const leafRecords = this.getLeafs(hierarchy[pivotKeys.records], pivotKeys);
-            hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, pivotKeys, true);
+            hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, pivotKeys);
             PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
         }
     }
