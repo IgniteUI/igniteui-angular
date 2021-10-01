@@ -1707,14 +1707,14 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             let rows = treeGrid.rowList.toArray();
 
-            [147, 475, 147, 475, 957, 317, 711, 998].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
+            [147, 147, 475, 957, 317, 711, 998].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
 
             treeGrid.paginate(1);
             fix.detectChanges();
 
             rows = treeGrid.rowList.toArray();
 
-            [147, 475, 299, 19, 847, 663].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
+            [147, 299, 19, 847, 663].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
         });
 
         it('should make a correct selection', () => {
