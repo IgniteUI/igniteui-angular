@@ -169,4 +169,34 @@ describe('Pivot pipes', () => {
         ]);
     });
 
+    fit('transforms flat data to pivot data 2 column dimensions', () => {
+        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy.rows, pivotConfigHierarchy.values);
+        const columnPipeResult = columnPipe.transform(rowPipeResult, [{
+            member: 'Country',
+            enabled: true,
+            childLevels:[]
+            },
+            {
+            member: 'Date',
+            enabled: true,
+            childLevels: []
+            }], pivotConfigHierarchy.values);
+        /* eslint-disable quote-props */
+        expect(columnPipeResult).toEqual([
+            {'field1':'All','records':[
+                {'field1':'Clothing','level':1,'Bulgaria':774,'Bulgaria-01/01/2021':282,
+                'Bulgaria-02/19/2020':492,'USA':296,'USA-01/05/2019':296,'Uruguay':456,'Uruguay-05/12/2020':456},
+                {'field1':'Bikes','level':1,'Uruguay':68,'Uruguay-01/06/2020':68},
+                {'field1':'Accessories','level':1,'USA':293,'USA-04/07/2021':293},
+                {'field1':'Components','level':1,'USA':240,'USA-12/08/2021':240}]
+                ,'level':0,'Bulgaria':774,'Bulgaria-01/01/2021':282,'Bulgaria-02/19/2020':492,
+                'USA':829,'USA-01/05/2019':296,'USA-04/07/2021':293,'USA-12/08/2021':240,
+                'Uruguay':524,'Uruguay-05/12/2020':456,'Uruguay-01/06/2020':68},
+            {'field1':'Clothing','level':1,'Bulgaria':774,'Bulgaria-01/01/2021':282,
+            'Bulgaria-02/19/2020':492,'USA':296,'USA-01/05/2019':296,'Uruguay':456,'Uruguay-05/12/2020':456},
+            {'field1':'Bikes','level':1,'Uruguay':68,'Uruguay-01/06/2020':68},
+            {'field1':'Accessories','level':1,'USA':293,'USA-04/07/2021':293},
+            {'field1':'Components','level':1,'USA':240,'USA-12/08/2021':240}]);
+    });
+
 });

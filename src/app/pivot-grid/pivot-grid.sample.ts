@@ -50,6 +50,11 @@ enabled: true,
 childLevels:[]
 },
 {
+member: 'SellerName',
+enabled: true,
+childLevels:[]
+},
+{
 member: 'Date',
 enabled: true,
 childLevels: []
