@@ -131,7 +131,7 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
         let value = resolveNestedPath(rec, fieldName);
 
         value = column.formatter && this.shouldApplyFormatter(fieldName) ?
-            column.formatter(value) :
+            column.formatter(value, rec) :
             value && isDate ? parseDate(value) : value;
 
         return value;
