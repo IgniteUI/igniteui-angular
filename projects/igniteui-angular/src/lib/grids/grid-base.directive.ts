@@ -3708,22 +3708,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .pipe(takeUntil(this.destroy$))
             .subscribe((change: QueryList<IgxGridRowComponent>) => {
                 this.onPinnedRowsChanged(change);
-
-              /*  debugger
-                if (change.last && change.last.pinned) {
-                    const row = new IgxGridRow(change.last.grid, change.last.index, change.last.rowData);
-                    const eventArgs: IPinRowEventArgs = {
-                        insertAtIndex: change.last.index,
-                        isPinned: true,
-                        rowID: change.last.rowID,
-                        row: row
-                    };
-
-                    //this.gridAPI.get_row_by_key(changel.last.index)
-
-                    this.rowPinned.emit(eventArgs);
-                }*/
-
             });
 
         this.addRowSnackbar?.clicked.subscribe(() => {
@@ -4807,7 +4791,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param index The index at which to insert the row in the pinned collection.
      */
     public pinRow(rowID: any, index?: number, row?: RowType): boolean {
-        debugger
         if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
             return false;
         }
@@ -4827,12 +4810,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.pipeTrigger++;
         if (this.gridAPI.grid) {
             this.notifyChanges();
-            // Force pipe triggering
             this.cdr.detectChanges();
             this.rowPinned.emit(eventArgs)
         }
-
-
 
         return true;
     }
@@ -6430,9 +6410,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (diff) {
             this.notifyChanges(true);
         }
-
-        // debugger
-        // this.rowPinned.emit();
     }
 
     /**

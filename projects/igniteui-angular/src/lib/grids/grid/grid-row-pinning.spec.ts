@@ -461,13 +461,13 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
 
             expect(grid.gridAPI.get_row_by_index(0).rowID).toBe(fix.componentInstance.data[1]);
-            expect(grid.gridAPI.get_row_by_index(1).rowID).toBe(fix.componentInstance.data[4]);
+            expect(grid.gridAPI.get_row_by_index(1).rowID).toBe(fix.componentInstance.data[5]);
 
             grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
             fix.detectChanges();
 
             // check pinned rows data is sorted
-            expect(grid.gridAPI.get_row_by_index(0).rowID).toBe(fix.componentInstance.data[4]);
+            expect(grid.gridAPI.get_row_by_index(0).rowID).toBe(fix.componentInstance.data[5]);
             expect(grid.gridAPI.get_row_by_index(1).rowID).toBe(fix.componentInstance.data[1]);
 
             // check unpinned rows data is sorted
