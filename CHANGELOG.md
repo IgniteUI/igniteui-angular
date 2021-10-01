@@ -22,6 +22,10 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
     - 'oddRowCSS' and 'evenRowCSS' properties has been deprecated
+- `IgxForOf` - now takes margins into account when calculating the space that each element takes.
+    _Note:_ If your virtualized items contain margins, please calculate them into the `itemSize` value for the best possible initial virtualized state.
+
+## 12.1.6
 
 ## 12.1.6
 

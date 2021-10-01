@@ -324,6 +324,33 @@ describe('IgxForOf directive -', () => {
             chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(10);
         });
+
+        it('should take item margins into account when calculating the size cache', async () => {
+            fix.componentInstance.height = '600px';
+            fix.componentInstance.itemSize = '100px';
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            virtualContainer.igxForSizePropName = 'height';
+            fix.componentInstance.data = [
+                { 1: '1', height: '100px', margin: '30px' },
+                { 1: '2', height: '100px', margin: '0px' },
+                { 1: '3', height: '100px', margin: '0px' },
+                { 1: '4', height: '100px', margin: '0px' },
+                { 1: '5', height: '100px', margin: '0px' },
+                { 1: '6', height: '100px', margin: '0px' },
+                { 1: '7', height: '100px', margin: '0px' },
+                { 1: '8', height: '100px', margin: '30px' },
+                { 1: '9', height: '100px', margin: '30px' },
+                { 1: '10', height: '100px', margin: '30px' }
+            ];
+            fix.detectChanges();
+            await wait(200);
+            const cache = (fix.componentInstance.parentVirtDir as any).heightCache;
+            expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 100, 100, 100]);
+            fix.componentInstance.scrollTop(400);
+            fix.detectChanges();
+            await wait(200);
+            expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 130, 130, 130]);
+        });
     });
 
     describe('vertical and horizontal virtual component', () => {
@@ -1185,7 +1212,7 @@ describe('IgxForOf directive -', () => {
             const secondForOf = fix.componentInstance.secondForOfDir;
             expect(secondForOf.state.startIndex).toBe(0);
         });
-});
+    });
 });
 
 class DataGenerator {
@@ -1401,7 +1428,9 @@ export class VirtualComponent {
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
                 [igxForItemSize]='itemSize'>
-                <div [style.display]="'flex'" [style.height]="rowData.height || itemSize || '50px'">
+                <div [style.display]="'flex'"
+                    [style.height]="rowData.height || itemSize || '50px'"
+                    [style.margin-top]="rowData.margin || '0px'">
                     <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
                     <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
                     <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
