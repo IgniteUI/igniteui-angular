@@ -29,7 +29,15 @@ export class PivotUtil {
         let i = 0;
         for (const col of dims) {
             const value = this.extractValueFromDimension(col, recData);
-            vals.push({ value });
+            if (vals.length > 0) {
+                const newChildVal = vals[0].value + '-' + value;
+                if(!vals[0].children) {
+                    vals[0].children = [];
+                }
+                vals[0].children.push({ value: newChildVal });
+            } else {
+                vals.push({ value });
+            }
             if (col.childLevels != null && col.childLevels.length > 0) {
                 const childValues = this.extractValuesFromDimension(col.childLevels, recData);
                 vals[i].children = childValues;
@@ -95,7 +103,11 @@ export class PivotUtil {
                 if (h[pivotKeys.children]) {
                     const records = this.flattenColumnHierarchy(h[pivotKeys.children], values, pivotKeys);
                     for (const record of records) {
-                        flatData.push(record);
+                        delete record[pivotKeys.records];
+                        const childKeys = Object.keys(record);
+                        for (const childKey of childKeys) {
+                            obj[childKey] = record[childKey];
+                        }
                     }
                 }
             }

@@ -45,14 +45,16 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [{
-            member: () => 'All',
-            enabled: true,
-            childLevels: [{
-                member: 'Country',
-                enabled: true,
-                childLevels:[]
-            }]
-        }],
+member: 'Country',
+enabled: true,
+childLevels:[]
+},
+{
+member: 'Date',
+enabled: true,
+childLevels: []
+}
+],
         rows: [{
             member: () => 'All',
             enabled: true,

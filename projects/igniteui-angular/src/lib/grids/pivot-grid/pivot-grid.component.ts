@@ -21,6 +21,7 @@ import { IPivotConfiguration, IPivotDimension } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
+import { PivotUtil } from './pivot-util';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -221,7 +222,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         fields.forEach((value, key) => {
             if (value.children == null || value.children.size === 0) {
                 const ref = factoryColumn.create(this.viewRef.injector);
-                ref.instance.header = key;
+                ref.instance.header = key.split(parent.header + '-')[1];
                 ref.instance.field = key;
                 ref.instance.dataType = this.resolveDataTypes(data[0][key]);
                 ref.instance.parent = parent;
@@ -257,7 +258,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected getFieldsHierarchy(data){
         const hierarchy = new Map<string, any>();
         for (const rec of data) {
-            const vals = this.extractValuesFromDimension(this.pivotConfiguration.columns, rec);
+            const vals = PivotUtil.extractValuesFromDimension(this.pivotConfiguration.columns, rec);
             for (const val of vals) {
                 if (hierarchy.get(val.value) != null && val.children) {
                     for (const child of val.children) {
@@ -274,28 +275,5 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             }
         }
         return hierarchy;
-    }
-
-    private extractValuesFromDimension(dims: IPivotDimension[], recData: any){
-        const vals = [];
-        let i = 0;
-        for (const col of dims) {
-            const value = typeof col.member === 'string' ? recData[col.member] : col.member.call(this, recData);
-            if (vals.length > 0) {
-                const newChildVal = vals[0].value + '-' + value;
-                if(!vals[0].children) {
-                    vals[0].children = [];
-                }
-                vals[0].children.push({ value });
-            } else {
-                vals.push({ value });
-            }
-            if (col.childLevels != null && col.childLevels.length > 0) {
-                const childValues = this.extractValuesFromDimension(col.childLevels, recData);
-                vals[i].children = childValues;
-            }
-            i++;
-        }
-        return vals;
     }
 }
