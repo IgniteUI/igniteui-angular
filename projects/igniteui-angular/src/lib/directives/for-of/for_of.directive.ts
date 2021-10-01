@@ -735,7 +735,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * @hidden
-     * Function that recaculates and updates cache sizes.
+     * Function that recalculates and updates cache sizes.
      */
     public recalcUpdateSizes() {
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
@@ -753,8 +753,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 if (!this.isRemote && !this.igxForOf[index]) {
                     continue;
                 }
+                const margin = this.getMargin(rNode, dimension);
                 const oldVal = dimension === 'height' ? this.heightCache[index] : this.igxForOf[index][dimension];
-                const newVal = dimension === 'height' ? h : rNode.clientWidth;
+                const newVal = (dimension === 'height' ? h : rNode.clientWidth) + margin;
                 if (dimension === 'height') {
                     this.heightCache[index] = newVal;
                 } else {
@@ -854,6 +855,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollTop);
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
+
+        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1403,6 +1406,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const newSize = this.sizesCache[this.state.startIndex] - offset;
             this.scrollPosition = newSize === this.scrollPosition ? newSize + 1 : newSize;
         }
+    }
+
+    private getMargin(node, dimension: string): number {
+        const styles = window.getComputedStyle(node);
+        if (dimension === 'height') {
+            return parseFloat(styles['marginTop']) +
+                parseFloat(styles['marginBottom']) || 0;
+        }
+        return parseFloat(styles['marginLeft']) +
+            parseFloat(styles['marginRight']) || 0;
     }
 }
 
