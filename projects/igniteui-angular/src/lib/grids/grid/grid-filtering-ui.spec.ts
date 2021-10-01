@@ -3879,6 +3879,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             scrollbar.scrollTop = displayContainer.getBoundingClientRect().height / 2;
             await wait(200);
             fix.detectChanges();
+            await wait(100);
 
             // Type string in search box
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
