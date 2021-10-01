@@ -54,7 +54,6 @@ import {
     Action,
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
@@ -156,7 +155,6 @@ import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
-import {IgxGridRow} from "./grid-public-row";
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -4772,7 +4770,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.gridAPI.grid) {
             this.notifyChanges();
             this.cdr.detectChanges();
-            this.rowPinned.emit(eventArgs)
+            this.rowPinned.emit(eventArgs);
         }
 
         return true;
