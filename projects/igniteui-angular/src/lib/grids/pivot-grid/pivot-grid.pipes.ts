@@ -37,7 +37,8 @@ export class IgxPivotRowPipe implements PipeTransform {
                     const hierarchyFields = PivotUtil.getFieldsHierarchy(newData[i][pivotKeys.records], [row], pivotKeys);
                     const siblingData = PivotUtil.flattenHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys);
                     for (const property in newData[i]) {
-                        if (newData[i].hasOwnProperty(property)) {
+                        if (newData[i].hasOwnProperty(property) &&
+                        Object.keys(pivotKeys).indexOf(property) === -1) {
                             siblingData.forEach(s => s[property] = newData[i][property]);
                         }
                     }
