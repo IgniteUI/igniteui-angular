@@ -28,10 +28,6 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
 @Directive()
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
 
-    /** @hidden */
-    @HostBinding('attr.role')
-    public role = 'tabs';
-
     /**
      * An @Input property that gets/sets the index of the selected item.
      * Default value is 0 if contents are defined otherwise defaults to -1.

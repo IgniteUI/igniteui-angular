@@ -501,6 +501,8 @@ export const yieldingLoop = (count: number, chunkSize: number, callback: (index:
     chunk();
 };
 
+export const isConstructor = (ref: any) => typeof ref === 'function' && Boolean(ref.prototype) && Boolean(ref.prototype.constructor);
+
 export const reverseAnimationResolver = (animation: AnimationReferenceMetadata): AnimationReferenceMetadata =>
     oppositeAnimation.get(animation) ?? animation;
 
