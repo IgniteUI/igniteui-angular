@@ -3138,7 +3138,7 @@ describe('igxOverlay', () => {
             tick();
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
-            expect(wrapperElement.style.visibility).toEqual('hidden');
+            expect(wrapperElement).toBeUndefined();
         }));
 
         // 3.2 Non - Modal
