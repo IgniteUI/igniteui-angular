@@ -20,7 +20,6 @@
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the components.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 /// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
 /// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
 /// @param {Map} $elevations [$igx-elevations] - The elevation map to be used by all component themes.
@@ -32,7 +31,6 @@
     $palette,
     $schema: $light-material-schema,
     $exclude: (),
-    $legacy-support: false,
     $roundness: null,
     $elevation: true,
     $elevations: $igx-elevations,
@@ -40,16 +38,13 @@
     // Stores all excluded component styles
     $excluded: ();
 
-    @if not($legacy-support) {
-        @include igx-palette-vars($palette, $contrast: true);
+    @include igx-palette-vars($palette, $contrast: true);
 
-        @if $elevation {
-            @include igx-elevation-vars($elevations);
-        }
+    @if $elevation {
+        @include igx-elevation-vars($elevations);
     }
 
     $theme-palette: $palette !global;
-    $igx-legacy-support: $legacy-support !global;
 
     @if list.length($exclude) > 0 {
         $excluded: is-component($exclude);
@@ -476,11 +471,9 @@
 /// Creates a global material theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-light-theme(
     $palette,
     $exclude: (),
-    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -501,7 +494,6 @@
     @include igx-theme(
         $palette: $light-palette,
         $schema: $light-schema,
-        $legacy-support: $legacy-support,
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
@@ -511,11 +503,9 @@
 /// Creates a global material theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -536,7 +526,6 @@
     @include igx-theme(
         $palette: $dark-palette,
         $schema: $dark-schema,
-        $legacy-support: $legacy-support,
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
@@ -546,11 +535,9 @@
 /// Creates a global fluent theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-fluent-light-theme(
     $palette,
     $exclude: (),
-    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -566,7 +553,6 @@
             $grays: #000
         ),
         $schema: $light-fluent-schema,
-        $legacy-support: $legacy-support,
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
@@ -576,11 +562,9 @@
 /// Creates a global fluent theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-fluent-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -596,7 +580,6 @@
             $grays: #fff
         ),
         $schema: $dark-fluent-schema,
-        $legacy-support: $legacy-support,
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
@@ -607,11 +590,9 @@
 /// Creates a global bootstrap-like theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-bootstrap-light-theme(
     $palette,
     $exclude: (),
-    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -627,7 +608,6 @@
             $grays: #212529
         ),
         $schema: $light-bootstrap-schema,
-        $legacy-support: $legacy-support,
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
@@ -637,11 +617,9 @@
 /// Creates a global bootstrap-like theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-bootstrap-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -657,7 +635,6 @@
             $grays: #fff
         ),
         $schema: $dark-bootstrap-schema,
-        $legacy-support: $legacy-support,
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
@@ -667,11 +644,9 @@
 /// Creates a global indigo theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-indigo-light-theme(
     $palette,
     $exclude: (),
-    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -687,7 +662,6 @@
             $grays: #060716,
         ),
         $schema: $light-indigo-schema,
-        $legacy-support: $legacy-support,
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
@@ -697,11 +671,9 @@
 /// Creates a global indigo theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-indigo-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -717,7 +689,6 @@
             $grays: #fff
         ),
         $schema: $dark-indigo-schema,
-        $legacy-support: $legacy-support,
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,

@@ -54,16 +54,6 @@
 }
 
 @include describe('Meta introspection') {
-    @include it('legacy should return true with $legacy-support on') {
-        $igx-legacy-support: true !global;
-        @include assert-equal(legacy(), true);
-    }
-
-    @include it('legacy should return false with $legacy-support off') {
-        $igx-legacy-support: false !global;
-        @include assert-equal(legacy(), false);
-    }
-
     @include it('is-root should return true if called from root') {
         @include assert('when called from root') {
             // Defined at root level
@@ -114,30 +104,7 @@ $theme-palette: $_palette;
         }
     }
 
-    @include describe('igx-color w/ legacy support') {
-        $igx-legacy-support: true !global;
-
-        @include it('should return a value of type color w/o arguments')  {
-            $value: igx-color();
-            @include assert-equal(type-of($value), color);
-        }
-
-        @include it('should return a value of type color from $theme-palette w/ color as only argument')  {
-            $value: igx-color($color: secondary);
-            $actual: igx-color($theme-palette, 'secondary');
-            @include assert-equal($value, $actual);
-        }
-
-        @include it('should return a value of type color from $theme-palette w/ color and variant as only arguments')  {
-            $value: igx-color($color: secondary, $variant: 700);
-            $actual: igx-color($theme-palette, 'secondary', 700);
-            @include assert-equal($value, $actual);
-        }
-    }
-
-    @include describe('igx-color w/o legacy support') {
-        $igx-legacy-support: false !global;
-
+    @include describe('igx-color') {
         @include it('should return a value of type string as CSS var w/o arguments')  {
             $value: igx-color();
             @include assert-equal(type-of($value), string);

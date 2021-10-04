@@ -179,11 +179,7 @@
         @each $variant, $value in $color {
             @if meta.type-of($value) != 'map' {
                 @include gen-color-class($name, $variant, $prefix, $suffix) {
-                    @if legacy() {
-                        #{$prop}: igx-color($palette, $color: $name, $variant: $variant);
-                    } @else {
-                        #{$prop}: igx-color($color: $name, $variant: $variant);
-                    }
+                    #{$prop}: igx-color($color: $name, $variant: $variant);
                 }
             }
         }
@@ -323,16 +319,14 @@
     $n: map.get($theme, 'name');
     $name: if($scope, $scope, $s or $n);
 
-    @if not(legacy()) {
-        @if is-root() {
-            #{$name} {
-                @include css-vars-from-theme($theme, $prefix);
-            }
-        } @else {
-            &,
-            #{$name} {
-                @include css-vars-from-theme($theme, $prefix);
-            }
+    @if is-root() {
+        #{$name} {
+            @include css-vars-from-theme($theme, $prefix);
+        }
+    } @else {
+        &,
+        #{$name} {
+            @include css-vars-from-theme($theme, $prefix);
         }
     }
 }

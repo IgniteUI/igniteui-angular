@@ -168,11 +168,7 @@ $igx-elevations: igx-elevations(
     }
 
     @if $elevations == null {
-        @return if(
-            legacy(),
-            igx-elevation($igx-elevations, $elevation),
-            #{var(--igx-elevation-#{$elevation})}
-        );
+        @return #{var(--igx-elevation-#{$elevation})};
     }
 
     @return map.get($elevations, #{$elevation});

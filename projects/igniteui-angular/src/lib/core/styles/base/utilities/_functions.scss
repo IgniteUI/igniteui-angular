@@ -404,13 +404,9 @@ $p-test: igx-palette(#fff, #000);
 
     @if $palette == null {
         @return if(
-            legacy(),
-            igx-color($theme-palette, $color, $variant),
-            if(
-                $contrast,
-                $var-string,
-                hsla($var-string, if($opacity, $opacity, $a)),
-            )
+            $contrast,
+            $var-string,
+            hsla($var-string, if($opacity, $opacity, $a)),
         );
     }
 
@@ -662,21 +658,14 @@ $p-test: igx-palette(#fff, #000);
 ///   %igx-avatar-icon {
 ///     color: var-get($avatar-theme, 'icon-color');
 ///   }
-///   // If legacy-support is off, it will produce the following:
-///   // %igx-avatar-icon {
-///   //   color: var(--igx-avatar-icon-color);
-///   // }
-///   // otherwise, it will return the value for key 'icon-color' in the '$avatar-theme';
+/// Returns the value for key 'icon-color' in the '$avatar-theme';
 /// @returns {String} - The value of the key in the passed map, or the name of key concatenated with the key name.
 @function var-get($map, $key, $fallback: null) {
     @if map.has-key($map, $key) {
-        @if not(legacy()) {
-            @if not($fallback) {
-                @return var(--#{$key})
-            }
-            @return var(--#{$key}, #{$fallback})
+        @if not($fallback) {
+            @return var(--#{$key})
         } @else {
-            @return map.get($map, $key);
+            @return var(--#{$key}, #{$fallback})
         }
     } @else {
         @error string.unquote('The map you passed does not contain a key #{$key}');
@@ -839,14 +828,6 @@ $p-test: igx-palette(#fff, #000);
     }
 }
 
-@function legacy() {
-    @return if(
-        meta.global-variable-exists('igx-legacy-support'),
-        $igx-legacy-support,
-        false
-    );
-}
-
 /// Returns calc value between given min and max values
 /// @access private
 @function fraction-clamp($factor, $min, $max) {
@@ -859,7 +840,6 @@ $p-test: igx-palette(#fff, #000);
 
     @return ($max - $min) * $factor + $min;
 }
-
 
 /// If the value is unitless, returns value or list of values between 0 and 1
 /// where the 0 is the minimum and 1 is the maximum

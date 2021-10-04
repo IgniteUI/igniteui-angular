@@ -18,7 +18,6 @@ body {
 @include igx-theme(
     $palette: $palette,
     $schema: $schema,
-    $legacy-support: $legacy-support,
 );
 
 .dock {
