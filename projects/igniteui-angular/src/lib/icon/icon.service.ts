@@ -168,10 +168,7 @@ export class IgxIconService {
      * ```
      */
     public getSvgIcon(name: string, family: string = '') {
-        if(this._cachedSvgIcons.has(family)) {
-            const familyRegistry = this._cachedSvgIcons.get(family) as Map<string, string>;
-            return familyRegistry.get(name);
-        }
+        return this._cachedSvgIcons.get(family)?.get(name);
     }
 
     /**

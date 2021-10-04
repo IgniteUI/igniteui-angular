@@ -245,8 +245,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     public get getSvg(): SafeHtml {
         if (this.iconService.isSvgIconCached(this.name, this.family)) {
             const svgText = this.iconService.getSvgIcon(this.name, this.family);
-            const svg = this.sanitizer.bypassSecurityTrustHtml(svgText);
-            return svg;
+            return this.sanitizer.bypassSecurityTrustHtml(svgText);
         }
 
         return null;
