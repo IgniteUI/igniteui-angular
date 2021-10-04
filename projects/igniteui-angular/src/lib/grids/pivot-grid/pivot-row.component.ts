@@ -62,10 +62,12 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         this.extractFromDimensions(rowDimConfig, 0);
     }
 
-    protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number){
+    protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number) {
+        let dimIndex = 0;
         for (const dim of rowDimConfig) {
             if  (level === this.level) {
-                this.rowDimension.push(this.extractFromDimension(dim));
+                this.rowDimension.push(this.extractFromDimension(dim, dimIndex));
+                dimIndex++;
             } else {
                 level++;
                 this.extractFromDimensions(dim.childLevels, level);
@@ -73,24 +75,24 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         }
     }
 
-    protected extractFromDimension(dim: IPivotDimension) {
+    protected extractFromDimension(dim: IPivotDimension, index: number = 0) {
         let field = null;
         if (typeof dim.member === 'string') {
             field = this.rowData[dim.member];
         } else if (typeof dim.member === 'function'){
             field = dim.member.call(this, this.rowData);
         }
-        const col = this._createColComponent(field);
+        const col = this._createColComponent(field, index);
         return col;
     }
 
-    protected _createColComponent(field: string) {
+    protected _createColComponent(field: string, index: number = 0) {
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
         ref.instance.field = field;
         ref.instance.header = field;
         ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
-        (ref as any).instance._vIndex = this.grid.columns.length + this.index;
+        (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
         ref.instance.headerTemplate = this.headerTemplate;
         return ref.instance;
     }
