@@ -91,7 +91,7 @@
     </igx-grid>
 
      <igx-dialog #jsonDialog title="Multi-row layout result:"
-        leftButtonLabel="Cancel" (onLeftButtonSelect)="jsonDialog.close()" rightButtonLabel="Copy" (onRightButtonSelect)="copyToClipboard()"
+        leftButtonLabel="Cancel" (leftButtonSelect)="jsonDialog.close()" rightButtonLabel="Copy" (rightButtonSelect)="copyToClipboard()"
         backgroundClick="true" [closeOnOutsideSelect]="true">
         <textarea #textArea rows="18" cols="101" readonly>{{jsonCollection}}</textarea>
     </igx-dialog>

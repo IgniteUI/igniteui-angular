@@ -253,8 +253,8 @@ export class IgxFilteringService implements OnDestroy {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
         grid.crudService.endEdit(false);
-        if (grid.paging) {
-            grid.page = 0;
+        if (grid.paginator) {
+            grid.paginator.page = 0;
         }
 
         filteringTree.filteringOperands = [];
@@ -346,8 +346,8 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         this.grid.crudService.endEdit(false);
-        if (grid.paging) {
-            grid.page = 0;
+        if (grid.paginator) {
+            grid.paginator.page = 0;
         }
         grid.filteringExpressionsTree = newFilteringTree;
 
@@ -502,7 +502,7 @@ export class IgxFilteringService implements OnDestroy {
             const column = this.grid.getColumnByName(expression.fieldName);
             const formatter = column.formatter;
             if (formatter) {
-                return formatter(expression.searchVal);
+                return formatter(expression.searchVal, undefined);
             }
             const pipeArgs = column.pipeArgs;
             return this.grid.datePipe.transform(expression.searchVal, pipeArgs.format, undefined, this.grid.locale);
@@ -560,8 +560,8 @@ export class IgxFilteringService implements OnDestroy {
         const filteringTree = grid.filteringExpressionsTree;
         this.grid.crudService.endEdit(false);
 
-        if (grid.paging) {
-            grid.page = 0;
+        if (grid.paginator) {
+            grid.paginator.page = 0;
         }
 
         const fieldFilterIndex = filteringTree.findIndex(fieldName);

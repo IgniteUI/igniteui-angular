@@ -209,7 +209,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.cdr.markForCheck();
         });
 
-        this.focusEditElement();
+        requestAnimationFrame(() => this.focusEditElement());
     }
 
     public get disabled(): boolean {

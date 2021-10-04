@@ -76,16 +76,18 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
 }
 
 @Component({
-    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobHireDate)
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.idNameJobHireDate, '',
+            '<igx-paginator *ngIf="paging"></igx-paginator>')
 })
 export class BasicGridSearchComponent extends GridWithSizeComponent {
     public highlightClass = 'igx-highlight';
     public activeClass = 'igx-highlight__active';
+    public paging = false;
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
-        '', ColumnDefinitions.idNameJobTitle)
+    template: GridTemplateStrings.declareGrid(``,
+        '', ColumnDefinitions.idNameJobTitle, '', '<igx-paginator *ngIf="paging" [perPage]="perPage"></igx-paginator>')
 })
 export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
@@ -117,10 +119,26 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
 }
 
 @Component({
+    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true" [rowClasses]="rowClasses"`,
+        '', '')
+})
+export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
+
+    public data = SampleTestData.contactInfoData();
+    public evenRowCondition = (row) => row.index % 2 === 0;
+    public oddRowCondition = (row) => row.index % 2 !== 0;
+
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    public rowClasses = {
+        eventRow: this.evenRowCondition,
+        oddRow: this.oddRowCondition
+    };
+}
+@Component({
     template: `<div>
     <igx-column-actions igxColumnHiding [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable,
-        '<igx-grid-toolbar></igx-grid-toolbar>') }
+        '<igx-grid-toolbar></igx-grid-toolbar>', '<igx-paginator *ngIf="paging"></igx-paginator>') }
     </div>`
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
@@ -130,6 +148,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     public height = '500px';
     public showInline = true;
     public hideFilter = false;
+    public paging = false;
 
     constructor(private cdr: ChangeDetectorRef) {
         super();

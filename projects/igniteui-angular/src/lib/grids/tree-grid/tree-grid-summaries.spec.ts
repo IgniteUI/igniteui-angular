@@ -557,7 +557,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         }));
 
         it('Paging: should render correct summaries when paging is enable and position is bottom', fakeAsync(() => {
-            treeGrid.paging = true;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
             treeGrid.perPage = 4;
             fix.detectChanges();
             tick(16);
@@ -604,7 +605,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         }));
 
         it('Paging: should render correct summaries when paging is enable and position is top', fakeAsync(() => {
-            treeGrid.paging = true;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
             treeGrid.perPage = 4;
             treeGrid.summaryPosition = 'top';
             fix.detectChanges();
@@ -1615,7 +1617,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             fix.detectChanges();
 
             let cell = treeGrid.getCellByColumn(0, 'ID');
-           UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
             fix.detectChanges();
 
             expect(cell.selected).toBe(true);
@@ -1754,13 +1756,13 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         fix.detectChanges();
 
         let row = treeGrid.getRowByKey(15);
-        (row as IgxTreeGridRowComponent).expanded = false;
+        row.expanded = false;
         fix.detectChanges();
         await wait(16);
         fix.detectChanges();
 
         row = treeGrid.getRowByKey(15);
-        (row as IgxTreeGridRowComponent).expanded = true;
+        row.expanded = true;
         fix.detectChanges();
         await wait(16);
         fix.detectChanges();

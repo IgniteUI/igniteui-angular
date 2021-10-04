@@ -18,13 +18,15 @@ export class GridTemplateStrings {
         [height]="height" [width]="width">
     </igx-grid>`;
 
-    public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``, toolbarDefinition = '') {
+    public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``,
+            toolbarDefinition = '', paginatorDefinition = '') {
         return `<igx-grid [data]="data"
         ${ attributes}
         ${ events}
         >
         ${ toolbarDefinition }
         ${ columnDefinitions}
+        ${ paginatorDefinition }
     </igx-grid>`;
     }
 
@@ -215,6 +217,7 @@ export class ColumnDefinitions {
 
     public static idNameFormatter = `
         <igx-column field="ID" [formatter]="multiplier"></igx-column>
+        <igx-column field="IsEmployed" [dataType]="'boolean'"></igx-column>
         <igx-column field="Name"></igx-column>
     `;
 

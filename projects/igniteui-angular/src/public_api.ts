@@ -85,7 +85,7 @@ export * from './lib/expansion-panel/public_api';
 export * from './lib/navbar/navbar.component';
 export * from './lib/navigation-drawer/public_api';
 export * from './lib/paginator/public_api';
-export * from './lib/paginator/paginator_interfaces';
+export * from './lib/paginator/paginator-interfaces';
 export * from './lib/progressbar/progressbar.component';
 export * from './lib/radio/radio.component';
 export * from './lib/slider/public_api';
@@ -124,5 +124,7 @@ export { IDatePickerResourceStrings } from './lib/core/i18n/date-picker-resource
 export { IDateRangePickerResourceStrings } from './lib/core/i18n/date-range-picker-resources';
 export { IListResourceStrings } from './lib/core/i18n/list-resources';
 export { ITreeResourceStrings } from './lib/core/i18n/tree-resources';
+export { IInputResourceStrings } from './lib/core/i18n/input-resources';
+export { IChipResourceStrings } from './lib/core/i18n/chip-resources';
 export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';

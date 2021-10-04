@@ -2,6 +2,65 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.2.0
+
+### New Features
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - Added capability to restore the state of multi column headers with `IgxGridStateDirective`.
+    - Introduced new 'rowStyles' and 'rowClasses' grid properties which allows to define a custom styling on each grid row
+    - Introduced two new *cancellable* outputs related to CRUD - `rowDelete` and `rowAdd`. Both use an `IGridEditEventArgs` object as an event argument.
+        ```html
+        <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" (rowDelete)="rowDelete($event)" [autoGenerate]="true"></igx-grid>
+        ```
+- `igxTreeGrid`
+    - Added `TreeGridMatchingRecordsOnlyFilteringStrategy`, which allows you to display only the records matching particular filtering condition without any trace for their parents.
+- `IgxSnackbarComponent`
+    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
+- `IgxToastComponent`
+    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
+
+### General
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - 'oddRowCSS' and 'evenRowCSS' properties has been deprecated
+- `IgxForOf` - now takes margins into account when calculating the space that each element takes.
+    _Note:_ If your virtualized items contain margins, please calculate them into the `itemSize` value for the best possible initial virtualized state.
+
+## 12.1.6
+
+## 12.1.6
+
+### New Features
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - Added two public methods that spawn the add row UI for an arbitrary record in the current data view. One that accepts a rowID to use as the row the UI spawns under and the other accepting an index that has a distinct implementation for `IgxTreeGrid`. Please, refer to the official documentation for more information: [Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-adding) and [Tree Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/row-adding).
+
+        _Note:_ That the new record is still added at the end of the data view, after the end-user submits it.
+        ```typescript
+        this.grid.beginAddRowById('ALFKI');             // spawns the add row UI under the row with PK 'ALFKI'
+        this.grid.beginAddRowById(null);                // spawns the add row UI as the first record
+        this.grid.beginAddRowByIndex(10);               // spawns the add row UI at index 10
+        this.grid.beginAddRowByIndex(0);                // spawns the add row UI as the first record
+        this.treeGrid.beginAddRowById('ALFKI', true);   // spawns the add row UI to add a child for the row with PK 'ALFKI'
+        this.treeGrid.beginAddRowByIndex(10, true);     // spawns the add row UI to add a child for the row at index 10
+        this.treeGrid.beginAddRowByIndex(null);         // spawns the add row UI as the first record
+        ```
+
+## 12.1.3
+
+### New Features
+- `igxGrid`
+    - Added `headerStyles` and `headerGroupStyles` inputs to the column component.
+    Similar to `cellStyles` is exposes a way to bind CSS properties and style the grid headers.
+
+## 12.1.2
+- `igxGrid`
+    - The column formatter callback signature now accepts the row data as an additional argument:
+    ```typescript formatter(value: any, rowData?: any)```
+    The `rowData` argument may be `undefined` in remote scenarios/applying the callback on filtering labels
+    so make sure to check its availability.
+
+- `IgxExcelExporterService`
+    - Added support for freezing column headers in **Excel**. By default, the column headers would not be frozen but this behavior can be controlled by the `freezeHeaders` option of the IgxExcelExporterOptions object.
+
 ## 12.1.0
 
 ### New Features
@@ -30,6 +89,30 @@ All notable changes for each version of this project will be documented in this 
       </ng-template>
     </igx-column>
     ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added `batchEditing` - an `Input` property for controlling what type of transaction service is provided for the grid.
+    Setting `<igx-grid [batchEditing]="true">` is the same as providing `[{ provide: IgxGridTransaction, useClass: IgxTransactionService }]`.
+    - **Deprecation** - Providing a transaction service for the grid via `providers: [IgxTransactionService]` is now deprecated and will be removed in a future patch.
+    Instead, use the new `batchEditing` property to control the grid's Transactions.
+
+    ```html
+    <igx-grid #grid [data]="data" [batchEditing]="true">
+        ...
+    </igx-grid>
+    <button igxButton (click)="grid.transactions.undo">Undo</button>
+    ```
+    - **Breaking changes**
+        - `IgxGridCellComponent`,  `IgxTreeGridCellComponent`, `IgxHierarchicalGridCellComponent` are no longer exposed in the public API. Instead, a new class `IgxGridCell` replaces all of these. It is a facade class which exposes only the public API of the above mentioned. Automatic migration will change these imports with `CellType`, which is the interface implemented by `IgxGridCell`
+    - **Behavioral changes**
+    - `getCellByKey`, `getCellByColumn`, `getCellByColumnVisibleIndex`, `row.cells`, `column.cells`, `grid.selectedCells` now return an `IgxGridCell` the `CellType` interface.
+    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitted in `cellClick`, `selected`, `contextMenu` and `doubleClick` events.
+    - `let-cell` property in cell template is now `CellType`.
+    - `getCellByColumnVisibleIndex` is now deprecated and will be removed in next major version. Use `getCellByKey`, `getCellByColumn` instead.
+
+- `Transactions`
+    - Added `IgxFlatTransactionFactory` - the singleton service instantiates a new `TransactionService<Transaction, State>` given a `transaction type`.
+    - Added `IgxHierarchicalTransactionFactory` - the singleton service instantiates a new `HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>` given a `transaction type`.
+
 - `Toolbar Actions`
     - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
 
@@ -61,8 +144,27 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IgxExcelExporterService`
     - Added support for exporting the grids' multi-column headers to **Excel**. By default, the multi-column headers would be exported but this behavior can be controlled by the `ignoreMultiColumnHeaders` option off the IgxExcelExporterOptions object.
-    
+
+- `IgxDateTimeEditor`, `IgxMask`, `IgxDatePicker`, `IgxTimePicker`, `IgxDateRangePicker`
+    - Added IME input support. When typing in an Asian language input, the control will display input method compositions and candidate lists directly in the control’s editing area, and immediately re-flow surrounding text as the composition ends.
+
 ### General
+- `IgxGridComponent`
+    - The following properties are deprecated:
+        - `paging`
+        - `perPage`
+        - `page`
+        - `totalPages`
+        - `isFirstPage`
+        - `isLastPage`
+        - `pageChange`
+        - `perPageChange`
+        - `pagingDone`
+    - The following methods, also are deprecated:
+        - `nextPage()`
+        - `previousPage()`
+    -  **Breaking Change** the following property has been removed
+        - `paginationTemplate`
 - `IgxPaginatorComponent`
     - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
     -  **Breaking Change** - the following properties are removed
@@ -72,7 +174,7 @@ All notable changes for each version of this project will be documented in this 
         - `dropdownHidden`
 - `IgxSnackbarComponent`
     - Deprecated property `message` is now removed;
-    - **Breaking Change** - the `snackbarAnimationStarted` and `snackbarAnimationDone` methods are now removed. The `animationStarted` and `animationDone` events now provide reference to the `ToggleViewEventArgs` interface as an argument and are emitted by the `onOpened` and `onClosed` events of the `IgxToggleDirective`. 
+    - **Breaking Change** - the `snackbarAnimationStarted` and `snackbarAnimationDone` methods are now removed. The `animationStarted` and `animationDone` events now provide reference to the `ToggleViewEventArgs` interface as an argument and are emitted by the `onOpened` and `onClosed` events of the `IgxToggleDirective`.
 - `IgxToastComponent`
     - Deprecated property `message` is now removed;
     - **Breaking Change** - The `isVisibleChange` event now provides reference to the `ToggleViewEventArgs` interface as an argument.
@@ -85,6 +187,11 @@ All notable changes for each version of this project will be documented in this 
     - `onAppended` -> `contentAppended`
     - `onAnimation` -> `animationStarting`
 
+- `IgxMaskDirective`
+    - **Breaking Change** - Deprecated property `placeholder` is now removed;
+    - **Breaking Change** - `IgxMaskDirective` events are renamed as follows:
+        - `onValueChange` -> `valueChanged`
+
 - **Breaking Change** - `IgxBannerComponent` events are renamed as follows:
     - `onOpening` -> `opening`
     - `onOpened` -> `opened`
@@ -92,6 +199,7 @@ All notable changes for each version of this project will be documented in this 
     - `onClosed` -> `closed`
 
 - `IgxExpansionPanelComponent`
+    - **Breaking Change** - `IExpansionPanelEventArgs.panel` - Deprecated event property `panel` is removed. Usе `owner` property to get a reference to the panel.
     - **Breaking Change** - `IgxExpansionPanelComponent` events are renamed as follows:
         - `onCollapsed` -> `contentCollapsed`
         - `onExpanded` -> `contentExpanded`
@@ -109,8 +217,65 @@ All notable changes for each version of this project will be documented in this 
         </igx-expansion-panel>
     ```
 
--   `IgxDropDown`
+- `IgxBanner`
+    - `BannerEventArgs.banner` - Deprecated. Usе `owner` property to get a reference to the banner.
+
+- `IgxDropDown`
     - **Breaking Change** - The dropdown items no longer takes focus unless `allowItemsFocus` is set to `true`.
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+        - `onSelection` -> `selectionChanging`
+
+
+- `IgxToggleDirective`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpened` -> `opened`
+        - `onOpening` -> `opening`
+        - `onClosed` -> `closed`
+        - `onClosing` -> `closing`
+        - `onAppended` -> `appended`
+
+- `IgxCombo`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onSelectionChange` -> `selectionChanging`
+        - `onSearchInput` -> `searchInputUpdate`
+        - `onAddition` -> `addition`
+        - `onDataPreLoad` -> `dataPreLoad`
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
+    - **Breaking Change** - `IComboSelectionChangeEventArgs` is renamed to `IComboSelectionChangingEventArgs`
+
+- `IgxSelect`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+        - `onSelection` -> `selectionChanging`
+
+- `IgxAutocomplete`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onItemSelected` -> `selectionChanging`
+    - **Breaking Change** - `AutocompleteItemSelectionEventArgs` is renamed to `AutocompleteSelectionChangingEventArgs`
+
+- `IgxDialog`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpen` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClose` -> `closing`
+        - `onClosed` -> `closed`
+        - `onLeftButtonSelect` -> `leftButtonSelect`
+        - `onRightButtonSelect` -> `rightButtonSelect`
+
+- `IgxDropDown`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`.
 
 ### Themes
 - **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
@@ -1131,7 +1296,7 @@ The following example shows how you can use the Indigo theme:
     export class MyInvitationComponent {
         public people: { name: string; id: string }[] = [...];
         ...
-        handleSelection(event: IComboSelectionChangeEventArgs) {
+        handleSelection(event: IComboSelectionChangingEventArgs) {
             const count = event.newSelection.length;
             event.displayText = count > 0 ? `${count} friend(s) invited!` : `No friends invited :(`;
         }
@@ -1376,7 +1541,7 @@ For more information about the theming please read our [documentation](https://w
     ```typescript
         export class Example {
             ...
-            handleChange(event: IComboSelectionChangeEventArgs) {
+            handleChange(event: IComboSelectionChangingEventArgs) {
             console.log("Items added: ", [...event.added]); // the items added to the selection in this change
             console.log("Items removed: ", [...event.removed]); // the items removed from the selection in this change
             }

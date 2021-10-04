@@ -261,4 +261,31 @@ export class CSVWrapper {
         `6${this._delimiter}-1${this._delimiter}Erma Walsh${this._delimiter}CEO${this._delimiter}52${this._eor}` +
         `10${this._delimiter}-1${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._delimiter}53${this._eor}`;
     }
+
+    public get gridColumnsAddedOnInit() {
+        return `CompanyName${this._delimiter}ContactName${this._delimiter}Address${this._delimiter}0${this._delimiter}` +
+        `1${this._delimiter}2${this._eor}` +
+        `Alfreds Futterkiste${this._delimiter}Maria Anders${this._delimiter}Obere Str. 57${this._delimiter}0${this._delimiter}` +
+        `2500${this._delimiter}5000${this._eor}` +
+        `Ana Trujillo Emparedados y helados${this._delimiter}Ana Trujillo${this._delimiter}Avda. de la Constitución 2222` +
+        `${this._delimiter}0${this._delimiter}2500${this._delimiter}5000${this._eor}` +
+        `Antonio Moreno Taquería${this._delimiter}Antonio Moreno${this._delimiter}Mataderos 2312${this._delimiter}0` +
+        `${this._delimiter}2500${this._delimiter}5000${this._eor}` +
+        `Around the Horn${this._delimiter}Thomas Hardy${this._delimiter}120 Hanover Sq.${this._delimiter}0${this._delimiter}` +
+        `2500${this._delimiter}5000${this._eor}` +
+        `Berglunds snabbköp${this._delimiter}Christina Berglund${this._delimiter}Berguvsvägen 8${this._delimiter}0` +
+        `${this._delimiter}2500${this._delimiter}5000${this._eor}` +
+        `Blauer See Delikatessen${this._delimiter}Hanna Moos${this._delimiter}Forsterstr. 57${this._delimiter}0${this._delimiter}` +
+        `2500${this._delimiter}5000${this._eor}` +
+        `Blondesddsl père et fils${this._delimiter}Frédérique Citeaux${this._delimiter}"24${this._delimiter} place Kléber"` +
+        `${this._delimiter}0${this._delimiter}2500${this._delimiter}5000${this._eor}` +
+        `Bólido Comidas preparadas${this._delimiter}Martín Sommer${this._delimiter}"C/ Araquil${this._delimiter} 67"` +
+        `${this._delimiter}0${this._delimiter}2500${this._delimiter}5000${this._eor}` +
+        `Bon app'${this._delimiter}Laurence Lebihan${this._delimiter}"12${this._delimiter} rue des Bouchers"${this._delimiter}` +
+        `0${this._delimiter}2500${this._delimiter}5000${this._eor}` +
+        `Bottom-Dollar Markets${this._delimiter}Elizabeth Lincoln${this._delimiter}23 Tsawassen Blvd.${this._delimiter}0` +
+        `${this._delimiter}2500${this._delimiter}5000${this._eor}` +
+        `B's Beverages${this._delimiter}Victoria Ashworth${this._delimiter}Fauntleroy Circus${this._delimiter}0${this._delimiter}` +
+        `2500${this._delimiter}5000${this._eor}`;
+    }
 }

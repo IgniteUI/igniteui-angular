@@ -98,7 +98,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        const childCell =  childGrid.getCellByColumn(0, 'ID');
+        const childCell =  childGrid.gridAPI.get_cell_by_index(0, 'ID');
         GridFunctions.focusCell(fixture, childCell);
         fixture.detectChanges();
 

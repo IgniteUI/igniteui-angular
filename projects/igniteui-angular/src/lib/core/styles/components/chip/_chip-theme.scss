@@ -94,7 +94,7 @@
     $remove-icon-color-focus: null,
 ) {
     $name: 'igx-chip';
-    $selector: 'igx-chip, .igx-chip__ghost';
+    $selector: 'igx-chip, .igx-chip__ghost, .igx-chip__ghost--compact, .igx-chip__ghost--cosy';
     $chip-schema: ();
 
     @if map.has-key($schema, $name) {
@@ -584,7 +584,6 @@
 
     %igx-chip__ghost {
         position: absolute;
-        z-index: 10;
         box-shadow: var-get($theme, 'ghost-shadow');
         overflow: hidden;
         color: var-get($theme, 'focus-text-color');
@@ -611,6 +610,14 @@
         %igx-chip__content {
             padding: map.get($chip-padding, 'compact');
         }
+    }
+
+    // Remark: If z-index is not set, the chip would
+    // hide behind it's parent grid as it has a z-index of 1
+    %igx-chip__ghost,
+    %igx-chip__ghost--cosy,
+    %igx-chip__ghost--compact {
+        z-index: 10;
     }
 }
 

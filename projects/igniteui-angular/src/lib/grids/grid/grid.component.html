@@ -49,10 +49,10 @@
         <ng-container *ngIf='data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
+        | gridAddRow:true:pipeTrigger
         | gridRowPinning:id:true:pipeTrigger
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-        | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true
-        | gridAddRow:true:pipeTrigger as pinnedData'>
+        | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData'>
             <div #pinContainer *ngIf='pinnedData.length > 0'
                 [ngClass]="{
                     'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
@@ -72,11 +72,11 @@
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
-        | gridPaging:page:perPage:id:pipeTrigger
+        | gridPaging:paginator?.page:paginator?.perPage:id:pipeTrigger
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
         | gridDetails:hasDetails:expansionStates:pipeTrigger
-        | gridRowPinning:id:false:pipeTrigger
-        | gridAddRow:false:pipeTrigger"
+        | gridAddRow:false:pipeTrigger
+        | gridRowPinning:id:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
@@ -92,12 +92,16 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
-        <ng-template #record_template let-rowIndex="index" let-rowData let-disabledRow="disabled" let-isAddRow="addRow">
-            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [disabled]="disabledRow" [addRow]="isAddRow" #row>
+        <ng-template #record_template let-rowIndex="index" let-rowData let-disabledRow="disabled">
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [disabled]="disabledRow"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
+                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-grid-row>
         </ng-template>
-        <ng-template #pinned_record_template let-rowIndex="index" let-rowData let-isAddRow="addRow">
-            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [addRow]="isAddRow" #row #pinnedRow>
+        <ng-template #pinned_record_template let-rowIndex="index" let-rowData>
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
+                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger"#row #pinnedRow>
             </igx-grid-row>
         </ng-template>
         <ng-template #group_template let-rowIndex="index" let-rowData>
@@ -146,7 +150,7 @@
     </div>
 
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]='snackbarDisplayTime'>{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
 
     <div #igxBodyOverlayOutlet="overlay-outlet" igxOverlayOutlet></div>
@@ -176,17 +180,10 @@
 
 <div class="igx-grid__footer" #footer>
     <ng-content select="igx-grid-footer"></ng-content>
-    <ng-container *ngIf="paging && totalRecords">
-        <ng-container
-            *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPaginator; context: {$implicit: this}">
-        </ng-container>
+    <ng-container *ngIf="totalRecords || pagingMode === 1">
+        <ng-content select="igx-paginator"></ng-content>
     </ng-container>
 </div>
-
-<ng-template #defaultPaginator>
-    <igx-paginator [overlaySettings]="paginatorSettings" [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords" [(perPage)]="perPage">
-    </igx-paginator>
-</ng-template>
 
 <ng-template #emptyFilteredGrid>
     <span class="igx-grid__tbody-message" role="cell">
@@ -207,7 +204,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)="beginAddRowByIndex(null, -1, false, $event)">
+    <button igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
@@ -246,16 +243,16 @@
 </ng-template>
 
 <ng-template #defaultRowEditActions>
-    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">Cancel</button>
-    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(true, $event)">Done</button>
+    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>
+    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(true, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_done }}</button>
 </ng-template>
 
 <ng-template #defaultRowEditTemplate>
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.isAddRow ? rowAddText : rowEditText ? rowEditText : defaultRowEditText;
-                context: { $implicit: !this.crudService.row?.isAddRow ? rowChangesCount : null }">
+                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddText : rowEditText ? rowEditText : defaultRowEditText;
+                context: { $implicit: this.crudService.row?.getClassName() !== 'IgxAddRow' ? rowChangesCount : null }">
             </ng-container>
         </span>
     </div>

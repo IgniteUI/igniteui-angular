@@ -29,8 +29,8 @@ handlers when the toggle is opened and respectively closed.
 ```html
 <button (click)="toggleRef.toggle()">Toggle</button>
 <div igxToggle #toggleRef="toggle" 
-    (onOpening)="eventHandler($event)" (onAppended)="eventHandler($event)" (onOpened)="eventHandler($event)"
-    (onClosing)="eventHandler($event)" (onClosed)="eventHandler($event)" >
+    (opening)="eventHandler($event)" (appended)="eventHandler($event)" (opened)="eventHandler($event)"
+    (closing)="eventHandler($event)" (closed)="eventHandler($event)" >
     <p>Some content that user would like to make it togglable.</p>
 </div>
 ```
@@ -38,13 +38,13 @@ handlers when the toggle is opened and respectively closed.
 ## API Summary
 
 ### Outputs
-| Name | Return Type | Description |
-|:--:|:---|:---|
-| `onAppended`   | `ToggleViewEventArgs`           | Emits an event after content is appended to the overlay.         |
-| `onOpening`    | `ToggleViewCancelableEventArgs` | Emits an event before the toggle container is opened.            |
-| `onOpened`     | `ToggleViewEventArgs`           | Emits an event after the toggle container is opened.             |
-| `onClosing`    | `ToggleViewCancelableEventArgs` | Emits an event before the toggle container is closed.            |
-| `onClosed`     | `ToggleViewEventArgs`           | Emits an event after the toggle container is closed.             |
+| Name         | Description                                              | Cancelable | Emitted with                    |
+|:------------:|:---------------------------------------------------------|:----------:|:--------------------------------|
+| `appended`   | Emits an event after content is appended to the overlay. | false      | `ToggleViewEventArgs`           |
+| `opening`    | Emits an event before the toggle container is opened.    | true       | `ToggleViewCancelableEventArgs` |
+| `opened`     | Emits an event after the toggle container is opened.     | false      | `ToggleViewEventArgs`           |
+| `closing`    | Emits an event before the toggle container is closed.    | true       | `ToggleViewCancelableEventArgs` |
+| `closed`     | Emits an event after the toggle container is closed.     | false      | `ToggleViewEventArgs`           |
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|

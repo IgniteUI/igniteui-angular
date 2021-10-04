@@ -17,14 +17,27 @@
                         [ariaLive]="'assertive'"
                         (clicked)="undoColorChange(snackbar)"
                         [outlet]="outlet"
-                        (animationStarted)="onAnimationStarted($event)"
-                        (animationDone)="onAnimationDone($event)"
+                        (animationStarted)="onAnimationStarted()"
+                        (animationDone)="onAnimationDone()"
                     >
                     </igx-snackbar>
                 </div>
                 <div igxOverlayOutlet #outlet="overlay-outlet"></div>
             </div>
             <button igxButton (click)="toggleSnackbar()">Toggle Snackbar</button>
+        </article>
+    </section>
+</div>
+
+<div class="sample-wrapper">
+    <section class="sample-content">
+        <article class="sample-column">
+            <h4 class="sample-title">Snackbar with positionSettings</h4>
+            <button igxButton="raised" (click)="snackbar1.open()">Send message</button>
+            <div>
+                <igx-snackbar #snackbar1 [autoHide]="false" [positionSettings]="newPositionSettings" actionText="Close" (clicked)="close(snackbar1)">Message sent
+                </igx-snackbar>
+            </div>
         </article>
     </section>
 </div>

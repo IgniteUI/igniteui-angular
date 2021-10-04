@@ -33,7 +33,7 @@ export class MaskParsingService {
             value = inputVal.toString();
         }
 
-        for (const maskSym of mask) {
+        for (const _maskSym of mask) {
             outputVal += maskOptions.promptChar;
         }
 
@@ -88,6 +88,7 @@ export class MaskParsingService {
 
     public replaceInMask(maskedValue: string, value: string, maskOptions: MaskOptions, start: number, end: number): Replaced {
         const literalsPositions: number[] = Array.from(this.getMaskLiterals(maskOptions.format).keys());
+        value = this.replaceIMENumbers(value);
         const chars = Array.from(value);
         let cursor = start;
         end = Math.min(end, maskedValue.length);
@@ -121,6 +122,19 @@ export class MaskParsingService {
         if (strValue !== undefined) {
             return strValue.substring(0, index) + char + strValue.substring(index + 1);
         }
+    }
+
+    public getMaskLiterals(mask: string): Map<number, string> {
+        const literals = new Map<number, string>();
+
+        for (let i = 0; i < mask.length; i++) {
+            const char = mask.charAt(i);
+            if (MASK_FLAGS.indexOf(char) === -1) {
+                literals.set(i, char);
+            }
+        }
+
+        return literals;
     }
 
     /** Validates only non literal positions. */
@@ -178,18 +192,6 @@ export class MaskParsingService {
 
         return isValid;
     }
-    private getMaskLiterals(mask: string): Map<number, string> {
-        const literals = new Map<number, string>();
-
-        for (let i = 0; i < mask.length; i++) {
-            const char = mask.charAt(i);
-            if (MASK_FLAGS.indexOf(char) === -1) {
-                literals.set(i, char);
-            }
-        }
-
-        return literals;
-    }
     private getNonLiteralIndices(mask: string, literalKeys: number[]): number[] {
         const nonLiteralsIndices: number[] = new Array();
 
@@ -211,5 +213,12 @@ export class MaskParsingService {
         }
 
         return nonLiteralValues;
+    }
+
+    private replaceIMENumbers(value: string): string {
+        return value.replace(/[０１２３４５６７８９]/g, (num) => ({
+            '１': '1', '２': '2', '３': '3', '４': '4', '５': '5',
+            '６': '6', '７': '7', '８': '8', '９': '9', '０': '0'
+        }[num]));
     }
 }

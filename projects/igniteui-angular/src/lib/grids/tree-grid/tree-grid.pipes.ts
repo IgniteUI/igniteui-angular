@@ -11,6 +11,7 @@ import { GridType } from '../common/grid.interface';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 import { GridPagingMode } from '../common/enums';
 import { TransactionType } from '../../services/public_api';
+import { IgxAddRow } from '../common/crud.service';
 
 /**
  * @hidden
@@ -243,7 +244,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
 
     public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, _: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
-        if (!grid.paging || grid.pagingMode !== GridPagingMode.Local) {
+        if (!grid.paginator  || grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
 
@@ -257,7 +258,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
 
         const result: ITreeGridRecord[] = DataUtil.page(cloneArray(collection), state, len);
         grid.pagingState = state;
-        (grid as any)._page = state.index;
+        grid.paginator.page = state.index;
 
         return result;
     }
@@ -336,5 +337,30 @@ export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
                     children: []
             }));
         return res;
+    }
+}
+
+@Pipe({
+    name: 'treeGridAddRow',
+    pure: true
+})
+export class IgxTreeGridAddRowPipe implements PipeTransform {
+    private gridAPI: IgxTreeGridAPIService;
+
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
+     }
+
+    public transform(collection: any, isPinned = false, _pipeTrigger: number) {
+        const grid = this.gridAPI.grid;
+        if (!grid.rowEditable || !grid.crudService.row || grid.crudService.row.getClassName() !== IgxAddRow.name ||
+            !grid.gridAPI.crudService.addRowParent || isPinned !== grid.gridAPI.crudService.addRowParent.isPinned) {
+            return collection;
+        }
+        const copy = collection.slice(0);
+        const rec = (grid.crudService.row as IgxAddRow).recordRef;
+        copy.splice(grid.crudService.row.index, 0, rec);
+        grid.records.set(rec.rowID, rec);
+        return copy;
     }
 }
