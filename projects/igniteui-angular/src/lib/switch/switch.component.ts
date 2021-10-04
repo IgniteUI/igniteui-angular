@@ -341,6 +341,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
             this._checked = value;
         }
     }
+
     /**
      * @hidden
      * @internal
@@ -374,6 +375,11 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     public registerOnTouched(fn: () => void) {
         this._onTouchedCallback = fn;
+    }
+
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
     }
 }
 

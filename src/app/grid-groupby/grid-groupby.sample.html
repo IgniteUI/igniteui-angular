@@ -18,7 +18,7 @@
     <button igxButton="raised" [igxToggleAction]="dropDownRowSelection"
         [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection:
         {{grid1.rowSelection}}</button>
-    <igx-drop-down #dropDownRowSelection (onSelection)="onRowSelection($event)" displayDensity="comfortable">
+    <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)" displayDensity="comfortable">
         <igx-drop-down-item *ngFor="let item of selectionModes">
             {{ item }}
         </igx-drop-down-item>
@@ -64,4 +64,15 @@
     <div>Current Display Density: {{displayDensityOptions.displayDensity}}</div>
 
     <button igxButton="raised" (click)="hideGroupableRow()">Show/Hide groupable row</button>
+</div>
+
+<div class="wrapper">
+    <h3>Selection Performance</h3>
+    <igx-grid [data]="data2" [allowFiltering]="true" cellSelection="none" width="1200px"
+    height="500px" rowSelection="multiple" [groupingExpressions]="perfGrpExpr">
+        <igx-column field="STATUS" header="Status" width="200px" [groupable]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="FIELD" header="Field" width="200px" [groupable]="true" [sortable]="true">
+        </igx-column>
+    </igx-grid>
 </div>

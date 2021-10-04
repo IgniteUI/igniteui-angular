@@ -1404,7 +1404,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 Also, the focus is now persistent over the tbody element`);
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
-            const cell = grid.getCellByColumn(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
@@ -2177,6 +2177,25 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // const cells = GridFunctions.getColumnCells(fix, 'Downloads');
             const rows = GridFunctions.getRows(fix);
             expect(rows.length).toEqual(2);
+        }));
+
+        it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy with rowData', fakeAsync(() => {
+            const formattedStrategy = new FormattedValuesFilteringStrategy(['ProductName']);
+            grid.filterStrategy = formattedStrategy;
+            const anotherFieldFormatter = (value: any, rowData: any) => rowData.ID + ':' + value;
+            grid.columns[1].formatter = anotherFieldFormatter;
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            fix.detectChanges();
+
+            GridFunctions.typeValueInFilterRowInput('1:', fix);
+            tick(DEBOUNCETIME);
+            GridFunctions.closeFilterRow(fix);
+            fix.detectChanges();
+
+            const rows = GridFunctions.getRows(fix);
+            expect(rows.length).toEqual(1);
         }));
 
         it('Should remove pending chip via its close button #9333', fakeAsync(() => {
@@ -3860,6 +3879,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             scrollbar.scrollTop = displayContainer.getBoundingClientRect().height / 2;
             await wait(200);
             fix.detectChanges();
+            await wait(100);
 
             // Type string in search box
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
@@ -4604,13 +4624,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = column.formatter(filteredDate);
+            const inputText = column.formatter(filteredDate, null);
             expect((input as HTMLInputElement).value).toMatch(inputText);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            const cellText = column.formatter(filteredDate);
+            const cellText = column.formatter(filteredDate, null);
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
             expect(cell.innerText).toMatch(cellText);
             expect(grid.filteredData.length).toEqual(1);

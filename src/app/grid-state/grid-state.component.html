@@ -42,6 +42,40 @@
     <div #reload="tooltip" igxTooltip>Reload the page.</div>
 </div>
 
+<!-- IgxGrid with Multi-column Headers-->
+<div class="grid__wrapper">
+    <igx-expansion-panel #collapsibleComponent [collapsed]="true">
+        <igx-expansion-panel-header [disabled]="false">
+            <igx-expansion-panel-title>Multi-column Headers</igx-expansion-panel-title>
+            <igx-expansion-panel-icon *ngIf="templatedIcon">
+                {{collapsed() ? 'Expand':'Collapse'}}
+            </igx-expansion-panel-icon>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <ng-container *ngTemplateOutlet="controls; context: getContext(mcGrid)"></ng-container>
+                <igx-grid [id]="mcGridId" #mcGrid [igxGridState]="options" height="480px" [data]="localData" displayDensity="compact" [allowFiltering]="true">
+                    <igx-column [movable]="true" [resizable]="true" field="EmployeeID" [filterable]="false"></igx-column>
+                    <igx-column-group [movable]="true" [pinned]="false" header="Employee">
+                        <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="Country"></igx-column>
+                        <igx-column-group [movable]="true" header="Employee Names">
+                            <igx-column [movable]="true" [pinned]="false" [sortable]="true" [resizable]="true" field="FirstName"></igx-column>
+                            <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="LastName"></igx-column>
+                        </igx-column-group>
+                    </igx-column-group>
+                    <igx-column-group header="Additional Information">
+                        <igx-column-group header="Data">
+                            <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="Country"></igx-column>
+                            <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="Age"></igx-column>
+                        </igx-column-group>
+                    </igx-column-group>
+                </igx-grid>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+
+    <div #clear="tooltip" igxTooltip>Clear the state from localStorage.</div>
+    <div #reload="tooltip" igxTooltip>Reload the page.</div>
+</div>
+
 <!-- IgxHierarchicalGrid -->
 <div class="grid__wrapper">
     <igx-expansion-panel #collapsibleComponent [collapsed]="true">

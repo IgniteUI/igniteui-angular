@@ -459,7 +459,7 @@
             "replaceWith": "displayMonthsCount",
             "definedIn": [
                 "IgxDatePickerComponent",
-                "IgxRangePickerComponent"
+                "IgxDateRangePickerComponent"
             ]
         },
         {
@@ -510,7 +510,7 @@
             "definedIn": [
                 "IgxDatePickerComponent",
                 "IgxTimePickerComponent",
-                "IgxRangePickerComponent"
+                "IgxDateRangePickerComponent"
             ]
         },
         {
@@ -519,7 +519,7 @@
             "definedIn": [
                 "IgxDatePickerComponent",
                 "IgxTimePickerComponent",
-                "IgxRangePickerComponent"
+                "IgxDateRangePickerComponent"
             ]
         },
         {
@@ -528,7 +528,7 @@
             "definedIn": [
                 "IgxDatePickerComponent",
                 "IgxTimePickerComponent",
-                "IgxRangePickerComponent"
+                "IgxDateRangePickerComponent"
             ]
         },
         {
@@ -537,7 +537,7 @@
             "definedIn": [
                 "IgxDatePickerComponent",
                 "IgxTimePickerComponent",
-                "IgxRangePickerComponent"
+                "IgxDateRangePickerComponent"
             ]
         },
         {
@@ -586,14 +586,14 @@
             "member": "selectRange",
             "replaceWith": "select",
             "definedIn": [
-                "IgxRangePickerComponent"
+                "IgxDateRangePickerComponent"
             ]
         },
         {
             "member": "rangeSelected",
             "replaceWith": "valueChange",
             "definedIn": [
-                "IgxRangePickerComponent"
+                "IgxDateRangePickerComponent"
             ]
         },
         {

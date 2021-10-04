@@ -51,6 +51,9 @@ export class IgxGridNavigationService {
 
     handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        if (NAVIGATION_KEYS.has(key)) {
+            event.stopPropagation();
+        }
         if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) {
             return;
         }
@@ -381,7 +384,7 @@ export class IgxGridNavigationService {
                 break;
             case 'enter':
             case 'f2':
-                const cell = this.grid.getCellByColumnVisibleIndex(this.activeNode.row, this.activeNode.column);
+                const cell = this.grid.gridAPI.get_cell_by_visible_index(this.activeNode.row, this.activeNode.column);
                 if (!this.isDataRow(rowIndex) || !cell.editable) {
                     break;
                 }
@@ -506,9 +509,9 @@ export class IgxGridNavigationService {
             }
 
             if (event.shiftKey && row.treeRow !== undefined) {
-                this.grid.beginAddRowByIndex(row.rowID, row.index, true, event);
+                this.grid.crudService.enterAddRowMode(row, true, event);
             } else if (!event.shiftKey) {
-                this.grid.beginAddRowByIndex(row.rowID, row.index, false, event);
+                this.grid.crudService.enterAddRowMode(row, false, event);
             }
         } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
             if (row.rowID === undefined) {
@@ -537,18 +540,7 @@ export class IgxGridNavigationService {
         event.preventDefault();
         if ((this.grid.crudService.rowInEditMode && this.grid.rowEditTabs.length) &&
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
-            if (this.grid.crudService.row?.isAddRow) {
-                const cancelable = this.grid.crudService.updateAddCell(false, event);
-                if (cancelable && cancelable.cancel) {
-                    this.grid.crudService.endAddRow();
-                } else {
-                    this.grid.crudService.exitCellEdit(event);
-                }
-                const row = this.grid.rowList.find(r => r.rowID === this.grid.crudService.row.id);
-                row.rowData = this.grid.crudService.row.data;
-            } else {
-                this.grid.crudService.updateCell(true, event);
-            }
+            this.grid.crudService.updateCell(true, event);
             if (shift) {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
             } else {

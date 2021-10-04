@@ -95,14 +95,14 @@ The component's action buttons can be templated using the `igxPickerActions` dir
 | `type` | `IgxInputGroupType` | Determines how the picker will be styled.
 
 ### Outputs
-| Name | Description |
-|:--:|:---|
-| `opening`  | `IBaseCancelableBrowserEventArgs` | Fired when the dropdown/dialog has started opening, cancelable. |
-| `opened`  | `IBaseEventArgs` | Fired after the dropdown/dialog has opened. |
-| `closing`  | `IBaseCancelableBrowserEventArgs` | Fired when the dropdown/dialog has started closing, cancelable. |
-| `closed`  | `IBaseEventArgs` | Fired after the dropdown/dialog has closed. |
-| `validationFailed`  | `ITimePickerValidationFailedEventArgs` | Emitted when an invalid time string is entered or when the value is outside the min/max range. |
-| `valueChange` | `Date | string` | Emitted when the picker's value changes. Allows two-way binding of `value`. |
+| Name | Description | Cancelable | Emitted with |
+|:----:|:------------|:----------:|--------------|
+| `opening` | Fired when the dropdown/dialog has started opening | true | `IBaseCancelableBrowserEventArgs` |
+| `opened` | Fired after the dropdown/dialog has opened. | false | `IBaseEventArgs` |
+| `closing` | Fired when the dropdown/dialog has started closing, cancelable. | true | `IBaseCancelableBrowserEventArgs` |
+| `closed`  | Fired after the dropdown/dialog has closed. | false | `IBaseEventArgs` |
+| `validationFailed` | Emitted when an invalid time string is entered or when the value is outside the min/max range. | false | `ITimePickerValidationFailedEventArgs` |
+| `valueChange` | Emitted when the picker's value changes. Allows two-way binding of `value`. | false | `Date | string` |
 
 ### Methods
 | Name   | Arguments | Return Type | Description |

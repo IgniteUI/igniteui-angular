@@ -30,7 +30,6 @@ import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.direc
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IgxTransactionService } from '../../services/public_api';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
@@ -38,7 +37,10 @@ import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolb
 import { IgxGridCRUDService } from '../common/crud.service';
 import { RowType } from '../common/row.interface';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
+import { CellType } from '../common/cell.interface';
+import { IgxGridCell } from '../grid-public-cell';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { DeprecateMethod } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -89,7 +91,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
     /** @hidden @internal */
-    @ContentChildren(IgxPaginatorComponent, {descendants: true})
+    @ContentChildren(IgxPaginatorComponent, { descendants: true })
     public paginatorList: QueryList<IgxPaginatorComponent>;
 
     @ViewChild('toolbarOutlet', { read: ViewContainerRef })
@@ -204,7 +206,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /** @hidden @internal */
     public get paginator() {
         const id = this.id;
-        return  (!this.parentIsland && this.paginationComponents?.first) || this.rootGrid.paginatorList?.find((pg) =>
+        return (!this.parentIsland && this.paginationComponents?.first) || this.rootGrid.paginatorList?.find((pg) =>
             pg.nativeElement.offsetParent?.id === id);
     }
 
@@ -284,6 +286,26 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * @deprecated
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param index
+     */
+    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
+    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+        const row = this.getRowByIndex(rowIndex);
+        const column = this.columnList.find((col) => col.visibleIndex === index);
+        if (row && row instanceof IgxHierarchicalGridRow && column) {
+            return new IgxGridCell(this, rowIndex, column.field);
+        }
+    }
+
+    /**
      * Gets the unique identifier of the parent row. It may be a `string` or `number` if `primaryKey` of the
      * parent grid is set or an object reference of the parent record otherwise.
      * ```typescript
@@ -306,6 +328,30 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return !!this.childLayoutKeys.length;
     }
 
+    /**
+     * @hidden
+     */
+    public get resolveRowEditContainer() {
+        if (this.parentIsland && this.parentIsland.rowEditCustom) {
+            return this.parentIsland.rowEditContainer;
+        }
+        return this.rowEditContainer;
+    }
+
+    /**
+     * @hidden
+     */
+    public get resolveRowEditActions() {
+        return this.parentIsland ? this.parentIsland.rowEditActions : this.rowEditActions;
+    }
+
+    /**
+     * @hidden
+     */
+    public get resolveRowEditText() {
+        return this.parentIsland ? this.parentIsland.rowEditText : this.rowEditText;
+    }
+
     /** @hidden */
     public hideActionStrip() {
         if (!this.parent) {
@@ -321,14 +367,25 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
+    public get parentRowOutletDirective() {
+        // Targeting parent outlet in order to prevent hiding when outlet
+        // is present at a child grid and is attached to a row.
+        return this.parent ? this.parent.rowOutletDirective : this.outlet;
+    }
+
+    /**
+     * @hidden
+     */
     public ngOnInit() {
-        if (this._transactions instanceof IgxTransactionService) {
-            // transaction service cannot be injected in a derived class in a factory manner
-            this._transactions = new IgxTransactionService();
-        }
         // this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
         //     const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
         // });
+        this.batchEditing = !!this.rootGrid.batchEditing;
+        if (this.rootGrid !== this) {
+            this.rootGrid.batchEditingChange.pipe(takeUntil(this.destroy$)).subscribe((val: boolean) => {
+                this.batchEditing = val;
+            });
+        }
         super.ngOnInit();
     }
 
@@ -431,17 +488,93 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.createRow(index);
     }
 
+    /**
+     * Returns the `RowType` by key.
+     *
+     * @example
+     * ```typescript
+     * const myRow = this.grid1.getRowByKey(1);
+     * ```
+     * @param key
+     */
     public getRowByKey(key: any): RowType {
         const data = this.dataView;
         const rec = this.primaryKey ?
             data.find(record => record[this.primaryKey] === key) :
             data.find(record => record === key);
-        const index = data.indexOf[rec];
+        const index = data.indexOf(rec);
         if (index < 0 || index > data.length) {
             return undefined;
         }
 
         return new IgxHierarchicalGridRow(this, index, rec);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public allRows(): RowType[] {
+        return this.dataView.map((rec, index) => this.createRow(index));
+    }
+
+    /**
+     * Returns the collection of `IgxHierarchicalGridRow`s for current page.
+     *
+     * @hidden @internal
+     */
+    public dataRows(): RowType[] {
+        return this.allRows().filter(row => row instanceof IgxHierarchicalGridRow);
+    }
+
+    /**
+     * Returns an array of the selected `IgxGridCell`s.
+     *
+     * @example
+     * ```typescript
+     * const selectedCells = this.grid.selectedCells;
+     * ```
+     */
+    public get selectedCells(): CellType[] {
+        return this.dataRows().map((row) => row.cells.filter((cell) => cell.selected))
+            .reduce((a, b) => a.concat(b), []);
+    }
+
+    /**
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumn(2, "UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param columnField
+     */
+    public getCellByColumn(rowIndex: number, columnField: string): CellType {
+        const row = this.getRowByIndex(rowIndex);
+        const column = this.columnList.find((col) => col.field === columnField);
+        if (row && row instanceof IgxHierarchicalGridRow && column) {
+            return new IgxGridCell(this, rowIndex, columnField);
+        }
+    }
+
+    /**
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @remarks
+     * Requires that the primaryKey property is set.
+     * @example
+     * ```typescript
+     * grid.getCellByKey(1, 'index');
+     * ```
+     * @param rowSelector match any rowID
+     * @param columnField
+     */
+    public getCellByKey(rowSelector: any, columnField: string): CellType {
+        const row = this.getRowByKey(rowSelector);
+        const column = this.columnList.find((col) => col.field === columnField);
+        if (row && column) {
+            return new IgxGridCell(this, row.index, columnField);
+        }
     }
 
     public pinRow(rowID: any, index?: number): boolean {
@@ -547,21 +680,25 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     index: this.dataView.indexOf(rowData)
                 };
             } else {
-                const rowID = this.primaryKey ? rowData.rowID : this.data.indexOf(rowData.rowID);
                 // child rows contain unique grids, hence should have unique templates
                 return {
                     $implicit: rowData,
-                    templateID: 'childRow-' + rowID,
+                    templateID: {
+                        type: 'childRow',
+                        id: rowData.rowID
+                    },
                     index: this.dataView.indexOf(rowData)
                 };
             }
         } else {
             return {
-                $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
-                templateID: 'dataRow',
+                $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
+                templateID: {
+                    type: 'dataRow',
+                    id: null
+                },
                 index: this.getDataViewIndex(rowIndex, pinned),
-                disabled: this.isGhostRecord(rowData),
-                addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
+                disabled: this.isGhostRecord(rowData)
             };
         }
     }
@@ -717,6 +854,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.hideOverlays();
     }
 
+    /**
+     * @hidden
+     */
+    public createRow(index: number, data?: any): RowType {
+        let row: RowType;
+        const rec: any = data ?? this.dataView[index];
+
+        if (!row && rec && !rec.childGridsData) {
+            row = new IgxHierarchicalGridRow(this, index, rec);
+        }
+
+        return row;
+    }
+
     protected getChildGrids(inDeph?: boolean) {
         return this.hgridAPI.getChildGrids(inDeph);
     }
@@ -766,21 +917,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             return true;
         }
         return super._shouldAutoSize(renderedHeight);
-    }
-
-
-    /**
-     * @hidden
-     */
-    protected createRow(index: number): RowType {
-        let row: RowType;
-        const rec: any = this.dataView[index];
-
-        if (!row && rec) {
-            row = new IgxHierarchicalGridRow(this, index, rec);
-        }
-
-        return row;
     }
 
     private updateSizes() {
