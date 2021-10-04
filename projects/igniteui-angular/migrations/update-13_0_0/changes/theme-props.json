@@ -1,4 +1,2753 @@
 {
     "$schema": "../../common/schema/theme-props.schema.json",
-    "changes": []
+    "changes": [
+        {
+            "name": "$_default-shape-action-strip",
+            "replaceWith": "$default-shape-action-strip"
+        },
+        {
+            "name": "$_bootstrap-shape-action-strip",
+            "replaceWith": "$bootstrap-shape-action-strip"
+        },
+        {
+            "name": "$_indigo-shape-action-strip",
+            "replaceWith": "$indigo-shape-action-strip"
+        },
+        {
+            "name": "$_light-action-strip",
+            "replaceWith": "$light-action-strip"
+        },
+        {
+            "name": "$_fluent-action-strip",
+            "replaceWith": "$fluent-action-strip"
+        },
+        {
+            "name": "$_bootstrap-action-strip",
+            "replaceWith": "$bootstrap-action-strip"
+        },
+        {
+            "name": "$_indigo-action-strip",
+            "replaceWith": "$indigo-action-strip"
+        },
+        {
+            "name": "$_dark-action-strip",
+            "replaceWith": "$dark-action-strip"
+        },
+        {
+            "name": "$_dark-fluent-action-strip",
+            "replaceWith": "$dark-fluent-action-strip"
+        },
+        {
+            "name": "$_dark-bootstrap-action-strip",
+            "replaceWith": "$dark-bootstrap-action-strip"
+        },
+        {
+            "name": "$_dark-indigo-action-strip",
+            "replaceWith": "$dark-indigo-action-strip"
+        },
+        {
+            "name": "$_square-shape-avatar",
+            "replaceWith": "$square-shape-avatar"
+        },
+        {
+            "name": "$_bootstrap-shape-avatar",
+            "replaceWith": "$bootstrap-shape-avatar"
+        },
+        {
+            "name": "$_light-avatar",
+            "replaceWith": "$light-avatar"
+        },
+        {
+            "name": "$_fluent-avatar",
+            "replaceWith": "$fluent-avatar"
+        },
+        {
+            "name": "$_bootstrap-avatar",
+            "replaceWith": "$bootstrap-avatar"
+        },
+        {
+            "name": "$_indigo-avatar",
+            "replaceWith": "$indigo-avatar"
+        },
+        {
+            "name": "$_dark-avatar",
+            "replaceWith": "$dark-avatar"
+        },
+        {
+            "name": "$_dark-fluent-avatar",
+            "replaceWith": "$dark-fluent-avatar"
+        },
+        {
+            "name": "$_dark-bootstrap-avatar",
+            "replaceWith": "$dark-bootstrap-avatar"
+        },
+        {
+            "name": "$_dark-indigo-avatar",
+            "replaceWith": "$dark-indigo-avatar"
+        },
+        {
+            "name": "$_default-shape-badge",
+            "replaceWith": "$default-shape-badge"
+        },
+        {
+            "name": "$_default-elevation-badge",
+            "replaceWith": "$default-elevation-badge"
+        },
+        {
+            "name": "$_bootstrap-shape-badge",
+            "replaceWith": "$bootstrap-shape-badge"
+        },
+        {
+            "name": "$_bootstrap-elevation-badge",
+            "replaceWith": "$bootstrap-elevation-badge"
+        },
+        {
+            "name": "$_light-badge",
+            "replaceWith": "$light-badge"
+        },
+        {
+            "name": "$_fluent-badge",
+            "replaceWith": "$fluent-badge"
+        },
+        {
+            "name": "$_bootstrap-badge",
+            "replaceWith": "$bootstrap-badge"
+        },
+        {
+            "name": "$_indigo-badge",
+            "replaceWith": "$indigo-badge"
+        },
+        {
+            "name": "$_dark-light-badge",
+            "replaceWith": "$dark-light-badge"
+        },
+        {
+            "name": "$_dark-fluent-badge",
+            "replaceWith": "$dark-fluent-badge"
+        },
+        {
+            "name": "$_dark-bootstrap-badge",
+            "replaceWith": "$dark-bootstrap-badge"
+        },
+        {
+            "name": "$_dark-indigo-badge",
+            "replaceWith": "$dark-indigo-badge"
+        },
+        {
+            "name": "$_light-banner",
+            "replaceWith": "$light-banner"
+        },
+        {
+            "name": "$_fluent-banner",
+            "replaceWith": "$fluent-banner"
+        },
+        {
+            "name": "$_bootstrap-banner",
+            "replaceWith": "$bootstrap-banner"
+        },
+        {
+            "name": "$_indigo-banner",
+            "replaceWith": "$indigo-banner"
+        },
+        {
+            "name": "$_dark-banner",
+            "replaceWith": "$light-banner"
+        },
+        {
+            "name": "$_dark-fluent-banner",
+            "replaceWith": "$fluent-banner"
+        },
+        {
+            "name": "$_dark-bootstrap-banner",
+            "replaceWith": "$bootstrap-banner"
+        },
+        {
+            "name": "$_dark-indigo-banner",
+            "replaceWith": "$indigo-banner"
+        },
+        {
+            "name": "$_default-elevation-bottom-nav",
+            "replaceWith": "$default-elevation-bottom-nav"
+        },
+        {
+            "name": "$_fluent-elevation-bottom-nav",
+            "replaceWith": "$fluent-elevation-bottom-nav"
+        },
+        {
+            "name": "$_indigo-elevation-bottom-nav",
+            "replaceWith": "$indigo-elevation-bottom-nav"
+        },
+        {
+            "name": "$_light-bottom-nav",
+            "replaceWith": "$light-bottom-nav"
+        },
+        {
+            "name": "$_fluent-bottom-nav",
+            "replaceWith": "$fluent-bottom-nav"
+        },
+        {
+            "name": "$_bootstrap-bottom-nav",
+            "replaceWith": "$bootstrap-bottom-nav"
+        },
+        {
+            "name": "$_indigo-bottom-nav",
+            "replaceWith": "$indigo-bottom-nav"
+        },
+        {
+            "name": "$_dark-bottom-nav",
+            "replaceWith": "$dark-bottom-nav"
+        },
+        {
+            "name": "$_dark-fluent-bottom-nav",
+            "replaceWith": "$dark-fluent-bottom-nav"
+        },
+        {
+            "name": "$_dark-bootstrap-bottom-nav",
+            "replaceWith": "$dark-bootstrap-bottom-nav"
+        },
+        {
+            "name": "$_dark-indigo-bottom-nav",
+            "replaceWith": "$dark-indigo-bottom-nav"
+        },
+        {
+            "name": "$_base-dark-bottom-nav",
+            "replaceWith": "$base-dark-bottom-nav"
+        },
+        {
+            "name": "$_default-shape-button-group",
+            "replaceWith": "$default-shape-button-group"
+        },
+        {
+            "name": "$_round-shape-button-group",
+            "replaceWith": "$round-shape-button-group"
+        },
+        {
+            "name": "$_square-shape-button-group",
+            "replaceWith": "$square-shape-button-group"
+        },
+        {
+            "name": "$_fluent-shape-button-group",
+            "replaceWith": "$fluent-shape-button-group"
+        },
+        {
+            "name": "$_bootstrap-shape-button-group",
+            "replaceWith": "$bootstrap-shape-button-group"
+        },
+        {
+            "name": "$_indigo-shape-button-group",
+            "replaceWith": "$indigo-shape-button-group"
+        },
+        {
+            "name": "$_default-elevation-button-group",
+            "replaceWith": "$default-elevation-button-group"
+        },
+        {
+            "name": "$_fluent-elevation-button-group",
+            "replaceWith": "$fluent-elevation-button-group"
+        },
+        {
+            "name": "$_bootstrap-elevation-button-group",
+            "replaceWith": "$bootstrap-elevation-button-group"
+        },
+        {
+            "name": "$_indigo-elevation-button-group",
+            "replaceWith": "$indigo-elevation-button-group"
+        },
+        {
+            "name": "$_light-button-group",
+            "replaceWith": "$light-button-group"
+        },
+        {
+            "name": "$_fluent-button-group",
+            "replaceWith": "$fluent-button-group"
+        },
+        {
+            "name": "$_bootstrap-button-group",
+            "replaceWith": "$bootstrap-button-group"
+        },
+        {
+            "name": "$_indigo-button-group",
+            "replaceWith": "$indigo-button-group"
+        },
+        {
+            "name": "$_dark-button-group",
+            "replaceWith": "$dark-button-group"
+        },
+        {
+            "name": "$_dark-fluent-button-group",
+            "replaceWith": "$dark-fluent-button-group"
+        },
+        {
+            "name": "$_dark-bootstrap-button-group",
+            "replaceWith": "$bootstrap-button-group"
+        },
+        {
+            "name": "$_dark-indigo-button-group",
+            "replaceWith": "$dark-indigo-button-group"
+        },
+        {
+            "name": "$_base-dark-button-group",
+            "replaceWith": "$base-dark-button-group"
+        },
+        {
+            "name": "$_round-shape-button",
+            "replaceWith": "$round-shape-button"
+        },
+        {
+            "name": "$_square-shape-button",
+            "replaceWith": "$square-shape-button"
+        },
+        {
+            "name": "$_material-shape-button",
+            "replaceWith": "$material-shape-button"
+        },
+        {
+            "name": "$_fluent-shape-button",
+            "replaceWith": "$fluent-shape-button"
+        },
+        {
+            "name": "$_bootstrap-shape-button",
+            "replaceWith": "$bootstrap-shape-button"
+        },
+        {
+            "name": "$_flat-elevation-button",
+            "replaceWith": "$flat-elevation-button"
+        },
+        {
+            "name": "$_material-raised-elevation",
+            "replaceWith": "$material-raised-elevation"
+        },
+        {
+            "name": "$_material-fab-elevation",
+            "replaceWith": "$material-fab-elevation"
+        },
+        {
+            "name": "$_material-ib-elevation",
+            "replaceWith": "$material-ib-elevation"
+        },
+        {
+            "name": "$_bootstrap-elevation-button",
+            "replaceWith": "$bootstrap-elevation-button"
+        },
+        {
+            "name": "$_indigo-elevation-button",
+            "replaceWith": "$indigo-elevation-button"
+        },
+        {
+            "name": "$_material-base-button",
+            "replaceWith": "$material-base-button"
+        },
+        {
+            "name": "$_material-flat-button",
+            "replaceWith": "$material-flat-button"
+        },
+        {
+            "name": "$_material-outlined-button",
+            "replaceWith": "$material-outlined-button"
+        },
+        {
+            "name": "$_material-raised-button",
+            "replaceWith": "$material-raised-button"
+        },
+        {
+            "name": "$_material-fab-button",
+            "replaceWith": "$material-fab-button"
+        },
+        {
+            "name": "$_material-icon-button",
+            "replaceWith": "$material-icon-button"
+        },
+        {
+            "name": "$_light-button",
+            "replaceWith": "$light-button"
+        },
+        {
+            "name": "$_fluent-base-button",
+            "replaceWith": "$fluent-base-button"
+        },
+        {
+            "name": "$_fluent-flat-button",
+            "replaceWith": "$fluent-flat-button"
+        },
+        {
+            "name": "$_fluent-outlined-button",
+            "replaceWith": "$fluent-outlined-button"
+        },
+        {
+            "name": "$_fluent-raised-button",
+            "replaceWith": "$fluent-raised-button"
+        },
+        {
+            "name": "$_fluent-fab-button",
+            "replaceWith": "$fluent-fab-button"
+        },
+        {
+            "name": "$_fluent-icon-button",
+            "replaceWith": "$fluent-icon-button"
+        },
+        {
+            "name": "$_fluent-button",
+            "replaceWith": "$fluent-button"
+        },
+        {
+            "name": "$_bootstrap-base-button",
+            "replaceWith": "$bootstrap-base-button"
+        },
+        {
+            "name": "$_bootstrap-flat-button",
+            "replaceWith": "$bootstrap-flat-button"
+        },
+        {
+            "name": "$_bootstrap-outlined-button",
+            "replaceWith": "$bootstrap-outlined-button"
+        },
+        {
+            "name": "$_bootstrap-raised-button",
+            "replaceWith": "$bootstrap-raised-button"
+        },
+        {
+            "name": "$_bootstrap-fab-button",
+            "replaceWith": "$bootstrap-fab-button"
+        },
+        {
+            "name": "$_bootstrap-icon-button",
+            "replaceWith": "$bootstrap-icon-button"
+        },
+        {
+            "name": "$_bootstrap-button",
+            "replaceWith": "$bootstrap-button"
+        },
+        {
+            "name": "$_indigo-base-button",
+            "replaceWith": "$indigo-base-button"
+        },
+        {
+            "name": "$_indigo-button",
+            "replaceWith": "$indigo-button"
+        },
+        {
+            "name": "$_indigo-flat-button",
+            "replaceWith": "$indigo-flat-button"
+        },
+        {
+            "name": "$_indigo-outlined-button",
+            "replaceWith": "$indigo-outlined-button"
+        },
+        {
+            "name": "$_indigo-raised-button",
+            "replaceWith": "$indigo-raised-button"
+        },
+        {
+            "name": "$_indigo-fab-button",
+            "replaceWith": "$indigo-fab-button"
+        },
+        {
+            "name": "$_indigo-icon-button",
+            "replaceWith": "$indigo-icon-button"
+        },
+        {
+            "name": "$_dark-button",
+            "replaceWith": "$dark-button"
+        },
+        {
+            "name": "$_material-base-button-dark",
+            "replaceWith": "$material-base-button-dark"
+        },
+        {
+            "name": "$_material-flat-button-dark",
+            "replaceWith": "$material-flat-button-dark"
+        },
+        {
+            "name": "$_material-icon-button-dark",
+            "replaceWith": "$material-icon-button-dark"
+        },
+        {
+            "name": "$_dark-fluent-button",
+            "replaceWith": "$dark-fluent-button"
+        },
+        {
+            "name": "$_fluent-flat-button-dark",
+            "replaceWith": "$fluent-flat-button-dark"
+        },
+        {
+            "name": "$_bootstrap-base-button-dark",
+            "replaceWith": "$bootstrap-base-button-dark"
+        },
+        {
+            "name": "$_dark-bootstrap-button",
+            "replaceWith": "$dark-bootstrap-button"
+        },
+        {
+            "name": "$_bootstrap-outlined-button-dark",
+            "replaceWith": "$bootstrap-outlined-button-dark"
+        },
+        {
+            "name": "$_dark-indigo-button",
+            "replaceWith": "$dark-indigo-button"
+        },
+        {
+            "name": "$_default-shape-calendar",
+            "replaceWith": "$default-shape-calendar"
+        },
+        {
+            "name": "$_round-shape-calendar",
+            "replaceWith": "$round-shape-calendar"
+        },
+        {
+            "name": "$_square-shape-calendar",
+            "replaceWith": "$square-shape-calendar"
+        },
+        {
+            "name": "$_fluent-shape-calendar",
+            "replaceWith": "$fluent-shape-calendar"
+        },
+        {
+            "name": "$_bootstrap-shape-calendar",
+            "replaceWith": "$bootstrap-shape-calendar"
+        },
+        {
+            "name": "$_indigo-shape-calendar",
+            "replaceWith": "$indigo-shape-calendar"
+        },
+        {
+            "name": "$_light-calendar",
+            "replaceWith": "$light-calendar"
+        },
+        {
+            "name": "$_fluent-calendar",
+            "replaceWith": "$fluent-calendar"
+        },
+        {
+            "name": "$_bootstrap-calendar",
+            "replaceWith": "$bootstrap-calendar"
+        },
+        {
+            "name": "$_indigo-calendar",
+            "replaceWith": "$indigo-calendar"
+        },
+        {
+            "name": "$_dark-calendar",
+            "replaceWith": "$dark-calendar"
+        },
+        {
+            "name": "$_dark-fluent-calendar",
+            "replaceWith": "$dark-fluent-calendar"
+        },
+        {
+            "name": "$_dark-bootstrap-calendar",
+            "replaceWith": "$dark-bootstrap-calendar"
+        },
+        {
+            "name": "$_dark-indigo-calendar",
+            "replaceWith": "$dark-indigo-calendar"
+        },
+        {
+            "name": "$_default-shape-card",
+            "replaceWith": "$default-shape-card"
+        },
+        {
+            "name": "$_round-shape-card",
+            "replaceWith": "$round-shape-card"
+        },
+        {
+            "name": "$_square-shape-card",
+            "replaceWith": "$square-shape-card"
+        },
+        {
+            "name": "$_fluent-shape-card",
+            "replaceWith": "$fluent-shape-card"
+        },
+        {
+            "name": "$_bootstrap-shape-card",
+            "replaceWith": "$bootstrap-shape-card"
+        },
+        {
+            "name": "$_indigo-shape-card",
+            "replaceWith": "$indigo-shape-card"
+        },
+        {
+            "name": "$_default-elevation-card",
+            "replaceWith": "$default-elevation-card"
+        },
+        {
+            "name": "$_flat-card",
+            "replaceWith": "$flat-card"
+        },
+        {
+            "name": "$_fluent-elevation-card",
+            "replaceWith": "$fluent-elevation-card"
+        },
+        {
+            "name": "$_indigo-elevation-card",
+            "replaceWith": "$indigo-elevation-card"
+        },
+        {
+            "name": "$_light-card",
+            "replaceWith": "$light-card"
+        },
+        {
+            "name": "$_fluent-card",
+            "replaceWith": "$fluent-card"
+        },
+        {
+            "name": "$_bootstrap-card",
+            "replaceWith": "$bootstrap-card"
+        },
+        {
+            "name": "$_indigo-card",
+            "replaceWith": "$indigo-card"
+        },
+        {
+            "name": "$_dark-card",
+            "replaceWith": "$dark-card"
+        },
+        {
+            "name": "$_dark-fluent-card",
+            "replaceWith": "$dark-fluent-card"
+        },
+        {
+            "name": "$_dark-bootstrap-card",
+            "replaceWith": "$dark-bootstrap-card"
+        },
+        {
+            "name": "$_dark-indigo-card",
+            "replaceWith": "$dark-indigo-card"
+        },
+        {
+            "name": "$_default-shape-carousel",
+            "replaceWith": "$default-shape-carousel"
+        },
+        {
+            "name": "$_round-shape-carousel",
+            "replaceWith": "$round-shape-carousel"
+        },
+        {
+            "name": "$_square-shape-carousel",
+            "replaceWith": "$square-shape-carousel"
+        },
+        {
+            "name": "$_bootstrap-shape-carousel",
+            "replaceWith": "$bootstrap-shape-carousel"
+        },
+        {
+            "name": "$_default-elevation-carousel",
+            "replaceWith": "$default-elevation-carousel"
+        },
+        {
+            "name": "$_flat-carousel",
+            "replaceWith": "$flat-carousel"
+        },
+        {
+            "name": "$_fluent-elevation-carousel",
+            "replaceWith": "$fluent-elevation-carousel"
+        },
+        {
+            "name": "$_bootstrap-elevation-carousel",
+            "replaceWith": "$bootstrap-elevation-carousel"
+        },
+        {
+            "name": "$_indigo-elevation-carousel",
+            "replaceWith": "$indigo-elevation-carousel"
+        },
+        {
+            "name": "$_light-carousel",
+            "replaceWith": "$light-carousel"
+        },
+        {
+            "name": "$_fluent-carousel",
+            "replaceWith": "$fluent-carousel"
+        },
+        {
+            "name": "$_bootstrap-carousel",
+            "replaceWith": "$bootstrap-carousel"
+        },
+        {
+            "name": "$_indigo-carousel",
+            "replaceWith": "$indigo-carousel"
+        },
+        {
+            "name": "$_base-dark-carousel",
+            "replaceWith": "$base-dark-carousel"
+        },
+        {
+            "name": "$_dark-carousel",
+            "replaceWith": "$dark-carousel"
+        },
+        {
+            "name": "$_dark-fluent-carousel",
+            "replaceWith": "$dark-fluent-carousel"
+        },
+        {
+            "name": "$_dark-bootstrap-carousel",
+            "replaceWith": "$dark-bootstrap-carousel"
+        },
+        {
+            "name": "$_dark-indigo-carousel",
+            "replaceWith": "$dark-indigo-carousel"
+        },
+        {
+            "name": "$_light-category-chart:",
+            "replaceWith": "$light-category-chart:"
+        },
+        {
+            "name": "$_fluent-category-chart",
+            "replaceWith": "$fluent-category-chart"
+        },
+        {
+            "name": "$_bootstrap-category-chart",
+            "replaceWith": "$bootstrap-category-chart"
+        },
+        {
+            "name": "$_indigo-category-chart",
+            "replaceWith": "$indigo-category-chart"
+        },
+        {
+            "name": "$_base-dark-category-chart",
+            "replaceWith": "$base-dark-category-chart"
+        },
+        {
+            "name": "$_dark-category-chart",
+            "replaceWith": "$dark-category-chart"
+        },
+        {
+            "name": "$_dark-fluent-category-chart",
+            "replaceWith": "$dark-fluent-category-chart"
+        },
+        {
+            "name": "$_dark-bootstrap-category-chart",
+            "replaceWith": "$dark-bootstrap-category-chart"
+        },
+        {
+            "name": "$_dark-indigo-category-chart",
+            "replaceWith": "$dark-indigo-category-chart"
+        },
+        {
+            "name": "$_default-shape-checkbox",
+            "replaceWith": "$default-shape-checkbox"
+        },
+        {
+            "name": "$_round-shape-checkbox",
+            "replaceWith": "$round-shape-checkbox"
+        },
+        {
+            "name": "$_square-shape-checkbox",
+            "replaceWith": "$square-shape-checkbox"
+        },
+        {
+            "name": "$_fluent-shape-checkbox",
+            "replaceWith": "$fluent-shape-checkbox"
+        },
+        {
+            "name": "$_bootstrap-shape-checkbox",
+            "replaceWith": "$bootstrap-shape-checkbox"
+        },
+        {
+            "name": "$_indigo-shape-checkbox",
+            "replaceWith": "$indigo-shape-checkbox"
+        },
+        {
+            "name": "$_light-checkbox",
+            "replaceWith": "$light-checkbox"
+        },
+        {
+            "name": "$_fluent-checkbox",
+            "replaceWith": "$fluent-checkbox"
+        },
+        {
+            "name": "$_bootstrap-checkbox",
+            "replaceWith": "$bootstrap-checkbox"
+        },
+        {
+            "name": "$_indigo-checkbox",
+            "replaceWith": "$indigo-checkbox"
+        },
+        {
+            "name": "$_dark-checkbox",
+            "replaceWith": "$dark-checkbox"
+        },
+        {
+            "name": "$_dark-fluent-checkbox",
+            "replaceWith": "$dark-fluent-checkbox"
+        },
+        {
+            "name": "$_dark-bootstrap-checkbox",
+            "replaceWith": "$dark-bootstrap-checkbox"
+        },
+        {
+            "name": "$_dark-indigo-checkbox",
+            "replaceWith": "$dark-indigo-checkbox"
+        },
+        {
+            "name": "$_round-shape-chip",
+            "replaceWith": "$round-shape-chip"
+        },
+        {
+            "name": "$_square-shape-chip",
+            "replaceWith": "$square-shape-chip"
+        },
+        {
+            "name": "$_bootstrap-shape-chip",
+            "replaceWith": "$bootstrap-shape-chip"
+        },
+        {
+            "name": "$_indigo-shape-chip",
+            "replaceWith": "$indigo-shape-chip"
+        },
+        {
+            "name": "$_default-elevation-chip",
+            "replaceWith": "$default-elevation-chip"
+        },
+        {
+            "name": "$_fluent-elevation-chip",
+            "replaceWith": "$fluent-elevation-chip"
+        },
+        {
+            "name": "$_bootstrap-elevation-chip",
+            "replaceWith": "$bootstrap-elevation-chip"
+        },
+        {
+            "name": "$_indigo-elevation-chip",
+            "replaceWith": "$indigo-elevation-chip"
+        },
+        {
+            "name": "$_light-chip",
+            "replaceWith": "$light-chip"
+        },
+        {
+            "name": "$_fluent-chip",
+            "replaceWith": "$fluent-chip"
+        },
+        {
+            "name": "$_bootstrap-chip",
+            "replaceWith": "$bootstrap-chip"
+        },
+        {
+            "name": "$_indigo-chip",
+            "replaceWith": "$indigo-chip"
+        },
+        {
+            "name": "$_base-dark-chip",
+            "replaceWith": "$base-dark-chip"
+        },
+        {
+            "name": "$_dark-chip",
+            "replaceWith": "$dark-chip"
+        },
+        {
+            "name": "$_dark-fluent-chip",
+            "replaceWith": "$dark-fluent-chip"
+        },
+        {
+            "name": "$_dark-bootstrap-chip",
+            "replaceWith": "$dark-bootstrap-chip"
+        },
+        {
+            "name": "$_dark-indigo-chip",
+            "replaceWith": "$dark-indigo-chip"
+        },
+        {
+            "name": "$_light-column-actions",
+            "replaceWith": "$light-column-actions"
+        },
+        {
+            "name": "$_fluent-column-actions",
+            "replaceWith": "$fluent-column-actions"
+        },
+        {
+            "name": "$_bootstrap-column-actions",
+            "replaceWith": "$bootstrap-column-actions"
+        },
+        {
+            "name": "$_indigo-column-actions",
+            "replaceWith": "$indigo-column-actions"
+        },
+        {
+            "name": "$_base-dark-column-actions",
+            "replaceWith": "$dark-column-actions"
+        },
+        {
+            "name": "$_dark-fluent-column-actions",
+            "replaceWith": "$dark-fluent-column-actions"
+        },
+        {
+            "name": "$_dark-bootstrap-column-actions",
+            "replaceWith": "$dark-bootstrap-column-actions"
+        },
+        {
+            "name": "$_dark-indigo-column-actions",
+            "replaceWith": "$dark-indigo-column-actions"
+        },
+        {
+            "name": "$_light-combo",
+            "replaceWith": "$light-combo"
+        },
+        {
+            "name": "$_fluent-combo",
+            "replaceWith": "$fluent-combo"
+        },
+        {
+            "name": "$_bootstrap-combo",
+            "replaceWith": "$bootstrap-combo"
+        },
+        {
+            "name": "$_indigo-combo",
+            "replaceWith": "$indigo-combo"
+        },
+        {
+            "name": "$_dark-combo",
+            "replaceWith": "$dark-combo"
+        },
+        {
+            "name": "$_dark-fluent-combo",
+            "replaceWith": "$dark-fluent-combo"
+        },
+        {
+            "name": "$_dark-bootstrap-combo",
+            "replaceWith": "$dark-bootstrap-combo"
+        },
+        {
+            "name": "$_dark-indigo-combo",
+            "replaceWith": "$dark-indigo-combo"
+        },
+        {
+            "name": "$_light-data-chart",
+            "replaceWith": "$light-data-chart"
+        },
+        {
+            "name": "$_fluent-data-chart",
+            "replaceWith": "$fluent-data-chart"
+        },
+        {
+            "name": "$_bootstrap-data-chart",
+            "replaceWith": "$bootstrap-data-chart"
+        },
+        {
+            "name": "$_indigo-data-chart",
+            "replaceWith": "$indigo-data-chart"
+        },
+        {
+            "name": "$_dark-data-chart",
+            "replaceWith": "$dark-data-chart"
+        },
+        {
+            "name": "$_dark-fluent-data-chart",
+            "replaceWith": "$dark-fluent-data-chart"
+        },
+        {
+            "name": "$_dark-bootstrap-data-chart",
+            "replaceWith": "$dark-bootstrap-data-chart"
+        },
+        {
+            "name": "$_dark-indigo-data-chart",
+            "replaceWith": "$dark-indigo-data-chart"
+        },
+        {
+            "name": "$_light-date-range-picker",
+            "replaceWith": "$light-date-range-picker"
+        },
+        {
+            "name": "$_fluent-date-range-picker",
+            "replaceWith": "$fluent-date-range-picker"
+        },
+        {
+            "name": "$_bootstrap-date-range-picker",
+            "replaceWith": "$bootstrap-date-range-picker"
+        },
+        {
+            "name": "$_indigo-date-range-picker",
+            "replaceWith": "$indigo-date-range-picker"
+        },
+        {
+            "name": "$_dark-date-range-picker",
+            "replaceWith": "$dark-date-range-picker"
+        },
+        {
+            "name": "$_dark-fluent-date-range-picker",
+            "replaceWith": "$dark-fluent-date-range-picker"
+        },
+        {
+            "name": "$_dark-bootstrap-date-range-picker",
+            "replaceWith": "$dark-bootstrap-date-range-picker"
+        },
+        {
+            "name": "$_dark-indigo-date-range-picker",
+            "replaceWith": "$dark-indigo-date-range-picker"
+        },
+        {
+            "name": "$_default-shape-dialog",
+            "replaceWith": "$default-shape-dialog"
+        },
+        {
+            "name": "$_round-shape-dialog",
+            "replaceWith": "$round-shape-dialog"
+        },
+        {
+            "name": "$_square-shape-dialog",
+            "replaceWith": "$square-shape-dialog"
+        },
+        {
+            "name": "$_fluent-shape-dialog",
+            "replaceWith": "$fluent-shape-dialog"
+        },
+        {
+            "name": "$_bootstrap-shape-dialog",
+            "replaceWith": "$bootstrap-shape-dialog"
+        },
+        {
+            "name": "$_indigo-shape-dialog",
+            "replaceWith": "$indigo-shape-dialog"
+        },
+        {
+            "name": "$_default-elevation-dialog",
+            "replaceWith": "$default-elevation-dialog"
+        },
+        {
+            "name": "$_bootstrap-elevation-dialog",
+            "replaceWith": "$bootstrap-elevation-dialog"
+        },
+        {
+            "name": "$_light-dialog",
+            "replaceWith": "$light-dialog"
+        },
+        {
+            "name": "$_fluent-dialog",
+            "replaceWith": "$fluent-dialog"
+        },
+        {
+            "name": "$_bootstrap-dialog",
+            "replaceWith": "$bootstrap-dialog"
+        },
+        {
+            "name": "$_indigo-dialog",
+            "replaceWith": "$indigo-dialog"
+        },
+        {
+            "name": "$_dark-dialog",
+            "replaceWith": "$dark-dialog"
+        },
+        {
+            "name": "$_dark-fluent-dialog",
+            "replaceWith": "$dark-fluent-dialog"
+        },
+        {
+            "name": "$_dark-bootstrap-dialog",
+            "replaceWith": "$dark-bootstrap-dialog"
+        },
+        {
+            "name": "$_dark-indigo-dialog",
+            "replaceWith": "$dark-indigo-dialog"
+        },
+        {
+            "name": "$_light-divider",
+            "replaceWith": "$light-divider"
+        },
+        {
+            "name": "$_fluent-divider",
+            "replaceWith": "$fluent-divider"
+        },
+        {
+            "name": "$_bootstrap-divider",
+            "replaceWith": "$bootstrap-divider"
+        },
+        {
+            "name": "$_indigo-divider",
+            "replaceWith": "$indigo-divider"
+        },
+        {
+            "name": "$_dark-divider",
+            "replaceWith": "$dark-fluent-divider"
+        },
+        {
+            "name": "$_dark-bootstrap-divider",
+            "replaceWith": "$dark-bootstrap-divider"
+        },
+        {
+            "name": "$_dark-indigo-divider",
+            "replaceWith": "$dark-indigo-divider"
+        },
+        {
+            "name": "$_light-dock-manager",
+            "replaceWith": "$light-dock-manager"
+        },
+        {
+            "name": "$_fluent-dock-manager",
+            "replaceWith": "$fluent-dock-manager"
+        },
+        {
+            "name": "$_bootstrap-dock-manager",
+            "replaceWith": "$bootstrap-dock-manager"
+        },
+        {
+            "name": "$_indigo-dock-manager",
+            "replaceWith": "$indigo-dock-manager"
+        },
+        {
+            "name": "$_dark-dock-manager",
+            "replaceWith": "$dark-dock-manager"
+        },
+        {
+            "name": "$_dark-fluent-dock-manager",
+            "replaceWith": "$dark-fluent-dock-manager"
+        },
+        {
+            "name": "$_dark-bootstrap-dock-manager",
+            "replaceWith": "$dark-bootstrap-dock-manager"
+        },
+        {
+            "name": "$_dark-indigo-dock-manager",
+            "replaceWith": "$dark-indigo-dock-manager"
+        },
+        {
+            "name": "$_light-doughnut-chart",
+            "replaceWith": "$light-doughnut-chart"
+        },
+        {
+            "name": "$_fluent-doughnut-chart",
+            "replaceWith": "$fluent-doughnut-chart"
+        },
+        {
+            "name": "$_bootstrap-doughnut-chart",
+            "replaceWith": "$bootstrap-doughnut-chart"
+        },
+        {
+            "name": "$_indigo-doughnut-chart",
+            "replaceWith": "$indigo-doughnut-chart"
+        },
+        {
+            "name": "$_default-shape-drop-down",
+            "replaceWith": "$default-shape-drop-down"
+        },
+        {
+            "name": "$_round-shape-drop-down",
+            "replaceWith": "$round-shape-drop-down"
+        },
+        {
+            "name": "$_square-shape-drop-down",
+            "replaceWith": "$square-shape-drop-down"
+        },
+        {
+            "name": "$_fluent-shape-drop-down",
+            "replaceWith": "$fluent-shape-drop-down"
+        },
+        {
+            "name": "$_bootstrap-shape-drop-down",
+            "replaceWith": "$bootstrap-shape-drop-down"
+        },
+        {
+            "name": "$_indigo-shape-drop-down",
+            "replaceWith": "$indigo-shape-drop-down"
+        },
+        {
+            "name": "$_default-elevation-drop-down",
+            "replaceWith": "$default-elevation-drop-down"
+        },
+        {
+            "name": "$_fluent-elevation-drop-down",
+            "replaceWith": "$fluent-elevation-drop-down"
+        },
+        {
+            "name": "$_bootstrap-elevation-drop-down",
+            "replaceWith": "$bootstrap-elevation-drop-down"
+        },
+        {
+            "name": "$_indigo-elevation-drop-down",
+            "replaceWith": "$indigo-elevation-drop-down"
+        },
+        {
+            "name": "$_light-drop-down",
+            "replaceWith": "$light-drop-down"
+        },
+        {
+            "name": "$_fluent-drop-down",
+            "replaceWith": "$fluent-drop-down"
+        },
+        {
+            "name": "$_bootstrap-drop-down",
+            "replaceWith": "$bootstrap-drop-down"
+        },
+        {
+            "name": "$_indigo-drop-down",
+            "replaceWith": "$indigo-drop-down"
+        },
+        {
+            "name": "$_dark-drop-down",
+            "replaceWith": "$dark-drop-down"
+        },
+        {
+            "name": "$_dark-fluent-drop-down",
+            "replaceWith": "$dark-fluent-drop-down"
+        },
+        {
+            "name": "$_dark-bootstrap-drop-down",
+            "replaceWith": "$dark-bootstrap-drop-down"
+        },
+        {
+            "name": "$_dark-indigo-drop-down",
+            "replaceWith": "$dark-indigo-drop-down"
+        },
+        {
+            "name": "$_default-shape-expansion-panel",
+            "replaceWith": "$default-shape-expansion-panel"
+        },
+        {
+            "name": "$_round-shape-expansion-panel",
+            "replaceWith": "$round-shape-expansion-panel"
+        },
+        {
+            "name": "$_square-shape-expansion-panel",
+            "replaceWith": "$square-shape-expansion-panel"
+        },
+        {
+            "name": "$_bootstrap-shape-expansion-panel",
+            "replaceWith": "$bootstrap-shape-expansion-panel"
+        },
+        {
+            "name": "$_indigo-shape-expansion-panel",
+            "replaceWith": "$indigo-shape-expansion-panel"
+        },
+        {
+            "name": "$_light-expansion-panel",
+            "replaceWith": "$light-expansion-panel"
+        },
+        {
+            "name": "$_fluent-expansion-panel",
+            "replaceWith": "$fluent-expansion-panel"
+        },
+        {
+            "name": "$_bootstrap-expansion-panel",
+            "replaceWith": "$bootstrap-expansion-panel"
+        },
+        {
+            "name": "$_indigo-expansion-panel",
+            "replaceWith": "$indigo-expansion-panel"
+        },
+        {
+            "name": "$_base-dark-expansion-panel",
+            "replaceWith": "$base-dark-expansion-panel"
+        },
+        {
+            "name": "$_dark-expansion-panel",
+            "replaceWith": "$dark-expansion-panel"
+        },
+        {
+            "name": "$_dark-fluent-expansion-panel",
+            "replaceWith": "$dark-fluent-expansion-panel"
+        },
+        {
+            "name": "$_dark-bootstrap-expansion-panel",
+            "replaceWith": "$dark-bootstrap-expansion-panel"
+        },
+        {
+            "name": "$_dark-indigo-expansion-panel",
+            "replaceWith": "$dark-indigo-expansion-panel"
+        },
+        {
+            "name": "$_light-financial-chart",
+            "replaceWith": "$light-financial-chart"
+        },
+        {
+            "name": "$_fluent-financial-chart",
+            "replaceWith": "$fluent-financial-chart"
+        },
+        {
+            "name": "$_bootstrap-financial-chart",
+            "replaceWith": "$bootstrap-financial-chart"
+        },
+        {
+            "name": "$_indigo-financial-chart",
+            "replaceWith": "$indigo-financial-chart"
+        },
+        {
+            "name": "$_dark-financial-chart",
+            "replaceWith": "$dark-financial-chart"
+        },
+        {
+            "name": "$_dark-fluent-financial-chart",
+            "replaceWith": "$dark-fluent-financial-chart"
+        },
+        {
+            "name": "$_dark-bootstrap-financial-chart",
+            "replaceWith": "$dark-bootstrap-financial-chart"
+        },
+        {
+            "name": "$_dark-indigo-financial-chart",
+            "replaceWith": "$dark-indigo-financial-chart"
+        },
+        {
+            "name": "$_light-funnel-chart",
+            "replaceWith": "$light-funnel-chart"
+        },
+        {
+            "name": "$_fluent-funnel-chart",
+            "replaceWith": "$fluent-funnel-chart"
+        },
+        {
+            "name": "$_bootstrap-funnel-chart",
+            "replaceWith": "$bootstrap-funnel-chart"
+        },
+        {
+            "name": "$_indigo-funnel-chart",
+            "replaceWith": "$indigo-funnel-chart"
+        },
+        {
+            "name": "$_dark-funnel-chart",
+            "replaceWith": "$dark-funnel-chart"
+        },
+        {
+            "name": "$_dark-fluent-funnel-chart",
+            "replaceWith": "$dark-fluent-funnel-chart"
+        },
+        {
+            "name": "$_dark-bootstrap-funnel-chart",
+            "replaceWith": "$dark-bootstrap-funnel-chart"
+        },
+        {
+            "name": "$_dark-indigo-funnel-chart",
+            "replaceWith": "$dark-indigo-funnel-chart"
+        },
+        {
+            "name": "$_light-gauge",
+            "replaceWith": "$light-gauge"
+        },
+        {
+            "name": "$_light-linear-gauge",
+            "replaceWith": "$light-linear-gauge"
+        },
+        {
+            "name": "$_light-radial-gauge",
+            "replaceWith": "$light-radial-gauge"
+        },
+        {
+            "name": "$_fluent-linear-gauge",
+            "replaceWith": "$fluent-linear-gauge"
+        },
+        {
+            "name": "$_fluent-radial-gauge",
+            "replaceWith": "$fluent-radial-gauge"
+        },
+        {
+            "name": "$_bootstrap-linear-gauge",
+            "replaceWith": "$bootstrap-linear-gauge"
+        },
+        {
+            "name": "$_bootstrap-radial-gauge",
+            "replaceWith": "$bootstrap-radial-gauge"
+        },
+        {
+            "name": "$_indigo-linear-gauge",
+            "replaceWith": "$indigo-linear-gauge"
+        },
+        {
+            "name": "$_indigo-radial-gauge",
+            "replaceWith": "$indigo-radial-gauge"
+        },
+        {
+            "name": "$_dark-linear-gauge",
+            "replaceWith": "$dark-linear-gauge"
+        },
+        {
+            "name": "$_dark-radial-gauge",
+            "replaceWith": "$dark-radial-gauge"
+        },
+        {
+            "name": "$_dark-fluent-linear-gauge",
+            "replaceWith": "$dark-fluent-linear-gauge"
+        },
+        {
+            "name": "$_dark-fluent-radial-gauge",
+            "replaceWith": "$dark-fluent-radial-gauge"
+        },
+        {
+            "name": "$_dark-bootstrap-linear-gauge",
+            "replaceWith": "$dark-bootstrap-linear-gauge"
+        },
+        {
+            "name": "$_dark-bootstrap-radial-gauge",
+            "replaceWith": "$dark-bootstrap-radial-gauge"
+        },
+        {
+            "name": "$_dark-indigo-linear-gauge",
+            "replaceWith": "$dark-indigo-linear-gauge"
+        },
+        {
+            "name": "$_dark-indigo-radial-gauge",
+            "replaceWith": "$dark-indigo-radial-gauge"
+        },
+        {
+            "name": "$_light-geo-map",
+            "replaceWith": "$light-geo-map"
+        },
+        {
+            "name": "$_fluent-geo-map",
+            "replaceWith": "$fluent-geo-map"
+        },
+        {
+            "name": "$_bootstrap-geo-map",
+            "replaceWith": "$bootstrap-geo-map"
+        },
+        {
+            "name": "$_indigo-geo-map",
+            "replaceWith": "$indigo-geo-map"
+        },
+        {
+            "name": "$_dark-geo-map",
+            "replaceWith": "$dark-geo-map"
+        },
+        {
+            "name": "$_dark-fluent-geo-map",
+            "replaceWith": "$dark-fluent-geo-map"
+        },
+        {
+            "name": "$_dark-bootstrap-geo-map",
+            "replaceWith": "$dark-bootstrap-geo-map"
+        },
+        {
+            "name": "$_dark-indigo-geo-map",
+            "replaceWith": "$dark-indigo-geo-map"
+        },
+        {
+            "name": "$_light-graph",
+            "replaceWith": "$light-graph"
+        },
+        {
+            "name": "$_fluent-graph",
+            "replaceWith": "$fluent-graph"
+        },
+        {
+            "name": "$_bootstrap-graph",
+            "replaceWith": "$bootstrap-graph"
+        },
+        {
+            "name": "$_indigo-graph",
+            "replaceWith": "$indigo-graph"
+        },
+        {
+            "name": "$_dark-graph",
+            "replaceWith": "$dark-graph"
+        },
+        {
+            "name": "$_dark-fluent-graph",
+            "replaceWith": "$dark-fluent-graph"
+        },
+        {
+            "name": "$_dark-bootstrap-graph",
+            "replaceWith": "$dark-bootstrap-graph"
+        },
+        {
+            "name": "$_dark-indigo-graph",
+            "replaceWith": "$dark-indigo-graph"
+        },
+        {
+            "name": "$_light-grid-filtering",
+            "replaceWith": "$light-grid-filtering"
+        },
+        {
+            "name": "$_fluent-grid-filtering",
+            "replaceWith": "$fluent-grid-filtering"
+        },
+        {
+            "name": "$_bootstrap-grid-filtering",
+            "replaceWith": "$bootstrap-grid-filtering"
+        },
+        {
+            "name": "$_indigo-grid-filtering",
+            "replaceWith": "$indigo-grid-filtering"
+        },
+        {
+            "name": "$_dark-grid-filtering",
+            "replaceWith": "$dark-grid-filtering"
+        },
+        {
+            "name": "$_dark-fluent-grid-filtering",
+            "replaceWith": "$dark-fluent-grid-filtering"
+        },
+        {
+            "name": "$_dark-bootstrap-grid-filtering",
+            "replaceWith": "$dark-bootstrap-grid-filtering"
+        },
+        {
+            "name": "$_dark-indigo-grid-filtering",
+            "replaceWith": "$dark-indigo-grid-filtering"
+        },
+        {
+            "name": "$_light-grid-summary",
+            "replaceWith": "$light-grid-summary"
+        },
+        {
+            "name": "$_fluent-grid-summary",
+            "replaceWith": "$fluent-grid-summary"
+        },
+        {
+            "name": "$_bootstrap-grid-summary",
+            "replaceWith": "$bootstrap-grid-summary"
+        },
+        {
+            "name": "$_indigo-grid-summary",
+            "replaceWith": "$indigo-grid-summary"
+        },
+        {
+            "name": "$_dark-grid-summary",
+            "replaceWith": "$dark-grid-summary"
+        },
+        {
+            "name": "$_dark-fluent-grid-summary",
+            "replaceWith": "$dark-fluent-grid-summary"
+        },
+        {
+            "name": "$_dark-bootstrap-grid-summary",
+            "replaceWith": "$dark-bootstrap-grid-summary"
+        },
+        {
+            "name": "$_dark-indigo-grid-summary",
+            "replaceWith": "$dark-indigo-grid-summary"
+        },
+        {
+            "name": "$_light-grid-toolbar",
+            "replaceWith": "$light-grid-toolbar"
+        },
+        {
+            "name": "$_fluent-grid-toolbar",
+            "replaceWith": "$fluent-grid-toolbar"
+        },
+        {
+            "name": "$_bootstrap-grid-toolbar",
+            "replaceWith": "$bootstrap-grid-toolbar"
+        },
+        {
+            "name": "$_indigo-grid-toolbar",
+            "replaceWith": "$indigo-grid-toolbar"
+        },
+        {
+            "name": "$_base-dark-grid-toolbar",
+            "replaceWith": "$base-dark-grid-toolbar"
+        },
+        {
+            "name": "$_dark-grid-toolbar",
+            "replaceWith": "$dark-grid-toolbar"
+        },
+        {
+            "name": "$_dark-fluent-grid-toolbar",
+            "replaceWith": "$dark-fluent-grid-toolbar"
+        },
+        {
+            "name": "$_dark-bootstrap-grid-toolbar",
+            "replaceWith": "$dark-bootstrap-grid-toolbar"
+        },
+        {
+            "name": "$_dark-indigo-grid-toolbar",
+            "replaceWith": "$dark-indigo-grid-toolbar"
+        },
+        {
+            "name": "$_default-shape-grid",
+            "replaceWith": "$default-shape-grid"
+        },
+        {
+            "name": "$_round-shape-grid",
+            "replaceWith": "$round-shape-grid"
+        },
+        {
+            "name": "$_square-shape-grid",
+            "replaceWith": "$square-shape-grid"
+        },
+        {
+            "name": "$_fluent-shape-grid",
+            "replaceWith": "$fluent-shape-grid"
+        },
+        {
+            "name": "$_bootstrap-shape-grid",
+            "replaceWith": "$bootstrap-shape-grid"
+        },
+        {
+            "name": "$_default-elevation-grid",
+            "replaceWith": "$default-elevation-grid"
+        },
+        {
+            "name": "$_fluent-elevation-grid",
+            "replaceWith": "$fluent-elevation-grid"
+        },
+        {
+            "name": "$_light-grid",
+            "replaceWith": "$light-grid"
+        },
+        {
+            "name": "$_fluent-grid",
+            "replaceWith": "$fluent-grid"
+        },
+        {
+            "name": "$_bootstrap-grid",
+            "replaceWith": "$bootstrap-grid"
+        },
+        {
+            "name": "$_indigo-grid",
+            "replaceWith": "$indigo-grid"
+        },
+        {
+            "name": "$_base-dark-grid",
+            "replaceWith": "$base-dark-grid"
+        },
+        {
+            "name": "$_dark-grid",
+            "replaceWith": "$dark-grid"
+        },
+        {
+            "name": "$_dark-fluent-grid",
+            "replaceWith": "$dark-fluent-grid"
+        },
+        {
+            "name": "$_dark-bootstrap-grid",
+            "replaceWith": "$dark-bootstrap-grid"
+        },
+        {
+            "name": "$_dark-indigo-grid",
+            "replaceWith": "$dark-indigo-grid"
+        },
+        {
+            "name": "$_light-highlight",
+            "replaceWith": "$light-highlight"
+        },
+        {
+            "name": "$_fluent-highlight",
+            "replaceWith": "$fluent-highlight"
+        },
+        {
+            "name": "$_bootstrap-highlight",
+            "replaceWith": "$bootstrap-highlight"
+        },
+        {
+            "name": "$_indigo-highlight",
+            "replaceWith": "$indigo-highlight"
+        },
+        {
+            "name": "$_dark-highlight",
+            "replaceWith": "$dark-highlight"
+        },
+        {
+            "name": "$_dark-fluent-highlight",
+            "replaceWith": "$dark-fluent-highlight"
+        },
+        {
+            "name": "$_dark-bootstrap-highlight",
+            "replaceWith": "$dark-bootstrap-highlight"
+        },
+        {
+            "name": "$_dark-indigo-highlight",
+            "replaceWith": "$dark-indigo-highlight"
+        },
+        {
+            "name": "$_light-icon",
+            "replaceWith": "$light-icon"
+        },
+        {
+            "name": "$_fluent-icon",
+            "replaceWith": "$fluent-icon"
+        },
+        {
+            "name": "$_bootstrap-icon",
+            "replaceWith": "$bootstrap-icon"
+        },
+        {
+            "name": "$_indigo-icon",
+            "replaceWith": "$indigo-icon"
+        },
+        {
+            "name": "$_dark-icon",
+            "replaceWith": "$dark-icon"
+        },
+        {
+            "name": "$_dark-fluent-icon",
+            "replaceWith": "$dark-fluent-icon"
+        },
+        {
+            "name": "$_dark-bootstrap-icon",
+            "replaceWith": "$dark-bootstrap-icon"
+        },
+        {
+            "name": "$_dark-indigo-icon",
+            "replaceWith": "$dark-indigo-icon"
+        },
+        {
+            "name": "$_default-shape-input-group",
+            "replaceWith": "$default-shape-input-group"
+        },
+        {
+            "name": "$_round-shape-input-group",
+            "replaceWith": "$round-shape-input-group"
+        },
+        {
+            "name": "$_square-shape-input-group",
+            "replaceWith": "$square-shape-input-group"
+        },
+        {
+            "name": "$_fluent-shape-input-group",
+            "replaceWith": "$fluent-shape-input-group"
+        },
+        {
+            "name": "$_default-elevation-input-group",
+            "replaceWith": "$default-elevation-input-group"
+        },
+        {
+            "name": "$_fluent-elevation-input-group",
+            "replaceWith": "$fluent-elevation-input-group"
+        },
+        {
+            "name": "$_indigo-elevation-input-group",
+            "replaceWith": "$indigo-elevation-input-group"
+        },
+        {
+            "name": "$_light-input-group",
+            "replaceWith": "$light-input-group"
+        },
+        {
+            "name": "$_fluent-input-group",
+            "replaceWith": "$fluent-input-group"
+        },
+        {
+            "name": "$_bootstrap-input-group",
+            "replaceWith": "$bootstrap-input-group"
+        },
+        {
+            "name": "$_indigo-input-group",
+            "replaceWith": "$indigo-input-group"
+        },
+        {
+            "name": "$_base-dark-input-group",
+            "replaceWith": "$base-dark-input-group"
+        },
+        {
+            "name": "$_dark-input-group",
+            "replaceWith": "$dark-input-group"
+        },
+        {
+            "name": "$_dark-fluent-input-group",
+            "replaceWith": "$dark-fluent-input-group"
+        },
+        {
+            "name": "$_dark-bootstrap-input-group",
+            "replaceWith": "$dark-bootstrap-input-group"
+        },
+        {
+            "name": "$_dark-indigo-input-group",
+            "replaceWith": "$dark-indigo-input-group"
+        },
+        {
+            "name": "$_default-shape-list",
+            "replaceWith": "$default-shape-list"
+        },
+        {
+            "name": "$_round-shape-list",
+            "replaceWith": "$round-shape-list"
+        },
+        {
+            "name": "$_square-shape-list",
+            "replaceWith": "$square-shape-list"
+        },
+        {
+            "name": "$_bootstrap-shape-list",
+            "replaceWith": "$bootstrap-shape-list"
+        },
+        {
+            "name": "$_indigo-shape-list",
+            "replaceWith": "$indigo-shape-list"
+        },
+        {
+            "name": "$_light-list",
+            "replaceWith": "$light-list"
+        },
+        {
+            "name": "$_fluent-list",
+            "replaceWith": "$fluent-list"
+        },
+        {
+            "name": "$_bootstrap-list",
+            "replaceWith": "$bootstrap-list"
+        },
+        {
+            "name": "$_indigo-list",
+            "replaceWith": "$indigo-list"
+        },
+        {
+            "name": "$_base-dark-list",
+            "replaceWith": "$base-dark-list"
+        },
+        {
+            "name": "$_dark-list",
+            "replaceWith": "$dark-list"
+        },
+        {
+            "name": "$_dark-fluent-list",
+            "replaceWith": "$dark-fluent-list"
+        },
+        {
+            "name": "$_dark-bootstrap-list",
+            "replaceWith": "$dark-bootstrap-list"
+        },
+        {
+            "name": "$_dark-indigo-list",
+            "replaceWith": "$dark-indigo-list"
+        },
+        {
+            "name": "$_default-elevation-navbar",
+            "replaceWith": "$default-elevation-navbar"
+        },
+        {
+            "name": "$_bootstrap-elevation-navbar",
+            "replaceWith": "$bootstrap-elevation-navbar"
+        },
+        {
+            "name": "$_indigo-elevation-navbar",
+            "replaceWith": ""
+        },
+        {
+            "name": "$_light-navbar",
+            "replaceWith": "$light-navbar"
+        },
+        {
+            "name": "$_fluent-navbar",
+            "replaceWith": "$fluent-navbar"
+        },
+        {
+            "name": "$_bootstrap-navbar",
+            "replaceWith": "$bootstrap-navbar"
+        },
+        {
+            "name": "$_indigo-navbar",
+            "replaceWith": "$indigo-navbar"
+        },
+        {
+            "name": "$_default-shape-navdrawer",
+            "replaceWith": "$default-shape-navdrawer"
+        },
+        {
+            "name": "$_round-shape-navdrawer",
+            "replaceWith": "$round-shape-navdrawer"
+        },
+        {
+            "name": "$_square-shape-navdrawer",
+            "replaceWith": "$square-shape-navdrawer"
+        },
+        {
+            "name": "$_indigo-shape-navdrawer",
+            "replaceWith": "$indigo-shape-navdrawer"
+        },
+        {
+            "name": "$_default-elevation-navdrawer",
+            "replaceWith": "$default-elevation-navdrawer"
+        },
+        {
+            "name": "$_indigo-elevation-navdrawer",
+            "replaceWith": "$indigo-elevation-navdrawer"
+        },
+        {
+            "name": "$_light-navdrawer",
+            "replaceWith": "$light-navdrawer"
+        },
+        {
+            "name": "$_fluent-navdrawer",
+            "replaceWith": "$fluent-navdrawer"
+        },
+        {
+            "name": "$_bootstrap-navdrawer",
+            "replaceWith": "$bootstrap-navdrawer"
+        },
+        {
+            "name": "$_indigo-navdrawer",
+            "replaceWith": "$indigo-navdrawer"
+        },
+        {
+            "name": "$_dark-navdrawer",
+            "replaceWith": "$dark-navdrawer"
+        },
+        {
+            "name": "$_dark-fluent-navdrawer",
+            "replaceWith": "$dark-fluent-navdrawer"
+        },
+        {
+            "name": "$_dark-bootstrap-navdrawer",
+            "replaceWith": "$dark-bootstrap-navdrawer"
+        },
+        {
+            "name": "$_dark-indigo-navdrawer",
+            "replaceWith": "$dark-indigo-navdrawer"
+        },
+        {
+            "name": "$_light-overlay",
+            "replaceWith": "$light-overlay"
+        },
+        {
+            "name": "$_fluent-overlay",
+            "replaceWith": "$fluent-overlay"
+        },
+        {
+            "name": "$_bootstrap-overlay",
+            "replaceWith": "$bootstrap-overlay"
+        },
+        {
+            "name": "$_indigo-overlay",
+            "replaceWith": "$indigo-overlay"
+        },
+        {
+            "name": "$_dark-overlay",
+            "replaceWith": "$dark-overlay"
+        },
+        {
+            "name": "$_dark-fluent-overlay",
+            "replaceWith": "$dark-fluent-overlay"
+        },
+        {
+            "name": "$_dark-bootstrap-overlay",
+            "replaceWith": "$dark-bootstrap-overlay"
+        },
+        {
+            "name": "$_dark-indigo-overlay",
+            "replaceWith": "$dark-indigo-overlay"
+        },
+        {
+            "name": "$_light-pagination",
+            "replaceWith": "$light-pagination"
+        },
+        {
+            "name": "$_fluent-pagination",
+            "replaceWith": "$fluent-pagination"
+        },
+        {
+            "name": "$_bootstrap-pagination",
+            "replaceWith": "$bootstrap-pagination"
+        },
+        {
+            "name": "$_indigo-pagination",
+            "replaceWith": "$indigo-pagination"
+        },
+        {
+            "name": "$_base-dark-pagination",
+            "replaceWith": "$base-dark-pagination"
+        },
+        {
+            "name": "$_dark-pagination",
+            "replaceWith": "$dark-pagination"
+        },
+        {
+            "name": "$_dark-fluent-pagination",
+            "replaceWith": "$dark-fluent-pagination"
+        },
+        {
+            "name": "$_dark-bootstrap-pagination",
+            "replaceWith": "$dark-bootstrap-pagination"
+        },
+        {
+            "name": "$_dark-indigo-pagination",
+            "replaceWith": "$dark-indigo-pagination"
+        },
+        {
+            "name": "$_light-pie-chart",
+            "replaceWith": "$light-pie-chart"
+        },
+        {
+            "name": "$_fluent-pie-chart",
+            "replaceWith": "$fluent-pie-chart"
+        },
+        {
+            "name": "$_bootstrap-pie-chart",
+            "replaceWith": "$bootstrap-pie-chart"
+        },
+        {
+            "name": "$_indigo-pie-chart",
+            "replaceWith": "$indigo-pie-chart"
+        },
+        {
+            "name": "$_dark-pie-chart",
+            "replaceWith": "$dark-pie-chart"
+        },
+        {
+            "name": "$_dark-fluent-pie-chart",
+            "replaceWith": "$dark-fluent-pie-chart"
+        },
+        {
+            "name": "$_dark-bootstrap-pie-chart",
+            "replaceWith": "$dark-bootstrap-pie-chart"
+        },
+        {
+            "name": "$_dark-indigo-pie-chart",
+            "replaceWith": "$dark-indigo-pie-chart"
+        },
+        {
+            "name": "$_default-shape-progress",
+            "replaceWith": "$default-shape-progress"
+        },
+        {
+            "name": "$_round-shape-progress",
+            "replaceWith": "$round-shape-progress"
+        },
+        {
+            "name": "$_square-shape-progress",
+            "replaceWith": "$square-shape-progress"
+        },
+        {
+            "name": "$_fluent-shape-progress",
+            "replaceWith": "$fluent-shape-progress"
+        },
+        {
+            "name": "$_bootstrap-shape-progress",
+            "replaceWith": "$bootstrap-shape-progress"
+        },
+        {
+            "name": "$_light-progress-linear",
+            "replaceWith": "$light-progress-linear"
+        },
+        {
+            "name": "$_fluent-progress-linear",
+            "replaceWith": "$fluent-progress-linear"
+        },
+        {
+            "name": "$_bootstrap-progress-linear",
+            "replaceWith": "$bootstrap-progress-linear"
+        },
+        {
+            "name": "$_indigo-progress-linear",
+            "replaceWith": "$indigo-progress-linear"
+        },
+        {
+            "name": "$_light-progress-circular",
+            "replaceWith": "$light-progress-circular"
+        },
+        {
+            "name": "$_fluent-progress-circular",
+            "replaceWith": "$fluent-progress-circular"
+        },
+        {
+            "name": "$_bootstrap-progress-circular",
+            "replaceWith": "$bootstrap-progress-circular"
+        },
+        {
+            "name": "$_indigo-progress-circular",
+            "replaceWith": "$indigo-progress-circular"
+        },
+        {
+            "name": "$_dark-progress-linear",
+            "replaceWith": "$dark-progress-linear"
+        },
+        {
+            "name": "$_dark-fluent-progress-linear",
+            "replaceWith": "$dark-fluent-progress-linear"
+        },
+        {
+            "name": "$_dark-bootstrap-progress-linear",
+            "replaceWith": "$dark-bootstrap-progress-linear"
+        },
+        {
+            "name": "$_dark-indigo-progress-linear",
+            "replaceWith": "$dark-indigo-progress-linear"
+        },
+        {
+            "name": "$_dark-progress-circular",
+            "replaceWith": "$dark-progress-circular"
+        },
+        {
+            "name": "$_dark-fluent-progress-circular",
+            "replaceWith": "$dark-fluent-progress-circular"
+        },
+        {
+            "name": "$_dark-bootstrap-progress-circular",
+            "replaceWith": "$dark-bootstrap-progress-circular"
+        },
+        {
+            "name": "$_dark-indigo-progress-circular",
+            "replaceWith": "$dark-indigo-progress-circular"
+        },
+        {
+            "name": "$_light-radio",
+            "replaceWith": "$light-radio"
+        },
+        {
+            "name": "$_fluent-radio",
+            "replaceWith": "$fluent-radio"
+        },
+        {
+            "name": "$_bootstrap-radio",
+            "replaceWith": "$bootstrap-radio"
+        },
+        {
+            "name": "$_indigo-radio",
+            "replaceWith": "$indigo-radio"
+        },
+        {
+            "name": "$_dark-radio",
+            "replaceWith": "$dark-radio"
+        },
+        {
+            "name": "$_dark-fluent-radio",
+            "replaceWith": "$dark-fluent-radio"
+        },
+        {
+            "name": "$_dark-bootstrap-radio",
+            "replaceWith": "$dark-bootstrap-radio"
+        },
+        {
+            "name": "$_dark-indigo-radio",
+            "replaceWith": "$dark-indigo-radio"
+        },
+        {
+            "name": "$_light-ripple",
+            "replaceWith": "$light-ripple"
+        },
+        {
+            "name": "$_fluent-ripple",
+            "replaceWith": "$fluent-ripple"
+        },
+        {
+            "name": "$_bootstrap-ripple",
+            "replaceWith": "$bootstrap-ripple"
+        },
+        {
+            "name": "$_indigo-ripple",
+            "replaceWith": "$indigo-ripple"
+        },
+        {
+            "name": "$_dark-ripple",
+            "replaceWith": "$dark-ripple"
+        },
+        {
+            "name": "$_dark-fluent-ripple",
+            "replaceWith": "$dark-fluent-ripple"
+        },
+        {
+            "name": "$_dark-bootstrap-ripple",
+            "replaceWith": "$dark-bootstrap-ripple"
+        },
+        {
+            "name": "$_dark-indigo-ripple",
+            "replaceWith": "$dark-indigo-ripple"
+        },
+        {
+            "name": "$_light-scrollbar",
+            "replaceWith": "$light-scrollbar"
+        },
+        {
+            "name": "$_fluent-scrollbar",
+            "replaceWith": "$fluent-scrollbar"
+        },
+        {
+            "name": "$_bootstrap-scrollbar",
+            "replaceWith": "$bootstrap-scrollbar"
+        },
+        {
+            "name": "$_indigo-scrollbar",
+            "replaceWith": "$indigo-scrollbar"
+        },
+        {
+            "name": "$_dark-scrollbar",
+            "replaceWith": "$dark-scrollbar"
+        },
+        {
+            "name": "$_dark-fluent-scrollbar",
+            "replaceWith": "$dark-fluent-scrollbar"
+        },
+        {
+            "name": "$_dark-bootstrap-scrollbar",
+            "replaceWith": "$dark-bootstrap-scrollbar"
+        },
+        {
+            "name": "$_dark-indigo-scrollbar",
+            "replaceWith": "$dark-indigo-scrollbar"
+        },
+        {
+            "name": "$_light-shape-chart",
+            "replaceWith": "$light-shape-chart"
+        },
+        {
+            "name": "$_fluent-shape-chart",
+            "replaceWith": "$fluent-shape-chart"
+        },
+        {
+            "name": "$_bootstrap-shape-chart",
+            "replaceWith": "$bootstrap-shape-chart"
+        },
+        {
+            "name": "$_indigo-shape-chart",
+            "replaceWith": "$indigo-shape-chart"
+        },
+        {
+            "name": "$_dark-shape-chart",
+            "replaceWith": "$dark-shape-chart"
+        },
+        {
+            "name": "$_dark-fluent-shape-chart",
+            "replaceWith": "$dark-fluent-shape-chart"
+        },
+        {
+            "name": "$_dark-bootstrap-shape-chart",
+            "replaceWith": "$dark-bootstrap-shape-chart"
+        },
+        {
+            "name": "$_dark-indigo-shape-chart",
+            "replaceWith": "$dark-indigo-shape-chart"
+        },
+        {
+            "name": "$_light-slider",
+            "replaceWith": "$light-slider"
+        },
+        {
+            "name": "$_fluent-slider",
+            "replaceWith": "$fluent-slider"
+        },
+        {
+            "name": "$_bootstrap-slider",
+            "replaceWith": "$bootstrap-slider"
+        },
+        {
+            "name": "$_indigo-slider",
+            "replaceWith": "$indigo-slider"
+        },
+        {
+            "name": "$_dark-slider",
+            "replaceWith": "$dark-slider"
+        },
+        {
+            "name": "$_dark-fluent-slider",
+            "replaceWith": "$dark-fluent-slider"
+        },
+        {
+            "name": "$_dark-bootstrap-slider",
+            "replaceWith": "$dark-bootstrap-slider"
+        },
+        {
+            "name": "$_dark-indigo-slider",
+            "replaceWith": "$dark-indigo-slider"
+        },
+        {
+            "name": "$_default-shape-snackbar",
+            "replaceWith": "$default-shape-snackbar"
+        },
+        {
+            "name": "$_round-shape-snackbar",
+            "replaceWith": "$round-shape-snackbar"
+        },
+        {
+            "name": "$_square-shape-snackbar",
+            "replaceWith": "$square-shape-snackbar"
+        },
+        {
+            "name": "$_fluent-shape-snackbar",
+            "replaceWith": "$fluent-shape-snackbar"
+        },
+        {
+            "name": "$_bootstrap-shape-snackbar",
+            "replaceWith": "$bootstrap-shape-snackbar"
+        },
+        {
+            "name": "$_indigo-shape-snackbar",
+            "replaceWith": "$indigo-shape-snackbar"
+        },
+        {
+            "name": "$_default-elevation-snackbar",
+            "replaceWith": "$default-elevation-snackbar"
+        },
+        {
+            "name": "$_bootstrap-elevation-snackbar",
+            "replaceWith": "$bootstrap-elevation-snackbar"
+        },
+        {
+            "name": "$_light-snackbar",
+            "replaceWith": "$light-snackbar"
+        },
+        {
+            "name": "$_fluent-snackbar",
+            "replaceWith": "$fluent-snackbar"
+        },
+        {
+            "name": "$_bootstrap-snackbar",
+            "replaceWith": "$bootstrap-snackbar"
+        },
+        {
+            "name": "$_indigo-snackbar",
+            "replaceWith": "$indigo-snackbar"
+        },
+        {
+            "name": "$_dark-snackbar",
+            "replaceWith": "$dark-snackbar"
+        },
+        {
+            "name": "$_dark-fluent-snackbar",
+            "replaceWith": "$dark-fluent-snackbar"
+        },
+        {
+            "name": "$_dark-bootstrap-snackbar",
+            "replaceWith": "$dark-bootstrap-snackbar"
+        },
+        {
+            "name": "$_dark-indigo-snackbar",
+            "replaceWith": "$dark-indigo-snackbar"
+        },
+        {
+            "name": "$_light-sparkline",
+            "replaceWith": "$light-sparkline"
+        },
+        {
+            "name": "$_fluent-sparkline",
+            "replaceWith": "$fluent-sparkline"
+        },
+        {
+            "name": "$_bootstrap-sparkline",
+            "replaceWith": "$bootstrap-sparkline"
+        },
+        {
+            "name": "$_indigo-sparkline",
+            "replaceWith": "$indigo-sparkline"
+        },
+        {
+            "name": "$_dark-sparkline",
+            "replaceWith": "$dark-sparkline"
+        },
+        {
+            "name": "$_dark-fluent-sparkline",
+            "replaceWith": "$dark-fluent-sparkline"
+        },
+        {
+            "name": "$_dark-bootstrap-sparkline",
+            "replaceWith": "$dark-bootstrap-sparkline"
+        },
+        {
+            "name": "$_dark-indigo-sparkline",
+            "replaceWith": "$dark-indigo-sparkline"
+        },
+        {
+            "name": "$_round-shape-splitter",
+            "replaceWith": "$round-shape-splitter"
+        },
+        {
+            "name": "$_square-shape-splitter",
+            "replaceWith": "$square-shape-splitter"
+        },
+        {
+            "name": "$_light-splitter",
+            "replaceWith": "$light-splitter"
+        },
+        {
+            "name": "$_fluent-splitter",
+            "replaceWith": "$fluent-splitter"
+        },
+        {
+            "name": "$_bootstrap-splitter",
+            "replaceWith": "$bootstrap-splitter"
+        },
+        {
+            "name": "$_indigo-splitter",
+            "replaceWith": "$indigo-splitter"
+        },
+        {
+            "name": "$_dark-splitter",
+            "replaceWith": "$dark-splitter"
+        },
+        {
+            "name": "$_dark-fluent-splitter",
+            "replaceWith": "$dark-fluent-splitter"
+        },
+        {
+            "name": "$_dark-bootstrap-splitter",
+            "replaceWith": "$dark-bootstrap-splitter"
+        },
+        {
+            "name": "$_dark-indigo-splitter",
+            "replaceWith": "$dark-indigo-splitter"
+        },
+        {
+            "name": "$_default-shape-switch",
+            "replaceWith": "$default-shape-switch"
+        },
+        {
+            "name": "$_round-shape-switch",
+            "replaceWith": "$round-shape-switch"
+        },
+        {
+            "name": "$_square-shape-switch",
+            "replaceWith": "$square-shape-switch"
+        },
+        {
+            "name": "$_fluent-shape-switch",
+            "replaceWith": "$fluent-shape-switch"
+        },
+        {
+            "name": "$_bootstrap-shape-switch",
+            "replaceWith": "$bootstrap-shape-switch"
+        },
+        {
+            "name": "$_indigo-shape-switch",
+            "replaceWith": "$indigo-shape-switch"
+        },
+        {
+            "name": "$_default-elevation-switch",
+            "replaceWith": "$default-elevation-switch"
+        },
+        {
+            "name": "$_light-switch",
+            "replaceWith": "$light-switch"
+        },
+        {
+            "name": "$_fluent-switch",
+            "replaceWith": "$fluent-switch"
+        },
+        {
+            "name": "$_bootstrap-switch",
+            "replaceWith": "$bootstrap-switch"
+        },
+        {
+            "name": "$_indigo-switch",
+            "replaceWith": "$indigo-switch"
+        },
+        {
+            "name": "$_base-dark-switch",
+            "replaceWith": "$base-dark-switch"
+        },
+        {
+            "name": "$_dark-switch",
+            "replaceWith": "$dark-switch"
+        },
+        {
+            "name": "$_dark-fluent-switch",
+            "replaceWith": "$dark-fluent-switch"
+        },
+        {
+            "name": "$_dark-bootstrap-switch",
+            "replaceWith": "$dark-bootstrap-switch"
+        },
+        {
+            "name": "$_dark-indigo-switch",
+            "replaceWith": "$dark-indigo-switch"
+        },
+        {
+            "name": "$_default-shape-tabs",
+            "replaceWith": "$default-shape-tabs"
+        },
+        {
+            "name": "$_round-shape-tabs:",
+            "replaceWith": "$round-shape-tabs:"
+        },
+        {
+            "name": "$_square-shape-tabs",
+            "replaceWith": "$square-shape-tabs"
+        },
+        {
+            "name": "$_fluent-shape-tabs",
+            "replaceWith": "$fluent-shape-tabs"
+        },
+        {
+            "name": "$_bootstrap-shape-tabs",
+            "replaceWith": "$bootstrap-shape-tabs"
+        },
+        {
+            "name": "$_light-tabs",
+            "replaceWith": "$light-tabs"
+        },
+        {
+            "name": "$_fluent-tabs",
+            "replaceWith": "$fluent-tabs"
+        },
+        {
+            "name": "$_bootstrap-tabs",
+            "replaceWith": "$bootstrap-tabs"
+        },
+        {
+            "name": "$_indigo-tabs",
+            "replaceWith": "$indigo-tabs"
+        },
+        {
+            "name": "$_base-dark-tabs",
+            "replaceWith": "$base-dark-tabs"
+        },
+        {
+            "name": "$_dark-tabs",
+            "replaceWith": "$dark-tabs"
+        },
+        {
+            "name": "$_dark-fluent-tabs",
+            "replaceWith": "$dark-fluent-tabs"
+        },
+        {
+            "name": "$_dark-bootstrap-tabs",
+            "replaceWith": "$dark-bootstrap-tabs"
+        },
+        {
+            "name": "$_dark-indigo-tabs",
+            "replaceWith": "$dark-indigo-tabs"
+        },
+        {
+            "name": "$_default-shape-time-picker",
+            "replaceWith": "$default-shape-time-picker"
+        },
+        {
+            "name": "$_round-shape-time-picker",
+            "replaceWith": "$round-shape-time-picker"
+        },
+        {
+            "name": "$_square-shape-time-picker",
+            "replaceWith": "$square-shape-time-picker"
+        },
+        {
+            "name": "$_fluent-shape-time-picker",
+            "replaceWith": "$fluent-shape-time-picker"
+        },
+        {
+            "name": "$_bootstrap-shape-time-picker",
+            "replaceWith": "$bootstrap-shape-time-picker"
+        },
+        {
+            "name": "$_indigo-shape-time-picker",
+            "replaceWith": "$indigo-shape-time-picker"
+        },
+        {
+            "name": "$_default-elevation-time-picker",
+            "replaceWith": "$default-elevation-time-picker"
+        },
+        {
+            "name": "$_light-time-picker",
+            "replaceWith": "$light-time-picker"
+        },
+        {
+            "name": "$_fluent-time-picker",
+            "replaceWith": "$fluent-time-picker"
+        },
+        {
+            "name": "$_bootstrap-time-picker",
+            "replaceWith": "$bootstrap-time-picker"
+        },
+        {
+            "name": "$_indigo-time-picker",
+            "replaceWith": "$indigo-time-picker"
+        },
+        {
+            "name": "$_dark-time-picker",
+            "replaceWith": "$dark-time-picker"
+        },
+        {
+            "name": "$_dark-fluent-time-picker",
+            "replaceWith": "$dark-fluent-time-picker"
+        },
+        {
+            "name": "$_dark-bootstrap-time-picker",
+            "replaceWith": "$dark-bootstrap-time-picker"
+        },
+        {
+            "name": "$_dark-indigo-time-picker",
+            "replaceWith": "$dark-indigo-time-picker"
+        },
+        {
+            "name": "$_default-shape-toast",
+            "replaceWith": "$default-shape-toast"
+        },
+        {
+            "name": "$_round-shape-toast",
+            "replaceWith": "$round-shape-toast"
+        },
+        {
+            "name": "$_square-shape-toast",
+            "replaceWith": "$square-shape-toast"
+        },
+        {
+            "name": "$_fluent-shape-toast",
+            "replaceWith": "$fluent-shape-toast"
+        },
+        {
+            "name": "$_bootstrap-shape-toast",
+            "replaceWith": "$bootstrap-shape-toast"
+        },
+        {
+            "name": "$_indigo-shape-toast",
+            "replaceWith": "$indigo-shape-toast"
+        },
+        {
+            "name": "$_default-elevation-toast",
+            "replaceWith": "$default-elevation-toast"
+        },
+        {
+            "name": "$_bootstrap-elevation-toast",
+            "replaceWith": "$bootstrap-elevation-toast"
+        },
+        {
+            "name": "$_light-toast",
+            "replaceWith": "$light-toast"
+        },
+        {
+            "name": "$_fluent-toast",
+            "replaceWith": "$fluent-toast"
+        },
+        {
+            "name": "$_bootstrap-toast",
+            "replaceWith": "$bootstrap-toast"
+        },
+        {
+            "name": "$_indigo-toast",
+            "replaceWith": "$indigo-toast"
+        },
+        {
+            "name": "$_dark-toast",
+            "replaceWith": "$dark-toast"
+        },
+        {
+            "name": "$_dark-fluent-toast",
+            "replaceWith": "$dark-fluent-toast"
+        },
+        {
+            "name": "$_dark-bootstrap-toast",
+            "replaceWith": "$dark-bootstrap-toast"
+        },
+        {
+            "name": "$_dark-indigo-toast",
+            "replaceWith": "$dark-indigo-toast"
+        },
+        {
+            "name": "$_default-shape-tooltip",
+            "replaceWith": "$default-shape-tooltip"
+        },
+        {
+            "name": "$_round-shape-tooltip",
+            "replaceWith": "$round-shape-tooltip"
+        },
+        {
+            "name": "$_square-shape-tooltip",
+            "replaceWith": "$square-shape-tooltip"
+        },
+        {
+            "name": "$_fluent-shape-tooltip",
+            "replaceWith": "$fluent-shape-tooltip"
+        },
+        {
+            "name": "$_bootstrap-shape-tooltip",
+            "replaceWith": "$bootstrap-shape-tooltip"
+        },
+        {
+            "name": "$_indigo-shape-tooltip",
+            "replaceWith": "$indigo-shape-tooltip"
+        },
+        {
+            "name": "$_light-tooltip",
+            "replaceWith": "$light-tooltip"
+        },
+        {
+            "name": "$_fluent-tooltip",
+            "replaceWith": "$fluent-tooltip"
+        },
+        {
+            "name": "$_bootstrap-tooltip",
+            "replaceWith": "$bootstrap-tooltip"
+        },
+        {
+            "name": "$_indigo-tooltip",
+            "replaceWith": "$indigo-tooltip"
+        },
+        {
+            "name": "$_dark-tooltip",
+            "replaceWith": "$dark-tooltip"
+        },
+        {
+            "name": "$_dark-fluent-tooltip",
+            "replaceWith": "$dark-fluent-tooltip"
+        },
+        {
+            "name": "$_dark-bootstrap-tooltip",
+            "replaceWith": "$dark-bootstrap-tooltip"
+        },
+        {
+            "name": "$_dark-indigo-tooltip:",
+            "replaceWith": "$dark-indigo-tooltip:"
+        },
+        {
+            "name": "$_light-tree",
+            "replaceWith": "$light-tree"
+        },
+        {
+            "name": "$_fluent-tree",
+            "replaceWith": "$fluent-tree"
+        },
+        {
+            "name": "$_bootstrap-tree",
+            "replaceWith": "$bootstrap-tree"
+        },
+        {
+            "name": "$_indigo-tree",
+            "replaceWith": "$indigo-tree"
+        },
+        {
+            "name": "$_base-dark-tree",
+            "replaceWith": "$base-dark-tree"
+        },
+        {
+            "name": "$_dark-tree",
+            "replaceWith": "$dark-tree"
+        },
+        {
+            "name": "$_dark-fluent-tree",
+            "replaceWith": "$dark-fluent-tree"
+        },
+        {
+            "name": "$_dark-bootstrap-tree",
+            "replaceWith": "$dark-bootstrap-tree"
+        },
+        {
+            "name": "$_dark-indigo-tree",
+            "replaceWith": "$dark-indigo-tree"
+        },
+        {
+            "name": "$_round-shape-watermark",
+            "replaceWith": "$round-shape-watermark"
+        },
+        {
+            "name": "$_square-shape-watermark",
+            "replaceWith": "$square-shape-watermark"
+        },
+        {
+            "name": "$_material-shape-watermark",
+            "replaceWith": "$material-shape-watermark"
+        },
+        {
+            "name": "$_fluent-shape-watermark",
+            "replaceWith": "$fluent-shape-watermark"
+        },
+        {
+            "name": "$_bootstrap-shape-watermark",
+            "replaceWith": "$bootstrap-shape-watermark"
+        },
+        {
+            "name": "$_indigo-shape-watermark",
+            "replaceWith": "$indigo-shape-watermark"
+        },
+        {
+            "name": "$_light-watermark-image",
+            "replaceWith": "$light-watermark-image"
+        },
+        {
+            "name": "$_light-watermark",
+            "replaceWith": "$light-watermark"
+        },
+        {
+            "name": "$_fluent-watermark",
+            "replaceWith": "$fluent-watermark"
+        },
+        {
+            "name": "$_bootstrap-watermark",
+            "replaceWith": "$bootstrap-watermark"
+        },
+        {
+            "name": "$_indigo-watermark",
+            "replaceWith": "$indigo-watermark"
+        },
+        {
+            "name": "$_dark-watermark-image",
+            "replaceWith": "$dark-watermark-image"
+        },
+        {
+            "name": "$_dark-watermark",
+            "replaceWith": "$dark-watermark"
+        },
+        {
+            "name": "$_dark-fluent-watermark",
+            "replaceWith": "$dark-fluent-watermark"
+        },
+        {
+            "name": "$_dark-bootstrap-watermark",
+            "replaceWith": "$dark-bootstrap-watermark"
+        },
+        {
+            "name": "$_dark-indigo-watermark",
+            "replaceWith": "$dark-indigo-watermark"
+        }
+    ]
 }
