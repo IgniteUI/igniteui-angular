@@ -586,7 +586,9 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         this.grid.notifyChanges(true);
 
         this.grid.navigateTo(this.row.index, -1);
-        const dummyRow = this.grid.gridAPI.get_row_by_index(this.row.index);
+        // when selecting the dummy row we need to adjust for top pinned rows
+        const indexAdjust = this.grid.isRowPinningToTop && !this.addRowParent.isPinned ? this.grid.pinnedRows.length : 0;
+        const dummyRow = this.grid.gridAPI.get_row_by_index(this.row.index + indexAdjust);
         dummyRow.triggerAddAnimation();
         dummyRow.cdr.detectChanges();
         dummyRow.addAnimationEnd.pipe(first()).subscribe(() => {
