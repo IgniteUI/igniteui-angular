@@ -345,7 +345,6 @@ export class IgxOverlayService implements OnDestroy {
         this.addOutsideClickListener(info);
         this.addResizeHandler();
         this.addCloseOnEscapeListener(info);
-        this.addModalClasses(info);
         this.buildAnimationPlayers(info);
         return info.id;
     }
@@ -412,6 +411,7 @@ export class IgxOverlayService implements OnDestroy {
             document,
             true,
             info.settings.target);
+            this.addModalClasses(info);
         if (info.settings.positionStrategy.settings.openAnimation) {
             this.buildAnimationPlayers(info);
             this.playOpenAnimation(info);
