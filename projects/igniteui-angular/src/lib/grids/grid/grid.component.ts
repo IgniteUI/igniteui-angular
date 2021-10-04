@@ -1030,7 +1030,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public getRowByIndex(index: number): RowType {
         if (this.gridAPI.grid.virtualizationState){
-            index = index - this.gridAPI.grid.virtualizationState.startIndex;
+            return this.createRow(index);
         }
         if (index < 0 || index >= this.dataView.length) {
             return undefined;
@@ -1104,9 +1104,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.field === columnField);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            if (this.gridAPI.grid.virtualizationState){
-                rowIndex = row.index;
-            }
             return new IgxGridCell(this, rowIndex, columnField);
         }
     }
@@ -1146,8 +1143,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
+        let rec: any;
 
-        const rec: any = data ?? this.dataView[index];
+        if (this.gridAPI.grid.virtualizationState) {
+            const virtIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
+            rec = data ?? this.dataView[virtIndex];
+        }else {
+            rec = data ?? this.dataView[index];
+        }
 
         if (rec && this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this, index, rec);
