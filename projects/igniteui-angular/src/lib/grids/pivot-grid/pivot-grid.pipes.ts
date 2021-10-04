@@ -39,11 +39,14 @@ export class IgxPivotRowPipe implements PipeTransform {
                     for (const property in newData[i]) {
                         if (newData[i].hasOwnProperty(property) &&
                         Object.keys(pivotKeys).indexOf(property) === -1) {
-                            siblingData.forEach(s => s[property] = newData[i][property]);
+                            siblingData.forEach(s => {
+                                s[property] = newData[i][property];
+                                s[pivotKeys.level] = newData[i][pivotKeys.level] + 1;
+                            });
                         }
                     }
-                    newData.splice(i, 1, ...siblingData);
-                    i+=siblingData.length - 1;
+                    newData.splice(i + 1, 0, ...siblingData);
+                    i+=siblingData.length;
                 }
                 data = newData;
             }
