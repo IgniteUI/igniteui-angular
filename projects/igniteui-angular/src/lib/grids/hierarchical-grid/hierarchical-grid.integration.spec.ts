@@ -1153,14 +1153,14 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             let rows = hierarchicalGrid.rowList.toArray();
 
-            [0, 0, 1, 2, 3, 4, 5].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
+            [0, 1, 0, 1, 2, 3, 4].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
 
             hierarchicalGrid.paginate(6);
             fixture.detectChanges();
 
             rows = hierarchicalGrid.rowList.toArray();
 
-            [0, 36, 37, 38, 39].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
+            [0, 1, 36, 37, 38, 39].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
         });
     });
 });
