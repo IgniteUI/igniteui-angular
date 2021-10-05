@@ -212,7 +212,7 @@ describe('Pivot pipes', () => {
          ]);
     });
 
-    it('transforms flat data to pivot data multiple row dimensions', () => {
+    xit('transforms flat data to pivot data multiple row dimensions', () => {
         const rowPipeResult = rowPipe.transform(data, [{
             member: 'ProductCategory',
             enabled: true,
