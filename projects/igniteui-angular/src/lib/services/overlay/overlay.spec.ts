@@ -3020,8 +3020,8 @@ describe('igxOverlay', () => {
             tick();
 
             wrapperElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
-            expect(wrapperElement).toBeUndefined();
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
+                expect(wrapperElement.style.visibility).toEqual('hidden');
         }));
 
         it('Should not close the component when esc key is pressed and closeOnEsc is false', fakeAsync(() => {
@@ -3137,8 +3137,8 @@ describe('igxOverlay', () => {
             UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
             tick();
             wrapperElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
-            expect(wrapperElement).toBeUndefined();
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
+            expect(wrapperElement.style.visibility).toEqual('hidden');
         }));
 
         // 3.2 Non - Modal
