@@ -203,6 +203,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
        const fieldColumn =  parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
        const groupColumn =  parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
        groupColumn.hidden = newState;
+       fieldColumn.hidden = !newState;
        if (newState) {
         fieldColumn.headerTemplate = this.headerTemplate;
        } else {
@@ -256,6 +257,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 refSibling.instance.field = key;
                 refSibling.instance.dataType = this.resolveDataTypes(data[0][key]);
                 refSibling.instance.parent = parent;
+                refSibling.instance.hidden = true;
 
                 const filteredChildren = children.filter(x => x.level === ref.instance.level + 1);
                 ref.changeDetectorRef.detectChanges();
