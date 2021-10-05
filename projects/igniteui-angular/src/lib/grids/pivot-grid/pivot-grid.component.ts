@@ -214,6 +214,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * @hidden
+     * @internal
+     */
+    protected calcGridHeadRow() {
+    }
+
+    /**
+     * @hidden
      */
      protected autogenerateColumns() {
         const data = this.gridAPI.get_data();
