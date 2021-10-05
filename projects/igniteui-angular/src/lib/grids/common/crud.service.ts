@@ -351,6 +351,12 @@ export class IgxRowCrudState extends IgxCellCrudState {
             rowEditArgs = this.grid.gridAPI.update_row(this.row, this.row.newData, event);
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
         } else {
+            const rowAddArgs = this.row.createEditEventArgs(true, event);
+            this.grid.rowAdd.emit(rowAddArgs);
+            if (rowAddArgs.cancel) {
+                return rowAddArgs;
+            }
+
             this.grid.transactions.endPending(false);
 
             const parentId = this.getParentRowId();
@@ -467,6 +473,9 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         }
 
         const args = super.endRowTransaction(commit, event);
+        if (args.cancel) {
+            return args;
+        }
 
         this.endAddRow();
         if (commit) {
@@ -577,7 +586,9 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         this.grid.notifyChanges(true);
 
         this.grid.navigateTo(this.row.index, -1);
-        const dummyRow = this.grid.gridAPI.get_row_by_index(this.row.index);
+        // when selecting the dummy row we need to adjust for top pinned rows
+        const indexAdjust = this.grid.isRowPinningToTop && !this.addRowParent.isPinned ? this.grid.pinnedRows.length : 0;
+        const dummyRow = this.grid.gridAPI.get_row_by_index(this.row.index + indexAdjust);
         dummyRow.triggerAddAnimation();
         dummyRow.cdr.detectChanges();
         dummyRow.addAnimationEnd.pipe(first()).subscribe(() => {

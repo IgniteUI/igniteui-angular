@@ -122,6 +122,8 @@
         margin: $navbar-title-margin;
         flex-grow: 1;
         user-select: text;
+        display: flex;
+        flex-direction: row
     }
 
     %igx-navbar-bundle {
