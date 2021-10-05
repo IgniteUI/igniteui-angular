@@ -1470,7 +1470,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         it('should pin/unpin a row', () => {
             treeGrid.pinRow(711);
-            fix.detectChanges();
 
             expect(treeGrid.pinnedRecordsCount).toBe(1);
             expect(treeGrid.getRowByKey(711).pinned).toBe(true);
@@ -1482,11 +1481,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.getRowByKey(711).pinned).toBe(false);
 
             treeGrid.getRowByKey(711).pin();
-            fix.detectChanges();
             expect(treeGrid.pinnedRecordsCount).toBe(1);
 
             treeGrid.getRowByKey(711).unpin();
-            fix.detectChanges();
             expect(treeGrid.pinnedRecordsCount).toBe(0);
 
 
@@ -1505,7 +1502,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             const visibleRecordsLength = treeGrid.records.size;
             treeGrid.pinRow(711);
-            fix.detectChanges();
 
             expect(treeGrid.getRowByIndex(visibleRecordsLength).key).toBe(711);
         });
@@ -1515,7 +1511,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const secondRow = treeGrid.getRowByIndex(1);
 
             treeGrid.pinRow(711);
-            fix.detectChanges();
 
             await wait();
 
@@ -1524,7 +1519,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.getRowByIndex(2).key).toBe(secondRow.key);
 
             treeGrid.unpinRow(711);
-            fix.detectChanges();
 
             await wait();
 
@@ -1537,13 +1531,11 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const primaryKey = treeGrid.primaryKey;
 
             treeGrid.pinRow(rowToPin.data[primaryKey]);
-            fix.detectChanges();
 
             expect(treeGrid.gridAPI.get_row_by_index(0).disabled).toBe(false);
             expect(treeGrid.gridAPI.get_row_by_index(1).disabled).toBe(true);
 
             treeGrid.unpinRow(rowToPin.data[primaryKey]);
-            fix.detectChanges();
 
             expect(treeGrid.gridAPI.get_row_by_index(0).disabled).toBe(false);
             expect(treeGrid.gridAPI.get_row_by_index(1).disabled).toBe(false);
@@ -1555,8 +1547,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const primaryKey = treeGrid.primaryKey;
 
             treeGrid.pinRow(rowToPin.data[primaryKey]);
-            fix.detectChanges();
-            fix.detectChanges();
 
             const firstColumnField = treeGrid.columns[0].field;
             const pinnedChipPosition = treeGrid.gridAPI.get_cell_by_index(1, firstColumnField);
@@ -1573,7 +1563,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const primaryKey = treeGrid.primaryKey;
 
             treeGrid.pinRow(rowToPin.data[primaryKey]);
-            fix.detectChanges();
 
             const thirdColumnField = treeGrid.columns[2].field;
 
@@ -1590,7 +1579,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const rowToPin = treeGrid.getRowByIndex(0);
 
             rowToPin.pin();
-            fix.detectChanges();
 
             // collapse pinned row
             treeGrid.toggleRow(rowToPin.key);
@@ -1613,7 +1601,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             const rowToPin = treeGrid.getRowByIndex(0);
             rowToPin.pin();
-            fix.detectChanges();
 
             searchResultsCount = treeGrid.findNext('John');
             expect(searchResultsCount).toBe(2);
@@ -1622,7 +1609,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         it('should apply filtering to both pinned and unpinned rows', () => {
             treeGrid.pinRow(147);
             treeGrid.pinRow(711);
-            fix.detectChanges();
 
             treeGrid.filter('ID', 147, IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
@@ -1635,8 +1621,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         it('should apply sorting to both pinned and unpinned rows', () => {
             treeGrid.pinRow(147);
-            treeGrid.pinRow(711);
-            fix.detectChanges();
+            treeGrid.pinRow(711);;
 
             expect(treeGrid.getRowByIndex(0).key).toBe(147);
             expect(treeGrid.getRowByIndex(1).key).toBe(711);
@@ -1652,7 +1637,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         it('should not take into account pinned rows when changing items per page', () => {
             treeGrid.pinRow(147);
-            fix.detectChanges();
 
             fix.componentInstance.paging = true;
             fix.detectChanges();
@@ -1676,8 +1660,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const paginator = fix.debugElement.query(By.directive(IgxPaginatorComponent)).componentInstance;
             // pin the first row
             treeGrid.getRowByIndex(0).pin();
-            fix.detectChanges();
-
             expect(treeGrid.rowList.length).toEqual(4);
             expect(treeGrid.perPage).toEqual(3);
             expect(paginator.perPage).toEqual(3);
@@ -1686,7 +1668,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             // pin the second row
             treeGrid.getRowByIndex(2).pin();
-            fix.detectChanges();
 
             expect(treeGrid.rowList.length).toEqual(5);
             expect(treeGrid.perPage).toEqual(3);
@@ -1702,8 +1683,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.height = '700px';
             fix.detectChanges();
             treeGrid.getRowByIndex(0).pin();
-            treeGrid.getRowByIndex(1).pin();
-            fix.detectChanges();
 
             let rows = treeGrid.rowList.toArray();
 
@@ -1719,7 +1698,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         it('should make a correct selection', () => {
             treeGrid.pinRow(147);
-            fix.detectChanges();
 
             const range = { rowStart: 0, rowEnd: 2, columnStart: 'ID', columnEnd: 'Name' };
             treeGrid.selectRange(range);
@@ -1735,7 +1713,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         it('should remove the pinned chip for filtered out parent', () => {
             treeGrid.pinRow(147);
-            fix.detectChanges();
 
             treeGrid.filter('ID', 957, IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
