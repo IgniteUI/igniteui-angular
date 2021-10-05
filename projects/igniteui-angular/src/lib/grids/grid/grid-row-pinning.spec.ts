@@ -622,7 +622,7 @@ describe('Row Pinning #grid', () => {
 
             let rows = grid.rowList.toArray();
 
-            [1, 1, 2, 3, 4, 5].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
+            [1, 2, 1, 2, 3, 4, 5].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
 
             grid.paginate(2);
             fix.detectChanges();
