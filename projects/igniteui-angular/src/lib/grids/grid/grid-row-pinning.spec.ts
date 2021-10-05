@@ -178,7 +178,7 @@ describe('Row Pinning #grid', () => {
         it('should emit rowPinned on pin/unpin.', () => {
             spyOn(grid.rowPinned, 'emit').and.callThrough();
 
-            let row = grid.getRowByIndex(0);
+            const row = grid.getRowByIndex(0);
             const rowID = row.key;
             row.pin();
 
