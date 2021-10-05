@@ -461,13 +461,13 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
 
             expect(grid.gridAPI.get_row_by_index(0).rowID).toBe(fix.componentInstance.data[1]);
-            expect(grid.gridAPI.get_row_by_index(1).rowID).toBe(fix.componentInstance.data[4]);
+            expect(grid.gridAPI.get_row_by_index(1).rowID).toBe(fix.componentInstance.data[5]);
 
             grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
             fix.detectChanges();
 
             // check pinned rows data is sorted
-            expect(grid.gridAPI.get_row_by_index(0).rowID).toBe(fix.componentInstance.data[4]);
+            expect(grid.gridAPI.get_row_by_index(0).rowID).toBe(fix.componentInstance.data[5]);
             expect(grid.gridAPI.get_row_by_index(1).rowID).toBe(fix.componentInstance.data[1]);
 
             // check unpinned rows data is sorted
@@ -627,14 +627,14 @@ describe('Row Pinning #grid', () => {
 
             let rows = grid.rowList.toArray();
 
-            [1, 1, 2, 3, 4, 5].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
+            [1, 2, 1, 2, 3, 4, 5].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
 
             grid.paginate(2);
             fix.detectChanges();
 
             rows = grid.rowList.toArray();
 
-                [1, 11, 12].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
+            [1, 2, 11, 12].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
         });
     });
 
