@@ -3021,7 +3021,7 @@ describe('igxOverlay', () => {
 
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
-            expect(wrapperElement.style.visibility).toEqual('hidden');
+            expect(wrapperElement).toBeUndefined();
         }));
 
         it('Should not close the component when esc key is pressed and closeOnEsc is false', fakeAsync(() => {
@@ -3138,7 +3138,7 @@ describe('igxOverlay', () => {
             tick();
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
-            expect(wrapperElement).toBeUndefined();
+            expect(wrapperElement.style.visibility).toEqual('hidden');
         }));
 
         // 3.2 Non - Modal
