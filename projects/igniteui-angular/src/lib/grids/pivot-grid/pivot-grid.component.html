@@ -117,7 +117,7 @@
         <igx-icon [attr.draggable]="false"
                   (click)="toggleColumn(column)"
                   style='cursor: pointer;'>
-                  {{columnGroupStates.get(column) ? 'expand_more' : 'expand_less'}}</igx-icon>
+                  {{columnGroupStates.get(column.header) ? 'expand_more' : 'expand_less'}}</igx-icon>
         {{column.header}}
     </div>
 </ng-template>

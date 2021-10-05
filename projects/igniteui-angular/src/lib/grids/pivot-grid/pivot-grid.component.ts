@@ -81,7 +81,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public headerTemplate: TemplateRef<any>;
 
 
-    public columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
+    public columnGroupStates = new Map<string, boolean>();
     public isPivot = true;
     private _data;
     private _filteredData;
@@ -196,8 +196,19 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
    public toggleColumn(col: IgxColumnComponent) {
-       const state = this.columnGroupStates.get(col);
-       this.columnGroupStates.set(col, !state);
+       const state = this.columnGroupStates.get(col.header);
+       const newState = !state;
+       this.columnGroupStates.set(col.header, newState);
+       const parentCols = col.parent ? col.parent.children : this.columns.filter(x => x.level === 0);
+       const fieldColumn =  parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
+       const groupColumn =  parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
+       groupColumn.hidden = newState;
+       if (newState) {
+        fieldColumn.headerTemplate = this.headerTemplate;
+       } else {
+        fieldColumn.headerTemplate = undefined;
+       }
+       this.reflow();
    }
 
     /**
@@ -230,33 +241,29 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.field = key;
                 ref.instance.dataType = this.resolveDataTypes(data[0][key]);
                 ref.instance.parent = parent;
-                ref.instance.visibleWhenCollapsed = false;
                 ref.changeDetectorRef.detectChanges();
                 columns.push(ref.instance);
             } else {
                 const ref = factoryColumnGroup.create(this.viewRef.injector);
                 ref.instance.header = key;
-                ref.instance.visibleWhenCollapsed = false;
                 ref.instance.parent = parent;
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
-                //ref.instance.headerTemplate = this.headerTemplate;
+                ref.instance.headerTemplate = this.headerTemplate;
                 const children = this.generateColumnHierarchy(value.children, data, ref.instance);
 
-                const refChild = factoryColumn.create(this.viewRef.injector);
-                refChild.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
-                refChild.instance.field = key;
-                refChild.instance.dataType = this.resolveDataTypes(data[0][key]);
-                refChild.instance.parent = ref.instance;
-                refChild.instance.visibleWhenCollapsed = true;
+                const refSibling = factoryColumn.create(this.viewRef.injector);
+                refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
+                refSibling.instance.field = key;
+                refSibling.instance.dataType = this.resolveDataTypes(data[0][key]);
+                refSibling.instance.parent = parent;
 
-                children.push(refChild.instance);
                 const filteredChildren = children.filter(x => x.level === ref.instance.level + 1);
                 ref.changeDetectorRef.detectChanges();
 
                 ref.instance.children.reset(filteredChildren);
-                ref.instance.collapsible = true;
 
                 columns.push(ref.instance);
+                columns.push(refSibling.instance);
                 columns = columns.concat(children);
             }
         });
