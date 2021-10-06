@@ -8,12 +8,8 @@
 2. **[DONE]** Grid row styles and classes [#9969](https://github.com/IgniteUI/igniteui-angular/issues/9969)
 3. **[DONE]** Freezing Columns/Rows on Export to Excel (Angular) [#9863](https://github.com/IgniteUI/igniteui-angular/issues/9863)
 4. **[DONE]** Persistent State directive for column group [#8516](https://github.com/IgniteUI/igniteui-angular/issues/8516)
-5. IgxTreeGrid: display only filtered records [#9923](https://github.com/IgniteUI/igniteui-angular/issues/9923)
-6. IgxCombo: being able to set groups sorting order [#10125](https://github.com/IgniteUI/igniteui-angular/issues/10125)
-7. IgxCsvExporterService: Support multi-column headers export [#10078](https://github.com/IgniteUI/igniteui-angular/issues/10078)
-8. **[DONE]** Snackbar support for animation customization [#10126](https://github.com/IgniteUI/igniteui-angular/issues/10126)
-9. IgxLinearProgressBar: animate initial progress [#10068](https://github.com/IgniteUI/igniteui-angular/issues/10068)
-10. Getting only one sort and one filter event after changing the state of grid using setState function [#8064](https://github.com/IgniteUI/igniteui-angular/issues/8064)
+5. **[DONE]** IgxTreeGrid: display only filtered records [#9923](https://github.com/IgniteUI/igniteui-angular/issues/9923)
+6. **[DONE]** Snackbar support for animation customization [#10126](https://github.com/IgniteUI/igniteui-angular/issues/10126)
 
 ## Going down the road
 
@@ -24,6 +20,9 @@
 5. Themes: Split themes and aid with Grid refactoring [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
 6. Stepper component [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
 7. Make IgxDropDownBaseToken public [#10103](https://github.com/IgniteUI/igniteui-angular/issues/10103)
+8. IgxLinearProgressBar: animate initial progress [#10068](https://github.com/IgniteUI/igniteui-angular/issues/10068)
+9. IgxCombo: being able to set groups sorting order [#10125](https://github.com/IgniteUI/igniteui-angular/issues/10125)
+10. Getting only one sort and one filter event after changing the state of grid using setState function [#8064](https://github.com/IgniteUI/igniteui-angular/issues/8064)
 
 # Previous Milestone
 
