@@ -6891,14 +6891,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const activeEl = this.selectionService.activeElement;
 
         if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
-            const expansionRowIndexes = Array.from(this.expansionStates.keys());
+            const expansionRowIndexes = [];
+            for (const [key, value] of this.expansionStates.entries()) {
+                if (value) {
+                    expansionRowIndexes.push(key);
+                }
+            }
             if (this.selectionService.selection.size > 0) {
                 if (expansionRowIndexes.length > 0) {
                     for (const [key, value] of this.selectionService.selection.entries()) {
                         let updatedKey = key;
                         expansionRowIndexes.forEach(row => {
                             let rowIndex;
-                            if (row.ID) {
+                            if (!isNaN(row.ID)) {
                                 rowIndex = Number(row.ID);
                             }else {
                                 rowIndex = Number(row);
