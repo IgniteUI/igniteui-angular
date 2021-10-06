@@ -203,7 +203,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
        const fieldColumn =  parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
        const groupColumn =  parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
        groupColumn.hidden = newState;
-       if (!groupColumn.hidden) {
+       if (!groupColumn.hidden &&  groupColumn.children.length > 1) {
             // column group when shown displays all children, we want to show only groups
            const fieldChildren =  groupColumn.children.filter(x => !x.columnGroup);
            fieldChildren.forEach(fieldChild => {
