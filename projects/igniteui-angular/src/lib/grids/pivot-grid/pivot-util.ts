@@ -23,10 +23,9 @@ export class PivotUtil {
         return typeof dim.member === 'string' ? recData[dim.member] : dim.member.call(null, recData);
     }
 
-    public static extractValuesFromDimension(dims: IPivotDimension[], recData: any) {
+    public static extractValuesFromDimension(dims: IPivotDimension[], recData: any, path = []) {
         const vals = [];
         let lvl = 0;
-        const path = [];
         let lvlCollection = vals;
         for (const col of dims) {
             const value = this.extractValueFromDimension(col, recData);
@@ -34,7 +33,7 @@ export class PivotUtil {
             const newValue = path.join('-');
             lvlCollection.push({ value: newValue });
             if (col.childLevels != null && col.childLevels.length > 0) {
-                const childValues = this.extractValuesFromDimension(col.childLevels, recData);
+                const childValues = this.extractValuesFromDimension(col.childLevels, recData, path);
                 vals[lvl].children = childValues;
                 vals[lvl].expandable = true;
             }
