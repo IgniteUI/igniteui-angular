@@ -1,27 +1,26 @@
 import {
-    Component,
-    HostBinding,
-    Input,
-    ViewChild,
-    QueryList,
-    ViewChildren,
-    forwardRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
+    Component,
     DoCheck,
     ElementRef,
-    HostListener
+    forwardRef,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input,
+    QueryList,
+    ViewChild,
+    ViewChildren
 } from '@angular/core';
-import { IgxColumnComponent } from '../columns/column.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
-import { GridType } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { PlatformUtil } from '../../core/utils';
+import { ColumnType } from '../common/column.interface';
 
 const Z_INDEX = 9999;
 
@@ -66,7 +65,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     @Input()
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     @HostBinding('class.igx-grid-th--active')
     public get active() {
@@ -111,7 +110,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     public defaultCss = true;
 
     constructor(private cdr: ChangeDetectorRef,
-        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Inject(IGX_GRID_BASE) public grid: GridType,
         private ref: ElementRef<HTMLElement>,
         public colResizingService: IgxColumnResizingService,
         public filteringService: IgxFilteringService,
@@ -151,15 +150,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             return null;
         }
         return Z_INDEX - this.grid.pinnedColumns.indexOf(this.column);
-    }
-
-    /**
-     * Gets the grid of the header group.
-     *
-     * @memberof IgxGridHeaderGroupComponent
-     */
-    public get grid(): any {
-        return this.gridAPI.grid;
     }
 
     /**

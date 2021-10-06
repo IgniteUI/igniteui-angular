@@ -1,7 +1,5 @@
-import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridComponent } from '../grid/grid.component';
-import { IgxHierarchicalGridComponent } from '../hierarchical-grid/hierarchical-grid.component';
-import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
+import { ColumnType } from './column.interface';
+import { GridType } from './grid.interface';
 import { RowType } from './row.interface';
 
 export interface CellType {
@@ -11,11 +9,15 @@ export interface CellType {
 	active: boolean;
 	editable: boolean;
 	editMode: boolean;
-	column: IgxColumnComponent;
+    nativeElement?: HTMLElement;
+	column: ColumnType;
 	row: RowType;
-	grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
+	grid: GridType;
 	id: { rowID: any; columnID: number; rowIndex: number };
 	width: string;
+    visibleColumnIndex?: number;
 	update: (value: any) => void;
+    calculateSizeToFit?(range: any): number;
+    activate?(): void;
 }
 

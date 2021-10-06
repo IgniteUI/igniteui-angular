@@ -17,9 +17,7 @@ import { IgxColumnResizingService } from './resizing.service';
  * @hidden
  * @internal
  */
-@Directive({
-    selector: '[igxResizeHandle]'
-})
+@Directive({ selector: '[igxResizeHandle]' })
 export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
 
     /**

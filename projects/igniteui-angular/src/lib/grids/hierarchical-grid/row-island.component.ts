@@ -59,9 +59,11 @@ export interface IGridCreatedEventArgs extends IBaseEventArgs {
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
     template: ``,
-    providers: [IgxRowIslandAPIService,
+    providers: [
+        IgxRowIslandAPIService,
         IgxFilteringService,
-        IgxGridSelectionService]
+        IgxGridSelectionService
+    ]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
@@ -308,9 +310,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                     record.item.columnChange.pipe(takeUntil(record.item.destroy$)).subscribe(() => this.updateColumnList());
                 });
             }
-         });
-         this.actionStrip = this.actionStrips.first;
-         if (this.actionStrip) {
+        });
+        this.actionStrip = this.actionStrips.first;
+        if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
     }

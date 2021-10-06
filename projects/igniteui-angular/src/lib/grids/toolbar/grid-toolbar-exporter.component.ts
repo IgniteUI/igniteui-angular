@@ -11,8 +11,8 @@ import {
     IgxExcelExporterOptions,
     IgxExcelExporterService
 } from '../../services/public_api';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { GridType } from '../common/grid.interface';
 
 
 export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions;
@@ -21,7 +21,7 @@ export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions
 export interface IgxExporterEvent {
     exporter: IgxBaseExporter;
     options: IgxExporterOptions;
-    grid: IgxGridBaseDirective;
+    grid: GridType;
     cancel: boolean;
 }
 

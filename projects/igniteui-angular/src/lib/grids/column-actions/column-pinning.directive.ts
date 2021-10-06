@@ -1,11 +1,9 @@
 import { Directive, Inject } from '@angular/core';
+import { ColumnType } from '../common/column.interface';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
-import { IgxColumnComponent } from '../columns/column.component';
 import { IgxColumnActionsComponent } from './column-actions.component';
 
-@Directive({
-    selector: '[igxColumnPinning]'
-})
+@Directive({ selector: '[igxColumnPinning]' })
 export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
 
     constructor(
@@ -45,19 +43,19 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public actionEnabledColumnsFilter = (c: IgxColumnComponent) => !c.disablePinning && !c.level;
+    public actionEnabledColumnsFilter = (c: ColumnType) => !c.disablePinning && !c.level;
 
     /**
      * @hidden @internal
      */
-    public columnChecked(column: IgxColumnComponent): boolean {
+    public columnChecked(column: ColumnType): boolean {
         return column.pinned;
     }
 
     /**
      * @hidden @internal
      */
-    public toggleColumn(column: IgxColumnComponent) {
+    public toggleColumn(column: ColumnType) {
         column.pinned = !column.pinned;
     }
 

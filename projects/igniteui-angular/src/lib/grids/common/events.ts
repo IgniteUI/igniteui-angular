@@ -1,16 +1,15 @@
 import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
-import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services/public_api';
 import { GridKeydownTargetType } from './enums';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { GridType } from './grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ColumnType } from './column.interface';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { RowType } from './row.interface';
 import { CellType } from './cell.interface';
-export { GridSelectionRange } from '../selection/selection.service';
+import { IgxBaseExporter } from '../../services/exporter-common/base-export-service';
+import { IgxExporterOptionsBase } from '../../services/exporter-common/exporter-options-base';
 
 export interface IGridClipboardEvent {
     data: any[];
@@ -34,7 +33,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     newValue?: any;
     event?: Event;
     column?: ColumnType;
-    owner?: IgxGridBaseDirective & GridType;
+    owner?: GridType;
     isAddRow?: boolean;
 }
 
@@ -107,7 +106,7 @@ export interface ISearchInfo {
 }
 
 export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
-    grid: IgxGridBaseDirective;
+    grid: GridType;
     exporter: IgxBaseExporter;
     options: IgxExporterOptionsBase;
     cancel: boolean;

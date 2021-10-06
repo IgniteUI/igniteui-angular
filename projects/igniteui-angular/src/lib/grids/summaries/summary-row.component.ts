@@ -8,21 +8,19 @@ import {
     ElementRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    DoCheck
+    DoCheck,
+    Inject
 } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxSummaryCellComponent } from './summary-cell.component';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { IgxColumnComponent } from '../columns/column.component';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
-import { GridType } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { ColumnType } from '../common/column.interface';
 
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-summary-row',
     templateUrl: './summary-row.component.html',
     providers: [IgxForOfSyncService]
@@ -70,23 +68,19 @@ export class IgxSummaryRowComponent implements DoCheck  {
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
     public virtDirRow: IgxGridForOfDirective<any>;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-                public element: ElementRef,
+    constructor(@Inject(IGX_GRID_BASE) public grid: GridType,
+                public element: ElementRef<HTMLElement>,
                 public cdr: ChangeDetectorRef) {}
 
     public ngDoCheck() {
         this.cdr.markForCheck();
     }
 
-    public get grid() {
-        return this.gridAPI.grid;
-    }
-
     public get nativeElement() {
         return this.element.nativeElement;
     }
 
-    public getColumnSummaries(columnName) {
+    public getColumnSummaries(columnName: string) {
         if (!this.summaries.get(columnName)) {
             return [];
         }
@@ -106,14 +100,14 @@ export class IgxSummaryRowComponent implements DoCheck  {
     /**
      * @hidden
      */
-    public get pinnedColumns(): IgxColumnComponent[] {
+    public get pinnedColumns(): ColumnType[] {
         return this.grid.pinnedColumns;
     }
 
     /**
      * @hidden
      */
-    public get unpinnedColumns(): IgxColumnComponent[] {
+    public get unpinnedColumns(): ColumnType[] {
         return this.grid.unpinnedColumns;
     }
 

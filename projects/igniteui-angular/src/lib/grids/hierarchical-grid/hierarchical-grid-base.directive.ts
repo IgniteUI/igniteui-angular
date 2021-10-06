@@ -22,7 +22,6 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
-import { IgxOverlayService, IgxTransactionService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -36,6 +35,9 @@ import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../core/utils';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
+import { IgxTransactionService } from '../../services/transaction/igx-transaction';
+import { IgxOverlayService } from '../../services/overlay/overlay';
+import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -164,7 +166,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         protected transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef,
+        elementRef: ElementRef<HTMLElement>,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
         cdr: ChangeDetectorRef,

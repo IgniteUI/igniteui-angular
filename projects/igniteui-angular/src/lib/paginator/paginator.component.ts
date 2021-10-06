@@ -1,10 +1,12 @@
-import { Component, Input, Output, Optional, Inject, EventEmitter,
-    HostBinding, Directive, ContentChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import {
+    Component, Input, Output, Optional, Inject, EventEmitter,
+    HostBinding, Directive, ContentChild, ElementRef, ChangeDetectorRef
+} from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
-import { OverlaySettings } from '../services/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
+import { OverlaySettings } from '../services/overlay/utilities';
 
 @Directive({ selector: '[igxPaginatorContent],igx-paginator-content' })
 export class IgxPaginatorTemplateDirective {
@@ -248,7 +250,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-                private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
+        private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
         super(_displayDensityOptions);
     }
 

@@ -9,7 +9,6 @@ import { IPagingState } from '../data-operations/paging-state.interface';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand, IFilteringOperation} from '../data-operations/filtering-condition';
-import { GridSelectionRange } from './selection/selection.service';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
@@ -17,6 +16,7 @@ import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IPinningConfig } from './grid.common';
 import { delay, take } from 'rxjs/operators';
+import { GridSelectionRange } from './common/types';
 
 export interface IGridState {
     columns?: IColumnState[];

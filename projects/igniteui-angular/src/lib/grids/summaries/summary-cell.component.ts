@@ -8,14 +8,13 @@ import {
     IgxSummaryResult,
     IgxTimeSummaryOperand
 } from './grid-summary';
-import { IgxColumnComponent } from '../columns/column.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { ISelectionNode } from '../selection/selection.service';
 import { getLocaleCurrencyCode } from '@angular/common';
+import { ColumnType } from '../common/column.interface';
+import { ISelectionNode } from '../common/types';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-summary-cell',
     templateUrl: './summary-cell.component.html'
 })
@@ -25,7 +24,7 @@ export class IgxSummaryCellComponent {
     public summaryResults: IgxSummaryResult[];
 
     @Input()
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     @Input()
     public firstCellIndentation = 0;

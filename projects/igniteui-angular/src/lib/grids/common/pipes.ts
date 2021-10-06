@@ -1,20 +1,16 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, resolveNestedPath } from '../../core/utils';
-import { GridType } from './grid.interface';
-import { IgxColumnComponent } from '../columns/column.component';
+import { GridType, IGX_GRID_BASE } from './grid.interface';
+import { ColumnType } from './column.interface';
 import { ColumnDisplayOrder } from './enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxAddRow } from './crud.service';
-import { IgxGridRow } from '../grid-public-row';
-import { IgxTreeGridRowComponent } from '../tree-grid/tree-grid-row.component';
-import { IgxGridRowComponent } from '../grid/grid-row.component';
-import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
 import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
+import { RowType } from './row.interface';
+import { IgxGridRow } from '../grid-public-row';
 
-interface CSSProp {
+interface GridStyleCSSProperty {
     [prop: string]: any;
 }
 
@@ -22,12 +18,10 @@ interface CSSProp {
  * @hidden
  * @internal
  */
-@Pipe({
-    name: 'igxCellStyleClasses'
-})
+@Pipe({ name: 'igxCellStyleClasses' })
 export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
-    public transform(cssClasses: CSSProp, _: any, data: any, field: string, index: number, __: number): string {
+    public transform(cssClasses: GridStyleCSSProperty, _: any, data: any, field: string, index: number, __: number): string {
         if (!cssClasses) {
             return '';
         }
@@ -56,7 +50,8 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 })
 export class IgxGridCellStylesPipe implements PipeTransform {
 
-    public transform(styles: CSSProp, _: any, data: any, field: string, index: number, __: number): CSSProp {
+    public transform(styles: GridStyleCSSProperty, _: any, data: any, field: string, index: number, __: number):
+        GridStyleCSSProperty {
         const css = {};
         if (!styles) {
             return css;
@@ -71,7 +66,6 @@ export class IgxGridCellStylesPipe implements PipeTransform {
     }
 }
 
-type _RowType = IgxGridRowComponent | IgxTreeGridRowComponent | IgxHierarchicalRowComponent;
 
 /**
  * @hidden
@@ -79,15 +73,15 @@ type _RowType = IgxGridRowComponent | IgxTreeGridRowComponent | IgxHierarchicalR
  */
 @Pipe({ name: 'igxGridRowClasses' })
 export class IgxGridRowClassesPipe implements PipeTransform {
-    public row: IgxGridRow;
+    public row: RowType;
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.row = new IgxGridRow(this.gridAPI.grid as any, -1, {});
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) {
+        this.row = new IgxGridRow(this.grid as any, -1, {});
     }
 
     public transform(
-        cssClasses: CSSProp,
-        row: _RowType,
+        cssClasses: GridStyleCSSProperty,
+        row: RowType,
         editMode: boolean,
         selected: boolean,
         dirty: boolean,
@@ -136,16 +130,16 @@ export class IgxGridRowClassesPipe implements PipeTransform {
 @Pipe({ name: 'igxGridRowStyles' })
 export class IgxGridRowStylesPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
-    public transform(styles: CSSProp, rowData: any, index: number, __: number): CSSProp {
+    public transform(styles: GridStyleCSSProperty, rowData: any, index: number, __: number): GridStyleCSSProperty {
         const css = {};
         if (!styles) {
             return css;
         }
         for (const prop of Object.keys(styles)) {
             const cb = styles[prop];
-            const row = new IgxGridRow((this.gridAPI.grid as any), index, rowData);
+            const row = new IgxGridRow((this.grid as any), index, rowData);
             css[prop] = typeof cb === 'function' ? cb(row) : cb;
         }
         return css;
@@ -199,22 +193,18 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
  * @hidden
  * @internal
  */
-@Pipe({
-    name: 'gridTransaction',
-    pure: true
-})
+@Pipe({ name: 'gridTransaction' })
 export class IgxGridTransactionPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], _id: string, _pipeTrigger: number) {
-        const grid: IgxGridBaseDirective = this.gridAPI.grid;
 
-        if (grid.transactions.enabled) {
+        if (this.grid.transactions.enabled) {
             const result = DataUtil.mergeTransactions(
                 cloneArray(collection),
-                grid.transactions.getAggregatedChanges(true),
-                grid.primaryKey);
+                this.grid.transactions.getAggregatedChanges(true),
+                this.grid.primaryKey);
             return result;
         }
         return collection;
@@ -225,10 +215,7 @@ export class IgxGridTransactionPipe implements PipeTransform {
  * @hidden
  * @internal
  */
-@Pipe({
-    name: 'paginatorOptions',
-    pure: true,
-})
+@Pipe({ name: 'paginatorOptions' })
 export class IgxGridPaginatorOptionsPipe implements PipeTransform {
     public transform(values: Array<number>) {
         return Array.from(new Set([...values])).sort((a, b) => a - b);
@@ -239,10 +226,7 @@ export class IgxGridPaginatorOptionsPipe implements PipeTransform {
  * @hidden
  * @internal
  */
-@Pipe({
-    name: 'visibleColumns',
-    pure: true
-})
+@Pipe({ name: 'visibleColumns' })
 export class IgxHasVisibleColumnsPipe implements PipeTransform {
     public transform(values: any[], hasVisibleColumns) {
         if (!(values && values.length)) {
@@ -256,47 +240,40 @@ export class IgxHasVisibleColumnsPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({
-    name: 'gridRowPinning',
-    pure: true
-})
+@Pipe({ name: 'gridRowPinning' })
 export class IgxGridRowPinningPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], id: string, isPinned = false, _pipeTrigger: number) {
-        const grid = this.gridAPI.grid;
 
-        if (grid.hasPinnedRecords && isPinned) {
-            const result = collection.filter(rec => !grid.isSummaryRow(rec) && grid.isRecordPinned(rec));
-            result.sort((rec1, rec2) => grid.getInitialPinnedIndex(rec1) - grid.getInitialPinnedIndex(rec2));
+        if (this.grid.hasPinnedRecords && isPinned) {
+            const result = collection.filter(rec => !this.grid.isSummaryRow(rec) && this.grid.isRecordPinned(rec));
+            result.sort((rec1, rec2) => this.grid.getInitialPinnedIndex(rec1) - this.grid.getInitialPinnedIndex(rec2));
             return result;
         }
 
-        grid.unpinnedRecords = collection;
-        if (!grid.hasPinnedRecords) {
-            grid.pinnedRecords = [];
+        this.grid.unpinnedRecords = collection;
+        if (!this.grid.hasPinnedRecords) {
+            this.grid.pinnedRecords = [];
             return isPinned ? [] : collection;
         }
 
-        return collection.map((rec) => !grid.isSummaryRow(rec) &&
-            grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true } : rec);
+        return collection.map((rec) => !this.grid.isSummaryRow(rec) &&
+            this.grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true } : rec);
     }
 }
 
-@Pipe({
-    name: 'columnActionEnabled',
-    pure: true
-})
+@Pipe({ name: 'columnActionEnabled' })
 export class IgxColumnActionEnabledPipe implements PipeTransform {
 
     constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
 
     public transform(
-        collection: IgxColumnComponent[],
-        actionFilter: (value: IgxColumnComponent, index: number, array: IgxColumnComponent[]) => boolean,
+        collection: ColumnType[],
+        actionFilter: (value: ColumnType, index: number, array: ColumnType[]) => boolean,
         _pipeTrigger: number
-    ): IgxColumnComponent[] {
+    ): ColumnType[] {
         if (!collection) {
             return collection;
         }
@@ -308,20 +285,17 @@ export class IgxColumnActionEnabledPipe implements PipeTransform {
             copy = copy.filter(actionFilter);
         }
         // Preserve the actionable collection for use in the component
-        this.columnActions.actionableColumns = copy;
+        this.columnActions.actionableColumns = copy as any;
         return copy;
     }
 }
 
-@Pipe({
-    name: 'filterActionColumns',
-    pure: true
-})
+@Pipe({ name: 'filterActionColumns' })
 export class IgxFilterActionColumnsPipe implements PipeTransform {
 
     constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
 
-    public transform(collection: IgxColumnComponent[], filterCriteria: string, _pipeTrigger: number): IgxColumnComponent[] {
+    public transform(collection: ColumnType[], filterCriteria: string, _pipeTrigger: number): ColumnType[] {
         if (!collection) {
             return collection;
         }
@@ -338,18 +312,15 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
             copy = collection.filter(filterFunc);
         }
         // Preserve the filtered collection for use in the component
-        this.columnActions.filteredColumns = copy;
+        this.columnActions.filteredColumns = copy as any;
         return copy;
     }
 }
 
-@Pipe({
-    name: 'sortActionColumns',
-    pure: true
-})
+@Pipe({ name: 'sortActionColumns' })
 export class IgxSortActionColumnsPipe implements PipeTransform {
 
-    public transform(collection: IgxColumnComponent[], displayOrder: ColumnDisplayOrder, _pipeTrigger: number): IgxColumnComponent[] {
+    public transform(collection: ColumnType[], displayOrder: ColumnDisplayOrder, _pipeTrigger: number): ColumnType[] {
         if (displayOrder === ColumnDisplayOrder.Alphabetical) {
             return collection.sort((a, b) => (a.header || a.field).localeCompare(b.header || b.field));
         }
@@ -411,17 +382,16 @@ export class IgxSummaryFormatterPipe implements PipeTransform {
 @Pipe({ name: 'gridAddRow' })
 export class IgxGridAddRowPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any, isPinned = false, _pipeTrigger: number) {
-        const grid = this.gridAPI.grid;
-        if (!grid.rowEditable || !grid.crudService.row || grid.crudService.row.getClassName() !== IgxAddRow.name ||
-            !grid.gridAPI.crudService.addRowParent || isPinned !== grid.gridAPI.crudService.addRowParent.isPinned) {
+        if (!this.grid.rowEditable || !this.grid.crudService.row || this.grid.crudService.row.getClassName() !== IgxAddRow.name ||
+            !this.grid.crudService.addRowParent || isPinned !== this.grid.crudService.addRowParent.isPinned) {
             return collection;
         }
         const copy = collection.slice(0);
-        const rec = (grid.crudService.row as IgxAddRow).recordRef;
-        copy.splice(grid.crudService.row.index, 0, rec);
+        const rec = (this.grid.crudService.row as IgxAddRow).recordRef;
+        copy.splice(this.grid.crudService.row.index, 0, rec);
         return copy;
     }
 }
@@ -437,7 +407,7 @@ export class IgxHeaderGroupWidthPipe implements PipeTransform {
 @Pipe({ name: 'igxHeaderGroupStyle' })
 export class IgxHeaderGroupStylePipe implements PipeTransform {
 
-    public transform(styles: { [prop: string]: any }, column: IgxColumnComponent, _: number): { [prop: string]: any } {
+    public transform(styles: { [prop: string]: any }, column: ColumnType, _: number): { [prop: string]: any } {
         const css = {};
 
         if (!styles) {

@@ -1,8 +1,7 @@
 import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, DoCheck, ChangeDetectionStrategy } from '@angular/core';
-import { IgxTreeGridComponent } from './tree-grid.component';
+import { GridType } from '../common/grid.interface';
 import { IgxRowDirective } from '../row.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxTreeGridAPIService } from './tree-grid-api.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -10,7 +9,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
     templateUrl: 'tree-grid-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxTreeGridRowComponent) }]
 })
-export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponent> implements DoCheck {
+export class IgxTreeGridRowComponent extends IgxRowDirective<GridType> implements DoCheck {
     @ViewChildren('treeCell')
     protected _cells: QueryList<any>;
 
@@ -107,7 +106,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
      * ```
      */
     public set expanded(value: boolean) {
-        (this.gridAPI as IgxTreeGridAPIService).set_row_expansion_state(this._treeRow.rowID, value);
+        this.grid.gridAPI.set_row_expansion_state(this._treeRow.rowID, value);
     }
 
     /**

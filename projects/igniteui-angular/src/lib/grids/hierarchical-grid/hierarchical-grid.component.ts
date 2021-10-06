@@ -17,7 +17,6 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -31,7 +30,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { GridType } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxGridCRUDService } from '../common/crud.service';
@@ -50,14 +49,13 @@ export interface HierarchicalStateRecord {
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
     providers: [
         IgxGridCRUDService,
         IgxGridSelectionService,
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
-        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
+        { provide: IGX_GRID_BASE, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxGridSummaryService,
         IgxFilteringService,
         IgxHierarchicalGridNavigationService,
@@ -447,10 +445,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.rootGrid.hasChildrenKey;
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
-
-        this.excelStyleFilteringComponents = this.parentIsland ?
-            this.parentIsland.excelStyleFilteringComponents :
-            this.excelStyleFilteringComponents;
     }
 
     public get outletDirective() {
@@ -904,7 +898,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
         Promise.resolve().then(() => {
             this.updateColumnList();
-            const cols = change.filter(c => c.gridAPI.grid === this);
+            const cols = change.filter(c => c.grid === this);
             if (cols.length > 0 || this.autoGenerate) {
                 this.columnList.reset(cols);
                 super.onColumnsChanged(this.columnList);

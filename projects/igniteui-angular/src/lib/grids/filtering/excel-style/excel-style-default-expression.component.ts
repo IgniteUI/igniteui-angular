@@ -7,8 +7,6 @@ import {
     ChangeDetectorRef,
     ViewChild
 } from '@angular/core';
-import { IgxColumnComponent } from '../../columns/column.component';
-import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
@@ -19,6 +17,8 @@ import { DisplayDensity } from '../../../core/density';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IgxInputDirective } from '../../../input-group/public_api';
+import { ExpressionUI } from './common';
+import { ColumnType } from '../../common/column.interface';
 
 /**
  * @hidden
@@ -32,13 +32,12 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
  * @hidden
  */
 @Component({
-    preserveWhitespaces: false,
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html'
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Input()
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     @Input()
     public expressionUI: ExpressionUI;

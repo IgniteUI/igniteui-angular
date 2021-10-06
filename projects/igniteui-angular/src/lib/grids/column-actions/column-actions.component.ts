@@ -10,13 +10,13 @@ import {
     IterableDiffer,
     DoCheck
 } from '@angular/core';
-import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from '../common/enums';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IColumnToggledEventArgs } from '../common/events';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
+import { GridType } from '../common/grid.interface';
+import { ColumnType } from '../common/column.interface';
 
 let NEXT_ID = 0;
 /**
@@ -40,7 +40,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * ```
      */
     @Input()
-    public grid: IgxGridBaseDirective;
+    public grid: GridType;
     /**
      * Gets/sets the indentation of columns in the column list based on their hierarchy level.
      *
@@ -119,12 +119,12 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    public actionableColumns: IgxColumnComponent[] = [];
+    public actionableColumns: ColumnType[] = [];
 
     /**
      * @hidden @internal
      */
-    public filteredColumns: IgxColumnComponent[] = [];
+    public filteredColumns: ColumnType[] = [];
 
     /**
      * @hidden @internal
@@ -406,9 +406,9 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    public toggleColumn(column: IgxColumnComponent) {
+    public toggleColumn(column: ColumnType) {
         this.actionsDirective.toggleColumn(column);
 
-        this.columnToggled.emit({column, checked: this.actionsDirective.columnChecked(column)});
+        this.columnToggled.emit({column: column as any, checked: this.actionsDirective.columnChecked(column)});
     }
 }

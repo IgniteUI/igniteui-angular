@@ -12,12 +12,11 @@ import {
     ROW_ADD_KEYS,
     PlatformUtil
 } from '../core/utils';
-import { IgxGridBaseDirective } from './grid-base.directive';
-import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
+import { IMultiRowLayoutNode } from './common/types';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -34,7 +33,7 @@ export interface IActiveNode {
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
-    public grid: IgxGridBaseDirective & GridType;
+    public grid: GridType;
     public _activeNode: IActiveNode = {} as IActiveNode;
     public lastActiveNode: IActiveNode = {} as IActiveNode;
     protected pendingNavigation = false;

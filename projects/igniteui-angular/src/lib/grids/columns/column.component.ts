@@ -12,6 +12,7 @@ import {
     Output,
     EventEmitter,
     OnDestroy,
+    Inject,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
@@ -27,12 +28,9 @@ import {
 } from '../../data-operations/filtering-condition';
 import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { DisplayDensity } from '../../core/displayDensity';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { IgxGridCellComponent } from '../cell.component';
 import { IgxRowDirective } from '../row.directive';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { GridBaseAPIService } from '../api.service';
-import { GridType } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
@@ -49,11 +47,11 @@ import {
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
-import { IgxColumnGroupComponent } from './column-group.component';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { CellType } from '../common/cell.interface';
 import { IgxGridCell } from '../grid-public-cell';
+import { ColumnType } from '../common/column.interface';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -73,7 +71,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
     selector: 'igx-column',
     template: ``
 })
-export class IgxColumnComponent implements AfterContentInit, OnDestroy {
+export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnType {
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -1114,17 +1112,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
     }
     /**
-     * The reference to the `igx-grid` owner.
-     * ```typescript
-     * let gridComponent = this.column.grid;
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    public get grid(): IgxGridBaseDirective {
-        return this.gridAPI.grid;
-    }
-    /**
      * Returns a reference to the `bodyTemplate`.
      * ```typescript
      * let bodyTemplate = this.column.bodyTemplate;
@@ -1281,7 +1268,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public get _cells(): IgxGridCellComponent[] {
+    public get _cells(): CellType[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowDirective)
             .map((row) => {
                 if (row._cells) {
@@ -1660,7 +1647,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
 
     constructor(
-        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Inject(IGX_GRID_BASE) public grid: GridType,
         public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
     ) { }
@@ -2110,8 +2097,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     public move(index: number) {
         let target;
-        const grid = (this.grid as IgxGridBaseDirective);
-        let columns: Array<IgxColumnComponent | IgxColumnGroupComponent> = grid.columnList.filter(c => c.visibleIndex > -1);
+        let columns = (this.grid.columnList as QueryList<IgxColumnComponent>).filter(c => c.visibleIndex > -1);
         // grid last visible index
         const li = columns.map(c => c.visibleIndex).reduce((a, b) => Math.max(a, b));
         const parent = this.parent;
@@ -2142,7 +2128,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
 
         const pos = isPreceding ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
-        grid.moveColumn(this, target as IgxColumnComponent, pos);
+        this.grid.moveColumn(this, target as IgxColumnComponent, pos);
     }
 
     /**
@@ -2386,14 +2372,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @internal
      */
     protected cacheCalcWidth(): any {
-        const grid = this.gridAPI.grid;
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         if (isPercentageWidth) {
-            this._calcWidth = parseFloat(colWidth) / 100 * grid.calcWidth;
+            this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
         } else if (!colWidth) {
             // no width
-            this._calcWidth = this.defaultWidth || grid.getPossibleColumnWidth();
+            this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
             this._calcWidth = this.width;
         }

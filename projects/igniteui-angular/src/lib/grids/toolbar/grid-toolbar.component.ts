@@ -15,9 +15,7 @@ import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from 
 import { IgxIconService } from '../../icon/public_api';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarTitleDirective, IgxGridToolbarActionsDirective } from './common';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { GridType } from '../common/grid.interface';
+import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 
 
 /**
@@ -58,7 +56,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
         return this.api.grid;
     }
 
-    public set grid(value: IgxGridBaseDirective) {
+    public set grid(value: GridType) {
         this._grid = value;
     }
 
@@ -111,12 +109,12 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
     @HostBinding('style.flex-basis.px')
     public width = null;
 
-    protected _grid: IgxGridBaseDirective;
+    protected _grid: GridType;
     protected sub: Subscription;
 
     constructor(
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        private api: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Inject(IGX_GRID_SERVICE_BASE) private api: GridServiceType,
         private iconService: IgxIconService,
         private element: ElementRef<HTMLElement>
     ) {

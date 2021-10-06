@@ -3,22 +3,21 @@ import { Subject } from 'rxjs';
 import { cloneArray, reverseMapper, mergeObjects } from '../core/utils';
 import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxGridCellComponent } from './cell.component';
-import { IgxGridBaseDirective } from './grid-base.directive';
-import { IgxRowDirective } from './row.directive';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
-import { GridType } from './common/grid.interface';
+import { GridServiceType, GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
+import { CellType } from './common/cell.interface';
+import { RowType } from './common/row.interface';
 
 /**
  * @hidden
  */
 @Injectable()
-export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
+export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
 
     public grid: T;
@@ -71,7 +70,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
     }
 
     public get_row_index_in_data(rowID: any, dataCollection?: any[]): number {
-        const grid = this.grid as IgxGridBaseDirective;
+        const grid = this.grid;
         if (!grid) {
             return -1;
         }
@@ -80,7 +79,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
             : record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
-    public get_row_by_key(rowSelector: any): IgxRowDirective<IgxGridBaseDirective & GridType> {
+    public get_row_by_key(rowSelector: any): RowType {
         if (!this.grid) {
             return null;
         }
@@ -92,33 +91,18 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    public get_row_by_index(rowIndex: number): IgxRowDirective<IgxGridBaseDirective & GridType> {
+    public get_row_by_index(rowIndex: number): RowType {
         return this.grid.rowList.find((row) => row.index === rowIndex);
     }
 
-    /**
-     * Gets the rowID of the record at the specified data view index
-     *
-     * @param index
-     * @param dataCollection
-     */
-    public get_rec_id_by_index(index: number, dataCollection?: any[]): any {
-        dataCollection = dataCollection || this.grid.data;
-        if (index >= 0 && index < dataCollection.length) {
-            const rec = dataCollection[index];
-            return this.grid.primaryKey ? rec[this.grid.primaryKey] : rec;
-        }
-        return null;
-    }
-
-    public get_cell_by_key(rowSelector: any, field: string): IgxGridCellComponent {
+    public get_cell_by_key(rowSelector: any, field: string): CellType {
         const row = this.get_row_by_key(rowSelector);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
         }
     }
 
-    public get_cell_by_index(rowIndex: number, columnID: number | string): IgxGridCellComponent {
+    public get_cell_by_index(rowIndex: number, columnID: number | string): CellType {
         const row = this.get_row_by_index(rowIndex);
         const hasCells = row && row.cells;
         if (hasCells && typeof columnID === 'number') {
@@ -130,7 +114,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
 
     }
 
-    public get_cell_by_visible_index(rowIndex: number, columnIndex: number): IgxGridCellComponent {
+    public get_cell_by_visible_index(rowIndex: number, columnIndex: number): CellType {
         const row = this.get_row_by_index(rowIndex);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
@@ -268,7 +252,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         return this.grid.filteredData;
     }
 
-    public addRowToData(rowData: any, parentID?) {
+    public addRowToData(rowData: any, _parentID?: any) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;

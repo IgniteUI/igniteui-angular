@@ -12,25 +12,26 @@
     OnInit,
     OnDestroy,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    Inject
 } from '@angular/core';
+import { formatPercent, formatCurrency } from '@angular/common';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { GridBaseAPIService } from './api.service';
-import { PlatformUtil } from '../core/utils';
-import { IgxGridBaseDirective } from './grid-base.directive';
-import { IgxGridSelectionService, ISelectionNode } from './selection/selection.service';
+import { formatDate, PlatformUtil } from '../core/utils';
+import { IgxGridSelectionService } from './selection/selection.service';
 import { DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
-import { GridType } from './common/grid.interface';
+import { GridType, IGX_GRID_BASE } from './common/grid.interface';
 import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
 import { CellType } from './common/cell.interface';
 import { IgxGridCell } from './grid-public-cell';
+import { ISelectionNode } from './common/types';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -77,7 +78,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @Input()
-    public intRow: IgxRowDirective<IgxGridBaseDirective & GridType>;
+    public intRow: IgxRowDirective<GridType>;
 
     /**
      * Gets the row of the cell.
@@ -228,17 +229,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return this.intRow.gridID;
     }
 
-    /**
-     * Gets the grid of the cell.
-     * ```typescript
-     * let grid = this.cell.grid;
-     * ```
-     *
-     * @memberof IgxGridCellComponent
-     */
-    public get grid(): any {
-        return this.gridAPI.grid;
-    }
 
     /**
      * Gets the `index` of the row where the cell is stored.
@@ -304,16 +294,28 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.title')
     public get title() {
-        return this.editMode || this.cellTemplate ? '' : this.formatter ? this.formatter(this.value, this.rowData) :
-            this.column.dataType === GridColumnDataType.Percent ?
-            this.grid.percentPipe.transform(this.value, this.column.pipeArgs.digitsInfo, this.grid.locale) :
-            this.column.dataType === GridColumnDataType.Currency ?
-                this.grid.currencyPipe.transform(this.value, this.currencyCode, this.column.pipeArgs.display,
-                    this.column.pipeArgs.digitsInfo, this.grid.locale) :
-            (this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime ||
-            this.column.dataType === GridColumnDataType.Time) ?
-                this.grid.datePipe.transform(this.value, this.column.pipeArgs.format, this.column.pipeArgs.timezone, this.grid.locale) :
-                this.value;
+        if (this.editMode || this.cellTemplate) {
+            return '';
+        }
+
+        if (this.formatter) {
+            return this.formatter(this.value, this.rowData);
+        }
+
+        const args = this.column.pipeArgs;
+        const locale = this.grid.locale;
+
+        switch (this.column.dataType) {
+            case GridColumnDataType.Percent:
+                return formatPercent(this.value, locale, args.digitsInfo);
+            case GridColumnDataType.Currency:
+                return formatCurrency(this.value, locale, args.display, this.currencyCode, args.digitsInfo);
+            case GridColumnDataType.Date:
+            case GridColumnDataType.DateTime:
+            case GridColumnDataType.Time:
+                return formatDate(this.value, args.format, locale, args.timezone);
+        }
+        return this.value;
     }
 
     @HostBinding('class.igx-grid__td--bool-true')
@@ -653,9 +655,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(
         protected selectionService: IgxGridSelectionService,
-        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Inject(IGX_GRID_BASE) public grid: GridType,
         public cdr: ChangeDetectorRef,
-        private element: ElementRef,
+        private element: ElementRef<HTMLElement>,
         protected zone: NgZone,
         private touchManager: HammerGesturesManager,
         protected platformUtil: PlatformUtil) { }
@@ -678,10 +680,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @HostListener('dblclick', ['$event'])
-    public onDoubleClick = (event: MouseEvent | HammerInput) => {
+    public onDoubleClick = (event: MouseEvent) => {
         if (event.type === 'doubletap') {
             // prevent double-tap to zoom on iOS
-            (event as HammerInput).preventDefault();
+            event.preventDefault();
         }
         if (this.editable && !this.editMode && !this.intRow.deleted && !this.grid.crudService.rowEditingBlocked) {
             this.grid.crudService.enterEditMode(this, event as Event);
@@ -772,7 +774,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.editable && value) {
             if (this.grid.crudService.cellInEditMode) {
-                this.gridAPI.update_cell(this.grid.crudService.cell);
+                this.grid.gridAPI.update_cell(this.grid.crudService.cell);
                 this.grid.crudService.endCellEdit();
             }
             this.grid.crudService.enterEditMode(this);
@@ -801,7 +803,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             cell = this.grid.crudService.createCell(this);
         }
         cell.editValue = val;
-        this.gridAPI.update_cell(cell);
+        this.grid.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
     }
@@ -878,9 +880,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this._updateCRUDStatus(event);
 
             const activeElement = this.selectionService.activeElement;
-            const row = activeElement ? this.gridAPI.get_row_by_index(activeElement.row) : null;
-            if ((this.grid.crudService.rowEditingBlocked && row && this.intRow.rowID !== row.rowID) ||
-                (this.grid.crudService.cell && this.grid.crudService.cellEditingBlocked)) {
+            const row = activeElement ? this.grid.gridAPI.get_row_by_index(activeElement.row) : null;
+            if (this.grid.crudService.rowEditingBlocked && row && this.intRow.rowID !== row.rowID) {
                 return;
             }
 
@@ -1014,6 +1015,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     private getCellType(useRow?: boolean): CellType {
         const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.rowData) : this.intRow.index;
+        // TOOD: Fix types
         return new IgxGridCell(this.grid, rowID, this.column.field);
     }
 }

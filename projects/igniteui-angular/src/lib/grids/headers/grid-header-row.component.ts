@@ -14,9 +14,9 @@ import {
 import { DisplayDensity } from '../../core/displayDensity';
 import { flatten } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { ColumnType } from '../common/column.interface';
 import { GridType } from '../common/grid.interface';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
-import { IgxColumnComponent } from '../public_api';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 
 export interface IgxGridRowSelectorsTemplateContext {
@@ -45,15 +45,15 @@ export class IgxGridHeaderRowComponent implements DoCheck {
 
     /** The grid component containing this element. */
     @Input()
-    public grid: any; //GridType;
+    public grid: GridType;
 
     /** Pinned columns of the grid. */
     @Input()
-    public pinnedColumnCollection: IgxColumnComponent[] = [];
+    public pinnedColumnCollection: ColumnType[] = [];
 
     /** Unpinned columns of the grid. */
     @Input()
-    public unpinnedColumnCollection: IgxColumnComponent[] = [];
+    public unpinnedColumnCollection: ColumnType[] = [];
 
     @Input()
     public activeDescendant: string;

@@ -1,14 +1,20 @@
-import { TemplateRef } from '@angular/core';
+import { QueryList, TemplateRef } from '@angular/core';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { ISortingStrategy } from '../../data-operations/sorting-strategy';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IColumnPipeArgs } from '../columns/interfaces';
+import { GridType } from './grid.interface';
+import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
 
 /**
  * @hidden
  * @internal
  */
 export interface ColumnType {
+    grid: GridType;
+    children: QueryList<ColumnType>;
+    allChildren: ColumnType[];
+
     field: string;
     header?: string;
     index: number;
@@ -26,13 +32,18 @@ export interface ColumnType {
     hidden: boolean;
     disablePinning: boolean;
     sortStrategy: ISortingStrategy;
+    sortingIgnoreCase: boolean;
+    filterCell: any;
+    filters: IgxFilteringOperand;
     filteringIgnoreCase: boolean;
     filteringExpressionsTree: FilteringExpressionsTree;
     hasSummary: boolean;
     summaries: any;
     pinned: boolean;
+    expanded: boolean;
     selected: boolean;
     selectable: boolean;
+    columnLayout: boolean;
     level: number;
     rowStart: number;
     rowEnd: number;
@@ -49,5 +60,16 @@ export interface ColumnType {
     defaultTimeFormat: string;
     defaultDateTimeFormat: string;
     additionalTemplateContext: any;
+    isLastPinned: boolean;
+    isFirstPinned: boolean;
+    applySelectableClass: boolean;
+    title: string;
+
+    filterCellTemplate: TemplateRef<any>;
+
+    getCellWidth(): string;
     getGridTemplate(isRow: boolean): string;
+    toggleVisibility(value?: boolean): void;
+    formatter(value: any, rowData?: any): any;
+    populateVisibleIndexes?(): void;
 }

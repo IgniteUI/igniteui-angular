@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { isPlatformBrowser } from '@angular/common';
+import { formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import mergeWith from 'lodash.mergewith';
 import { ResizeObserver as Polyfill } from '@juggle/resize-observer';
@@ -738,3 +738,15 @@ const verticalAnimations: AnimationReferenceMetadata[] = [
     swingInBottomBck,
     swingOutBottomBck,
 ];
+
+
+/**
+ * Similar to Angular's formatDate. However it will not throw on `undefined | null` instead
+ * coalescing to an empty string.
+ */
+export const formatDate = (value: string | number | Date, format: string, locale: string, timezone?: string): string => {
+    if (value === null || value === undefined) {
+        return '';
+    }
+    return _formatDate(value, format, locale, timezone);
+};

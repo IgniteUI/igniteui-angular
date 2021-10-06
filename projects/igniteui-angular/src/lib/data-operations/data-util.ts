@@ -11,11 +11,11 @@ import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { ISortingExpression } from './sorting-expression.interface';
 import { FilteringStrategy } from './filtering-strategy';
-import { ITreeGridRecord } from '../grids/tree-grid/public_api';
 import { cloneValue, mergeObjects, mkenum } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
+import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
 
 /**
  * @hidden

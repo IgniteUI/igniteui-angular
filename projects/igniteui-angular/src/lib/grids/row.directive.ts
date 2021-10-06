@@ -13,26 +13,23 @@ import {
     Output,
     EventEmitter,
     AfterViewInit,
-    OnDestroy
+    OnDestroy,
+    Inject
 } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { GridBaseAPIService } from './api.service';
-import { IgxColumnComponent } from './columns/column.component';
 import { TransactionType } from '../services/transaction/transaction';
-import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxAddRow, IgxEditRow } from './common/crud.service';
-import { GridType } from './common/grid.interface';
+import { GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { ColumnType } from './common/column.interface';
 import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-@Directive({
-    selector: '[igxRowBaseComponent]'
-})
-export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck, AfterViewInit, OnDestroy {
+@Directive({ selector: '[igxRowBaseComponent]' })
+export class IgxRowDirective<T extends GridType> implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
@@ -124,7 +121,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     public get expanded(): boolean {
-        return this.gridAPI.get_row_expansion_state(this.rowData);
+        return this.grid.gridAPI.get_row_expansion_state(this.rowData);
     }
 
     /**
@@ -135,7 +132,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     public set expanded(val: boolean) {
-        this.gridAPI.set_row_expansion_state(this.rowID, val);
+        this.grid.gridAPI.set_row_expansion_state(this.rowID, val);
     }
 
     public get addRowUI(): any {
@@ -232,7 +229,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-     public get columns(): IgxColumnComponent[] {
+     public get columns(): ColumnType[] {
         return this.grid.visibleColumns;
     }
 
@@ -250,7 +247,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    public get pinnedColumns(): IgxColumnComponent[] {
+    public get pinnedColumns(): ColumnType[] {
         return this.grid.pinnedColumns;
     }
 
@@ -271,7 +268,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    public get unpinnedColumns(): IgxColumnComponent[] {
+    public get unpinnedColumns(): ColumnType[] {
         return this.grid.unpinnedColumns;
     }
 
@@ -311,7 +308,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /** @hidden */
     public get deleted(): boolean {
-        return this.gridAPI.row_deleted_transaction(this.rowID);
+        return this.grid.gridAPI.row_deleted_transaction(this.rowID);
     }
 
     /**
@@ -329,27 +326,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         } else {
             return false;
         }
-    }
-
-    /**
-     * Get a reference to the grid that contains the selected row.
-     *
-     * ```typescript
-     * handleRowSelection(event) {
-     *  // the grid on which the rowSelected event was triggered
-     *  const grid = event.row.grid;
-     * }
-     * ```
-     *
-     * ```html
-     *  <igx-grid
-     *    [data]="data"
-     *    (rowSelected)="handleRowSelection($event)">
-     *  </igx-grid>
-     * ```
-     */
-    public get grid(): T {
-        return this.gridAPI.grid;
     }
 
     /**
@@ -400,7 +376,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     protected _addRow: boolean;
 
     constructor(
-        public gridAPI: GridBaseAPIService<T>,
+        @Inject(IGX_GRID_BASE) public grid: GridType,
         public selectionService: IgxGridSelectionService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef) { }
@@ -437,7 +413,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     public ngAfterViewInit() {
         // If the template of the row changes, the forOf in it is recreated and is not detected by the grid and rows can't be scrolled.
-        this._virtDirRow.changes.pipe(takeUntil(this.destroy$)).subscribe(() => this.grid.resetHorizontalForOfs());
+        this._virtDirRow.changes.pipe(takeUntil(this.destroy$)).subscribe(() => this.grid.resetHorizontalVirtualization());
     }
 
     public ngOnDestroy() {
@@ -476,7 +452,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             this.grid.transactions.endPending(false);
         }
         const row = new IgxEditRow(this.rowID, this.index, this.rowData, this.grid);
-        this.gridAPI.update_row(row, value);
+        this.grid.gridAPI.update_row(row, value);
         this.cdr.markForCheck();
     }
 

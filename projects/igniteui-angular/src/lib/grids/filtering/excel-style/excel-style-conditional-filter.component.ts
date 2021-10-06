@@ -12,16 +12,15 @@ import {
     AutoPositionStrategy,
     AbsoluteScrollStrategy
 } from '../../../services/public_api';
-import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../../core/utils';
+import { BaseFilteringComponent } from './base-filtering.component';
 
 
 /**
  * A component used for presenting Excel style conditional filter UI.
  */
 @Component({
-    preserveWhitespaces: false,
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html'
 })
@@ -52,7 +51,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
-    constructor(public esf: IgxGridExcelStyleFilteringComponent, protected platform: PlatformUtil) {
+    constructor(public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
                 this.shouldOpenSubMenu = true;

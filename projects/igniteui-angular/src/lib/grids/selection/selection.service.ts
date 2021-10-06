@@ -2,51 +2,21 @@ import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridBaseDirective } from '../grid/public_api';
+import { GridType } from '../common/grid.interface';
+import {
+    GridSelectionRange,
+    IColumnSelectionState,
+    IMultiRowLayoutNode,
+    ISelectionKeyboardState,
+    ISelectionNode,
+    ISelectionPointerState,
+    SelectionState
+} from '../common/types';
 
-export interface GridSelectionRange {
-    rowStart: number;
-    rowEnd: number;
-    columnStart: string | number;
-    columnEnd: string | number;
-}
 
-export interface ISelectionNode {
-    row: number;
-    column: number;
-    layout?: IMultiRowLayoutNode;
-    isSummaryRow?: boolean;
-}
-
-export interface IMultiRowLayoutNode {
-    rowStart: number;
-    colStart: number;
-    rowEnd: number;
-    colEnd: number;
-    columnVisibleIndex: number;
-}
-
-interface ISelectionKeyboardState {
-    node: null | ISelectionNode;
-    shift: boolean;
-    range: GridSelectionRange;
-    active: boolean;
-}
-
-interface ISelectionPointerState extends ISelectionKeyboardState {
-    ctrl: boolean;
-    primaryButton: boolean;
-}
-
-interface IColumnSelectionState {
-    field: null | string;
-    range: string[];
-}
-
-type SelectionState = ISelectionKeyboardState | ISelectionPointerState;
 @Injectable()
 export class IgxGridSelectionService {
-    public grid;
+    public grid: GridType;
     public dragMode = false;
     public activeElement: ISelectionNode | null;
     public keyboardState = {} as ISelectionKeyboardState;
@@ -730,9 +700,8 @@ export class IgxGridSelectionService {
     }
 
     private isFilteringApplied(): boolean {
-        const grid = this.grid as IgxGridBaseDirective;
-        return !FilteringExpressionsTree.empty(grid.filteringExpressionsTree) ||
-            !FilteringExpressionsTree.empty(grid.advancedFilteringExpressionsTree);
+        return !FilteringExpressionsTree.empty(this.grid.filteringExpressionsTree) ||
+            !FilteringExpressionsTree.empty(this.grid.advancedFilteringExpressionsTree);
     }
 
     private isRowDeleted(rowID): boolean {

@@ -313,8 +313,8 @@ export class GridRowAPISampleComponent implements OnInit {
         const count = this.grid.selectedRows.length || 1;
         this.countIcon = `filter_${count > 9 ? '9_plus' : `${count}`}`;
     }
-    public onLeave(args) {
-        this.onRowDragStart(args);
+    public onLeave() {
+        this.onRowDragStart();
         this.dragIcon = 'arrow_right_alt';
     }
 }
