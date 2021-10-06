@@ -47,6 +47,7 @@ export class IgxPivotRowPipe implements PipeTransform {
                         }
                     }
                     newData.splice(i + 1, 0, ...siblingData);
+                    newData[i][pivotKeys.records] = siblingData;
                     i+=siblingData.length;
                 }
                 data = newData;
