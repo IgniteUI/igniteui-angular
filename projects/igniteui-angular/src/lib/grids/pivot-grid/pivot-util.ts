@@ -36,6 +36,7 @@ export class PivotUtil {
             if (col.childLevels != null && col.childLevels.length > 0) {
                 const childValues = this.extractValuesFromDimension(col.childLevels, recData);
                 vals[lvl].children = childValues;
+                vals[lvl].expandable = true;
             }
             lvl++;
             if(!lvlCollection[0].children) {

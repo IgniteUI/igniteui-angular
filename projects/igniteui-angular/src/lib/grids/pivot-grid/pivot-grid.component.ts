@@ -203,7 +203,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
        const fieldColumn =  parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
        const groupColumn =  parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
        groupColumn.hidden = newState;
-       if (!groupColumn.hidden &&  groupColumn.children.length > 1) {
+       const hasChildGroup = groupColumn.children.filter(x => x.columnGroup).length > 0;
+       if (!groupColumn.hidden &&  hasChildGroup) {
             // column group when shown displays all children, we want to show only groups
            const fieldChildren =  groupColumn.children.filter(x => !x.columnGroup);
            fieldChildren.forEach(fieldChild => {
@@ -263,7 +264,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.header = key;
                 ref.instance.parent = parent;
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
-                ref.instance.headerTemplate = this.headerTemplate;
+                if (value.expandable) {
+                    ref.instance.headerTemplate = this.headerTemplate;
+                }
                 const children = this.generateColumnHierarchy(value.children, data, ref.instance);
 
                 const refSibling = factoryColumn.create(this.viewRef.injector);
