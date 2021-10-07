@@ -25,26 +25,33 @@ export class PivotUtil {
 
     public static extractValuesFromDimension(dims: IPivotDimension[], recData: any, path = []) {
         const vals = [];
-        let lvl = 0;
         let lvlCollection = vals;
-        for (const col of dims) {
+        const flattenedDims = this.flatten(dims);
+        for (const col of flattenedDims) {
             const value = this.extractValueFromDimension(col, recData);
             path.push(value);
             const newValue = path.join('-');
             lvlCollection.push({ value: newValue });
-            if (col.childLevels != null && col.childLevels.length > 0) {
-                const childValues = this.extractValuesFromDimension(col.childLevels, recData, path);
-                vals[lvl].children = childValues;
-                vals[lvl].expandable = true;
-            }
-            lvl++;
-            if(!lvlCollection[0].children) {
+            lvlCollection[0].expandable = col.expandable;
+            if (!lvlCollection[0].children) {
                 lvlCollection[0].children = [];
             }
             lvlCollection = lvlCollection[0].children;
         }
         return vals;
     }
+
+    public static flatten(arr) {
+        const newArr = arr.reduce((acc, item) => {
+            acc.push(item);
+          if (Array.isArray(item.childLevels) && item.childLevels.length > 0) {
+            item.expandable = true;
+            acc = acc.concat(this.flatten(item.childLevels));
+          }
+          return acc;
+        }, []);
+        return newArr;
+      }
 
     public static applyAggregations(hierarchies, values, pivotKeys) {
         hierarchies.forEach((hierarchy) => {

@@ -85,10 +85,11 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
     }
 
     protected _createColComponent(field: string) {
+        const fieldName = field.indexOf('-') !==  -1 ? field.slice(field.lastIndexOf('-') + 1) : field;
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
         ref.instance.field = field;
-        ref.instance.header = field;
+        ref.instance.header = fieldName;
         ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
         (ref as any).instance._vIndex = this.grid.columns.length + this.index;
         ref.instance.headerTemplate = this.headerTemplate;

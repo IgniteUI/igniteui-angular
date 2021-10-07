@@ -196,21 +196,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
    public toggleColumn(col: IgxColumnComponent) {
-       const state = this.columnGroupStates.get(col.header);
+       const state = this.columnGroupStates.get(col.field);
        const newState = !state;
-       this.columnGroupStates.set(col.header, newState);
+       this.columnGroupStates.set(col.field, newState);
        const parentCols = col.parent ? col.parent.children : this.columns.filter(x => x.level === 0);
        const fieldColumn =  parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
        const groupColumn =  parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
        groupColumn.hidden = newState;
-       const hasChildGroup = groupColumn.children.filter(x => x.columnGroup).length > 0;
-       if (!groupColumn.hidden &&  hasChildGroup) {
-            // column group when shown displays all children, we want to show only groups
-           const fieldChildren =  groupColumn.children.filter(x => !x.columnGroup);
-           fieldChildren.forEach(fieldChild => {
-            fieldChild.hidden = true;
-           });
-       }
+        this.resolveToggle(groupColumn);
        fieldColumn.hidden = !newState;
        if (newState) {
         fieldColumn.headerTemplate = this.headerTemplate;
@@ -218,6 +211,20 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         fieldColumn.headerTemplate = undefined;
        }
        this.reflow();
+   }
+
+   protected resolveToggle(groupColumn: IgxColumnComponent) {
+    const hasChildGroup = groupColumn.children.filter(x => x.columnGroup).length > 0;
+        if (!groupColumn.hidden &&  hasChildGroup) {
+            const fieldChildren =  groupColumn.children.filter(x => !x.columnGroup);
+            const groupChildren = groupColumn.children.filter(x => x.columnGroup);
+            groupChildren.forEach(group => {
+                this.resolveToggle(group);
+            });
+            fieldChildren.forEach(fieldChild => {
+                fieldChild.hidden = true;
+            });
+        }
    }
 
     /**
@@ -261,28 +268,26 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 columns.push(ref.instance);
             } else {
                 const ref = factoryColumnGroup.create(this.viewRef.injector);
-                ref.instance.header = key;
                 ref.instance.parent = parent;
+                ref.instance.field = key;
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                 if (value.expandable) {
                     ref.instance.headerTemplate = this.headerTemplate;
+                    const refSibling = factoryColumn.create(this.viewRef.injector);
+                    refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
+                    refSibling.instance.field = key;
+                    refSibling.instance.dataType = this.resolveDataTypes(data[0][key]);
+                    refSibling.instance.parent = parent;
+                    refSibling.instance.hidden = true;
+                    columns.push(refSibling.instance);
                 }
                 const children = this.generateColumnHierarchy(value.children, data, ref.instance);
-
-                const refSibling = factoryColumn.create(this.viewRef.injector);
-                refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
-                refSibling.instance.field = key;
-                refSibling.instance.dataType = this.resolveDataTypes(data[0][key]);
-                refSibling.instance.parent = parent;
-                refSibling.instance.hidden = true;
-
                 const filteredChildren = children.filter(x => x.level === ref.instance.level + 1);
                 ref.changeDetectorRef.detectChanges();
 
                 ref.instance.children.reset(filteredChildren);
 
                 columns.push(ref.instance);
-                columns.push(refSibling.instance);
                 columns = columns.concat(children);
             }
         });
