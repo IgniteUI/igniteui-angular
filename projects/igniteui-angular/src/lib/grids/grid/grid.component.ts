@@ -1144,7 +1144,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
         if (index < 0 || index >= this.dataView.length) {
             if (index >= this.dataView.length){
-                rec = data ?? this.gridAPI.get_row_by_index(index).rowData;
+                const virtIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
+                rec = data ?? this.dataView[virtIndex];
             }
         }else {
             rec = data ?? this.dataView[index];
