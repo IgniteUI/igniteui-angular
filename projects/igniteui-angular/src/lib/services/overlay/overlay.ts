@@ -111,7 +111,7 @@ export class IgxOverlayService implements OnDestroy {
      * }
      * ```
      */
-     public contentAppended = new EventEmitter<OverlayEventArgs>();
+    public contentAppended = new EventEmitter<OverlayEventArgs>();
 
     /**
      * Emitted just before the overlay animation start.
@@ -707,7 +707,9 @@ export class IgxOverlayService implements OnDestroy {
         //  to eliminate flickering show the element just before animation start
         info.wrapperElement.style.visibility = '';
         info.visible = true;
-        this.addModalClasses(info);
+        requestAnimationFrame(() => {
+            this.addModalClasses(info);
+        });
         info.openAnimationPlayer.play();
     }
 
@@ -923,7 +925,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private openAnimationDone(info: OverlayInfo){
+    private openAnimationDone(info: OverlayInfo) {
         this.opened.emit({ id: info.id, componentRef: info.componentRef });
         if (info.openAnimationPlayer) {
             info.openAnimationPlayer.reset();
@@ -939,7 +941,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private closeAnimationDone(info: OverlayInfo){
+    private closeAnimationDone(info: OverlayInfo) {
         this.closeDone(info);
         if (info.closeAnimationPlayer) {
             info.closeAnimationPlayer.reset();
