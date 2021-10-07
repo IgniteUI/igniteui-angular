@@ -249,10 +249,12 @@ export class IgxGridNavigationService {
 
     public isDataRow(rowIndex: number, includeSummary = false) {
         let curRow: any;
-        if (this.grid.virtualizationState) {
-            curRow = this.grid.dataView[rowIndex - this.grid.virtualizationState.startIndex];
-        }else if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
-            return false;
+
+        if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
+                curRow = this.grid.dataView[rowIndex - this.grid.virtualizationState.startIndex];
+            if (!curRow){
+                return false;
+            }
         }else {
             curRow = this.grid.dataView[rowIndex];
         }
