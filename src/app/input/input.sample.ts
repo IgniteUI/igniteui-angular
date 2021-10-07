@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { IChangeRadioEventArgs } from 'igniteui-angular';
 
 @Component({
@@ -11,6 +12,11 @@ export class InputSampleComponent {
     public placeholder = 'Please enter a value';
     public selected = 'option1';
     public airplaneMode = false;
+
+    public myForm = this.fb.group({
+        checkbox: [],
+        switch: []
+    });
 
     public user = {
         comment: '',
@@ -49,6 +55,8 @@ export class InputSampleComponent {
         active: false,
         disabled: true
     }];
+
+    constructor(private fb: FormBuilder) {}
 
     public onClick(event: MouseEvent) {
         console.log(event);
