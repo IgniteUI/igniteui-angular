@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.2.1
+
+### New Features
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - new `rowPinned` event is emitted after a row is pinned/unpinned and grid has already refreshed its state to represent the pinned/unpinned rows in the DOM.
+
 ## 12.2.0
 
 ### New Features
