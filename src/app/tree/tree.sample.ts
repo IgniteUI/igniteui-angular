@@ -188,7 +188,7 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public ngAfterViewInit() {
         this.tree.nodes.toArray().forEach(node => {
-            node.selectedChange.subscribe(() => { }); 
+            node.selectedChange.subscribe(() => {});
         });
     }
 

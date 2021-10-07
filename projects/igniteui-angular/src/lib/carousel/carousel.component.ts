@@ -317,7 +317,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Output() public SlideChanged = new EventEmitter<ISlideEventArgs>();
+    @Output() public onSlideChanged = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after a slide has been added to the carousel.
@@ -328,7 +328,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Output() public SlideAdded = new EventEmitter<ISlideEventArgs>();
+    @Output() public onSlideAdded = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after a slide has been removed from the carousel.
@@ -339,7 +339,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Output() public SlideRemoved = new EventEmitter<ISlideEventArgs>();
+    @Output() public onSlideRemoved = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after the carousel has been paused.
@@ -350,7 +350,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Output() public CarouselPaused = new EventEmitter<IgxCarouselComponent>();
+    @Output() public onCarouselPaused = new EventEmitter<IgxCarouselComponent>();
 
     /**
      * An event that is emitted after the carousel has resumed transitioning between `slides`.
@@ -815,7 +815,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public stop() {
         if (this.pause) {
             this.playing = false;
-            this.CarouselPaused.emit(this);
+            this.onCarouselPaused.emit(this);
             this.resetInterval();
         }
     }
@@ -944,7 +944,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             } else {
                 this.currentItem = slide;
             }
-            this.SlideChanged.emit({ carousel: this, slide });
+            this.onSlideChanged.emit({ carousel: this, slide });
             this.restartInterval();
         }
     }
@@ -967,7 +967,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             diff.forEachAddedItem((record: IterableChangeRecord<IgxSlideComponent>) => {
                 const slide = record.item;
                 slide.total = this.total;
-                this.SlideAdded.emit({ carousel: this, slide });
+                this.onSlideAdded.emit({ carousel: this, slide });
                 if (slide.active) {
                     this.currentItem = slide;
                 }
@@ -976,7 +976,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxSlideComponent>) => {
                 const slide = record.item;
-                this.SlideRemoved.emit({ carousel: this, slide });
+                this.onSlideRemoved.emit({ carousel: this, slide });
                 if (slide.active) {
                     slide.active = false;
                     this.currentItem = this.get(slide.index < this.total ? slide.index : this.total - 1);
