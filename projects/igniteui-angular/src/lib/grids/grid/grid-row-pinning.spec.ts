@@ -611,7 +611,7 @@ describe('Row Pinning #grid', () => {
             expect(paginator.totalPages).toEqual(3);
         });
 
-        fit('should have the correct records shown for pages with pinned rows', () => {
+        it('should have the correct records shown for pages with pinned rows', () => {
             grid.gridAPI.get_row_by_index(0).pin();
 
             let rows = grid.rowList.toArray();
