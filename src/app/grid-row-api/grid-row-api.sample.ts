@@ -179,7 +179,6 @@ export class GridRowAPISampleComponent implements OnInit {
     public togglePinning(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
         byIndex: boolean, index: number, key: any) {
         const row: RowType = byIndex ? grid.getRowByIndex(index) : grid.getRowByKey(key);
-        const index2: number = row.index;
         if (row.pinned) {
             row.unpin();
         } else {
@@ -308,11 +307,10 @@ export class GridRowAPISampleComponent implements OnInit {
         }
     }
 
-    public onEnter(args) {
+    public onEnter() {
         this.dragIcon = 'add';
     }
     public onRowDragStart(args: IRowDragStartEventArgs) {
-        const row = args.dragData;
         const count = this.grid.selectedRows.length || 1;
         this.countIcon = `filter_${count > 9 ? '9_plus' : `${count}`}`;
     }
