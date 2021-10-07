@@ -6879,7 +6879,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                             let rowIndex;
                             if (!isNaN(row.ID)) {
                                 rowIndex = Number(row.ID);
-                            }else {
+                            } else {
                                 rowIndex = Number(row);
                             }
 
