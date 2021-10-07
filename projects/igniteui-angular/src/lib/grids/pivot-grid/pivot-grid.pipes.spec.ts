@@ -276,7 +276,7 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data 2 column dimensions', () => {
-        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy.rows, pivotConfigHierarchy.values);
+        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy.rows, new Map<any, boolean>(), pivotConfigHierarchy.values);
         const columnPipeResult = columnPipe.transform(rowPipeResult, [{
             member: 'Country',
             enabled: true,
@@ -306,7 +306,7 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data 3 column dimensions', () => {
-        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy.rows, pivotConfigHierarchy.values);
+        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy.rows, new Map<any, boolean>(), pivotConfigHierarchy.values);
         const columnPipeResult = columnPipe.transform(rowPipeResult, [{
             member: 'Country',
             enabled: true,
