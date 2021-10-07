@@ -3,7 +3,7 @@ import { IgxIconService } from './icon.service';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { SafeHtml } from '@angular/platform-browser';
 
 /**
  * Icon provides a way to include material icons to markup
@@ -119,7 +119,6 @@ export class IgxIconComponent implements OnInit, OnDestroy {
         public el: ElementRef,
         private iconService: IgxIconService,
         private ref: ChangeDetectorRef,
-        private sanitizer: DomSanitizer
     ) {
         this.family = this.iconService.defaultFamily;
         this.iconService.registerFamilyAlias('material', 'material-icons');
@@ -244,8 +243,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      */
     public get getSvg(): SafeHtml {
         if (this.iconService.isSvgIconCached(this.name, this.family)) {
-            const svgText = this.iconService.getSvgIcon(this.name, this.family);
-            return this.sanitizer.bypassSecurityTrustHtml(svgText);
+            return this.iconService.getSvgIcon(this.name, this.family);
         }
 
         return null;

@@ -1,5 +1,5 @@
 import { Injectable, SecurityContext, Inject, Optional } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
@@ -46,8 +46,9 @@ export class IgxIconService {
 
     private _family = 'material-icons';
     private _familyAliases = new Map<string, string>();
-    private _cachedSvgIcons = new Map<string, Map<string, string>>();
+    private _cachedSvgIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
+    private _domParser = new DOMParser();
 
     constructor(
         @Optional() private _sanitizer: DomSanitizer,
@@ -154,7 +155,7 @@ export class IgxIconService {
      */
     public isSvgIconCached(name: string, family: string = ''): boolean {
         if(this._cachedSvgIcons.has(family)) {
-            const familyRegistry = this._cachedSvgIcons.get(family) as Map<string, string>;
+            const familyRegistry = this._cachedSvgIcons.get(family) as Map<string, SafeHtml>;
             return familyRegistry.has(name);
         }
 
@@ -184,18 +185,18 @@ export class IgxIconService {
      */
     private cacheSvgIcon(name: string, value: string, family: string = '') {
         if (name && value) {
-            const div = this._document.createElement('div');
-            div.innerHTML = value;
-            const svg = div.querySelector('svg') as SVGElement;
+            const doc = this._domParser.parseFromString(value, 'image/svg+xml');
+            const svg = doc.querySelector('svg') as SVGElement;
 
             if (!this._cachedSvgIcons.has(family)) {
-                this._cachedSvgIcons.set(family, new Map<string, string>());
+                this._cachedSvgIcons.set(family, new Map<string, SafeHtml>());
             }
 
             if (svg) {
                 svg.setAttribute('fit', '');
                 svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-                this._cachedSvgIcons.get(family).set(name, svg.outerHTML);
+                const safeSvg = this._sanitizer.bypassSecurityTrustHtml(svg.outerHTML);
+                this._cachedSvgIcons.get(family).set(name, safeSvg);
             }
         }
     }

@@ -5,13 +5,7 @@
 </ng-template>
 
 <ng-template #svgImage>
-    <svg
-        viewBox="0 0 24 24"
-        preserveAspectRatio="xMidYMid meet"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        [innerHTML]="getSvg"
-    ></svg>
+    <svg [outerHTML]="getSvg"></svg>
 </ng-template>
 
 <ng-container *ngTemplateOutlet="template"></ng-container>
