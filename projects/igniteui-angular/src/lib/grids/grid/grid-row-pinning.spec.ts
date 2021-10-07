@@ -198,12 +198,6 @@ describe('Row Pinning #grid', () => {
             expect(row.pinned).toBe(false);
 
             expect(grid.rowPinned.emit).toHaveBeenCalledTimes(2);
-            // expect(grid.rowPinned.emit).toHaveBeenCalledWith({
-            //     rowID,
-            //     insertAtIndex: 0,
-            //     isPinned: false,
-            //     row
-            // });
         });
 
         it('should pin/unpin via grid API methods.', () => {
@@ -617,12 +611,12 @@ describe('Row Pinning #grid', () => {
             expect(paginator.totalPages).toEqual(3);
         });
 
-        it('should have the correct records shown for pages with pinned rows', () => {
+        fit('should have the correct records shown for pages with pinned rows', () => {
             grid.gridAPI.get_row_by_index(0).pin();
 
             let rows = grid.rowList.toArray();
 
-            [1, 2, 1, 2, 3, 4, 5].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
+            [1, 1, 2, 3, 4, 5].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
 
             grid.paginate(2);
             fix.detectChanges();
