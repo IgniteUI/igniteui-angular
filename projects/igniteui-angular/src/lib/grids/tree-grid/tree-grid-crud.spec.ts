@@ -1,7 +1,7 @@
 
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridModule, IgxTreeGridComponent, IGridEditDoneEventArgs } from './public_api';
+import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
@@ -420,7 +420,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
 
                 // Update row on level 1
-                const oldRow = Object.assign({}, treeGrid.getRowByKey(1).data);
                 const newRow = {
                     ID: 1,
                     ParentID: -1,

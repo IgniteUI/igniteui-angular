@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxGridModule, IgxGridComponent } from './grid/public_api';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
@@ -120,7 +120,6 @@ describe('IgxGridState - input properties #grid', () => {
         const groupBy = grid.groupingExpressions;
         const groupByExpansion = grid.groupingExpansionState;
         const filtering = grid.filteringExpressionsTree;
-        const advancedFiltering = grid.advancedFilteringExpressionsTree;
 
         const gridState = state.getState(false) as IGridState;
         HelperFunctions.verifyColumns(columns, gridState);
@@ -581,7 +580,7 @@ class HelperFunctions {
 
     public static verifyExpansionStates(expansion: Map<any, boolean>, gridState: IGridState) {
         const gridExpansion = new Map<any, boolean>(gridState.expansion);
-        expansion.forEach((value, key, map) => {
+        expansion.forEach((value, key) => {
             expect(value).toBe(gridExpansion.get(key));
         });
     }

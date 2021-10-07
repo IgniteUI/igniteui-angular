@@ -1306,8 +1306,6 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('Pinning - Should not be able to pin a column programmaticaly if disablePinning is enabled for that column', (async () => {
-            const columnsList = grid.columnList.toArray();
-
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
             grid.getColumnByName('ID').pinned = true;

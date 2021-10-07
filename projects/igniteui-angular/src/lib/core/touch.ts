@@ -127,7 +127,7 @@ export class HammerGesturesManager {
      * @param element The DOM element used to create the manager on.
      */
     public getManagerForElement(element: EventTarget): HammerManager {
-        const result =  this._hammerManagers.filter((value, index, array) => value.element === element);
+        const result =  this._hammerManagers.filter(value => value.element === element);
         return result.length ? result[0].manager : null;
     }
 

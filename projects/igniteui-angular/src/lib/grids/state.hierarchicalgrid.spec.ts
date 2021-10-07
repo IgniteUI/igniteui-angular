@@ -119,7 +119,6 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const columns = fix.componentInstance.columns;
         const sorting = grid.sortingExpressions;
         const filtering = grid.filteringExpressionsTree;
-        const advancedFiltering = grid.advancedFilteringExpressionsTree;
 
         const gridState = state.getState(false) as IGridState;
         HelperFunctions.verifyColumns(columns, gridState);
@@ -493,7 +492,7 @@ class HelperFunctions {
 
     public static verifyExpansionStates(expansion: Map<any, boolean>, gridState: IGridState) {
         const gridExpansion = new Map<any, boolean>(gridState.expansion);
-        expansion.forEach((value, key, map) => {
+        expansion.forEach((value, key) => {
             expect(value).toBe(gridExpansion.get(key));
         });
     }

@@ -2,7 +2,6 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxGridCell, IgxTreeGridModule } from './public_api';
-import { IgxTreeGridCellComponent } from './tree-cell.component';
 import {
     IgxTreeGridSimpleComponent,
     IgxTreeGridCellSelectionComponent,

@@ -102,7 +102,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             });
     }
 
-    getNextHorizontalCellPosition(previous = false) {
+    public getNextHorizontalCellPosition(previous = false) {
         const parent = this.parentByChildIndex(this.activeNode.column);
         if (!this.hasNextHorizontalPosition(previous, parent)) {
             return { row: this.activeNode.row, column: this.activeNode.column };
@@ -121,7 +121,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return { row: this.activeNode.row, column: column.visibleIndex };
     }
 
-    getNextVerticalPosition(previous = false) {
+    public getNextVerticalPosition(previous = false) {
         this.activeNode.column = this.activeNode.column || 0;
         if (!this.hasNextVerticalPosition(previous)) {
             return { row: this.activeNode.row, column: this.activeNode.column };
@@ -138,7 +138,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return { row: nextBlock ? nextRI : this.activeNode.row, column: col.visibleIndex };
     }
 
-    headerNavigation(event: KeyboardEvent) {
+    public headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!HEADER_KEYS.has(key)) {
             return;

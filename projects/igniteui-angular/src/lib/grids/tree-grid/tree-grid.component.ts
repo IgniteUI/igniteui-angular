@@ -49,7 +49,7 @@ import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridInstanceType, GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
-import { IgxAddRow, IgxGridCRUDService } from '../common/crud.service';
+import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
 import { CellType } from '../common/cell.interface';

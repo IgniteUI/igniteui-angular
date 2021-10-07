@@ -2049,7 +2049,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const cell = grid.getCellByColumn(0, '2');
             const cellElem = grid.gridAPI.get_cell_by_index(0, '2');
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             await wait(DEBOUNCETIME);

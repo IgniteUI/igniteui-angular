@@ -1296,7 +1296,7 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
     public dragGrid: IgxGridComponent;
     @ViewChild('dropGrid', { read: IgxGridComponent, static: true })
     public dropGrid: IgxGridComponent;
-    newData = [];
+    public newData = [];
     public currentSortExpressions;
 
     public onGroupingDoneHandler(sortExpr) {
@@ -1337,7 +1337,7 @@ export class IgxHierarchicalGridTestComponent {
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     public data;
-    newData = [];
+    public newData = [];
 
     constructor() {
         this.data = SampleTestData.generateHGridData(2, 3);
@@ -1375,7 +1375,7 @@ export class IgxHierarchicalGridCustomGhostTestComponent {
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     public data;
-    newData = [];
+    public newData = [];
 
     constructor() {
         this.data = SampleTestData.generateHGridData(2, 3);
@@ -1404,7 +1404,7 @@ export class IgxTreeGridTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     @ViewChild(IgxGridComponent, { static: true }) public dropGrid: IgxGridComponent;
     public data = SampleTestData.employeeScrollingData();
-    newData = [];
+    public newData = [];
 
     public onRowDrop(args) {
         args.cancel = true;

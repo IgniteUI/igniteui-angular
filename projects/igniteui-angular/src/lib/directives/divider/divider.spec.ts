@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -129,9 +129,9 @@ describe('Divider', () => {
     </igx-divider>`
 })
 class TestDividerComponent {
-    type: string;
-    vertical: boolean;
-    middle: boolean;
-    inset: string;
-    role: string;
+    public type: string;
+    public vertical: boolean;
+    public middle: boolean;
+    public inset: string;
+    public role: string;
 }

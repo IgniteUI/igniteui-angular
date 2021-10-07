@@ -86,8 +86,7 @@ export class IgxFilterDirective implements OnChanges {
 
     @Input('igxFilter') public filterOptions: IgxFilterOptions;
 
-    constructor(private element: ElementRef, renderer: Renderer2) {
-    }
+    constructor() {}
 
     public ngOnChanges(changes: SimpleChanges) {
         // Detect only changes of input value

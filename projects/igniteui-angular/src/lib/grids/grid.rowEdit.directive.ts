@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Host, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener } from '@angular/core';
 import { GridBaseAPIService } from './api.service';
 
 /** @hidden @internal */

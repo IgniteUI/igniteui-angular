@@ -12,7 +12,6 @@ import {
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { DebugElement } from '@angular/core';

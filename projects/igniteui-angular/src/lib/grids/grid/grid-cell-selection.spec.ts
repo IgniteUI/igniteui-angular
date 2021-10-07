@@ -840,7 +840,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should return correct selected data when selected event is emitted', () => {
             let selectedData = [];
-            grid.selected.subscribe((e) => {
+            grid.selected.subscribe(() => {
                 selectedData = grid.getSelectedData();
             });
 
@@ -3234,7 +3234,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should return correct selected data when selected event is emitted using mouse click and kb navigation', () => {
             let selectedData = [];
-            grid.selected.subscribe((e) => {
+            grid.selected.subscribe(() => {
                 selectedData = grid.getSelectedData();
             });
 
