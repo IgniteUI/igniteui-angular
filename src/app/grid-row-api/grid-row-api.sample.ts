@@ -6,7 +6,6 @@ import {
     IgxHierarchicalGridComponent,
     IPinningConfig,
     RowPinningPosition,
-    IRowDragStartEventArgs,
     GridSummaryCalculationMode,
     GridSummaryPosition
 } from 'igniteui-angular';
@@ -310,13 +309,12 @@ export class GridRowAPISampleComponent implements OnInit {
     public onEnter() {
         this.dragIcon = 'add';
     }
-    public onRowDragStart(args: IRowDragStartEventArgs) {
+    public onRowDragStart() {
         const count = this.grid.selectedRows.length || 1;
         this.countIcon = `filter_${count > 9 ? '9_plus' : `${count}`}`;
-        return args;
     }
-    public onLeave(args) {
-        this.onRowDragStart(args);
+    public onLeave() {
+        this.onRowDragStart();
         this.dragIcon = 'arrow_right_alt';
     }
 }
