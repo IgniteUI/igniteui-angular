@@ -1,6 +1,5 @@
 import { Directive, Input, ElementRef, NgZone, OnInit, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlatformUtil } from '../../core/utils';
 
 /**
  * @hidden
@@ -208,7 +207,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
      * Function that is called the first moment we start interacting with the content on a touch device
      */
     protected onTouchStart(event) {
-        if (typeof MSGesture === 'function' || !this.IgxScrollInertiaScrollContainer) {
+        if (!this.IgxScrollInertiaScrollContainer) {
             return false;
         }
 
@@ -245,9 +244,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
      * Function that is called when we need to scroll the content based on touch interactions
      */
     protected onTouchMove(event) {
-        if (typeof MSGesture === 'function') {
-            return false;
-        }
         if (!this.IgxScrollInertiaScrollContainer) {
             return;
         }
@@ -312,9 +308,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     }
 
     protected onTouchEnd(event) {
-        if (typeof MSGesture === 'function') {
-            return;
-        }
         let speedX = 0;
         let speedY = 0;
 
@@ -341,8 +334,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
      * Function that is called when we need to detect touch starting on a touch device on IE/Edge
      */
     protected onPointerDown(event) {
-        if (!event || (event.pointerType !== 2 && event.pointerType !== 'touch') ||
-            typeof MSGesture !== 'function') {
+        if (!event || (event.pointerType !== 2 && event.pointerType !== 'touch')) {
             return true;
         }
         if (!this.IgxScrollInertiaScrollContainer) {
@@ -350,12 +342,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         }
         // setPointerCaptureFName is the name of the function that is supported
         event.target[this.setPointerCaptureFName](this._pointer = event.pointerId);
-
-        // create gestureObject only one time to prevent overlapping during intertia
-        if (!this._gestureObject) {
-            this._gestureObject = new MSGesture();
-            this._gestureObject.target = this.parentElement;
-        }
         this._gestureObject.addPointer(this._pointer);
     }
 
