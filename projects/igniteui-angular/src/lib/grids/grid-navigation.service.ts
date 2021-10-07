@@ -251,10 +251,15 @@ export class IgxGridNavigationService {
     }
 
     public isDataRow(rowIndex: number, includeSummary = false) {
+        let curRow: any;
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
-            return false;
+            curRow = this.grid.dataView[rowIndex - this.grid.virtualizationState.startIndex];
+            if (!curRow){
+                return false;
+            }
+        } else {
+            curRow = this.grid.dataView[rowIndex];
         }
-        const curRow = this.grid.dataView[rowIndex];
         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow)
             && !curRow.childGridsData && (includeSummary || !curRow.summaries);
     }
