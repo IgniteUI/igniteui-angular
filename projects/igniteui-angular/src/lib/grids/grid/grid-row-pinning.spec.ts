@@ -623,11 +623,7 @@ describe('Row Pinning #grid', () => {
 
             rows = grid.rowList.toArray();
 
-<<<<<<< HEAD
-            [1, 2, 11, 12].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
-=======
             [1, 11, 12].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
->>>>>>> ff6e5bf6e2 (test(grid): dont use detect changes after pinning/unpinning)
         });
     });
 
