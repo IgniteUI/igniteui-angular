@@ -110,7 +110,7 @@ export class PivotUtil {
             const obj = {};
             for (const value of values) {
                 if(h[pivotKeys.aggregations]) {
-                    obj[key] = h[pivotKeys.aggregations][value.member];
+                    obj[key + '-' + value.member] = h[pivotKeys.aggregations][value.member];
                 }
                 obj[pivotKeys.records] = h[pivotKeys.records];
                 flatData.push(obj);

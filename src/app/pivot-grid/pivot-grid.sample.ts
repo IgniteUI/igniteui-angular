@@ -47,24 +47,8 @@ export class PivotGridSampleComponent {
         columns: [{
             member: 'Country',
             enabled: true,
-            childLevels: [{
-                member: 'SellerName',
-                enabled: true,
-                childLevels: [
-                    {
-                        member: 'Date',
-                        enabled: true,
-                        childLevels: []
-                    },
-                    ]
-            }]
-        },
-
-        {
-            member: 'ProductCategory',
-            enabled: true,
             childLevels: []
-        }
+        },
         ]
 ,
         rows: [{
@@ -82,6 +66,11 @@ export class PivotGridSampleComponent {
         values: [
             {
                 member: 'UnitsSold',
+                aggregate: IgxNumberSummaryOperand.sum,
+                enabled: true
+            },
+            {
+                member: 'UnitPrice',
                 aggregate: IgxNumberSummaryOperand.sum,
                 enabled: true
             }
