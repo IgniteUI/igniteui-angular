@@ -73,7 +73,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     /**
      * @hidden
      */
-    public onIndicatorFocus() {
+    public onIndicatorFocus(event) {
         this.gridAPI.update_cell(this.grid.crudService.cell);
     }
 
