@@ -261,15 +261,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         let columns = [];
         fields.forEach((value, key) => {
             if (value.children == null || value.children.length === 0 || value.children.size === 0) {
-                const ref = factoryColumn.create(this.viewRef.injector);
+                const ref = factoryColumnGroup.create(this.viewRef.injector);
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                 ref.instance.field = key;
-                ref.instance.dataType = this.resolveDataTypes(data[0][key]);
                 ref.instance.parent = parent;
                 ref.instance.dataType = this.extractDataType();
                 ref.instance.formatter = this.pivotConfiguration.values[0].formatter;
                 ref.changeDetectorRef.detectChanges();
+
+                const children = this.getMeasureChildren(factoryColumn, data , ref.instance);
+                ref.instance.children.reset(children);
                 columns.push(ref.instance);
+                columns = columns.concat(children);
             } else {
                 const ref = factoryColumnGroup.create(this.viewRef.injector);
                 ref.instance.parent = parent;
@@ -311,4 +314,19 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             default: return GridColumnDataType.String;
         }
     }
+    protected getMeasureChildren(colFactory, data, parent){
+        const cols = [];
+        this.pivotConfiguration.values.forEach(val => {
+            const ref = colFactory.create(this.viewRef.injector);
+            ref.instance.header = val.member;
+            ref.instance.field = parent.field + '-' + val.member;
+            ref.instance.parent = parent;
+            ref.instance.dataType = this.resolveDataTypes(data[0][val.member]);
+            ref.changeDetectorRef.detectChanges();
+            cols.push(ref.instance);
+        });
+        return cols;
+    }
+
+
 }
