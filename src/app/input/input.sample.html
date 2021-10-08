@@ -122,6 +122,14 @@
                     <span igxListLineTitle>Brian Vaughan</span>
                     <igx-checkbox igxListAction [(ngModel)]="user.registered" [indeterminate]="true" [disabled]="true">Value</igx-checkbox>
                 </igx-list-item>
+
+                <igx-list-item>
+                    <form [formGroup]="myForm">
+                        <igx-checkbox formControlName="checkbox">Form Group Checkbox</igx-checkbox>
+                        <igx-switch formControlName="switch">Form Group Switch</igx-switch>
+                    </form>
+                    <button igxButton (click)="myForm.reset()">Reset Form Group</button>
+                </igx-list-item>
             </igx-list>
         </div>
     </article>
