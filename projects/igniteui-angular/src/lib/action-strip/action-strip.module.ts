@@ -10,6 +10,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxGridActionButtonComponent } from './grid-actions/grid-action-button.component';
+import { IgxTooltipModule } from '../directives/tooltip/tooltip.directive';
 
 /**
  * @hidden
@@ -33,6 +34,6 @@ import { IgxGridActionButtonComponent } from './grid-actions/grid-action-button.
         IgxGridActionsBaseDirective,
         IgxGridActionButtonComponent
     ],
-    imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxButtonModule, IgxIconModule, IgxRippleModule]
+    imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxButtonModule, IgxIconModule, IgxRippleModule, IgxTooltipModule]
 })
 export class IgxActionStripModule { }
