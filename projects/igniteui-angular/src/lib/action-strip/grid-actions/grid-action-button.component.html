@@ -1,3 +1,4 @@
+<ng-container *ngIf="!asMenuItem">
     <ng-container *ngIf="!asMenuItem">
         <button igxButton="icon" igxRipple #target="tooltipTarget" [igxTooltipTarget]="tooltipRef" (click)="handleClick($event)" (mousedown)="preventEvent($event)">
             <igx-icon *ngIf="iconSet" [family]="iconSet" [name]="iconName">{{iconName}}</igx-icon>
@@ -15,3 +16,4 @@
             <label *ngIf='asMenuItem' igxLabel>{{labelText}}</label>
         </div>
     </ng-container>
+</ng-container>
