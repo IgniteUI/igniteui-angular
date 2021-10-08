@@ -707,9 +707,7 @@ export class IgxOverlayService implements OnDestroy {
         //  to eliminate flickering show the element just before animation start
         info.wrapperElement.style.visibility = '';
         info.visible = true;
-        requestAnimationFrame(() => {
-            this.addModalClasses(info);
-        });
+        this.addModalClasses(info);
         info.openAnimationPlayer.play();
     }
 
@@ -886,7 +884,9 @@ export class IgxOverlayService implements OnDestroy {
             const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
             wrapperElement.classList.remove('igx-overlay__wrapper');
             this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
-            wrapperElement.classList.add('igx-overlay__wrapper--modal');
+            requestAnimationFrame(() => {
+                wrapperElement.classList.add('igx-overlay__wrapper--modal');
+            });
         }
     }
 
