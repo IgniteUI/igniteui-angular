@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSwitchComponent } from './switch.component';
@@ -19,9 +19,10 @@ describe('IgxSwitch', () => {
                 SwitchDisabledComponent,
                 SwitchExternalLabelComponent,
                 SwitchInvisibleLabelComponent,
+                SwitchFormGroupComponent,
                 IgxSwitchComponent
             ],
-            imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
+            imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));
@@ -68,7 +69,7 @@ describe('IgxSwitch', () => {
         fixture.detectChanges();
 
         expect(nativeCheckbox.checked).toBe(false);
-        expect(switchInstance.checked).toBe(false);
+        expect(switchInstance.checked).toBe(null);
 
         testInstance.subscribed = true;
         switchInstance.name = 'my-switch';
@@ -77,6 +78,22 @@ describe('IgxSwitch', () => {
         expect(nativeCheckbox.checked).toBe(true);
         expect(switchInstance.checked).toBe(true);
         expect(switchInstance.name).toEqual('my-switch');
+    });
+
+    it('Initializes with form group', () => {
+        const fixture = TestBed.createComponent(SwitchFormGroupComponent);
+        fixture.detectChanges();
+
+        const testInstance = fixture.componentInstance;
+        const switchInstance = testInstance.switch;
+        const form = testInstance.myForm;
+
+        form.setValue({ switch: true });
+        expect(switchInstance.checked).toBe(true);
+
+        form.reset();
+
+        expect(switchInstance.checked).toBe(null);
     });
 
     it('Initializes with external label', () => {
@@ -149,7 +166,7 @@ describe('IgxSwitch', () => {
         fixture.detectChanges();
 
         // Should not update
-        expect(switchInstance.checked).toBe(false);
+        expect(switchInstance.checked).toBe(null);
         expect(testInstance.subscribed).toBe(false);
     });
 
@@ -255,4 +272,15 @@ class SwitchExternalLabelComponent {
 class SwitchInvisibleLabelComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
     public label = 'Invisible Label';
+}
+
+@Component({
+    template: `<form [formGroup]="myForm"><igx-switch #switch formControlName="switch">Form Group</igx-switch></form>`
+})
+class SwitchFormGroupComponent {
+    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+
+    public myForm = this.fb.group({ switch: [] });
+
+    constructor(private fb: FormBuilder) {}
 }
