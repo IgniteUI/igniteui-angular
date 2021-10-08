@@ -95,6 +95,7 @@
             [checked]="editValue"
             (change)="editValue = $event.checked"
             [igxFocus]="true"
+            [disableRipple]="true"
         ></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
