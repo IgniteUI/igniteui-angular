@@ -20,7 +20,6 @@ import {
 } from './progressbar.common';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { IgxDirectionality } from '../services/direction/directionality';
-
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
 
@@ -91,8 +90,9 @@ export abstract class BaseProgressDirective {
     protected _newVal = MIN_VALUE;
     protected _animate = true;
     protected _step;
+    protected _animation;
 
-    private interval;
+    private _interval;
 
     /**
      * Returns the value which update the progress indicator of the `progress bar`.
@@ -233,6 +233,10 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public set value(val) {
+        if (this._animation && this._animation.playState !== 'finished') {
+            return;
+        }
+
         const valInRange = valueInRange(val, this.max);
         if (isNaN(valInRange) || this._value === val || this.indeterminate) {
             return;
@@ -260,7 +264,7 @@ export abstract class BaseProgressDirective {
             const newToPercent = toPercent(newVal, this.max);
             const oldToPercent = toPercent(oldVal, this.max);
             const duration = this.animationDuration / Math.abs(newToPercent - oldToPercent);
-            this.interval = setInterval(() =>
+            this._interval = setInterval(() =>
                 this.increase(newVal, stepDirection), duration);
             this.runAnimation(newVal);
         } else {
@@ -276,9 +280,8 @@ export abstract class BaseProgressDirective {
     protected increase(newValue: number, step: number) {
         const targetValue = toPercent(newValue, this._max);
         this._value = valueInRange(this._value, this._max) + step;
-
         if (this.valueInPercent === targetValue) {
-            return clearInterval(this.interval);
+            return clearInterval(this._interval);
         }
     }
 
@@ -406,6 +409,13 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     @Input()
     public type = 'default';
 
+    @ViewChild('indicator', {static: true})
+    private _progressIndicator: ElementRef;
+
+    private animationState = {
+        width: '0%'
+    };
+
     constructor() {
         super();
     }
@@ -445,6 +455,28 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     public ngAfterContentInit() {
         this.triggerProgressTransition(MIN_VALUE, this._initValue);
         this._contentInit = true;
+    }
+
+    public runAnimation(value: number) {
+        if (this._animation && this._animation.playState !== 'finished') {
+            return;
+        }
+
+        const FRAMES = [];
+        FRAMES[0] = {
+            ...this.animationState
+        };
+
+        this.animationState.width = toPercent(value, this.max) + '%';
+        FRAMES[1] = {
+            ...this.animationState
+        };
+
+        this._animation = this._progressIndicator.nativeElement.animate(FRAMES, {
+            easing: 'ease-out',
+            fill: 'forwards',
+            duration: this.animationDuration
+        });
     }
 }
 
@@ -530,7 +562,7 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
 
     private animationState = {
         strokeDashoffset: 289,
-        strokeOpacity: this.STROKE_OPACITY_ADDITION
+        strokeOpacity: 1
     };
 
     constructor(private renderer: Renderer2, private _directionality: IgxDirectionality) {
@@ -558,18 +590,21 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     }
 
     public runAnimation(value: number) {
-        this.animationState.strokeOpacity = this.valueInPercent / this.STROKE_OPACITY_DVIDER + this.STROKE_OPACITY_ADDITION;
+        if (this._animation && this._animation.playState !== 'finished') {
+            return;
+        }
 
-        const FRAMES = [
-            {...this.animationState},
-            {
-                strokeDashoffset: this.getProgress(toPercent(value, this.max)),
-                strokeOpacity: (100 - this.valueInPercent) / this.STROKE_OPACITY_DVIDER + this.STROKE_OPACITY_ADDITION
-            }];
+        const FRAMES = [];
+        FRAMES[0] = {...this.animationState};
 
         this.animationState.strokeDashoffset = this.getProgress(toPercent(value, this.max));
+        this.animationState.strokeOpacity = toPercent(value, this.max) / this.STROKE_OPACITY_DVIDER + this.STROKE_OPACITY_ADDITION;
 
-        this._svgCircle.nativeElement.animate(FRAMES, {
+        FRAMES[1] = {
+            ...this.animationState
+        };
+
+        this._animation = this._svgCircle.nativeElement.animate(FRAMES, {
             easing: 'ease-out',
             fill: 'forwards',
             duration: this.animationDuration
