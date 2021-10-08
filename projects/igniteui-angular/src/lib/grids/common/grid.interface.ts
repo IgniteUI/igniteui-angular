@@ -340,7 +340,7 @@ export interface GridType extends IGridDataBindable {
     setFilteredSortedData(data: any, pinned: boolean): void;
     sort(expression: ISortingExpression | ISortingExpression[]): void;
     clearSort(name?: string): void;
-    pinRow(id: any): boolean;
+    pinRow(id: any, index?: number, row?: RowType): boolean;
     unpinRow(id: any, row?: RowType): boolean;
     getUnpinnedIndexById(id: any): number;
     getEmptyRecordObjectFor(inRow: RowType): any;

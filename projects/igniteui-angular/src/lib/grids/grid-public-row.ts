@@ -208,7 +208,7 @@ abstract class BaseRow implements RowType {
      * ```
      */
     public pin(): boolean {
-        return this.grid.pinRow(this.key);
+        return this.grid.pinRow(this.key, this.index);
     }
 
     /**

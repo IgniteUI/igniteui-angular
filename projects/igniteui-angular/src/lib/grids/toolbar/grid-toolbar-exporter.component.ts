@@ -108,8 +108,8 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
 
     constructor(
         @Host() protected toolbar: IgxGridToolbarComponent,
-        @Optional() private excelExporter: IgxExcelExporterService,
-        @Optional() private csvExporter: IgxCsvExporterService,
+        private excelExporter: IgxExcelExporterService,
+        private csvExporter: IgxCsvExporterService,
     ) {
         super(toolbar);
     }
