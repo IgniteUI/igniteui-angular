@@ -2,6 +2,18 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.0.0
+
+### New Features
+- `IgxCsvExporterService`, `IgxExcelExporterService`
+    - Exporter services are no longer required to be provided in the application since they are now injected on a root level. 
+
+## 12.2.1
+
+### New Features
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - new `rowPinned` event is emitted after a row is pinned/unpinned and grid has already refreshed its state to represent the pinned/unpinned rows in the DOM.
+
 ## 12.2.0
 
 ### New Features
