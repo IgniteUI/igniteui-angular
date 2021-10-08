@@ -1,10 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { PivotDimensionType } from 'igniteui-angular';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IPivotDimension, IPivotKeys, IPivotValue } from './pivot-grid.interface';
+import { IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 
 /**

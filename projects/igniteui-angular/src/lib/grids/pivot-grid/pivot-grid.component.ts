@@ -17,12 +17,11 @@ import { GridType } from '../common/grid.interface';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IPivotConfiguration, IPivotDimension } from './pivot-grid.interface';
+import { IPivotConfiguration, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { PivotUtil } from './pivot-util';
-import { PivotDimensionType } from 'igniteui-angular';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
