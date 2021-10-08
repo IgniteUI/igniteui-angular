@@ -22,6 +22,7 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { PivotUtil } from './pivot-util';
+import { GridColumnDataType } from 'igniteui-angular';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -265,6 +266,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.field = key;
                 ref.instance.dataType = this.resolveDataTypes(data[0][key]);
                 ref.instance.parent = parent;
+                ref.instance.dataType = this.extractDataType();
+                ref.instance.formatter = this.pivotConfiguration.values[0].formatter;
                 ref.changeDetectorRef.detectChanges();
                 columns.push(ref.instance);
             } else {
@@ -278,6 +281,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                     refSibling.instance.field = key;
                     refSibling.instance.dataType = this.resolveDataTypes(data[0][key]);
+                    refSibling.instance.formatter = this.pivotConfiguration.values[0].formatter;
                     refSibling.instance.parent = parent;
                     refSibling.instance.hidden = true;
                     columns.push(refSibling.instance);
@@ -295,5 +299,16 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return columns;
     }
 
-
+    private extractDataType(): GridColumnDataType {
+        switch(this.pivotConfiguration.values[0].dataType) {
+            case 'number': return GridColumnDataType.Number;
+            case 'currency': return GridColumnDataType.Currency;
+            case 'boolean': return GridColumnDataType.Boolean;
+            case 'date': return GridColumnDataType.Date;
+            case 'dateTime': return GridColumnDataType.DateTime;
+            case 'percent': return GridColumnDataType.Percent;
+            case 'time': return GridColumnDataType.Time;
+            default: return GridColumnDataType.String;
+        }
+    }
 }

@@ -25,6 +25,12 @@ export interface IPivotValue {
     aggregate: (data: any[]) => any;
     // Enables/Disables a particular value from pivot aggregation.
     enabled: boolean;
+    // Allow conditionally styling of the IgxPivotGrid cells
+    styles?: any;
+    // Enables a data type specific template of the cells
+    dataType?: string;
+    // Applies display format to cell values.
+    formatter?: (value: any, rowData?: any) => any;
 }
 
 export interface IPivotKeys {

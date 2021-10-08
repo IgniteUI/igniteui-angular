@@ -5,7 +5,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 @Component({
     providers: [],
     selector: 'app-tree-grid-sample',
-    styleUrls: ['pivot-grid.sample.css'],
+    styleUrls: ['pivot-grid.sample.scss'],
     templateUrl: 'pivot-grid.sample.html'
 })
 
@@ -83,7 +83,17 @@ export class PivotGridSampleComponent {
             {
                 member: 'UnitsSold',
                 aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true
+                enabled: true,
+                styles: {
+                    upFont: (rowData:any, columnKey:any): boolean => {
+                        return rowData[columnKey] > 300;
+                    },
+                    downFont: (rowData:any, columnKey:any): boolean => {
+                        return rowData[columnKey] <= 300;
+                    }
+                },
+                // dataType: 'currency',
+                formatter: (value) => value ? value + '$' : undefined
             }
         ],
         filters: null
