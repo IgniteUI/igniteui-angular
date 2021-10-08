@@ -96,7 +96,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(addRow.addRowUI).toBeTrue();
         });
 
-        xit('Should display the banner above the row if there is no room underneath it', () => {
+        it('Should display the banner above the row if there is no room underneath it', () => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
             grid.notifyChanges(true);
