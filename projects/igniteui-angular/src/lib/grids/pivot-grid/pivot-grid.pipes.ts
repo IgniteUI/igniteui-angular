@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { PivotDimensionType } from 'igniteui-angular';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -29,13 +30,14 @@ export class IgxPivotRowPipe implements PipeTransform {
         for (const row of rows) {
             if (!data) {
                 // build hierarchies - groups and subgroups
-                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], pivotKeys);
+                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row],  PivotDimensionType.Row, pivotKeys);
                 // generate flat data from the hierarchies
                 data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, expansionStates, true);
             } else {
                 const newData = [...data];
                 for (let i = 0; i < newData.length; i++) {
-                    const hierarchyFields = PivotUtil.getFieldsHierarchy(newData[i][pivotKeys.records], [row], pivotKeys);
+                    const hierarchyFields = PivotUtil
+                        .getFieldsHierarchy(newData[i][pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                     const siblingData = PivotUtil.flattenHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0, expansionStates, true);
                     for (const property in newData[i]) {
                         if (newData[i].hasOwnProperty(property) &&
@@ -48,6 +50,9 @@ export class IgxPivotRowPipe implements PipeTransform {
                     }
                     newData.splice(i + 1, 0, ...siblingData);
                     newData[i][pivotKeys.records] = siblingData;
+                    const dim = hierarchyFields.get(hierarchyFields.keys().next().value)['dimension'];
+                    const siblingFieldName = PivotUtil.resolveFieldName(dim, newData[i]);
+                    newData[i][siblingFieldName] = '';
                     i+=siblingData.length;
                 }
                 data = newData;
@@ -107,7 +112,7 @@ export class IgxPivotColumnPipe implements PipeTransform {
             this.groupColumns(children, columns, values, pivotKeys);
         } else if (hierarchy[pivotKeys.records]) {
             const leafRecords = this.getLeafs(hierarchy[pivotKeys.records], pivotKeys);
-            hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, pivotKeys);
+            hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, PivotDimensionType.Column, pivotKeys);
             PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
         }
     }
