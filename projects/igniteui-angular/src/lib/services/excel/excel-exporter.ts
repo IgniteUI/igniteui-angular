@@ -39,7 +39,9 @@ const EXCEL_MAX_COLS = 16384;
  * this.excelExportService.exportData(this.localData, new IgxExcelExporterOptions("FileName"));
  * ```
  */
-@Injectable()
+ @Injectable({
+    providedIn: 'root',
+})
 export class IgxExcelExporterService extends IgxBaseExporter {
     private static ZIP_OPTIONS = { compression: 'DEFLATE', type: 'base64' } as JSZip.JSZipGeneratorOptions<'base64'>;
 
