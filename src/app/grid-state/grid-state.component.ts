@@ -90,7 +90,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
         groupBy: true,
         columns: true,
         expansion: true,
-        rowPinning: true,
+        rowPinning: true
     };
 
     public initialColumns: GridState [] = [
