@@ -31,7 +31,9 @@ export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
  * this.csvExportService.exportData(this.localData, opt);
  * ```
  */
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class IgxCsvExporterService extends IgxBaseExporter {
     /**
      * This event is emitted when the export process finishes.

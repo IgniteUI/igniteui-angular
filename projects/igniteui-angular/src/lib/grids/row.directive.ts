@@ -500,7 +500,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * Pins the specified row.
-     * This method emits `rowPinning` event.
+     * This method emits `rowPinning`\`rowPinned` event.
      *
      * ```typescript
      * // pin the selected row from the grid
@@ -513,7 +513,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * Unpins the specified row.
-     * This method emits `rowPinning` event.
+     * This method emits `rowPinning`\`rowPinned` event.
      *
      * ```typescript
      * // unpin the selected row from the grid
