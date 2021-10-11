@@ -11,7 +11,8 @@ import {
     NoOpScrollStrategy,
     ElasticPositionStrategy,
     IgxDragDirective,
-    ContainerPositionStrategy
+    ContainerPositionStrategy,
+    IAnimationParams
 } from 'igniteui-angular';
 
 @Component({
@@ -48,6 +49,7 @@ export class OverlaySampleComponent implements OnInit {
     public closeOnOutsideClick = true;
     public modal = true;
     public useOutlet = false;
+    public animationLength = 300; // in ms
 
     private xAddition = 0;
     private yAddition = 0;
@@ -341,6 +343,10 @@ export class OverlaySampleComponent implements OnInit {
             this.cdr.detectChanges();
             this.onChange2();
             this._overlaySettings.target = this.button.nativeElement;
+            (this._overlaySettings.positionStrategy.settings.openAnimation.options.params as IAnimationParams).duration
+                = `${this.animationLength}ms`;
+            (this._overlaySettings.positionStrategy.settings.closeAnimation.options.params as IAnimationParams).duration
+                = `${this.animationLength}ms`;
         }
         this.igxDropDown.toggle(this._overlaySettings);
     }

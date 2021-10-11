@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.2.1
+
+### New Features
+- `IgxCsvExporterService`, `IgxExcelExporterService`
+    - Exporter services are no longer required to be provided in the application since they are now injected on a root level. 
+
 ## 12.2.0
 
 ### New Features
