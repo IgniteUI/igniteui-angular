@@ -345,7 +345,7 @@ describe('Dialog', () => {
         fix.detectChanges();
 
         dialog.open();
-        tick();
+        tick(16);
         fix.detectChanges();
 
         overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
