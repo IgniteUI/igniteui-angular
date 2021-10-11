@@ -201,17 +201,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
        const state = this.columnGroupStates.get(col.field);
        const newState = !state;
        this.columnGroupStates.set(col.field, newState);
-       const parentCols = col.parent ? col.parent.children : this.columns.filter(x => x.level === 0);
-       const fieldColumn =  parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
-       const groupColumn =  parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
-       groupColumn.hidden = newState;
-        this.resolveToggle(groupColumn);
-       fieldColumn.hidden = !newState;
-       if (newState) {
-        fieldColumn.headerTemplate = this.headerTemplate;
-       } else {
-        fieldColumn.headerTemplate = undefined;
-       }
+       const fieldColumns =  col.children.filter(x => !x.columnGroup);
+       const groupColumns =  col.children.filter(x => x.columnGroup);
+       groupColumns.forEach(groupColumn => {
+            groupColumn.hidden = newState;
+            this.resolveToggle(groupColumn);
+       });
+        fieldColumns.forEach(fieldColumn => {
+            fieldColumn.hidden = !newState;
+        });
        this.reflow();
    }
 
@@ -269,10 +267,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.formatter = this.pivotConfiguration.values[0].formatter;
                 ref.changeDetectorRef.detectChanges();
 
-                const children = this.getMeasureChildren(factoryColumn, data , ref.instance);
-                ref.instance.children.reset(children);
+                const measureChildren = this.getMeasureChildren(factoryColumn, data , ref.instance, false);
+                ref.instance.children.reset(measureChildren);
                 columns.push(ref.instance);
-                columns = columns.concat(children);
+                columns = columns.concat(measureChildren);
             } else {
                 const ref = factoryColumnGroup.create(this.viewRef.injector);
                 ref.instance.parent = parent;
@@ -280,23 +278,19 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                 if (value.expandable) {
                     ref.instance.headerTemplate = this.headerTemplate;
-                    const refSibling = factoryColumn.create(this.viewRef.injector);
-                    refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
-                    refSibling.instance.field = key;
-                    refSibling.instance.dataType = this.resolveDataTypes(data[0][key]);
-                    refSibling.instance.formatter = this.pivotConfiguration.values[0].formatter;
-                    refSibling.instance.parent = parent;
-                    refSibling.instance.hidden = true;
-                    columns.push(refSibling.instance);
                 }
                 const children = this.generateColumnHierarchy(value.children, data, ref.instance);
                 const filteredChildren = children.filter(x => x.level === ref.instance.level + 1);
                 ref.changeDetectorRef.detectChanges();
 
-                ref.instance.children.reset(filteredChildren);
+                const measureChildren = this.getMeasureChildren(factoryColumn, data , ref.instance, true);
+                const nestedChildren = filteredChildren.concat(measureChildren);
+
+                const allChildren = children.concat(measureChildren);
+                ref.instance.children.reset(nestedChildren);
 
                 columns.push(ref.instance);
-                columns = columns.concat(children);
+                columns = columns.concat(allChildren);
             }
         });
         return columns;
@@ -314,13 +308,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             default: return GridColumnDataType.String;
         }
     }
-    protected getMeasureChildren(colFactory, data, parent){
+    protected getMeasureChildren(colFactory, data, parent, hidden) {
         const cols = [];
         this.pivotConfiguration.values.forEach(val => {
             const ref = colFactory.create(this.viewRef.injector);
             ref.instance.header = val.member;
             ref.instance.field = parent.field + '-' + val.member;
             ref.instance.parent = parent;
+            ref.instance.hidden = hidden;
             ref.instance.dataType = this.resolveDataTypes(data[0][val.member]);
             ref.changeDetectorRef.detectChanges();
             cols.push(ref.instance);
