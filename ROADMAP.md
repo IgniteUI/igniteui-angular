@@ -14,7 +14,7 @@
 ## Going down the road
 
 1. Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
-2. Grid Cell Merging
+2. Grid Cell Merging [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
 3. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
 4. Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
 5. Themes: Split themes and aid with Grid refactoring [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
