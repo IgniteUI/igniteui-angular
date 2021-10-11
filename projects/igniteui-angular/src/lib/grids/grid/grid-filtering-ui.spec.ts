@@ -475,7 +475,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             GridFunctions.resetFilterRow(fix);
 
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
+            const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(emptyFilter);
             expect(grid.onFilteringDone.emit).toHaveBeenCalledTimes(1);
             const filterUiRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const reset = filterUiRow.queryAll(By.css('button'))[0];
@@ -497,7 +498,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
+            const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(emptyFilter);
         }));
 
         it('Removing second condition removes the And/Or button', fakeAsync(() => {
