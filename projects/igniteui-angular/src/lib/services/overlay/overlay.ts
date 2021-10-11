@@ -659,15 +659,14 @@ export class IgxOverlayService implements OnDestroy {
         if (info.componentRef) {
             this._appRef.detachView(info.componentRef.hostView);
             info.componentRef.destroy();
+            delete info.componentRef;
         }
         if (info.hook) {
             info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
             info.hook.parentElement.removeChild(info.hook);
             delete info.hook;
         }
-        if (info.wrapperElement) {
-            delete info.wrapperElement;
-        }
+
         const index = this._overlayInfos.indexOf(info);
         this._overlayInfos.splice(index, 1);
 
@@ -679,6 +678,20 @@ export class IgxOverlayService implements OnDestroy {
             }
             this.removeCloseOnEscapeListener();
         }
+
+        // clean all the resources attached to info
+        delete info.elementRef;
+        delete info.settings;
+        delete info.initialSize;
+        info.openAnimationPlayer?.destroy();
+        delete info.openAnimationPlayer;
+        delete info.openAnimationInnerPlayer;
+        info.closeAnimationPlayer?.destroy();
+        delete info.closeAnimationPlayer;
+        delete info.closeAnimationInnerPlayer;
+        delete info.ngZone;
+        delete info.wrapperElement;
+        info = null;
     }
 
     private playOpenAnimation(info: OverlayInfo) {
@@ -940,7 +953,6 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private closeAnimationDone(info: OverlayInfo) {
-        this.closeDone(info);
         if (info.closeAnimationPlayer) {
             info.closeAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
@@ -954,6 +966,8 @@ export class IgxOverlayService implements OnDestroy {
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.openAnimationPlayer as any)._started = false;
         }
+        // call this last. closeDone will emit this.closed where everything should be cleared
+        this.closeDone(info);
     }
 
     private finishAnimations(info: OverlayInfo) {
