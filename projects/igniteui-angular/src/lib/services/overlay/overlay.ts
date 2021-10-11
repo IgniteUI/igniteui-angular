@@ -536,6 +536,7 @@ export class IgxOverlayService implements OnDestroy {
             this.playCloseAnimation(info, event);
         } else {
             this.closeDone(info);
+            this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
         }
     }
 
@@ -644,7 +645,6 @@ export class IgxOverlayService implements OnDestroy {
             // to eliminate flickering show the element just before animation start
             info.wrapperElement.style.visibility = 'hidden';
         }
-        this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
         delete info.event;
     }
 
@@ -721,6 +721,7 @@ export class IgxOverlayService implements OnDestroy {
         info.wrapperElement.style.visibility = '';
         info.visible = true;
         this.addModalClasses(info);
+        info.openAnimationStarted = true;
         info.openAnimationPlayer.play();
     }
 
@@ -749,6 +750,7 @@ export class IgxOverlayService implements OnDestroy {
         this.animationStarting.emit({ id: info.id, animationPlayer: info.closeAnimationPlayer, animationType: 'close' });
         info.event = event;
         this.removeModalClasses(info);
+        info.closeAnimationStarted = true;
         info.closeAnimationPlayer.play();
     }
 
@@ -939,7 +941,10 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private openAnimationDone(info: OverlayInfo) {
-        this.opened.emit({ id: info.id, componentRef: info.componentRef });
+        if (info.openAnimationStarted) {
+            info.openAnimationStarted = false;
+            this.opened.emit({ id: info.id, componentRef: info.componentRef });
+        }
         if (info.openAnimationPlayer) {
             info.openAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
@@ -968,18 +973,21 @@ export class IgxOverlayService implements OnDestroy {
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.openAnimationPlayer as any)._started = false;
         }
-        // call this last. closeDone will emit this.closed where everything should be cleared
         this.closeDone(info);
+        if (info.closeAnimationStarted) {
+            info.closeAnimationStarted = false;
+            this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
+        }
     }
 
     private finishAnimations(info: OverlayInfo) {
         // TODO: should we emit here opened or closed events
-        if (info.openAnimationPlayer) {
+        if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
             info.openAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.openAnimationPlayer as any)._started = false;
         }
-        if (info.closeAnimationPlayer) {
+        if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
             info.closeAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.closeAnimationPlayer as any)._started = false;

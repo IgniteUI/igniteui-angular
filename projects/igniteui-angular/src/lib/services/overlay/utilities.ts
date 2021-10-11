@@ -147,8 +147,14 @@ export interface OverlayInfo {
     initialSize?: Size;
     hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
-    closeAnimationPlayer?: AnimationPlayer;
     openAnimationInnerPlayer?: any;
+    // calling animation.destroy in detach fires animation.done. This should not happen
+    // this is why we should trace if animation ever started
+    openAnimationStarted?: boolean;
+    closeAnimationPlayer?: AnimationPlayer;
+    // calling animation.destroy in detach fires animation.done. This should not happen
+    // this is why we should trace if animation ever started
+    closeAnimationStarted?: boolean;
     closeAnimationInnerPlayer?: any;
     ngZone: NgZone;
     transformX?: number;
