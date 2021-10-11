@@ -1,15 +1,15 @@
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
 import { SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { Injectable } from '@angular/core';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { RowType } from '../common/row.interface';
 import { IPathSegment } from './hierarchical-grid-base.directive';
+import { GridType } from '../common/grid.interface';
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
-    public grid: IgxHierarchicalGridComponent;
+    public grid: GridType;
 
     protected _pendingNavigation = false;
 

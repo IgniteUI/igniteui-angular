@@ -9,16 +9,16 @@ import {
     ViewChild,
     AfterViewInit,
     SimpleChanges,
-    ComponentFactoryResolver
+    ComponentFactoryResolver,
+    Inject
 } from '@angular/core';
-import { GridBaseAPIService } from '.././api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { takeUntil } from 'rxjs/operators';
+import { GridServiceType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-child-grid-row',
     templateUrl: './child-grid-row.component.html'
 })
@@ -100,7 +100,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * let selectedRowNativeElement = this.grid.selectedRows[1].nativeElement;
      * ```
      */
-     public get nativeElement() {
+    public get nativeElement() {
         return this.element.nativeElement;
     }
 
@@ -112,19 +112,17 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      */
     public expanded = false;
 
-    private resolver;
 
-    constructor(public gridAPI: GridBaseAPIService<any/* TODO: IgxHierarchicalGridComponent*/>,
-        public element: ElementRef,
-        resolver: ComponentFactoryResolver,
-        public cdr: ChangeDetectorRef) {
-            this.resolver = resolver;
-    }
+    constructor(
+        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
+        public element: ElementRef<HTMLElement>,
+        private resolver: ComponentFactoryResolver,
+        public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
      */
-     public ngOnInit() {
+    public ngOnInit() {
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
@@ -134,7 +132,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         });
         this.hGrid.parent = this.parentGrid;
         this.hGrid.parentIsland = this.layout;
-        this.hGrid.childRow =  this;
+        this.hGrid.childRow = this;
         // handler logic that re-emits hgrid events on the row island
         this.setupEventEmitters();
         this.layout.gridCreated.emit({
@@ -147,7 +145,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     /**
      * @hidden
      */
-     public ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.hGrid.childLayoutList = this.layout.children;
         const layouts = this.hGrid.childLayoutList.toArray();
         layouts.forEach((l) => this.hGrid.hgridAPI.registerChildRowIsland(l));

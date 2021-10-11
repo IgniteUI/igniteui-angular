@@ -17,7 +17,6 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
@@ -30,7 +29,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxGridCRUDService } from '../common/crud.service';
@@ -54,7 +53,7 @@ export interface HierarchicalStateRecord {
     providers: [
         IgxGridCRUDService,
         IgxGridSelectionService,
-        { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
+        { provide: IGX_GRID_SERVICE_BASE, useClass: IgxHierarchicalGridAPIService },
         { provide: IGX_GRID_BASE, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxGridSummaryService,
         IgxFilteringService,

@@ -1159,7 +1159,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ViewChild('tfoot', { static: true })
-    public tfoot: ElementRef;
+    public tfoot: ElementRef<HTMLElement>;
 
     /**
      * @hidden @internal

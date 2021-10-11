@@ -4,10 +4,9 @@ import { IPathSegment } from './hierarchical-grid-base.directive';
 import { GridType } from '../common/grid.interface';
 import { Injectable } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 
 @Injectable()
-export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBaseDirective & GridType> {
+export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> {
     protected childRowIslands: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();
     protected childGrids:  Map<string, Map<any, GridType>> =
         new Map<string, Map<any, GridType>>();

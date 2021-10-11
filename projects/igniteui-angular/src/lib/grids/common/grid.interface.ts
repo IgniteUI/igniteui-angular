@@ -9,7 +9,7 @@ import {
     ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs,
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/displayDensity';
-import { ChangeDetectorRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -129,6 +129,7 @@ export interface GridType extends IGridDataBindable {
     actionStrip: IgxActionStripComponent;
     resizeLine: IgxGridColumnResizerComponent;
 
+    tfoot: ElementRef<HTMLElement>;
     paginator: IgxPaginatorComponent;
     crudService: IgxGridCRUDService;
     summaryService: IgxGridSummaryService;
@@ -235,6 +236,7 @@ export interface GridType extends IGridDataBindable {
 
     // XXX: Work around till we fixed the injection tokens
     flatData?: any[];
+    childRow?: any;
     expansionDepth?: number;
     childDataKey?: any;
     foreignKey?: any;
@@ -353,12 +355,13 @@ export interface GridType extends IGridDataBindable {
     isGroupByRecord(rec: any): boolean;
     isGhostRecord(rec: any): boolean;
     isTreeRow?(rec: any): boolean;
+    isChildGridRecord?(rec: any): boolean;
     isHierarchicalRecord?(record: any): boolean;
     columnToVisibleIndex(key: string | number): number;
     moveColumn(column: ColumnType, target: ColumnType, pos: DropPosition): void;
     navigateTo(rowIndex: number, visibleColumnIndex: number, callback?: (e: any) => any): void;
-    getPreviousCell(currRowIndex: number, curVisibleColIndex: number, callback: (IgxColumnComponent) => boolean): ICellPosition;
-    getNextCell(currRowIndex: number, curVisibleColIndex: number, callback: (IgxColumnComponent) => boolean): ICellPosition;
+    getPreviousCell(currRowIndex: number, curVisibleColIndex: number, callback: (c: ColumnType) => boolean): ICellPosition;
+    getNextCell(currRowIndex: number, curVisibleColIndex: number, callback: (c: ColumnType) => boolean): ICellPosition;
     clearCellSelection(): void;
     selectRange(range: GridSelectionRange | GridSelectionRange[]): void;
     selectRows(rowIDs: any[], clearCurrentSelection?: boolean): void;
