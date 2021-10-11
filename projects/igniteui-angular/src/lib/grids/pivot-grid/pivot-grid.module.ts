@@ -22,7 +22,10 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
     IgxGridModule,
     IgxPivotGridComponent,
     IgxPivotRowComponent,
-    IgxPivotHeaderRowComponent
+    IgxPivotHeaderRowComponent,
+    IgxPivotRowPipe,
+    IgxPivotColumnPipe,
+    IgxPivotGridFilterPipe
   ],
   imports: [
     IgxGridModule,

@@ -15,6 +15,8 @@ export interface IPivotDimension {
     member: string | ((data: any) => any);
     // Enables/Disables a particular dimension from pivot structure.
     enabled: boolean;
+    // additional field name when using member as a function
+    fieldName?: string;
 }
 
 export interface IPivotValue {
@@ -23,4 +25,11 @@ export interface IPivotValue {
     aggregate: (data: any[]) => any;
     // Enables/Disables a particular value from pivot aggregation.
     enabled: boolean;
+}
+
+export interface IPivotKeys {
+    children: string;
+    records: string;
+    aggregations: string;
+    level: string;
 }

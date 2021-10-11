@@ -14,27 +14,6 @@ export class PivotGridSampleComponent {
 
     public pivotConfig: IPivotConfiguration = {
         columns: [{
-            member: 'Country',
-            enabled: true,
-            childLevels:[]
-        }],
-        rows: [{
-            member: (data) => data.ProductCategory,
-            enabled: true,
-            childLevels:[]
-        }],
-        values: [
-            {
-                member: 'UnitsSold',
-                aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true
-            }
-        ],
-        filters: null
-    };
-
-    public pivotConfigHierarchy: IPivotConfiguration = {
-        columns: [{
             member: () => 'All',
             enabled: true,
             childLevels: [{
@@ -48,6 +27,52 @@ export class PivotGridSampleComponent {
             enabled: true,
             childLevels:[
                 {
+                    member: (data) => data.ProductCategory,
+                    enabled: true,
+                    childLevels:[]
+                }
+            ]
+        }],
+        values: [
+            {
+                member: 'UnitsSold',
+                aggregate: IgxNumberSummaryOperand.sum,
+                enabled: true
+            }
+        ],
+        filters: null
+    };
+
+    public pivotConfigHierarchy: IPivotConfiguration = {
+        columns: [{
+            member: 'Country',
+            enabled: true,
+            childLevels: [{
+                member: 'SellerName',
+                enabled: true,
+                childLevels: [
+                    {
+                        member: 'Date',
+                        enabled: true,
+                        childLevels: []
+                    },
+                    ]
+            }]
+        },
+
+        {
+            member: 'ProductCategory',
+            enabled: true,
+            childLevels: []
+        }
+        ]
+,
+        rows: [{
+            member: () => 'All',
+            enabled: true,
+            childLevels:[
+                {
+                    fieldName: 'ProductCategory',
                     member: (data) => data.ProductCategory,
                     enabled: true,
                     childLevels:[]
