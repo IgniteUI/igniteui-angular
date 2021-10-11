@@ -15,7 +15,6 @@ export interface ThemePropertyChange extends ChangeAction {
 export interface ThemeVariableChange extends ChangeAction {
     /** Name of the theme variable */
     name: string;
-    owner: string;
 }
 
 export interface SelectorChanges {

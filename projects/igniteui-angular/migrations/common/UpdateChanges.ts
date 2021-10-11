@@ -1,3 +1,4 @@
+import { ThemeVariableChange } from './../../../../dist/igniteui-angular/migrations/common/schema/index.d';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
@@ -6,7 +7,7 @@ import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics'
 import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
-    SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
+    SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges, ThemePropertyChange
 } from './schema';
 import {
     getLanguageService, getRenamePositions, getIdentifierPositions, replaceMatch,
@@ -169,7 +170,6 @@ export class UpdateChanges {
         this.updateTsFiles();
         this.updateMembers();
         /** Sass files */
-        // Take out in a new method
         if (this.themePropsChanges && this.themePropsChanges.changes.length) {
             for (const entryPath of this.sassFiles) {
                 this.updateThemeProps(entryPath);
@@ -377,20 +377,21 @@ export class UpdateChanges {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
         for (const change of this.themePropsChanges.changes) {
-            if (fileContent.indexOf(change.owner) !== -1) {
+            const _change = change as ThemePropertyChange;
+            if (fileContent.indexOf(_change.owner) !== -1) {
                 /** owner-func:( * ); */
-                const searchPattern = String.raw`${change.owner}\([\s\S]+?\);`;
+                const searchPattern = String.raw`${_change.owner}\([\s\S]+?\);`;
                 const matches = fileContent.match(new RegExp(searchPattern, 'g'));
                 if (!matches) {
                     continue;
                 }
                 for (const match of matches) {
-                    if (match.indexOf(change.name) !== -1) {
-                        const name = change.name.replace('$', '\\$');
-                        const replaceWith = change.replaceWith?.replace('$', '\\$');
+                    if (match.indexOf(_change.name) !== -1) {
+                        const name = _change.name.replace('$', '\\$');
+                        const replaceWith = _change.replaceWith?.replace('$', '\\$');
                         const reg = new RegExp(String.raw`^\s*${name}:`);
                         const existing = new RegExp(String.raw`${replaceWith}:`);
-                        const opening = `${change.owner}(`;
+                        const opening = `${_change.owner}(`;
                         const closing = /\s*\);$/.exec(match).pop();
                         const body = match.substr(opening.length, match.length - opening.length - closing.length);
 
@@ -399,8 +400,8 @@ export class UpdateChanges {
                             if (reg.test(param)) {
                                 const duplicate = !!replaceWith && arr.some(p => existing.test(p));
 
-                                if (!change.remove && !duplicate) {
-                                    arr.push(param.replace(change.name, change.replaceWith));
+                                if (!_change.remove && !duplicate) {
+                                    arr.push(param.replace(_change.name, _change.replaceWith));
                                 }
                             } else {
                                 arr.push(param);
@@ -422,24 +423,45 @@ export class UpdateChanges {
         }
     }
 
+    protected isNamedArgument(fileContent: string, i: number, occurrences: number[], change: ThemeVariableChange) {
+        if ((fileContent[(occurrences[i] + change.name.length)] === ':') ||
+            (fileContent[(occurrences[i] + change.name.length)] === ' ' &&
+                fileContent[(occurrences[i] + change.name.length) + 1] === ':')) {
+            for (let j = occurrences[i]; j >= 0; j--) {
+                if (fileContent[j] === '(' || fileContent[j] === ')') {
+                    if (fileContent[j] === ')') {
+                        return false;
+                    } else if (fileContent[j] === '(') {
+                        return true;
+                    }
+                } else {
+                    continue;
+                }
+            }
+        }
+        return false;
+    }
+
     protected updateSassVariables(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
-        const allowedEndCharacters = new RegExp('[;:), ]', 'i');
-            for (const change of this.themePropsChanges.changes) {
-                if (!change.owner) {
-                    const occurrences = findMatches(fileContent, change.name);
-                    if (occurrences.length > 0) {
-                        for (let i = occurrences.length - 1; i >= 0; i--) {
-                            if (fileContent[fileContent.indexOf(change.name) + change.name.length].match(allowedEndCharacters)) {
-                                fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
-                                overwrite = true;
-                            }
+        const allowedStartCharacters = new RegExp('(\:|\,)\s?', 'g');
+        const allowedEndCharacters = new RegExp('[;),: \r\n]', 'g');
+        for (const change of this.themePropsChanges.changes) {
+            if (!('owner' in change)) {
+                const occurrences = findMatches(fileContent, change.name);
+                for (let i = occurrences.length - 1; i >= 0; i--) {
+                    if (fileContent[occurrences[i] - 1].match(allowedStartCharacters)
+                        || fileContent[(occurrences[i] + change.name.length)].match(allowedEndCharacters)) {
+                        if (this.isNamedArgument(fileContent, i, occurrences, change as ThemeVariableChange)) {
+                            continue;
                         }
+                        fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
+                        overwrite = true;
                     }
                 }
             }
-
+        }
         if (overwrite) {
             this.host.overwrite(entryPath, fileContent);
         }
