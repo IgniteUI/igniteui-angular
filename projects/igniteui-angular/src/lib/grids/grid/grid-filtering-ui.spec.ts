@@ -485,9 +485,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, columnName);
             GridFunctions.resetFilterRow(fix);
 
-            expect(grid.filtering.emit).toHaveBeenCalledWith({ owner: grid, cancel: false, filteringExpressions: null });
-            expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
             const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            expect(grid.filtering.emit).toHaveBeenCalledWith({ owner: grid, cancel: false, filteringExpressions: emptyFilter });
+            expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
             expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
             expect(grid.filteringDone.emit).toHaveBeenCalledTimes(2);
 
@@ -513,9 +513,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            const args = { owner: grid, cancel: false, filteringExpressions: null };
-            expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            const args = { owner: grid, cancel: false, filteringExpressions: emptyFilter };
+            expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
         }));
 
@@ -852,10 +852,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.rowList.length).toEqual(8);
 
-            args.filteringExpressions = null;
+            const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            args.filteringExpressions = emptyFilter;
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
-            const emptyFilter = new FilteringExpressionsTree(null, columnName);
             expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
             expect(grid.filteringDone.emit).toHaveBeenCalledTimes(2);
         }));
