@@ -45,7 +45,6 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         groupBy: true,
         columns: false,
         rowPinning: true,
-        rowPinned: true,
         pinningConfig: true
     };
     public selectionMode;
