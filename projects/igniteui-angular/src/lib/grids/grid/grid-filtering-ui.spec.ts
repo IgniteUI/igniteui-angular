@@ -487,7 +487,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.filtering.emit).toHaveBeenCalledWith({ owner: grid, cancel: false, filteringExpressions: null });
             expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(null);
+            const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
             expect(grid.filteringDone.emit).toHaveBeenCalledTimes(2);
 
             const filterUiRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -514,7 +515,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const args = { owner: grid, cancel: false, filteringExpressions: null };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(null);
+            const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
         }));
 
         it('Removing second condition removes the And/Or button', fakeAsync(() => {
@@ -826,13 +828,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             spyOn(grid.filtering, 'emit');
             spyOn(grid.filteringDone, 'emit');
 
-            grid.filter('ProductName', 'I', IgxStringFilteringOperand.instance().condition('startsWith'));
+            const columnName = 'ProductName';
+            grid.filter(columnName, 'I', IgxStringFilteringOperand.instance().condition('startsWith'));
             tick(30);
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(2);
 
-            const filteringExpressions = grid.filteringExpressionsTree.find('ProductName') as FilteringExpressionsTree;
+            const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
             const args = { owner: grid, cancel: false, filteringExpressions };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
@@ -852,7 +855,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             args.filteringExpressions = null;
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(null);
+            const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
             expect(grid.filteringDone.emit).toHaveBeenCalledTimes(2);
         }));
 
