@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration } from 'igniteui-angular';
+import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration, NoopPivotDimensionsStrategy } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
@@ -24,10 +24,12 @@ export class PivotGridSampleComponent {
         }],
         rows: [{
             member: () => 'All',
+            fieldName: 'All',
             enabled: true,
             childLevels:[
                 {
                     member: (data) => data.ProductCategory,
+                    fieldName: 'ProductCategory',
                     enabled: true,
                     childLevels:[]
                 }
@@ -44,30 +46,16 @@ export class PivotGridSampleComponent {
     };
 
     public pivotConfigHierarchy: IPivotConfiguration = {
+        columnStrategy: NoopPivotDimensionsStrategy.instance(),
+        rowStrategy: NoopPivotDimensionsStrategy.instance(),
         columns: [{
             member: 'Country',
-            enabled: true,
-            childLevels: [{
-                member: 'SellerName',
-                enabled: true,
-                childLevels: [
-                    {
-                        member: 'Date',
-                        enabled: true,
-                        childLevels: []
-                    },
-                    ]
-            }]
-        },
-
-        {
-            member: 'ProductCategory',
-            enabled: true,
-            childLevels: []
+            enabled: true
         }
         ]
 ,
         rows: [{
+            fieldName: 'All',
             member: () => 'All',
             enabled: true,
             childLevels:[
