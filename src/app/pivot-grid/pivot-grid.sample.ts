@@ -12,24 +12,27 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
 
-    public pivotConfig: IPivotConfiguration = {
+
+    public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [{
-            member: () => 'All',
-            enabled: true,
-            childLevels: [{
-                member: 'Country',
-                enabled: true,
-                childLevels:[]
-            }]
-        }],
-        rows: [{
-            member: () => 'All',
             fieldName: 'All',
+            member: () => 'All',
             enabled: true,
             childLevels:[
                 {
-                    member: (data) => data.ProductCategory,
+            member: 'Country',
+            enabled: true}]
+        }
+        ]
+,
+        rows: [{
+            fieldName: 'All',
+            member: () => 'All',
+            enabled: true,
+            childLevels:[
+                {
                     fieldName: 'ProductCategory',
+                    member: (data) => data.ProductCategory,
                     enabled: true,
                     childLevels:[]
                 }
@@ -45,7 +48,7 @@ export class PivotGridSampleComponent {
         filters: null
     };
 
-    public pivotConfigHierarchy: IPivotConfiguration = {
+    public pivotConfigRemoteHierarchy: IPivotConfiguration = {
         columnStrategy: NoopPivotDimensionsStrategy.instance(),
         rowStrategy: NoopPivotDimensionsStrategy.instance(),
         columns: [{
@@ -101,11 +104,10 @@ export class PivotGridSampleComponent {
     ];
 
     public dataHierarchical =  [
-        { ProductCategory: 'All', All: 1000, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, level: 0, records: [
-            { ProductCategory: 'Clothing', 'All-Bulgaria': 774, 'All-USA': 296,  'All-Uruguay': 456, level: 1  },
-            { ProductCategory: 'Bikes',  'All-Uruguay': 68, level: 1  },
-            { ProductCategory: 'Accessories', 'All-USA': 293, level: 1  },
-            { ProductCategory: 'Components', 'All-USA': 240, level: 1  }
-        ] }
-    ];
+        {All:2127,records:[
+            {ProductCategory:'All-Clothing', level:1, All:1526,'All-Bulgaria':774,'All-USA':296,'All-Uruguay':456},
+            {ProductCategory:'All-Bikes', level:1, All:68,'All-Uruguay':68},
+            {ProductCategory:'All-Accessories',level:1, All:293,'All-USA':293},
+            {ProductCategory:'All-Components', level:1, All:240,'All-USA':240}]
+            , level:0,'All-Bulgaria':774,'All-USA':829,'All-Uruguay':524}];
 }
