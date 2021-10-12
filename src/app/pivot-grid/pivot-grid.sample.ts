@@ -101,10 +101,6 @@ export class PivotGridSampleComponent {
             { ProductCategory: 'Bikes', Uruguay: 68, level: 1  },
             { ProductCategory: 'Accessories', USA: 293, level: 1  },
             { ProductCategory: 'Components', USA: 240, level: 1  }
-        ] },
-        { ProductCategory: 'Clothing', All: 1000, Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
-        { ProductCategory: 'Bikes', All: 1000, Uruguay: 68, level: 1  },
-        { ProductCategory: 'Accessories', All: 1000, USA: 293, level: 1  },
-        { ProductCategory: 'Components', All: 1000, USA: 240, level: 1  }
+        ] }
     ];
 }

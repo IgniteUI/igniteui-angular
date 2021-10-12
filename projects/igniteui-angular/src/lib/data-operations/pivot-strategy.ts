@@ -6,7 +6,6 @@ export interface IPivotDimensionStrategy {
     process(collection: any,
         dimensions: IPivotDimension[],
         values: IPivotValue[],
-        expansionStates?: Map<any, boolean>,
         pivotKeys?: IPivotKeys): any[];
 }
 
@@ -38,13 +37,12 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
             collection: any[],
             rows: IPivotDimension[],
             __: IPivotValue[],
-            expansionStates: Map<any, boolean>,
             pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
         ): any[] {
             // build hierarchies - groups and subgroups
             const hierarchies = PivotUtil.getFieldsHierarchy(collection, rows, pivotKeys);
             // generate flat data from the hierarchies
-            const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], rows, pivotKeys, 0, expansionStates, true);
+            const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], rows, pivotKeys, 0);
             return data;
     }
 }
@@ -62,7 +60,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
             collection: any[],
             columns: IPivotDimension[],
             values: IPivotValue[],
-            expansionStates: Map<any, boolean>,
             pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
         ): any[] {
             const result = [];

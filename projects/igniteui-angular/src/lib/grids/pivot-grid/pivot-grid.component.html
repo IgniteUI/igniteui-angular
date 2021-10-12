@@ -32,7 +32,8 @@
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | pivotGridFilter:pivotConfiguration.filters:filterStrategy:advancedFilteringExpressionsTree
-        | pivotGridRow:pivotConfiguration:expansionStates
+        | pivotGridRow:pivotConfiguration
+        | pivotGridRowExpansion:pivotConfiguration:expansionStates
         | pivotGridColumn:pivotConfiguration"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'

@@ -5,6 +5,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IPivotConfiguration, IPivotKeys } from './pivot-grid.interface';
 import { PivotColumnDimensionsStrategy, PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { PivotUtil } from './pivot-util';
 /**
  * @hidden
  */
@@ -19,13 +20,55 @@ export class IgxPivotRowPipe implements PipeTransform {
     public transform(
         collection: any,
         config: IPivotConfiguration,
-        expansionStates: Map<any, boolean>,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
        const rowStrategy = config.rowStrategy ||  PivotRowDimensionsStrategy.instance();
-       return rowStrategy.process(collection, config.rows, config.values, expansionStates, pivotKeys);
+       return rowStrategy.process(collection, config.rows, config.values, pivotKeys);
     }
 }
+
+/**
+ * @hidden
+ */
+ @Pipe({
+    name: 'pivotGridRowExpansion',
+    pure: true
+})
+export class IgxPivotRowExpansionPipe implements PipeTransform {
+
+    constructor() { }
+
+    public transform(
+        collection: any,
+        config: IPivotConfiguration,
+        expansionStates: Map<any, boolean>,
+        pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+    ): any[] {
+        const flatData = [];
+        const defaultExpandState = true;
+        const rowDimsFlattened = PivotUtil.flatten(config.rows);
+        collection.forEach(rec => {
+            const lvl = rec[pivotKeys.level];
+            // should have handling for multiple dims
+            const dim = rowDimsFlattened.filter(x => x.level === lvl)[0];
+            let field;
+            if (config.rowStrategy) {
+                field = dim.fieldName;
+            } else {
+                field = PivotUtil.resolveFieldName(dim, rec);
+            }
+            flatData.push(rec);
+            const isExpanded = expansionStates.get(field) === undefined ? defaultExpandState : expansionStates.get(field);
+            if (dim.childLevels && dim.childLevels.length > 0 && isExpanded) {
+                for (const record of rec[pivotKeys.records]) {
+                    flatData.push(record);
+                }
+            }
+        });
+       return flatData;
+    }
+}
+
 
 /**
  * @hidden
@@ -39,11 +82,10 @@ export class IgxPivotColumnPipe implements PipeTransform {
     public transform(
         collection: any,
         config: IPivotConfiguration,
-        expansionStates: Map<any, boolean>,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
         const colStrategy = config.columnStrategy ||  PivotColumnDimensionsStrategy.instance();
-        return colStrategy.process(collection, config.columns, config.values, expansionStates, pivotKeys);
+        return colStrategy.process(collection, config.columns, config.values, pivotKeys);
     }
 }
 

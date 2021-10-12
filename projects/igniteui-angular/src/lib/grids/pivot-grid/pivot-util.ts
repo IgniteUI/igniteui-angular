@@ -41,12 +41,13 @@ export class PivotUtil {
         return vals;
     }
 
-    public static flatten(arr) {
+    public static flatten(arr, lvl = 0) {
         const newArr = arr.reduce((acc, item) => {
+            item.level = lvl;
             acc.push(item);
           if (Array.isArray(item.childLevels) && item.childLevels.length > 0) {
             item.expandable = true;
-            acc = acc.concat(this.flatten(item.childLevels));
+            acc = acc.concat(this.flatten(item.childLevels, lvl + 1));
           }
           return acc;
         }, []);
@@ -75,8 +76,7 @@ export class PivotUtil {
         return result;
     }
 
-    public static flattenHierarchy(hierarchies, rec, dims, pivotKeys, level = 0,
-         expansionStates: Map<any, boolean>, defaultExpandState: boolean) {
+    public static flattenHierarchy(hierarchies, rec, dims, pivotKeys, level = 0) {
         const flatData = [];
         for (const dim of dims) {
             hierarchies.forEach((h, key) => {
@@ -87,16 +87,13 @@ export class PivotUtil {
                 obj = { ...obj, ...h[pivotKeys.aggregations] };
                 obj[pivotKeys.level] = level;
                 flatData.push(obj);
-                const isExpanded = expansionStates.get(key) === undefined ? defaultExpandState : expansionStates.get(key);
 
                 if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
                     obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec,
-                         dim.childLevels, pivotKeys, level + 1, expansionStates, defaultExpandState);
-                    if (isExpanded) {
-                        for (const record of obj[pivotKeys.records]) {
-                            flatData.push(record);
-                        }
-                    }
+                         dim.childLevels, pivotKeys, level + 1);
+                        // for (const record of obj[pivotKeys.records]) {
+                        //     flatData.push(record);
+                        // }
                 }
             });
         }
@@ -130,7 +127,7 @@ export class PivotUtil {
         return flatData;
     }
 
-    private static resolveFieldName(dimension, record) {
+    public static resolveFieldName(dimension, record) {
          if (typeof dimension.member === 'string') {
             return dimension.member;
          } else {
