@@ -255,7 +255,8 @@ export class IgxFilteringService implements OnDestroy {
         this.clear_filter(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(null));
+        const emptyFilter = new FilteringExpressionsTree(null, field);
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(emptyFilter));
 
         if (field) {
             const expressions = this.getExpressions(field);
