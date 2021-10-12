@@ -84,12 +84,8 @@ export class PivotGridSampleComponent {
                 aggregate: IgxNumberSummaryOperand.sum,
                 enabled: true,
                 styles: {
-                    upFont: (rowData: any, columnKey: any): boolean => {
-                        return rowData[columnKey] > 300;
-                    },
-                    downFont: (rowData: any, columnKey: any): boolean => {
-                        return rowData[columnKey] <= 300;
-                    }
+                    upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
+                    downFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 300
                 },
                 // dataType: 'currency',
                 formatter: (value) => value ? value + '$' : undefined
@@ -100,12 +96,8 @@ export class PivotGridSampleComponent {
                 enabled: true,
                 dataType: 'currency',
                 styles: {
-                    upFont1: (rowData: any, columnKey: any): boolean => {
-                        return rowData[columnKey] > 150;
-                    },
-                    downFont1: (rowData: any, columnKey: any): boolean => {
-                        return rowData[columnKey] <= 150;
-                    }
+                    upFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 150,
+                    downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 150
                 },
             }
         ],
