@@ -1374,6 +1374,12 @@
 
     %grid-cell--active {
         box-shadow: inset 0 0 0 1px var-get($theme, 'cell-active-border-color');
+
+        %igx-grid__filtering-cell,
+        %grid-cell-header {
+            border-#{$right}-color: var-get($theme, 'cell-active-border-color');
+            border-bottom-color: var-get($theme, 'cell-active-border-color');
+        }
     }
 
     %grid-cell--selected {
@@ -1577,11 +1583,7 @@
         flex-grow: 1; /* hey IE, the text should take most of the space */
         // align-self: flex-end; /* commenting out for now on external request */
         line-height: math.div(map.get($grid-header-height, 'comfortable'), $grid-head-fs);
-        transition: opacity 250ms ease-in-out, color 250ms ease-in-out;
-
-        @if $variant != 'indigo-design' {
-            opacity: .7;
-        }
+        transition: color 250ms ease-in-out;
     }
 
     %grid-cell-header-title--cosy {
@@ -1967,7 +1969,9 @@
         background: var-get($theme, 'header-background');
 
         %grid-cell-header {
-            opacity: .4;
+            > * {
+                opacity: .4;
+            }
         }
     }
 
