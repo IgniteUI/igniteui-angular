@@ -1,3 +1,27 @@
 .sample-content {
     flex-flow: column nowrap;
 }
+
+
+.grid__wrapper {
+    margin: 16px;
+}
+
+.cell__inner {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.cell__inner {
+    position: relative;
+    justify-content: space-between;
+}
+
+.athlete_name {
+    margin-left: 30px;
+}
+
+.country_name {
+    margin-left: 30px;
+}

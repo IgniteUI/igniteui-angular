@@ -18,6 +18,7 @@ export class GridToolbarSampleComponent implements OnInit {
 
     public _displayDensity = [DisplayDensity.comfortable, DisplayDensity.cosy, DisplayDensity.compact];
 
+    public data1 = [];
     public data = [
         {
             Name: 'Alice',

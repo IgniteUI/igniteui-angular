@@ -967,6 +967,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.summaryService.updateSummaryCache(args);
             this._headerFeaturesWidth = NaN;
         });
+
     }
 
     /**
@@ -987,6 +988,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
         super.ngDoCheck();
+
+        // setTimeout(() => {
+        //
+        // }, 1)
+
+        // Promise.resolve(1);
     }
 
     /**

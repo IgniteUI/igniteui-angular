@@ -1,3 +1,49 @@
+<igx-tabs [disableAnimation]="true">
+    <igx-tab-item>
+        <igx-tab-header>
+            Grid
+        </igx-tab-header>
+        <igx-tab-content>
+            <div class="grid__wrapper">
+                <igx-grid #grid1 [data]="data1" height="200px" width="100%">
+
+                    <igx-grid-toolbar>
+                        <div style="width: 100%; background: yellow">custom content</div>
+                    </igx-grid-toolbar>
+
+                    <igx-column field="Name" header="Column" width="100">
+                    </igx-column>
+
+                </igx-grid>
+
+            </div>
+        </igx-tab-content>
+    </igx-tab-item>
+    <igx-tab-item>
+        <igx-tab-header>
+            Tab
+        </igx-tab-header>
+        <igx-tab-content>
+            <div class="grid__wrapper">
+                <igx-grid #grid1 [data]="data1" height="200px" width="100%">
+
+                    <igx-grid-toolbar>
+                        <div style="width: 100%; background: yellow">custom content</div>
+                    </igx-grid-toolbar>
+
+                    <igx-column field="Name" header="Column" width="100">
+                    </igx-column>
+
+                </igx-grid>
+
+            </div>
+        </igx-tab-content>
+    </igx-tab-item>
+</igx-tabs>
+
+
+
+
 <section class="sample-content">
     <article class="grid-sample">
         <h4 class="sample-title">Toolbar</h4>
