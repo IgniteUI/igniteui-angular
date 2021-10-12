@@ -46,11 +46,16 @@ export class PivotGridSampleComponent {
     };
 
     public pivotConfigHierarchy: IPivotConfiguration = {
-        // columnStrategy: NoopPivotDimensionsStrategy.instance(),
-        // rowStrategy: NoopPivotDimensionsStrategy.instance(),
+        columnStrategy: NoopPivotDimensionsStrategy.instance(),
+        rowStrategy: NoopPivotDimensionsStrategy.instance(),
         columns: [{
+            fieldName: 'All',
+            member: () => 'All',
+            enabled: true,
+            childLevels:[
+                {
             member: 'Country',
-            enabled: true
+            enabled: true}]
         }
         ]
 ,
@@ -96,11 +101,11 @@ export class PivotGridSampleComponent {
     ];
 
     public dataHierarchical =  [
-        { ProductCategory: 'All', All: 1000, Bulgaria: 774, USA: 829, Uruguay: 524, level: 0, records: [
-            { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
-            { ProductCategory: 'Bikes', Uruguay: 68, level: 1  },
-            { ProductCategory: 'Accessories', USA: 293, level: 1  },
-            { ProductCategory: 'Components', USA: 240, level: 1  }
+        { ProductCategory: 'All', All: 1000, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, level: 0, records: [
+            { ProductCategory: 'Clothing', 'All-Bulgaria': 774, 'All-USA': 296,  'All-Uruguay': 456, level: 1  },
+            { ProductCategory: 'Bikes',  'All-Uruguay': 68, level: 1  },
+            { ProductCategory: 'Accessories', 'All-USA': 293, level: 1  },
+            { ProductCategory: 'Components', 'All-USA': 240, level: 1  }
         ] }
     ];
 }
