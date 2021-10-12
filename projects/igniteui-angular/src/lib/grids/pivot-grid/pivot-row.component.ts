@@ -66,6 +66,16 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         return this.grid.gridAPI.get_row_expansion_state(this.rowDimensionKey);
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public getCellClass(col: any) {
+        const colName = col.field.split('-');
+        const measureName = colName[colName.length - 1];
+        return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
+    }
+
     public ngOnInit() {
         // generate rowDimension
         const rowDimConfig = this.grid.pivotConfiguration.rows;

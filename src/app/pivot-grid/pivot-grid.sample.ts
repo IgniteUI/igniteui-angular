@@ -59,7 +59,6 @@ export class PivotGridSampleComponent {
                     ]
             }]
         },
-
         {
             member: 'ProductCategory',
             enabled: true,
@@ -98,7 +97,16 @@ export class PivotGridSampleComponent {
             {
                 member: 'UnitPrice',
                 aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true
+                enabled: true,
+                dataType: 'currency',
+                styles: {
+                    upFont1: (rowData:any, columnKey:any): boolean => {
+                        return rowData[columnKey] > 150;
+                    },
+                    downFont1: (rowData:any, columnKey:any): boolean => {
+                        return rowData[columnKey] <= 150;
+                    }
+                },
             }
         ],
         filters: null

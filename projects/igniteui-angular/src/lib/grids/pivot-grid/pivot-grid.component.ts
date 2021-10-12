@@ -263,8 +263,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                 ref.instance.field = key;
                 ref.instance.parent = parent;
-                ref.instance.dataType = this.extractDataType();
-                ref.instance.formatter = this.pivotConfiguration.values[0].formatter;
                 ref.changeDetectorRef.detectChanges();
 
                 const measureChildren = this.getMeasureChildren(factoryColumn, data , ref.instance, false);
@@ -296,18 +294,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return columns;
     }
 
-    private extractDataType(): GridColumnDataType {
-        switch(this.pivotConfiguration.values[0].dataType) {
-            case 'number': return GridColumnDataType.Number;
-            case 'currency': return GridColumnDataType.Currency;
-            case 'boolean': return GridColumnDataType.Boolean;
-            case 'date': return GridColumnDataType.Date;
-            case 'dateTime': return GridColumnDataType.DateTime;
-            case 'percent': return GridColumnDataType.Percent;
-            case 'time': return GridColumnDataType.Time;
-            default: return GridColumnDataType.String;
-        }
-    }
     protected getMeasureChildren(colFactory, data, parent, hidden) {
         const cols = [];
         this.pivotConfiguration.values.forEach(val => {
@@ -316,12 +302,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             ref.instance.field = parent.field + '-' + val.member;
             ref.instance.parent = parent;
             ref.instance.hidden = hidden;
-            ref.instance.dataType = this.resolveDataTypes(data[0][val.member]);
+            ref.instance.dataType = val.dataType || this.resolveDataTypes(data[0][val.member]);
+            ref.instance.formatter = val.formatter;
             ref.changeDetectorRef.detectChanges();
             cols.push(ref.instance);
         });
         return cols;
     }
-
-
 }
