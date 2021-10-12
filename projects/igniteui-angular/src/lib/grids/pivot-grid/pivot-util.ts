@@ -107,7 +107,8 @@ export class PivotUtil {
             obj = { ...obj, ...h[pivotKeys.aggregations] };
             obj[pivotKeys.level] = level;
             flatData.push(obj);
-            const isExpanded = expansionStates.get(key) === undefined ? defaultExpandState : expansionStates.get(key);
+            const isExpanded = this.isExpanded(key, expansionStates, defaultExpandState) &&
+                this.isExpanded(key + '_', expansionStates, defaultExpandState);
 
             if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
                 obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec,
@@ -155,6 +156,18 @@ export class PivotUtil {
          } else {
             return (dimension && dimension.fieldName) ?? this.generateFieldValue(record);
          }
+    }
+
+    public static buildKey(rowDimensions, record) {
+        let key = rowDimensions.map(r => record[this.resolveFieldName(r, record)]).join('_');
+        while (key[key.length - 1] === '_') {
+            key = key.substr(0, key.length - 1);
+        }
+        return key;
+    }
+
+    public static isExpanded(key: string, expansionStates: Map<any, boolean>, defaultExpandState: boolean) {
+        return expansionStates.get(key) === undefined ? defaultExpandState : expansionStates.get(key);
     }
 
     private static generateFieldValue(rec) {

@@ -22,37 +22,45 @@ export class IgxPivotRowPipe implements PipeTransform {
         rows: IPivotDimension[],
         expansionStates: Map<any, boolean>,
         values?: IPivotValue[],
-        pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+        pivotKeys: IPivotKeys =
+            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level', collapsed: 'collapsed' }
     ): any[] {
         let hierarchies;
         let data;
         for (const row of rows) {
             if (!data) {
                 // build hierarchies - groups and subgroups
-                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row],  PivotDimensionType.Row, pivotKeys);
+                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
                 // generate flat data from the hierarchies
                 data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, expansionStates, true);
             } else {
                 const newData = [...data];
                 for (let i = 0; i < newData.length; i++) {
-                    const hierarchyFields = PivotUtil
-                        .getFieldsHierarchy(newData[i][pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
-                    const siblingData = PivotUtil.flattenHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0, expansionStates, true);
-                    for (const property in newData[i]) {
-                        if (newData[i].hasOwnProperty(property) &&
-                        Object.keys(pivotKeys).indexOf(property) === -1) {
-                            siblingData.forEach(s => {
-                                s[property] = newData[i][property];
-                                s[pivotKeys.level] = newData[i][pivotKeys.level] + 1;
-                            });
+                    const key = PivotUtil.buildKey(rows, newData[i]);
+                    if (PivotUtil.isExpanded(key, expansionStates, true) &&
+                        PivotUtil.isExpanded(key + '_', expansionStates, true)) {
+                        const hierarchyFields = PivotUtil
+                            .getFieldsHierarchy(newData[i][pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
+                        const siblingData = PivotUtil
+                            .flattenHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0, expansionStates, true);
+                        for (const property in newData[i]) {
+                            if (newData[i].hasOwnProperty(property) &&
+                                Object.keys(pivotKeys).indexOf(property) === -1) {
+                                siblingData.forEach(s => {
+                                    s[property] = newData[i][property];
+                                    s[pivotKeys.level] = newData[i][pivotKeys.level] + 1;
+                                });
+                            }
                         }
+                        newData.splice(i + 1, 0, ...siblingData);
+                        newData[i][pivotKeys.records] = siblingData;
+                        const dim = hierarchyFields.get(hierarchyFields.keys().next().value)['dimension'];
+                        const siblingFieldName = PivotUtil.resolveFieldName(dim, newData[i]);
+                        newData[i][siblingFieldName] = '';
+                        i += siblingData.length;
+                    } else {
+                        newData[i][pivotKeys.collapsed] = true;
                     }
-                    newData.splice(i + 1, 0, ...siblingData);
-                    newData[i][pivotKeys.records] = siblingData;
-                    const dim = hierarchyFields.get(hierarchyFields.keys().next().value)['dimension'];
-                    const siblingFieldName = PivotUtil.resolveFieldName(dim, newData[i]);
-                    newData[i][siblingFieldName] = '';
-                    i+=siblingData.length;
                 }
                 data = newData;
             }
@@ -74,7 +82,8 @@ export class IgxPivotColumnPipe implements PipeTransform {
         collection: any,
         columns: IPivotDimension[],
         values?: IPivotValue[],
-        pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+        pivotKeys: IPivotKeys =
+            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level', collapsed: 'collapsed' }
     ): any[] {
         // build hierarchies - groups and subgroups by columns
         const result = [];
@@ -83,10 +92,13 @@ export class IgxPivotColumnPipe implements PipeTransform {
             this.groupColumns(hierarchy, columns, values, pivotKeys);
             if (hierarchy[pivotKeys.children]) {
                 let flatCols = {};
-                PivotUtil.flattenColumnHierarchy(hierarchy[pivotKeys.children], values, pivotKeys).forEach(o => {
-                    delete o[pivotKeys.records];
-                    flatCols = {...flatCols, ...o};
-                });
+                if (!hierarchy[pivotKeys.collapsed]) {
+                    PivotUtil.flattenColumnHierarchy(hierarchy[pivotKeys.children], values, pivotKeys).forEach(o => {
+                        delete o[pivotKeys.records];
+                        flatCols = { ...flatCols, ...o };
+                    });
+                }
+                delete hierarchy[pivotKeys.collapsed];
                 delete hierarchy[pivotKeys.children]; /* or we can keep it
                 and use when creating the columns in pivot grid instead of recreating it */
                 if (this.isLeaf(hierarchy, pivotKeys)) {
