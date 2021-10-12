@@ -4,7 +4,7 @@ import { DataUtil } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
-import { IComboFilteringOptions } from './combo.component';
+import { IComboFilteringOptions, GroupsSortingDirection } from './combo.component';
 
 
 /**
@@ -44,14 +44,15 @@ export class IgxComboGroupingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
 
-    public transform(collection: any[], groupKey: any, valueKey: any) {
+    public transform(collection: any[], groupKey: any, valueKey: any, sortingDirection: GroupsSortingDirection) {
         this.combo.filteredData = collection;
         if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;
         }
+        const dir: SortingDirection = sortingDirection === 'ascending' ? SortingDirection.Asc : SortingDirection.Desc;
         const sorted = DataUtil.sort(cloneArray(collection), [{
             fieldName: groupKey,
-            dir: SortingDirection.Asc,
+            dir,
             ignoreCase: true,
             strategy: DefaultSortingStrategy.instance()
         }]);

@@ -16,7 +16,9 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, IBaseEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
+import {
+    cloneArray, IBaseEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs, CancelableEventArgs, mkenum
+} from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfModule, IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -66,6 +68,16 @@ const ItemHeights = {
  * drop-down list if no `[itemsMaxHeight]` is specified
  */
 const itemsInContainer = 10;
+
+/**
+ * @hidden
+ */
+ export const GroupsSortingDirection = mkenum({
+    ascending: 'ascending',
+    descending: 'descending'
+});
+
+export type GroupsSortingDirection = (typeof GroupsSortingDirection)[keyof typeof GroupsSortingDirection];
 
 export enum IgxComboState {
     /**
@@ -775,6 +787,20 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public filterable = true;
 
     /**
+     * An @Input property that sets groups sorting order. The default is `ascending`.
+     * ```html
+     * <igx-combo [groupsSortingDirection]="'ascending'">
+     * ```
+     */
+    @Input()
+    public get groupsSortingDirection() {
+        return this._groupsSortingDirection;
+    }
+    public set groupsSortingDirection(val: GroupsSortingDirection) {
+        this._groupsSortingDirection = val;
+    }
+
+    /**
      * An @Input property that set aria-labelledby attribute
      * ```html
      * <igx-combo [ariaLabelledBy]="'label1'">
@@ -906,6 +932,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _overlaySettings: OverlaySettings;
     private _value = '';
     private _valid = IgxComboState.INITIAL;
+    private _groupsSortingDirection: GroupsSortingDirection = GroupsSortingDirection.ascending;
 
     constructor(
         protected elementRef: ElementRef,

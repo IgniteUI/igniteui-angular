@@ -2172,6 +2172,17 @@ describe('igxCombo', () => {
             expect(combo.dropdown.headers.length).toEqual(1);
             expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual(fallBackGroup);
         });
+        it('should sort groups correctly', () => {
+            combo.groupsSortingDirection = 'ascending';
+            combo.toggle();
+            fixture.detectChanges();
+            expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('East North Central');
+
+            combo.groupsSortingDirection = 'descending';
+            combo.toggle();
+            fixture.detectChanges();
+            expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('West South Cent');
+        });
     });
     describe('Filtering tests: ', () => {
         configureTestSuite();
