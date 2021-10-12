@@ -291,6 +291,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 columns = columns.concat(allChildren);
             }
         });
+        this.reflow();
         return columns;
     }
 
