@@ -46,8 +46,8 @@ export class PivotGridSampleComponent {
     };
 
     public pivotConfigHierarchy: IPivotConfiguration = {
-        columnStrategy: NoopPivotDimensionsStrategy.instance(),
-        rowStrategy: NoopPivotDimensionsStrategy.instance(),
+        // columnStrategy: NoopPivotDimensionsStrategy.instance(),
+        // rowStrategy: NoopPivotDimensionsStrategy.instance(),
         columns: [{
             member: 'Country',
             enabled: true

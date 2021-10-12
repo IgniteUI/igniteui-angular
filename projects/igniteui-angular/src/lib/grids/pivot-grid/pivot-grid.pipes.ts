@@ -20,6 +20,7 @@ export class IgxPivotRowPipe implements PipeTransform {
     public transform(
         collection: any,
         config: IPivotConfiguration,
+        _: Map<any, boolean>,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
        const rowStrategy = config.rowStrategy ||  PivotRowDimensionsStrategy.instance();
@@ -82,6 +83,7 @@ export class IgxPivotColumnPipe implements PipeTransform {
     public transform(
         collection: any,
         config: IPivotConfiguration,
+        _: Map<any, boolean>,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
         const colStrategy = config.columnStrategy ||  PivotColumnDimensionsStrategy.instance();
