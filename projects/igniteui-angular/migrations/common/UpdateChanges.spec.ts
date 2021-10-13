@@ -931,7 +931,7 @@ export class CustomGridComponent {
     });
 
     // sass variable migrations
-    fit('Should migrate sass variables names correctly', ()=> {
+    it('Should migrate sass variables names correctly', ()=> {
         const themePropsJson: ThemePropertyChanges = {
             changes: [
                 {
