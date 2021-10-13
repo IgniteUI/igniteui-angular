@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxCheckboxComponent } from './checkbox.component';
@@ -22,9 +22,10 @@ describe('IgxCheckbox', () => {
                 CheckboxExternalLabelComponent,
                 CheckboxInvisibleLabelComponent,
                 CheckboxDisabledTransitionsComponent,
+                CheckboxFormGroupComponent,
                 IgxCheckboxComponent
             ],
-            imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
+            imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));
@@ -34,7 +35,7 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
 
         const checkbox = fixture.componentInstance.cb;
-        const nativeCheckbox = fixture.debugElement.query(By.css('input')).nativeElement;
+        const nativeCheckbox = checkbox.nativeCheckbox.nativeElement;
         const nativeLabel = checkbox.nativeLabel.nativeElement;
         const placeholderLabel = fixture.debugElement.query(By.css('.igx-checkbox__label')).nativeElement;
 
@@ -69,7 +70,7 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
 
         expect(nativeCheckbox.checked).toBe(false);
-        expect(checkboxInstance.checked).toBe(false);
+        expect(checkboxInstance.checked).toBe(null);
 
         testInstance.subscribed = true;
         checkboxInstance.name = 'my-checkbox';
@@ -84,6 +85,22 @@ describe('IgxCheckbox', () => {
         expect(nativeCheckbox.checked).toBe(true);
         expect(checkboxInstance.name).toEqual('my-checkbox');
     }));
+
+    it('Initializes with form group', () => {
+        const fixture = TestBed.createComponent(CheckboxFormGroupComponent);
+        fixture.detectChanges();
+
+        const testInstance = fixture.componentInstance;
+        const checkboxInstance = testInstance.cb;
+        const form = testInstance.myForm;
+
+        form.setValue({ checkbox: true });
+        expect(checkboxInstance.checked).toBe(true);
+
+        form.reset();
+
+        expect(checkboxInstance.checked).toBe(null);
+    });
 
     it('Initializes with external label', () => {
         const fixture = TestBed.createComponent(CheckboxExternalLabelComponent);
@@ -197,7 +214,7 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
 
         // Should not update
-        expect(checkboxInstance.checked).toBe(false);
+        expect(checkboxInstance.checked).toBe(null);
         expect(testInstance.subscribed).toBe(false);
     });
 
@@ -397,4 +414,15 @@ class CheckboxInvisibleLabelComponent {
 })
 class CheckboxDisabledTransitionsComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+}
+
+@Component({
+    template: `<form [formGroup]="myForm"><igx-checkbox #cb formControlName="checkbox">Form Group</igx-checkbox></form>`
+})
+class CheckboxFormGroupComponent {
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+
+    public myForm = this.fb.group({ checkbox: [''] });
+
+    constructor(private fb: FormBuilder) {}
 }
