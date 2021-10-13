@@ -1,3 +1,4 @@
+import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { IgxNumberSummaryOperand } from '../summaries/grid-summary';
 import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
@@ -358,5 +359,36 @@ describe('Pivot pipes', () => {
             {'field1':'All-Accessories','level':1,'USA':293,'USA-David':293,'USA-David-04/07/2021':293},
             {'field1':'All-Components','level':1,'USA':240,'USA-John':240,'USA-John-12/08/2021':240}
         ]);
+    });
+
+    it('allow setting NoopPivotDimensionsStrategy for rows/columns', () => {
+        const config = Object.assign({}, pivotConfigHierarchy);
+        const preprocessedData = [
+            {All:2127,records:[
+                {ProductCategory:'Clothing', level:1, All:1526,'All-Bulgaria':774,'All-USA':296,'All-Uruguay':456},
+                {ProductCategory:'Bikes', level:1, All:68,'All-Uruguay':68},
+                {ProductCategory:'Accessories',level:1, All:293,'All-USA':293},
+                {ProductCategory:'Components', level:1, All:240,'All-USA':240}]
+                , level:0,'All-Bulgaria':774,'All-USA':829,'All-Uruguay':524}];
+        config.columnStrategy =  NoopPivotDimensionsStrategy.instance();
+        config.columns[0].fieldName = 'All';
+        config.rowStrategy  = NoopPivotDimensionsStrategy.instance();
+        config.rows[0].fieldName = 'All';
+
+        const rowPipeResult = rowPipe.transform(preprocessedData, config, new Map<any, boolean>());
+        const rowStateResult = rowStatePipe.transform(rowPipeResult, config, new Map<any, boolean>());
+        const columnPipeResult = columnPipe.transform(rowStateResult, config, new Map<any, boolean>());
+
+        // same data but expanded
+        expect(columnPipeResult).toEqual([{All:2127,records:[
+            {ProductCategory:'Clothing', level:1, All:1526,'All-Bulgaria':774,'All-USA':296,'All-Uruguay':456},
+            {ProductCategory:'Bikes', level:1, All:68,'All-Uruguay':68},
+            {ProductCategory:'Accessories',level:1, All:293,'All-USA':293},
+            {ProductCategory:'Components', level:1, All:240,'All-USA':240}]
+            , level:0,'All-Bulgaria':774,'All-USA':829,'All-Uruguay':524},
+            {ProductCategory:'Clothing', level:1, All:1526,'All-Bulgaria':774,'All-USA':296,'All-Uruguay':456},
+            {ProductCategory:'Bikes', level:1, All:68,'All-Uruguay':68},
+            {ProductCategory:'Accessories',level:1, All:293,'All-USA':293},
+            {ProductCategory:'Components', level:1, All:240,'All-USA':240}]);
     });
 });
