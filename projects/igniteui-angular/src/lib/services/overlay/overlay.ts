@@ -760,9 +760,6 @@ export class IgxOverlayService implements OnDestroy {
             wrapperElement.style.transitionDuration = '0ms';
             return;
         }
-        if (animationOptions.type === AnimationMetadataType.AnimateRef) {
-            animationOptions = (animationOptions as AnimationAnimateRefMetadata).animation;
-        }
         if (!animationOptions.options || !animationOptions.options.params) {
             return;
         }
@@ -908,6 +905,7 @@ export class IgxOverlayService implements OnDestroy {
     private removeModalClasses(info: OverlayInfo) {
         if (info.settings.modal) {
             const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
+            this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.closeAnimation);
             wrapperElement.classList.remove('igx-overlay__wrapper--modal');
             wrapperElement.classList.add('igx-overlay__wrapper');
         }
