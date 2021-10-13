@@ -5,7 +5,9 @@ import {
     ComponentFactoryResolver,
     ElementRef,
     forwardRef,
+    OnChanges,
     OnInit,
+    SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewContainerRef
@@ -25,7 +27,7 @@ const MINIMUM_COLUMN_WIDTH = 200;
     templateUrl: './pivot-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }]
 })
-export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent> implements OnInit {
+export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent> implements OnChanges {
 
     /**
      * @hidden @internal
@@ -67,12 +69,19 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         return this.grid.gridAPI.get_row_expansion_state(this.rowDimensionKey);
     }
 
-    public ngOnInit() {
-        // generate rowDimension
-        const rowDimConfig = this.grid.pivotConfiguration.rows;
-        this.level = this.rowData['level'] || 0;
-        this.hasChild = this.rowData['records'] != null && this.rowData['records'].length > 0;
-        this.extractFromDimensions(rowDimConfig, 0);
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.rowData) {
+            // generate new rowDimension on row data change
+            this.rowDimension = [];
+            const rowDimConfig = this.grid.pivotConfiguration.rows;
+            this.level = this.rowData['level'] || 0;
+            this.hasChild = this.rowData['records'] != null && this.rowData['records'].length > 0;
+            this.extractFromDimensions(rowDimConfig, 0);
+        }
     }
 
     protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number) {
