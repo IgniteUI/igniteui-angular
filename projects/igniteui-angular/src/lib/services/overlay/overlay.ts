@@ -683,9 +683,11 @@ export class IgxOverlayService implements OnDestroy {
         delete info.elementRef;
         delete info.settings;
         delete info.initialSize;
+        info.openAnimationDetaching = true;
         info.openAnimationPlayer?.destroy();
         delete info.openAnimationPlayer;
         delete info.openAnimationInnerPlayer;
+        info.closeAnimationDetaching = true;
         info.closeAnimationPlayer?.destroy();
         delete info.closeAnimationPlayer;
         delete info.closeAnimationInnerPlayer;
@@ -721,7 +723,6 @@ export class IgxOverlayService implements OnDestroy {
         info.wrapperElement.style.visibility = '';
         info.visible = true;
         this.addModalClasses(info);
-        info.openAnimationStarted = true;
         info.openAnimationPlayer.play();
     }
 
@@ -750,7 +751,6 @@ export class IgxOverlayService implements OnDestroy {
         this.animationStarting.emit({ id: info.id, animationPlayer: info.closeAnimationPlayer, animationType: 'close' });
         info.event = event;
         this.removeModalClasses(info);
-        info.closeAnimationStarted = true;
         info.closeAnimationPlayer.play();
     }
 
@@ -941,8 +941,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private openAnimationDone(info: OverlayInfo) {
-        if (info.openAnimationStarted) {
-            info.openAnimationStarted = false;
+        if (!info.openAnimationDetaching) {
             this.opened.emit({ id: info.id, componentRef: info.componentRef });
         }
         if (info.openAnimationPlayer) {
@@ -974,8 +973,7 @@ export class IgxOverlayService implements OnDestroy {
             (info.openAnimationPlayer as any)._started = false;
         }
         this.closeDone(info);
-        if (info.closeAnimationStarted) {
-            info.closeAnimationStarted = false;
+        if (!info.closeAnimationDetaching) {
             this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
         }
     }
