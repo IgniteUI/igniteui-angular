@@ -15,8 +15,7 @@ import { IgxSummaryResult } from './grid-summary';
 import { IgxSummaryCellComponent } from './summary-cell.component';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { ColumnType } from '../common/column.interface';
+import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 
 @Component({

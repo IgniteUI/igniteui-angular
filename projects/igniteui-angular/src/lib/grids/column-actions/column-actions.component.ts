@@ -1,22 +1,21 @@
 import {
     Component,
+    DoCheck,
+    EventEmitter,
     HostBinding,
     Input,
-    ViewChildren,
-    QueryList,
-    EventEmitter,
-    Output,
-    IterableDiffers,
     IterableDiffer,
-    DoCheck
+    IterableDiffers,
+    Output,
+    QueryList,
+    ViewChildren
 } from '@angular/core';
 import { ColumnDisplayOrder } from '../common/enums';
-import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { IColumnToggledEventArgs } from '../common/events';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
-import { GridType } from '../common/grid.interface';
-import { ColumnType } from '../common/column.interface';
+import { ColumnType, GridType } from '../common/grid.interface';
+import { IColumnToggledEventArgs } from '../common/events';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 
 let NEXT_ID = 0;
 /**
@@ -409,6 +408,6 @@ export class IgxColumnActionsComponent implements DoCheck {
     public toggleColumn(column: ColumnType) {
         this.actionsDirective.toggleColumn(column);
 
-        this.columnToggled.emit({column: column as any, checked: this.actionsDirective.columnChecked(column)});
+        this.columnToggled.emit({ column: column as any, checked: this.actionsDirective.columnChecked(column) });
     }
 }

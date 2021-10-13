@@ -15,8 +15,7 @@ import {
     EventEmitter,
     LOCALE_ID
 } from '@angular/core';
-import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
-import { GridBaseAPIService } from '../api.service';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -28,7 +27,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { GridServiceType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
@@ -38,6 +37,7 @@ import { IgxFlatTransactionFactory } from '../../services/transaction/transactio
 import { IgxTransactionService } from '../../services/transaction/igx-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
+import { IgxGridTransaction } from '../common/types';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -245,7 +245,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     protected _createColGroupComponent(col: IgxColumnGroupComponent) {
         const factoryGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
-        const ref = this.viewRef.createComponent(factoryGroup, null, this.viewRef.injector);
+        const ref = this.viewRef.createComponent(IgxColumnGroupComponent, { injector: this.viewRef.injector });
         ref.changeDetectorRef.detectChanges();
         factoryGroup.inputs.forEach((input) => {
             const propName = input.propName;
@@ -266,7 +266,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     protected _createColComponent(col) {
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
+        const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector });
         factoryColumn.inputs.forEach((input) => {
             const propName = input.propName;
             if (!(col[propName] instanceof IgxSummaryOperand)) {

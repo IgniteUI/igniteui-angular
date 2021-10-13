@@ -1,5 +1,5 @@
 import { Directive, Inject } from '@angular/core';
-import { ColumnType } from '../common/column.interface';
+import { ColumnType } from '../common/grid.interface';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxColumnActionsComponent } from './column-actions.component';
 

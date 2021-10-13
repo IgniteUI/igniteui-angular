@@ -14,8 +14,7 @@ import {
 import { DisplayDensity } from '../../core/displayDensity';
 import { flatten } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
-import { ColumnType } from '../common/column.interface';
-import { GridType } from '../common/grid.interface';
+import { ColumnType, GridType } from '../common/grid.interface';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 

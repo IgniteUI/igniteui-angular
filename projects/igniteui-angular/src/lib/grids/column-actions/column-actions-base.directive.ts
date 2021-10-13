@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { ColumnType } from '../common/column.interface';
+import { ColumnType } from '../common/grid.interface';
 
 @Directive()
 export abstract class IgxColumnActionsBaseDirective {

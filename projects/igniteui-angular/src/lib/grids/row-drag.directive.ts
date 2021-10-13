@@ -1,9 +1,8 @@
 import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
-import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { fromEvent, Subscription } from 'rxjs';
+import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
-import { GridType } from './common/grid.interface';
-import { IgxRowDirective } from './row.directive';
+import { RowType } from './common/grid.interface';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
@@ -32,7 +31,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     private subscription$: Subscription;
     private _rowDragStarted = false;
 
-    private get row(): IgxRowDirective<GridType> {
+    private get row(): RowType {
         return this._data;
     }
 

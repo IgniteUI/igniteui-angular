@@ -30,7 +30,7 @@ import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxRowDirective } from '../row.directive';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { CellType, ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
@@ -49,9 +49,7 @@ import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './inter
 import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { isConstructor, PlatformUtil } from '../../core/utils';
-import { CellType } from '../common/cell.interface';
 import { IgxGridCell } from '../grid-public-cell';
-import { ColumnType } from '../common/column.interface';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';

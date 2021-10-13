@@ -1,5 +1,4 @@
 import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
-import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -17,6 +16,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-g
 import { IPinningConfig } from './grid.common';
 import { delay, take } from 'rxjs/operators';
 import { GridSelectionRange } from './common/types';
+import { ISortingExpression } from '../data-operations/sorting-strategy';
 
 export interface IGridState {
     columns?: IColumnState[];

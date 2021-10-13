@@ -1,3 +1,5 @@
+import { InjectionToken } from '@angular/core';
+
 export interface GridSelectionRange {
     rowStart: number;
     rowEnd: number;
@@ -38,3 +40,5 @@ export interface IColumnSelectionState {
 }
 
 export type SelectionState = ISelectionKeyboardState | ISelectionPointerState;
+
+export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');

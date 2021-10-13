@@ -2,8 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { formatDate } from '../../core/utils';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { IgxSorting } from '../../data-operations/sorting-strategy';
 import { GridType } from '../common/grid.interface';
+import { IgxSorting } from '../common/strategy';
 
 const HIDDEN_FIELD_NAME = '_Igx_Hidden_Data_';
 

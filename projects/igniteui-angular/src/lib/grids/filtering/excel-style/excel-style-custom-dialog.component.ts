@@ -35,7 +35,7 @@ import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-express
 import { DisplayDensity } from '../../../core/density';
 import { PlatformUtil } from '../../../core/utils';
 import { ExpressionUI } from './common';
-import { ColumnType } from '../../common/column.interface';
+import { ColumnType } from '../../common/grid.interface';
 
 /**
  * @hidden

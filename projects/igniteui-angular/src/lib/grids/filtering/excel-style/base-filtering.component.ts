@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Directive, ElementRef, EventEmitter } from '@angular/core';
 import { DisplayDensity } from '../../../core/displayDensity';
 import { PlatformUtil } from '../../../core/utils';
-import { IgxOverlayService } from '../../../services/public_api';
+import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { ExpressionUI, FilterListItem } from './common';
 
 
@@ -28,8 +28,8 @@ export abstract class BaseFilteringComponent {
     constructor(
         protected cdr: ChangeDetectorRef,
         public element: ElementRef<HTMLElement>,
-        protected platform: PlatformUtil) {
-    }
+        protected platform: PlatformUtil
+    ) { }
 
 
     abstract initialize(column: any, overlayService: IgxOverlayService): void;
@@ -37,4 +37,4 @@ export abstract class BaseFilteringComponent {
     abstract hide(): void;
     abstract closeDropdown(): void;
 
- }
+}

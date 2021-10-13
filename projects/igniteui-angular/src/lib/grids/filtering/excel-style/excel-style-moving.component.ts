@@ -1,6 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
-import { IgxColumnGroupComponent } from '../../columns/column-group.component';
-import { ColumnType } from '../../common/column.interface';
+import { ColumnType } from '../../common/grid.interface';
 import { BaseFilteringComponent } from './base-filtering.component';
 
 /**
@@ -20,7 +19,7 @@ export class IgxExcelStyleMovingComponent {
     constructor(public esf: BaseFilteringComponent) { }
 
     private get visibleColumns() {
-        return this.esf.grid.visibleColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
+        return this.esf.grid.visibleColumns.filter(col => !col.columnGroup);
     }
 
     /**

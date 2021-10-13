@@ -21,15 +21,12 @@ import { formatDate, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
-import { ColumnType } from './common/column.interface';
-import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
-import { GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
-import { CellType } from './common/cell.interface';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
 

@@ -17,10 +17,9 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { PlatformUtil } from '../../core/utils';
-import { ColumnType } from '../common/column.interface';
 
 const Z_INDEX = 9999;
 

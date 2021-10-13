@@ -1,9 +1,8 @@
 import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } from '@angular/core';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridComponent } from './grid.component';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGroupByAreaDirective } from '../grouping/group-by-area.directive';
+import { ColumnType } from '../common/grid.interface';
 
 /**
  * @hidden
@@ -85,7 +84,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
 
     constructor(
         private groupArea: IgxGroupByAreaDirective,
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         renderer: Renderer2,
         zone: NgZone) {
         super(elementRef, renderer, zone);
@@ -93,7 +92,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
 
     public onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
-        const column: IgxColumnComponent = drag.column;
+        const column: ColumnType = drag.column;
         if (!this.columnBelongsToGrid(column)) {
             return;
         }
@@ -112,7 +111,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
 
     public onDragLeave(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
-        const column: IgxColumnComponent = drag.column;
+        const column: ColumnType = drag.column;
         if (!this.columnBelongsToGrid(column)) {
             return;
         }
@@ -126,13 +125,13 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             this.closestParentByAttr(elem.parentElement, attr);
     }
 
-    private columnBelongsToGrid(column) {
+    private columnBelongsToGrid(column: ColumnType) {
         const elem = this.elementRef.nativeElement;
         const closestGridID = this.closestParentByAttr(elem, 'igxGroupAreaDrop').getAttribute('gridId');
         if (!column) {
             return false;
         } else {
-            const grid = column.grid as IgxGridComponent;
+            const grid = column.grid;
             if (!grid || grid.id !== closestGridID) {
                 return false;
             }

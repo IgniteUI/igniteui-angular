@@ -1,10 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
 
-@Pipe({
-  name: 'sortingIndex',
-  pure: true
-})
+@Pipe({ name: 'sortingIndex' })
 export class SortingIndexPipe implements PipeTransform {
     public transform(columnField: string, sortingExpressions: ISortingExpression[]): number {
         let sortIndex = sortingExpressions.findIndex(expression => expression.fieldName === columnField);

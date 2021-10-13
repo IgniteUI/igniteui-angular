@@ -20,8 +20,7 @@ import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
-import { ColumnType } from '../../common/column.interface';
-import { GridType } from '../../common/grid.interface';
+import { ColumnType, GridType } from '../../common/grid.interface';
 
 /**
  * @hidden

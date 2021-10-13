@@ -2,12 +2,12 @@ import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray, cloneHierarchicalArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 import { GridPagingMode } from '../common/enums';
 import { TransactionType } from '../../services/public_api';
 import { IgxAddRow } from '../common/crud.service';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { IGridSortingStrategy } from '../common/strategy';
 
 /**
  * @hidden

@@ -12,34 +12,26 @@ import { DisplayDensity, IDensityChangedEventArgs } from '../../core/displayDens
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { IgxGridHeaderComponent } from '../headers/grid-header.component';
-import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
-import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
-import { IgxCell, IgxEditRow, IgxGridCRUDService } from './crud.service';
+import { IgxCell, IgxEditRow } from './crud.service';
 import { GridSelectionRange } from './types';
-import { ColumnType } from './column.interface';
-import { RowType } from './row.interface';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { DropPosition, IgxColumnMovingService } from '../moving/moving.service';
 import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { Observable, Subject } from 'rxjs';
-import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
-import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
-import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IPathSegment } from '../hierarchical-grid/hierarchical-grid-base.directive';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
-import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
-
+import { GridColumnDataType } from '../../data-operations/data-util';
+import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
+import { IColumnPipeArgs } from '../columns/interfaces';
+import { IgxSummaryResult } from '../summaries/grid-summary';
+import { ISortingExpression, ISortingStrategy } from '../../data-operations/sorting-strategy';
+import { IGridSortingStrategy } from './strategy';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -49,10 +41,126 @@ export interface IGridDataBindable {
     filteredData: any[];
 }
 
+export interface CellType {
+	value: any;
+	editValue: any;
+	selected: boolean;
+	active: boolean;
+	editable: boolean;
+	editMode: boolean;
+    nativeElement?: HTMLElement;
+	column: ColumnType;
+	row: RowType;
+	grid: GridType;
+	id: { rowID: any; columnID: number; rowIndex: number };
+	width: string;
+    visibleColumnIndex?: number;
+	update: (value: any) => void;
+    calculateSizeToFit?(range: any): number;
+    activate?(): void;
+}
+
+export interface RowType {
+    nativeElement?: HTMLElement;
+    index: number;
+    viewIndex: number;
+    isGroupByRow?: boolean;
+    isSummaryRow?: boolean;
+    summaries?: Map<string, IgxSummaryResult[]>;
+    groupRow?: IGroupByRecord;
+    /** Deprecated, will be removed. key is the new property */
+    rowID?: any;
+    key?: any;
+    /** Deprecated, will be removed. data is the new property */
+    rowData?: any;
+    data?: any;
+    cells?: QueryList<CellType> | CellType[];
+    disabled?: boolean;
+    pinned?: boolean;
+    selected?: boolean;
+    expanded?: boolean;
+    deleted?: boolean;
+    inEditMode?: boolean;
+    children?: RowType[];
+    parent?: RowType;
+    hasChildren?: boolean;
+    treeRow? : ITreeGridRecord;
+    grid: GridType;
+    update?: (value: any) => void;
+    delete?: () => any;
+    pin?: () => void;
+    unpin?: () => void;
+}
+
+export interface ColumnType {
+    grid: GridType;
+    children: QueryList<ColumnType>;
+    allChildren: ColumnType[];
+
+    field: string;
+    header?: string;
+    index: number;
+    dataType: GridColumnDataType;
+    inlineEditorTemplate: TemplateRef<any>;
+    visibleIndex: number;
+    editable: boolean;
+    resizable: boolean;
+    searchable: boolean;
+    columnGroup: boolean;
+    movable: boolean;
+    groupable: boolean;
+    sortable: boolean;
+    filterable: boolean;
+    hidden: boolean;
+    disablePinning: boolean;
+    sortStrategy: ISortingStrategy;
+    sortingIgnoreCase: boolean;
+    filterCell: any;
+    filters: IgxFilteringOperand;
+    filteringIgnoreCase: boolean;
+    filteringExpressionsTree: FilteringExpressionsTree;
+    hasSummary: boolean;
+    summaries: any;
+    pinned: boolean;
+    expanded: boolean;
+    selected: boolean;
+    selectable: boolean;
+    columnLayout: boolean;
+    level: number;
+    rowStart: number;
+    rowEnd: number;
+    colStart: number;
+    colEnd: number;
+    gridRowSpan: number;
+    gridColumnSpan: number;
+    columnLayoutChild: boolean;
+    width: string;
+    topLevelParent?: ColumnType;
+    parent?: ColumnType;
+    pipeArgs: IColumnPipeArgs;
+    hasNestedPath: boolean;
+    defaultTimeFormat: string;
+    defaultDateTimeFormat: string;
+    additionalTemplateContext: any;
+    isLastPinned: boolean;
+    isFirstPinned: boolean;
+    applySelectableClass: boolean;
+    title: string;
+    groupingComparer: (a: any, b: any) => number;
+
+    filterCellTemplate: TemplateRef<any>;
+
+    getCellWidth(): string;
+    getGridTemplate(isRow: boolean): string;
+    toggleVisibility(value?: boolean): void;
+    formatter(value: any, rowData?: any): any;
+    populateVisibleIndexes?(): void;
+}
+
 export interface GridServiceType {
 
     grid: GridType;
-    crudService: IgxGridCRUDService;
+    crudService: any;
     cms: IgxColumnMovingService;
 
     get_data(): any[];
@@ -122,17 +230,17 @@ export interface GridType extends IGridDataBindable {
 
     filterMode: FilterMode;
 
-    theadRow: IgxGridHeaderRowComponent;
-    groupArea: IgxGridGroupByAreaComponent;
-    filterCellList: IgxGridFilteringCellComponent[];
-    filteringRow: IgxGridFilteringRowComponent;
-    actionStrip: IgxActionStripComponent;
-    resizeLine: IgxGridColumnResizerComponent;
+    theadRow: any;
+    groupArea: any;
+    filterCellList: any[];
+    filteringRow: any;
+    actionStrip: any;
+    resizeLine: any;
 
     tfoot: ElementRef<HTMLElement>;
     paginator: IgxPaginatorComponent;
-    crudService: IgxGridCRUDService;
-    summaryService: IgxGridSummaryService;
+    crudService: any;
+    summaryService: any;
 
 
 
@@ -176,9 +284,9 @@ export interface GridType extends IGridDataBindable {
     visibleColumns: ColumnType[];
     unpinnedColumns: ColumnType[];
     pinnedColumns: ColumnType[];
-    headerCellList: IgxGridHeaderComponent[];
-    headerGroups: IgxGridHeaderGroupComponent[];
-    headerGroupsList: IgxGridHeaderGroupComponent[];
+    headerCellList: any[];
+    headerGroups: any[];
+    headerGroupsList: any[];
     summariesRowList: any;
     headerContainer: any;
     isCellSelectable: boolean;

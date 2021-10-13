@@ -3,8 +3,7 @@ import { first } from 'rxjs/operators';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { HORIZONTAL_NAV_KEYS, HEADER_KEYS } from '../core/utils';
 import { GridKeydownTargetType } from './common/enums';
-import { GridType } from './common/grid.interface';
-import { ColumnType } from './common/column.interface';
+import { ColumnType, GridType } from './common/grid.interface';
 
 /** @hidden */
 @Injectable()

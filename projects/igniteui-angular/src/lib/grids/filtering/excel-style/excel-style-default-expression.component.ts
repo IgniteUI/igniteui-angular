@@ -18,7 +18,7 @@ import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IgxInputDirective } from '../../../input-group/public_api';
 import { ExpressionUI } from './common';
-import { ColumnType } from '../../common/column.interface';
+import { ColumnType } from '../../common/grid.interface';
 
 /**
  * @hidden

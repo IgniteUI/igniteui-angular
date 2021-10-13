@@ -17,7 +17,7 @@ import {
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { CellType } from '../common/cell.interface';
+import { CellType } from '../common/grid.interface';
 
 const DEBOUNCETIME = 30;
 

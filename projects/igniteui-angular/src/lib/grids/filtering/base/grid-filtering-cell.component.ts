@@ -15,9 +15,9 @@ import { IFilteringExpression } from '../../../data-operations/filtering-express
 import { IgxFilteringService } from '../grid-filtering.service';
 import { DisplayDensity } from '../../../core/displayDensity';
 import { ExpressionUI } from '../excel-style/common';
-import { ColumnType } from '../../common/column.interface';
 import { IgxChipsAreaComponent } from '../../../chips/chips-area.component';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../../chips/chip.component';
+import { ColumnType } from '../../common/grid.interface';
 
 /**
  * @hidden

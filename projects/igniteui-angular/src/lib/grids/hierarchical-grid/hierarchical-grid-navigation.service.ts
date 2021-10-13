@@ -3,9 +3,8 @@ import { first } from 'rxjs/operators';
 import { SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { Injectable } from '@angular/core';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
-import { RowType } from '../common/row.interface';
 import { IPathSegment } from './hierarchical-grid-base.directive';
-import { GridType } from '../common/grid.interface';
+import { GridType, RowType } from '../common/grid.interface';
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
