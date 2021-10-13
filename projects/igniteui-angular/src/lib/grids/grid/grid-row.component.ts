@@ -1,12 +1,13 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, forwardRef } from '@angular/core';
 import { IgxRowDirective } from '../row.directive';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-row',
-    templateUrl: './grid-row.component.html'
+    templateUrl: './grid-row.component.html',
+    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxGridRowComponent) }]
 })
-export class IgxGridRowComponent extends IgxRowDirective<any> {
+export class IgxGridRowComponent extends IgxRowDirective {
 
     public getContext(col, row) {
         return {

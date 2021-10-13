@@ -1316,7 +1316,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private defaultRowEditTemplate: TemplateRef<any>;
 
     @ViewChildren(IgxRowDirective, { read: IgxRowDirective })
-    private _dataRowList: QueryList<IgxRowDirective<IgxGridBaseDirective>>;
+    private _dataRowList: QueryList<IgxRowDirective>;
 
     /**
      * Gets/Sets the resource strings.
@@ -2163,7 +2163,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get rowList() {
-        const res = new QueryList<any>();
+        const res = new QueryList<IgxRowDirective>();
         if (!this._rowList) {
             return res;
         }
@@ -2182,8 +2182,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const dataList = this.grid.dataRowList;
      * ```
      */
-    public get dataRowList(): QueryList<IgxRowDirective<IgxGridBaseDirective>> {
-        const res = new QueryList<IgxRowDirective<IgxGridBaseDirective>>();
+    public get dataRowList(): QueryList<IgxRowDirective> {
+        const res = new QueryList<IgxRowDirective>();
         if (!this._dataRowList) {
             return res;
         }
@@ -3638,7 +3638,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public resetHorizontalVirtualization() {
-        const elementFilter = (item: IgxRowDirective<any> | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
+        const elementFilter = (item: IgxRowDirective | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
         this._horizontalForOfs = [
             ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
             ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
@@ -3649,7 +3649,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public _setupRowObservers() {
-        const elementFilter = (item: IgxRowDirective<any> | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
+        const elementFilter = (item: IgxRowDirective | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
         const extractForOfs = pipe(map((collection: any[]) => collection.filter(elementFilter).map(item => item.virtDirRow)));
         const rowListObserver = extractForOfs(this._dataRowList.changes);
         const summaryRowObserver = extractForOfs(this._summaryRowList.changes);
@@ -5943,7 +5943,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public getEmptyRecordObjectFor(inRow: IgxRowDirective<IgxGridBaseDirective & GridType>) {
+    public getEmptyRecordObjectFor(inRow: IgxRowDirective) {
         const row = { ...inRow?.rowData };
         Object.keys(row).forEach(key => row[key] = undefined);
         const id = this.generateRowID();
@@ -6085,7 +6085,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected beginAddRowForIndex(index: number, asChild: boolean = false) {
-        const row: IgxRowDirective<IgxGridBaseDirective & GridType> = index == null ?
+        const row: RowType = index == null ?
             null : this.rowList.find(r => r.index === index);
         if (row !== undefined) {
             this.crudService.enterAddRowMode(row, asChild);
@@ -7055,7 +7055,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected scrollToHorizontally(column: any | number) {
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
-        const scrollRow = this.rowList.find(r => r.virtDirRow);
+        const scrollRow = this.rowList.find(r => !!r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
         if (this.isPinningToStart && this.pinnedColumns.length) {
             if (columnIndex >= this.pinnedColumns.length) {
@@ -7422,7 +7422,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!targetRow) {
             return;
         }
-        settings.target = (targetRow as IgxRowDirective<IgxGridBaseDirective>).element.nativeElement;
+        settings.target = (targetRow as IgxRowDirective).element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 }

@@ -75,7 +75,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @Input()
-    public intRow: IgxRowDirective<GridType>;
+    public intRow: IgxRowDirective;
 
     /**
      * Gets the row of the cell.

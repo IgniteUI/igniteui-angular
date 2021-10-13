@@ -28,12 +28,12 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Directive({ selector: '[igxRowBaseComponent]' })
-export class IgxRowDirective<T extends GridType> implements DoCheck, AfterViewInit, OnDestroy {
+export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
     @Output()
-    public addAnimationEnd = new EventEmitter<IgxRowDirective<T>>();
+    public addAnimationEnd = new EventEmitter<IgxRowDirective>();
 
     /**
      * @hidden
