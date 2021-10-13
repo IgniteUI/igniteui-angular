@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
-    IgxIconModule, IgxBottomNavModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
+    IgxIconModule, IgxBottomNavModule, IgxGridModule, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxInputGroupModule,
     IgxIconService, DisplayDensityToken, DisplayDensity,
     IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService, IgxButtonGroupModule,
@@ -331,9 +331,7 @@ const components = [
         HierarchicalRemoteService,
         GridBaseAPIService,
         IgxGridHierarchicalPipe,
-        IgxExcelExporterService,
         IgxIconService,
-        IgxCsvExporterService,
         IgxOverlayService,
         { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) },
         {

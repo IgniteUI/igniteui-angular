@@ -866,15 +866,12 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
         it('should pin rows to top ', (() => {
             hierarchicalGrid.pinRow('0');
-            fixture.detectChanges();
             expect(hierarchicalGrid.pinnedRows.length).toBe(1);
 
             hierarchicalGrid.unpinRow('0');
-            fixture.detectChanges();
             expect(hierarchicalGrid.pinnedRows.length).toBe(0);
 
             hierarchicalGrid.pinRow('0');
-            fixture.detectChanges();
             expect(hierarchicalGrid.pinnedRows.length).toBe(1);
 
             let pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
@@ -888,7 +885,6 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowByIndex(3).key).toBe('2');
 
             hierarchicalGrid.pinRow('2');
-            fixture.detectChanges();
 
             pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer[0].children.length).toBe(2);
@@ -1107,7 +1103,6 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const paginator = fixture.debugElement.query(By.directive(IgxPaginatorComponent)).componentInstance;
             // pin the first row
             hierarchicalGrid.getRowByIndex(0).pin();
-            fixture.detectChanges();
 
             expect(hierarchicalGrid.rowList.length).toEqual(6);
             expect(hierarchicalGrid.perPage).toEqual(5);
@@ -1117,7 +1112,6 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // pin the second row
             hierarchicalGrid.getRowByIndex(2).pin();
-            fixture.detectChanges();
 
             expect(hierarchicalGrid.rowList.length).toEqual(7);
             expect(hierarchicalGrid.perPage).toEqual(5);
@@ -1148,19 +1142,17 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.height = '700px';
             fixture.detectChanges();
             hierarchicalGrid.getRowByIndex(0).pin();
-            hierarchicalGrid.getRowByIndex(1).pin();
-            fixture.detectChanges();
 
             let rows = hierarchicalGrid.rowList.toArray();
 
-            [0, 1, 0, 1, 2, 3, 4].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
+            [0, 0, 1, 2, 3, 4, 5].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
 
             hierarchicalGrid.paginate(6);
             fixture.detectChanges();
 
             rows = hierarchicalGrid.rowList.toArray();
 
-            [0, 1, 36, 37, 38, 39].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
+            [0, 36, 37, 38, 39].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
         });
     });
 });
