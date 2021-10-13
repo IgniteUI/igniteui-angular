@@ -11,8 +11,7 @@ import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
 import { DatePipe } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IPathSegment } from './../../grids/hierarchical-grid/hierarchical-grid-base.directive';
-import { ColumnType, GridType } from '../../grids/common/grid.interface';
+import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',

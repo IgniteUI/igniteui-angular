@@ -1,7 +1,6 @@
 import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';
-import { IPathSegment } from './hierarchical-grid-base.directive';
-import { GridType } from '../common/grid.interface';
+import { GridType, IPathSegment } from '../common/grid.interface';
 import { Injectable } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 

@@ -1,20 +1,20 @@
 import {
+    AfterViewInit,
     ChangeDetectorRef,
+    Directive,
     DoCheck,
     ElementRef,
+    EventEmitter,
     forwardRef,
     HostBinding,
     HostListener,
+    Inject,
     Input,
+    OnDestroy,
+    Output,
     QueryList,
     ViewChild,
-    ViewChildren,
-    Directive,
-    Output,
-    EventEmitter,
-    AfterViewInit,
-    OnDestroy,
-    Inject
+    ViewChildren
 } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
@@ -196,10 +196,6 @@ export class IgxRowDirective<T extends GridType> implements DoCheck, AfterViewIn
             .sort((item1, item2) => item1.column.visibleIndex - item2.column.visibleIndex);
         res.reset(cList);
         return res;
-    }
-
-    public set cells(cells) {
-
     }
 
     @HostBinding('attr.data-rowIndex')

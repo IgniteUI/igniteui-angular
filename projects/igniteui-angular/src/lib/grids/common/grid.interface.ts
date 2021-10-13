@@ -23,7 +23,6 @@ import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { DropPosition, IgxColumnMovingService } from '../moving/moving.service';
 import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { Observable, Subject } from 'rxjs';
-import { IPathSegment } from '../hierarchical-grid/hierarchical-grid-base.directive';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { GridColumnDataType } from '../../data-operations/data-util';
@@ -35,6 +34,11 @@ import { IGridSortingStrategy } from './strategy';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
+
+export interface IPathSegment {
+    rowID: any;
+    rowIslandKey: string;
+}
 
 export interface IGridDataBindable {
     data: any[] | null;

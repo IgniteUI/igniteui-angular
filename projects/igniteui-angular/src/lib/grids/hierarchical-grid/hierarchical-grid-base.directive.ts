@@ -27,7 +27,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridServiceType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { GridServiceType, IGX_GRID_SERVICE_BASE, IPathSegment } from '../common/grid.interface';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
@@ -45,11 +45,6 @@ export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
     useFactory: hierarchicalTransactionServiceFactory
 };
-
-export interface IPathSegment {
-    rowID: any;
-    rowIslandKey: string;
-}
 
 @Directive()
 export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {

@@ -13,7 +13,6 @@ import {
     HostBinding,
     HostListener,
     Inject,
-    InjectionToken,
     Input,
     IterableChangeRecord,
     IterableDiffers,
