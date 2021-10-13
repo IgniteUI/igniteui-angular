@@ -134,7 +134,7 @@ $light-grid: extend(
         ),
 
         header-text-color: (
-            igx-color: ('grays', 800)
+            igx-color: ('grays', 800, .7)
         ),
 
         header-selected-background: (
@@ -142,7 +142,7 @@ $light-grid: extend(
         ),
 
         header-selected-text-color: (
-            igx-contrast-color: ('secondary', 100)
+            igx-contrast-color: ('secondary', 100, .7)
         ),
 
         sortable-header-icon-hover-color: (
@@ -816,11 +816,11 @@ $indigo-grid: extend(
         ),
 
         cell-selected-within-background: (
-            igx-color: ('primary', 200),
+            igx-color: ('primary', 300),
         ),
 
         cell-selected-within-text-color: (
-            igx-contrast-color: ('primary', 200)
+            igx-contrast-color: ('primary', 300)
         ),
 
         row-selected-hover-background: (
