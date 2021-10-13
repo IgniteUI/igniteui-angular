@@ -87,7 +87,9 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
     protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number) {
         let dimIndex = 0;
         for (const dim of rowDimConfig) {
-            this.rowDimension.push(this.extractFromDimension(dim, dimIndex));
+            if (this.level === level) {
+                this.rowDimension.push(this.extractFromDimension(dim, dimIndex));
+            }
             dimIndex++;
             if  (level < this.level) {
                 level++;
