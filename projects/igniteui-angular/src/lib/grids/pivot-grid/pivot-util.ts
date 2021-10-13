@@ -131,7 +131,9 @@ export class PivotUtil {
          if (typeof dimension.member === 'string') {
             return dimension.member;
          } else {
-            return (dimension && dimension.fieldName) ?? this.generateFieldValue(record);
+             const fieldName =  (dimension && dimension.fieldName) ?? this.generateFieldValue(record);
+             dimension.fieldName = fieldName;
+            return fieldName;
          }
     }
 

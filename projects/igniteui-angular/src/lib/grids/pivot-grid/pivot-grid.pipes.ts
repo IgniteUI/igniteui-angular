@@ -56,7 +56,8 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
             if (config.rowStrategy) {
                 field = dim.fieldName;
             } else {
-                field = PivotUtil.resolveFieldName(dim, rec);
+                const fieldName = PivotUtil.resolveFieldName(dim, rec);
+                field = rec[fieldName];
             }
             flatData.push(rec);
             const isExpanded = expansionStates.get(field) === undefined ? defaultExpandState : expansionStates.get(field);
