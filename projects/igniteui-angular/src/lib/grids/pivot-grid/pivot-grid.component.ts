@@ -1,4 +1,5 @@
 import {
+    AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     forwardRef,
@@ -42,10 +43,8 @@ const MINIMUM_COLUMN_WIDTH = 200;
         IgxForOfScrollSyncService
     ]
 })
-export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit,
+export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
     GridType {
-
-
 
     /** @hidden @internal */
     @ViewChild(IgxPivotHeaderRowComponent, { static: true })
@@ -94,8 +93,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public ngOnInit() {
         // pivot grid always generates columns automatically.
         this.autoGenerate = true;
-        this.columnList.reset([]);
         super.ngOnInit();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterContentInit() {
+            // ignore any user defined columns and auto-generate based on pivot config.
+            this.columnList.reset([]);
+            Promise.resolve().then(() => {
+                this.setupColumns();
+            });
     }
 
     /** @hidden */
