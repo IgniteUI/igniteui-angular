@@ -76,6 +76,9 @@ export interface IColumnState {
     header: string;
     resizable: boolean;
     searchable: boolean;
+    columnGroup: boolean;
+    parent: any;
+    disableHiding: boolean;
 }
 
 export type GridFeatures = keyof IGridStateOptions;
@@ -161,27 +164,30 @@ export class IgxGridStateDirective {
         columns: {
             getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => ({
-                        pinned: c.pinned,
-                        sortable: c.sortable,
-                        filterable: c.filterable,
-                        editable: c.editable,
-                        sortingIgnoreCase: c.sortingIgnoreCase,
-                        filteringIgnoreCase: c.filteringIgnoreCase,
-                        headerClasses: c.headerClasses,
-                        headerGroupClasses: c.headerGroupClasses,
-                        maxWidth: c.maxWidth,
-                        groupable: c.groupable,
-                        movable: c.movable,
-                        hidden: c.hidden,
-                        dataType: c.dataType,
-                        hasSummary: c.hasSummary,
-                        field: c.field,
-                        width: c.width,
-                        header: c.header,
-                        resizable: c.resizable,
-                        searchable: c.searchable,
-                        selectable: c.selectable
-                    }));
+                    pinned: c.pinned,
+                    sortable: c.sortable,
+                    filterable: c.filterable,
+                    editable: c.editable,
+                    sortingIgnoreCase: c.sortingIgnoreCase,
+                    filteringIgnoreCase: c.filteringIgnoreCase,
+                    headerClasses: c.headerClasses,
+                    headerGroupClasses: c.headerGroupClasses,
+                    maxWidth: c.maxWidth,
+                    groupable: c.groupable,
+                    movable: c.movable,
+                    hidden: c.hidden,
+                    dataType: c.dataType,
+                    hasSummary: c.hasSummary,
+                    field: c.field,
+                    width: c.width,
+                    header: c.header,
+                    resizable: c.resizable,
+                    searchable: c.searchable,
+                    selectable: c.selectable,
+                    parent: c.parent ? c.parent.header : null,
+                    columnGroup: c.columnGroup,
+                    disableHiding: c.disableHiding
+                }));
                 return { columns: gridColumns };
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[]): void => {
