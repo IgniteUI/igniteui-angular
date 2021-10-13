@@ -43,9 +43,6 @@ describe('IgxRadioGroupDirective', () => {
         const allButtonsWithGroupName = radioInstance.radioButtons.filter((btn) => btn.name === radioInstance.name);
         expect(allButtonsWithGroupName.length).toEqual(radioInstance.radioButtons.length);
 
-        const allButtonsWithGroupLabelPos = radioInstance.radioButtons.filter((btn) => btn.labelPosition === radioInstance.labelPosition);
-        expect(allButtonsWithGroupLabelPos.length).toEqual(radioInstance.radioButtons.length);
-
         const buttonWithGroupValue = radioInstance.radioButtons.find((btn) => btn.value === radioInstance.value);
         expect(buttonWithGroupValue).toBeDefined();
         expect(buttonWithGroupValue).toEqual(radioInstance.selected);
@@ -73,20 +70,6 @@ describe('IgxRadioGroupDirective', () => {
 
         const allRequiredButtons = radioInstance.radioButtons.filter((btn) => btn.required);
         expect(allRequiredButtons.length).toEqual(radioInstance.radioButtons.length);
-
-        // labelPosition
-        radioInstance.labelPosition = 'after';
-        fixture.detectChanges();
-
-        const allAfterButtons = radioInstance.radioButtons.filter((btn) => btn.labelPosition === 'after');
-        expect(allAfterButtons.length).toEqual(radioInstance.radioButtons.length);
-
-        // disabled
-        radioInstance.disabled = true;
-        fixture.detectChanges();
-
-        const allDisabledButtons = radioInstance.radioButtons.filter((btn) => btn.disabled);
-        expect(allDisabledButtons.length).toEqual(radioInstance.radioButtons.length);
     }));
 
     it('Set value should change selected property and emit change event.', fakeAsync(() => {
@@ -326,12 +309,11 @@ class RadioGroupReactiveFormsComponent {
     `
 })
 class RadioGroupDeepProjectionComponent {
-
     @ViewChild(IgxRadioGroupDirective, { static: true })
-    radioGroup: IgxRadioGroupDirective;
+    public radioGroup: IgxRadioGroupDirective;
 
-    choices = [0, 1, 2];
-    group1: FormGroup;
+    public choices = [0, 1, 2];
+    public group1: FormGroup;
 
     constructor(private _builder: FormBuilder) {
         this._createForm();
