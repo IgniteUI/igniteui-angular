@@ -32,7 +32,6 @@ export interface IPivotKeys {
     records: string;
     aggregations: string;
     level: string;
-    collapsed: string;
 }
 
 export enum PivotDimensionType {

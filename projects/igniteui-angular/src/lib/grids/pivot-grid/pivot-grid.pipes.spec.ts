@@ -226,73 +226,6 @@ describe('Pivot pipes', () => {
 
         expect(rowPipeResult).toEqual([
             {
-                ProductCategory: 'Clothing',
-                Date: '',
-                records: [
-                    {
-                        Date: '01/01/2021',
-                        records: [
-                            {
-                                ProductCategory: 'Clothing',
-                                UnitPrice: 12.81,
-                                SellerName: 'Stanley',
-                                Country: 'Bulgaria',
-                                Date: '01/01/2021',
-                                UnitsSold: 282
-                            }
-                        ],
-                        level: 1,
-                        ProductCategory: 'Clothing'
-                    },
-                    {
-                        Date: '01/05/2019',
-                        records: [
-                            {
-                                ProductCategory: 'Clothing',
-                                UnitPrice: 49.57,
-                                SellerName: 'Elisa',
-                                Country: 'USA',
-                                Date: '01/05/2019',
-                                UnitsSold: 296
-                            }
-                        ],
-                        level: 1,
-                        ProductCategory: 'Clothing'
-                    },
-                    {
-                        Date: '05/12/2020',
-                        records: [
-                            {
-                                ProductCategory: 'Clothing',
-                                UnitPrice: 68.33,
-                                SellerName: 'Larry',
-                                Country: 'Uruguay',
-                                Date: '05/12/2020',
-                                UnitsSold: 456
-                            }
-                        ],
-                        level: 1,
-                        ProductCategory: 'Clothing'
-                    },
-                    {
-                        Date: '02/19/2020',
-                        records: [
-                            {
-                                ProductCategory: 'Clothing',
-                                UnitPrice: 16.05,
-                                SellerName: 'Walter',
-                                Country: 'Bulgaria',
-                                Date: '02/19/2020',
-                                UnitsSold: 492
-                            }
-                        ],
-                        level: 1,
-                        ProductCategory: 'Clothing'
-                    }
-                ],
-                level: 0
-            },
-            {
                 Date: '01/01/2021',
                 records: [
                     {
@@ -304,7 +237,7 @@ describe('Pivot pipes', () => {
                         UnitsSold: 282
                     }
                 ],
-                level: 1,
+                level: 0,
                 ProductCategory: 'Clothing'
             },
             {
@@ -319,7 +252,7 @@ describe('Pivot pipes', () => {
                         UnitsSold: 296
                     }
                 ],
-                level: 1,
+                level: 0,
                 ProductCategory: 'Clothing'
             },
             {
@@ -334,7 +267,7 @@ describe('Pivot pipes', () => {
                         UnitsSold: 456
                     }
                 ],
-                level: 1,
+                level: 0,
                 ProductCategory: 'Clothing'
             },
             {
@@ -349,30 +282,8 @@ describe('Pivot pipes', () => {
                         UnitsSold: 492
                     }
                 ],
-                level: 1,
+                level: 0,
                 ProductCategory: 'Clothing'
-            },
-            {
-                ProductCategory: 'Bikes',
-                Date: '',
-                records: [
-                    {
-                        Date: '01/06/2020',
-                        records: [
-                            {
-                                ProductCategory: 'Bikes',
-                                UnitPrice: 3.56,
-                                SellerName: 'Lydia',
-                                Country: 'Uruguay',
-                                Date: '01/06/2020',
-                                UnitsSold: 68
-                            }
-                        ],
-                        level: 1,
-                        ProductCategory: 'Bikes'
-                    }
-                ],
-                level: 0
             },
             {
                 Date: '01/06/2020',
@@ -386,30 +297,8 @@ describe('Pivot pipes', () => {
                         UnitsSold: 68
                     }
                 ],
-                level: 1,
+                level: 0,
                 ProductCategory: 'Bikes'
-            },
-            {
-                ProductCategory: 'Accessories',
-                Date: '',
-                records: [
-                    {
-                        Date: '04/07/2021',
-                        records: [
-                            {
-                                ProductCategory: 'Accessories',
-                                UnitPrice: 85.58,
-                                SellerName: 'David',
-                                Country: 'USA',
-                                Date: '04/07/2021',
-                                UnitsSold: 293
-                            }
-                        ],
-                        level: 1,
-                        ProductCategory: 'Accessories'
-                    }
-                ],
-                level: 0
             },
             {
                 Date: '04/07/2021',
@@ -423,30 +312,8 @@ describe('Pivot pipes', () => {
                         UnitsSold: 293
                     }
                 ],
-                level: 1,
+                level: 0,
                 ProductCategory: 'Accessories'
-            },
-            {
-                ProductCategory: 'Components',
-                Date: '',
-                records: [
-                    {
-                        Date: '12/08/2021',
-                        records: [
-                            {
-                                ProductCategory: 'Components',
-                                UnitPrice: 18.13,
-                                SellerName: 'John',
-                                Country: 'USA',
-                                Date: '12/08/2021',
-                                UnitsSold: 240
-                            }
-                        ],
-                        level: 1,
-                        ProductCategory: 'Components'
-                    }
-                ],
-                level: 0
             },
             {
                 Date: '12/08/2021',
@@ -460,7 +327,7 @@ describe('Pivot pipes', () => {
                         UnitsSold: 240
                     }
                 ],
-                level: 1,
+                level: 0,
                 ProductCategory: 'Components'
             }
         ]);
