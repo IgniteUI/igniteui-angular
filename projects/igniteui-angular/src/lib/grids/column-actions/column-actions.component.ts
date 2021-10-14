@@ -173,27 +173,6 @@ export class IgxColumnActionsComponent implements DoCheck {
     }
 
     /**
-     * Gets the grid columns to provide an action for.
-     *
-     * @deprecated
-     * @example
-     * ```typescript
-     * let gridColumns = this.columnActions.columns;
-     * ```
-     */
-    @DeprecateProperty(`Deprecated. Use 'grid' input instead.`)
-    @Input()
-    public get columns() {
-        return this.grid?.columns;
-    }
-
-    public set columns(value) {
-        if (value && value.length > 0) {
-            this.grid = value[0].grid;
-        }
-    }
-
-    /**
      * Gets the prompt that is displayed in the filter input.
      *
      * @example

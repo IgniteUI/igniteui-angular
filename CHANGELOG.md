@@ -23,7 +23,14 @@ All notable changes for each version of this project will be documented in this 
     };
     this.alert.positionSettings = this.newPositionSettings;
     ```
-
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - **Breaking Change** - The following deprecated inputs have been removed
+        - Inputs  `showToolbar`, `toolbarTitle`, `columnHiding`, `columnHidingTitle`, `columnPinning`, 
+        `columnPinningTitle`, `pinnedColumnsText`.
+        Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
+- `IgxColumnActionsComponent`
+    - **Breaking Change** - The following input has been removed
+        - Input `columns`. Use `igxGrid` input instead.        
 ## 12.2.1
 
 ### New Features
