@@ -1,4 +1,3 @@
-import { ThemeVariableChange } from './../../../../dist/igniteui-angular/migrations/common/schema/index.d';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
@@ -7,7 +6,7 @@ import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics'
 import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
-    SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges, ThemePropertyChange
+    SelectorChanges, ThemePropertyChanges, ThemeVariableChange, ImportsChanges, MemberChanges, ThemePropertyChange
 } from './schema';
 import {
     getLanguageService, getRenamePositions, getIdentifierPositions, replaceMatch,
