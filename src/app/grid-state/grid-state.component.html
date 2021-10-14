@@ -54,7 +54,7 @@
         <igx-expansion-panel-body>
             <ng-container *ngTemplateOutlet="controls; context: getContext(mcGrid)"></ng-container>
                 <igx-grid [id]="mcGridId" #mcGrid [igxGridState]="options" height="480px" [data]="localData" displayDensity="compact" [allowFiltering]="true">
-                    <igx-column [movable]="true" [resizable]="true" field="EmployeeID" [filterable]="false" [disableHiding]="true"></igx-column>
+                    <igx-column [movable]="true" [resizable]="true" field="EmployeeID" [filterable]="false"></igx-column>
                     <igx-column-group [movable]="true" [pinned]="false" header="Employee">
                         <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="Country"></igx-column>
                         <igx-column-group [movable]="true" header="Employee Names">
@@ -74,7 +74,6 @@
 
     <div #clear="tooltip" igxTooltip>Clear the state from localStorage.</div>
     <div #reload="tooltip" igxTooltip>Reload the page.</div>
-    <igx-switch [(ngModel)]="disableHiding">ReorderLevel disableHiding</igx-switch>
 </div>
 
 <!-- IgxHierarchicalGrid -->
@@ -140,7 +139,6 @@
             </div>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
-    <igx-switch [(ngModel)]="disableHiding">ReorderLevel disableHiding</igx-switch>
 </div>
 
 <!-- IgxTreeGrid -->
