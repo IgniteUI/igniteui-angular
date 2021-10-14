@@ -35,7 +35,7 @@ import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-express
 import { DisplayDensity } from '../../../core/density';
 import { PlatformUtil } from '../../../core/utils';
 import { ExpressionUI } from './common';
-import { ColumnType } from '../../common/column.interface';
+import { ColumnType } from '../../common/grid.interface';
 
 /**
  * @hidden
@@ -58,9 +58,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     @Input()
     public overlayComponentId: string;
-
-    @Input()
-    public overlayService: IgxOverlayService;
 
     @Input()
     public displayDensity: DisplayDensity;
@@ -98,7 +95,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     };
 
 
-    constructor(private cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
+    constructor(
+        protected overlayService: IgxOverlayService,
+        private cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil
+    ) { }
 
     public ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;

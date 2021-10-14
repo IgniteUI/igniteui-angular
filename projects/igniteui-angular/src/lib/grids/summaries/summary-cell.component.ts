@@ -10,8 +10,8 @@ import {
 } from './grid-summary';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { getLocaleCurrencyCode } from '@angular/common';
-import { ColumnType } from '../common/column.interface';
 import { ISelectionNode } from '../common/types';
+import { ColumnType } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

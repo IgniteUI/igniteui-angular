@@ -13,10 +13,10 @@ import {
     PlatformUtil
 } from '../core/utils';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 import { IMultiRowLayoutNode } from './common/types';
+import { SortingDirection } from '../data-operations/sorting-strategy';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;

@@ -1,5 +1,5 @@
+import { IgxSorting } from '../grids/common/strategy';
 import { IGroupByRecord } from './groupby-record.interface';
-import { IgxSorting } from './sorting-strategy';
 import { IGroupingState } from './groupby-state.interface';
 import { IGroupByResult } from './grouping-result.interface';
 

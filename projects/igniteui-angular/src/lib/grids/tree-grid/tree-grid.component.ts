@@ -23,7 +23,7 @@ import {
     LOCALE_ID
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowDataEventArgs, IRowToggleEventArgs } from '../common/events';
 import {
@@ -41,16 +41,14 @@ import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { CellType, GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridInstanceType, GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
-import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
-import { CellType } from '../common/cell.interface';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -58,6 +56,7 @@ import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
+import { IgxGridTransaction } from '../common/types';
 
 let NEXT_ID = 0;
 

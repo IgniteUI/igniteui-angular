@@ -18,7 +18,7 @@ import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IgxInputDirective } from '../../../input-group/public_api';
 import { ExpressionUI } from './common';
-import { ColumnType } from '../../common/column.interface';
+import { ColumnType } from '../../common/grid.interface';
 
 /**
  * @hidden
@@ -152,6 +152,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     public getCondition(value: string): IFilteringOperation {
         return this.column.filters.condition(value);
+    }
+
+    public getConditionFriendlyName(name: string): string {
+        return this.grid.resourceStrings[`igx_grid_filter_${name}`] || name;
     }
 
     public onValuesInput(eventArgs) {

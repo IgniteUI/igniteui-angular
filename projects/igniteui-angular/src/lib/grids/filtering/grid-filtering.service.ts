@@ -23,8 +23,7 @@ import { IgxIconService } from '../../icon/icon.service';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { createExcelStyleFilterComponent } from './excel-style/render-dialog';
-import { GridType } from '../common/grid.interface';
-import { ColumnType } from '../common/column.interface';
+import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
 
 /**
@@ -266,11 +265,11 @@ export class IgxFilteringService implements OnDestroy {
             }
         }
 
+        const emptyFilter = new FilteringExpressionsTree(null, field);
         const onFilteringEventArgs: IFilteringEventArgs = {
             owner: this.grid,
-            filteringExpressions: null,
-            cancel: false
-        };
+            filteringExpressions: emptyFilter,
+            cancel: false };
 
         this.grid.filtering.emit(onFilteringEventArgs);
 
@@ -282,7 +281,7 @@ export class IgxFilteringService implements OnDestroy {
         this.clear_filter(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.filteringDone.emit(null));
+        requestAnimationFrame(() => this.grid.filteringDone.emit(emptyFilter));
 
         if (field) {
             const expressions = this.getExpressions(field);

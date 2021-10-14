@@ -13,13 +13,12 @@ import {
     ViewChild
 } from '@angular/core';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { Subject } from 'rxjs';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { DisplayDensity } from '../../core/displayDensity';
-import { ColumnType } from '../common/column.interface';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 /**
  * @hidden

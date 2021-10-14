@@ -19,7 +19,7 @@ import { GridType } from '../common/grid.interface';
     templateUrl: './hierarchical-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]
 })
-export class IgxHierarchicalRowComponent extends IgxRowDirective<GridType> {
+export class IgxHierarchicalRowComponent extends IgxRowDirective {
     @ViewChild('expander', { read: ElementRef })
     public expander: ElementRef<HTMLElement>;
 

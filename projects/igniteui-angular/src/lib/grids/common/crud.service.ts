@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataEventArgs } from '../common/events';
-import { GridType } from './grid.interface';
+import { GridType, RowType } from './grid.interface';
 import { Subject } from 'rxjs';
 import { isEqual } from '../../core/utils';
-import { RowType } from './row.interface';
 
 export class IgxEditRow {
     public transactionState: any;

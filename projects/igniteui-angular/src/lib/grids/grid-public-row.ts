@@ -1,15 +1,13 @@
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { CellType } from './common/cell.interface';
 import { IgxEditRow } from './common/crud.service';
 import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
-import { RowType } from './common/row.interface';
 import { IgxGridCell } from './grid-public-cell';
 import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
-import { GridServiceType, GridType } from './common/grid.interface';
+import { CellType, GridServiceType, GridType, RowType } from './common/grid.interface';
 
 abstract class BaseRow implements RowType {
     public index: number;

@@ -1,5 +1,4 @@
 import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, DoCheck, ChangeDetectionStrategy } from '@angular/core';
-import { GridType } from '../common/grid.interface';
 import { IgxRowDirective } from '../row.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 
@@ -9,7 +8,7 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
     templateUrl: 'tree-grid-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxTreeGridRowComponent) }]
 })
-export class IgxTreeGridRowComponent extends IgxRowDirective<GridType> implements DoCheck {
+export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck {
     @ViewChildren('treeCell')
     protected _cells: QueryList<any>;
 

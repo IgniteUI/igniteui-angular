@@ -4,30 +4,29 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     ComponentFactoryResolver,
-    ContentChildren,
     ContentChild,
+    ContentChildren,
+    Directive,
+    DoCheck,
     ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Inject,
     Input,
     IterableChangeRecord,
     IterableDiffers,
+    LOCALE_ID,
     NgZone,
     OnDestroy,
     OnInit,
+    Optional,
     Output,
     QueryList,
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef,
-    InjectionToken,
-    Optional,
-    DoCheck,
-    Directive,
-    LOCALE_ID,
-    HostListener
+    ViewContainerRef
 } from '@angular/core';
 import { formatDate, resizeObservable } from '../core/utils';
 import 'igniteui-trial-watermark';
@@ -37,7 +36,6 @@ import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, Pla
 import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
@@ -119,31 +117,31 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from './common/grid.interface';
+import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE, RowType } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
-import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
-import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import { IPageEventArgs } from '../paginator/paginator-interfaces';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
-import { GridSelectionRange } from './common/types';
+import { GridSelectionRange, IgxGridTransaction } from './common/types';
 import { VerticalAlignment, HorizontalAlignment, PositionSettings, OverlaySettings } from '../services/overlay/utilities';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
 import { ContainerPositionStrategy } from '../services/overlay/position/container-position-strategy';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
 import { Action, StateUpdateEvent, TransactionEventOrigin } from '../services/transaction/transaction';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
+import { IGridSortingStrategy } from './common/strategy';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -155,8 +153,6 @@ const FILTER_ROW_HEIGHT = 50;
 // More accurate calculation is not possible, cause row editing overlay is still not shown and we don't know its height,
 // but in the same time we need to set row editing overlay outlet before opening the overlay itself.
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
-
-export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
@@ -654,7 +650,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public sortingDone = new EventEmitter<ISortingExpression | Array<ISortingExpression>>();
+    public sortingDone = new EventEmitter<ISortingExpression | ISortingExpression[]>();
 
     /**
      * Emitted before filtering expressions are applied.
@@ -1320,7 +1316,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private defaultRowEditTemplate: TemplateRef<any>;
 
     @ViewChildren(IgxRowDirective, { read: IgxRowDirective })
-    private _dataRowList: QueryList<IgxRowDirective<IgxGridBaseDirective>>;
+    private _dataRowList: QueryList<IgxRowDirective>;
 
     /**
      * Gets/Sets the resource strings.
@@ -2167,7 +2163,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get rowList() {
-        const res = new QueryList<any>();
+        const res = new QueryList<IgxRowDirective>();
         if (!this._rowList) {
             return res;
         }
@@ -2186,8 +2182,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const dataList = this.grid.dataRowList;
      * ```
      */
-    public get dataRowList(): QueryList<IgxRowDirective<IgxGridBaseDirective>> {
-        const res = new QueryList<IgxRowDirective<IgxGridBaseDirective>>();
+    public get dataRowList(): QueryList<IgxRowDirective> {
+        const res = new QueryList<IgxRowDirective>();
         if (!this._dataRowList) {
             return res;
         }
@@ -3642,7 +3638,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public resetHorizontalVirtualization() {
-        const elementFilter = (item: IgxRowDirective<any> | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
+        const elementFilter = (item: IgxRowDirective | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
         this._horizontalForOfs = [
             ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
             ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
@@ -3653,7 +3649,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public _setupRowObservers() {
-        const elementFilter = (item: IgxRowDirective<any> | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
+        const elementFilter = (item: IgxRowDirective | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
         const extractForOfs = pipe(map((collection: any[]) => collection.filter(elementFilter).map(item => item.virtDirRow)));
         const rowListObserver = extractForOfs(this._dataRowList.changes);
         const summaryRowObserver = extractForOfs(this._summaryRowList.changes);
@@ -4581,7 +4577,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid.sort({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
      * ```
      */
-    public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
+    public sort(expression: ISortingExpression| Array<ISortingExpression>): void {
         const sortingState = cloneArray(this.sortingExpressions);
 
         if (expression instanceof Array) {
@@ -5947,7 +5943,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public getEmptyRecordObjectFor(inRow: IgxRowDirective<IgxGridBaseDirective & GridType>) {
+    public getEmptyRecordObjectFor(inRow: IgxRowDirective) {
         const row = { ...inRow?.rowData };
         Object.keys(row).forEach(key => row[key] = undefined);
         const id = this.generateRowID();
@@ -6089,7 +6085,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected beginAddRowForIndex(index: number, asChild: boolean = false) {
-        const row: IgxRowDirective<IgxGridBaseDirective & GridType> = index == null ?
+        const row: RowType = index == null ?
             null : this.rowList.find(r => r.index === index);
         if (row !== undefined) {
             this.crudService.enterAddRowMode(row, asChild);
@@ -7059,7 +7055,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected scrollToHorizontally(column: any | number) {
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
-        const scrollRow = this.rowList.find(r => r.virtDirRow);
+        const scrollRow = this.rowList.find(r => !!r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
         if (this.isPinningToStart && this.pinnedColumns.length) {
             if (columnIndex >= this.pinnedColumns.length) {
@@ -7426,7 +7422,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!targetRow) {
             return;
         }
-        settings.target = (targetRow as IgxRowDirective<IgxGridBaseDirective>).element.nativeElement;
+        settings.target = (targetRow as IgxRowDirective).element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 }

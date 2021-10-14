@@ -18,7 +18,6 @@ import {
     ViewChild,
     ViewRef
 } from '@angular/core';
-import { IgxOverlayService } from '../../../services/public_api';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { resolveNestedPath, parseDate, uniqueDates, PlatformUtil, formatDate } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
@@ -28,11 +27,11 @@ import { GridSelectionMode } from '../../common/enums';
 import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
 import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
 import { formatCurrency, formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
-import { SortingDirection } from '../../../data-operations/sorting-expression.interface';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
-import { GridType, IGX_GRID_BASE } from '../../common/grid.interface';
-import { ColumnType } from '../../common/column.interface';
+import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
+import { IgxOverlayService } from '../../../services/overlay/overlay';
+import { SortingDirection } from '../../../data-operations/sorting-strategy';
 
 
 @Directive({
@@ -293,13 +292,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      */
     public ngOnDestroy(): void {
         this.subscriptions?.unsubscribe();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public selectedClass() {
-        return this.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select';
     }
 
     /**

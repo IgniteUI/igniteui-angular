@@ -1,40 +1,39 @@
 import {
+    AfterViewInit,
     ChangeDetectorRef,
+    Directive,
     DoCheck,
     ElementRef,
+    EventEmitter,
     forwardRef,
     HostBinding,
     HostListener,
+    Inject,
     Input,
+    OnDestroy,
+    Output,
     QueryList,
     ViewChild,
-    ViewChildren,
-    Directive,
-    Output,
-    EventEmitter,
-    AfterViewInit,
-    OnDestroy,
-    Inject
+    ViewChildren
 } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { TransactionType } from '../services/transaction/transaction';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxAddRow, IgxEditRow } from './common/crud.service';
-import { GridType, IGX_GRID_BASE } from './common/grid.interface';
-import { ColumnType } from './common/column.interface';
+import { ColumnType, GridType, IGX_GRID_BASE } from './common/grid.interface';
 import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Directive({ selector: '[igxRowBaseComponent]' })
-export class IgxRowDirective<T extends GridType> implements DoCheck, AfterViewInit, OnDestroy {
+export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
     @Output()
-    public addAnimationEnd = new EventEmitter<IgxRowDirective<T>>();
+    public addAnimationEnd = new EventEmitter<IgxRowDirective>();
 
     /**
      * @hidden
@@ -197,10 +196,6 @@ export class IgxRowDirective<T extends GridType> implements DoCheck, AfterViewIn
             .sort((item1, item2) => item1.column.visibleIndex - item2.column.visibleIndex);
         res.reset(cList);
         return res;
-    }
-
-    public set cells(cells) {
-
     }
 
     @HostBinding('attr.data-rowIndex')

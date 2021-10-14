@@ -4,7 +4,6 @@ import { IgxColumnResizerDirective } from './resizer.directive';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-column-resizer',
     templateUrl: './resizer.component.html'
 })

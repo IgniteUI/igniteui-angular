@@ -6,7 +6,7 @@ import {
 import { HammerGesturesManager } from '../../core/touch';
 import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.component';
 import { IgxTreeGridRow } from '../grid-public-row';
-import { RowType } from '../common/row.interface';
+import { RowType } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

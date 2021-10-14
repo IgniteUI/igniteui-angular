@@ -2,16 +2,13 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray, reverseMapper, mergeObjects } from '../core/utils';
 import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
-import { GridServiceType, GridType } from './common/grid.interface';
-import { ColumnType } from './common/column.interface';
+import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
-import { CellType } from './common/cell.interface';
-import { RowType } from './common/row.interface';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 
 /**
  * @hidden
@@ -25,7 +22,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
     constructor(
         public crudService: IgxGridCRUDService,
-        public cms: IgxColumnMovingService) { }
+        public cms: IgxColumnMovingService
+    ) { }
 
     public get_column_by_name(name: string): ColumnType {
         return this.grid.columnList.find((col: ColumnType) => col.field === name);
@@ -108,7 +106,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (hasCells && typeof columnID === 'number') {
             return row.cells.find((cell) => cell.column.index === columnID);
         }
-        if (hasCells && typeof columnID === 'string'){
+        if (hasCells && typeof columnID === 'string') {
             return row.cells.find((cell) => cell.column.field === columnID);
         }
 

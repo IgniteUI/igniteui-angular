@@ -5,7 +5,7 @@ import { IgxGridSharedModules } from '../common/shared.module';
 import { IgxColumnMovingModule } from '../moving/moving.module';
 import { IgxGridFilteringModule } from '../filtering/base/filtering.module';
 import { IgxGridResizingModule } from '../resizing/resize.module';
-import { SortingIndexPipe } from './sorting-index.pipe';
+import { IgxHeaderGroupStylePipe, IgxHeaderGroupWidthPipe, SortingIndexPipe } from './pipes';
 export * from './grid-header-group.component';
 export * from './grid-header.component';
 import { IgxGridPipesModule } from '../common/grid-pipes.module';
@@ -16,7 +16,9 @@ import { IgxGridHeaderRowComponent } from './grid-header-row.component';
         IgxGridHeaderComponent,
         IgxGridHeaderGroupComponent,
         IgxGridHeaderRowComponent,
-        SortingIndexPipe
+        SortingIndexPipe,
+        IgxHeaderGroupWidthPipe,
+        IgxHeaderGroupStylePipe
     ],
     imports: [
         IgxGridSharedModules,
@@ -29,6 +31,8 @@ import { IgxGridHeaderRowComponent } from './grid-header-row.component';
         IgxGridHeaderComponent,
         IgxGridHeaderGroupComponent,
         IgxGridHeaderRowComponent,
+        IgxHeaderGroupWidthPipe,
+        IgxHeaderGroupStylePipe
     ]
 })
 export class IgxGridHeadersModule {}

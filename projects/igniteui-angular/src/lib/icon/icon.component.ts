@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChi
 import { IgxIconService } from './icon.service';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+import { SafeHtml } from '@angular/platform-browser';
 
 /**
  * Icon provides a way to include material icons to markup
@@ -79,20 +79,6 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     public active = true;
 
     /**
-     * An @Input property that allows you to change the `color` of the icon.
-     *
-     * * @deprecated
-     *
-     * @example
-     * ```html
-     * <igx-icon color="blue">settings</igx-icon>
-     * ```
-     */
-    @DeprecateProperty('`color` is deprecated.')
-    @Input('color')
-    public color: string;
-
-    /**
      *  An @Input property that allows you to set the `name` of the icon.
      *
      *  @example
@@ -114,16 +100,19 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     private destroy$ = new Subject<void>();
 
-    constructor(public el: ElementRef,
-                private iconService: IgxIconService,
-                private ref: ChangeDetectorRef) {
+    constructor(
+        public el: ElementRef,
+        private iconService: IgxIconService,
+        private ref: ChangeDetectorRef,
+    ) {
         this.family = this.iconService.defaultFamily;
         this.iconService.registerFamilyAlias('material', 'material-icons');
-        this.iconService.iconLoaded.pipe(
-            first(e => e.name === this.name && e.family === this.family),
-            takeUntil(this.destroy$)
-        )
-        .subscribe(() => this.ref.detectChanges());
+        this.iconService.iconLoaded
+            .pipe(
+                first((e) => e.name === this.name && e.family === this.family),
+                takeUntil(this.destroy$)
+            )
+            .subscribe(() => this.ref.detectChanges());
     }
 
     /**
@@ -193,23 +182,6 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * An accessor that returns the opposite value of the `color` property.
-     *
-     * @example
-     * ```typescript
-     * @ViewChild("MyIcon")
-     * public icon: IgxIconComponent;
-     * ngAfterViewInit() {
-     *    let color = this.icon.getColor;
-     * }
-     * ```
-     */
-    @HostBinding('style.color')
-    public get getColor(): string {
-        return this.color;
-    }
-
-    /**
      * An accessor that returns the value of the iconName property.
      *
      * @example
@@ -226,21 +198,20 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     }
 
     /**
-     *  An accessor that returns the key of the SVG image.
-     *  The key consists of the font-family and the name separated by underscore.
+     *  An accessor that returns the underlying SVG image as SafeHtml.
      *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
      * public icon: IgxIconComponent;
      * ngAfterViewInit() {
-     *    let svgKey = this.icon.getSvgKey;
+     *    let svg: SafeHtml = this.icon.getSvg;
      * }
      * ```
      */
-    public get getSvgKey(): string {
+    public get getSvg(): SafeHtml {
         if (this.iconService.isSvgIconCached(this.name, this.family)) {
-            return '#' + this.iconService.getSvgIconKey(this.name, this.family);
+            return this.iconService.getSvgIcon(this.name, this.family);
         }
 
         return null;

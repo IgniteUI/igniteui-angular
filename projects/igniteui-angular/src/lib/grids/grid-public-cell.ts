@@ -1,9 +1,6 @@
-import { resolveNestedPath } from '../core/utils';
-import { CellType } from './common/cell.interface';
-import { ColumnType } from './common/column.interface';
-import { GridType } from './common/grid.interface';
-import { RowType } from './common/row.interface';
+import { CellType, ColumnType, GridType, RowType } from './common/grid.interface';
 import { ISelectionNode } from './common/types';
+import { resolveNestedPath } from '../core/utils';
 
 export class IgxGridCell implements CellType {
 

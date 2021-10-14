@@ -6,7 +6,6 @@ import {
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { cloneArray, IBaseEventArgs } from '../../core/utils';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
@@ -23,15 +22,14 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode, GridInstanceType } from '../common/enums';
-import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
-import { RowType } from '../common/row.interface';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
-import { CellType } from '../common/cell.interface';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
 
 let NEXT_ID = 0;
 

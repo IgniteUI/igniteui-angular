@@ -27,8 +27,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RowType } from '../common/row.interface';
-import { CellType } from '../common/cell.interface';
+import { CellType } from '../common/grid.interface';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';

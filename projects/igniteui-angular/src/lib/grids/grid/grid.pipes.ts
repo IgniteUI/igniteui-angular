@@ -4,12 +4,12 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 import { GridPagingMode } from '../common/enums';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { IGridSortingStrategy } from '../common/strategy';
 
 /**
  * @hidden

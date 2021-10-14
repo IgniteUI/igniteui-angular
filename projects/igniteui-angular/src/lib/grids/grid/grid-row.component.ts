@@ -1,5 +1,4 @@
-import { Component, forwardRef, ChangeDetectionStrategy } from '@angular/core';
-import { GridType } from '../common/grid.interface';
+import { Component, ChangeDetectionStrategy, forwardRef } from '@angular/core';
 import { IgxRowDirective } from '../row.directive';
 
 @Component({
@@ -8,7 +7,7 @@ import { IgxRowDirective } from '../row.directive';
     templateUrl: './grid-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxGridRowComponent) }]
 })
-export class IgxGridRowComponent extends IgxRowDirective<GridType> {
+export class IgxGridRowComponent extends IgxRowDirective {
 
     public getContext(col, row) {
         return {

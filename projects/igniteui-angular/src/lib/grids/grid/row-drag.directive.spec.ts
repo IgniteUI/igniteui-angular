@@ -23,7 +23,7 @@ import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule } from '../hier
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid/public_api';
 import { GridSelectionMode } from '../common/enums';
-import { RowType } from '../common/row.interface';
+import { RowType } from '../common/grid.interface';
 import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
 
 const DEBOUNCE_TIME = 50;

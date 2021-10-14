@@ -1,5 +1,5 @@
-import { ColumnType } from '../grids/common/column.interface';
-import { ISortingExpression } from './sorting-expression.interface';
+import { ColumnType } from '../grids/common/grid.interface';
+import { ISortingExpression } from './sorting-strategy';
 
 /**
  * @hidden

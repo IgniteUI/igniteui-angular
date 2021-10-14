@@ -10,19 +10,14 @@ import {
     IgxGridPaginatorOptionsPipe,
     IgxHasVisibleColumnsPipe,
     IgxGridRowPinningPipe,
-    IgxColumnActionEnabledPipe,
-    IgxFilterActionColumnsPipe,
-    IgxSortActionColumnsPipe,
     IgxGridDataMapperPipe,
     IgxStringReplacePipe,
     IgxGridTransactionStatePipe,
     IgxColumnFormatterPipe,
     IgxSummaryFormatterPipe,
     IgxGridAddRowPipe,
-    IgxHeaderGroupWidthPipe,
     IgxGridRowClassesPipe,
     IgxGridRowStylesPipe,
-    IgxHeaderGroupStylePipe
 } from './pipes';
 export * from './pipes';
 
@@ -37,19 +32,14 @@ export * from './pipes';
         IgxGridPaginatorOptionsPipe,
         IgxHasVisibleColumnsPipe,
         IgxGridRowPinningPipe,
-        IgxColumnActionEnabledPipe,
-        IgxFilterActionColumnsPipe,
-        IgxSortActionColumnsPipe,
         IgxGridDataMapperPipe,
         IgxStringReplacePipe,
         IgxGridTransactionStatePipe,
         IgxGridAddRowPipe,
         IgxColumnFormatterPipe,
         IgxSummaryFormatterPipe,
-        IgxHeaderGroupWidthPipe,
         IgxGridRowClassesPipe,
-        IgxGridRowStylesPipe,
-        IgxHeaderGroupStylePipe
+        IgxGridRowStylesPipe
     ],
     exports: [
         IgxGridFilterConditionPipe,
@@ -61,19 +51,14 @@ export * from './pipes';
         IgxGridPaginatorOptionsPipe,
         IgxHasVisibleColumnsPipe,
         IgxGridRowPinningPipe,
-        IgxColumnActionEnabledPipe,
-        IgxFilterActionColumnsPipe,
-        IgxSortActionColumnsPipe,
         IgxGridDataMapperPipe,
         IgxStringReplacePipe,
         IgxGridTransactionStatePipe,
         IgxGridAddRowPipe,
         IgxColumnFormatterPipe,
         IgxSummaryFormatterPipe,
-        IgxHeaderGroupWidthPipe,
         IgxGridRowClassesPipe,
-        IgxGridRowStylesPipe,
-        IgxHeaderGroupStylePipe
+        IgxGridRowStylesPipe
     ],
     imports: [
         CommonModule

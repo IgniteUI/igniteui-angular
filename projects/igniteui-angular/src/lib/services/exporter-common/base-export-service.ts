@@ -11,11 +11,7 @@ import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
 import { DatePipe } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IgxRowIslandComponent } from '../../grids/hierarchical-grid/row-island.component';
-import { IPathSegment } from './../../grids/hierarchical-grid/hierarchical-grid-base.directive';
-import { IgxColumnGroupComponent } from './../../grids/columns/column-group.component';
-import { GridType } from '../../grids/common/grid.interface';
-import { ColumnType } from '../../grids/common/column.interface';
+import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -525,7 +521,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private prepareIslandData(island: IgxRowIslandComponent, islandGrid: GridType, data: any[]): any[] {
+    private prepareIslandData(island: any, islandGrid: GridType, data: any[]): any[] {
         if (islandGrid !== undefined) {
             const hasFiltering = (islandGrid.filteringExpressionsTree &&
                 islandGrid.filteringExpressionsTree.filteringOperands.length > 0) ||
@@ -593,7 +589,7 @@ export abstract class IgxBaseExporter {
         return data;
     }
 
-    private getAllChildColumnsAndData(island: IgxRowIslandComponent,
+    private getAllChildColumnsAndData(island: any,
         childData: any[], expansionStateVal: boolean, grid: GridType) {
         const columnList = this._ownersMap.get(island).columns;
         const columnHeader = columnList
@@ -841,10 +837,10 @@ export abstract class IgxBaseExporter {
             const columnWidth = Number(column.width?.slice(0, -2)) || DEFAULT_COLUMN_WIDTH;
             const columnLevel = !this.options.ignoreMultiColumnHeaders ? column.level : 0;
 
-            const isMultiColHeader = column instanceof IgxColumnGroupComponent;
+            const isMultiColHeader = column.columnGroup;
             const colSpan = isMultiColHeader ?
                 column.allChildren
-                    .filter(ch => !(ch instanceof IgxColumnGroupComponent) && (!this.options.ignoreColumnsVisibility ? !ch.hidden : true))
+                    .filter(ch => !(ch.columnGroup) && (!this.options.ignoreColumnsVisibility ? !ch.hidden : true))
                     .length :
                 1;
 
@@ -906,7 +902,7 @@ export abstract class IgxBaseExporter {
         return result;
     }
 
-    private mapHierarchicalGridColumns(island: IgxRowIslandComponent, gridData: any) {
+    private mapHierarchicalGridColumns(island: any, gridData: any) {
         let columnList: IColumnList;
         let keyData;
 

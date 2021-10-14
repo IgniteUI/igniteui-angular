@@ -1,13 +1,9 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, resolveNestedPath } from '../../core/utils';
-import { GridType, IGX_GRID_BASE } from './grid.interface';
-import { ColumnType } from './column.interface';
-import { ColumnDisplayOrder } from './enums';
-import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
+import { GridType, IGX_GRID_BASE, RowType } from './grid.interface';
 import { IgxAddRow } from './crud.service';
 import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
-import { RowType } from './row.interface';
 import { IgxGridRow } from '../grid-public-row';
 
 interface GridStyleCSSProperty {
@@ -264,70 +260,6 @@ export class IgxGridRowPinningPipe implements PipeTransform {
     }
 }
 
-@Pipe({ name: 'columnActionEnabled' })
-export class IgxColumnActionEnabledPipe implements PipeTransform {
-
-    constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
-
-    public transform(
-        collection: ColumnType[],
-        actionFilter: (value: ColumnType, index: number, array: ColumnType[]) => boolean,
-        _pipeTrigger: number
-    ): ColumnType[] {
-        if (!collection) {
-            return collection;
-        }
-        let copy = collection.slice(0);
-        if (copy.length && copy[0].grid.hasColumnLayouts) {
-            copy = copy.filter(c => c.columnLayout);
-        }
-        if (actionFilter) {
-            copy = copy.filter(actionFilter);
-        }
-        // Preserve the actionable collection for use in the component
-        this.columnActions.actionableColumns = copy as any;
-        return copy;
-    }
-}
-
-@Pipe({ name: 'filterActionColumns' })
-export class IgxFilterActionColumnsPipe implements PipeTransform {
-
-    constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
-
-    public transform(collection: ColumnType[], filterCriteria: string, _pipeTrigger: number): ColumnType[] {
-        if (!collection) {
-            return collection;
-        }
-        let copy = collection.slice(0);
-        if (filterCriteria && filterCriteria.length > 0) {
-            const filterFunc = (c) => {
-                const filterText = c.header || c.field;
-                if (!filterText) {
-                    return false;
-                }
-                return filterText.toLocaleLowerCase().indexOf(filterCriteria.toLocaleLowerCase()) >= 0 ||
-                    (c.children?.some(filterFunc) ?? false);
-            };
-            copy = collection.filter(filterFunc);
-        }
-        // Preserve the filtered collection for use in the component
-        this.columnActions.filteredColumns = copy as any;
-        return copy;
-    }
-}
-
-@Pipe({ name: 'sortActionColumns' })
-export class IgxSortActionColumnsPipe implements PipeTransform {
-
-    public transform(collection: ColumnType[], displayOrder: ColumnDisplayOrder, _pipeTrigger: number): ColumnType[] {
-        if (displayOrder === ColumnDisplayOrder.Alphabetical) {
-            return collection.sort((a, b) => (a.header || a.field).localeCompare(b.header || b.field));
-        }
-        return collection;
-    }
-}
-
 @Pipe({ name: 'dataMapper' })
 export class IgxGridDataMapperPipe implements PipeTransform {
 
@@ -393,32 +325,5 @@ export class IgxGridAddRowPipe implements PipeTransform {
         const rec = (this.grid.crudService.row as IgxAddRow).recordRef;
         copy.splice(this.grid.crudService.row.index, 0, rec);
         return copy;
-    }
-}
-
-@Pipe({ name: 'igxHeaderGroupWidth' })
-export class IgxHeaderGroupWidthPipe implements PipeTransform {
-
-    public transform(width: any, minWidth: any, hasLayout: boolean) {
-        return hasLayout ? '' : `${Math.max(parseFloat(width), minWidth)}px`;
-    }
-}
-
-@Pipe({ name: 'igxHeaderGroupStyle' })
-export class IgxHeaderGroupStylePipe implements PipeTransform {
-
-    public transform(styles: { [prop: string]: any }, column: ColumnType, _: number): { [prop: string]: any } {
-        const css = {};
-
-        if (!styles) {
-            return css;
-        }
-
-        for (const prop of Object.keys(styles)) {
-            const res = styles[prop];
-            css[prop] = typeof res === 'function' ? res(column) : res;
-        }
-
-        return css;
     }
 }

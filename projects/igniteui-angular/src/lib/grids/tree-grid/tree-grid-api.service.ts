@@ -3,11 +3,10 @@ import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { HierarchicalTransaction, TransactionType, State } from '../../services/public_api';
 import { Injectable } from '@angular/core';
-import { ColumnType } from '../common/column.interface';
 import { cloneArray, mergeObjects } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
-import { GridType } from '../common/grid.interface';
+import { ColumnType, GridType } from '../common/grid.interface';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {

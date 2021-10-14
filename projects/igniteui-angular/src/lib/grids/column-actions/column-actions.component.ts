@@ -1,22 +1,23 @@
 import {
     Component,
-    HostBinding,
-    Input,
-    ViewChildren,
-    QueryList,
+    DoCheck,
     EventEmitter,
-    Output,
-    IterableDiffers,
+    HostBinding,
+    Inject,
+    Input,
     IterableDiffer,
-    DoCheck
+    IterableDiffers,
+    Output,
+    Pipe,
+    PipeTransform,
+    QueryList,
+    ViewChildren
 } from '@angular/core';
 import { ColumnDisplayOrder } from '../common/enums';
-import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { ColumnType, GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
-import { GridType } from '../common/grid.interface';
-import { ColumnType } from '../common/column.interface';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 
 let NEXT_ID = 0;
 /**
@@ -170,27 +171,6 @@ export class IgxColumnActionsComponent implements DoCheck {
 
     constructor(private differs: IterableDiffers) {
         this._differ = this.differs.find([]).create(this.trackChanges);
-    }
-
-    /**
-     * Gets the grid columns to provide an action for.
-     *
-     * @deprecated
-     * @example
-     * ```typescript
-     * let gridColumns = this.columnActions.columns;
-     * ```
-     */
-    @DeprecateProperty(`Deprecated. Use 'grid' input instead.`)
-    @Input()
-    public get columns() {
-        return this.grid?.columns;
-    }
-
-    public set columns(value) {
-        if (value && value.length > 0) {
-            this.grid = value[0].grid;
-        }
     }
 
     /**
@@ -409,6 +389,70 @@ export class IgxColumnActionsComponent implements DoCheck {
     public toggleColumn(column: ColumnType) {
         this.actionsDirective.toggleColumn(column);
 
-        this.columnToggled.emit({column: column as any, checked: this.actionsDirective.columnChecked(column)});
+        this.columnToggled.emit({ column: column as any, checked: this.actionsDirective.columnChecked(column) });
+    }
+}
+
+@Pipe({ name: 'columnActionEnabled' })
+export class IgxColumnActionEnabledPipe implements PipeTransform {
+
+    constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
+
+    public transform(
+        collection: ColumnType[],
+        actionFilter: (value: ColumnType, index: number, array: ColumnType[]) => boolean,
+        _pipeTrigger: number
+    ): ColumnType[] {
+        if (!collection) {
+            return collection;
+        }
+        let copy = collection.slice(0);
+        if (copy.length && copy[0].grid.hasColumnLayouts) {
+            copy = copy.filter(c => c.columnLayout);
+        }
+        if (actionFilter) {
+            copy = copy.filter(actionFilter);
+        }
+        // Preserve the actionable collection for use in the component
+        this.columnActions.actionableColumns = copy as any;
+        return copy;
+    }
+}
+
+@Pipe({ name: 'filterActionColumns' })
+export class IgxFilterActionColumnsPipe implements PipeTransform {
+
+    constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
+
+    public transform(collection: ColumnType[], filterCriteria: string, _pipeTrigger: number): ColumnType[] {
+        if (!collection) {
+            return collection;
+        }
+        let copy = collection.slice(0);
+        if (filterCriteria && filterCriteria.length > 0) {
+            const filterFunc = (c) => {
+                const filterText = c.header || c.field;
+                if (!filterText) {
+                    return false;
+                }
+                return filterText.toLocaleLowerCase().indexOf(filterCriteria.toLocaleLowerCase()) >= 0 ||
+                    (c.children?.some(filterFunc) ?? false);
+            };
+            copy = collection.filter(filterFunc);
+        }
+        // Preserve the filtered collection for use in the component
+        this.columnActions.filteredColumns = copy as any;
+        return copy;
+    }
+}
+
+@Pipe({ name: 'sortActionColumns' })
+export class IgxSortActionColumnsPipe implements PipeTransform {
+
+    public transform(collection: ColumnType[], displayOrder: ColumnDisplayOrder, _pipeTrigger: number): ColumnType[] {
+        if (displayOrder === ColumnDisplayOrder.Alphabetical) {
+            return collection.sort((a, b) => (a.header || a.field).localeCompare(b.header || b.field));
+        }
+        return collection;
     }
 }
