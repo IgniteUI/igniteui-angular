@@ -856,7 +856,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(grid.getSelectedData()).toEqual(expectedData);
             }));
 
-            fit('getSelectedData should return correct values when there are master details and paging is enabled', fakeAsync(() => {
+            it('getSelectedData should return correct values when there are master details and paging is enabled', fakeAsync(() => {
                 const range = { rowStart: 0, rowEnd: 5, columnStart: 'ContactName', columnEnd: 'ContactName' };
                 const expectedData = [
                     { ContactName: 'Victoria Ashworth' },
