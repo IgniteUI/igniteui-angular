@@ -2,7 +2,6 @@ import { AnimationReferenceMetadata } from '@angular/animations';
 import { formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import mergeWith from 'lodash.mergewith';
-import { ResizeObserver as Polyfill } from '@juggle/resize-observer';
 import { Observable } from 'rxjs';
 import {
     blink, fadeIn, fadeOut, flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop,
@@ -29,11 +28,10 @@ import { setImmediate } from './setImmediate';
 export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
 
 /**
- * Returns the ResizeObserver type or the polyfilled version if not available.
  *
  * @hidden @internal
  */
-export const getResizeObserver = () => window.ResizeObserver || Polyfill;
+export const getResizeObserver = () => window.ResizeObserver;
 
 /**
  * @hidden
@@ -194,7 +192,7 @@ export class PlatformUtil {
     public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
-    /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
+        /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
 
     public KEYMAP = mkenum({
         ENTER: 'Enter',
@@ -237,7 +235,7 @@ export class PlatformUtil {
      * and the function may instead remove the parent size while measuring to get the correct value.
      * ```
      */
-     public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
+    public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
         let nodeStyles;
 
@@ -249,7 +247,7 @@ export class PlatformUtil {
 
         if (sizeHoldingNode) {
             const style = sizeHoldingNode.style;
-            nodeStyles = [ style.width, style.minWidth, style.flexBasis ];
+            nodeStyles = [style.width, style.minWidth, style.flexBasis];
             style.width = '';
             style.minWidth = '';
             style.flexBasis = '';

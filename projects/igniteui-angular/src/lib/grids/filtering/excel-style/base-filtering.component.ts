@@ -39,5 +39,6 @@ export abstract class BaseFilteringComponent {
     abstract onSelect(): void;
     abstract onPin(): void;
     abstract onHideToggle(): void;
+    abstract cancel(): void;
 
 }

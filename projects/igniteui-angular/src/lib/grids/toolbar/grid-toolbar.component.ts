@@ -14,8 +14,9 @@ import { Subscription } from 'rxjs';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import { IgxIconService } from '../../icon/public_api';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
-import { IgxGridToolbarTitleDirective, IgxGridToolbarActionsDirective } from './common';
+import { IgxGridToolbarActionsDirective } from './common';
 import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { IgxToolbarToken } from './token';
 
 
 /**
@@ -26,7 +27,8 @@ import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid
  */
 @Component({
     selector: 'igx-grid-toolbar',
-    templateUrl: './grid-toolbar.component.html'
+    templateUrl: './grid-toolbar.component.html',
+    providers: [{ provide: IgxToolbarToken, useClass: IgxGridToolbarComponent }]
 })
 export class IgxGridToolbarComponent extends DisplayDensityBase implements OnInit, OnDestroy {
 
@@ -64,13 +66,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
     public get nativeElement() {
         return this.element.nativeElement;
     }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ContentChild(IgxGridToolbarTitleDirective)
-    public hasTitle: IgxGridToolbarTitleDirective;
 
     /**
      * @hidden
