@@ -289,6 +289,9 @@ export interface GridType extends IGridDataBindable {
     hasVisibleColumns: boolean;
     hasExpandableChildren?: boolean;
 
+    hiddenColumnsCount: number;
+    pinnedColumnsCount: number;
+
     iconTemplate?: TemplateRef<any>;
     groupRowTemplate?: TemplateRef<any>;
     groupByRowSelectorTemplate?: TemplateRef<any>;
