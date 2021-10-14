@@ -196,7 +196,6 @@ Below is the list of all inputs that the developers may set to configure the gri
 | `rowHeight` | number | Sets the row height. |
 | `columnWidth` | string | The default width of the `IgxGridComponent`'s columns. |
 |`primaryKey`| any | Property that sets the primary key of the `IgxGridComponent`. |
-|`toolbarTitle`| string | the toolbar's title. |
 |`exportExcel`| boolean | Returns whether the option for exporting to MS Excel is enabled or disabled. |
 |`exportCsv`| boolean | Returns whether the option for exporting to CSV is enabled or disabled.|
 |`exportText`| string | Returns the textual content for the main export button.|

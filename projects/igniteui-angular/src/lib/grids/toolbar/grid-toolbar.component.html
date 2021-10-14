@@ -12,8 +12,6 @@
 </ng-template>
 <igx-grid-toolbar-actions *ngIf="!hasActions">
     <igx-grid-toolbar-advanced-filtering *ngIf="grid.allowAdvancedFiltering"></igx-grid-toolbar-advanced-filtering>
-    <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-    <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
     <igx-grid-toolbar-exporter *ngIf="grid.exportExcel || grid.exportCsv" (exportStarted)="showProgress = true" (exportEnded)="showProgress = false">
     </igx-grid-toolbar-exporter>
 </igx-grid-toolbar-actions>

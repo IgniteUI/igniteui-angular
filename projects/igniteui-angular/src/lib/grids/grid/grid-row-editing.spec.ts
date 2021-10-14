@@ -1511,6 +1511,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Hiding: Should show correct value when showing the column again`, waitForAsync(async () => {
+            fix.componentInstance.showToolbar = true;
             fix.detectChanges();
             await fix.whenStable();
             fix.detectChanges();
