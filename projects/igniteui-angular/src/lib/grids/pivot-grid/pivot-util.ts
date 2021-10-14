@@ -105,12 +105,14 @@ export class PivotUtil {
          expansionStates: Map<any, boolean>, defaultExpandState: boolean) {
         const flatData = [];
         hierarchies.forEach((h, key) => {
+            if(h.dimension) {
             const field = this.resolveFieldName(h.dimension, rec);
             let obj = {};
             obj[field] = key;
             obj[pivotKeys.records] = h[pivotKeys.records];
             obj = { ...obj, ...h[pivotKeys.aggregations] };
             obj[pivotKeys.level] = level;
+            obj[field + '_' + pivotKeys.level] = level;
             flatData.push(obj);
             const isExpanded = expansionStates.get(key) === undefined ? defaultExpandState : expansionStates.get(key);
 
@@ -122,6 +124,7 @@ export class PivotUtil {
                         flatData.push(record);
                     }
                 }
+            }
             }
         });
 

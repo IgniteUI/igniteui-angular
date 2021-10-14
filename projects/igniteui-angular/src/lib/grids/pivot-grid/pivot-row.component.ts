@@ -18,6 +18,7 @@ import { GridBaseAPIService, IgxColumnComponent } from '../hierarchical-grid/pub
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
+import { dir } from 'console';
 
 
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -86,14 +87,16 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
 
     protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number) {
         let dimIndex = 0;
+        let currentLvl = level;
         for (const dim of rowDimConfig) {
-            if (this.level === level) {
+            const field = (typeof dim.member === 'string' ? dim.member : 'field' + (dimIndex + 1)) + '_level';
+            currentLvl = this.rowData[field] !== undefined ? this.rowData[field] : currentLvl + 1;
+            if (currentLvl === level) {
                 this.rowDimension.push(this.extractFromDimension(dim, dimIndex));
             }
             dimIndex++;
-            if  (level < this.level) {
-                level++;
-                this.extractFromDimensions(dim.childLevels, level);
+            if  (level < currentLvl) {
+                this.extractFromDimensions(dim.childLevels, level + 1);
             }
         }
     }
