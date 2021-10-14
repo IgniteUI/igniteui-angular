@@ -1819,30 +1819,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Gets/Sets the title to be displayed in the built-in column hiding UI.
-     *
-     * @deprecated
-     *
-     * @example
-     * ```html
-     * <igx-grid [showToolbar]="true" [columnHiding]="true" columnHidingTitle="Column Hiding"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`columnHidingTitle` is deprecated')
-    @Input()
-    public get columnHidingTitle(): string {
-        return this._columnHidingTitle;
-    }
-    public set columnHidingTitle(v: string) {
-        this._columnHidingTitle = v;
-    }
-
-    /** @hidden @internal */
-    public get columnHidingTitleInternal(): string {
-        return this._columnHidingTitle;
-    }
-
-    /**
      * Gets/Sets the initial pinning configuration.
      *
      * @remarks
@@ -1862,51 +1838,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.resetCaches();
         }
         this._pinning = value;
-    }
-
-
-    /**
-     * Gets/Sets if the built-in column pinning UI should be shown in the toolbar.
-     *
-     * @deprecated
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [columnPinning]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`columnPinning` is deprecated')
-    @Input()
-    public get columnPinning() {
-        return this._columnPinning;
-    }
-    public set columnPinning(value) {
-        this._columnPinning = value;
-        this.notifyChanges();
-    }
-
-    /**
-     * Gets/Sets the title to be displayed in the UI of the column pinning.
-     *
-     * @deprecated
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [columnPinning]="'true" [columnPinningTitle]="'Column Hiding'" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`columnPinningTitle` is deprecated')
-    @Input()
-    public get columnPinningTitle(): string {
-        return this._columnPinningTitle;
-    }
-    public set columnPinningTitle(v: string) {
-        this._columnPinningTitle = v;
-    }
-
-    /** @hidden @internal */
-    public get columnPinningTitleInternal(): string {
-        return this._columnPinningTitle;
     }
 
     /**
@@ -2403,52 +2334,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Gets/Sets the text to be displayed inside the toggle button.
-     *
-     * @deprecated
-     *
-     * @remarks
-     * Used for the built-in column hiding UI of the`IgxColumnComponent`.
-     * @example
-     * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" [hiddenColumnsText]="'Hidden Columns'"></igx-grid>
-     * ```
-     */
-    // @DeprecateProperty('`hiddenColumnsText` is deprecated')
-    @Input()
-    public get hiddenColumnsText() {
-        return this._hiddenColumnsText;
-    }
-
-    public set hiddenColumnsText(value) {
-        this._hiddenColumnsText = value;
-        this.notifyChanges();
-
-    }
-
-    /**
-     * Gets/Sets the text to be displayed inside the toggle button.
-     *
-     * @deprecated
-     *
-     * @remarks
-     * Used for the built-in column pinning UI of the`IgxColumnComponent`.
-     * @example
-     * ```html
-     * <igx-grid [pinnedColumnsText]="'PinnedCols Text" [data]="data" [width]="'100%'" [height]="'500px'"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`pinnedColumnsText` is deprecated')
-    @Input()
-    public get pinnedColumnsText() {
-        return this._pinnedColumnsText;
-    }
-    public set pinnedColumnsText(value) {
-        this._pinnedColumnsText = value;
-        this.notifyChanges();
-    }
-
-    /**
      * Gets/Sets whether the grid has batch editing enabled.
      * When batch editing is enabled, changes are not made directly to the underlying data.
      * Instead, they are stored as transactions, which can later be committed w/ the `commit` method.
@@ -2471,11 +2356,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.switchTransactionService(val);
             this.subscribeToTransactions();
         }
-    }
-
-    /** @hidden @internal */
-    public get pinnedColumnsTextInternal() {
-        return this._pinnedColumnsText;
     }
 
     /**
@@ -2506,147 +2386,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const formatParts = format.split(',');
         const i = formatParts.indexOf(formatParts.find(c => c.includes('¤')));
         return this._currencyPositionLeft = i < 1;
-    }
-
-
-    /**
-     * Gets/Sets whether the toolbar is shown.
-     *
-     * @deprecated
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" ></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`showToolbar` is deprecated')
-    @Input()
-    public get showToolbar(): boolean {
-        return this._showToolbar;
-    }
-    public set showToolbar(newValue: boolean) {
-        this._showToolbar = newValue;
-    }
-
-    /**
-     * Gets/Sets the toolbar's title.
-     *
-     * @deprecated
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [toolbarTitle]="'My Grid'"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`toolbarTitle` is deprecated')
-    @Input()
-    public get toolbarTitle(): string {
-        return this._toolbarTitle;
-    }
-
-    public set toolbarTitle(newValue: string) {
-        this._toolbarTitle = newValue;
-        this.notifyChanges();
-    }
-
-    /**
-     * Gets/Sets whether exporting to MS Excel is enabled or disabled.
-     *
-     * @deprecated
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportExcel]="true"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`exportExcel` is deprecated')
-    @Input()
-    public get exportExcel(): boolean {
-        return this.getExportExcel();
-    }
-
-    public set exportExcel(newValue: boolean) {
-        this._exportExcel = newValue;
-        this.notifyChanges();
-    }
-
-    /**
-     * Gets/Sets whether the option for exporting to CSV is enabled or disabled.
-     *
-     * @deprecated
-     *
-     * ```html
-     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportCsv]="true"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`exportCsv` is deprecated')
-    @Input()
-    public get exportCsv(): boolean {
-        return this.getExportCsv();
-    }
-    public set exportCsv(newValue: boolean) {
-        this._exportCsv = newValue;
-        this.notifyChanges();
-    }
-
-    /**
-     * Gets/Sets the textual content for the main export button.
-     *
-     * @deprecated
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="localData" [showToolbar]="true" [exportText]="'My Exporter'" [exportCsv]="true"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`exportText` is deprecated')
-    @Input()
-    public get exportText(): string {
-        return this._exportText;
-    }
-
-    public set exportText(newValue: string) {
-        this._exportText = newValue;
-        this.notifyChanges();
-    }
-
-    /**
-     * Gets/Sets the textual content for the MS Excel export button.
-     *
-     * @deprecated
-     *
-     * ```html
-     * <igx-grid [exportExcelText]="'My Excel Exporter" [showToolbar]="true" [exportText]="'My Exporter'" [exportCsv]="true"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`exportExcelText` is deprecated')
-    @Input()
-    public get exportExcelText(): string {
-        return this._exportExcelText;
-    }
-    public set exportExcelText(newValue: string) {
-        this._exportExcelText = newValue;
-        this.notifyChanges();
-    }
-
-    /**
-     * Gets/Sets the textual content for the CSV export button.
-     *
-     * @deprecated
-     *
-     * @example
-     * ```html
-     * <igx-grid [exportCsvText]="'My Csv Exporter" [showToolbar]="true" [exportText]="'My Exporter'" [exportExcel]="true"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`exportCsvText` is deprecated')
-    @Input()
-    public get exportCsvText(): string {
-        return this._exportCsvText;
-    }
-    public set exportCsvText(newValue: string) {
-        this._exportCsvText = newValue;
-        this.notifyChanges();
     }
 
     /**
@@ -2937,17 +2676,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.verticalScrollContainer.getScrollNativeSize();
     }
 
-    private _columnPinningTitle: string;
-    private _columnHidingTitle: string;
-
-    /* Toolbar related definitions */
-    private _showToolbar = false;
-    private _exportExcel = false;
-    private _exportCsv = false;
-    private _toolbarTitle: string = null;
-    private _exportText: string;
-    private _exportExcelText: string;
-    private _exportCsvText: string;
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
@@ -2981,8 +2709,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private columnListDiffer;
     private rowListDiffer;
-    private _hiddenColumnsText = '';
-    private _pinnedColumnsText = '';
     private _height: string | null = '100%';
     private _width: string | null = '100%';
     private _rowHeight;
@@ -4577,7 +4303,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid.sort({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
      * ```
      */
-    public sort(expression: ISortingExpression| Array<ISortingExpression>): void {
+    public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         const sortingState = cloneArray(this.sortingExpressions);
 
         if (expression instanceof Array) {
@@ -6143,20 +5869,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             rowForOf.onHScroll(gridScrLeft);
             rowForOf.cdr.detectChanges();
         }
-    }
-
-    /**
-     * @hidden
-     */
-    protected getExportExcel(): boolean {
-        return this._exportExcel;
-    }
-
-    /**
-     * @hidden
-     */
-    protected getExportCsv(): boolean {
-        return this._exportCsv;
     }
 
     protected changeRowEditingOverlayStateOnScroll(row: RowType) {
