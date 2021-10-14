@@ -2228,7 +2228,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    public getAutoSize(byHeader = false) {
+    public getAutoSize(byHeader = false): string {
         const size = !byHeader ? this.getLargestCellWidth() :
             (Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b) + 'px');
         const isPercentageWidth = this.width && typeof this.width === 'string' && this.width.indexOf('%') !== -1;

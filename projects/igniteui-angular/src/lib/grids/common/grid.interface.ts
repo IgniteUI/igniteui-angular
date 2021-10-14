@@ -27,7 +27,7 @@ import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
-import { IColumnPipeArgs } from '../columns/interfaces';
+import { IColumnPipeArgs, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy } from './strategy';
@@ -100,6 +100,25 @@ export interface ColumnType {
     grid: GridType;
     children: QueryList<ColumnType>;
     allChildren: ColumnType[];
+    // TYPE
+    headerGroup: any;
+    // TYPE
+    headerCell: any;
+
+    headerTemplate: TemplateRef<any>;
+    collapsibleIndicatorTemplate?: TemplateRef<any>;
+    headerClasses: any;
+    headerStyles: any;
+    headerGroupClasses: any;
+    headerGroupStyles: any;
+
+    calcWidth: any;
+    minWidthPx: number;
+    maxWidthPx: number;
+    minWidth: string;
+    maxWidth: string;
+    minWidthPercent: number;
+    maxWidthPercent: number;
 
     field: string;
     header?: string;
@@ -107,6 +126,7 @@ export interface ColumnType {
     dataType: GridColumnDataType;
     inlineEditorTemplate: TemplateRef<any>;
     visibleIndex: number;
+    collapsible?: boolean;
     editable: boolean;
     resizable: boolean;
     searchable: boolean;
@@ -154,6 +174,8 @@ export interface ColumnType {
 
     filterCellTemplate: TemplateRef<any>;
 
+    getAutoSize(): string;
+    getResizableColUnderEnd(): MRLResizeColumnInfo[];
     getCellWidth(): string;
     getGridTemplate(isRow: boolean): string;
     toggleVisibility(value?: boolean): void;
@@ -234,6 +256,7 @@ export interface GridType extends IGridDataBindable {
 
     filterMode: FilterMode;
 
+    // TYPE
     theadRow: any;
     groupArea: any;
     filterCellList: any[];
@@ -260,9 +283,22 @@ export interface GridType extends IGridDataBindable {
     columnInDrag: any;
     pinnedWidth: number;
     unpinnedWidth: number;
+    summariesMargin: number;
+    headSelectorBaseAriaLabel: string;
 
+    hasVisibleColumns: boolean;
+    hasExpandableChildren?: boolean;
+
+    iconTemplate?: TemplateRef<any>;
+    groupRowTemplate?: TemplateRef<any>;
+    groupByRowSelectorTemplate?: TemplateRef<any>;
+    rowLoadingIndicatorTemplate?: TemplateRef<any>;
+    headSelectorTemplate: TemplateRef<any>;
+    rowSelectorTemplate: TemplateRef<any>;
     dragIndicatorIconTemplate: any;
     dragIndicatorIconBase: any;
+    disableTransitions: boolean;
+    currencyPositionLeft: boolean;
 
     columnWidthSetByUser: boolean;
     headerFeaturesWidth: number;
@@ -443,6 +479,7 @@ export interface GridType extends IGridDataBindable {
     resetHorizontalVirtualization(): void;
     hasVerticalScroll(): boolean;
     getVisibleContentHeight(): number;
+    getDragGhostCustomTemplate(): TemplateRef<any> | null;
     openRowOverlay(id: any): void;
     openAdvancedFilteringDialog(): void;
     showSnackbarFor(index: number): void;
@@ -494,6 +531,8 @@ export interface GridType extends IGridDataBindable {
 
     // TODO: Maybe move them to FlatGridType, but then will we need another token?
     isExpandedGroup(group: IGroupByRecord): boolean;
+    toggleAllGroupRows?(): void;
+    toggleAll?(): void;
     generateRowPath?(rowId: any): any[];
 
 }

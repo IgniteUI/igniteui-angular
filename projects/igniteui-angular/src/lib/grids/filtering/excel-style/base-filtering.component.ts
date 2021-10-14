@@ -36,5 +36,8 @@ export abstract class BaseFilteringComponent {
     abstract detectChanges(): void;
     abstract hide(): void;
     abstract closeDropdown(): void;
+    abstract onSelect(): void;
+    abstract onPin(): void;
+    abstract onHideToggle(): void;
 
 }

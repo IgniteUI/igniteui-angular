@@ -60,9 +60,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     public overlayComponentId: string;
 
     @Input()
-    public overlayService: IgxOverlayService;
-
-    @Input()
     public displayDensity: DisplayDensity;
 
     @ViewChild('toggle', { read: IgxToggleDirective, static: true })
@@ -98,7 +95,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     };
 
 
-    constructor(private cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
+    constructor(
+        protected overlayService: IgxOverlayService,
+        private cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil
+    ) { }
 
     public ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;

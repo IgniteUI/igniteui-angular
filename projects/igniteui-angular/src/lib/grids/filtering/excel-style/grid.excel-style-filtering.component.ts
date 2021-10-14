@@ -297,13 +297,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     /**
      * @hidden @internal
      */
-    public selectedClass() {
-        return this.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select';
-    }
-
-    /**
-     * @hidden @internal
-     */
     public initialize(column: ColumnType, overlayService: IgxOverlayService) {
         this.inline = false;
         this.column = column;

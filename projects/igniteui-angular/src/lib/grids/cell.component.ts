@@ -19,7 +19,6 @@ import { formatPercent, formatCurrency } from '@angular/common';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { formatDate, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
 import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType } from './common/grid.interface';
@@ -643,8 +642,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return getCurrencySymbol(this.currencyCode, 'wide', this.grid.locale);
     }
 
-    /** @hidden @internal @deprecated */
-    public focused = this.active;
     protected _lastSearchInfo: ISearchInfo;
     private _highlight: IgxTextHighlightDirective;
     private _cellSelection = GridSelectionMode.multiple;
@@ -657,20 +654,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         private element: ElementRef<HTMLElement>,
         protected zone: NgZone,
         private touchManager: HammerGesturesManager,
-        protected platformUtil: PlatformUtil) { }
-
-    /**
-     * @deprecated
-     * Gets whether the cell is selected.
-     * ```typescript
-     * let isCellSelected = thid.cell.isCellSelected();
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    @DeprecateMethod(`'isCellSelected' is deprecated. Use 'selected' property instead.`)
-    public isCellSelected() {
-        return this.selectionService.selected(this.selectionNode);
-    }
+        protected platformUtil: PlatformUtil
+    ) { }
 
     /**
      * @hidden
