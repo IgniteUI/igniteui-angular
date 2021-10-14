@@ -3,7 +3,7 @@ import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angul
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait, waitForActiveNodeChange} from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
 import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
@@ -43,7 +43,7 @@ describe('IgxGrid Master Detail #grid', () => {
     }));
 
     describe('Basic', () => {
-        beforeEach( fakeAsync(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -689,7 +689,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
     describe('Integration', () => {
         describe('Paging', () => {
-             it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
+            it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 fix.componentInstance.paging = true;
                 grid = fix.componentInstance.grid;
@@ -847,6 +847,31 @@ describe('IgxGrid Master Detail #grid', () => {
                     { ContactName: 'Ana Trujillo' },
                     { ContactName: 'Antonio Moreno' }
                 ];
+                grid.expandAll();
+                tick(100);
+                fix.detectChanges();
+
+                grid.selectRange(range);
+                fix.detectChanges();
+                expect(grid.getSelectedData()).toEqual(expectedData);
+            }));
+
+            fit('getSelectedData should return correct values when there are master details and paging is enabled', fakeAsync(() => {
+                const range = { rowStart: 0, rowEnd: 5, columnStart: 'ContactName', columnEnd: 'ContactName' };
+                const expectedData = [
+                    { ContactName: 'Victoria Ashworth' },
+                    { ContactName: 'Patricio Simpson' },
+                    { ContactName: 'Francisco Chang' }
+                ];
+                fix.componentInstance.paging = true;
+                fix.detectChanges();
+                grid.perPage = 5;
+                fix.detectChanges();
+                tick(16);
+                grid.paginate(2);
+                fix.detectChanges();
+                tick(16);
+
                 grid.expandAll();
                 tick(100);
                 fix.detectChanges();
