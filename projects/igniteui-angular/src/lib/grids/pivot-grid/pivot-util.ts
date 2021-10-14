@@ -9,7 +9,7 @@ export class PivotUtil {
         for (const rec of data) {
             const vals = dimensionType === PivotDimensionType.Column ?
                 this.extractValuesForColumn(dimensions, rec) :
-                this.extractValuesForRow(dimensions, rec);
+                this.extractValuesForRow(dimensions, rec, pivotKeys);
             for (const val of vals) { // this should go in depth also vals.children
                 if (hierarchy.get(val.value) != null) {
                     this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys.records);
@@ -26,7 +26,7 @@ export class PivotUtil {
         return typeof dim.member === 'string' ? recData[dim.member] : dim.member.call(null, recData);
     }
 
-    public static extractValuesForRow(dims: IPivotDimension[], recData: any) {
+    public static extractValuesForRow(dims: IPivotDimension[], recData: any,  pivotKeys: IPivotKeys) {
         const values: any[] = [];
         let i = 0;
         for (const col of dims) {
@@ -36,8 +36,13 @@ export class PivotUtil {
             objValue['dimension'] = col;
             values.push(objValue);
             if (col.childLevels != null && col.childLevels.length > 0) {
-                const childValues = this.extractValuesForRow(col.childLevels, recData);
+                const childValues = this.extractValuesForRow(col.childLevels, recData, pivotKeys);
                 values[i].children = childValues;
+            }
+            if (recData.level && recData.level > 0) {
+                const childData = recData.records;
+                const res =  this.getFieldsHierarchy(childData, [col], PivotDimensionType.Row, pivotKeys);
+                return Array.from(res.values());
             }
             i++;
         }

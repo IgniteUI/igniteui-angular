@@ -62,7 +62,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      * @internal
      */
     public get rowDimensionKey(){
-        return this.rowDimension.map(x => x.header).join('_');
+        return this.rowDimension.filter(x => x.headerTemplate === this.headerTemplate).map(x => x.header).join('_');
     }
 
     public get expandState() {
@@ -106,11 +106,11 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         } else if (typeof dim.member === 'function'){
             header = dim.member.call(this, this.rowData);
         }
-        const col = this._createColComponent(field, header, index);
+        const col = this._createColComponent(field, header, index, dim);
         return col;
     }
 
-    protected _createColComponent(field: string, header: string, index: number = 0) {
+    protected _createColComponent(field: string, header: string, index: number = 0, dim: IPivotDimension) {
         // const fieldName = field.indexOf('-') !==  -1 ? field.slice(field.lastIndexOf('-') + 1) : field;
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
@@ -118,7 +118,9 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         ref.instance.header = header;
         ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
         (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
-        ref.instance.headerTemplate = this.headerTemplate;
+        if (dim.childLevels && dim.childLevels.length > 0) {
+            ref.instance.headerTemplate = this.headerTemplate;
+        }
         return ref.instance;
     }
 }
