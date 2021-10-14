@@ -68,14 +68,12 @@
         font-size: $igx-icon-font-size;
         color: var-get($theme, 'color');
 
+        div,
         svg {
+            display: block;
             width: inherit;
             height: inherit;
             fill: currentColor;
-
-            use {
-                pointer-events: none;
-            }
         }
     }
 
