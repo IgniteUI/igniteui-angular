@@ -54,7 +54,7 @@ export class PivotGridSampleComponent {
         ]
 ,
 rows: [{
-    member: () => 'All',
+    member: () => 'AllProd',
     enabled: true,
     childLevels: [{
     member: 'ProductCategory',
@@ -63,7 +63,7 @@ rows: [{
     }]
     },
     {
-        member: () => 'All',
+        member: () => 'AllDate',
     enabled: true,
     childLevels: [{
     member: 'Date',
