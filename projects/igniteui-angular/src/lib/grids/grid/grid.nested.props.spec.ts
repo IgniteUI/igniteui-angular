@@ -547,7 +547,7 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(cell.editMode).toBeTruthy();
         expect(combo.selectedItems().length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -609,7 +609,7 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(cell.editMode).toBeTruthy();
         expect(combo.selectedItems().length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -677,7 +677,7 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(cell.editMode).toBeTruthy();
         expect(combo.selectedItems().length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -740,7 +740,7 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(cell.editMode).toBeTruthy();
         expect(combo.selectedItems().length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 

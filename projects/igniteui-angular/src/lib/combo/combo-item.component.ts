@@ -27,6 +27,9 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     @HostBinding('style.height.px')
     public itemHeight: string | number = '';
 
+    @Input()
+    public singleMode: boolean;
+
     /**
      * @hidden
      */

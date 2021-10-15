@@ -27,6 +27,8 @@ export interface IgxComboBase {
     isAddButtonVisible(): boolean;
     handleInputChange(event?: string): void;
     isItemSelected(itemID: any): boolean;
-    selectItems(itemIDs: any[], clearSelection?: boolean, event?: Event): void;
-    deselectItems(itemIDs: any[], event?: Event): void;
+    select(item: any);
+    select(itemIDs: any[], clearSelection?: boolean, event?: Event): void;
+    deselect(item: any);
+    deselect(itemIDs: any[], event?: Event): void;
 }
