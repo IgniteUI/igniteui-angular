@@ -24,7 +24,7 @@ import { IgxIconModule, IgxIconService } from '../icon/public_api';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownModule } from '../drop-down/public_api';
+import { IgxDropDownModule, ISelectionEventArgs } from '../drop-down/public_api';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -143,7 +143,7 @@ let NEXT_ID = 0;
  * @igxGroup Grids & Lists
  *
  * @remarks
- * It provides the ability to filter items as well as perform single or multiple seleciton with the provided data.
+ * It provides the ability to filter items as well as perform single or multiple selection with the provided data.
  * Additionally, it exposes keyboard navigation and custom styling capabilities.
  * @example
  * ```html
@@ -402,7 +402,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public selectionChanging = new EventEmitter<IComboSelectionChangingEventArgs>();
+    public selectionChanging = new EventEmitter<IComboSelectionChangingEventArgs | ISelectionEventArgs>();
 
     /**
      * Emitted before the dropdown is opened
@@ -910,22 +910,22 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected _groupKey = '';
     protected _displayKey: string;
     protected _prevInputValue = '';
+    protected _value = '';
+    protected _valid = IgxComboState.INITIAL;
+    protected destroy$ = new Subject<any>();
+    protected _onChangeCallback: (_: any) => void = noop;
+    protected _data = [];
 
     private _dataType = '';
     private _searchValue = '';
     private _type = null;
     private ngControl: NgControl = null;
-    private destroy$ = new Subject<any>();
-    private _data = [];
     private _filteredData = [];
     private _itemHeight = null;
     private _itemsMaxHeight = null;
     private _remoteSelection = {};
-    private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
     private _overlaySettings: OverlaySettings;
-    private _value = '';
-    private _valid = IgxComboState.INITIAL;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
 
     constructor(
@@ -933,10 +933,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
-        private _iconService: IgxIconService,
+        protected _iconService: IgxIconService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
-        @Optional() private _injector: Injector) {
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
+        @Optional() protected _injector: Injector) {
         super(_displayDensityOptions);
         this.comboAPI.register(this);
     }
@@ -1021,6 +1021,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         return this._value;
     }
 
+    public set value(val: string) {
+        this._value = val;
+    }
+
     /**
      * @hidden @internal
      */
@@ -1040,6 +1044,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public handleKeyUp(event: KeyboardEvent): void {
+        // TODO: use PlatformUtil for keyboard navigation
         if (event.key === 'ArrowDown' || event.key === 'Down') {
             this.dropdown.focusedItem = this.dropdown.items[0];
             this.dropdownContainer.nativeElement.focus();
@@ -1062,10 +1067,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public handleInputChange(event?: string) {
+    public handleInputChange(event?: any) {
         if (event !== undefined) {
             const args: IComboSearchInputEventArgs = {
-                searchText: event,
+                searchText: typeof event === 'string' ? event : event.target.value,
                 owner: this,
                 cancel: false
             };
@@ -1160,10 +1165,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.data.push(args.addedItem);
         // trigger re-render
         this.data = cloneArray(this.data);
-        this.selectItems(this.valueKey !== null && this.valueKey !== undefined ?
+        this.select(this.valueKey !== null && this.valueKey !== undefined ?
             [args.addedItem[this.valueKey]] : [args.addedItem], false);
         this.customValueFlag = false;
-        this.searchInput.nativeElement.focus();
+        this.searchInput?.nativeElement.focus();
         this.dropdown.focusedItem = null;
         this.virtDir.scrollTo(0);
     }
@@ -1389,10 +1394,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @param newItems new items to be selected
      * @param clearCurrentSelection if true clear previous selected items
      * ```typescript
-     * this.combo.selectItems(["New York", "New Jersey"]);
+     * this.combo.select(["New York", "New Jersey"]);
      * ```
      */
-    public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean, event?: Event) {
+    public select(newItems: Array<any>, clearCurrentSelection?: boolean, event?: Event) {
         if (newItems) {
             const newSelection = this.selection.add_items(this.id, newItems, clearCurrentSelection);
             this.setSelection(newSelection, event);
@@ -1404,10 +1409,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *
      * @param items items to deselected
      * ```typescript
-     * this.combo.deselectItems(["New York", "New Jersey"]);
+     * this.combo.deselect(["New York", "New Jersey"]);
      * ```
      */
-    public deselectItems(items: Array<any>, event?: Event) {
+    public deselect(items: Array<any>, event?: Event) {
         if (items) {
             const newSelection = this.selection.delete_items(this.id, items);
             this.setSelection(newSelection, event);
@@ -1468,9 +1473,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             return;
         }
         if (select) {
-            this.selectItems([itemID], false, event);
+            this.select([itemID], false, event);
         } else {
-            this.deselectItems([itemID], event);
+            this.deselect([itemID], event);
         }
     }
     /**
@@ -1513,7 +1518,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             return;
         }
         this.searchValue = '';
-        this.comboInput.nativeElement.focus();
+        if (!e.event) {
+            this.comboInput?.nativeElement.focus();
+        }
     }
 
     /**
@@ -1581,6 +1588,40 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         }
     }
 
+    /**
+     * Constructs the combo display value
+     * If remote, caches the key displayText
+     * If not, just combine the object.displayKeys
+     */
+    protected createDisplayText(newSelection: any[], oldSelection: any[]) {
+        let value = '';
+        if (this.isRemote) {
+            if (newSelection.length) {
+                const removedItems = oldSelection.filter(e => newSelection.indexOf(e) < 0);
+                const addedItems = newSelection.filter(e => oldSelection.indexOf(e) < 0);
+                this.registerRemoteEntries(addedItems);
+                this.registerRemoteEntries(removedItems, false);
+                value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
+            } else {
+                // If new selection is empty, clear all items
+                this.registerRemoteEntries(oldSelection, false);
+            }
+        } else {
+            value = this.concatDisplayText(newSelection);
+        }
+        return value;
+    }
+
+    protected checkMatch(): void {
+        const itemMatch = this.filteredData.some(this.findMatch);
+        this.customValueFlag = this.allowCustomValues && !itemMatch;
+    }
+
+    protected findMatch = (element: any): boolean => {
+        const value = this.displayKey ? element[this.displayKey] : element;
+        return value.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
+    };
+
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
     private registerRemoteEntries(ids: any[], add = true) {
         if (add) {
@@ -1605,45 +1646,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         }));
     }
 
-    private checkMatch(): void {
-        const displayKey = this.displayKey;
-        const matchFn = (e) => {
-            const value = displayKey ? e[displayKey] : e;
-            return value.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
-        };
-        const itemMatch = this.filteredData.some(matchFn);
-        this.customValueFlag = this.allowCustomValues && !itemMatch;
-    }
-
     /** Returns a string that should be populated in the combo's text box */
     private concatDisplayText(selection: any[]): string {
         const value = this.displayKey !== null && this.displayKey !== undefined ?
             this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
             selection.join(', ');
-        return value;
-    }
-
-    /**
-     * Constructs the combo display value
-     * If remote, caches the key displayText
-     * If not, just combine the object.displayKeys
-     */
-    private createDisplayText(newSelection: any[], oldSelection: any[]) {
-        let value = '';
-        if (this.isRemote) {
-            if (newSelection.length) {
-                const removedItems = oldSelection.filter(e => newSelection.indexOf(e) < 0);
-                const addedItems = newSelection.filter(e => oldSelection.indexOf(e) < 0);
-                this.registerRemoteEntries(addedItems);
-                this.registerRemoteEntries(removedItems, false);
-                value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
-            } else {
-                // If new selection is empty, clear all items
-                this.registerRemoteEntries(oldSelection, false);
-            }
-        } else {
-            value = this.concatDisplayText(newSelection);
-        }
         return value;
     }
 
@@ -1672,6 +1679,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         IgxComboToggleIconDirective,
         IgxComboClearIconDirective],
     exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboAddItemComponent,
+        IgxComboGroupingPipe, // TODO: create common ng module
+        IgxComboFilteringPipe,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,
