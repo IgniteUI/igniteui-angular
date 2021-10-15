@@ -22,14 +22,16 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
     }));
 
     it('should apply formatter and dataType from measures', () => {
+        fixture.detectChanges()
         const pivotGrid = fixture.componentInstance.pivotGrid;
         const actualFormatterValue = pivotGrid.rowList.first.cells.first.title;
         expect(actualFormatterValue).toEqual('774$');
         const actualDataTypeValue = pivotGrid.rowList.first.cells.last.title;
-        expect(actualDataTypeValue).toEqual('$28.86');
+        expect(actualDataTypeValue).toEqual('$71.89');
     });
 
     it('should apply css class to cells from measures', () => {
+        fixture.detectChanges()
         const pivotGrid = fixture.componentInstance.pivotGrid;
         const cells = pivotGrid.rowList.first.cells;
         expect(cells.first.nativeElement.classList).toContain('test');
