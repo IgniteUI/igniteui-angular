@@ -137,8 +137,8 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
     template: `<div>
     <igx-column-actions igxColumnHiding [grid]="grid" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable,
-        "<igx-grid-toolbar><igx-grid-toolbar-actions>" + "<igx-grid-toolbar-hiding buttonText='Hidden'></igx-grid-toolbar-hiding>" +
-        "</igx-grid-toolbar-actions></igx-grid-toolbar>", '<igx-paginator *ngIf="paging"></igx-paginator>') }
+        '<igx-grid-toolbar><igx-grid-toolbar-actions>' + '<igx-grid-toolbar-hiding buttonText="Hidden"></igx-grid-toolbar-hiding>' +
+        '</igx-grid-toolbar-actions></igx-grid-toolbar>', '<igx-paginator *ngIf="paging"></igx-paginator>') }
     </div>`
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
