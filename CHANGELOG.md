@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxCsvExporterService`, `IgxExcelExporterService`
     - Exporter services are no longer required to be provided in the application since they are now injected on a root level.
+- `IgxGridToolbarPinningComponent`, `IgxGridToolbarHidingComponent`
+    - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
 
 ### General
 

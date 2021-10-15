@@ -16,7 +16,6 @@ import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 /**
