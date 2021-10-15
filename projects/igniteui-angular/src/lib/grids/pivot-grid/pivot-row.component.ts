@@ -18,7 +18,6 @@ import { GridBaseAPIService, IgxColumnComponent } from '../hierarchical-grid/pub
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
-import { dir } from 'console';
 
 
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -62,12 +61,14 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      * @hidden
      * @internal
      */
-    public get rowDimensionKey(){
-        return this.rowDimension.filter(x => x.headerTemplate === this.headerTemplate).map(x => x.header).join('_');
+    public getRowDimensionKey(col: IgxColumnComponent) {
+            const nonExpandable = this.rowDimension.filter(x => x.headerTemplate !== this.headerTemplate).map(x => x.header);
+            const allFields = nonExpandable.concat(col.header);
+            return allFields.join('_') ;
     }
 
-    public get expandState() {
-        return this.grid.gridAPI.get_row_expansion_state(this.rowDimensionKey);
+    public getExpandState(col: IgxColumnComponent) {
+        return this.grid.gridAPI.get_row_expansion_state(this.getRowDimensionKey(col));
     }
 
     /**
