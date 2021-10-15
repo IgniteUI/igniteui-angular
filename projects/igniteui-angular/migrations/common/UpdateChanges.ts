@@ -423,22 +423,24 @@ export class UpdateChanges {
     }
 
     protected isNamedArgument(fileContent: string, i: number, occurrences: number[], change: ThemeVariableChange) {
-        if ((fileContent[(occurrences[i] + change.name.length)] === ':') ||
+        const openingBrackets = [];
+        const closingBrackets = [];
+
+        if (!(fileContent[(occurrences[i] + change.name.length)] === ':') ||
             (fileContent[(occurrences[i] + change.name.length)] === ' ' &&
                 fileContent[(occurrences[i] + change.name.length) + 1] === ':')) {
+            return false;
+        } else {
             for (let j = occurrences[i]; j >= 0; j--) {
-                if (fileContent[j] === '(' || fileContent[j] === ')') {
-                    if (fileContent[j] === ')') {
-                        return false;
-                    } else if (fileContent[j] === '(') {
-                        return true;
-                    }
-                } else {
-                    continue;
+                if (fileContent[j] === ')') {
+                    closingBrackets.push(fileContent[j]);
+                } else if (fileContent[j] === '(') {
+                    openingBrackets.push(fileContent[j]);
                 }
             }
         }
-        return false;
+
+        return !(openingBrackets.length === closingBrackets.length);
     }
 
     protected updateSassVariables(entryPath: string) {
@@ -450,14 +452,13 @@ export class UpdateChanges {
             if (!('owner' in change)) {
                 const occurrences = findMatches(fileContent, change.name);
                 for (let i = occurrences.length - 1; i >= 0; i--) {
-                    if (fileContent[occurrences[i] - 1].match(allowedStartCharacters)
-                        || fileContent[(occurrences[i] + change.name.length)].match(allowedEndCharacters)) {
-                        if (this.isNamedArgument(fileContent, i, occurrences, change as ThemeVariableChange)) {
-                            continue;
-                        }
-                        fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
-                        overwrite = true;
+                    if (!(fileContent[occurrences[i] - 1].match(allowedStartCharacters)
+                        || fileContent[(occurrences[i] + change.name.length)].match(allowedEndCharacters))
+                        || (this.isNamedArgument(fileContent, i, occurrences, change as ThemeVariableChange))) {
+                        continue;
                     }
+                    fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
+                    overwrite = true;
                 }
             }
         }

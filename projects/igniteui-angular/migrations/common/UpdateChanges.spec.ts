@@ -931,7 +931,7 @@ export class CustomGridComponent {
     });
 
     // sass variable migrations
-    it('Should migrate sass variables names correctly', ()=> {
+    fit('Should migrate sass variables names correctly', ()=> {
         const themePropsJson: ThemePropertyChanges = {
             changes: [
                 {
@@ -979,6 +979,18 @@ $color: #3321;
 $colorful: #3245;
 $palette5: mat.define-light-theme($light-palette-primary, $elevation, $light-palette, $some-variable: $elevation);
 $crm-grid-theme: igx-grid-theme($elevation: #f0f8fe, $header-border-color: #dde5eb);
+$dark-theme-palette: igx-palette($primary: $dark-color, $secondary: $orange-color);
+
+$dark-grid-theme: igx-grid-theme(
+$palette: $dark-theme-palette,
+$content-background: igx-color($dark-theme-palette, "secondary", 100),
+$elevation: igx-color($dark-theme-palette, "primary", 500),
+$header-text-color: igx-color($dark-theme-palette, "secondary", 600),
+$cell-selected-background: igx-color($dark-theme-palette, "primary", 500),
+$cell-selected-text-color: igx-color($dark-theme-palette, "secondary", 500),
+$row-hover-background: igx-color($dark-theme-palette, "primary", 100),
+$header-border-color: igx-color($dark-theme-palette, "primary", 600)
+);
 `;
         appTree.create('test.component.scss', fileContent);
         const expectedFileContent =
@@ -994,6 +1006,18 @@ $igx-color: #3321;
 $colorful: #3245;
 $palette5: mat.define-light-theme($light-palette-primary, $igx-elevation, $igx-light-palette, $some-variable: $igx-elevation);
 $crm-grid-theme: igx-grid-theme($elevation: #f0f8fe, $header-border-color: #dde5eb);
+$dark-theme-palette: igx-palette($primary: $dark-color, $secondary: $orange-color);
+
+$dark-grid-theme: igx-grid-theme(
+$palette: $dark-theme-palette,
+$content-background: igx-color($dark-theme-palette, "secondary", 100),
+$elevation: igx-color($dark-theme-palette, "primary", 500),
+$header-text-color: igx-color($dark-theme-palette, "secondary", 600),
+$cell-selected-background: igx-color($dark-theme-palette, "primary", 500),
+$cell-selected-text-color: igx-color($dark-theme-palette, "secondary", 500),
+$row-hover-background: igx-color($dark-theme-palette, "primary", 100),
+$header-border-color: igx-color($dark-theme-palette, "primary", 600)
+);
 `;
 
     const update = new UnitUpdateChanges(__dirname, appTree);
