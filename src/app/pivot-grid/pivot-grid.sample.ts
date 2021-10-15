@@ -94,8 +94,8 @@ export class PivotGridSampleComponent {
                 enabled: true,
                 dataType: 'currency',
                 styles: {
-                    upFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 150,
-                    downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 150
+                    upFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 50,
+                    downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 50
                 },
             }
         ],

@@ -297,9 +297,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.field = key;
                 ref.instance.parent = parent;
                 ref.changeDetectorRef.detectChanges();
-
-                const measureChildren = this.getMeasureChildren(factoryColumn, data, ref.instance, false);
-                ref.instance.children.reset(measureChildren);
                 columns.push(ref.instance);
                 if (this.hasMultipleValues) {
                     const measureChildren = this.getMeasureChildren(factoryColumn, data , ref.instance, false);
