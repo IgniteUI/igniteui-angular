@@ -102,7 +102,7 @@ export class PivotUtil {
     }
 
     public static flattenHierarchy(hierarchies, rec, pivotKeys, level = 0,
-         expansionStates: Map<any, boolean>, defaultExpandState: boolean) {
+         expansionStates: Map<any, boolean>, parentFields = [], defaultExpandState: boolean) {
         const flatData = [];
         hierarchies.forEach((h, key) => {
             if(h.dimension) {
@@ -114,11 +114,15 @@ export class PivotUtil {
             obj[pivotKeys.level] = level;
             obj[field + '_' + pivotKeys.level] = level;
             flatData.push(obj);
-            const isExpanded = expansionStates.get(key) === undefined ? defaultExpandState : expansionStates.get(key);
-
+            const parentLvl = rec[pivotKeys.level];
+            // TODO - can probably be extracted in a common function to use in rows and pipes.
+            const expansionRowKey = parentLvl !== undefined && parentLvl > level ? parentFields.concat(key).join('_') : key;
+            const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
+             defaultExpandState :
+             expansionStates.get(expansionRowKey);
             if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
                 obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec,
-                        pivotKeys, level + 1, expansionStates, defaultExpandState);
+                        pivotKeys, level + 1, expansionStates, parentFields, defaultExpandState);
                 if (isExpanded) {
                     for (const record of obj[pivotKeys.records]) {
                         flatData.push(record);
