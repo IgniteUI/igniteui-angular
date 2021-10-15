@@ -42,7 +42,13 @@ export class PivotUtil {
             if (recData.level && recData.level > 0) {
                 const childData = recData.records;
                 const res =  this.getFieldsHierarchy(childData, [col], PivotDimensionType.Row, pivotKeys);
-                return Array.from(res.values());
+                const arrRes = Array.from(res.values());
+                arrRes.forEach(arr => {
+                    if (arr.children) {
+                        arr.children =  Array.from(arr.children.values());
+                    }
+                });
+                return Array.from(arrRes);
             }
             i++;
         }
@@ -105,7 +111,6 @@ export class PivotUtil {
          expansionStates: Map<any, boolean>, parentFields = [], defaultExpandState: boolean) {
         const flatData = [];
         hierarchies.forEach((h, key) => {
-            if(h.dimension) {
             const field = this.resolveFieldName(h.dimension, rec);
             let obj = {};
             obj[field] = key;
@@ -128,7 +133,6 @@ export class PivotUtil {
                         flatData.push(record);
                     }
                 }
-            }
             }
         });
 
