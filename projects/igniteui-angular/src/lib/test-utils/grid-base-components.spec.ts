@@ -135,9 +135,10 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
 }
 @Component({
     template: `<div>
-    <igx-column-actions igxColumnHiding *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
+    <igx-column-actions igxColumnHiding [grid]="grid" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable,
-        '<igx-grid-toolbar></igx-grid-toolbar>', '<igx-paginator *ngIf="paging"></igx-paginator>') }
+        "<igx-grid-toolbar><igx-grid-toolbar-actions>" + "<igx-grid-toolbar-hiding buttonText='Hidden'></igx-grid-toolbar-hiding>" +
+        "</igx-grid-toolbar-actions></igx-grid-toolbar>", '<igx-paginator *ngIf="paging"></igx-paginator>') }
     </div>`
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
@@ -184,7 +185,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
 
 @Component({
     template: `<div>
-        <igx-column-actions igxColumnPinning *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
+        <igx-column-actions igxColumnPinning [grid]="grid" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
         ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productFilterable,
             '<igx-grid-toolbar>' +
             '<igx-grid-toolbar-actions><igx-grid-toolbar-pinning></igx-grid-toolbar-pinning></igx-grid-toolbar-actions>' +
@@ -235,7 +236,7 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
 
 @Component({
     template: `<div>
-    <igx-column-actions igxColumnPinning *ngIf="showInline"></igx-column-actions>
+    <igx-column-actions igxColumnPinning [grid]="grid" *ngIf="showInline"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid(' #grid [height]="height" ', '', ColumnDefinitions.contactInfoGroupableColumns,
         '<igx-grid-toolbar></igx-grid-toolbar>')}
     </div>`
