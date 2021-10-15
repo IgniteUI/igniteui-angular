@@ -1,5 +1,5 @@
 import { IgxNumberSummaryOperand } from '../summaries/grid-summary';
-import { IPivotConfiguration } from './pivot-grid.interface';
+import { IPivotConfiguration, IPivotValue } from './pivot-grid.interface';
 import { IgxPivotColumnPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 
 describe('Pivot pipes', () => {
@@ -53,17 +53,17 @@ describe('Pivot pipes', () => {
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfigHierarchy.columns, pivotConfigHierarchy.values);
         expect(columnPipeResult).toEqual([
             {
-                field1: 'All', All: 2127, Bulgaria: 774, USA: 829, Uruguay: 524, level: 0, records: [
-                    { field1: 'Clothing', All: 1526, Bulgaria: 774, USA: 296, Uruguay: 456, level: 1 },
-                    { field1: 'Bikes', All: 68, Uruguay: 68, level: 1 },
-                    { field1: 'Accessories', All: 293, USA: 293, level: 1 },
-                    { field1: 'Components', All: 240, USA: 240, level: 1 }
+                field1: 'All', All: 2127, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, level: 0, records: [
+                    { field1: 'Clothing', All: 1526, 'All-Bulgaria': 774,'All-USA': 296,'All-Uruguay': 456, level: 1 },
+                    { field1: 'Bikes', All: 68, 'All-Uruguay': 68, level: 1 },
+                    { field1: 'Accessories', All: 293, 'All-USA': 293, level: 1 },
+                    { field1: 'Components', All: 240, 'All-USA': 240, level: 1 }
                 ]
             },
-            { field1: 'Clothing', All: 1526, Bulgaria: 774, USA: 296, Uruguay: 456, level: 1 },
-            { field1: 'Bikes', All: 68, Uruguay: 68, level: 1 },
-            { field1: 'Accessories', All: 293, USA: 293, level: 1 },
-            { field1: 'Components', All: 240, USA: 240, level: 1 }
+            { field1: 'Clothing', All: 1526, 'All-Bulgaria': 774,'All-USA': 296,'All-Uruguay': 456, level: 1 },
+            { field1: 'Bikes', All: 68, 'All-Uruguay': 68, level: 1 },
+            { field1: 'Accessories', All: 293, 'All-USA': 293, level: 1 },
+            { field1: 'Components', All: 240, 'All-USA': 240, level: 1 }
         ]);
     });
 
@@ -75,7 +75,7 @@ describe('Pivot pipes', () => {
         }], expansionStates, pivotConfigHierarchy.values);
         expect(rowPipeResult).toEqual([
             {
-                ProductCategory: 'Clothing', level: 0, records: [
+        ProductCategory: 'Clothing', level: 0, records: [
         { ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley', Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282 },
         { ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa', Country: 'USA', Date: '01/05/2019', UnitsSold: 296 },
         { ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry', Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456 },
@@ -99,10 +99,10 @@ describe('Pivot pipes', () => {
         ]);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfigHierarchy.columns, pivotConfigHierarchy.values);
         expect(columnPipeResult).toEqual([
-            { ProductCategory: 'Clothing', All: 1526, Bulgaria: 774, USA: 296, Uruguay: 456, level: 0 },
-            { ProductCategory: 'Bikes', All: 68, Uruguay: 68, level: 0 },
-            { ProductCategory: 'Accessories', All: 293, USA: 293, level: 0 },
-            { ProductCategory: 'Components', All: 240, USA: 240, level: 0 }
+            { ProductCategory: 'Clothing', All: 1526, 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456, level: 0 },
+            { ProductCategory: 'Bikes', All: 68, 'All-Uruguay': 68, level: 0 },
+            { ProductCategory: 'Accessories', All: 293, 'All-USA': 293, level: 0 },
+            { ProductCategory: 'Components', All: 240, 'All-USA': 240, level: 0 }
         ]);
     });
 
@@ -212,65 +212,123 @@ describe('Pivot pipes', () => {
          ]);
     });
 
-    xit('transforms flat data to pivot data multiple row dimensions', () => {
+    it('transforms flat data to pivot data multiple row dimensions', () => {
         const rowPipeResult = rowPipe.transform(data, [{
             member: 'ProductCategory',
             enabled: true,
             childLevels: []
         },
         {
-            member: Date,
+            member: 'Date',
             enabled: true,
             childLevels: []
         }], expansionStates, pivotConfigHierarchy.values);
 
         expect(rowPipeResult).toEqual([
             {
-                ProductCategory: 'Clothing', level: 0, children: [
-                  { Date: '01/01/2021', records: [
-        { ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley', Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282 }
-                  ]},
-                  { Date: '01/05/2019', records: [
-        { ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa', Country: 'USA', Date: '01/05/2019', UnitsSold: 296 }
-                  ]},
-                  { Date: '05/12/2020', records: [
-        { ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry', Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456 }
-                  ]},
-                  { Date: '02/19/2020', records: [
-        { ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter', Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492 }
-                  ]},
-                ], records: [
-        { ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley', Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282 },
-        { ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa', Country: 'USA', Date: '01/05/2019', UnitsSold: 296 },
-        { ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry', Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456 },
-        { ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter', Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492 }]
+                Date: '01/01/2021',
+                records: [
+                    {
+                        ProductCategory: 'Clothing',
+                        UnitPrice: 12.81,
+                        SellerName: 'Stanley',
+                        Country: 'Bulgaria',
+                        Date: '01/01/2021',
+                        UnitsSold: 282
+                    }
+                ],
+                level: 0,
+                ProductCategory: 'Clothing'
             },
             {
-                ProductCategory: 'Bikes', level: 0, children: [
-                    {Date: '01/06/2020', records: [
-        { ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia', Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68 }
-                    ]}
-                ], records: [
-        { ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia', Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68 }
-                ]
+                Date: '01/05/2019',
+                records: [
+                    {
+                        ProductCategory: 'Clothing',
+                        UnitPrice: 49.57,
+                        SellerName: 'Elisa',
+                        Country: 'USA',
+                        Date: '01/05/2019',
+                        UnitsSold: 296
+                    }
+                ],
+                level: 0,
+                ProductCategory: 'Clothing'
             },
             {
-                ProductCategory: 'Accessories', level: 0, children: [
-                    { Date: '04/07/2021', records: [
-        { ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David', Country: 'USA', Date: '04/07/2021', UnitsSold: 293 }
-                    ]}
-                    ], records: [
-        { ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David', Country: 'USA', Date: '04/07/2021', UnitsSold: 293 }
-                ]
+                Date: '05/12/2020',
+                records: [
+                    {
+                        ProductCategory: 'Clothing',
+                        UnitPrice: 68.33,
+                        SellerName: 'Larry',
+                        Country: 'Uruguay',
+                        Date: '05/12/2020',
+                        UnitsSold: 456
+                    }
+                ],
+                level: 0,
+                ProductCategory: 'Clothing'
             },
             {
-                ProductCategory: 'Components', level: 0, children: [
-                    { Date: '12/08/2021', records: [
-        { ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John', Country: 'USA', Date: '12/08/2021', UnitsSold: 240 }
-                    ]}
-                ], records: [
-        { ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John', Country: 'USA', Date: '12/08/2021', UnitsSold: 240 }
-                ]
+                Date: '02/19/2020',
+                records: [
+                    {
+                        ProductCategory: 'Clothing',
+                        UnitPrice: 16.05,
+                        SellerName: 'Walter',
+                        Country: 'Bulgaria',
+                        Date: '02/19/2020',
+                        UnitsSold: 492
+                    }
+                ],
+                level: 0,
+                ProductCategory: 'Clothing'
+            },
+            {
+                Date: '01/06/2020',
+                records: [
+                    {
+                        ProductCategory: 'Bikes',
+                        UnitPrice: 3.56,
+                        SellerName: 'Lydia',
+                        Country: 'Uruguay',
+                        Date: '01/06/2020',
+                        UnitsSold: 68
+                    }
+                ],
+                level: 0,
+                ProductCategory: 'Bikes'
+            },
+            {
+                Date: '04/07/2021',
+                records: [
+                    {
+                        ProductCategory: 'Accessories',
+                        UnitPrice: 85.58,
+                        SellerName: 'David',
+                        Country: 'USA',
+                        Date: '04/07/2021',
+                        UnitsSold: 293
+                    }
+                ],
+                level: 0,
+                ProductCategory: 'Accessories'
+            },
+            {
+                Date: '12/08/2021',
+                records: [
+                    {
+                        ProductCategory: 'Components',
+                        UnitPrice: 18.13,
+                        SellerName: 'John',
+                        Country: 'USA',
+                        Date: '12/08/2021',
+                        UnitsSold: 240
+                    }
+                ],
+                level: 0,
+                ProductCategory: 'Components'
             }
         ]);
     });
@@ -344,5 +402,45 @@ describe('Pivot pipes', () => {
             {'field1':'Accessories','level':1,'USA':293,'USA-David':293,'USA-David-04/07/2021':293},
             {'field1':'Components','level':1,'USA':240,'USA-John':240,'USA-John-12/08/2021':240}
         ]);
+    });
+
+    it('transforms flat data to pivot data 2 value dimensions', () => {
+        const values: IPivotValue[] = [
+            {
+                member: 'UnitsSold',
+                aggregate: IgxNumberSummaryOperand.sum,
+                enabled: true
+            },
+            {
+                member: 'UnitPrice',
+                aggregate: IgxNumberSummaryOperand.sum,
+                enabled: true
+            }
+        ];
+        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy.rows, expansionStates, values);
+        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfigHierarchy.columns, values);
+        expect(columnPipeResult).toEqual([{
+            'field1':'All','records':[
+            {'field1':'Clothing','level':1,'All-UnitsSold':1526,'All-Bulgaria-UnitsSold':774,
+            'All-Bulgaria-UnitPrice':28.86,'All-USA-UnitsSold':296,'All-USA-UnitPrice':49.57,'All-Uruguay-UnitsSold':456,
+            'All-Uruguay-UnitPrice':68.33,'All-UnitPrice':146.76},
+            {'field1':'Bikes','level':1,'All-UnitsSold':68,'All-Uruguay-UnitsSold':68,
+            'All-Uruguay-UnitPrice':3.56,'All-UnitPrice':3.56},
+            {'field1':'Accessories','level':1,'All-UnitsSold':293,'All-USA-UnitsSold':293,
+            'All-USA-UnitPrice':85.58,'All-UnitPrice':85.58},
+            {'field1':'Components','level':1,'All-UnitsSold':240,'All-USA-UnitsSold':240,
+            'All-USA-UnitPrice':18.13,'All-UnitPrice':18.13}
+            ],'level':0,'All-UnitsSold':2127,'All-Bulgaria-UnitsSold':774,'All-Bulgaria-UnitPrice':28.86,'All-USA-UnitsSold':829,
+            'All-USA-UnitPrice':153.28,'All-Uruguay-UnitsSold':524,'All-Uruguay-UnitPrice':71.89,'All-UnitPrice':254.02999999999997},
+            {'field1':'Clothing','level':1,'All-UnitsSold':1526,'All-Bulgaria-UnitsSold':774,
+            'All-Bulgaria-UnitPrice':28.86,'All-USA-UnitsSold':296,'All-USA-UnitPrice':49.57,'All-Uruguay-UnitsSold':456,
+            'All-Uruguay-UnitPrice':68.33,'All-UnitPrice':146.76},
+            {'field1':'Bikes','level':1,'All-UnitsSold':68,'All-Uruguay-UnitsSold':68,
+            'All-Uruguay-UnitPrice':3.56,'All-UnitPrice':3.56},
+            {'field1':'Accessories','level':1,'All-UnitsSold':293,'All-USA-UnitsSold':293,
+            'All-USA-UnitPrice':85.58,'All-UnitPrice':85.58},
+            {'field1':'Components','level':1,'All-UnitsSold':240,'All-USA-UnitsSold':240,
+            'All-USA-UnitPrice':18.13,'All-UnitPrice':18.13}
+            ]);
     });
 });
