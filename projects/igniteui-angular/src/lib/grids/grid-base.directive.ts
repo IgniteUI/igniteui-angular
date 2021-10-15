@@ -6952,7 +6952,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paging ? row + (this.perPage * this.page) : row;
+            row = this.paging && source === this.filteredSortedData ? row + (this.perPage * this.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
