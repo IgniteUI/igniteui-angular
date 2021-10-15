@@ -18,7 +18,7 @@ import { GridType } from '../common/grid.interface';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IPivotConfiguration, IPivotDimension } from './pivot-grid.interface';
+import { IPivotConfiguration, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -252,6 +252,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const fieldsMap = PivotUtil.getFieldsHierarchy(
             data,
             this.pivotConfiguration.columns,
+            PivotDimensionType.Column,
             {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
             );
         const columns = this.generateColumnHierarchy(fieldsMap, data);

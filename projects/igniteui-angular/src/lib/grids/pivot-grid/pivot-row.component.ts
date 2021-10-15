@@ -5,7 +5,9 @@ import {
     ComponentFactoryResolver,
     ElementRef,
     forwardRef,
+    OnChanges,
     OnInit,
+    SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewContainerRef
@@ -15,6 +17,7 @@ import { IgxRowDirective } from '../row.directive';
 import { GridBaseAPIService, IgxColumnComponent } from '../hierarchical-grid/public_api';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IPivotDimension } from './pivot-grid.interface';
+import { PivotUtil } from './pivot-util';
 
 
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -24,7 +27,7 @@ const MINIMUM_COLUMN_WIDTH = 200;
     templateUrl: './pivot-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }]
 })
-export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent> implements OnInit {
+export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent> implements OnChanges {
 
     /**
      * @hidden @internal
@@ -66,46 +69,56 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         return this.grid.gridAPI.get_row_expansion_state(this.rowDimensionKey);
     }
 
-    public ngOnInit() {
-        // generate rowDimension
-        const rowDimConfig = this.grid.pivotConfiguration.rows;
-        this.level = this.rowData['level'] || 0;
-        this.hasChild = this.rowData['records'] != null && this.rowData['records'].length > 0;
-        this.extractFromDimensions(rowDimConfig, 0);
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.rowData) {
+            // generate new rowDimension on row data change
+            this.rowDimension = [];
+            const rowDimConfig = this.grid.pivotConfiguration.rows;
+            this.level = this.rowData['level'] || 0;
+            this.hasChild = this.rowData['records'] != null && this.rowData['records'].length > 0;
+            this.extractFromDimensions(rowDimConfig, 0);
+        }
     }
 
-    protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number){
+    protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number) {
+        let dimIndex = 0;
         for (const dim of rowDimConfig) {
-            if  (level === this.level) {
-                this.rowDimension.push(this.extractFromDimension(dim));
-            } else {
+            if (this.level === level) {
+                this.rowDimension.push(this.extractFromDimension(dim, dimIndex));
+            }
+            dimIndex++;
+            if  (level < this.level) {
                 level++;
                 this.extractFromDimensions(dim.childLevels, level);
             }
         }
     }
 
-    protected extractFromDimension(dim: IPivotDimension) {
-        let field = null;
+    protected extractFromDimension(dim: IPivotDimension, index: number = 0) {
+        const field = PivotUtil.resolveFieldName(dim, this.rowData);
+        let header = null;
         if (typeof dim.member === 'string') {
-            field = this.rowData[dim.member];
+            header = this.rowData[dim.member];
         } else if (typeof dim.member === 'function'){
-            field = dim.member.call(this, this.rowData);
+            header = dim.member.call(this, this.rowData);
         }
-        const col = this._createColComponent(field);
+        const col = this._createColComponent(field, header, index);
         return col;
     }
 
-    protected _createColComponent(field: string) {
-        const fieldName = field.indexOf('-') !==  -1 ? field.slice(field.lastIndexOf('-') + 1) : field;
+    protected _createColComponent(field: string, header: string, index: number = 0) {
+        // const fieldName = field.indexOf('-') !==  -1 ? field.slice(field.lastIndexOf('-') + 1) : field;
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
         ref.instance.field = field;
-        ref.instance.header = fieldName;
+        ref.instance.header = header;
         ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
-        (ref as any).instance._vIndex = this.grid.columns.length + this.index;
+        (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
         ref.instance.headerTemplate = this.headerTemplate;
         return ref.instance;
     }
 }
-

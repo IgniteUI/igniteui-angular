@@ -19,17 +19,17 @@ export class PivotGridSampleComponent {
             childLevels: [{
                 member: 'Country',
                 enabled: true,
-                childLevels:[]
+                childLevels: []
             }]
         }],
         rows: [{
             member: () => 'All',
             enabled: true,
-            childLevels:[
+            childLevels: [
                 {
                     member: (data) => data.ProductCategory,
                     enabled: true,
-                    childLevels:[]
+                    childLevels: []
                 }
             ]
         }],
@@ -68,16 +68,14 @@ export class PivotGridSampleComponent {
         ]
 ,
         rows: [{
-            member: () => 'All',
+            member: 'ProductCategory',
             enabled: true,
-            childLevels:[
-                {
-                    fieldName: 'ProductCategory',
-                    member: (data) => data.ProductCategory,
-                    enabled: true,
-                    childLevels:[]
-                }
-            ]
+            childLevels: []
+        },
+        {
+            member: 'Date',
+            enabled: true,
+            childLevels: []
         }],
         values: [
             {
@@ -107,16 +105,18 @@ export class PivotGridSampleComponent {
         { ProductCategory: 'Components', USA: 240 }
     ];
 
-    public dataHierarchical =  [
-        { ProductCategory: 'All', All: 1000, Bulgaria: 774, USA: 829, Uruguay: 524, level: 0, records: [
-            { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
-            { ProductCategory: 'Bikes', Uruguay: 68, level: 1  },
-            { ProductCategory: 'Accessories', USA: 293, level: 1  },
-            { ProductCategory: 'Components', USA: 240, level: 1  }
-        ] },
-        { ProductCategory: 'Clothing', All: 1000, Bulgaria: 774, USA: 296, Uruguay: 456, level: 1  },
-        { ProductCategory: 'Bikes', All: 1000, Uruguay: 68, level: 1  },
-        { ProductCategory: 'Accessories', All: 1000, USA: 293, level: 1  },
-        { ProductCategory: 'Components', All: 1000, USA: 240, level: 1  }
+    public dataHierarchical = [
+        {
+            ProductCategory: 'All', All: 1000, Bulgaria: 774, USA: 829, Uruguay: 524, level: 0, records: [
+                { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456, level: 1 },
+                { ProductCategory: 'Bikes', Uruguay: 68, level: 1 },
+                { ProductCategory: 'Accessories', USA: 293, level: 1 },
+                { ProductCategory: 'Components', USA: 240, level: 1 }
+            ]
+        },
+        { ProductCategory: 'Clothing', All: 1000, Bulgaria: 774, USA: 296, Uruguay: 456, level: 1 },
+        { ProductCategory: 'Bikes', All: 1000, Uruguay: 68, level: 1 },
+        { ProductCategory: 'Accessories', All: 1000, USA: 293, level: 1 },
+        { ProductCategory: 'Components', All: 1000, USA: 240, level: 1 }
     ];
 }
