@@ -6,7 +6,7 @@
 
 1. Stepper component [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
 2. Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
-3. Themes: Split themes and aid with Grid refactoring [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
+3. **DONE** Themes: Refactor Grid theme [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
 4. Make IgxDropDownBaseToken public [#10103](https://github.com/IgniteUI/igniteui-angular/issues/10103)
 5. Classes to indicate position of auto overlay [#9481](https://github.com/IgniteUI/igniteui-angular/issues/9481)
 6. onFilterDone property to expose additional information [#10243](https://github.com/IgniteUI/igniteui-angular/issues/10243)
