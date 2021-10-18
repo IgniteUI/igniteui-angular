@@ -277,9 +277,10 @@ export class IgxFilteringService implements OnDestroy {
             }
         }
 
+        const emptyFilter = new FilteringExpressionsTree(null, field);
         const onFilteringEventArgs: IFilteringEventArgs = {
             owner: this.grid,
-            filteringExpressions: null,
+            filteringExpressions: emptyFilter,
             cancel: false };
 
         this.grid.filtering.emit(onFilteringEventArgs);
@@ -292,7 +293,7 @@ export class IgxFilteringService implements OnDestroy {
         this.clear_filter(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.filteringDone.emit(null));
+        requestAnimationFrame(() => this.grid.filteringDone.emit(emptyFilter));
 
         if (field) {
             const expressions = this.getExpressions(field);
