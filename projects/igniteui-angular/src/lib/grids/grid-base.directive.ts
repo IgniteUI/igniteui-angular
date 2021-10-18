@@ -6881,16 +6881,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const activeEl = this.selectionService.activeElement;
 
         if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
-            const expansionRowIndexes = Array.from(this.expansionStates.keys());
+            const expansionRowIndexes = [];
+            for (const [key, value] of this.expansionStates.entries()) {
+                if (value) {
+                    expansionRowIndexes.push(key);
+                }
+            }
             if (this.selectionService.selection.size > 0) {
                 if (expansionRowIndexes.length > 0) {
                     for (const [key, value] of this.selectionService.selection.entries()) {
                         let updatedKey = key;
                         expansionRowIndexes.forEach(row => {
                             let rowIndex;
-                            if (row.ID) {
+                            if (!isNaN(row.ID)) {
                                 rowIndex = Number(row.ID);
-                            }else {
+                            } else {
                                 rowIndex = Number(row);
                             }
 
@@ -6937,7 +6942,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator ? row + (this.paginator.perPage * this.paginator.page) : row;
+            row = this.paginator && source === this.filteredSortedData ? row + (this.paginator.perPage * this.paginator.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;

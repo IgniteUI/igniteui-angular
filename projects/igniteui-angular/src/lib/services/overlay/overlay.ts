@@ -111,7 +111,7 @@ export class IgxOverlayService implements OnDestroy {
      * }
      * ```
      */
-     public contentAppended = new EventEmitter<OverlayEventArgs>();
+    public contentAppended = new EventEmitter<OverlayEventArgs>();
 
     /**
      * Emitted just before the overlay animation start.
@@ -345,7 +345,6 @@ export class IgxOverlayService implements OnDestroy {
         this.addOutsideClickListener(info);
         this.addResizeHandler();
         this.addCloseOnEscapeListener(info);
-        this.addModalClasses(info);
         this.buildAnimationPlayers(info);
         return info.id;
     }
@@ -708,6 +707,7 @@ export class IgxOverlayService implements OnDestroy {
         //  to eliminate flickering show the element just before animation start
         info.wrapperElement.style.visibility = '';
         info.visible = true;
+        this.addModalClasses(info);
         info.openAnimationPlayer.play();
     }
 
@@ -735,6 +735,7 @@ export class IgxOverlayService implements OnDestroy {
 
         this.animationStarting.emit({ id: info.id, animationPlayer: info.closeAnimationPlayer, animationType: 'close' });
         info.event = event;
+        this.removeModalClasses(info);
         info.closeAnimationPlayer.play();
     }
 
@@ -743,9 +744,6 @@ export class IgxOverlayService implements OnDestroy {
         if (!animationOptions) {
             wrapperElement.style.transitionDuration = '0ms';
             return;
-        }
-        if (animationOptions.type === AnimationMetadataType.AnimateRef) {
-            animationOptions = (animationOptions as AnimationAnimateRefMetadata).animation;
         }
         if (!animationOptions.options || !animationOptions.options.params) {
             return;
@@ -883,7 +881,18 @@ export class IgxOverlayService implements OnDestroy {
             const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
             wrapperElement.classList.remove('igx-overlay__wrapper');
             this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
-            wrapperElement.classList.add('igx-overlay__wrapper--modal');
+            requestAnimationFrame(() => {
+                wrapperElement.classList.add('igx-overlay__wrapper--modal');
+            });
+        }
+    }
+
+    private removeModalClasses(info: OverlayInfo) {
+        if (info.settings.modal) {
+            const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
+            this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.closeAnimation);
+            wrapperElement.classList.remove('igx-overlay__wrapper--modal');
+            wrapperElement.classList.add('igx-overlay__wrapper');
         }
     }
 
@@ -914,7 +923,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private openAnimationDone(info: OverlayInfo){
+    private openAnimationDone(info: OverlayInfo) {
         this.opened.emit({ id: info.id, componentRef: info.componentRef });
         if (info.openAnimationPlayer) {
             info.openAnimationPlayer.reset();
@@ -930,7 +939,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private closeAnimationDone(info: OverlayInfo){
+    private closeAnimationDone(info: OverlayInfo) {
         this.closeDone(info);
         if (info.closeAnimationPlayer) {
             info.closeAnimationPlayer.reset();
