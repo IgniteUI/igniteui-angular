@@ -206,7 +206,7 @@ export class PivotUtil {
                 }
 
                 if (hierarchy.get(val.value).children.get(child.value)[recordsKey]) {
-                    hierarchy.get(val.value).children.get(child.value)[recordsKey].push(rec);
+                    //hierarchy.get(val.value).children.get(child.value)[recordsKey].push(rec);
                 } else {
                     hierarchy.get(val.value).children.get(child.value)[recordsKey] = [rec];
                 }
