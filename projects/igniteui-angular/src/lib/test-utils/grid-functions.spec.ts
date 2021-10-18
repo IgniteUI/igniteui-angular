@@ -596,8 +596,9 @@ export class GridFunctions {
         const ddItems = ddList.nativeElement.children;
         let i;
         for (i = 0; i < ddItems.length; i++) {
-            if (ddItems[i].textContent === cond) {
-                ddItems[i].click();
+            const ddItem = ddItems[i].querySelector('.igx-grid__filtering-dropdown-items span');
+            if (ddItem.textContent === cond) {
+                ddItem.click();
                 tick(100);
                 return;
             }
