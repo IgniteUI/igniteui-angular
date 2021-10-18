@@ -99,7 +99,7 @@
 
     <ng-template #headerTemplate let-column>
         <div class="igx-grid__tr--header igx-grid__row-indentation--level-{{ level }}">
-            <igx-icon *ngIf="hasChild" [attr.draggable]="false"
+            <igx-icon [attr.draggable]="false"
                       (click)="grid.toggleRow(getRowDimensionKey(column))"
                       style='cursor: pointer;'>
                       {{ getExpandState(column) ? 'expand_more' : 'expand_less'}}</igx-icon>
