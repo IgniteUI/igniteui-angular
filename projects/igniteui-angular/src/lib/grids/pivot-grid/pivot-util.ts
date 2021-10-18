@@ -108,7 +108,7 @@ export class PivotUtil {
     }
 
     public static flattenHierarchy(hierarchies, rec, pivotKeys, level = 0,
-         expansionStates: Map<any, boolean>, parentFields = [], defaultExpandState: boolean) {
+         expansionStates: Map<any, boolean>, defaultExpandState: boolean) {
         const flatData = [];
         hierarchies.forEach((h, key) => {
             const field = this.resolveFieldName(h.dimension, rec);
@@ -121,13 +121,13 @@ export class PivotUtil {
             flatData.push(obj);
             const parentLvl = rec[pivotKeys.level];
             // TODO - can probably be extracted in a common function to use in rows and pipes.
-            const expansionRowKey = parentLvl !== undefined && parentLvl > level ? parentFields.concat(key).join('_') : key;
+            const expansionRowKey = parentLvl !== undefined ? this.getRecordKey(rec, key) : key;
             const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
              defaultExpandState :
              expansionStates.get(expansionRowKey);
             if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
                 obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec,
-                        pivotKeys, level + 1, expansionStates, parentFields, defaultExpandState);
+                        pivotKeys, level + 1, expansionStates, defaultExpandState);
                 if (isExpanded) {
                     for (const record of obj[pivotKeys.records]) {
                         flatData.push(record);
@@ -137,6 +137,32 @@ export class PivotUtil {
         });
 
         return flatData;
+    }
+
+    public static getRecordKey(rec, key) {
+        const pivotKeys =  { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'};
+        const parentFields = [];
+        for (const property in rec) {
+            if (rec.hasOwnProperty(property) &&
+             Object.keys(pivotKeys).indexOf(property) === -1
+             && Object.keys(pivotKeys).filter(x => property.indexOf(x) !== -1).length === 0) {
+                 const currLevel = rec[property + '_level'];
+                 if (currLevel > 0) {
+                    parentFields.unshift(rec[property]);
+                 }
+            }
+        }
+        return parentFields.concat(key).join('_');
+    }
+
+    public static getTotalLvl(rec) {
+        let total = 0;
+        Object.keys(rec).forEach(key => {
+            if (key.indexOf('_level') !== -1 && key.indexOf('level_') === -1) {
+                total += rec[key] || 0;
+            }
+        });
+        return total;
     }
 
     public static flattenColumnHierarchy(hierarchies, values, pivotKeys) {

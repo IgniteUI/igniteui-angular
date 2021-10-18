@@ -32,23 +32,15 @@ export class IgxPivotRowPipe implements PipeTransform {
                 // build hierarchies - groups and subgroups
                 hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
                 // generate flat data from the hierarchies
-                data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, expansionStates, [], true);
+                data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, expansionStates, true);
                 row.fieldName = hierarchies.get(hierarchies.keys().next().value).dimension.fieldName;
             } else {
                 const newData = [...data];
                 for (let i = 0; i < newData.length; i++) {
                     const hierarchyFields = PivotUtil
                         .getFieldsHierarchy(newData[i][pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
-                    const parentFields = [];
-                    for (const property in newData[i]) {
-                        if (newData[i].hasOwnProperty(property) &&
-                         Object.keys(pivotKeys).indexOf(property) === -1
-                         && Object.keys(pivotKeys).filter(x => property.indexOf(x) !== -1).length === 0) {
-                            parentFields.unshift(newData[i][property]);
-                        }
-                    }
                     const siblingData = PivotUtil
-                        .flattenHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0, expansionStates, parentFields, true);
+                        .flattenHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0, expansionStates, true);
                     row.fieldName = hierarchyFields.get(hierarchyFields.keys().next().value).dimension.fieldName;
                     for (const property in newData[i]) {
                         if (newData[i].hasOwnProperty(property) &&
