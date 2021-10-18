@@ -194,7 +194,6 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         it('should not render rows, paging and headers group when all cols are hidden', fakeAsync(() => {
             grid.rowSelection = GridSelectionMode.multiple;
             grid.rowDraggable = true;
-            grid.showToolbar =  true;
             tick(30);
             fix.detectChanges();
 
