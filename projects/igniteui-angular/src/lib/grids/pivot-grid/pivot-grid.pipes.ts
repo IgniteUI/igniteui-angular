@@ -44,7 +44,7 @@ export class IgxPivotRowPipe implements PipeTransform {
                         if (newData[i].hasOwnProperty(property) &&
                          Object.keys(pivotKeys).indexOf(property) === -1
                          && Object.keys(pivotKeys).filter(x => property.indexOf(x) !== -1).length === 0) {
-                            parentFields.push(newData[i][property]);
+                            parentFields.unshift(newData[i][property]);
                         }
                     }
                     const siblingData = PivotUtil
