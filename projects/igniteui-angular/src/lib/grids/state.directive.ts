@@ -76,6 +76,7 @@ export interface IColumnState {
     header: string;
     resizable: boolean;
     searchable: boolean;
+    disableHiding: boolean;
 }
 
 export type GridFeatures = keyof IGridStateOptions;
@@ -180,7 +181,8 @@ export class IgxGridStateDirective {
                         header: c.header,
                         resizable: c.resizable,
                         searchable: c.searchable,
-                        selectable: c.selectable
+                        selectable: c.selectable,
+                        disableHiding: c.disableHiding
                     }));
                 return { columns: gridColumns };
             },
