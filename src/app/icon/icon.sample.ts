@@ -19,6 +19,6 @@ export class IconSampleComponent implements OnInit {
         this._iconService.addSvgIcon('equals', '/assets/svg/filtering/equals.svg', 'svg-flags');
         this._iconService.addSvgIcon('is_empty', '/assets/svg/filtering/is_empty.svg', 'svg-flags');
         this._iconService.addSvgIcon('starts_with', '/assets/svg/filtering/starts_with.svg', 'svg-flags');
-        this._iconService.addSvgIcon('copy', '/assets/svg/filtering/copy.svg', 'svg-flags');
+        this._iconService.addSvgIcon('copy', '/assets/svg/filtering/copy.svg');
     }
 }
