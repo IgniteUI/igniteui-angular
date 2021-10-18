@@ -35,6 +35,12 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      @ViewChild('headerTemplate', { read: TemplateRef, static: true })
      public headerTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden @internal
+     */
+     @ViewChild('headerTemplateGray', { read: TemplateRef, static: true })
+     public headerTemplateGray: TemplateRef<any>;
+
     public rowDimension: IgxColumnComponent[] = [];
     public level = 0;
     public hasChild = false;
@@ -127,6 +133,8 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
         if (dim.childLevels && dim.childLevels.length > 0 && this.hasChild && lvl >= PivotUtil.getTotalLvl(this.rowData)) {
             ref.instance.headerTemplate = this.headerTemplate;
+        } else if (lvl < PivotUtil.getTotalLvl(this.rowData)) {
+            ref.instance.headerTemplate = this.headerTemplateGray;
         }
         return ref.instance;
     }
