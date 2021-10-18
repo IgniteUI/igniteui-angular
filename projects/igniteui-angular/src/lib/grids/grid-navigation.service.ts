@@ -51,6 +51,9 @@ export class IgxGridNavigationService {
 
     handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        if (NAVIGATION_KEYS.has(key)) {
+            event.stopPropagation();
+        }
         if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) {
             return;
         }

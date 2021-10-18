@@ -54,7 +54,6 @@ import {
     Action,
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
@@ -940,6 +939,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public rowPinning = new EventEmitter<IPinRowEventArgs>();
+
+    /**
+     * Emitted when the pinned state of a row is changed.
+     *
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (rowPinned)="rowPin($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public rowPinned = new EventEmitter<IPinRowEventArgs>();
 
     /**
      * Emmited when the active node is changed.
@@ -4826,6 +4836,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
             return false;
         }
+
         const eventArgs: IPinRowEventArgs = {
             insertAtIndex: index,
             isPinned: true,
@@ -4840,8 +4851,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this.pipeTrigger++;
         if (this.gridAPI.grid) {
-            this.notifyChanges();
+            this.cdr.detectChanges();
+            this.rowPinned.emit(eventArgs);
         }
+
         return true;
     }
 
@@ -4867,12 +4880,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             row
         };
         this.rowPinning.emit(eventArgs);
+
         this.crudService.endEdit(false);
         this._pinnedRecordIDs.splice(index, 1);
         this.pipeTrigger++;
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
+            this.rowPinned.emit(eventArgs);
         }
+
         return true;
     }
 
@@ -6865,16 +6881,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const activeEl = this.selectionService.activeElement;
 
         if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
-            const expansionRowIndexes = Array.from(this.expansionStates.keys());
+            const expansionRowIndexes = [];
+            for (const [key, value] of this.expansionStates.entries()) {
+                if (value) {
+                    expansionRowIndexes.push(key);
+                }
+            }
             if (this.selectionService.selection.size > 0) {
                 if (expansionRowIndexes.length > 0) {
                     for (const [key, value] of this.selectionService.selection.entries()) {
                         let updatedKey = key;
                         expansionRowIndexes.forEach(row => {
                             let rowIndex;
-                            if (row.ID) {
+                            if (!isNaN(row.ID)) {
                                 rowIndex = Number(row.ID);
-                            }else {
+                            } else {
                                 rowIndex = Number(row);
                             }
 
@@ -6921,7 +6942,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator ? row + (this.paginator.perPage * this.paginator.page) : row;
+            row = this.paginator && source === this.filteredSortedData ? row + (this.paginator.perPage * this.paginator.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;

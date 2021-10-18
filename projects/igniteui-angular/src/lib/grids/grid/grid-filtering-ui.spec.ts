@@ -485,9 +485,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, columnName);
             GridFunctions.resetFilterRow(fix);
 
-            expect(grid.filtering.emit).toHaveBeenCalledWith({ owner: grid, cancel: false, filteringExpressions: null });
+            const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            expect(grid.filtering.emit).toHaveBeenCalledWith({ owner: grid, cancel: false, filteringExpressions: emptyFilter });
             expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(null);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
             expect(grid.filteringDone.emit).toHaveBeenCalledTimes(2);
 
             const filterUiRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -512,9 +513,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            const args = { owner: grid, cancel: false, filteringExpressions: null };
+            const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            const args = { owner: grid, cancel: false, filteringExpressions: emptyFilter };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(null);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
         }));
 
         it('Removing second condition removes the And/Or button', fakeAsync(() => {
@@ -826,13 +828,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             spyOn(grid.filtering, 'emit');
             spyOn(grid.filteringDone, 'emit');
 
-            grid.filter('ProductName', 'I', IgxStringFilteringOperand.instance().condition('startsWith'));
+            const columnName = 'ProductName';
+            grid.filter(columnName, 'I', IgxStringFilteringOperand.instance().condition('startsWith'));
             tick(30);
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(2);
 
-            const filteringExpressions = grid.filteringExpressionsTree.find('ProductName') as FilteringExpressionsTree;
+            const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
             const args = { owner: grid, cancel: false, filteringExpressions };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
@@ -849,10 +852,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.rowList.length).toEqual(8);
 
-            args.filteringExpressions = null;
+            const emptyFilter = new FilteringExpressionsTree(null, columnName);
+            args.filteringExpressions = emptyFilter;
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(null);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
             expect(grid.filteringDone.emit).toHaveBeenCalledTimes(2);
         }));
 
@@ -2177,6 +2181,25 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // const cells = GridFunctions.getColumnCells(fix, 'Downloads');
             const rows = GridFunctions.getRows(fix);
             expect(rows.length).toEqual(2);
+        }));
+
+        it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy with rowData', fakeAsync(() => {
+            const formattedStrategy = new FormattedValuesFilteringStrategy(['ProductName']);
+            grid.filterStrategy = formattedStrategy;
+            const anotherFieldFormatter = (value: any, rowData: any) => rowData.ID + ':' + value;
+            grid.columns[1].formatter = anotherFieldFormatter;
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            fix.detectChanges();
+
+            GridFunctions.typeValueInFilterRowInput('1:', fix);
+            tick(DEBOUNCETIME);
+            GridFunctions.closeFilterRow(fix);
+            fix.detectChanges();
+
+            const rows = GridFunctions.getRows(fix);
+            expect(rows.length).toEqual(1);
         }));
 
         it('Should remove pending chip via its close button #9333', fakeAsync(() => {
@@ -3860,6 +3883,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             scrollbar.scrollTop = displayContainer.getBoundingClientRect().height / 2;
             await wait(200);
             fix.detectChanges();
+            await wait(100);
 
             // Type string in search box
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
