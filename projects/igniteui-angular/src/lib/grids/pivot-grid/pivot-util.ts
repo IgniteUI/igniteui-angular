@@ -232,7 +232,15 @@ export class PivotUtil {
                 }
 
                 if (hierarchy.get(val.value).children.get(child.value)[recordsKey]) {
-                    //hierarchy.get(val.value).children.get(child.value)[recordsKey].push(rec);
+                    const copy = Object.assign({}, rec);
+                    if(rec[recordsKey]) {
+                        // not all nested children are valid
+                        const nestedValue =  hierarchy.get(val.value).children.get(child.value).value;
+                        const member = hierarchy.get(val.value).children.get(child.value).dimension.member;
+                        const validRecs = rec[recordsKey].filter(x => x[member] === nestedValue);
+                        copy[recordsKey] = validRecs;
+                    }
+                    hierarchy.get(val.value).children.get(child.value)[recordsKey].push(copy);
                 } else {
                     hierarchy.get(val.value).children.get(child.value)[recordsKey] = [rec];
                 }
