@@ -47,8 +47,10 @@ export class IgxPivotRowPipe implements PipeTransform {
                             Object.keys(pivotKeys).indexOf(property) === -1) {
                             siblingData.forEach(s => {
                                 s[property] = newData[i][property];
-                                s[property + '_'  + pivotKeys.level] = s[pivotKeys.level];
-                                //s[pivotKeys.level] = newData[i][pivotKeys.level];
+                                if (property.indexOf(pivotKeys.level) === -1) {
+                                    s[property + '_'  + pivotKeys.level] = s[pivotKeys.level];
+                                    //s[pivotKeys.level] = newData[i][pivotKeys.level];
+                                }
                             });
                         }
                     }
