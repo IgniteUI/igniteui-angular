@@ -37,3 +37,8 @@ export interface IPivotKeys {
     aggregations: string;
     level: string;
 }
+
+export enum PivotDimensionType {
+    Row,
+    Column
+}
