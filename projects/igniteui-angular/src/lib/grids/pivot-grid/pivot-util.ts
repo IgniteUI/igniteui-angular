@@ -108,8 +108,7 @@ export class PivotUtil {
         return result;
     }
 
-    public static flattenHierarchy(hierarchies, rec, pivotKeys, level = 0,
-         expansionStates: Map<any, boolean>, defaultExpandState: boolean) {
+    public static flattenHierarchy(hierarchies, rec, pivotKeys, level = 0) {
         const flatData = [];
         hierarchies.forEach((h, key) => {
             const field = this.resolveFieldName(h.dimension, rec);
@@ -120,20 +119,9 @@ export class PivotUtil {
             obj[pivotKeys.level] = level;
             obj[field + '_' + pivotKeys.level] = level;
             flatData.push(obj);
-            const parentLvl = rec[pivotKeys.level];
-            // TODO - Move to expansion pipe.
-            const expansionRowKey = parentLvl !== undefined ? this.getRecordKey(rec, key) : key;
-            const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
-             defaultExpandState :
-             expansionStates.get(expansionRowKey);
             if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
                 obj[pivotKeys.records] = this.flattenHierarchy(h[pivotKeys.children], rec,
-                        pivotKeys, level + 1, expansionStates, defaultExpandState);
-                if (isExpanded) {
-                    for (const record of obj[pivotKeys.records]) {
-                        flatData.push(record);
-                    }
-                }
+                        pivotKeys, level + 1);
             }
         });
 

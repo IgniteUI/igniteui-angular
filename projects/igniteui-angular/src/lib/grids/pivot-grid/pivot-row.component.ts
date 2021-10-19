@@ -69,7 +69,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      * @internal
      */
     public getRowDimensionKey(col: IgxColumnComponent) {
-            const key =  PivotUtil.getRecordKey(this.rowData, this.rowData[col.field]) ;
+            const key =  PivotUtil.getRecordKey(this.rowData, col.field);
             return key;
     }
 

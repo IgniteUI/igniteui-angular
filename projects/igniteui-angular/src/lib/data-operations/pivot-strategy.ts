@@ -1,5 +1,5 @@
 
-import { IPivotDimension, IPivotKeys, IPivotValue } from '../grids/pivot-grid/pivot-grid.interface';
+import { IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 
 export interface IPivotDimensionStrategy {
@@ -34,18 +34,50 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
     }
 
     public process(
-            collection: any[],
+            collection: any,
             rows: IPivotDimension[],
-            __: IPivotValue[],
-            pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+            values?: IPivotValue[],
+            pivotKeys: IPivotKeys =
+            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
         ): any[] {
-            // build hierarchies - groups and subgroups
-            const hierarchies = PivotUtil.getFieldsHierarchy(collection, rows, pivotKeys);
-            // generate flat data from the hierarchies
-            const data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], rows, pivotKeys, 0);
+            let hierarchies;
+            let data;
+            for (const row of rows) {
+                if (!data) {
+                    // build hierarchies - groups and subgroups
+                    hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
+                    // generate flat data from the hierarchies
+                    data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0);
+                    row.fieldName = hierarchies.get(hierarchies.keys().next().value).dimension.fieldName;
+                } else {
+                    const newData = [...data];
+                    for (let i = 0; i < newData.length; i++) {
+                        const hierarchyFields = PivotUtil
+                            .getFieldsHierarchy(newData[i][pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
+                        const siblingData = PivotUtil
+                            .flattenHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
+                        row.fieldName = hierarchyFields.get(hierarchyFields.keys().next().value).dimension.fieldName;
+                        for (const property in newData[i]) {
+                            if (newData[i].hasOwnProperty(property) &&
+                                Object.keys(pivotKeys).indexOf(property) === -1) {
+                                siblingData.forEach(s => {
+                                    s[property] = newData[i][property];
+                                    if (property.indexOf(pivotKeys.level) === -1) {
+                                        s[property + '_'  + pivotKeys.level] = s[pivotKeys.level];
+                                        //s[pivotKeys.level] = newData[i][pivotKeys.level];
+                                    }
+                                });
+                            }
+                        }
+                        newData.splice(i , 1, ...siblingData);
+                        i += siblingData.length - 1;
+                    }
+                    data = newData;
+                }
+            }
             return data;
+        }
     }
-}
 
 export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: PivotRowDimensionsStrategy = null;
@@ -95,7 +127,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
             this.groupColumns(children, columns, values, pivotKeys);
         } else if (hierarchy[pivotKeys.records]) {
             const leafRecords = this.getLeafs(hierarchy[pivotKeys.records], pivotKeys);
-            hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, pivotKeys);
+            hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, PivotDimensionType.Column, pivotKeys);
             PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
         }
     }

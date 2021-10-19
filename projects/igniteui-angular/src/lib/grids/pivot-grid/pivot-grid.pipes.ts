@@ -60,7 +60,10 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
                 field = rec[fieldName];
             }
             flatData.push(rec);
-            const isExpanded = expansionStates.get(field) === undefined ? defaultExpandState : expansionStates.get(field);
+            const expansionRowKey = lvl !== undefined ? PivotUtil.getRecordKey(rec, field) : field;
+            const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
+             defaultExpandState :
+             expansionStates.get(expansionRowKey);
             if (dim.childLevels && dim.childLevels.length > 0 && isExpanded) {
                 for (const record of rec[pivotKeys.records]) {
                     flatData.push(record);

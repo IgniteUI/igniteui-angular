@@ -277,7 +277,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             const fields = this.generateDataFields(data);
             const rowFields = PivotUtil.flatten(this.pivotConfiguration.rows).map(x => x.fieldName);
             const keyFields = Object.values(this.pivotKeys);
-            const filteredFields = fields.filter(x => rowFields.indexOf(x) === -1 && keyFields.indexOf(x) === -1);
+            const filteredFields = fields.filter(x => rowFields.indexOf(x) === -1 && keyFields.indexOf(x) === -1 &&
+             x.indexOf('_level') === -1);
             fieldsMap = this.generateFromData(filteredFields);
          } else {
             fieldsMap = PivotUtil.getFieldsHierarchy(
