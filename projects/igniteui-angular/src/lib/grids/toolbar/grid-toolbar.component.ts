@@ -104,10 +104,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
         return this.displayDensity === 'compact';
     }
 
-    // /** @hidden @internal */
-    // @HostBinding('style.max-width.px')
-    // @HostBinding('style.flex-basis.px')
-    // public width = null;
 
     protected _grid: IgxGridBaseDirective;
     protected sub: Subscription;
