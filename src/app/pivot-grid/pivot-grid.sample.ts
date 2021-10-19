@@ -5,7 +5,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 @Component({
     providers: [],
     selector: 'app-tree-grid-sample',
-    styleUrls: ['pivot-grid.sample.css'],
+    styleUrls: ['pivot-grid.sample.scss'],
     templateUrl: 'pivot-grid.sample.html'
 })
 
@@ -46,51 +46,61 @@ export class PivotGridSampleComponent {
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
 
-        {
-            member: 'ProductCategory',
-            enabled: true,
-            childLevels: []
-        }
-        ]
-,
-rows: [
-    {
-        member: () => 'AllProd',
-        enabled: true,
-        childLevels: [{
-        member: 'ProductCategory',
-        enabled: true,
-        childLevels: []
-        }]
-    },
-    {
-        member: () => 'AllDate',
-        enabled: true,
-        childLevels: [{
-        member: 'Date',
-        enabled: true,
-        childLevels: []
-        }]
-    },
-    {
-        member: () => 'AllSale',
-        enabled: true,
-        childLevels: [{
-        member: 'SellerName',
-        enabled: true,
-        childLevels: []
-        }]
-    }],
+            {
+                member: 'ProductCategory',
+                enabled: true,
+                childLevels: []
+            }
+        ],
+        rows: [
+            {
+                member: () => 'AllProd',
+                enabled: true,
+                childLevels: [{
+                    member: 'ProductCategory',
+                    enabled: true,
+                    childLevels: []
+                }]
+            },
+            {
+                member: () => 'AllDate',
+                enabled: true,
+                childLevels: [{
+                    member: 'Date',
+                    enabled: true,
+                    childLevels: []
+                }]
+            },
+            {
+                member: () => 'AllSale',
+                enabled: true,
+                childLevels: [{
+                    member: 'SellerName',
+                    enabled: true,
+                    childLevels: []
+                }]
+            }],
         values: [
             {
                 member: 'UnitsSold',
                 aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true
+                enabled: true,
+                styles: {
+                    upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
+                    downFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 300
+                },
+                // dataType: 'currency',
+                formatter: (value) => value ? value + '$' : undefined
             },
             {
                 member: 'UnitPrice',
                 aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true
+                enabled: true,
+                dataType: 'currency',
+                styles: {
+                    upFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 50,
+                    downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 50
+                },
             }
         ],
         filters: null
