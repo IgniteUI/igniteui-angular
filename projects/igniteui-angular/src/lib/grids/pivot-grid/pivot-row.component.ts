@@ -69,6 +69,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         return this.grid.gridAPI.get_row_expansion_state(this.rowDimensionKey);
     }
 
+
     /**
      * @hidden
      * @internal
@@ -82,6 +83,12 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
             this.hasChild = this.rowData['records'] != null && this.rowData['records'].length > 0;
             this.extractFromDimensions(rowDimConfig, 0);
         }
+    }
+
+    public getCellClass(col: any) {
+        const colName = col.field.split('-');
+        const measureName = colName[colName.length - 1];
+        return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
     }
 
     protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number) {

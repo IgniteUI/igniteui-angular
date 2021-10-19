@@ -5,7 +5,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 @Component({
     providers: [],
     selector: 'app-tree-grid-sample',
-    styleUrls: ['pivot-grid.sample.css'],
+    styleUrls: ['pivot-grid.sample.scss'],
     templateUrl: 'pivot-grid.sample.html'
 })
 
@@ -56,17 +56,16 @@ export class PivotGridSampleComponent {
                         enabled: true,
                         childLevels: []
                     },
-                    ]
+                ]
             }]
         },
-
         {
             member: 'ProductCategory',
             enabled: true,
             childLevels: []
         }
         ]
-,
+        ,
         rows: [{
             member: 'ProductCategory',
             enabled: true,
@@ -81,12 +80,23 @@ export class PivotGridSampleComponent {
             {
                 member: 'UnitsSold',
                 aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true
+                enabled: true,
+                styles: {
+                    upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
+                    downFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 300
+                },
+                // dataType: 'currency',
+                formatter: (value) => value ? value + '$' : undefined
             },
             {
                 member: 'UnitPrice',
                 aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true
+                enabled: true,
+                dataType: 'currency',
+                styles: {
+                    upFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 50,
+                    downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 50
+                },
             }
         ],
         filters: null
