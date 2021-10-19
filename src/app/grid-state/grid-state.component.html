@@ -100,7 +100,7 @@
                     </igx-grid-toolbar>
                     <igx-column *ngFor="let c of hierGridColumns" [sortable]="c.sortable" [movable]="c.movable"
                         [editable]="true" [filterable]="c.filterable" [groupable]="c.groupable" [field]="c.field"
-                        [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned" [hidden]="c.hidden">
+                        [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned" [disableHiding]="true" [hidden]="c.hidden">
                     </igx-column>
 
                     <igx-row-island primaryKey="ID" key="childData" height="450px" [showExpandAll]="true"

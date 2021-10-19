@@ -6,8 +6,33 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `IgxCsvExporterService`, `IgxExcelExporterService`
-    - Exporter services are no longer required to be provided in the application since they are now injected on a root level. 
+    - Exporter services are no longer required to be provided in the application since they are now injected on a root level.
+- `IgxGridToolbarPinningComponent`, `IgxGridToolbarHidingComponent`
+    - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
 
+### General
+
+- `IgxDialog`
+    - **Breaking Change** - The default positionSettings open/close animation has been changed to `fadeIn`/`fadeOut`. The open/close animation can be set through the position settings, e.g. change the animation to the previously default open/close animation:
+
+    ```typescript
+    import { slideInBottom, slideOutTop } from 'igniteui-angular';
+
+    @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
+    public newPositionSettings: PositionSettings = {
+        openAnimation: useAnimation(slideInBottom, { params: { fromPosition: 'translateY(100%)' } }),
+        closeAnimation: useAnimation(slideOutTop, { params: { toPosition: 'translateY(-100%)'} })
+    };
+    this.alert.positionSettings = this.newPositionSettings;
+    ```
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - **Breaking Change** - The following deprecated inputs have been removed
+        - Inputs  `showToolbar`, `toolbarTitle`, `columnHiding`, `columnHidingTitle`, `hiddenColumnsText`,
+        `columnPinning`, `columnPinningTitle`, `pinnedColumnsText`.
+        Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
+- `IgxColumnActionsComponent`
+    - **Breaking Change** - The following input has been removed
+        - Input `columns`. Use `igxGrid` `columns` input instead.        
 ## 12.2.1
 
 ### New Features

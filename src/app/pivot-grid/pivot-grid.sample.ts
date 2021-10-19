@@ -86,6 +86,11 @@ rows: [
                 member: 'UnitsSold',
                 aggregate: IgxNumberSummaryOperand.sum,
                 enabled: true
+            },
+            {
+                member: 'UnitPrice',
+                aggregate: IgxNumberSummaryOperand.sum,
+                enabled: true
             }
         ],
         filters: null

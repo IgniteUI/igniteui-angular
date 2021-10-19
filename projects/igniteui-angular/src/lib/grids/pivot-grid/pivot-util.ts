@@ -169,9 +169,14 @@ export class PivotUtil {
         const flatData = [];
         hierarchies.forEach((h, key) => {
             const obj = {};
+            const multipleValues = values.length > 1;
             for (const value of values) {
                 if(h[pivotKeys.aggregations]) {
-                    obj[key] = h[pivotKeys.aggregations][value.member];
+                    if (multipleValues) {
+                        obj[key + '-' + value.member] = h[pivotKeys.aggregations][value.member];
+                    } else {
+                        obj[key] = h[pivotKeys.aggregations][value.member];
+                    }
                 }
                 obj[pivotKeys.records] = h[pivotKeys.records];
                 flatData.push(obj);
