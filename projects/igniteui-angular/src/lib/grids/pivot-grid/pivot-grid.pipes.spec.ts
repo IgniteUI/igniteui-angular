@@ -221,7 +221,8 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data multiple row dimensions', () => {
-        const rowPipeResult = rowPipe.transform(data, [{
+        const config = Object.assign({}, pivotConfigHierarchy);
+        config.rows = [{
             member: 'ProductCategory',
             enabled: true,
             childLevels: []
@@ -232,8 +233,9 @@ describe('Pivot pipes', () => {
             childLevels: []
         }];
         const rowPipeResult = rowPipe.transform(data, config, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, config, expansionStates);
 
-        expect(rowPipeResult).toEqual([
+        expect(rowStatePipeResult).toEqual([
             {
                 Date: '01/01/2021',
                 records: [
@@ -357,7 +359,8 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data with multiple nested row dimensions', () => {
-        const rowPipeResult = rowPipe.transform(data, [{
+        const config = Object.assign({}, pivotConfigHierarchy);
+        config.rows = [{
             member: () => 'AllProd',
             enabled: true,
             childLevels: [{
@@ -374,8 +377,10 @@ describe('Pivot pipes', () => {
             enabled: true,
             childLevels: []
             }]
-        }], expansionStates, pivotConfigHierarchy.values);
-        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfigHierarchy.columns, pivotConfigHierarchy.values);
+        }];
+        const rowPipeResult = rowPipe.transform(data, config, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, config, expansionStates);
+        const columnPipeResult = columnPipe.transform(rowStatePipeResult, config, expansionStates);
         expect(columnPipeResult).toEqual([{
             field2: 'AllDate',
             records: [{
@@ -1010,7 +1015,8 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data 2 value dimensions', () => {
-        const values: IPivotValue[] = [
+        const config = Object.assign({}, pivotConfigHierarchy);
+        config.values = [
             {
                 member: 'UnitsSold',
                 aggregate: IgxNumberSummaryOperand.sum,
@@ -1022,8 +1028,9 @@ describe('Pivot pipes', () => {
                 enabled: true
             }
         ];
-        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy.rows, expansionStates, values);
-        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfigHierarchy.columns, values);
+        const rowPipeResult = rowPipe.transform(data, config, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfigHierarchy,  new Map<any, boolean>());
+        const columnPipeResult = columnPipe.transform(rowStatePipeResult, config, expansionStates);
         expect(columnPipeResult).toEqual([{
             'field1':'All','records':[
             {'field1':'Clothing','level':1, 'field1_level': 1,'All-UnitsSold':1526,'All-Bulgaria-UnitsSold':774,
