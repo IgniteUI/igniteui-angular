@@ -1012,25 +1012,26 @@ describe('Pivot pipes', () => {
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfigHierarchy.columns, values);
         expect(columnPipeResult).toEqual([{
             'field1':'All','records':[
-            {'field1':'Clothing','level':1,'All-UnitsSold':1526,'All-Bulgaria-UnitsSold':774,
+            {'field1':'Clothing','level':1, 'field1_level': 1,'All-UnitsSold':1526,'All-Bulgaria-UnitsSold':774,
             'All-Bulgaria-UnitPrice':28.86,'All-USA-UnitsSold':296,'All-USA-UnitPrice':49.57,'All-Uruguay-UnitsSold':456,
             'All-Uruguay-UnitPrice':68.33,'All-UnitPrice':146.76},
-            {'field1':'Bikes','level':1,'All-UnitsSold':68,'All-Uruguay-UnitsSold':68,
+            {'field1':'Bikes','level':1, 'field1_level': 1,'All-UnitsSold':68,'All-Uruguay-UnitsSold':68,
             'All-Uruguay-UnitPrice':3.56,'All-UnitPrice':3.56},
-            {'field1':'Accessories','level':1,'All-UnitsSold':293,'All-USA-UnitsSold':293,
+            {'field1':'Accessories','level':1, 'field1_level': 1,'All-UnitsSold':293,'All-USA-UnitsSold':293,
             'All-USA-UnitPrice':85.58,'All-UnitPrice':85.58},
-            {'field1':'Components','level':1,'All-UnitsSold':240,'All-USA-UnitsSold':240,
+            {'field1':'Components','level':1, 'field1_level': 1,'All-UnitsSold':240,'All-USA-UnitsSold':240,
             'All-USA-UnitPrice':18.13,'All-UnitPrice':18.13}
-            ],'level':0,'All-UnitsSold':2127,'All-Bulgaria-UnitsSold':774,'All-Bulgaria-UnitPrice':28.86,'All-USA-UnitsSold':829,
+            ],'level':0, 'field1_level': 0,
+            'All-UnitsSold':2127,'All-Bulgaria-UnitsSold':774,'All-Bulgaria-UnitPrice':28.86,'All-USA-UnitsSold':829,
             'All-USA-UnitPrice':153.28,'All-Uruguay-UnitsSold':524,'All-Uruguay-UnitPrice':71.89,'All-UnitPrice':254.02999999999997},
-            {'field1':'Clothing','level':1,'All-UnitsSold':1526,'All-Bulgaria-UnitsSold':774,
+            {'field1':'Clothing','level':1, 'field1_level': 1,'All-UnitsSold':1526,'All-Bulgaria-UnitsSold':774,
             'All-Bulgaria-UnitPrice':28.86,'All-USA-UnitsSold':296,'All-USA-UnitPrice':49.57,'All-Uruguay-UnitsSold':456,
             'All-Uruguay-UnitPrice':68.33,'All-UnitPrice':146.76},
-            {'field1':'Bikes','level':1,'All-UnitsSold':68,'All-Uruguay-UnitsSold':68,
+            {'field1':'Bikes','level':1,  'field1_level': 1,'All-UnitsSold':68,'All-Uruguay-UnitsSold':68,
             'All-Uruguay-UnitPrice':3.56,'All-UnitPrice':3.56},
-            {'field1':'Accessories','level':1,'All-UnitsSold':293,'All-USA-UnitsSold':293,
+            {'field1':'Accessories','level':1, 'field1_level': 1,'All-UnitsSold':293,'All-USA-UnitsSold':293,
             'All-USA-UnitPrice':85.58,'All-UnitPrice':85.58},
-            {'field1':'Components','level':1,'All-UnitsSold':240,'All-USA-UnitsSold':240,
+            {'field1':'Components','level':1, 'field1_level': 1,'All-UnitsSold':240,'All-USA-UnitsSold':240,
             'All-USA-UnitPrice':18.13,'All-UnitPrice':18.13}
             ]);
     });
