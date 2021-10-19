@@ -47,7 +47,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                     // build hierarchies - groups and subgroups
                     hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
                     // generate flat data from the hierarchies
-                    data = PivotUtil.flattenHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0);
+                    data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0);
                     row.fieldName = hierarchies.get(hierarchies.keys().next().value).dimension.fieldName;
                 } else {
                     const newData = [...data];
@@ -55,20 +55,9 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                         const hierarchyFields = PivotUtil
                             .getFieldsHierarchy(newData[i][pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                         const siblingData = PivotUtil
-                            .flattenHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
+                            .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
                         row.fieldName = hierarchyFields.get(hierarchyFields.keys().next().value).dimension.fieldName;
-                        for (const property in newData[i]) {
-                            if (newData[i].hasOwnProperty(property) &&
-                                Object.keys(pivotKeys).indexOf(property) === -1) {
-                                siblingData.forEach(s => {
-                                    s[property] = newData[i][property];
-                                    if (property.indexOf(pivotKeys.level) === -1) {
-                                        s[property + '_'  + pivotKeys.level] = s[pivotKeys.level];
-                                        //s[pivotKeys.level] = newData[i][pivotKeys.level];
-                                    }
-                                });
-                            }
-                        }
+                        PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
                         newData.splice(i , 1, ...siblingData);
                         i += siblingData.length - 1;
                     }
