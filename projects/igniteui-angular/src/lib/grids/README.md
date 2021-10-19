@@ -193,17 +193,9 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`transactions`| `TransactionService` | Transaction provider allowing access to all transactions and states of the modified rows. |
 |`summaryPosition`| GridSummaryPosition | The summary row position for the child levels. The default is top. |
 |`summaryCalculationMode`| GridSummaryCalculationMode | The summary calculation mode. The default is rootAndChildLevels, which means summaries are calculated for root and child levels.|
-|`columnHiding`| boolean | Returns whether the column hiding UI for the `IgxGridComponent` is enabled.|
-| `columnHidingTitle`| string | The title to be displayed in the built-in column hiding UI.|
-| `columnPinning` | boolean | Returns if the built-in column pinning UI should be shown in the toolbar. |
-| `columnPinningTitle` | string | The title to be displayed in the UI of the column pinning.|
 | `rowHeight` | number | Sets the row height. |
 | `columnWidth` | string | The default width of the `IgxGridComponent`'s columns. |
 |`primaryKey`| any | Property that sets the primary key of the `IgxGridComponent`. |
-|`hiddenColumnsText`| string | The text to be displayed inside the toggle button for the built-in column hiding UI of the`IgxColumnComponent`. |
-|`pinnedColumnsText`| string | the text to be displayed inside the toggle button for the built-in column pinning UI of the`IgxColumnComponent`. |
-|`showToolbar`| boolean | Specifies whether the `IgxGridComponent`'s toolbar is shown or hidden.|
-|`toolbarTitle`| string | the toolbar's title. |
 |`exportExcel`| boolean | Returns whether the option for exporting to MS Excel is enabled or disabled. |
 |`exportCsv`| boolean | Returns whether the option for exporting to CSV is enabled or disabled.|
 |`exportText`| string | Returns the textual content for the main export button.|
