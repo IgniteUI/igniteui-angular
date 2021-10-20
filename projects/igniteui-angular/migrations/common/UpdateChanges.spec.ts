@@ -931,7 +931,7 @@ export class CustomGridComponent {
     });
 
     // sass variable migrations
-    it('Should migrate sass variables names correctly', ()=> {
+    fit('Should migrate sass variables names correctly', ()=> {
         const themePropsJson: ThemePropertyChanges = {
             changes: [
                 {
@@ -968,6 +968,7 @@ export class CustomGridComponent {
 
         const fileContent =
 `$palette: $light-material-palette;
+$light-material-palette : $some-variable,
 $palette2: $light-material-palette-primary;
 $palette3: mat.define-light-theme($light-palette-primary, $elevation, $light-palette);
 $palette4: $elevation;
@@ -980,7 +981,6 @@ $colorful: #3245;
 $palette5: mat.define-light-theme($light-palette-primary, $elevation, $light-palette, $some-variable: $elevation);
 $crm-grid-theme: igx-grid-theme($elevation: #f0f8fe, $header-border-color: #dde5eb);
 $dark-theme-palette: igx-palette($primary: $dark-color, $secondary: $orange-color);
-
 $dark-grid-theme: igx-grid-theme(
 $palette: $dark-theme-palette,
 $content-background: igx-color($dark-theme-palette, "secondary", 100),
@@ -995,6 +995,7 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
         appTree.create('test.component.scss', fileContent);
         const expectedFileContent =
 `$palette: $igx-light-material-palette;
+$igx-light-material-palette : $some-variable,
 $palette2: $light-material-palette-primary;
 $palette3: mat.define-light-theme($light-palette-primary, $igx-elevation, $igx-light-palette);
 $palette4: $igx-elevation;
@@ -1007,7 +1008,6 @@ $colorful: #3245;
 $palette5: mat.define-light-theme($light-palette-primary, $igx-elevation, $igx-light-palette, $some-variable: $igx-elevation);
 $crm-grid-theme: igx-grid-theme($elevation: #f0f8fe, $header-border-color: #dde5eb);
 $dark-theme-palette: igx-palette($primary: $dark-color, $secondary: $orange-color);
-
 $dark-grid-theme: igx-grid-theme(
 $palette: $dark-theme-palette,
 $content-background: igx-color($dark-theme-palette, "secondary", 100),
