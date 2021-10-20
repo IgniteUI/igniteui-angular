@@ -45,10 +45,11 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         expansionStates: Map<any, boolean>,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
+        const data = collection.slice(0);
         for (const row of config.rows) {
-            PivotUtil.flattenHierarchy(collection, config, row, expansionStates, pivotKeys);
+            PivotUtil.flattenHierarchy(data, config, row, expansionStates, pivotKeys);
         }
-        return collection;
+        return data;
     }
 }
 

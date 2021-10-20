@@ -105,7 +105,7 @@ export class PivotGridSampleComponent {
     ];
 
     public dataHierarchical =  [
-        {All:2127,records:[
+        {All:2127, All_records:[
             {ProductCategory:'Clothing', level:1, ProductCategory_level: 1, All:1526,'All-Bulgaria':774,'All-USA':296,'All-Uruguay':456},
             {ProductCategory:'Bikes', level:1, ProductCategory_level: 1, All:68,'All-Uruguay':68},
             {ProductCategory:'Accessories',level:1, ProductCategory_level: 1, All:293,'All-USA':293},

@@ -100,8 +100,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         for (const dim of rowDimConfig) {
             const fieldName = PivotUtil.resolveFieldName(dim, this.rowData);
             const fieldLevel = fieldName + '_level';
-            const hasChild = this.rowData[fieldName + '_records'] !== undefined && this.rowData[fieldName + '_records'].length > 0;
-            currentLvl = hasChild ? this.rowData[fieldLevel] : currentLvl + 1;
+            currentLvl = this.rowData[fieldLevel] !== undefined ?  this.rowData[fieldLevel] : currentLvl + 1;
             if (currentLvl === level) {
                 this.rowDimension.push(this.extractFromDimension(dim, dimIndex, this.currLvl));
             }
