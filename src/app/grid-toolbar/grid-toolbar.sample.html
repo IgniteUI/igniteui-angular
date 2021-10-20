@@ -8,7 +8,7 @@
                 <igx-grid-toolbar-title>{{ title }}</igx-grid-toolbar-title>
                 <igx-grid-toolbar-actions>
                    <igx-grid-toolbar-pinning *ngIf="pinningEnabled"></igx-grid-toolbar-pinning>
-                   <igx-grid-toolbar-hiding *ngIf="hidingEnabled"></igx-grid-toolbar-hiding>
+                   <igx-grid-toolbar-hiding [buttonText]="'Test'" *ngIf="hidingEnabled"></igx-grid-toolbar-hiding>
                     <igx-grid-toolbar-advanced-filtering>Really advanced filtering</igx-grid-toolbar-advanced-filtering>
                     <igx-grid-toolbar-exporter [exportCSV]="csv" [exportExcel]="excel">
                         <span excelText>Transform to Excel 👌</span>

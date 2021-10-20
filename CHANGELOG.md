@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxCsvExporterService`, `IgxExcelExporterService`
     - Exporter services are no longer required to be provided in the application since they are now injected on a root level.
+- `IgxGridToolbarPinningComponent`, `IgxGridToolbarHidingComponent`
+    - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
 
 ### General
 
@@ -23,7 +25,14 @@ All notable changes for each version of this project will be documented in this 
     };
     this.alert.positionSettings = this.newPositionSettings;
     ```
-
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - **Breaking Change** - The following deprecated inputs have been removed
+        - Inputs  `showToolbar`, `toolbarTitle`, `columnHiding`, `columnHidingTitle`, `hiddenColumnsText`,
+        `columnPinning`, `columnPinningTitle`, `pinnedColumnsText`.
+        Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
+- `IgxColumnActionsComponent`
+    - **Breaking Change** - The following input has been removed
+        - Input `columns`. Use `igxGrid` `columns` input instead.        
 ## 12.2.1
 
 ### New Features
