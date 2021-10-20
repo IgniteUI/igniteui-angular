@@ -42,13 +42,15 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         ): any[] {
             let hierarchies;
             let data;
+            let prevRowField;
             for (const row of rows) {
                 if (!data) {
                     // build hierarchies - groups and subgroups
                     hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
                     // generate flat data from the hierarchies
-                    data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0);
+                    data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
                     row.fieldName = hierarchies.get(hierarchies.keys().next().value).dimension.fieldName;
+                    prevRowField = row.fieldName;
                 } else {
                     const newData = [...data];
                     for (let i = 0; i < newData.length; i++) {
@@ -58,6 +60,20 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                             .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
                         row.fieldName = hierarchyFields.get(hierarchyFields.keys().next().value).dimension.fieldName;
                         PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
+                        // process combined groups
+                        for (const sibling of siblingData) {
+                            const childCollection = sibling[prevRowField + '_' + pivotKeys.records] || [];
+                            for (const child of childCollection) {
+                                child[row.fieldName + '_' + pivotKeys.records] = [];
+                                const hierarchyFields2 = PivotUtil
+                                .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
+                                const siblingData2 = PivotUtil
+                                .processHierarchy(hierarchyFields2, child ?? [], pivotKeys, 0);
+                                PivotUtil.processSiblingProperties(child, siblingData2, pivotKeys);
+                                child[row.fieldName + '_' + pivotKeys.records] =
+                                child[row.fieldName + '_' + pivotKeys.records].concat(siblingData2);
+                            }
+                        }
                         newData.splice(i , 1, ...siblingData);
                         i += siblingData.length - 1;
                     }

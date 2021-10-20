@@ -125,7 +125,7 @@ export class PivotUtil {
         }
     }
 
-    public static processHierarchy(hierarchies, rec, pivotKeys, level = 0) {
+    public static processHierarchy(hierarchies, rec, pivotKeys, level = 0, rootData = false) {
         const flatData = [];
         hierarchies.forEach((h, key) => {
             const field = this.resolveFieldName(h.dimension, rec);
@@ -139,7 +139,10 @@ export class PivotUtil {
             if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
                 obj[pivotKeys.records] = this.processHierarchy(h[pivotKeys.children], rec,
                         pivotKeys, level + 1);
-                PivotUtil.processSiblingProperties(rec, obj[pivotKeys.records], pivotKeys);
+                obj[field + '_' + pivotKeys.records] = obj[pivotKeys.records];
+                if (!rootData) {
+                    PivotUtil.processSiblingProperties(rec, obj[pivotKeys.records], pivotKeys);
+                }
             }
         });
 
