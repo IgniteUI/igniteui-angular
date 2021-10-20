@@ -539,6 +539,11 @@ describe('IgxTimePicker', () => {
             it('should close the dropdown and keep the current selection on outside click in dialog mode', fakeAsync(() => {
                 fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
+                // close the time picker to avoid random fails, if the state is not clean
+                if (!timePicker.collapsed) {
+                    timePicker.close();
+                    fixture.detectChanges();
+                }
 
                 inputGroup.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
