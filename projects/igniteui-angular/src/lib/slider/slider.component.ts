@@ -274,7 +274,7 @@ export class IgxSliderComponent implements
 
         if (this._hasViewInit) {
             this.stepDistance = this.calculateStepDistance();
-            this.normalizeByStep(this.value);
+            this._value = this.normalizeByStep(this.value);
             this.setTickInterval();
         }
     }
@@ -564,6 +564,7 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set value(value: number | IRangeSliderValue) {
+        value = this.normalizeByStep(value);
         if (this._hasViewInit) {
             this.setValue(value, true);
             this.positionHandlersAndUpdateTrack();
@@ -1049,7 +1050,7 @@ export class IgxSliderComponent implements
             return;
         }
 
-        this.normalizeByStep(value);
+        this.value = this.normalizeByStep(value);
     }
 
     /**
@@ -1362,15 +1363,13 @@ export class IgxSliderComponent implements
      */
     private normalizeByStep(value: IRangeSliderValue | number) {
         if (this.isRange) {
-            this.value = {
+            return {
                 lower: (value as IRangeSliderValue).lower - ((value as IRangeSliderValue).lower % this.step),
                 upper: (value as IRangeSliderValue).upper - ((value as IRangeSliderValue).upper % this.step)
             };
         } else {
-            this.value = (value as number) - ((value as number) % this.step);
+            return (value as number) - ((value as number) % this.step);
         }
-
-        this._cdr.detectChanges();
     }
 
     private updateTrack() {
