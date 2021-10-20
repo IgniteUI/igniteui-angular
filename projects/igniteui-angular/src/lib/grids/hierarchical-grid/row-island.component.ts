@@ -26,7 +26,6 @@ import {
     TemplateRef,
     ViewContainerRef
 } from '@angular/core';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -41,7 +40,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridServiceType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
@@ -50,7 +49,7 @@ import { IgxFlatTransactionFactory } from '../../services/transaction/transactio
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
-    grid: IgxHierarchicalGridComponent;
+    grid: GridType;
 }
 
 @Component({
@@ -406,7 +405,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             this.rootGrid.columnList.notifyOnChanges();
         }
 
-        this.rowIslandAPI.getChildGrids().forEach((grid: IgxHierarchicalGridComponent) => {
+        this.rowIslandAPI.getChildGrids().forEach((grid: GridType) => {
             grid.createColumnsList(this.childColumns.toArray());
             if (!document.body.contains(grid.nativeElement)) {
                 grid.updateOnRender = true;

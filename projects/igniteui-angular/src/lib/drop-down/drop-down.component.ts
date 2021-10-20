@@ -27,10 +27,10 @@ import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { OverlaySettings } from '../services/public_api';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { OverlaySettings } from '../services/overlay/utilities';
 
 /**
  * **Ignite UI for Angular DropDown** -

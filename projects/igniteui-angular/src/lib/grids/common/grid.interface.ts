@@ -9,7 +9,7 @@ import {
     ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs,
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/displayDensity';
-import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
@@ -31,6 +31,7 @@ import { IColumnPipeArgs, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy } from './strategy';
+import { IForOfState } from '../../directives/for-of/for_of.directive';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -271,7 +272,8 @@ export interface GridType extends IGridDataBindable {
 
 
 
-
+    virtualizationState: IForOfState;
+    // TYPE
     selectionService: any;
     navigation: any;
     filteringService: any;
@@ -386,6 +388,8 @@ export interface GridType extends IGridDataBindable {
     summaryPosition: GridSummaryPosition;
 
     // XXX: Work around till we fixed the injection tokens
+    toolbarOutlet?: ViewContainerRef;
+    paginatorOutlet?: ViewContainerRef;
     flatData?: any[];
     childRow?: any;
     expansionDepth?: number;
@@ -520,6 +524,7 @@ export interface GridType extends IGridDataBindable {
     deselectRows(rowIDs: any[]): void;
     selectAllRows(onlyFilterData?: boolean): void;
     deselectAllRows(onlyFilterData?: boolean): void;
+    setUpPaginator(): void;
     // Type to RowType
     createRow?(index: number, data?: any): RowType;
     deleteRow(id: any): any;
@@ -534,6 +539,7 @@ export interface GridType extends IGridDataBindable {
 
     // TODO: Maybe move them to FlatGridType, but then will we need another token?
     isExpandedGroup(group: IGroupByRecord): boolean;
+    createColumnsList?(cols: ColumnType[]): void;
     toggleAllGroupRows?(): void;
     toggleAll?(): void;
     generateRowPath?(rowId: any): any[];
