@@ -3,9 +3,7 @@
         name="btnColumnPinning" (click)="toggle(btn, ref, actions)" [displayDensity]="grid.displayDensity">
         <igx-icon family="imx-icons" [name]="!grid.pinnedColumnsCount ? 'unpin-left' : 'pin-left'"></igx-icon>
         <span>{{ grid.pinnedColumnsCount }}</span>
-        <span>
-            <ng-content></ng-content>
-        </span>
+        <span>{{ buttonText }}</span>
     </button>
     <igx-column-actions #actions igxColumnPinning igxToggle (opened)="focusSearch(ref.element)" #ref="toggle"
         [grid]="grid" [title]="title || grid?.resourceStrings.igx_grid_toolbar_pinning_title"

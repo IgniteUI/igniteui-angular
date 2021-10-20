@@ -3,9 +3,7 @@
         name="btnColumnHiding" (click)="toggle(btn, ref, actions)" [displayDensity]="grid.displayDensity">
         <igx-icon>{{ !grid.hiddenColumnsCount ? 'visibility' : 'visibility_off' }}</igx-icon>
         <span>{{ grid.hiddenColumnsCount }}</span>
-        <span>
-            <ng-content></ng-content>
-        </span>
+        <span>{{ buttonText }}</span>
     </button>
     <igx-column-actions #actions igxColumnHiding igxToggle (opened)="focusSearch(ref.element)" #ref="toggle"
         [grid]="grid" [title]="title || grid?.resourceStrings.igx_grid_toolbar_hiding_title"

@@ -385,7 +385,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" [showToolbar]="true" [primaryKey]="'ProductID'" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" [primaryKey]="'ProductID'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @WatchChanges()
@@ -792,7 +792,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Args: { column: any, newValue: boolean }
      * @example
      * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnVisibilityChanging)="visibilityChanging($event)"></igx-grid>
+     * <igx-grid (columnVisibilityChanging)="visibilityChanging($event)"></igx-grid>
      * ```
      */
     @Output()
@@ -805,7 +805,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Args: { column: IgxColumnComponent, newValue: boolean }
      * @example
      * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnVisibilityChanged)="visibilityChanged($event)"></igx-grid>
+     * <igx-grid (columnVisibilityChanged)="visibilityChanged($event)"></igx-grid>
      * ```
      */
     @Output()
@@ -818,7 +818,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the moved `IgxColumnComponent` object.
      * @example
      * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnMovingStart)="movingStart($event)"></igx-grid>
+     * <igx-grid (columnMovingStart)="movingStart($event)"></igx-grid>
      * ```
      */
     @Output()
@@ -831,7 +831,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the source and target `IgxColumnComponent` objects. This event is cancelable.
      * @example
      * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnMoving)="moving($event)"></igx-grid>
+     * <igx-grid (columnMoving)="moving($event)"></igx-grid>
      * ```
      */
     @Output()
@@ -844,7 +844,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the source and target `IgxColumnComponent` objects.
      * @example
      * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnMovingEnd)="movingEnds($event)"></igx-grid>
+     * <igx-grid (columnMovingEnd)="movingEnds($event)"></igx-grid>
      * ```
      */
     @Output()
@@ -1547,28 +1547,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Gets/Sets whether the column hiding UI is enabled.
-     *
-     * @deprecated
-     * @remarks
-     * By default it is disabled (false). In order for the UI to work, you need to enable the toolbar as shown in the example below.
-     * @example
-     * ```html
-     * <igx-grid [data]="Data" [autoGenerate]="true" [showToolbar]="true" [columnHiding]="true"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('`columnHiding` is deprecated.')
-    @Input()
-    public get columnHiding() {
-        return this._columnHiding;
-    }
-
-    public set columnHiding(value) {
-        this._columnHiding = value;
-        this.notifyChanges();
-    }
-
-    /**
      * Gets/Sets if the row selectors are hidden.
      *
      * @remarks
@@ -1625,7 +1603,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * By default it is set to false.
      * @example
      * ```html
-     * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [primaryKey]="'ProductID'" [columnHiding]="true"></igx-grid>
+     * <igx-grid #grid [rowEditable]="true" [primaryKey]="'ProductID'" ></igx-grid>
      * ```
      */
     @WatchChanges()
@@ -1712,7 +1690,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" [showToolbar]="true" [rowHeight]="100" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" [rowHeight]="100" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @WatchChanges()
@@ -1730,7 +1708,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" [showToolbar]="true" [columnWidth]="100" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" [columnWidth]="100" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @WatchChanges()
@@ -1874,7 +1852,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [showToolbar]="true" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Input()

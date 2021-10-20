@@ -171,7 +171,10 @@ export abstract class BaseToolbarDirective implements OnDestroy {
      @Input()
      public indentetion = 30;
 
-     protected columnActionsUI: IgxColumnActionsComponent;
+    @Input()
+    public buttonText: string;
+
+    protected columnActionsUI: IgxColumnActionsComponent;
 
      public checkAll() {
          this.columnActionsUI.checkAllColumns();
