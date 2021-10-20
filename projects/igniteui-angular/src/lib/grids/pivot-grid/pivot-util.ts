@@ -26,7 +26,7 @@ export class PivotUtil {
         return typeof dim.member === 'string' ? recData[dim.member] : dim.member.call(null, recData);
     }
 
-    public static flattenHierarchy(records, config, dim, expansionStates, pivotKeys, lvl = 0) {
+    public static flattenHierarchy(records, config, dim, expansionStates, pivotKeys) {
         const data = records;
         const defaultExpandState = true;
         //const dims = rows;
@@ -42,7 +42,6 @@ export class PivotUtil {
                     if(!field) {
                         continue;
                     }
-                    rec[field + '_level'] = lvl;
                     const expansionRowKey = PivotUtil.getRecordKey(rec, rec[field]);
                     const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
                     defaultExpandState :
@@ -168,6 +167,7 @@ export class PivotUtil {
             obj[field + '_' + pivotKeys.records] = h[pivotKeys.records];
             obj = { ...obj, ...h[pivotKeys.aggregations] };
             obj[pivotKeys.level] = level;
+            obj[field + '_' + pivotKeys.level] = level;
             flatData.push(obj);
             if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
                 obj[pivotKeys.records] = this.processHierarchy(h[pivotKeys.children], rec,
