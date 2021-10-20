@@ -64,14 +64,18 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                         for (const sibling of siblingData) {
                             const childCollection = sibling[prevRowField + '_' + pivotKeys.records] || [];
                             for (const child of childCollection) {
+                                child[row.fieldName] = sibling[row.fieldName];
+                                child[row.fieldName + '_' + pivotKeys.level] = sibling[row.fieldName + '_' + pivotKeys.level];
                                 child[row.fieldName + '_' + pivotKeys.records] = [];
                                 const hierarchyFields2 = PivotUtil
                                 .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                                 const siblingData2 = PivotUtil
                                 .processHierarchy(hierarchyFields2, child ?? [], pivotKeys, 0);
-                                PivotUtil.processSiblingProperties(child, siblingData2, pivotKeys);
-                                child[row.fieldName + '_' + pivotKeys.records] =
-                                child[row.fieldName + '_' + pivotKeys.records].concat(siblingData2);
+                                //PivotUtil.processSiblingProperties(child, siblingData2, pivotKeys);
+                                for(const sib of siblingData2) {
+                                    child[row.fieldName + '_' + pivotKeys.records] =
+                                child[row.fieldName + '_' + pivotKeys.records].concat(sib[row.fieldName + '_' + pivotKeys.records]);
+                                }
                             }
                         }
                         newData.splice(i , 1, ...siblingData);

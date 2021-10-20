@@ -40,37 +40,15 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
     constructor() { }
 
     public transform(
-        collection: any,
+        collection: any[],
         config: IPivotConfiguration,
         expansionStates: Map<any, boolean>,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
-        const flatData = [];
-        const defaultExpandState = true;
-        const rowDimsFlattened = PivotUtil.flatten(config.rows);
-        collection.forEach(rec => {
-            const lvl = rec[pivotKeys.level];
-            // should have handling for multiple dims
-            const dim = rowDimsFlattened.filter(x => x.level === lvl)[0];
-            let field;
-            if (config.rowStrategy) {
-                field = dim.fieldName;
-            } else {
-                const fieldName = PivotUtil.resolveFieldName(dim, rec);
-                field = rec[fieldName];
-            }
-            flatData.push(rec);
-            const expansionRowKey = lvl !== undefined ? PivotUtil.getRecordKey(rec, field) : field;
-            const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
-             defaultExpandState :
-             expansionStates.get(expansionRowKey);
-            if (dim.childLevels && dim.childLevels.length > 0 && isExpanded) {
-                for (const record of rec[pivotKeys.records]) {
-                    flatData.push(record);
-                }
-            }
-        });
-       return flatData;
+        for (const row of config.rows) {
+            PivotUtil.flattenHierarchy(collection, config, row, expansionStates, pivotKeys, 0);
+        }
+        return collection;
     }
 }
 

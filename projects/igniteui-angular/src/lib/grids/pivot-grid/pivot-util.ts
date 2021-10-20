@@ -26,6 +26,39 @@ export class PivotUtil {
         return typeof dim.member === 'string' ? recData[dim.member] : dim.member.call(null, recData);
     }
 
+    public static flattenHierarchy(records, config, dim, expansionStates, pivotKeys, lvl = 0) {
+        const data = records;
+        const defaultExpandState = true;
+        //const dims = rows;
+        for (let i = 0; i < data.length; i++) {
+            const rec = data[i];
+            //for (const dim of dims) {
+                    let field;
+                    if (config.rowStrategy) {
+                        field = dim.fieldName || dim.member;
+                    } else {
+                        field = PivotUtil.resolveFieldName(dim, rec);
+                    }
+                    if(!field) {
+                        continue;
+                    }
+                    rec[field + '_level'] = lvl;
+                    const expansionRowKey = PivotUtil.getRecordKey(rec, rec[field]);
+                    const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
+                    defaultExpandState :
+                    expansionStates.get(expansionRowKey);
+                    if (rec[field + '_' + pivotKeys.records] &&
+                      rec[field + '_' + pivotKeys.records].length > 0 &&
+                       isExpanded) {
+                        const dimData = rec[field + '_' + pivotKeys.records];
+                        data.splice(i + 1, 0, ...dimData);
+                        i += dimData.length;
+                    }
+            //}
+        }
+       return data;
+    }
+
     public static extractValuesForRow(dims: IPivotDimension[], recData: any,  pivotKeys: IPivotKeys) {
         const values: any[] = [];
         let i = 0;
@@ -132,17 +165,17 @@ export class PivotUtil {
             let obj = {};
             obj[field] = key;
             obj[pivotKeys.records] = h[pivotKeys.records];
+            obj[field + '_' + pivotKeys.records] = h[pivotKeys.records];
             obj = { ...obj, ...h[pivotKeys.aggregations] };
             obj[pivotKeys.level] = level;
-            obj[field + '_' + pivotKeys.level] = level;
             flatData.push(obj);
             if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
                 obj[pivotKeys.records] = this.processHierarchy(h[pivotKeys.children], rec,
                         pivotKeys, level + 1);
-                obj[field + '_' + pivotKeys.records] = obj[pivotKeys.records];
                 if (!rootData) {
                     PivotUtil.processSiblingProperties(rec, obj[pivotKeys.records], pivotKeys);
                 }
+                obj[field + '_' + pivotKeys.records] = obj[pivotKeys.records];
             }
         });
 
