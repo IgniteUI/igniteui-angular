@@ -201,7 +201,7 @@ export class PivotUtil {
     public static getTotalLvl(rec) {
         let total = 0;
         Object.keys(rec).forEach(key => {
-            if (key.indexOf('_level') !== -1 && key.indexOf('level_') === -1) {
+            if (key.indexOf('_level') !== -1 && key.indexOf('level_') === -1 && key.indexOf('records') === -1) {
                 total += rec[key] || 0;
             }
         });

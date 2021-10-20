@@ -71,11 +71,11 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                                 .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                                 const siblingData2 = PivotUtil
                                 .processHierarchy(hierarchyFields2, child ?? [], pivotKeys, 0);
-                                //PivotUtil.processSiblingProperties(child, siblingData2, pivotKeys);
                                 for(const sib of siblingData2) {
                                     child[row.fieldName + '_' + pivotKeys.records] =
                                 child[row.fieldName + '_' + pivotKeys.records].concat(sib[row.fieldName + '_' + pivotKeys.records]);
                                 }
+                                PivotUtil.processSiblingProperties(child, siblingData2, pivotKeys);
                             }
                         }
                         newData.splice(i , 1, ...siblingData);
