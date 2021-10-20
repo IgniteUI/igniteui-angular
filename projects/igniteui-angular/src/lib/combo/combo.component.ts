@@ -42,6 +42,7 @@ import { EditorProvider } from '../core/edit-provider';
 import { IgxInputState, IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 import { caseSensitive } from '@igniteui/material-icons-extended';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 /**
  * @hidden
@@ -68,16 +69,6 @@ const ItemHeights = {
  * drop-down list if no `[itemsMaxHeight]` is specified
  */
 const itemsInContainer = 10;
-
-/**
- * @hidden
- */
- export const GroupsSortingDirection = mkenum({
-    ascending: 'ascending',
-    descending: 'descending'
-});
-
-export type GroupsSortingDirection = (typeof GroupsSortingDirection)[keyof typeof GroupsSortingDirection];
 
 export enum IgxComboState {
     /**
@@ -787,17 +778,22 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public filterable = true;
 
     /**
-     * An @Input property that sets groups sorting order. The default is `ascending`.
+     * An @Input property that sets groups sorting order.
+     *
+     * @example
      * ```html
-     * <igx-combo [groupsSortingDirection]="'ascending'">
+     * <igx-combo [groupSortingDirection]="groupSortingDirection"></igx-combo>
+     * ```
+     * ```typescript
+     * public groupSortingDirection = SortingDirection.Asc;
      * ```
      */
     @Input()
-    public get groupsSortingDirection() {
-        return this._groupsSortingDirection;
+    public get groupSortingDirection(): SortingDirection {
+        return this._groupSortingDirection;
     }
-    public set groupsSortingDirection(val: GroupsSortingDirection) {
-        this._groupsSortingDirection = val;
+    public set groupSortingDirection(val: SortingDirection) {
+        this._groupSortingDirection = val;
     }
 
     /**
@@ -932,7 +928,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _overlaySettings: OverlaySettings;
     private _value = '';
     private _valid = IgxComboState.INITIAL;
-    private _groupsSortingDirection: GroupsSortingDirection = GroupsSortingDirection.ascending;
+    private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
 
     constructor(
         protected elementRef: ElementRef,
