@@ -536,6 +536,7 @@ export class IgxOverlayService implements OnDestroy {
             this.playCloseAnimation(info, event);
         } else {
             this.closeDone(info);
+            this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
         }
     }
 
