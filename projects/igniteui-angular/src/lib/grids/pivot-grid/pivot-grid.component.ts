@@ -1,5 +1,6 @@
 import {
     AfterContentInit,
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     forwardRef,
@@ -44,7 +45,7 @@ const MINIMUM_COLUMN_WIDTH = 200;
     ]
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
-    GridType {
+    GridType, AfterViewInit {
 
     /** @hidden @internal */
     @ViewChild(IgxPivotHeaderRowComponent, { static: true })
@@ -105,6 +106,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             Promise.resolve().then(() => {
                 this.setupColumns();
             });
+    }
+
+    public ngAfterViewInit() {
+        Promise.resolve().then(() => {
+            super.ngAfterViewInit();
+        });
     }
 
     /** @hidden */
@@ -296,6 +303,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                 ref.instance.field = key;
                 ref.instance.parent = parent;
+                ref.instance.dataType = this.pivotConfiguration.values[0].dataType || this.resolveDataTypes(data[0][key]);
+                ref.instance.formatter = this.pivotConfiguration.values[0].formatter;
                 ref.changeDetectorRef.detectChanges();
                 columns.push(ref.instance);
                 if (this.hasMultipleValues) {
@@ -309,6 +318,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.parent = parent;
                 ref.instance.field = key;
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
+                ref.instance.dataType = this.pivotConfiguration.values[0].dataType || this.resolveDataTypes(data[0][key]);
+                ref.instance.formatter = this.pivotConfiguration.values[0].formatter;
                 if (value.expandable) {
                     ref.instance.headerTemplate = this.headerTemplate;
                 }
@@ -316,9 +327,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     const refSibling = factoryColumn.create(this.viewRef.injector);
                     refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                     refSibling.instance.field = key;
-                    refSibling.instance.dataType = this.resolveDataTypes(data[0][key]);
                     refSibling.instance.parent = parent;
                     refSibling.instance.hidden = true;
+                    refSibling.instance.dataType = this.resolveDataTypes(data[0][key]);
+                    refSibling.instance.formatter = this.pivotConfiguration.values[0].formatter;
                     columns.push(refSibling.instance);
                 }
                 const children = this.generateColumnHierarchy(value.children, data, ref.instance);

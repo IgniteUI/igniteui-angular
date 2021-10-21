@@ -1,3 +1,4 @@
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 
 export interface IPivotConfiguration {
@@ -28,7 +29,7 @@ export interface IPivotValue {
     // Allow conditionally styling of the IgxPivotGrid cells
     styles?: any;
     // Enables a data type specific template of the cells
-    dataType?: string;
+    dataType?: GridColumnDataType;
     // Applies display format to cell values.
     formatter?: (value: any, rowData?: any) => any;
 }

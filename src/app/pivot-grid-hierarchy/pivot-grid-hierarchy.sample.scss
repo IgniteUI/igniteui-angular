@@ -1,0 +1,21 @@
+:host ::ng-deep {
+    .upFont {
+        color: green;
+    }
+
+    .downFont {
+        color:red;
+    }
+
+    .upFont1 {
+        color: blue;
+    }
+
+    .downFont1 {
+        color:yellow;
+    }
+
+    .sample-column {
+        max-width: 900px;
+    }
+}
