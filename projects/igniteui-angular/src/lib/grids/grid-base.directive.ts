@@ -104,8 +104,7 @@ import {
     FilterMode,
     ColumnPinningPosition,
     RowPinningPosition,
-    GridPagingMode,
-    SortingMode
+    GridPagingMode
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -3022,7 +3021,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteringStrategy: IFilteringStrategy;
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
-    private _sortingOptions: ISortingOptions = { mode: SortingMode };
+    private _sortingOptions: ISortingOptions = { mode: 'single' || 'multiple'} ;
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -3508,16 +3507,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (ind !== -1) {
                 this.overlayIDs.splice(ind, 1);
             }
-        });
-
-        this.sortingDone.pipe(destructor).subscribe(event => { 
-           if(this._sortingOptions.mode === 'single') {
-               this.columns.forEach((col) => {
-                if (!(col.field === event.fieldName)) {
-                  this.clearSort(col.field);
-                }
-              });
-           }
         });
 
         this.verticalScrollContainer.dataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
@@ -4673,6 +4662,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             if (expression.dir === SortingDirection.None) {
                 this.gridAPI.remove_grouping_expression(expression.fieldName);
+            } else if (this._sortingOptions.mode === 'single') {
+                this.columns.forEach((col) => {
+                 if (!(col.field === expression.fieldName)) {
+                    this.clearSort(col.field);
+                 }
+               });
             }
             this.gridAPI.prepare_sorting_expression([sortingState], expression);
         }

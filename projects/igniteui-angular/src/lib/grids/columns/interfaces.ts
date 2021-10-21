@@ -1,4 +1,3 @@
-import { SortingMode } from '../common/enums';
 import { IgxColumnComponent } from './column.component';
 
 
@@ -46,5 +45,5 @@ export interface IColumnPipeArgs {
 }
 
 export interface ISortingOptions {
-    mode: any;
+    mode: string;
 }
