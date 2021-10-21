@@ -263,7 +263,7 @@ const testGroupBy = () => {
             // sort
             const res = DataUtil.sort(data, [expr]);
             // group by
-            DataUtil.group(res, state, null, groupRecords);
+            DataUtil.group(res, state, null, null, groupRecords);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
@@ -279,7 +279,7 @@ const testGroupBy = () => {
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2]);
              // group by
-            DataUtil.group(sorted, state, null, groupRecords);
+            DataUtil.group(sorted, state, null, null, groupRecords);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
