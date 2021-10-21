@@ -31,8 +31,9 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
+import { IColumnPipeArgs } from 'igniteui-angular';
 
-describe('IgxGrid - Summaries #grid', () => {
+fdescribe('IgxGrid - Summaries #grid', () => {
 
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
@@ -154,7 +155,7 @@ describe('IgxGrid - Summaries #grid', () => {
             it('should properly render custom summaries', () => {
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['10', '39,004', '3,900.4']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest', 'Items InStock'], ['May 17, 1990', '1337']);
 
                 grid.filter('UnitsInStock', '0', IgxNumberFilteringOperand.instance().condition('lessThan'), true);
                 fixture.detectChanges();
@@ -181,7 +182,7 @@ describe('IgxGrid - Summaries #grid', () => {
             it('should change custom summaries at runtime', () => {
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['10', '39,004', '3,900.4']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest', 'Items InStock'], ['May 17, 1990', '1337']);
                 GridSummaryFunctions.verifyVisibleSummariesHeight(fixture, 3, grid.defaultSummaryHeight);
                 grid.getColumnByName('UnitsInStock').summaries = fixture.componentInstance.dealsSummaryMinMax;
                 fixture.detectChanges();
@@ -192,20 +193,20 @@ describe('IgxGrid - Summaries #grid', () => {
             it('should be able to access alldata from each summary', () => {
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['10', '39,004', '3,900.4']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest', 'Items InStock'], ['May 17, 1990', '1337']);
                 GridSummaryFunctions.verifyVisibleSummariesHeight(fixture, 3, grid.defaultSummaryHeight);
                 grid.getColumnByName('UnitsInStock').summaries = fixture.componentInstance.inStockSummary;
                 fixture.detectChanges();
 
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
-                    ['10', '0', '20000', '39004', '3900.4', '6']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
+                    ['10', '0', '20,000', '39,004', '3,900.4', '6']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest', 'Items InStock'], ['May 17, 1990', '1337']);
 
                 grid.getCellByColumn(4, 'InStock').update(true);
                 fixture.detectChanges();
 
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
-                    ['10', '0', '20000', '39004', '3900.4', '7']);
+                    ['10', '0', '20,000', '39,004', '3,900.4', '7']);
 
                 grid.filter('UnitsInStock', 0, IgxNumberFilteringOperand.instance().condition('equals'));
                 fixture.detectChanges();
@@ -292,7 +293,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(grid.hasSummarizedColumns).toBe(false);
             });
 
-            it('should change summary operand through grid API ', () => {
+            it('should change summary operand through grid API', () => {
                 grid.enableSummaries([{ fieldName: 'UnitsInStock', customSummary: fix.componentInstance.dealsSummaryMinMax }]);
                 fix.detectChanges();
 
@@ -2442,11 +2443,6 @@ class DealsSummary extends IgxNumberSummaryOperand {
     public operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
-                const summaryResult = obj.summaryResult;
-                // apply formatting to float numbers
-                if (Number(summaryResult) === summaryResult) {
-                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
-                }
                 return obj;
             }
         });
@@ -2462,11 +2458,6 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
     public operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'min' || obj.key === 'max') {
-                const summaryResult = obj.summaryResult;
-                // apply formatting to float numbers
-                if (Number(summaryResult) === summaryResult) {
-                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
-                }
                 return obj;
             }
         });
@@ -2482,10 +2473,13 @@ class EarliestSummary extends IgxDateSummaryOperand {
     public operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'earliest') {
-                const date = obj.summaryResult ? new Date(obj.summaryResult) : undefined;
-                obj.summaryResult = date ? new Intl.DateTimeFormat('en-US').format(date) : undefined;
                 return obj;
             }
+        });
+        result.push({
+            key: 'test',
+            label: 'Items InStock',
+            summaryResult: 1337
         });
         return result;
     }
@@ -2541,14 +2535,14 @@ class AllDataAvgSummary extends IgxSummaryOperand {
 
 @Component({
     template: `
-        <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [allowFiltering]="true">
+        <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [locale]="locale" [allowFiltering]="true">
             <igx-column field="ProductID" header="Product ID">
             </igx-column>
             <igx-column field="ProductName" [hasSummary]="true">
             </igx-column>
             <igx-column field="InStock" [dataType]="'boolean'" [hasSummary]="true">
             </igx-column>
-            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true"  [summaries]="dealsSummary">
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [pipeArgs]="formatOptions" [summaries]="dealsSummary">
             </igx-column>
             <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true"
             [summaries]="earliest">
@@ -2566,5 +2560,9 @@ export class CustomSummariesComponent {
     public earliest = EarliestSummary;
     public inStockSummary = InStockSummary;
     public allDataAvgSummary = AllDataAvgSummary;
+    public formatOptions: IColumnPipeArgs = {
+        digitsInfo: '1.0-2'
+    };
+    public locale = 'en-US';
 }
 
