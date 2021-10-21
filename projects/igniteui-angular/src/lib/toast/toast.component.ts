@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectorRef,
     Component,
     ElementRef,
@@ -8,9 +9,11 @@ import {
     Inject,
     Input,
     NgModule,
+    OnChanges,
     OnInit,
     Optional,
     Output,
+    SimpleChanges,
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../core/navigation';
@@ -64,7 +67,7 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
     templateUrl: 'toast.component.html'
 })
 export class IgxToastComponent extends IgxNotificationsDirective
-    implements OnInit {
+    implements OnInit, AfterViewInit, OnChanges {
     /**
      * @hidden
      */
@@ -158,17 +161,7 @@ export class IgxToastComponent extends IgxNotificationsDirective
          this._positionSettings = settings;
      }
 
-     private _positionSettings: PositionSettings = {
-        horizontalDirection: HorizontalAlignment.Center,
-        verticalDirection:
-            this.position === 'bottom'
-                ? VerticalAlignment.Bottom
-                : this.position === 'middle'
-                    ? VerticalAlignment.Middle
-                    : VerticalAlignment.Top,
-        openAnimation: useAnimation(fadeIn),
-        closeAnimation: useAnimation(fadeOut),
-    };
+     private _positionSettings: PositionSettings;
 
     /**
      * Gets the nativeElement of the toast.
@@ -236,6 +229,29 @@ export class IgxToastComponent extends IgxNotificationsDirective
             const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
             this.isVisibleChange.emit(closedEventArgs);
         });
+    }
+
+    public ngAfterViewInit() {
+        this._positionSettings = {
+            horizontalDirection: HorizontalAlignment.Center,
+            verticalDirection: this.calculatePosition(),
+            openAnimation: useAnimation(fadeIn),
+            closeAnimation: useAnimation(fadeOut),
+        };
+    }
+
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes['position'] && this._positionSettings) {
+            this._positionSettings.verticalDirection = this.calculatePosition();
+        }
+    }
+
+    private calculatePosition() {
+        return this.position === 'bottom'
+            ? VerticalAlignment.Bottom
+            : this.position === 'middle'
+                ? VerticalAlignment.Middle
+                : VerticalAlignment.Top;
     }
 }
 
