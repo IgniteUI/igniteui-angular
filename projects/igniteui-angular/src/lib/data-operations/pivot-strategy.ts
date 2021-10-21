@@ -42,7 +42,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         ): any[] {
             let hierarchies;
             let data;
-            let prevRowField;
+            const prevRowFields = [];
             for (const row of rows) {
                 if (!data) {
                     // build hierarchies - groups and subgroups
@@ -50,7 +50,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                     // generate flat data from the hierarchies
                     data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
                     row.fieldName = hierarchies.get(hierarchies.keys().next().value).dimension.fieldName;
-                    prevRowField = row.fieldName;
+                    prevRowFields.push(row.fieldName);
                 } else {
                     const newData = [...data];
                     for (let i = 0; i < newData.length; i++) {
@@ -60,31 +60,14 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                             .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
                         row.fieldName = hierarchyFields.get(hierarchyFields.keys().next().value).dimension.fieldName;
                         PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
-                        // process combined groups
-                        for (const sibling of siblingData) {
-                            const childCollection = sibling[prevRowField + '_' + pivotKeys.records] || [];
-                            for (const child of childCollection) {
-                                child[row.fieldName] = sibling[row.fieldName];
-                                child[row.fieldName + '_' + pivotKeys.level] = sibling[row.fieldName + '_' + pivotKeys.level];
-                                child[row.fieldName + '_' + pivotKeys.records] = [];
-                                const hierarchyFields2 = PivotUtil
-                                .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
-                                const keys = Object.assign({}, pivotKeys) as any;
-                                keys[row.fieldName] = row.fieldName;
-                                keys[row.fieldName + '_' + pivotKeys.level] = row.fieldName + '_' + pivotKeys.level;
-                                const siblingData2 = PivotUtil
-                                .processHierarchy(hierarchyFields2, child ?? [], keys, 0);
-                                for(const sib of siblingData2) {
-                                    child[row.fieldName + '_' + pivotKeys.records] =
-                                    child[row.fieldName + '_' + pivotKeys.records].concat(sib[row.fieldName + '_' + pivotKeys.records]);
-                                }
-                                PivotUtil.processSiblingProperties(child, siblingData2, pivotKeys);
-                            }
-                        }
+                        prevRowFields.forEach(prev => {
+                            PivotUtil.processSubGroups(row, prev, siblingData, pivotKeys);
+                        });
                         newData.splice(i , 1, ...siblingData);
                         i += siblingData.length - 1;
                     }
                     data = newData;
+                    prevRowFields.push(row.fieldName);
                 }
             }
             return data;

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration, NoopPivotDimensionsStrategy } from 'igniteui-angular';
+import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
@@ -12,32 +12,26 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
 
-
-    public pivotConfigHierarchy: IPivotConfiguration = {
-        columns: [
-            {
-            member: 'Country',
-            enabled: true
-        }
-        ]
-,
+    public pivotConfig: IPivotConfiguration = {
+        columns: [{
+            member: () => 'All',
+            enabled: true,
+            childLevels: [{
+                member: 'Country',
+                enabled: true,
+                childLevels: []
+            }]
+        }],
         rows: [{
-            member: () => 'AllProd',
+            member: () => 'All',
             enabled: true,
-            childLevels: [{
-            member: 'ProductCategory',
-            enabled: true,
-            childLevels: []
-            }]
-        },
-        {
-            member: () => 'AllDate',
-            enabled: true,
-            childLevels: [{
-            member: 'Date',
-            enabled: true,
-            childLevels: []
-            }]
+            childLevels: [
+                {
+                    member: (data) => data.ProductCategory,
+                    enabled: true,
+                    childLevels: []
+                }
+            ]
         }],
         values: [
             {
@@ -49,36 +43,52 @@ export class PivotGridSampleComponent {
         filters: null
     };
 
-    public pivotConfigRemoteHierarchy: IPivotConfiguration = {
-        columnStrategy: NoopPivotDimensionsStrategy.instance(),
-        rowStrategy: NoopPivotDimensionsStrategy.instance(),
-        columns: [{
-            fieldName: 'All',
-            member: () => 'All',
+    public pivotConfigHierarchy: IPivotConfiguration = {
+        columns: [
+
+        {
+            member: 'ProductCategory',
             enabled: true,
-            childLevels:[
-                {
-            member: 'Country',
-            enabled: true}]
+            childLevels: []
         }
         ]
 ,
-        rows: [{
-            fieldName: 'All',
-            member: () => 'All',
-            enabled: true,
-            childLevels:[
-                {
-                    fieldName: 'ProductCategory',
-                    member: (data) => data.ProductCategory,
-                    enabled: true,
-                    childLevels:[]
-                }
-            ]
-        }],
+rows: [
+    {
+        member: () => 'AllProd',
+        enabled: true,
+        childLevels: [{
+        member: 'ProductCategory',
+        enabled: true,
+        childLevels: []
+        }]
+    },
+    {
+        member: () => 'AllDate',
+        enabled: true,
+        childLevels: [{
+        member: 'Date',
+        enabled: true,
+        childLevels: []
+        }]
+    },
+    {
+        member: () => 'AllSale',
+        enabled: true,
+        childLevels: [{
+        member: 'SellerName',
+        enabled: true,
+        childLevels: []
+        }]
+    }],
         values: [
             {
                 member: 'UnitsSold',
+                aggregate: IgxNumberSummaryOperand.sum,
+                enabled: true
+            },
+            {
+                member: 'UnitPrice',
                 aggregate: IgxNumberSummaryOperand.sum,
                 enabled: true
             }
@@ -104,11 +114,18 @@ export class PivotGridSampleComponent {
         { ProductCategory: 'Components', USA: 240 }
     ];
 
-    public dataHierarchical =  [
-        {All:2127, All_records:[
-            {ProductCategory:'Clothing', level:1, ProductCategory_level: 1, All:1526,'All-Bulgaria':774,'All-USA':296,'All-Uruguay':456},
-            {ProductCategory:'Bikes', level:1, ProductCategory_level: 1, All:68,'All-Uruguay':68},
-            {ProductCategory:'Accessories',level:1, ProductCategory_level: 1, All:293,'All-USA':293},
-            {ProductCategory:'Components', level:1, ProductCategory_level: 1, All:240,'All-USA':240}]
-            , level:0, All_level: 0,'All-Bulgaria':774,'All-USA':829,'All-Uruguay':524}];
+    public dataHierarchical = [
+        {
+            ProductCategory: 'All', All: 1000, Bulgaria: 774, USA: 829, Uruguay: 524, level: 0, records: [
+                { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456, level: 1 },
+                { ProductCategory: 'Bikes', Uruguay: 68, level: 1 },
+                { ProductCategory: 'Accessories', USA: 293, level: 1 },
+                { ProductCategory: 'Components', USA: 240, level: 1 }
+            ]
+        },
+        { ProductCategory: 'Clothing', All: 1000, Bulgaria: 774, USA: 296, Uruguay: 456, level: 1 },
+        { ProductCategory: 'Bikes', All: 1000, Uruguay: 68, level: 1 },
+        { ProductCategory: 'Accessories', All: 1000, USA: 293, level: 1 },
+        { ProductCategory: 'Components', All: 1000, USA: 240, level: 1 }
+    ];
 }
