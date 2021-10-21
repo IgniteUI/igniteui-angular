@@ -568,7 +568,7 @@ export class IgxSliderComponent implements
     @Input()
     public set value(value: number | IRangeSliderValue) {
         this.normalizeByStep(value);
-        
+
         if (this._hasViewInit) {
             this.setValue(this._value, true);
             this.positionHandlersAndUpdateTrack();
