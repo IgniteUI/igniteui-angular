@@ -43,6 +43,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
             let hierarchies;
             let data;
             const prevRowFields = [];
+            let prevDim;
             for (const row of rows) {
                 if (!data) {
                     // build hierarchies - groups and subgroups
@@ -51,6 +52,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                     data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
                     row.fieldName = hierarchies.get(hierarchies.keys().next().value).dimension.fieldName;
                     prevRowFields.push(row.fieldName);
+                    prevDim = row;
                 } else {
                     const newData = [...data];
                     for (let i = 0; i < newData.length; i++) {
@@ -62,11 +64,15 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                         PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
 
                         PivotUtil.processSubGroups(row, prevRowFields.slice(0), siblingData, pivotKeys);
-
-                        newData.splice(i , 1, ...siblingData);
+                        if (PivotUtil.getDimensionDepth(prevDim) > PivotUtil.getDimensionDepth(row)) {
+                            newData[i][row.fieldName + '_' + pivotKeys.records] = siblingData;
+                        } else {
+                            newData.splice(i , 1, ...siblingData);
+                        }
                         i += siblingData.length - 1;
                     }
                     data = newData;
+                    prevDim = row;
                     prevRowFields.push(row.fieldName);
                 }
             }

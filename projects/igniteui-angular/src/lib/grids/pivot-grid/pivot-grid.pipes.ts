@@ -46,8 +46,11 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
         const data = collection.slice(0);
+        let totalLlv = 0;
         for (const row of config.rows) {
-            PivotUtil.flattenHierarchy(data, config, row, expansionStates, pivotKeys);
+            const lvl = PivotUtil.getDimensionDepth(row);
+            totalLlv += lvl;
+            PivotUtil.flattenHierarchy(data, config, row, expansionStates, pivotKeys, totalLlv);
         }
         return data;
     }

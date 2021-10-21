@@ -26,7 +26,16 @@ export class PivotUtil {
         return typeof dim.member === 'string' ? recData[dim.member] : dim.member.call(null, recData);
     }
 
-    public static flattenHierarchy(records, config, dim, expansionStates, pivotKeys) {
+    public static getDimensionDepth(dim) {
+        let lvl = 0;
+        while(dim.childLevels && dim.childLevels.length > 0) {
+            lvl++;
+            dim = dim.childLevels[0];
+        }
+        return lvl;
+    }
+
+    public static flattenHierarchy(records, config, dim, expansionStates, pivotKeys, lvl) {
         const data = records;
         const defaultExpandState = true;
         //const dims = rows;
@@ -48,11 +57,20 @@ export class PivotUtil {
                     expansionStates.get(expansionRowKey);
                     if (rec[field + '_' + pivotKeys.records] &&
                       rec[field + '_' + pivotKeys.records].length > 0 &&
-                       isExpanded) {
+                       isExpanded && lvl > 0) {
                         let dimData = rec[field + '_' + pivotKeys.records];
-                        if (dim.childLevels && dim.childLevels.length > 0) {
-                            dimData = this.flattenHierarchy(dimData, config, dim.childLevels[0], expansionStates, pivotKeys);
+                        if (dim.childLevels && dim.childLevels.length > 0 && PivotUtil.getDimensionDepth(dim) > 1) {
+                            dimData = this.flattenHierarchy(dimData, config, dim.childLevels[0], expansionStates, pivotKeys, lvl - 1);
                         }
+                        dimData.forEach(currData => {
+                            if (!currData[pivotKeys.records]) {
+                                currData[pivotKeys.records] = [];
+                                const lvlKeys = Object.keys(rec).filter(x => x.indexOf(pivotKeys.level) !== -1);
+                                lvlKeys.forEach(key => {
+                                    currData[key] = rec[key];
+                                });
+                            }
+                        });
                         data.splice(i + 1, 0, ...dimData);
                         i += dimData.length;
                     }
@@ -168,18 +186,23 @@ export class PivotUtil {
                 const childCollection = sibling[prevRowField + '_' + pivotKeys.records] || [];
                 for (const child of childCollection) {
                     child[row.fieldName] = sibling[row.fieldName];
+                    if (!child[pivotKeys.records]) {
+                        continue;
+                    }
                     child[row.fieldName + '_' + pivotKeys.level] = sibling[row.fieldName + '_' + pivotKeys.level];
                     child[row.fieldName + '_' + pivotKeys.records] = [];
-                    const hierarchyFields2 = PivotUtil
-                    .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                     const keys = Object.assign({}, pivotKeys) as any;
                     keys[row.fieldName] = row.fieldName;
                     keys[row.fieldName + '_' + pivotKeys.level] = row.fieldName + '_' + pivotKeys.level;
+                    const hierarchyFields2 = PivotUtil
+                    .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                     const siblingData2 = PivotUtil
                     .processHierarchy(hierarchyFields2, child ?? [], keys, 0);
                     for(const sib of siblingData2) {
-                        child[row.fieldName + '_' + pivotKeys.records] =
-                        child[row.fieldName + '_' + pivotKeys.records].concat(sib[row.fieldName + '_' + pivotKeys.records]);
+                        if(sib[row.fieldName + '_' + pivotKeys.records]) {
+                            child[row.fieldName + '_' + pivotKeys.records] =
+                            child[row.fieldName + '_' + pivotKeys.records].concat(sib[row.fieldName + '_' + pivotKeys.records]);
+                        }
                     }
                     PivotUtil.processSiblingProperties(child, siblingData2, pivotKeys);
                     if (prevRowFields.length > 0) {
@@ -274,6 +297,7 @@ export class PivotUtil {
 
     public static resolveFieldName(dimension, record) {
          if (typeof dimension.member === 'string') {
+            dimension.fieldName = dimension.member;
             return dimension.member;
          } else {
             const fieldName = (dimension && dimension.fieldName) ?? this.generateFieldValue(record);
