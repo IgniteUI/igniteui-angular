@@ -536,7 +536,6 @@ export class IgxOverlayService implements OnDestroy {
             this.playCloseAnimation(info, event);
         } else {
             this.closeDone(info);
-            this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
         }
     }
 
@@ -644,6 +643,9 @@ export class IgxOverlayService implements OnDestroy {
         if (info.wrapperElement) {
             // to eliminate flickering show the element just before animation start
             info.wrapperElement.style.visibility = 'hidden';
+        }
+        if (!info.closeAnimationDetaching) {
+            this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
         }
         delete info.event;
     }
@@ -971,9 +973,6 @@ export class IgxOverlayService implements OnDestroy {
             (info.openAnimationPlayer as any)._started = false;
         }
         this.closeDone(info);
-        if (!info.closeAnimationDetaching) {
-            this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
-        }
     }
 
     private finishAnimations(info: OverlayInfo) {
