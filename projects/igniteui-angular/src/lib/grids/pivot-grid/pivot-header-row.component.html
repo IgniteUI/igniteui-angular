@@ -58,4 +58,4 @@
     </div>
 </div>
 <!-- Header thumb area -->
-<div class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize"></div>
+<div *ngIf="!row" class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize"></div>
