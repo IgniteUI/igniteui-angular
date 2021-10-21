@@ -60,9 +60,9 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                             .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
                         row.fieldName = hierarchyFields.get(hierarchyFields.keys().next().value).dimension.fieldName;
                         PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
-                        prevRowFields.forEach(prev => {
-                            PivotUtil.processSubGroups(row, prev, siblingData, pivotKeys);
-                        });
+
+                        PivotUtil.processSubGroups(row, prevRowFields.slice(0), siblingData, pivotKeys);
+
                         newData.splice(i , 1, ...siblingData);
                         i += siblingData.length - 1;
                     }
