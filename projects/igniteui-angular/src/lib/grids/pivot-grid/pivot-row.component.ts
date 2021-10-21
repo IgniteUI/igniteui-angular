@@ -96,7 +96,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
 
     public getCellClass(col: any) {
         const configuration = this.grid.pivotConfiguration;
-        if(configuration.values.length == 1) {
+        if (configuration.values.length == 1) {
             return configuration.values[0].styles;
         }
         const colName = col.field.split('-');
@@ -127,11 +127,9 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         let header = null;
         if (typeof dim.member === 'string') {
             header = this.rowData[dim.member];
-        }
-        else if (typeof dim.member === 'function' && dim.fieldName) {
+        } else if (typeof dim.member === 'function' && dim.fieldName) {
             header = this.rowData[dim.fieldName];
-        }
-        else {
+        } else {
             header = dim.member.call(this, this.rowData);
         }
         const col = this._createColComponent(field, header, index, dim, lvl);
