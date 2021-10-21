@@ -300,16 +300,16 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
-        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        [primaryKey]="'ID'" [autoGenerate]="true">
         <igx-grid-toolbar>
             <button igxButton="raised">Parent Button</button>
         </igx-grid-toolbar>
-        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [autoGenerate]="true">
             <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
                 <button igxButton="raised">Child 1 Button</button>
             </igx-grid-toolbar>
         </igx-row-island>
-        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
         <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
                 <button igxButton="raised">Child2 Button</button>
             </igx-grid-toolbar>
@@ -321,14 +321,14 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
-        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true" [rowEditable]='true'>
+        [primaryKey]="'ID'" [autoGenerate]="true" [rowEditable]='true'>
         <igx-action-strip #actionStrip1>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
             <igx-grid-editing-actions></igx-grid-editing-actions>
         </igx-action-strip>
-        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [autoGenerate]="true">
         </igx-row-island>
-        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
             <igx-action-strip #actionStrip2>
                 <igx-grid-pinning-actions></igx-grid-pinning-actions>
                 <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
