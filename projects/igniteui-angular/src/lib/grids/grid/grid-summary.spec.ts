@@ -33,7 +33,7 @@ import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IColumnPipeArgs } from 'igniteui-angular';
 
-fdescribe('IgxGrid - Summaries #grid', () => {
+describe('IgxGrid - Summaries #grid', () => {
 
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
