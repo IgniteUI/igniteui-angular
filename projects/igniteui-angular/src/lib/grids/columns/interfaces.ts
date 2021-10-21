@@ -1,3 +1,4 @@
+import { SortingMode } from '../common/enums';
 import { IgxColumnComponent } from './column.component';
 
 
@@ -42,4 +43,8 @@ export interface IColumnPipeArgs {
      * The value is of type string. By default is set to 'symbol'
      */
     display?: string;
+}
+
+export interface ISortingOptions {
+    mode: any;
 }

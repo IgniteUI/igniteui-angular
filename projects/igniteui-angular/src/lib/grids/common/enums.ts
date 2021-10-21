@@ -61,3 +61,8 @@ export enum GridInstanceType {
     Grid,
     TreeGrid
 }
+
+export enum SortingMode {
+    SINGLE = 'single',
+    MULTIPLE = 'multiple'
+}

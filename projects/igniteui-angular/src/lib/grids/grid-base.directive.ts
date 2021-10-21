@@ -104,7 +104,8 @@ import {
     FilterMode,
     ColumnPinningPosition,
     RowPinningPosition,
-    GridPagingMode
+    GridPagingMode,
+    SortingMode
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -155,6 +156,7 @@ import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
+import { ISortingOptions } from './columns/interfaces';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -2107,6 +2109,27 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Gets/Sets the sorting options - single or multiple sorting.
+     * Accepts an `ISortingOptions` object with any of the `mode` properties.
+     * @example  
+     * ```typescript
+     * const _sortingOptions: ISortingOptions = {
+     *      mode: 'single'
+     * }
+     * ```html
+     * <igx-grid [sortingOptions]="sortingOptions"><igx-grid>
+     * ```
+     */
+    @Input()
+    public set sortingOptions(value: ISortingOptions) {
+        this._sortingOptions = Object.assign(this._sortingOptions, value);
+    }
+
+    public get sortingOptions() {
+        return this._sortingOptions;
+    }
+
+    /**
      * Gets/Sets the current selection state.
      *
      * @remarks
@@ -2999,6 +3022,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteringStrategy: IFilteringStrategy;
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
+    private _sortingOptions: ISortingOptions = { mode: SortingMode };
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -3484,6 +3508,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (ind !== -1) {
                 this.overlayIDs.splice(ind, 1);
             }
+        });
+
+        this.sortingDone.pipe(destructor).subscribe(event => { 
+           if(this._sortingOptions.mode === 'single') {
+               this.columns.forEach((col) => {
+                if (!(col.field === event.fieldName)) {
+                  this.clearSort(col.field);
+                }
+              });
+           }
         });
 
         this.verticalScrollContainer.dataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
