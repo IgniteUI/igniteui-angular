@@ -6499,4 +6499,4 @@ export const DATA = [
         Value: '72.779385965680419',
         NumberOfUnits: '376'
     }
-]
+];
