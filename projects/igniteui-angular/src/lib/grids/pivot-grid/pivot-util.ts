@@ -49,7 +49,10 @@ export class PivotUtil {
                     if (rec[field + '_' + pivotKeys.records] &&
                       rec[field + '_' + pivotKeys.records].length > 0 &&
                        isExpanded) {
-                        const dimData = rec[field + '_' + pivotKeys.records];
+                        let dimData = rec[field + '_' + pivotKeys.records];
+                        if (dim.childLevels && dim.childLevels.length > 0) {
+                            dimData = this.flattenHierarchy(dimData, config, dim.childLevels[0], expansionStates, pivotKeys);
+                        }
                         data.splice(i + 1, 0, ...dimData);
                         i += dimData.length;
                     }
@@ -201,7 +204,7 @@ export class PivotUtil {
             flatData.push(obj);
             if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
                 obj[pivotKeys.records] = this.processHierarchy(h[pivotKeys.children], rec,
-                        pivotKeys, level + 1);
+                        pivotKeys, level + 1, rootData);
                 if (!rootData) {
                     PivotUtil.processSiblingProperties(rec, obj[pivotKeys.records], pivotKeys);
                 }
