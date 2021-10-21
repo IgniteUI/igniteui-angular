@@ -45,5 +45,5 @@ export interface IColumnPipeArgs {
 }
 
 export interface ISortingOptions {
-    mode: string;
+    mode: 'single' | 'multiple';
 }
