@@ -2020,7 +2020,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Gets/Sets the sorting options - single or multiple sorting.
      * Accepts an `ISortingOptions` object with any of the `mode` properties.
      *
-     * @example  
+     * @example
      * ```typescript
      * const _sortingOptions: ISortingOptions = {
      *      mode: 'single'
@@ -2033,7 +2033,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set sortingOptions(value: ISortingOptions) {
         this._sortingOptions = Object.assign(this._sortingOptions, value);
     }
-    
+
     /**
      * @hidden
      * @internal
