@@ -2542,7 +2542,8 @@ class AllDataAvgSummary extends IgxSummaryOperand {
             </igx-column>
             <igx-column field="InStock" [dataType]="'boolean'" [hasSummary]="true">
             </igx-column>
-            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [pipeArgs]="formatOptions" [summaries]="dealsSummary">
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [pipeArgs]="formatOptions"
+            [summaries]="dealsSummary">
             </igx-column>
             <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true"
             [summaries]="earliest">
