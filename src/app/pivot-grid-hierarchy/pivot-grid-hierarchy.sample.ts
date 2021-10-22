@@ -48,20 +48,12 @@ export class PivotGridHierarchySampleComponent {
             {
                 member: 'NumberOfUnits',
                 aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true,
-                styles: {
-                    upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 30,
-                    downFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 30
-                }
+                enabled: true
 
             }, {
                 member: 'Value',
                 aggregate: IgxNumberSummaryOperand.sum,
                 enabled: true,
-                styles: {
-                    upFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 50,
-                    downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 50
-                },
                 formatter: (val) => val ? parseFloat(val).toFixed(2) : undefined
             }
         ],
