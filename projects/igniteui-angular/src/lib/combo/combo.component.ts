@@ -16,9 +16,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import {
-    cloneArray, IBaseEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs, CancelableEventArgs, mkenum
-} from '../core/utils';
+import { cloneArray, IBaseEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfModule, IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
