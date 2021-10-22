@@ -182,7 +182,7 @@ describe('IgxGridState - input properties #grid', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
-        grid.getCellByColumn(0, "OrderDate").value = null;
+        grid.getCellByColumn(0, 'OrderDate').value = null;
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
