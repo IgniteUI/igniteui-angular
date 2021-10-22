@@ -9,11 +9,9 @@ import {
     Inject,
     Input,
     NgModule,
-    OnChanges,
     OnInit,
     Optional,
-    Output,
-    SimpleChanges,
+    Output
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../core/navigation';
@@ -67,7 +65,7 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
     templateUrl: 'toast.component.html'
 })
 export class IgxToastComponent extends IgxNotificationsDirective
-    implements OnInit, AfterViewInit, OnChanges {
+    implements OnInit, AfterViewInit {
     /**
      * @hidden
      */
@@ -123,7 +121,14 @@ export class IgxToastComponent extends IgxNotificationsDirective
      * @memberof IgxToastComponent
      */
     @Input()
-    public position: IgxToastPosition = 'bottom';
+    public get position(): IgxToastPosition {
+        return this._position;
+    }
+
+    public set position(position: IgxToastPosition) {
+        this._position = position;
+        this._positionSettings.verticalDirection = this.calculatePosition();
+    }
 
     /**
      * Get the position and animation settings used by the toast.
@@ -162,6 +167,7 @@ export class IgxToastComponent extends IgxNotificationsDirective
      }
 
      private _positionSettings: PositionSettings;
+     private _position: IgxToastPosition = 'bottom';
 
     /**
      * Gets the nativeElement of the toast.
@@ -238,12 +244,6 @@ export class IgxToastComponent extends IgxNotificationsDirective
             openAnimation: useAnimation(fadeIn),
             closeAnimation: useAnimation(fadeOut),
         };
-    }
-
-    public ngOnChanges(changes: SimpleChanges) {
-        if (changes['position'] && this._positionSettings) {
-            this._positionSettings.verticalDirection = this.calculatePosition();
-        }
     }
 
     private calculatePosition() {
