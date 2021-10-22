@@ -322,7 +322,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (this.navigationService && this.id) {
             this.navigationService.remove(this.id);
         }
-        if (!this.collapsed && this._overlayId) {
+        if (this._overlayId) {
             this.overlayService.detach(this._overlayId);
         }
         this.unsubscribe();
