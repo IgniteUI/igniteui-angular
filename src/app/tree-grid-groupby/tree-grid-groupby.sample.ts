@@ -59,7 +59,7 @@ export class TreeGridGroupBySampleComponent implements OnInit {
         this.density = this.displayDensities[event.index].label;
     }
 
-    public cellEditDone(event: any) {
+    public cellEditDone() {
         this.groupingExpressions = [...this.groupingExpressions]; // will trigger grouping pipe
     }
 }
