@@ -16,7 +16,7 @@ class i18nTests {
     public i18nFilesMatchForAllLanguages(): void {
         this.getDirectories(i18nLanguagesPath).forEach(dir => {
             const curDirPath = path.join(i18nLanguagesPath, dir);
-            if (this.getFiles(curDirPath).length === this.getFiles(i18nProductPath).length) {
+            if (this.getFiles(curDirPath).length !== this.getFiles(i18nProductPath).length) {
                 errors.push(`Not all i18n component files that are available for localization have matching files for ${dir} language.
                     Check and add the appropriate resource strings with EN translation and mark the PR as 'pending localization'`
                 );
