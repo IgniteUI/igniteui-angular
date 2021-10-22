@@ -177,6 +177,9 @@ export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirec
     @Input()
     public indentetion = 30;
 
+    @Input()
+    public buttonText: string;
+
     protected columnActionsUI: IgxColumnActionsComponent;
 
     public checkAll() {

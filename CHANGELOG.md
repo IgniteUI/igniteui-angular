@@ -2,6 +2,43 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.0.0
+
+### New Features
+- `IgxCsvExporterService`, `IgxExcelExporterService`
+    - Exporter services are no longer required to be provided in the application since they are now injected on a root level.
+- `IgxGridToolbarPinningComponent`, `IgxGridToolbarHidingComponent`
+    - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
+
+### General
+
+- `IgxDialog`
+    - **Breaking Change** - The default positionSettings open/close animation has been changed to `fadeIn`/`fadeOut`. The open/close animation can be set through the position settings, e.g. change the animation to the previously default open/close animation:
+
+    ```typescript
+    import { slideInBottom, slideOutTop } from 'igniteui-angular';
+
+    @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
+    public newPositionSettings: PositionSettings = {
+        openAnimation: useAnimation(slideInBottom, { params: { fromPosition: 'translateY(100%)' } }),
+        closeAnimation: useAnimation(slideOutTop, { params: { toPosition: 'translateY(-100%)'} })
+    };
+    this.alert.positionSettings = this.newPositionSettings;
+    ```
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - **Breaking Change** - The following deprecated inputs have been removed
+        - Inputs  `showToolbar`, `toolbarTitle`, `columnHiding`, `columnHidingTitle`, `hiddenColumnsText`,
+        `columnPinning`, `columnPinningTitle`, `pinnedColumnsText`.
+        Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
+- `IgxColumnActionsComponent`
+    - **Breaking Change** - The following input has been removed
+        - Input `columns`. Use `igxGrid` `columns` input instead.        
+## 12.2.1
+
+### New Features
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - new `rowPinned` event is emitted after a row is pinned/unpinned and grid has already refreshed its state to represent the pinned/unpinned rows in the DOM.
+
 ## 12.2.0
 
 ### New Features
@@ -12,25 +49,6 @@ All notable changes for each version of this project will be documented in this 
         ```html
         <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" (rowDelete)="rowDelete($event)" [autoGenerate]="true"></igx-grid>
         ```
-- `igxTreeGrid`
-    - Added `TreeGridMatchingRecordsOnlyFilteringStrategy`, which allows you to display only the records matching particular filtering condition without any trace for their parents.
-- `IgxSnackbarComponent`
-    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
-- `IgxToastComponent`
-    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
-
-### General
-- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
-    - 'oddRowCSS' and 'evenRowCSS' properties has been deprecated
-- `IgxForOf` - now takes margins into account when calculating the space that each element takes.
-    _Note:_ If your virtualized items contain margins, please calculate them into the `itemSize` value for the best possible initial virtualized state.
-
-## 12.1.6
-
-## 12.1.6
-
-### New Features
-- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
     - Added two public methods that spawn the add row UI for an arbitrary record in the current data view. One that accepts a rowID to use as the row the UI spawns under and the other accepting an index that has a distinct implementation for `IgxTreeGrid`. Please, refer to the official documentation for more information: [Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-adding) and [Tree Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/row-adding).
 
         _Note:_ That the new record is still added at the end of the data view, after the end-user submits it.
@@ -43,21 +61,26 @@ All notable changes for each version of this project will be documented in this 
         this.treeGrid.beginAddRowByIndex(10, true);     // spawns the add row UI to add a child for the row at index 10
         this.treeGrid.beginAddRowByIndex(null);         // spawns the add row UI as the first record
         ```
-
-## 12.1.3
-
-### New Features
-- `igxGrid`
     - Added `headerStyles` and `headerGroupStyles` inputs to the column component.
-    Similar to `cellStyles` is exposes a way to bind CSS properties and style the grid headers.
+        Similar to `cellStyles` is exposes a way to bind CSS properties and style the grid headers.
+- `igxTreeGrid`
+    - Added `TreeGridMatchingRecordsOnlyFilteringStrategy`, which allows you to display only the records matching particular filtering condition without any trace for their parents.
+- `IgxSnackbarComponent`
+    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
+- `IgxToastComponent`
+    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
 
-## 12.1.2
-- `igxGrid`
+### General
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - 'oddRowCSS' and 'evenRowCSS' properties has been deprecated
     - The column formatter callback signature now accepts the row data as an additional argument:
-    ```typescript formatter(value: any, rowData?: any)```
-    The `rowData` argument may be `undefined` in remote scenarios/applying the callback on filtering labels
-    so make sure to check its availability.
+        ```typescript
+        formatter(value: any, rowData?: any)
+        ```
+        The `rowData` argument may be `undefined` in remote scenarios/applying the callback on filtering labels so make sure to check its availability.
+- `IgxForOf` - now takes margins into account when calculating the space that each element takes.
 
+    _Note:_ If your virtualized items contain margins, please calculate them into the `itemSize` value for the best possible initial virtualized state.
 - `IgxExcelExporterService`
     - Added support for freezing column headers in **Excel**. By default, the column headers would not be frozen but this behavior can be controlled by the `freezeHeaders` option of the IgxExcelExporterOptions object.
 
