@@ -71,8 +71,15 @@ export class PivotUtil {
                                 });
                             }
                         });
-                        data.splice(i + 1, 0, ...dimData);
-                        i += dimData.length;
+                        if (rec[pivotKeys.level] !== lvl && rec[field]) {
+                            // concat
+                            data.splice(i + 1, 0, ...dimData);
+                            i += dimData.length;
+                        } else {
+                            // merge
+                            data.splice(i, 1, ...dimData);
+                            i += dimData.length - 1;
+                        }
                     }
             //}
         }
