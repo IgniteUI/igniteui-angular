@@ -593,7 +593,6 @@ describe('Row Drag Tests #grid', () => {
         });
         it('should be able to drag grid row when column hiding is enabled', () => {
             const hiddenDragCellValue = dragGrid.getCellByColumn(1, 'Downloads').value;
-            dragGrid.columnHiding = true;
             const column = dragGrid.getColumnByName('Downloads');
             column.hidden = true;
 
