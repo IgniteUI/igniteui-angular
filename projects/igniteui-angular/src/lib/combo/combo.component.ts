@@ -40,6 +40,7 @@ import { EditorProvider } from '../core/edit-provider';
 import { IgxInputState, IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 import { caseSensitive } from '@igniteui/material-icons-extended';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 /**
  * @hidden
@@ -775,6 +776,25 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public filterable = true;
 
     /**
+     * An @Input property that sets groups sorting order.
+     *
+     * @example
+     * ```html
+     * <igx-combo [groupSortingDirection]="groupSortingDirection"></igx-combo>
+     * ```
+     * ```typescript
+     * public groupSortingDirection = SortingDirection.Asc;
+     * ```
+     */
+    @Input()
+    public get groupSortingDirection(): SortingDirection {
+        return this._groupSortingDirection;
+    }
+    public set groupSortingDirection(val: SortingDirection) {
+        this._groupSortingDirection = val;
+    }
+
+    /**
      * An @Input property that set aria-labelledby attribute
      * ```html
      * <igx-combo [ariaLabelledBy]="'label1'">
@@ -906,6 +926,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _overlaySettings: OverlaySettings;
     private _value = '';
     private _valid = IgxComboState.INITIAL;
+    private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
 
     constructor(
         protected elementRef: ElementRef,

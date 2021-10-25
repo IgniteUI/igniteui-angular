@@ -17,7 +17,7 @@ import { SharedModule } from './shared/shared.module';
 import { routing } from './routing';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 import { AppComponent } from './app.component';
-import { AvatartSampleComponent } from './avatar/avatar.sample';
+import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
@@ -162,7 +162,7 @@ const components = [
     AutocompletePipeContains,
     AutocompleteGroupPipeContains,
     AutocompleteSampleComponent,
-    AvatartSampleComponent,
+    AvatarSampleComponent,
     BadgeSampleComponent,
     BannerSampleComponent,
     ButtonSampleComponent,

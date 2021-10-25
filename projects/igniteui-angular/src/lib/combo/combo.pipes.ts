@@ -43,14 +43,14 @@ export class IgxComboGroupingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
 
-    public transform(collection: any[], groupKey: any, valueKey: any) {
+    public transform(collection: any[], groupKey: any, valueKey: any, sortingDirection: SortingDirection) {
         this.combo.filteredData = collection;
         if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;
         }
         const sorted = DataUtil.sort(cloneArray(collection), [{
             fieldName: groupKey,
-            dir: SortingDirection.Asc,
+            dir: sortingDirection,
             ignoreCase: true,
             strategy: DefaultSortingStrategy.instance()
         }]);
