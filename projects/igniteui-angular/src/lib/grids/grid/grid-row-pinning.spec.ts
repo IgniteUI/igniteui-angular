@@ -161,7 +161,8 @@ describe('Row Pinning #grid', () => {
                 row,
                 rowID,
                 insertAtIndex: undefined,
-                isPinned: true
+                isPinned: true,
+                cancel: false
             });
 
             row = grid.getRowByIndex(0);
