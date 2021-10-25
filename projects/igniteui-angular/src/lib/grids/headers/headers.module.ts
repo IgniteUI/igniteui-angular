@@ -11,6 +11,11 @@ export * from './grid-header.component';
 import { IgxGridPipesModule } from '../common/grid-pipes.module';
 import { IgxGridHeaderRowComponent } from './grid-header-row.component';
 
+export * from './pipes';
+export { IgxGridHeaderComponent } from './grid-header.component';
+export { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+export { IgxGridHeaderRowComponent } from './grid-header-row.component';
+
 @NgModule({
     declarations: [
         IgxGridHeaderComponent,

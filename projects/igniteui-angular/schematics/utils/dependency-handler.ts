@@ -23,12 +23,10 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
     { name: 'hammerjs', target: PackageTarget.REGULAR },
     { name: 'jszip', target: PackageTarget.REGULAR },
     { name: 'tslib', target: PackageTarget.NONE },
-    { name: '@juggle/resize-observer', target: PackageTarget.REGULAR },
     { name: '@types/hammerjs', target: PackageTarget.DEV },
     { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
     { name: 'lodash.mergewith', target: PackageTarget.NONE },
     { name: 'uuid', target: PackageTarget.NONE },
-    { name: 'web-animations-js', target: PackageTarget.REGULAR },
     { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
     // peerDependencies
     { name: '@angular/forms', target: PackageTarget.NONE },
