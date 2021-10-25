@@ -117,7 +117,7 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE, RowType } from './common/grid.interface';
+import { ColumnType, GridServiceType, GridType, IGX_GRID_SERVICE_BASE, RowType } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
@@ -142,6 +142,7 @@ import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scro
 import { Action, StateUpdateEvent, TransactionEventOrigin } from '../services/transaction/transaction';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { IGridSortingStrategy } from './common/strategy';
+import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -3287,6 +3288,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
+    }
+
+    /** @hidden @internal */
+    public createFilterDropdown(column: ColumnType, options: OverlaySettings) {
+        options.outlet = this.outlet;
+        const instance = this.viewRef.createComponent(IgxGridExcelStyleFilteringComponent).instance;
+        instance.initialize(column, this.overlayService);
+        const id = this.overlayService.attach(instance.element, options);
+        return { instance, id };
     }
 
     /** @hidden @internal */

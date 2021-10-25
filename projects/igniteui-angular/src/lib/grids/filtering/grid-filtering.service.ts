@@ -1,10 +1,6 @@
 import {
     Injectable,
     OnDestroy,
-    NgModuleRef,
-    ComponentFactoryResolver,
-    ApplicationRef,
-    Injector,
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -22,7 +18,6 @@ import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-s
 import { IgxIconService } from '../../icon/icon.service';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { ExpressionUI, generateExpressionsList } from './excel-style/common';
-import { createExcelStyleFilterComponent } from './excel-style/render-dialog';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
 
@@ -52,12 +47,9 @@ export class IgxFilteringService implements OnDestroy {
     private lastActiveNode;
 
     constructor(
-        private _moduleRef: NgModuleRef<any>,
         private iconService: IgxIconService,
         private _overlayService: IgxOverlayService,
-        private _factoryResolver: ComponentFactoryResolver,
-        private _appRef: ApplicationRef,
-        private _injector: Injector) { }
+    ) { }
 
     public ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -72,14 +64,9 @@ export class IgxFilteringService implements OnDestroy {
             const filterIconTarget = element.querySelector(`.${filterIcon}`) as HTMLElement;
 
             this._filterMenuOverlaySettings.target = filterIconTarget;
-            this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
-
-            this.componentInstance = createExcelStyleFilterComponent(this._moduleRef, this._factoryResolver, this._appRef, this._injector);
-            this.componentInstance.initialize(this.column, this._overlayService);
-
-            this._componentOverlayId = this._overlayService.attach(this.componentInstance.element, this._filterMenuOverlaySettings);
-            this.componentInstance.overlayComponentId = this._componentOverlayId;
-
+            const { id, instance } = this.grid.createFilterDropdown(this.column, this._filterMenuOverlaySettings);
+            this.componentInstance = instance;
+            this._componentOverlayId = id;
             this._overlayService.show(this._componentOverlayId);
         }
     }
@@ -269,7 +256,8 @@ export class IgxFilteringService implements OnDestroy {
         const onFilteringEventArgs: IFilteringEventArgs = {
             owner: this.grid,
             filteringExpressions: emptyFilter,
-            cancel: false };
+            cancel: false
+        };
 
         this.grid.filtering.emit(onFilteringEventArgs);
 

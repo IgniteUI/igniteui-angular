@@ -32,6 +32,7 @@ import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy } from './strategy';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { OverlaySettings } from '../../services/overlay/utilities';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -138,6 +139,7 @@ export interface ColumnType {
     filterable: boolean;
     hidden: boolean;
     disablePinning: boolean;
+    disableHiding: boolean;
     sortStrategy: ISortingStrategy;
     sortingIgnoreCase: boolean;
     filterCell: any;
@@ -527,6 +529,7 @@ export interface GridType extends IGridDataBindable {
     selectAllRows(onlyFilterData?: boolean): void;
     deselectAllRows(onlyFilterData?: boolean): void;
     setUpPaginator(): void;
+    createFilterDropdown(column: ColumnType, options: OverlaySettings): any;
     // Type to RowType
     createRow?(index: number, data?: any): RowType;
     deleteRow(id: any): any;
