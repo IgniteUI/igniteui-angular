@@ -236,6 +236,24 @@ describe('IgxSlider', () => {
             expect(slider.value.upper).toBe(30);
         });
 
+        it('should position correctly lower and upper value based on the step', () => {
+            slider.step = 10;
+
+            slider.type = IgxSliderType.RANGE;
+
+            fixture.detectChanges();
+
+            slider.value = {
+                lower: 23,
+                upper: 56
+            };
+
+            fixture.detectChanges();
+
+            expect((slider.value as IRangeSliderValue).lower).toBe(20);
+            expect((slider.value as IRangeSliderValue).upper).toBe(50);
+        });
+
         it('should not set lower value outside bounds slider when slider is RANGE', () => {
             slider.lowerBound = 10;
             slider.upperBound = 40;
