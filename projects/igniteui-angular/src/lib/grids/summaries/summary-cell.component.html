@@ -15,15 +15,15 @@
                     {{
                         summaryFormatter
                         ? (summary | summaryFormatter:column.summaries:summaryFormatter)
-                        : (isNumberOperand() && summary.key !== 'count')
+                        : (isNumberColumn() && summary.defaultFormatting)
                         ? (summary.summaryResult | number:column.pipeArgs.digitsInfo:grid.locale)
-                        : ((isDateOperand() || isTimeOperand()) && summary.key !== 'count')
+                        : (isDateKindColumn() && summary.defaultFormatting)
                         ? (summary.summaryResult | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
-                        : (isCurrencyOperand() && summary.key !== 'count')
+                        : (isCurrencyColumn() && summary.defaultFormatting)
                         ? (summary.summaryResult | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
-                        : (isPercentOperand() && summary.key !== 'count')
+                        : (isPercentColumn() && summary.defaultFormatting)
                         ? (summary.summaryResult | percent:column.pipeArgs.digitsInfo:grid.locale)
-                        : (summary.key === 'count' && (isNumberOperand() || isDateOperand() || isCurrencyOperand() || isPercentOperand()))
+                        : (summary.key === 'count')
                         ? (summary.summaryResult | number:undefined:grid.locale)
                         : summary.summaryResult
                     }}
