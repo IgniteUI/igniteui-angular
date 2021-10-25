@@ -36,7 +36,7 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - The following input has been removed
         - Input `columns`. Use `igxGrid` `columns` input instead.        
 
-## 12.2.2
+## 12.2.3
 
 ### General
 - **Breaking Change** - `IgxPercentSummaryOperand` and `IgxCurrencySummaryOperand` have been removed and `IgxNumberSummaryOperand` should be used instead. If you have used the percent or currency summary operands to extend a custom summary operand from them, then change the custom operand to extend from the number summary operand.
