@@ -539,11 +539,6 @@ describe('IgxTimePicker', () => {
             it('should close the dropdown and keep the current selection on outside click in dialog mode', fakeAsync(() => {
                 fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
-                // close the time picker to avoid random fails, if the state is not clean
-                if (!timePicker.collapsed) {
-                    timePicker.close();
-                    fixture.detectChanges();
-                }
 
                 inputGroup.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
@@ -554,8 +549,7 @@ describe('IgxTimePicker', () => {
                 hourColumn.triggerEventHandler('wheel', event);
                 fixture.detectChanges();
 
-                const overlay = document.getElementsByClassName(CSS_CLASS_OVERLAY)[0];
-                const overlayWrapper = overlay.children[0];
+                const overlayWrapper = document.getElementsByClassName(CSS_CLASS_TIMEPICKER)[0].parentNode.parentNode;
                 UIInteractions.simulateClickEvent(overlayWrapper);
                 tick();
                 fixture.detectChanges();
