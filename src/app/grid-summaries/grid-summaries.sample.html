@@ -25,7 +25,7 @@
     <igx-column field="QuantityPerUnit" [width]="cw" header="QuantityPerUnit" [sortable]="true" [dataType]="'string'"
         [editable]="true">
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" [width]="cw" [dataType]="'number'"
+    <igx-column field="UnitsInStock" header="UnitsInStock" [width]="cw" [dataType]="'currency'"
         [hasSummary]="hasSummaryUnit" [hidden]="hasHidden" [editable]="true" [sortable]="true">
         <ng-template igxCell let-cell="cell" let-val let-row>
             ${{val}}
@@ -39,7 +39,7 @@
             {{val}}
         </ng-template>
     </igx-column>
-    <igx-column field="Sum" [hasSummary]="true" [summaries]="mySummary">
+    <igx-column field="Sum" [hasSummary]="true" [dataType]="'percent'" [summaries]="mySummary">
     </igx-column>
 </igx-grid>
 
