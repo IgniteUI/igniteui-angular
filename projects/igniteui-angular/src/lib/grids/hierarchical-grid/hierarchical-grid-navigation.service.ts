@@ -2,7 +2,6 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { first } from 'rxjs/operators';
 import { SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { Injectable } from '@angular/core';
-import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { GridType, IPathSegment, RowType } from '../common/grid.interface';
 
 @Injectable()
@@ -261,7 +260,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     protected getPositionInfo(rowObj: RowType, isNext: boolean) {
         // XXX: Fix type
         let rowElem = (rowObj as any).nativeElement;
-        if (rowObj instanceof IgxChildGridRowComponent) {
+        if ((rowObj as any).layout) {
             const childLayoutKeys = this.grid.childLayoutKeys;
             const riKey = isNext ? childLayoutKeys[0] : childLayoutKeys[childLayoutKeys.length - 1];
             const pathSegment: IPathSegment = {

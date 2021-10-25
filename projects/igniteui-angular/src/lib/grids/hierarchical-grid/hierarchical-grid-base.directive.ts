@@ -1,19 +1,19 @@
 import {
-    ElementRef,
-    NgZone,
     ChangeDetectorRef,
-    IterableDiffers,
-    ViewContainerRef,
-    Inject,
     ComponentFactoryResolver,
-    Optional,
-    Input,
-    ViewChild,
-    TemplateRef,
     Directive,
-    Output,
+    ElementRef,
     EventEmitter,
-    LOCALE_ID
+    Inject,
+    Input,
+    IterableDiffers,
+    LOCALE_ID,
+    NgZone,
+    Optional,
+    Output,
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
@@ -25,7 +25,6 @@ import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE, IPathSegment } from '../common/grid.interface';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
@@ -146,12 +145,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * @hidden
      */
     public parentIsland: IgxRowIslandComponent;
-
-    /**
-     * @hidden
-     */
-    public childRow: IgxChildGridRowComponent;
-
     public abstract rootGrid;
 
     public abstract expandChildren: boolean;
