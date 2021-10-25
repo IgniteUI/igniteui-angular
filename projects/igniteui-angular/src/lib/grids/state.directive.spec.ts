@@ -180,6 +180,27 @@ describe('IgxGridState - input properties #grid', () => {
         expect(gridState).toBe(filteringState);
     });
 
+    it('setState should correctly restore grid filtering state from  with null date values', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.grid;
+        grid.getCellByColumn(0, 'OrderDate').value = null;
+        fix.detectChanges();
+        const state = fix.componentInstance.state;
+
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"empty","isUnary":true,"iconName":"is-empty"},"fieldName":"OrderDate","ignoreCase":true,"searchVal":null}],"operator":1,"fieldName":"OrderDate"}],"operator":0,"type":0}}';
+        const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
+
+        let gridState = state.getState(true, 'filtering');
+        expect(gridState).toBe(initialState);
+
+        state.setState(filteringState);
+        gridState = state.getState(false, 'filtering') as IGridState;
+        HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
+        gridState = state.getState(true, 'filtering');
+        expect(gridState).toBe(filteringState);
+    });
+
     it('setState should correctly restore grid filtering state from object', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
