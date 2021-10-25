@@ -293,11 +293,6 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
     public operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'min' || obj.key === 'max') {
-                const summaryResult = obj.summaryResult;
-                // apply formatting to float numbers
-                if (Number(summaryResult) === summaryResult) {
-                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
-                }
                 return obj;
             }
         });
