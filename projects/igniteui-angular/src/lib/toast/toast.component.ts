@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit,
     ChangeDetectorRef,
     Component,
     ElementRef,
@@ -210,7 +209,7 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
         }
         requestAnimationFrame(() => {
             this.strategy = new GlobalPositionStrategy(this.positionSettings);
-            super.open()
+            super.open();
         });
     }
 
