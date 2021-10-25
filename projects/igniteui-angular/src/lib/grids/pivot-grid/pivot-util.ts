@@ -35,7 +35,7 @@ export class PivotUtil {
         return lvl;
     }
 
-    public static flattenHierarchy(records, config, dim, expansionStates, pivotKeys, lvl) {
+    public static flattenHierarchy(records, config, dim, expansionStates, pivotKeys, lvl, prevDim) {
         const data = records;
         const defaultExpandState = true;
         //const dims = rows;
@@ -60,18 +60,26 @@ export class PivotUtil {
                        isExpanded && lvl > 0) {
                         let dimData = rec[field + '_' + pivotKeys.records];
                         if (dim.childLevels && dim.childLevels.length > 0 && PivotUtil.getDimensionDepth(dim) > 1) {
-                            dimData = this.flattenHierarchy(dimData, config, dim.childLevels[0], expansionStates, pivotKeys, lvl - 1);
+                            dimData = this.flattenHierarchy(dimData, config, dim.childLevels[0],
+                                 expansionStates, pivotKeys, lvl - 1, prevDim);
                         }
-                        dimData.forEach(currData => {
-                            if (!currData[pivotKeys.records]) {
-                                currData[pivotKeys.records] = [];
-                                const lvlKeys = Object.keys(rec).filter(x => x.indexOf(pivotKeys.level) !== -1);
-                                lvlKeys.forEach(key => {
-                                    currData[key] = rec[key];
-                                });
+                        let prevDimRecs = [];
+                        const dimLevel = rec[field + '_' + pivotKeys.level];
+                        let prevDimLevel;
+                        let shouldConcat = true;
+                        if(prevDim) {
+                            let prevDimName = prevDim.fieldName;
+                            prevDimRecs = rec[prevDimName + '_' + pivotKeys.records];
+                            if(!prevDimRecs) {
+                                prevDimName =  prevDim.childLevels[0].fieldName;
+                                prevDimRecs = rec[prevDimName + '_' + pivotKeys.records];
                             }
-                        });
-                        if (rec[pivotKeys.level] !== lvl && rec[field]) {
+                            prevDimLevel = rec[prevDimName + '_' + pivotKeys.level];
+                            shouldConcat = !!rec[field] && (prevDimLevel === undefined || prevDimLevel >= dimLevel);
+                            dimData = prevDimLevel >= dimLevel ? dimData.filter(x => x[prevDimName]) : dimData;
+                        }
+
+                        if (shouldConcat) {
                             // concat
                             data.splice(i + 1, 0, ...dimData);
                             i += dimData.length;

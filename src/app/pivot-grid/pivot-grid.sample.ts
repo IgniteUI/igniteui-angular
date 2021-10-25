@@ -73,14 +73,10 @@ rows: [
         }]
     },
     {
-        member: () => 'AllSale',
-        enabled: true,
-        childLevels: [{
         member: 'SellerName',
         enabled: true,
         childLevels: []
-        }]
-    }],
+        }],
         values: [
             {
                 member: 'UnitsSold',

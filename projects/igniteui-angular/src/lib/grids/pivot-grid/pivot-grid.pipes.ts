@@ -24,7 +24,7 @@ export class IgxPivotRowPipe implements PipeTransform {
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
        const rowStrategy = config.rowStrategy ||  PivotRowDimensionsStrategy.instance();
-       return rowStrategy.process(collection, config.rows, config.values, pivotKeys);
+       return rowStrategy.process(collection.slice(0), config.rows, config.values, pivotKeys);
     }
 }
 
@@ -47,10 +47,12 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
     ): any[] {
         const data = collection.slice(0);
         let totalLlv = 0;
+        let prevDim;
         for (const row of config.rows) {
             const lvl = PivotUtil.getDimensionDepth(row);
             totalLlv += lvl;
-            PivotUtil.flattenHierarchy(data, config, row, expansionStates, pivotKeys, totalLlv);
+            PivotUtil.flattenHierarchy(data, config, row, expansionStates, pivotKeys, totalLlv, prevDim);
+            prevDim = row;
         }
         return data;
     }
