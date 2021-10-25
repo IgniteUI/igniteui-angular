@@ -64,8 +64,7 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
     selector: 'igx-toast',
     templateUrl: 'toast.component.html'
 })
-export class IgxToastComponent extends IgxNotificationsDirective
-    implements OnInit, AfterViewInit {
+export class IgxToastComponent extends IgxNotificationsDirective implements OnInit {
     /**
      * @hidden
      */
@@ -126,8 +125,10 @@ export class IgxToastComponent extends IgxNotificationsDirective
     }
 
     public set position(position: IgxToastPosition) {
-        this._position = position;
-        this._positionSettings.verticalDirection = this.calculatePosition();
+        if (position) {
+            this._position = position;
+            this._positionSettings.verticalDirection = this.calculatePosition();
+        }
     }
 
     /**
@@ -166,7 +167,12 @@ export class IgxToastComponent extends IgxNotificationsDirective
          this._positionSettings = settings;
      }
 
-     private _positionSettings: PositionSettings;
+     private _positionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Center,
+        verticalDirection: this.calculatePosition(),
+        openAnimation: useAnimation(fadeIn),
+        closeAnimation: useAnimation(fadeOut),
+     };
      private _position: IgxToastPosition = 'bottom';
 
     /**
@@ -202,9 +208,10 @@ export class IgxToastComponent extends IgxNotificationsDirective
         if (message !== undefined) {
             this.textMessage = message;
         }
-
-        this.strategy = new GlobalPositionStrategy(this.positionSettings);
-        super.open();
+        requestAnimationFrame(() => {
+            this.strategy = new GlobalPositionStrategy(this.positionSettings);
+            super.open()
+        });
     }
 
     /**
@@ -235,15 +242,6 @@ export class IgxToastComponent extends IgxNotificationsDirective
             const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
             this.isVisibleChange.emit(closedEventArgs);
         });
-    }
-
-    public ngAfterViewInit() {
-        this._positionSettings = {
-            horizontalDirection: HorizontalAlignment.Center,
-            verticalDirection: this.calculatePosition(),
-            openAnimation: useAnimation(fadeIn),
-            closeAnimation: useAnimation(fadeOut),
-        };
     }
 
     private calculatePosition() {
