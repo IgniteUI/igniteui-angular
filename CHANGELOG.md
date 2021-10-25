@@ -9,6 +9,8 @@ All notable changes for each version of this project will be documented in this 
     - Exporter services are no longer required to be provided in the application since they are now injected on a root level.
 - `IgxGridToolbarPinningComponent`, `IgxGridToolbarHidingComponent`
     - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
+- `IgxCombo`
+    - Added `groupSortingDirection` input, which allows you to set groups sorting order.
 
 ### General
 
@@ -3659,3 +3661,4 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
+    
