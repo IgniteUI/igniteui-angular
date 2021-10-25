@@ -164,7 +164,8 @@ describe('Row Pinning #grid', () => {
                 rowID,
                 insertAtIndex: 0,
                 isPinned: true,
-                row
+                row,
+                cancel: false
             });
 
             row = grid.getRowByIndex(0);
@@ -190,7 +191,8 @@ describe('Row Pinning #grid', () => {
                 rowID,
                 insertAtIndex: 0,
                 isPinned: true,
-                row
+                row,
+                cancel: false
             });
 
             row.unpin();
