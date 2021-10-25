@@ -56,8 +56,9 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                 } else {
                     const newData = [...data];
                     for (let i = 0; i < newData.length; i++) {
+                        const currData = newData[i][prevDim.fieldName + '_' + pivotKeys.records];
                         const hierarchyFields = PivotUtil
-                            .getFieldsHierarchy(newData[i][pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
+                            .getFieldsHierarchy(currData, [row], PivotDimensionType.Row, pivotKeys);
                         const siblingData = PivotUtil
                             .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
                         row.fieldName = hierarchyFields.get(hierarchyFields.keys().next().value).dimension.fieldName;

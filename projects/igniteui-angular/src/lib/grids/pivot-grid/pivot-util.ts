@@ -235,23 +235,39 @@ export class PivotUtil {
             const field = this.resolveFieldName(h.dimension, rec);
             let obj = {};
             obj[field] = key;
-            obj[pivotKeys.records] = h[pivotKeys.records];
+            if (h[pivotKeys.records]) {
+                obj[pivotKeys.records] = this.getDirectLeafs(h[pivotKeys.records], pivotKeys);
+            }
             obj[field + '_' + pivotKeys.records] = h[pivotKeys.records];
             obj = { ...obj, ...h[pivotKeys.aggregations] };
             obj[pivotKeys.level] = level;
             obj[field + '_' + pivotKeys.level] = level;
             flatData.push(obj);
             if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
-                obj[pivotKeys.records] = this.processHierarchy(h[pivotKeys.children], rec,
-                        pivotKeys, level + 1, rootData);
+                const nestedData = this.processHierarchy(h[pivotKeys.children], rec,
+                    pivotKeys, level + 1, rootData);
+                obj[pivotKeys.records] = this.getDirectLeafs(nestedData, pivotKeys);
+                obj[field + '_' + pivotKeys.records] = nestedData;
                 if (!rootData) {
-                    PivotUtil.processSiblingProperties(rec, obj[pivotKeys.records], pivotKeys);
+                    PivotUtil.processSiblingProperties(rec, obj[field + '_' + pivotKeys.records], pivotKeys);
                 }
-                obj[field + '_' + pivotKeys.records] = obj[pivotKeys.records];
             }
         });
 
         return flatData;
+    }
+
+    public static getDirectLeafs(records, pivotKeys) {
+        let leafs = [];
+        for (const rec of records) {
+            if (rec[pivotKeys.records]) {
+                const data = rec[pivotKeys.records].filter(x => !x[pivotKeys.records] && leafs.indexOf(x) === -1);
+                leafs = leafs.concat(data);
+            } else {
+                leafs.push(rec);
+            }
+        }
+        return leafs;
     }
 
     public static getRecordKey(rec, key) {

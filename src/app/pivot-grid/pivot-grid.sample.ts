@@ -47,7 +47,7 @@ export class PivotGridSampleComponent {
         columns: [
 
         {
-            member: 'ProductCategory',
+            member: 'Country',
             enabled: true,
             childLevels: []
         }
@@ -72,35 +72,43 @@ rows: [
         childLevels: []
         }]
     },
-    {
-        member: 'SellerName',
-        enabled: true,
-        childLevels: []
-        }],
+    // {
+    //     member: 'SellerName',
+    //     enabled: true,
+    //     childLevels: []
+    //     }
+    ],
         values: [
             {
                 member: 'UnitsSold',
                 aggregate: IgxNumberSummaryOperand.sum,
                 enabled: true
             },
-            {
-                member: 'UnitPrice',
-                aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true
-            }
+            // {
+            //     member: 'UnitPrice',
+            //     aggregate: IgxNumberSummaryOperand.sum,
+            //     enabled: true
+            // }
         ],
         filters: null
     };
 
-    public origData = [
-        { ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley', Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282 },
-        { ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa', Country: 'USA', Date: '01/05/2019', UnitsSold: 296 },
-        { ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia', Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68 },
-        { ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David', Country: 'USA', Date: '04/07/2021', UnitsSold: 293 },
-        { ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John', Country: 'USA', Date: '12/08/2021', UnitsSold: 240 },
-        { ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry', Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456 },
-        { ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter', Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492 }
-    ];
+    public origData =  [
+        { ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley Brooker',
+         Country: 'Bulgaria', City: 'Plovdiv', Date: '01/01/2012', UnitsSold: 282 },
+    { ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa Longbottom',
+     Country: 'US', City: 'New York', Date: '01/05/2013', UnitsSold: 296 },
+    { ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia Burson',
+     Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2011', UnitsSold: 68 },
+    { ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David Haley',
+     Country: 'UK', City: 'London', Date: '04/07/2012', UnitsSold: 293 },
+    { ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John Smith',
+     Country: 'Japan', City: 'Yokohama', Date: '12/08/2012', UnitsSold: 240 },
+    { ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry Lieb',
+     Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2011', UnitsSold: 456 },
+    { ProductCategory: 'Components', UnitPrice: 16.05, SellerName: 'Walter Pang',
+     Country: 'Bulgaria', City: 'Sofia', Date: '02/19/2013', UnitsSold: 492 }];
+
     // note: this is the potential processed by the pipes data
     // used just for testing purposes until the pipes are fully implemented
     public data = [
