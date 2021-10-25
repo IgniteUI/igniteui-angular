@@ -217,9 +217,10 @@ export class PivotUtil {
                         if(sib[row.fieldName + '_' + pivotKeys.records]) {
                             child[row.fieldName + '_' + pivotKeys.records] =
                             child[row.fieldName + '_' + pivotKeys.records].concat(sib[row.fieldName + '_' + pivotKeys.records]);
+                            child[row.fieldName] = sib[row.fieldName];
                         }
                     }
-                    PivotUtil.processSiblingProperties(child, siblingData2, pivotKeys);
+                    PivotUtil.processSiblingProperties(child, siblingData2, keys);
                     if (prevRowFields.length > 0) {
                         this.processSubGroups(row, prevRowFields.slice(0), siblingData2, pivotKeys);
                     }
