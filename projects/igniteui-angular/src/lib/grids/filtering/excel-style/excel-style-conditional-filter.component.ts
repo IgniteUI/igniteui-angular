@@ -1,20 +1,16 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down/public_api';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
-import {
-    HorizontalAlignment,
-    VerticalAlignment,
-    OverlaySettings,
-    AutoPositionStrategy,
-    AbsoluteScrollStrategy
-} from '../../../services/public_api';
-import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
+import { AutoPositionStrategy } from '../../../services/overlay/position/auto-position-strategy';
+import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
+import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../../services/overlay/utilities';
 
 
 /**

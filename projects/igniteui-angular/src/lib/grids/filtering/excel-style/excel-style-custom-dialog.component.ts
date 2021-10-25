@@ -21,21 +21,16 @@ import {
     IgxTimeFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
-import {
-    AutoPositionStrategy,
-    OverlaySettings,
-    VerticalAlignment,
-    PositionSettings,
-    HorizontalAlignment,
-    IgxOverlayService,
-    AbsoluteScrollStrategy
-} from '../../../services/public_api';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 import { DisplayDensity } from '../../../core/density';
 import { PlatformUtil } from '../../../core/utils';
 import { ExpressionUI } from './common';
 import { ColumnType } from '../../common/grid.interface';
+import { HorizontalAlignment, OverlaySettings, PositionSettings, VerticalAlignment } from '../../../services/overlay/utilities';
+import { AutoPositionStrategy } from '../../../services/overlay/position/auto-position-strategy';
+import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
+import { IgxOverlayService } from '../../../services/overlay/overlay';
 
 /**
  * @hidden

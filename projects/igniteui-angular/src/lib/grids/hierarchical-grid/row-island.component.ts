@@ -38,19 +38,14 @@ import { IgxOverlayService } from '../../services/public_api';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
-
-export interface IGridCreatedEventArgs extends IBaseEventArgs {
-    owner: IgxRowIslandComponent;
-    parentID: any;
-    grid: GridType;
-}
+import { IGridCreatedEventArgs } from './events';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

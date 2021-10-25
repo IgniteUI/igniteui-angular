@@ -10,7 +10,6 @@ import {
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { OverlaySettings, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../../services/public_api';
 import { IBaseEventArgs, PlatformUtil } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DisplayDensity } from '../../../core/density';
@@ -19,6 +18,9 @@ import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.dir
 import { IgxInputDirective } from '../../../input-group/public_api';
 import { ExpressionUI } from './common';
 import { ColumnType } from '../../common/grid.interface';
+import { OverlaySettings } from '../../../services/overlay/utilities';
+import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
+import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
 
 /**
  * @hidden

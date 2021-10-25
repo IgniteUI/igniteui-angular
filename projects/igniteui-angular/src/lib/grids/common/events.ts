@@ -1,6 +1,5 @@
 import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
 import { GridKeydownTargetType } from './enums';
-// import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { CellType, ColumnType, GridType, RowType } from './grid.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxBaseExporter } from '../../services/exporter-common/base-export-service';

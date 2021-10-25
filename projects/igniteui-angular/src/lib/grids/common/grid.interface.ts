@@ -251,6 +251,7 @@ export interface GridType extends IGridDataBindable {
     pipeTrigger: number;
     summaryPipeTrigger: number;
     hasColumnLayouts: boolean;
+    isLoading: boolean;
 
     gridAPI: GridServiceType;
 
@@ -388,6 +389,7 @@ export interface GridType extends IGridDataBindable {
     summaryPosition: GridSummaryPosition;
 
     // XXX: Work around till we fixed the injection tokens
+    lastChildGrid?: GridType;
     toolbarOutlet?: ViewContainerRef;
     paginatorOutlet?: ViewContainerRef;
     flatData?: any[];
