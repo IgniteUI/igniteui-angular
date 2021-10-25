@@ -12,7 +12,8 @@ import {
     ChangeDetectorRef,
     OnChanges,
     NgZone,
-    AfterContentInit
+    AfterContentInit,
+    SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -274,7 +275,9 @@ export class IgxSliderComponent implements
 
         if (this._hasViewInit) {
             this.stepDistance = this.calculateStepDistance();
-            this.normalizeByStep(this.value);
+            this.normalizeByStep(this._value);
+            this.setValue(this._value, true);
+            this.positionHandlersAndUpdateTrack();
             this.setTickInterval();
         }
     }
@@ -564,11 +567,11 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set value(value: number | IRangeSliderValue) {
+        this.normalizeByStep(value);
+
         if (this._hasViewInit) {
-            this.setValue(value, true);
+            this.setValue(this._value, true);
             this.positionHandlersAndUpdateTrack();
-        } else {
-            this._value = value;
         }
     }
 
@@ -960,11 +963,15 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    public ngOnChanges(changes) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes.minValue && changes.maxValue &&
             changes.minValue.currentValue < changes.maxValue.currentValue) {
             this._maxValue = changes.maxValue.currentValue;
             this._minValue = changes.minValue.currentValue;
+        }
+
+        if (changes.step && changes.step.isFirstChange()) {
+            this.normalizeByStep(this._value);
         }
     }
 
@@ -1037,6 +1044,8 @@ export class IgxSliderComponent implements
         }
 
         this.normalizeByStep(value);
+        this.setValue(this._value, false);
+        this.positionHandlersAndUpdateTrack();
     }
 
     /**
@@ -1349,15 +1358,13 @@ export class IgxSliderComponent implements
      */
     private normalizeByStep(value: IRangeSliderValue | number) {
         if (this.isRange) {
-            this.value = {
+            this._value = {
                 lower: (value as IRangeSliderValue).lower - ((value as IRangeSliderValue).lower % this.step),
                 upper: (value as IRangeSliderValue).upper - ((value as IRangeSliderValue).upper % this.step)
             };
         } else {
-            this.value = (value as number) - ((value as number) % this.step);
+            this._value = (value as number) - ((value as number) % this.step);
         }
-
-        this._cdr.detectChanges();
     }
 
     private updateTrack() {
