@@ -3293,10 +3293,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden @internal */
     public createFilterDropdown(column: ColumnType, options: OverlaySettings) {
         options.outlet = this.outlet;
-        const instance = this.viewRef.createComponent(IgxGridExcelStyleFilteringComponent).instance;
-        instance.initialize(column, this.overlayService);
-        const id = this.overlayService.attach(instance.element, options);
-        return { instance, id };
+        const ref = this.viewRef.createComponent(IgxGridExcelStyleFilteringComponent);
+        ref.instance.initialize(column, this.overlayService);
+        const id = this.overlayService.attach(ref.instance.element, options);
+        return { ref, id };
     }
 
     /** @hidden @internal */

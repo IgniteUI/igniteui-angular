@@ -219,7 +219,8 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     public ngOnDestroy(): void {
         this._destroy$.next(true);
         this._destroy$.complete();
-        this.grid.filteringService.hideExcelFiltering();
+        // Is this really needed ?
+        // this.grid.filteringService.hideExcelFiltering();
     }
 
 
