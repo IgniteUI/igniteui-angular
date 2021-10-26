@@ -47,17 +47,11 @@ describe('IgxToast', () => {
     });
 
     it('should properly change verical position', () => {
-        toast.open();
-        fixture.detectChanges();
         expect(toast.position).toBe('bottom');
         expect(toast.positionSettings.verticalDirection).toBe(0);
-        toast.toggle();
-        fixture.detectChanges();
 
         toast.position = 'top';
-        toast.open();
         fixture.detectChanges();
-        expect(toast.position).toBe('top');
         expect(toast.positionSettings.verticalDirection).toBe(-1);
     });
 
