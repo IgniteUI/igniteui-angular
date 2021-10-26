@@ -47,16 +47,9 @@ export class PivotUtil {
     public static flattenHierarchy(records, config, dim, expansionStates, pivotKeys, lvl, prevDims, currDimLvl) {
         const data = records;
         const defaultExpandState = true;
-        //const dims = rows;
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
-            //for (const dim of dims) {
-                    let field;
-                    if (config.rowStrategy) {
-                        field = dim.fieldName || dim.member;
-                    } else {
-                        field = PivotUtil.resolveFieldName(dim, rec);
-                    }
+                    const field = dim.fieldName;
                     if(!field) {
                         continue;
                     }
@@ -115,7 +108,6 @@ export class PivotUtil {
                             i += dimData.length - 1;
                         }
                     }
-            //}
         }
        return data;
     }
