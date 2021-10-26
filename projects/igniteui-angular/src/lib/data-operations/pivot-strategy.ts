@@ -42,7 +42,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         ): any[] {
             let hierarchies;
             let data;
-            const prevRowFields = [];
+            const prevRowDims = [];
             let prevDim;
             for (const row of rows) {
                 if (!data) {
@@ -51,7 +51,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                     // generate flat data from the hierarchies
                     data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
                     row.fieldName = hierarchies.get(hierarchies.keys().next().value).dimension.fieldName;
-                    prevRowFields.push(row.fieldName);
+                    prevRowDims.push(row);
                     prevDim = row;
                 } else {
                     const newData = [...data];
@@ -64,7 +64,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                         row.fieldName = hierarchyFields.get(hierarchyFields.keys().next().value).dimension.fieldName;
                         PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
 
-                        PivotUtil.processSubGroups(row, prevRowFields.slice(0), siblingData, pivotKeys);
+                        PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
                         if (PivotUtil.getDimensionDepth(prevDim) > PivotUtil.getDimensionDepth(row)) {
                             newData[i][row.fieldName + '_' + pivotKeys.records] = siblingData;
                         } else {
@@ -74,7 +74,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                     }
                     data = newData;
                     prevDim = row;
-                    prevRowFields.push(row.fieldName);
+                    prevRowDims.push(row);
                 }
             }
             return data;

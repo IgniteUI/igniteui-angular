@@ -193,14 +193,18 @@ export class PivotUtil {
         }
     }
 
-    public static processSubGroups(row, prevRowFields, siblingData, pivotKeys) {
+    public static processSubGroups(row, prevRowDims, siblingData, pivotKeys) {
          // process combined groups
-         while(prevRowFields.length > 0) {
-               const prevRowField = prevRowFields.shift();
+         while(prevRowDims.length > 0) {
+               const prevRowDim = prevRowDims.shift();
+               const prevRowField = prevRowDim.fieldName;
+               const sameDimLvl = PivotUtil.getDimensionDepth(prevRowDim) === PivotUtil.getDimensionDepth(row);
                for (const sibling of siblingData) {
                 const childCollection = sibling[prevRowField + '_' + pivotKeys.records] || [];
                 for (const child of childCollection) {
-                    child[row.fieldName] = sibling[row.fieldName];
+                    if (sameDimLvl) {
+                        child[row.fieldName] = sibling[row.fieldName];
+                    }
                     if (!child[pivotKeys.records]) {
                         continue;
                     }
@@ -213,16 +217,22 @@ export class PivotUtil {
                     .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                     const siblingData2 = PivotUtil
                     .processHierarchy(hierarchyFields2, child ?? [], keys, 0);
-                    for(const sib of siblingData2) {
-                        if(sib[row.fieldName + '_' + pivotKeys.records]) {
-                            child[row.fieldName + '_' + pivotKeys.records] =
-                            child[row.fieldName + '_' + pivotKeys.records].concat(sib[row.fieldName + '_' + pivotKeys.records]);
-                            child[row.fieldName] = sib[row.fieldName];
+                    if (sameDimLvl) {
+                        // add children to current level if dimensions have same depth
+                        for (const sib of siblingData2) {
+                                if (sib[row.fieldName + '_' + pivotKeys.records]) {
+                                    child[row.fieldName + '_' + pivotKeys.records] =
+                                    child[row.fieldName + '_' + pivotKeys.records].concat(sib[row.fieldName + '_' + pivotKeys.records]);
+                                    child[row.fieldName] = sib[row.fieldName];
+                                }
                         }
+                    } else {
+                        // otherwise overwrite direct child collection
+                        child[row.fieldName + '_' + pivotKeys.records] = siblingData2;
                     }
                     PivotUtil.processSiblingProperties(child, siblingData2, keys);
-                    if (prevRowFields.length > 0) {
-                        this.processSubGroups(row, prevRowFields.slice(0), siblingData2, pivotKeys);
+                    if (prevRowDims.length > 0) {
+                        this.processSubGroups(row, prevRowDims.slice(0), siblingData2, pivotKeys);
                     }
                 }
             }

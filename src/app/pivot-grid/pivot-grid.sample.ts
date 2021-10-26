@@ -72,11 +72,11 @@ rows: [
         childLevels: []
         }]
     },
-    // {
-    //     member: 'SellerName',
-    //     enabled: true,
-    //     childLevels: []
-    //     }
+    {
+        member: 'SellerName',
+        enabled: true,
+        childLevels: []
+        }
     ],
         values: [
             {
