@@ -974,17 +974,20 @@
 
     %grid-thead-thumb {
         background: var-get($theme, 'header-background');
-        border-#{$left}: 1px solid igx-color($palette, 'grays', 300);
+        border-#{$left}: 1px solid var-get($theme, 'header-border-color');
     }
 
     %grid-tfoot-thumb {
+        position: absolute;
+        top: 0;
+        #{$right}: 0;
         background: var-get($theme, 'header-background');
-        border-#{$left}: 1px solid igx-color($palette, 'grays', 300);
+        border-#{$left}: 1px solid var-get($theme, 'header-border-color');
     }
 
     %grid-tbody-scrollbar {
         background: var-get($theme, 'content-background');
-        border-#{$left}: 1px solid igx-color($palette, 'grays', 300);
+        border-#{$left}: 1px solid var-get($theme, 'row-border-color');
         position: relative;
     }
 
