@@ -110,6 +110,40 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @WatchChanges()
     @Input()
+    public get hideRowSelectors() {
+        return;
+    }
+
+    public set hideRowSelectors(value: boolean) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get rowDraggable(): boolean {
+        return;
+    }
+
+
+    public set rowDraggable(val: boolean) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get dragIndicatorIconTemplate(): TemplateRef<any> {
+        return;
+    }
+
+    public set dragIndicatorIconTemplate(val: TemplateRef<any>) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @WatchChanges()
+    @Input()
     public get rowEditable(): boolean {
         return;
     }
