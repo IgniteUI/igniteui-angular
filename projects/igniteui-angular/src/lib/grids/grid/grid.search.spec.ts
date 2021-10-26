@@ -335,7 +335,6 @@ describe('IgxGrid - search API #grid - ', () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'HireDate').nativeElement;
 
             grid.findNext('1');
-            const activeHighlight = cell.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             const highlights = cell.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(5);
             verifyActiveHighlight(0);
@@ -343,12 +342,10 @@ describe('IgxGrid - search API #grid - ', () => {
 
         it('Active highlight should be updated when a column is pinned/unpinned', () => {
             let cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            let activeHighlight: any;
             let highlights: NodeListOf<Element>;
 
             grid.findNext('casey');
             cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -356,7 +353,6 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.columns[1].pinned = true;
             fix.detectChanges();
             cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -364,7 +360,6 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.columns[1].pinned = false;
             fix.detectChanges();
             cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -372,11 +367,9 @@ describe('IgxGrid - search API #grid - ', () => {
 
         it('Active highlight should be updated when a column is hidden/shown', () => {
             let cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            let activeHighlight: any;
             let highlights: NodeListOf<Element>;
 
             grid.findNext('casey');
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -384,7 +377,6 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.columns[0].hidden = true;
             fix.detectChanges();
             cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -392,7 +384,6 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.columns[0].hidden = false;
             fix.detectChanges();
             cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -404,7 +395,6 @@ describe('IgxGrid - search API #grid - ', () => {
 
             grid.findNext('an');
             fix.detectChanges();
-            let activeHighlight = getActiveHighlight();
             let highlights = getHighlights();
             expect(highlights.length).toBe(3);
             verifyActiveHighlight(0);
@@ -413,7 +403,6 @@ describe('IgxGrid - search API #grid - ', () => {
 
             grid.columns[1].hidden = true;
             fix.detectChanges();
-            activeHighlight = getActiveHighlight();
             highlights = getHighlights();
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);

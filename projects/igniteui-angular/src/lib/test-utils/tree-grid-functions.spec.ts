@@ -1,6 +1,6 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxGridBaseDirective } from '../grids/tree-grid/public_api';
-import { CellType, IGridDataBindable } from '../grids/common/grid.interface';
+import { IgxTreeGridComponent } from '../grids/tree-grid/public_api';
+import { CellType } from '../grids/common/grid.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { GridFunctions } from './grid-functions.spec';
@@ -400,7 +400,8 @@ export class TreeGridFunctions {
         return cellDOM.nativeElement.classList.contains(TREE_CELL_SELECTION_CSS_CLASS);
     }
 
-    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent, cell: IgxGridCellComponent | CellType, selected: boolean = true) {
+    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent,
+                                             cell: IgxGridCellComponent | CellType, selected: boolean = true) {
         expect(cell).toBeDefined();
         if (cell) {
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(cell)).toBe(selected);

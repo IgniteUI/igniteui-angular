@@ -53,7 +53,8 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    *
    * @returns target and element DomRect objects
    */
-  protected calculateElementRectangles(contentElement, target: Point | HTMLElement): { targetRect: Partial<DOMRect>; elementRect: Partial<DOMRect> } {
+  protected calculateElementRectangles(contentElement, target: Point | HTMLElement):
+    { targetRect: Partial<DOMRect>; elementRect: Partial<DOMRect> } {
       return {
           targetRect: Util.getTargetRect(target),
           elementRect: contentElement.getBoundingClientRect() as DOMRect

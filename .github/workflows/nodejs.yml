@@ -28,12 +28,12 @@ jobs:
             cache: 'npm'
       - name: Install packages
         run: npm ci
-    #   - name: Lint
-    #     run: npm run lint:lib
-    #     env:
-    #         NODE_OPTIONS: --max_old_space_size=4096
-    #   - name: Lint i18n
-    #     run: npm run lint:i18n
+      - name: Lint
+        run: npm run lint:lib
+        env:
+            NODE_OPTIONS: --max_old_space_size=4096
+      - name: Lint i18n
+        run: npm run lint:i18n
       - name: Build
         run: npm run build:lib
       - name: Test

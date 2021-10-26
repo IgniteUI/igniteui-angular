@@ -8,7 +8,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
-import { IgxGridCellComponent } from '../cell.component';
 
 const DEBOUNCETIME = 30;
 

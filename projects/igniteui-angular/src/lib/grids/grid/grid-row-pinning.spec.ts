@@ -1246,14 +1246,11 @@ describe('Row Pinning #grid', () => {
     });
 
     describe(' Initial pinning', () => {
-        let gridContent: DebugElement;
-
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningWithInitialPinningComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid1;
             setupGridScrollDetection(fix, grid);
-            gridContent = GridFunctions.getGridContent(fix);
         }));
 
         it('should pin rows on OnInit.', () => {

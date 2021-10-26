@@ -7,7 +7,6 @@ import {
     ComponentFactoryResolver,
     ContentChild,
     ContentChildren,
-    DoCheck,
     ElementRef,
     EventEmitter,
     Inject,
@@ -57,7 +56,7 @@ import { IGridCreatedEventArgs } from './events';
     ]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
-    implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
+    implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
      * ```html
@@ -361,12 +360,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             this.rootGrid.hgridAPI.unsetChildRowIsland(this);
             this.cleanGridState(this.rootGrid);
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public ngDoCheck() {
     }
 
     /**

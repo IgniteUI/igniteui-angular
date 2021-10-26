@@ -1,4 +1,4 @@
-import { AnimationAnimateRefMetadata, AnimationBuilder, AnimationMetadataType, AnimationReferenceMetadata } from '@angular/animations';
+import { AnimationBuilder, AnimationReferenceMetadata } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import {
     ApplicationRef,

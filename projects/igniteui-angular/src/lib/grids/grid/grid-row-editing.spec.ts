@@ -2046,7 +2046,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const cell = grid.getCellByColumn(0, '2');
             const cellElem = grid.gridAPI.get_cell_by_index(0, '2');
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             await wait(DEBOUNCETIME);
@@ -2070,7 +2069,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             const gridContent = GridFunctions.getGridContent(fix);
 
             const grid = fix.componentInstance.grid;
-            let cell = grid.getCellByColumn(0, 'ProductName');
             let cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
             spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
@@ -2081,7 +2079,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fix.detectChanges();
 
-            cell = grid.getCellByColumn(0, 'ReorderLevel');
             cellElem = grid.gridAPI.get_cell_by_index(0, 'ReorderLevel');
             expect(parseInt(GridFunctions.getRowEditingBannerText(fix), 10)).toEqual(1);
 

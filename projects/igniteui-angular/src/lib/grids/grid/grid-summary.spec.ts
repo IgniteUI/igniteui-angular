@@ -987,8 +987,6 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(cell.selected).toBe(true);
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
 
-            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
             GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
             fix.detectChanges();
 
@@ -1469,7 +1467,6 @@ describe('IgxGrid - Summaries #grid', () => {
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
             fix.detectChanges();
-            const cell = grid.getCellByColumn(1, 'Age');
 
             let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '50']);
@@ -1490,7 +1487,6 @@ describe('IgxGrid - Summaries #grid', () => {
             summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '50']);
 
-            const hireDateCell = grid.getCellByColumn(1, 'HireDate');
             UIInteractions.triggerKeyDownEvtUponElem('enter', grid.gridAPI.get_cell_by_index(1, 'HireDate').nativeElement, true);
             flush();
             fix.detectChanges();

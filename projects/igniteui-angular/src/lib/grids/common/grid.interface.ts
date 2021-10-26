@@ -1,4 +1,4 @@
-import { FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, } from './enums';
+import { FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs, IGridEditEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -6,7 +6,7 @@ import {
     IGridEditDoneEventArgs, IRowDataEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs,
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
-    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs,
+    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/displayDensity';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -95,7 +95,7 @@ export interface RowType {
     treeRow? : ITreeGridRecord;
     addRowUI: any;
     grid: GridType;
-    beginAddRow?(): void;
+    beginAddRow?: () => void;
     update?: (value: any) => void;
     delete?: () => any;
     pin?: () => void;
@@ -207,7 +207,7 @@ export interface GridServiceType {
     get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number;
     get_row_index_in_data(rowID: any, dataCollection?: any[]): number;
     get_cell_by_key(rowSelector: any, field: string): CellType;
-    get_cell_by_index(rowIndex: number, columnID: number | string): CellType
+    get_cell_by_index(rowIndex: number, columnID: number | string): CellType;
     get_cell_by_visible_index(rowIndex: number, columnIndex: number);
     set_grouprow_expansion_state?(groupRow: IGroupByRecord, value: boolean): void;
     row_deleted_transaction(id: any): boolean;

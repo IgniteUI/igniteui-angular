@@ -34,8 +34,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     public resizeStart = new Subject<MouseEvent>();
 
     // eslint-disable-next-line @angular-eslint/no-output-native
-    @Output()
-    public resize = new Subject<any>();
+    @Output() public resize = new Subject<any>();
 
     private _left: number;
     private _destroy = new Subject<boolean>();

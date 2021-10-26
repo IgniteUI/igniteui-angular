@@ -392,7 +392,6 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
 
         // check if selected row is in view of parent.
-        const selectedCell = fixture.componentInstance.selectedCell;
         const gridOffsets = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
         const rowElem = hierarchicalGrid.gridAPI.get_row_by_index(parentCell.row.index);
         const rowOffsets = rowElem.nativeElement.getBoundingClientRect();

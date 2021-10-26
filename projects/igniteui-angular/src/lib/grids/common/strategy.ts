@@ -125,8 +125,12 @@ export class IgxSorting implements IGridSortingStrategy {
         expressionIndex: number = 0,
         grid: GridType
     ): T[] {
-        let i: number, j: number, gbData: T[], gbDataLen: number;
-        const exprsLen = expressions.length, dataLen = data.length;
+        let i: number;
+        let j: number;
+        let gbData: T[];
+        let gbDataLen: number;
+        const exprsLen = expressions.length;
+        const dataLen = data.length;
 
         expressionIndex = expressionIndex || 0;
         if (expressionIndex >= exprsLen || dataLen <= 1) {

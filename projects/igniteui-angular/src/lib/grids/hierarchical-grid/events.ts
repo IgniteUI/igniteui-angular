@@ -6,5 +6,5 @@ import { IgxRowIslandComponent } from './row-island.component';
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
-    grid: IgxHierarchicalGridComponent
+    grid: IgxHierarchicalGridComponent;
 }
