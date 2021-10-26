@@ -166,13 +166,14 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
          this._positionSettings = settings;
      }
 
+     private _position: IgxToastPosition = 'bottom';
+
      private _positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Center,
-        verticalDirection: this.calculatePosition(),
+        verticalDirection: VerticalAlignment.Bottom,
         openAnimation: useAnimation(fadeIn),
         closeAnimation: useAnimation(fadeOut),
      };
-     private _position: IgxToastPosition = 'bottom';
 
     /**
      * Gets the nativeElement of the toast.
