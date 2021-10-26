@@ -173,8 +173,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-    * @hidden @interal
-    */
+     * @hidden @interal
+     */
     @Input()
     public get summaryCalculationMode() {
         return;
