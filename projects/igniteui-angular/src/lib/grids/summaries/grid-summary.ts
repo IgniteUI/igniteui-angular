@@ -6,6 +6,19 @@ export interface IgxSummaryResult {
     key: string;
     label: string;
     summaryResult: any;
+    /**
+     * Apply default formatting based on the grid column type.
+     * ```typescript
+     * const result: IgxSummaryResult = {
+     *   key: 'key',
+     *   label: 'label',
+     *   defaultFormatting: true
+     * }
+     * ```
+     *
+     * @memberof IgxSummaryResult
+     */
+    defaultFormatting?: boolean;
 }
 
 export interface ISummaryRecord {
@@ -65,6 +78,7 @@ export class IgxSummaryOperand {
         return [{
             key: 'count',
             label: 'Count',
+            defaultFormatting: false,
             summaryResult: IgxSummaryOperand.count(data)
         }];
     }
@@ -160,21 +174,25 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
         result.push({
             key: 'min',
             label: 'Min',
+            defaultFormatting: true,
             summaryResult: IgxNumberSummaryOperand.min(data)
         });
         result.push({
             key: 'max',
             label: 'Max',
+            defaultFormatting: true,
             summaryResult: IgxNumberSummaryOperand.max(data)
         });
         result.push({
             key: 'sum',
             label: 'Sum',
+            defaultFormatting: true,
             summaryResult: IgxNumberSummaryOperand.sum(data)
         });
         result.push({
             key: 'average',
             label: 'Avg',
+            defaultFormatting: true,
             summaryResult: IgxNumberSummaryOperand.average(data)
         });
         return result;
@@ -244,11 +262,13 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
         result.push({
             key: 'earliest',
             label: 'Earliest',
+            defaultFormatting: true,
             summaryResult: IgxDateSummaryOperand.earliest(data)
         });
         result.push({
             key: 'latest',
             label: 'Latest',
+            defaultFormatting: true,
             summaryResult: IgxDateSummaryOperand.latest(data)
         });
         return result;
@@ -295,70 +315,15 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
         result.push({
             key: 'earliest',
             label: 'Earliest',
+            defaultFormatting: true,
             summaryResult: IgxTimeSummaryOperand.earliestTime(data)
         });
         result.push({
             key: 'latest',
             label: 'Latest',
+            defaultFormatting: true,
             summaryResult: IgxTimeSummaryOperand.latestTime(data)
         });
         return result;
     }
 }
-
-export class IgxCurrencySummaryOperand extends IgxSummaryOperand {
-
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
-        const result = super.operate(data, allData, fieldName);
-        result.push({
-            key: 'min',
-            label: 'Min',
-            summaryResult: IgxNumberSummaryOperand.min(data)
-        });
-        result.push({
-            key: 'max',
-            label: 'Max',
-            summaryResult: IgxNumberSummaryOperand.max(data)
-        });
-        result.push({
-            key: 'sum',
-            label: 'Sum',
-            summaryResult: IgxNumberSummaryOperand.sum(data)
-        });
-        result.push({
-            key: 'average',
-            label: 'Avg',
-            summaryResult: IgxNumberSummaryOperand.average(data)
-        });
-        return result;
-    }
-}
-
-export class IgxPercentSummaryOperand extends IgxSummaryOperand {
-
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
-        const result = super.operate(data, allData, fieldName);
-        result.push({
-            key: 'min',
-            label: 'Min',
-            summaryResult: IgxNumberSummaryOperand.min(data)
-        });
-        result.push({
-            key: 'max',
-            label: 'Max',
-            summaryResult: IgxNumberSummaryOperand.max(data)
-        });
-        result.push({
-            key: 'sum',
-            label: 'Sum',
-            summaryResult: IgxNumberSummaryOperand.sum(data)
-        });
-        result.push({
-            key: 'average',
-            label: 'Avg',
-            summaryResult: IgxNumberSummaryOperand.average(data)
-        });
-        return result;
-    }
-}
-
