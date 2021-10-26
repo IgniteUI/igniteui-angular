@@ -76,14 +76,9 @@ export class PivotUtil {
                             }
                             dimData.forEach(d => {
                                 d[dim.childLevels[0].fieldName + '_' + pivotKeys.level] = currDimLvl + 1;
-                                if (prevDims && prevDims.length > 0) {
-                                    prevDims.forEach(prev => {
-                                        const dimInfo = PivotUtil.getDimensionLevel(prev, rec, pivotKeys);
-                                        d[dimInfo.fieldName + '_' + pivotKeys.level] = dimInfo.level;
-                                    });
-                                }
                             });
                         }
+
                         let prevDimRecs = [];
                         const dimLevel = rec[field + '_' + pivotKeys.level];
                         let prevDimLevel;
@@ -99,7 +94,17 @@ export class PivotUtil {
                             prevDimLevel = rec[prevDimName + '_' + pivotKeys.level];
                             shouldConcat = !!rec[field] && (prevDimLevel === undefined || prevDimLevel >= dimLevel);
                         }
-
+                        dimData.forEach(d => {
+                            if (prevDims && prevDims.length > 0) {
+                                if (!shouldConcat) {
+                                    d[dim.fieldName + '_' + pivotKeys.level] = currDimLvl;
+                                }
+                                prevDims.forEach(prev => {
+                                    const dimInfo = PivotUtil.getDimensionLevel(prev, rec, pivotKeys);
+                                    d[dimInfo.fieldName + '_' + pivotKeys.level] = dimInfo.level;
+                                });
+                            }
+                        });
                         if (shouldConcat) {
                             // concat
                             data.splice(i + 1, 0, ...dimData);
