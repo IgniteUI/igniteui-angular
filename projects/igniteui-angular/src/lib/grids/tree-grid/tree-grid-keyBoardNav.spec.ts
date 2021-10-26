@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
+import { IgxTreeGridModule, IgxTreeGridComponent, CellType } from './public_api';
 import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -409,7 +409,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
         it('should navigate with arrow Up and Down keys', async () => {
             spyOn(treeGrid.selected, 'emit').and.callThrough();
-            const firstCell: IgxGridCellComponent = treeGrid.gridAPI.get_cell_by_index(5, 'ID');
+            const firstCell: CellType = treeGrid.gridAPI.get_cell_by_index(5, 'ID');
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 

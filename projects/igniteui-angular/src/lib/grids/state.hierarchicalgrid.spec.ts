@@ -2,11 +2,9 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IPagingState } from '../data-operations/paging-state.interface';
-import { GridSelectionRange } from './selection/selection.service';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from './hierarchical-grid/row-island.component';
@@ -15,6 +13,8 @@ import { FilteringLogic } from '../data-operations/filtering-expression.interfac
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { GridSelectionMode } from './common/enums';
 import { wait } from '../test-utils/ui-interactions.spec';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
+import { GridSelectionRange } from './common/types';
 
 /* eslint-disable max-len */
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {

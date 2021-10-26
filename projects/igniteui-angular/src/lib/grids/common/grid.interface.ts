@@ -206,6 +206,7 @@ export interface GridServiceType {
     get_row_by_key(rowSelector: any): RowType;
     get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number;
     get_row_index_in_data(rowID: any, dataCollection?: any[]): number;
+    get_cell_by_key(rowSelector: any, field: string): CellType;
     get_cell_by_index(rowIndex: number, columnID: number | string): CellType
     get_cell_by_visible_index(rowIndex: number, columnIndex: number);
     set_grouprow_expansion_state?(groupRow: IGroupByRecord, value: boolean): void;

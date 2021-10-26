@@ -4,18 +4,17 @@ import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IPagingState } from '../data-operations/paging-state.interface';
-import { GridSelectionRange } from './selection/selection.service';
 import { IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { GridSelectionMode } from './common/enums';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
+import { GridSelectionRange } from './common/types';
 
 /* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {

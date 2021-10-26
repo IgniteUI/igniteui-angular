@@ -176,7 +176,7 @@ export class GridFunctions {
     /**
      * Focus the cell in the grid
      */
-    public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent) {
+    public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent | CellType) {
         this.getGridContent(fix).triggerEventHandler('focus', null);
         fix.detectChanges();
         cell.activate(null);
@@ -2216,7 +2216,7 @@ export class GridSelectionFunctions {
         expect(range[rangeIndex].rowEnd).toBe(rowEnd);
     }
 
-    public static verifyCellSelected(cell: IgxGridCellComponent, selected = true) {
+    public static verifyCellSelected(cell: IgxGridCellComponent | CellType, selected = true) {
         expect(cell.selected).toBe(selected);
         expect(cell.nativeElement.classList.contains(CELL_SELECTED_CSS_CLASS)).toBe(selected);
     }
