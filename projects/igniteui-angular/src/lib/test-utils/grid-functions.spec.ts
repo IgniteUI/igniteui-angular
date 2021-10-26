@@ -8,7 +8,6 @@ import { IgxChipComponent } from '../chips/public_api';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import {
     CellType,
@@ -23,6 +22,7 @@ import { parseDate } from '../core/utils';
 import { IgxGridHeaderRowComponent } from '../grids/headers/grid-header-row.component';
 import { IgxGridRowComponent } from '../grids/grid/grid-row.component';
 import { IgxGridCellComponent } from '../grids/cell.component';
+import { SortingDirection } from '../data-operations/sorting-strategy';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
