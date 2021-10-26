@@ -92,12 +92,10 @@
             },
             "hmr": {
               "hmr": true,
-              "hmrWarning": false,
               "browserTarget": "igniteui-dev-demos:build:hmr"
             },
             "es5": {
               "hmr": true,
-              "hmrWarning": false,
               "browserTarget": "igniteui-dev-demos:build:es5"
             }
           }
