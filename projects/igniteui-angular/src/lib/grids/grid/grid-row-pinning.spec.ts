@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './public_api';
+import {IgxGridModule, IPinRowEventArgs } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../grid.common';
@@ -171,6 +171,62 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
 
             expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(2);
+        });
+
+        it(`Should be able to cancel rowPinning on pin/unpin event.`, () => {
+            spyOn(grid.onRowPinning, 'emit').and.callThrough();
+            let sub = grid.onRowPinning.subscribe((e: IPinRowEventArgs) => {
+                e.cancel = true;
+            });
+
+            const row = grid.getRowByIndex(0);
+            const rowID = row.rowID;
+            expect(row.pinned).toBeFalsy();
+
+            row.pin();
+            fix.detectChanges();
+
+            expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
+                insertAtIndex: 0,
+                isPinned: true,
+                rowID,
+                row,
+                cancel: true
+            });
+            expect(row.pinned).toBeFalsy();
+
+            sub.unsubscribe();
+
+            row.pin();
+            fix.detectChanges();
+
+            expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(2);
+            expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
+                insertAtIndex: 0,
+                isPinned: true,
+                rowID,
+                row,
+                cancel: false
+            });
+            expect(row.pinned).toBe(true);
+
+            sub = grid.onRowPinning.subscribe((e: IPinRowEventArgs) => {
+                e.cancel = true;
+            });
+
+            row.unpin();
+            fix.detectChanges();
+
+            expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(3);
+            expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
+                isPinned: false,
+                rowID,
+                row,
+                cancel: true
+            });
+            expect(row.pinned).toBe(true);
+            sub.unsubscribe();
         });
 
         it('should pin/unpin via grid API methods.', () => {
