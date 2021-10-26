@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule, IPinRowEventArgs} from './public_api';
+import { IgxGridModule, IPinRowEventArgs } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../grid.common';
@@ -202,7 +202,7 @@ describe('Row Pinning #grid', () => {
             expect(grid.rowPinned.emit).toHaveBeenCalledTimes(2);
         });
 
-        fit(`Should be able to cancel rowPinning on pin/unpin event.`, () => {
+        it(`Should be able to cancel rowPinning on pin/unpin event.`, () => {
             spyOn(grid.rowPinning, 'emit').and.callThrough();
             let sub = grid.rowPinning.subscribe((e: IPinRowEventArgs) => {
                 e.cancel = true;
