@@ -73,9 +73,13 @@ rows: [
         }]
     },
     {
+        member: () => 'AllSel',
+        enabled: true,
+        childLevels: [{
         member: 'SellerName',
         enabled: true,
         childLevels: []
+        }]
         }
     ],
         values: [

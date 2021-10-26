@@ -47,12 +47,12 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
     ): any[] {
         const data = collection.slice(0);
         let totalLlv = 0;
-        let prevDim;
+        const prevDims = [];
         for (const row of config.rows) {
             const lvl = PivotUtil.getDimensionDepth(row);
             totalLlv += lvl;
-            PivotUtil.flattenHierarchy(data, config, row, expansionStates, pivotKeys, totalLlv, prevDim);
-            prevDim = row;
+            PivotUtil.flattenHierarchy(data, config, row, expansionStates, pivotKeys, totalLlv, prevDims, 0);
+            prevDims.push(row);
         }
         return data;
     }

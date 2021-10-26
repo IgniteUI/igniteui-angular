@@ -42,7 +42,6 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      public headerTemplateGray: TemplateRef<any>;
 
     public rowDimension: IgxColumnComponent[] = [];
-    public level = 0;
     public hasChild = false;
     public currLvl = 0;
 
@@ -86,7 +85,6 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
             // generate new rowDimension on row data change
             this.rowDimension = [];
             const rowDimConfig = this.grid.pivotConfiguration.rows;
-            this.level = this.rowData['level'] || 0;
             this.hasChild = this.rowData['records'] != null && this.rowData['records'].length > 0;
             this.currLvl = 0;
             this.extractFromDimensions(rowDimConfig, 0);
