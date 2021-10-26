@@ -188,7 +188,7 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
-                insertAtIndex: undefined,
+                insertAtIndex: 0,
                 isPinned: true,
                 rowID,
                 row,
@@ -203,7 +203,7 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(2);
             expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
-                insertAtIndex: undefined,
+                insertAtIndex: 0,
                 isPinned: true,
                 rowID,
                 row,

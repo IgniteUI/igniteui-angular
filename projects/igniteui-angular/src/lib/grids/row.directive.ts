@@ -495,7 +495,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     public pin() {
-        return this.grid.pinRow(this.rowID);
+        return this.grid.pinRow(this.rowID, this.index);
     }
 
     /**
