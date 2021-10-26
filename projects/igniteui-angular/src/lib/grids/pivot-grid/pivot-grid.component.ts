@@ -139,8 +139,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-        * @hidden @interal
-        */
+    * @hidden @interal
+    */
     @Input()
     public get summaryCalculationMode() {
         return;
@@ -326,8 +326,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-    * @hidden @internal
-    */
+     * @hidden @internal
+     */
     public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
         return;
     }
@@ -421,8 +421,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-    * @hidden @internal
-    */
+     * @hidden @internal
+     */
     public get visibleColumns(): IgxColumnComponent[] {
         return;
     }
@@ -439,8 +439,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-    * @hidden @internal
-    */
+     * @hidden @internal
+     */
     public moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
     }
 
@@ -463,8 +463,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-    * @hidden @internal
-    */
+     * @hidden @internal
+     */
     public updateRow(value: any, rowSelector: any): void {
     }
 
@@ -475,8 +475,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-    * @hidden @internal
-    */
+     * @hidden @internal
+     */
     public disableSummaries(...rest) {
     }
 
@@ -495,8 +495,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-    * @hidden @internal
-    */
+     * @hidden @internal
+     */
     public pinRow(rowID: any, index?: number, row?: RowType): boolean {
         return;
     }
