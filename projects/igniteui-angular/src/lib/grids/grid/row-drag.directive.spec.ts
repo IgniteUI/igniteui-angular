@@ -17,7 +17,6 @@ import { IgxRowDragDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule } from '../hierarchical-grid/public_api';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
@@ -25,6 +24,7 @@ import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid/public_api
 import { GridSelectionMode } from '../common/enums';
 import { RowType } from '../common/grid.interface';
 import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';

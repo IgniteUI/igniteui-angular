@@ -15,8 +15,7 @@ import { DefaultGridMasterDetailComponent } from './grid.master-detail.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { TransactionType } from '../../services/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
@@ -856,7 +855,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const newRow = grid.gridAPI.get_row_by_index(1);
             expect(newRow.addRowUI).toBeTrue();
             const newRowCells = newRow.cells.toArray();
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, newRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, newRowCells as any);
         });
     });
 

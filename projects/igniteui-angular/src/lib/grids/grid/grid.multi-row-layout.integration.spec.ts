@@ -8,8 +8,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { ViewChild, Component } from '@angular/core';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 

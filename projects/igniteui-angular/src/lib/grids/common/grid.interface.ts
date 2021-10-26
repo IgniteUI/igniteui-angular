@@ -59,11 +59,13 @@ export interface CellType {
 	row: RowType;
 	grid: GridType;
 	id: { rowID: any; columnID: number; rowIndex: number };
+    cellID?: any;
 	width: string;
     visibleColumnIndex?: number;
 	update: (value: any) => void;
+    setEditMode?(value: boolean): void;
     calculateSizeToFit?(range: any): number;
-    activate?(): void;
+    activate?(event: FocusEvent | KeyboardEvent): void;
 }
 
 export interface RowType {
@@ -80,7 +82,7 @@ export interface RowType {
     /** Deprecated, will be removed. data is the new property */
     rowData?: any;
     data?: any;
-    cells?: QueryList<CellType> | CellType[];
+    cells?: QueryList<CellType>;
     disabled?: boolean;
     pinned?: boolean;
     selected?: boolean;
@@ -91,7 +93,9 @@ export interface RowType {
     parent?: RowType;
     hasChildren?: boolean;
     treeRow? : ITreeGridRecord;
+    addRowUI: any;
     grid: GridType;
+    beginAddRow?(): void;
     update?: (value: any) => void;
     delete?: () => any;
     pin?: () => void;
@@ -202,6 +206,7 @@ export interface GridServiceType {
     get_row_by_key(rowSelector: any): RowType;
     get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number;
     get_row_index_in_data(rowID: any, dataCollection?: any[]): number;
+    get_cell_by_index(rowIndex: number, columnID: number | string): CellType
     get_cell_by_visible_index(rowIndex: number, columnIndex: number);
     set_grouprow_expansion_state?(groupRow: IGroupByRecord, value: boolean): void;
     row_deleted_transaction(id: any): boolean;

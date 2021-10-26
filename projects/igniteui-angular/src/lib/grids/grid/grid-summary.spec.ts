@@ -10,7 +10,8 @@ import {
     IgxSummaryResult,
     IgxGroupByRow,
     IgxSummaryRow,
-    IgxGridRow
+    IgxGridRow,
+    IColumnPipeArgs
 } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -27,11 +28,10 @@ import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IColumnPipeArgs } from 'igniteui-angular';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Summaries #grid', () => {
 

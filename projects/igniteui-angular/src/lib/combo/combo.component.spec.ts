@@ -28,7 +28,7 @@ import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../service
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../data-operations/sorting-strategy';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
