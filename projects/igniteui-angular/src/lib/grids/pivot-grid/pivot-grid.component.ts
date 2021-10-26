@@ -71,8 +71,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-     @ViewChild('record_template', { read: TemplateRef, static: true })
-     public recordTemplate: TemplateRef<any>;
+    @ViewChild('record_template', { read: TemplateRef, static: true })
+    public recordTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
@@ -159,7 +159,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * let data = this.grid.data;
      * ```
      */
-     public get data(): any[] | null {
+    public get data(): any[] | null {
         return this._data;
     }
     /**
@@ -171,21 +171,21 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * }];
      * ```
      */
-         public set filteredData(value) {
-            this._filteredData = value;
-        }
+    public set filteredData(value) {
+        this._filteredData = value;
+    }
 
-        /**
-         * Returns an array of objects containing the filtered data.
-         * ```typescript
-         * let filteredData = this.grid.filteredData;
-         * ```
-         *
-         * @memberof IgxHierarchicalGridComponent
-         */
-        public get filteredData() {
-            return this._filteredData;
-        }
+    /**
+     * Returns an array of objects containing the filtered data.
+     * ```typescript
+     * let filteredData = this.grid.filteredData;
+     * ```
+     *
+     * @memberof IgxHierarchicalGridComponent
+     */
+    public get filteredData() {
+        return this._filteredData;
+    }
 
 
     /**
@@ -253,7 +253,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 fieldChild.hidden = true;
             });
         }
-   }
+    }
 
     /**
      * @hidden
@@ -369,6 +369,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 }
             }
         });
+        this.reflow();
         return columns;
     }
 
@@ -380,12 +381,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             ref.instance.field = parent.field + '-' + val.member;
             ref.instance.parent = parent;
             ref.instance.hidden = hidden;
-            ref.instance.dataType = this.resolveDataTypes(data[0][val.member]);
+            ref.instance.dataType = val.dataType || this.resolveDataTypes(data[0][val.member]);
+            ref.instance.formatter = val.formatter;
             ref.changeDetectorRef.detectChanges();
             cols.push(ref.instance);
         });
         return cols;
     }
-
-
 }
