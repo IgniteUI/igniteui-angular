@@ -569,9 +569,8 @@ class HelperFunctions {
     }
 
     private static getParentRowID(grid: IgxHierarchicalGridComponent) {
-        let childGrid; let childRow;
+        let childGrid;
         while (grid.parent) {
-            childRow = grid.childRow;
             childGrid = grid;
             grid = grid.parent;
         }

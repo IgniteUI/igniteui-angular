@@ -1727,7 +1727,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             const firstColumnField = treeGrid.columns[0].field;
             const pinnedChipExpectedPosition = treeGrid.gridAPI.get_cell_by_index(1, firstColumnField);
-            const pinnedRow = pinnedChipExpectedPosition.row;
 
             expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
         });
