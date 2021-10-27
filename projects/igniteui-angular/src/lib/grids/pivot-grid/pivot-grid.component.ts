@@ -156,7 +156,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Input()
     public get pinning() {
-        return null;
+        return {};
     }
     public set pinning(value) {
     }
@@ -217,13 +217,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public set batchEditing(val: boolean) {
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get transactions(): TransactionService<Transaction, State> {
-        return null;
     }
 
     /**
@@ -369,17 +362,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    @Input()
-    public get expansionStates() {
-        return null;
-    }
-
-    public set expansionStates(value) {
-    }
-
-    /**
-     * @hidden @internal
-     */
     public expandAll() {
     }
 
@@ -402,38 +384,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-     * @hidden @interal
-     */
-    public toggleRow(rowID: any) {
-    }
-
-    /**
-     * Gets the current width of the container for the pinned `IgxColumnComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const pinnedWidth = this.grid.getPinnedWidth;
-     * ```
-     */
-    public get pinnedWidth() {
-        return null;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get unpinnedWidth() {
-        return null;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get pinnedColumns(): IgxColumnComponent[] {
-        return;
-    }
-
-    /**
      * @hidden @internal
      */
     public get pinnedRows(): IgxGridRowComponent[] {
@@ -443,21 +393,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public get unpinnedColumns(): IgxColumnComponent[] {
-        return;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public getColumnByVisibleIndex(index: number): IgxColumnComponent {
-        return;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get visibleColumns(): IgxColumnComponent[] {
         return;
     }
 
@@ -573,15 +509,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public getPinnedWidth(takeHidden = false) {
-        return null;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get pinnedDataView(): any[] {
-        return;
+        return [];
     }
 
     /**
