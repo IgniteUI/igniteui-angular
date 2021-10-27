@@ -160,7 +160,7 @@ describe('Row Pinning #grid', () => {
             expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
                 row,
                 rowID,
-                insertAtIndex: undefined,
+                insertAtIndex: 0,
                 isPinned: true,
                 cancel: false
             });
