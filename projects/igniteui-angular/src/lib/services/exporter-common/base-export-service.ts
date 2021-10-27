@@ -379,6 +379,9 @@ export abstract class IgxBaseExporter {
                 }
                 return a;
             }, {});
+        } else {
+            const filteredHeaders = this._ownersMap.get(record.owner).columns.filter(c => c.skip).map(c => c.header ? c.header : c.field);
+            record.data = record.data.filter(d => filteredHeaders.indexOf(d) === -1);
         }
 
         const rowArgs = {

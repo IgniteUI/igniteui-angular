@@ -830,6 +830,22 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithFrozenHeaders);
         });
+
+        it('should export hierarchical grid with skipped columns', async () => {
+            exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
+                if ((args.header === 'Debut' && args.columnIndex === 1) ||
+                    (args.header === 'Billboard Review' && args.columnIndex === 2) ||
+                    (args.header === 'Album' && args.columnIndex === 0) ||
+                    (args.header === 'Tickets Sold' && args.columnIndex === 1) ||
+                    (args.header === 'Released' && args.columnIndex === 2)) {
+                    args.cancel = true;
+                  }
+            });
+
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithSkippedColumns);
+        });
     });
 
     describe('', () => {
