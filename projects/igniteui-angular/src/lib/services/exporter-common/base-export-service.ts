@@ -351,37 +351,40 @@ export abstract class IgxBaseExporter {
     }
 
     private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
-        if (!isSpecialData && record.type !== ExportRecordType.HeaderRecord) {
+        if (!isSpecialData) {
             const owner = record.owner === undefined ? DEFAULT_OWNER : record.owner;
+            const ownerCols = this._ownersMap.get(owner).columns;
 
-            const columns = this._ownersMap.get(owner).columns
-                .filter(c => c.headerType !== HeaderType.MultiColumnHeader)
-                .sort((a, b) => a.startIndex - b.startIndex)
-                .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
+            if (record.type !== ExportRecordType.HeaderRecord) {
+                const columns = ownerCols
+                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader)
+                    .sort((a, b) => a.startIndex - b.startIndex)
+                    .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
-            record.data = columns.reduce((a, e) => {
-                if (!e.skip) {
-                    let rawValue = resolveNestedPath(record.data, e.field);
+                record.data = columns.reduce((a, e) => {
+                    if (!e.skip) {
+                        let rawValue = resolveNestedPath(record.data, e.field);
 
-                    const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
+                        const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
 
-                    if (e.dataType === 'date' &&
-                        !(rawValue instanceof Date) &&
-                        !shouldApplyFormatter &&
-                        rawValue !== undefined &&
-                        rawValue !== null) {
-                        rawValue = new Date(rawValue);
-                    } else if (e.dataType === 'string' && rawValue instanceof Date) {
-                        rawValue = rawValue.toString();
+                        if (e.dataType === 'date' &&
+                            !(rawValue instanceof Date) &&
+                            !shouldApplyFormatter &&
+                            rawValue !== undefined &&
+                            rawValue !== null) {
+                            rawValue = new Date(rawValue);
+                        } else if (e.dataType === 'string' && rawValue instanceof Date) {
+                            rawValue = rawValue.toString();
+                        }
+
+                        a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
                     }
-
-                    a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
-                }
-                return a;
-            }, {});
-        } else {
-            const filteredHeaders = this._ownersMap.get(record.owner).columns.filter(c => c.skip).map(c => c.header ? c.header : c.field);
-            record.data = record.data.filter(d => filteredHeaders.indexOf(d) === -1);
+                    return a;
+                }, {});
+            } else {
+                const filteredHeaders = ownerCols.filter(c => c.skip).map(c => c.header ? c.header : c.field);
+                record.data = record.data.filter(d => filteredHeaders.indexOf(d) === -1);
+            }
         }
 
         const rowArgs = {
