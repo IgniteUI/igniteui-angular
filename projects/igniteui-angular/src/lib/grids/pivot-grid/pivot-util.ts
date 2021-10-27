@@ -66,10 +66,11 @@ export class PivotUtil {
                             if (PivotUtil.getDimensionDepth(dim) > 1) {
                                 dimData = this.flattenHierarchy(dimData, config, dim.childLevels[0],
                                     expansionStates, pivotKeys, lvl - 1, prevDims, currDimLvl + 1);
+                            } else {
+                                dimData.forEach(d => {
+                                    d[dim.childLevels[0].fieldName + '_' + pivotKeys.level] = currDimLvl + 1;
+                                });
                             }
-                            dimData.forEach(d => {
-                                d[dim.childLevels[0].fieldName + '_' + pivotKeys.level] = currDimLvl + 1;
-                            });
                         }
 
                         let prevDimRecs = [];
