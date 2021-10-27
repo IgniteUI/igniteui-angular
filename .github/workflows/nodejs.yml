@@ -41,6 +41,7 @@ jobs:
             npm run test:lib
             npm run test:styles
             npm run test:schematics
+            npm run test:i18n
         env:
             NODE_OPTIONS: --max_old_space_size=4096
       - name: Build i18n & validate output
