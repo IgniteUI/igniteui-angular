@@ -303,8 +303,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                 ref.instance.field = key;
                 ref.instance.parent = parent;
-                ref.instance.dataType = this.pivotConfiguration.values[0].dataType || this.resolveDataTypes(data[0][key]);
-                ref.instance.formatter = this.pivotConfiguration.values[0].formatter;
+                ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
+                ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
                 ref.changeDetectorRef.detectChanges();
                 columns.push(ref.instance);
                 if (this.hasMultipleValues) {
@@ -327,8 +327,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     refSibling.instance.field = key;
                     refSibling.instance.parent = parent;
                     refSibling.instance.hidden = true;
-                    refSibling.instance.dataType = this.pivotConfiguration.values[0].dataType || this.resolveDataTypes(data[0][key]);
-                    refSibling.instance.formatter = this.pivotConfiguration.values[0].formatter;
+                    refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
+                    refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
                     columns.push(refSibling.instance);
                 }
                 const children = this.generateColumnHierarchy(value.children, data, ref.instance);
