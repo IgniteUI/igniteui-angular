@@ -1,6 +1,6 @@
 import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
 import { RouterModule } from '@angular/router';
-import { AvatartSampleComponent } from './avatar/avatar.sample';
+import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
@@ -118,7 +118,7 @@ const appRoutes = [
     },
     {
         path: 'avatar',
-        component: AvatartSampleComponent
+        component: AvatarSampleComponent
     },
     {
         path: 'badge',
