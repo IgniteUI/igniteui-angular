@@ -22,12 +22,14 @@ export class IgxPivotRowPipe implements PipeTransform {
         rows: IPivotDimension[],
         expansionStates: Map<any, boolean>,
         values?: IPivotValue[],
+        _pipeTrigger?: number,
         pivotKeys: IPivotKeys =
             { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
         let hierarchies;
         let data;
-        for (const row of rows) {
+        const enabledRows = rows.filter(x => x.enabled);
+        for (const row of enabledRows) {
             if (!data) {
                 // build hierarchies - groups and subgroups
                 hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
@@ -77,17 +79,20 @@ export class IgxPivotColumnPipe implements PipeTransform {
         collection: any,
         columns: IPivotDimension[],
         values?: IPivotValue[],
+        _pipeTrigger?: number,
         pivotKeys: IPivotKeys =
             { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
     ): any[] {
         // build hierarchies - groups and subgroups by columns
         const result = [];
+        const enabledColumns = columns.filter(x => x.enabled);
+        const enabledValues = values.filter(x => x.enabled);
         collection.forEach(hierarchy => {
             // apply aggregations based on the created groups and generate column fields based on the hierarchies
-            this.groupColumns(hierarchy, columns, values, pivotKeys);
+            this.groupColumns(hierarchy, enabledColumns, enabledValues, pivotKeys);
             if (hierarchy[pivotKeys.children]) {
                 let flatCols = {};
-                PivotUtil.flattenColumnHierarchy(hierarchy[pivotKeys.children], values, pivotKeys).forEach(o => {
+                PivotUtil.flattenColumnHierarchy(hierarchy[pivotKeys.children], enabledValues, pivotKeys).forEach(o => {
                     delete o[pivotKeys.records];
                     flatCols = { ...flatCols, ...o };
                 });

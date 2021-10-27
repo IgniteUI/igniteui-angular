@@ -1,13 +1,53 @@
+<div class="igx-grid-thead__wrapper" role="row" [style.width.px]="width" *ngIf="!row" >
+    <div class="igx-grid__tr" role="row" [style.width.px]="width">
+        <span #pivotFilterContainer class="igx-grid__tr-action" [style.min-width.px] = "grid.pivotRowWidths" 
+        (pointerdown)="$event.preventDefault()">
+              <!-- Filter area -->
+              <igx-chips-area>
+                <igx-chip *ngFor="let filter of grid.pivotConfiguration.filters" [id]="filter.fieldName" [removable]="true">
+                    <igx-icon igxPrefix>filter_list</igx-icon>
+                    {{filter.fieldName}}
+                </igx-chip>
+            </igx-chips-area>
+        </span>
+        <div #pivotValueContainer [style.min-width.px] = "grid.unpinnedWidth" 
+        (pointerdown)="$event.preventDefault()">
+
+        <!-- Columns area -->
+        <igx-chips-area (reorder)="columnsOrderChanged($event)">
+            <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.fieldName" [removable]="true" (remove)="columnRemoved($event)">
+                <igx-icon igxPrefix>view_column</igx-icon>
+                <igx-icon igxPrefix>filter_list</igx-icon>
+                {{col.fieldName}}
+            </igx-chip>
+        </igx-chips-area>
+
+         <!-- Value area -->
+         <igx-chips-area>
+            <igx-chip *ngFor="let value of grid.values" [draggable]="'true'" [id]="value.member" [removable]="true" (remove)="valueRemoved($event)">
+                <igx-icon igxPrefix>functions</igx-icon>
+                {{value.member}}
+            </igx-chip>
+        </igx-chips-area>
+        </div>
+    </div>
+</div>
 <div role="rowgroup" class="igx-grid-thead__wrapper" [style.width.px]="width"
     [attr.aria-activedescendant]="activeDescendant" [class.igx-grid__tr--mrl]="hasMRL">
-
     <!-- Column headers area -->
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
 
         <ng-container *ngIf="!row">
             <div #pivotContainer class="igx-grid__tr-action" [style.min-width.px] = "grid.pivotRowWidths" 
-                (pointerdown)="$event.preventDefault()">
-                
+                (pointerdown)="$event.preventDefault()" style='display: flex; align-items: flex-end;'>
+                 <!-- Row area -->
+                 <igx-chips-area (reorder)="rowsOrderChanged($event)">
+                    <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="'true'" [id]="row.fieldName" [removable]="true" (remove)="rowRemoved($event)">
+                        <igx-icon igxPrefix>table_rows</igx-icon>
+                        <igx-icon igxPrefix>filter_list</igx-icon>
+                        {{ row.fieldName}}
+                    </igx-chip>
+                </igx-chips-area>
             </div>
         </ng-container>
 
