@@ -111,7 +111,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                     const keys = Object.keys(hierarchy);
                     //remove all record keys from final data since we don't need them anymore.
                     keys.forEach(k => {
-                        if (k.indexOf(pivotKeys.records) !== -1) {
+                        if (k.indexOf(pivotKeys.records) !== -1 || k  === pivotKeys.level) {
                             delete hierarchy[k];
                         }
                     });
