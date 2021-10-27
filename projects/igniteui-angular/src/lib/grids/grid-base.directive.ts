@@ -5698,16 +5698,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             } else {
                 data = selectedData;
                 result = this.prepareCopyData(event, data);
-               
                 if (Object.values(selectedData[0]).length <= 1) {
                     result = result.slice(0, -2);
-                    
                     if (!this.clipboardOptions.copyHeaders) {
                         result = result.substring(result[0], result.indexOf('\n'));
                     }
                 } 
             }
-
             if (this.platform.isIE) {
                 (window as any).clipboardData.setData('Text', result);
                 return;
