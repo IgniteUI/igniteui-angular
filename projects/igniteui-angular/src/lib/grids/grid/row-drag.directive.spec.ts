@@ -906,7 +906,6 @@ describe('Row Drag Tests #grid', () => {
 describe('Row Drag Tests #hGrid', () => {
     let fixture: ComponentFixture<any>;
     let dropAreaElement: Element;
-    let dragIndicatorElements: DebugElement[];
     let dragIndicatorElement: Element;
     let rowDragDirective: IgxRowDragDirective;
     let startPoint: Point;
@@ -937,7 +936,6 @@ describe('Row Drag Tests #hGrid', () => {
         fixture.detectChanges();
         dragGrid = fixture.componentInstance.hDragGrid;
         dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
-        dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
         dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
 
         // first level row
@@ -1014,7 +1012,6 @@ describe('Row Drag Tests #hGrid', () => {
         fixture = TestBed.createComponent(IgxHierarchicalGridCustomGhostTestComponent);
         dragGrid = fixture.componentInstance.hDragGrid;
         fixture.detectChanges();
-        dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
         dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
 
         // first level row

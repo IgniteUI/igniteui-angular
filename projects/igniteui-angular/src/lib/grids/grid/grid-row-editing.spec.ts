@@ -450,7 +450,6 @@ describe('IgxGrid - Row Editing #grid', () => {
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
         let targetCell: IgxGridCellComponent;
-        let targetCellDebug: DebugElement;
         let editedCell: IgxGridCellComponent;
         let editedCellDebug: DebugElement;
 
@@ -579,7 +578,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             const cellReleaseDate = grid.gridAPI.get_cell_by_index(0, 'ReleaseDate');
             targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
-            targetCellDebug = GridFunctions.getRowCells(fix, 0)[0];
 
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
@@ -857,14 +855,12 @@ describe('IgxGrid - Row Editing #grid', () => {
     describe('Exit row editing', () => {
         let fix;
         let grid: IgxGridComponent;
-        let gridContent: DebugElement;
         let cell: CellType;
         let cellElem: IgxGridCellComponent;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            gridContent = GridFunctions.getGridContent(fix);
             cell = grid.getCellByColumn(0, 'ProductName');
             cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
         }));
@@ -1111,7 +1107,6 @@ describe('IgxGrid - Row Editing #grid', () => {
     describe('Integration', () => {
         let fix;
         let grid: IgxGridComponent;
-        let gridContent: DebugElement;
         let cell: CellType;
         let cellElem: IgxGridCellComponent;
 
@@ -1119,7 +1114,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            gridContent = GridFunctions.getGridContent(fix);
             cell = grid.getCellByColumn(0, 'ProductName');
             cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
         });
