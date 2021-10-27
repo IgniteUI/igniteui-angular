@@ -105,7 +105,7 @@ export class IgxIconService {
      *   this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
      * ```
      */
-    public addSvgIcon(name: string, url: string, family: string = '') {
+    public addSvgIcon(name: string, url: string, family = this._family) {
         if (name && url) {
             const safeUrl = this._sanitizer.bypassSecurityTrustResourceUrl(url);
             if (!safeUrl) {
@@ -154,8 +154,9 @@ export class IgxIconService {
      * ```
      */
     public isSvgIconCached(name: string, family: string = ''): boolean {
-        if(this._cachedSvgIcons.has(family)) {
-            const familyRegistry = this._cachedSvgIcons.get(family) as Map<string, SafeHtml>;
+        const familyClassName = this.familyClassName(family);
+        if(this._cachedSvgIcons.has(familyClassName)) {
+            const familyRegistry = this._cachedSvgIcons.get(familyClassName) as Map<string, SafeHtml>;
             return familyRegistry.has(name);
         }
 
@@ -169,7 +170,8 @@ export class IgxIconService {
      * ```
      */
     public getSvgIcon(name: string, family: string = '') {
-        return this._cachedSvgIcons.get(family)?.get(name);
+        const familyClassName = this.familyClassName(family);
+        return this._cachedSvgIcons.get(familyClassName)?.get(name);
     }
 
     /**
