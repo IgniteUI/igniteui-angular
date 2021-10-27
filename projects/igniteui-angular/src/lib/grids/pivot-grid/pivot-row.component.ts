@@ -42,8 +42,6 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      public headerTemplateGray: TemplateRef<any>;
 
     public rowDimension: IgxColumnComponent[] = [];
-    public hasChild = false;
-    public currLvl = 0;
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxPivotGridComponent>,
@@ -86,8 +84,6 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
             // generate new rowDimension on row data change
             this.rowDimension = [];
             const rowDimConfig = this.grid.pivotConfiguration.rows;
-            this.hasChild = this.rowData['records'] != null && this.rowData['records'].length > 0;
-            this.currLvl = 0;
             this.extractFromDimensions(rowDimConfig, 0);
         }
     }
@@ -100,19 +96,14 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
 
     protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number) {
         let dimIndex = 0;
-        this.currLvl += level;
-        let currentLvl = level;
+        let currentLvl = 0;
+        currentLvl += level;
         for (const dim of rowDimConfig) {
-            const fieldName = PivotUtil.resolveFieldName(dim, this.rowData);
-            const fieldLevel = fieldName + '_level';
-            currentLvl = this.rowData[fieldLevel] !== undefined ?  this.rowData[fieldLevel] : currentLvl + 1;
-            if (currentLvl === level) {
-                this.rowDimension.push(this.extractFromDimension(dim, dimIndex, this.currLvl));
-            }
-            dimIndex++;
-            if  (level < currentLvl) {
-                this.extractFromDimensions(dim.childLevels, level + 1);
-            }
+            const dimData = PivotUtil.getDimensionLevel(dim, this.rowData,
+                  { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'});
+            dimIndex += dimData.level;
+            currentLvl += dimData.level;
+            this.rowDimension.push(this.extractFromDimension(dimData.dimension, dimIndex, currentLvl));
         }
     }
 
@@ -129,15 +120,13 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
     }
 
     protected _createColComponent(field: string, header: string, index: number = 0, dim: IPivotDimension, lvl = 0) {
-        const hasChild = this.rowData[field + '_records'] !== undefined && this.rowData[field + '_records'].length > 0;
-        // const fieldName = field.indexOf('-') !==  -1 ? field.slice(field.lastIndexOf('-') + 1) : field;
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
         ref.instance.field = field;
         ref.instance.header = header;
         ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
         (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
-        if (dim.childLevels && dim.childLevels.length > 0 && hasChild && lvl >= PivotUtil.getTotalLvl(this.rowData)) {
+        if (dim.childLevels && dim.childLevels.length > 0 && lvl >= PivotUtil.getTotalLvl(this.rowData)) {
             ref.instance.headerTemplate = this.headerTemplate;
         } else if (lvl < PivotUtil.getTotalLvl(this.rowData)) {
             ref.instance.headerTemplate = this.headerTemplateGray;

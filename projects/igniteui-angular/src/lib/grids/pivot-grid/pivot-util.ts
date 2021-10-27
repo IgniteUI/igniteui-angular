@@ -41,7 +41,7 @@ export class PivotUtil {
             dim = dim.childLevels[0];
             level = rec[dim.fieldName + '_' + pivotKeys.level];
         }
-        return { level, fieldName: dim.fieldName };
+        return { level, fieldName: dim.fieldName, dimension: dim };
     }
 
     public static flattenHierarchy(records, config, dim, expansionStates, pivotKeys, lvl, prevDims, currDimLvl) {
