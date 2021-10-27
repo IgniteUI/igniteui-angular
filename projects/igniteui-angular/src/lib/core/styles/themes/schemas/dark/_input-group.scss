@@ -30,11 +30,15 @@ $dark-fluent-input-group: extend(
     $base-dark-input-group,
     (
         input-prefix-background: (
-            igx-color: ('grays', 100)
+            igx-color: ('grays', 50)
         ),
 
         input-suffix-background: (
-            igx-color: ('grays', 100)
+            igx-color: ('grays', 50)
+        ),
+
+        box-background: (
+            igx-color: ('grays', 50),
         ),
     )
 );
