@@ -1051,7 +1051,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (index < 0 || index > this.dataView.length) {
             return undefined;
         }
-        // TODO 
+        // TODO
         return new IgxGridRow((this as any) as GridType, index, rec);
     }
 
