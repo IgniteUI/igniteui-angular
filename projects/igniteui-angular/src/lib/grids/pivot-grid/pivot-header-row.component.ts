@@ -55,10 +55,10 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         this.grid.pipeTrigger++;
     }
 
-    public onDimDragEnter(event) {
-        const isValue = this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id);
-        if (isValue) {
-            // cannot drag value in dimensions
+    public onDimDragEnter(event, dimension: PivotDimensionType) {
+        const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id) : null;
+        if (typeMismatch) {
+            // cannot drag between dimensions and value
             return;
         }
         event.owner.nativeElement.style.borderLeft = '1px solid red';
@@ -67,11 +67,11 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         event.owner.nativeElement.style.borderLeft = '';
     }
 
-    public onAreaDragEnter(event, area) {
+    public onAreaDragEnter(event, area, dimension: PivotDimensionType) {
         const dragId = event.detail.owner.element.nativeElement.parentElement.id;
-        const isValue = this.grid.pivotConfiguration.values.find(x => x.member === dragId);
-        if (isValue) {
-            // cannot drag value in dimensions
+        const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === dragId) : null;
+        if (typeMismatch) {
+            // cannot drag between dimensions and value
             return;
         }
         const lastElem = area.chipsList.last.nativeElement;
@@ -85,6 +85,20 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         area.chipsList.toArray().forEach(element => {
             element.nativeElement.style.borderRight = '';
         });
+    }
+
+    public onValueDrop(event, area) {
+        //values can only be reordered
+        const currentDim = this.grid.pivotConfiguration.values;
+        const dragId = event.dragChip?.id || event.dragData?.chip.id;
+        const chipsArray = area.chipsList.toArray();
+        const chipIndex = chipsArray.indexOf(event.owner) !== -1 ? chipsArray.indexOf(event.owner) : chipsArray.length;
+        const newDim = currentDim.find(x => x.member === dragId);
+        const dragChipIndex = chipsArray.indexOf(event.dragChip || event.dragData.chip);
+        currentDim.splice(dragChipIndex, 1);
+        currentDim.splice(dragChipIndex > chipIndex ? chipIndex : chipIndex - 1, 0, newDim);
+
+        this.grid.setupColumns();
     }
 
     public onDimDrop(event, area, dimension: PivotDimensionType) {
