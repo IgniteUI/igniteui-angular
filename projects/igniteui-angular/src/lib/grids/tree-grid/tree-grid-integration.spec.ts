@@ -333,8 +333,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 cell.editMode = true;
                 fix.detectChanges();
 
-                // const editRow = cell.row.nativeElement;
-                const editRow = cellElem.intRow.nativeElement;
+                const editRow = cell.row.nativeElement;
+                //const editRow = cellElem.intRow.nativeElement;
                 const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
 
                 const bannerTop = banner.getBoundingClientRect().top;
@@ -366,7 +366,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             // const editRow = cell.row.nativeElement;
-            const editRow = cell.intRow.nativeElement;
+            const editRow = cell.row.nativeElement;
             const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
 
             const bannerTop = banner.getBoundingClientRect().top;
@@ -393,7 +393,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             // const editRow = cell.row.nativeElement;
-            const editRow = cell.intRow.nativeElement;
+            const editRow = cell.row.nativeElement;
             const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
 
             const bannerBottom = banner.getBoundingClientRect().bottom;
@@ -415,7 +415,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             // const editRow = cell.row.nativeElement;
-            const editRow = cell.intRow.nativeElement;
+            const editRow = cell.row.nativeElement;
             const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
 
             const bannerBottom = banner.getBoundingClientRect().bottom;

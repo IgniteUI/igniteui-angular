@@ -449,7 +449,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
+            const detailRow = row.nativeElement.previousElementSibling as HTMLElement;
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
@@ -469,7 +469,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(2);
-            const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
+            const detailRow = row.nativeElement.previousElementSibling as HTMLElement;
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
@@ -587,7 +587,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
-            expect(lastRow.cells.last.active).toBeTruthy();
+            expect(lastRow.cells[0].active).toBeTruthy();
         });
 
         it('Should navigate to the first data cell in the grid using Ctrl + Home.', async () => {
@@ -607,7 +607,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const fRow = grid.gridAPI.get_row_by_index(0);
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
-            expect(fRow.cells.first.active).toBeTruthy();
+            expect(fRow.cells[0].active).toBeTruthy();
         });
 
         it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async () => {
@@ -625,7 +625,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
-            expect(lastRow.cells.first.active).toBeTruthy();
+            expect(lastRow.cells[0].active).toBeTruthy();
         });
 
         it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async () => {
@@ -645,7 +645,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const fRow = grid.gridAPI.get_row_by_index(0);
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
-            expect(fRow.cells.last.active).toBeTruthy();
+            expect(fRow.cells[fRow.cells.length-1].active).toBeTruthy();
         });
 
         it(`Should navigate to the first/last row when using Ctrl+ArrowUp/ArrowDown

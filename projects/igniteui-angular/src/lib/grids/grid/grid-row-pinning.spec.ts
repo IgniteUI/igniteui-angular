@@ -496,7 +496,7 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.pinnedRows.length).toBe(1);
 
-            const firstRowIconName = GridFunctions.getRowExpandIconName(grid.rowList.toArray()[0]);
+            const firstRowIconName = GridFunctions.getRowExpandIconName(grid.rowList[0]);
             const pinnedRow = grid.pinnedRows[0];
             expect(grid.expansionStates.size).toEqual(1);
             expect(grid.expansionStates.has(pinnedRow.rowID)).toBeTruthy();
@@ -504,7 +504,7 @@ describe('Row Pinning #grid', () => {
             // disabled row should have expand icon
             expect(firstRowIconName).toEqual('expand_more');
             // disabled row should have chip
-            const cell = grid.gridAPI.get_row_by_index(0).cells.first;
+            const cell = grid.gridAPI.get_row_by_index(0).cells[0];
             expect(cell.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(1);
             // pinned row shouldn't have expand icon
             const hasIconForPinnedRow = pinnedRow.cells.first.nativeElement.querySelector('igx-icon');
@@ -746,7 +746,7 @@ describe('Row Pinning #grid', () => {
             expect(row.pinned).toBeFalsy();
 
             const gridUnpinnedRow = grid.gridAPI.get_row_by_index(1);
-            const unpinnedRowCells = gridUnpinnedRow.cells.toArray();
+            const unpinnedRowCells = gridUnpinnedRow.cells;
 
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
@@ -788,7 +788,7 @@ describe('Row Pinning #grid', () => {
             expect(row.pinned).toBeFalsy();
 
             const gridUnpinnedRow = grid.gridAPI.get_row_by_index(1);
-            const unpinnedRowCells = gridUnpinnedRow.cells.toArray();
+            const unpinnedRowCells = gridUnpinnedRow.cells;
 
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
@@ -1023,7 +1023,7 @@ describe('Row Pinning #grid', () => {
         it('should navigate to bottom from top pinned row using Ctrl+ArrowDown', async () => {
             grid.gridAPI.get_row_by_index(5).pin();
 
-            const firstRowCell = grid.gridAPI.get_row_by_index(0).cells.toArray()[1];
+            const firstRowCell = grid.gridAPI.get_row_by_index(0).cells[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -1048,7 +1048,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const firstRowCell = grid.gridAPI.get_row_by_index(0).cells.toArray()[1];
+            const firstRowCell = grid.gridAPI.get_row_by_index(0).cells[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -1076,7 +1076,7 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).not.toEqual(0);
 
-            const lastRowCell = grid.gridAPI.get_row_by_index(27).cells.toArray()[1];
+            const lastRowCell = grid.gridAPI.get_row_by_index(27).cells[1];
             UIInteractions.simulateClickAndSelectEvent(lastRowCell);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -1098,7 +1098,7 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(5).pin();
             grid.gridAPI.get_row_by_index(1).pin();
 
-            const thirdRowCell = grid.gridAPI.get_row_by_index(2).cells.toArray()[1];
+            const thirdRowCell = grid.gridAPI.get_row_by_index(2).cells[1];
             UIInteractions.simulateClickAndSelectEvent(thirdRowCell);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -1126,7 +1126,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const lastRowCell = grid.gridAPI.get_row_by_index(27).cells.toArray()[1];
+            const lastRowCell = grid.gridAPI.get_row_by_index(27).cells[1];
             UIInteractions.simulateClickAndSelectEvent(lastRowCell);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -1151,7 +1151,7 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(5).pin();
             fix.detectChanges();
 
-            const firstRowCell = grid.gridAPI.get_row_by_index(27).cells.toArray()[1];
+            const firstRowCell = grid.gridAPI.get_row_by_index(27).cells[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -1174,7 +1174,7 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
 
-            const firstRowCell = grid.gridAPI.get_row_by_index(0).cells.toArray()[1];
+            const firstRowCell = grid.gridAPI.get_row_by_index(0).cells[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -1205,7 +1205,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const firstRowCell = grid.gridAPI.get_row_by_index(26).cells.toArray()[1];
+            const firstRowCell = grid.gridAPI.get_row_by_index(26).cells[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -1229,7 +1229,7 @@ describe('Row Pinning #grid', () => {
             grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
-            const firstRowCell = grid.gridAPI.get_row_by_index(0).cells.toArray()[1];
+            const firstRowCell = grid.gridAPI.get_row_by_index(0).cells[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -1275,10 +1275,10 @@ describe('Row Pinning #grid', () => {
             const fourthRow = grid.gridAPI.get_row_by_index(3);
 
             expect(firstRow).toBeDefined();
-            expect(firstRow.element.nativeElement.classList.contains('eventRow')).toBeTrue();
-            expect(firstRow.element.nativeElement.classList.contains('oddRow')).toBeFalse();
-            expect(fourthRow.element.nativeElement.classList.contains('eventRow')).toBeFalse();
-            expect(fourthRow.element.nativeElement.classList.contains('oddRow')).toBeTrue();
+            expect(firstRow.nativeElement.classList.contains('eventRow')).toBeTrue();
+            expect(firstRow.nativeElement.classList.contains('oddRow')).toBeFalse();
+            expect(fourthRow.nativeElement.classList.contains('eventRow')).toBeFalse();
+            expect(fourthRow.nativeElement.classList.contains('oddRow')).toBeTrue();
         });
 
         it('Should apply custom CSS bindings to the grid cells/rows. Check the style attribute to match each binding', () => {
@@ -1297,8 +1297,8 @@ describe('Row Pinning #grid', () => {
             const expectedEvenStyles = 'background: gray; animation: 0.75s ease 0s 1 normal none running popin;';
             const expectedOddStyles = 'background: white; animation: 0.75s ease 0s 1 normal none running popin;';
 
-            expect(firstRow.element.nativeElement.style.cssText).toEqual(expectedEvenStyles);
-            expect(fourthRow.element.nativeElement.style.cssText).toEqual(expectedOddStyles);
+            expect(firstRow.nativeElement.style.cssText).toEqual(expectedEvenStyles);
+            expect(fourthRow.nativeElement.style.cssText).toEqual(expectedOddStyles);
         });
 
     });

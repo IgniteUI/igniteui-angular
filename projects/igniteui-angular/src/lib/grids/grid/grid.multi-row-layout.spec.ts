@@ -895,7 +895,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // check total widths sum - unique col groups col span 10 in total * 200px default witdth * 3 times repeated
         const horizonatalScrElem = horizontalVirtualization.getScroll();
         const totalExpected = 10 * 200 * 3;
-        expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
+        expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
         // check groups are rendered correctly
 
         const firstRowCells = grid.rowList.first.cells.toArray();

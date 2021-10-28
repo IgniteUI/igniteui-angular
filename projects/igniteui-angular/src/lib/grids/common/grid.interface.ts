@@ -31,7 +31,7 @@ import { IColumnPipeArgs, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy } from './strategy';
-import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
@@ -60,12 +60,16 @@ export interface CellType {
 	grid: GridType;
 	id: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
+    readonly?: boolean;
+    title?: any;
 	width: string;
     visibleColumnIndex?: number;
 	update: (value: any) => void;
     setEditMode?(value: boolean): void;
     calculateSizeToFit?(range: any): number;
     activate?(event: FocusEvent | KeyboardEvent): void;
+    onDoubleClick?(event: MouseEvent): void;
+    onClick?(event: MouseEvent): void;
 }
 
 export interface RowType {
@@ -82,8 +86,9 @@ export interface RowType {
     /** Deprecated, will be removed. data is the new property */
     rowData?: any;
     data?: any;
-    cells?: QueryList<CellType>;
+    cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
+    virtDirRow?: IgxGridForOfDirective<any>;
     pinned?: boolean;
     selected?: boolean;
     expanded?: boolean;
@@ -93,8 +98,11 @@ export interface RowType {
     parent?: RowType;
     hasChildren?: boolean;
     treeRow? : ITreeGridRecord;
-    addRowUI: any;
+    addRowUI?: any;
+    focused?: boolean;
     grid: GridType;
+    onRowSelectorClick?: (event) => void;
+    onClick?: (event: MouseEvent) => void;
     beginAddRow?: () => void;
     update?: (value: any) => void;
     delete?: () => any;
@@ -483,6 +491,7 @@ export interface GridType extends IGridDataBindable {
     groupingFlatResult?: any[];
     groupingResult?: any[];
     groupingMetadata?: any[];
+    selectedCells?: CellType[];
 
     toggleGroup?(groupRow: IGroupByRecord): void;
     clearGrouping?(field: string): void;
@@ -504,6 +513,7 @@ export interface GridType extends IGridDataBindable {
     getColumnByVisibleIndex(index: number): ColumnType;
     getHeaderGroupWidth(column: ColumnType): string;
     getRowByKey?(key: any): RowType;
+    getRowByIndex?(index: number): RowType;
     setFilteredData(data: any, pinned: boolean): void;
     setFilteredSortedData(data: any, pinned: boolean): void;
     sort(expression: ISortingExpression | ISortingExpression[]): void;

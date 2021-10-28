@@ -25,6 +25,7 @@ import { GridSelectionMode } from '../common/enums';
 import { RowType } from '../common/grid.interface';
 import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxRowDirective } from '../row.directive';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';
@@ -56,9 +57,9 @@ describe('Row Drag Tests #grid', () => {
         describe('Drag and drop tests', () => {
             let grid: IgxGridComponent;
             let nonDroppableAreaElement: Element;
-            let rows: IgxGridRowComponent[];
+            let rows: IgxRowDirective[];
             let dragRows: DebugElement[];
-            let rowToDrag: IgxGridRowComponent;
+            let rowToDrag: IgxRowDirective;
             configureTestSuite((() => {
                 TestBed.configureTestingModule({
                     declarations: [
@@ -408,7 +409,7 @@ describe('Row Drag Tests #grid', () => {
         });
         describe('Custom ghost template tests', () => {
             let grid: IgxGridComponent;
-            let rows: IgxGridRowComponent[];
+            let rows: IgxRowDirective[];
             let dragRows: DebugElement[];
             configureTestSuite((() => {
                 TestBed.configureTestingModule({
@@ -458,8 +459,8 @@ describe('Row Drag Tests #grid', () => {
     describe('Grid feature integration tests', () => {
         let dragGrid: IgxGridComponent;
         let dropGrid: IgxGridComponent;
-        let dragGridRows: IgxGridRowComponent[];
-        let dropGridRows: IgxGridRowComponent[];
+        let dragGridRows: IgxRowDirective[];
+        let dropGridRows: IgxRowDirective[];
         let dragRows: DebugElement[];
         configureTestSuite((() => {
             TestBed.configureTestingModule({
@@ -485,10 +486,10 @@ describe('Row Drag Tests #grid', () => {
         }));
         const verifyDragAndDropRowCellValues = (dragRowIndex: number, dropRowIndex: number) => {
             const dragRow = dragGrid.gridAPI.get_row_by_index(dragRowIndex);
-            const dragRowCells = dragRow.cells.toArray();
+            const dragRowCells = dragRow.cells;
 
             const dropRow = dropGrid.gridAPI.get_row_by_index(dropRowIndex);
-            const dropRowCells = dropRow.cells.toArray();
+            const dropRowCells = dropRow.cells;
             for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex++) {
                 expect(dropRowCells[cellIndex].value).toEqual(dragRowCells[cellIndex].value);
             }

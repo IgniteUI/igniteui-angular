@@ -259,7 +259,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             let horizonatalScrElem = horizontalVirtualization.getScroll();
             // 7 column span in total
             let totalExpected = 7 * 200;
-            expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
+            expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
 
             // hide group 3
             grid.getColumnByName('group3').hidden = true;
@@ -280,7 +280,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             horizonatalScrElem = horizontalVirtualization.getScroll();
             // 7 column span in total
             totalExpected = 6 * 200;
-            expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
+            expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
 
             // show group1
             grid.getColumnByName('group1').hidden = false;
@@ -303,7 +303,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             horizonatalScrElem = horizontalVirtualization.getScroll();
             // 7 column span in total
             totalExpected = 9 * 200;
-            expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
+            expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
 
             // check last column group can be scrolled in view
             horizontalVirtualization.scrollTo(2);
@@ -624,7 +624,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const horizonatalScrElem = horizontalVirtualization.getScroll();
             // 9 column span in total
             const totalExpected = 9 * 200;
-            expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
+            expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
 
             // check last column group can be scrolled in view
             horizontalVirtualization.scrollTo(2);
@@ -796,7 +796,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             // check width scrollbar
             const horizonatalScrElem = horizontalVirtualization.getScroll();
-            expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
+            expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
         });
     });
 
