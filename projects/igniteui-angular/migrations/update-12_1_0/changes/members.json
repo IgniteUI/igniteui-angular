@@ -308,6 +308,13 @@
             "definedIn": [
                 "IgxMaskDirective"
             ]
+        },
+        {
+            "member": "isCellSelected",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxGridCellComponent"
+            ]
         }
     ]
 }

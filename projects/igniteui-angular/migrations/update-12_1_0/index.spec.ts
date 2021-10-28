@@ -816,5 +816,52 @@ public onBannerOpened(event: BannerEventArgs) {
         `
         );
     });
+
+    it('Should remove references to deprecated `isCellSelected` property of `IgxGridCellComponent`', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/expansion-test.component.ts',
+            `import { Component, ViewChild } from '@angular/core';
+import { IgxGridCellComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-expansion-test',
+    templateUrl: './expansion-test.component.html',
+    styleUrls: ['./expansion-test.component.scss']
+})
+export class ExpansionTestComponent {
+
+     @ViewChild(IgxGridCellComponent, { read: IgxGridCellComponent })
+     public cellComponent: IgxGridCellComponent;
+
+    public get ariaSelected() {
+        return this.selected || this.column.selected || this.intRow.selected;
+    }
+}`
+        );
+        const tree = await schematicRunner
+            .runSchematicAsync('migration-17', {}, appTree)
+            .toPromise();
+        const expectedContent =  `import { Component, ViewChild } from '@angular/core';
+import { IgxGridCellComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-expansion-test',
+    templateUrl: './expansion-test.component.html',
+    styleUrls: ['./expansion-test.component.scss']
+})
+export class ExpansionTestComponent {
+
+    @ViewChild(IgxGridCellComponent, { static: true })
+    public cellComponent: IgxGridCellComponent;
+
+    public get ariaSelected() {
+        return this.selected || this.column.selected || this.intRow.selected;
+    }
+}`;
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/expansion-test.component.ts')
+        ).toEqual(expectedContent);
+    });
 });
 

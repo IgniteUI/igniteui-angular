@@ -35,7 +35,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxColumnActionsComponent`
     - **Breaking Change** - The following input has been removed
         - Input `columns`. Use `igxGrid` `columns` input instead.        
-
+- `IgxGridCellComponent`
+  - **Breaking Change** - `isCellSelected` method has been deprecated. Usе `selected` property to get the selected cell.
 ## 12.2.3
 
 ### General
