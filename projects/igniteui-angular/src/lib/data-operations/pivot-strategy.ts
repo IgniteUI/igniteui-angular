@@ -12,8 +12,6 @@ export interface IPivotDimensionStrategy {
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: NoopPivotDimensionsStrategy = null;
 
-    private constructor() {  }
-
     public static instance() {
         return this._instance || (this._instance = new NoopPivotDimensionsStrategy());
     }
@@ -26,8 +24,6 @@ export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
 
 export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: PivotRowDimensionsStrategy = null;
-
-    private constructor() {  }
 
     public static instance() {
         return this._instance || (this._instance = new PivotRowDimensionsStrategy());
@@ -83,8 +79,6 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
 
 export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: PivotRowDimensionsStrategy = null;
-
-    private constructor() {  }
 
     public static instance() {
         return this._instance || (this._instance = new PivotColumnDimensionsStrategy());

@@ -1,5 +1,22 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration, NoopPivotDimensionsStrategy } from 'igniteui-angular';
+import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration, IPivotDimension, IPivotDimensionStrategy,
+     IPivotValue,
+     NoopPivotDimensionsStrategy } from 'igniteui-angular';
+
+
+
+export class MyRowStrategy extends NoopPivotDimensionsStrategy {
+    public process(collection: any[], _: IPivotDimension[], __: IPivotValue[]): any[] {
+        return collection;
+    }
+}
+
+export class MyColumnStrategy extends NoopPivotDimensionsStrategy {
+    public process(collection: any[], _: IPivotDimension[], __: IPivotValue[]): any[] {
+        return collection;
+    }
+}
+
 
 @Component({
     providers: [],
@@ -10,7 +27,6 @@ import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration, No
 
 export class PivotGridNoopSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
-
     public pivotConfigHierarchy: IPivotConfiguration = {
         columnStrategy: NoopPivotDimensionsStrategy.instance(),
         rowStrategy: NoopPivotDimensionsStrategy.instance(),
