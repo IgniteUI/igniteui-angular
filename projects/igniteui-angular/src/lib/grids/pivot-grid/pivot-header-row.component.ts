@@ -122,6 +122,10 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
                 return;
             }
             dim.enabled = false;
+            if (dimension === PivotDimensionType.Row) {
+                // opposite dimension has changed.
+                this.grid.setupColumns();
+            }
 
             const newDim = Object.assign({}, dim);
             newDim.enabled = true;
