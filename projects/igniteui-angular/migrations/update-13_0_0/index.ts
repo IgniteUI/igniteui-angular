@@ -24,7 +24,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             const { file, node } = offset;
             if (file.content.includes('columns')) {
                 const gridRef = node.attrs.find(e => e.name.includes('#')).name.substring(1);
-                const content = file.content.split(gridRef + '.columns').join(gridRef + '.columnsCollection')
+                const content = file.content.split(gridRef + '.columns').join(gridRef + '.columnsCollection');
                 host.overwrite(path, content);
             }
         });
