@@ -21,7 +21,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         findElementNodes(parseFile(host, path), TAGS)
         .map(node => getSourceOffset(node as Element))
         .forEach(offset => {
-            const { startTag, file, node } = offset;
+            const { file, node } = offset;
             if (file.content.includes('columns')) {
                 const gridRef = node.attrs.find(e => e.name.includes('#')).name.substring(1);
                 const content = file.content.split(gridRef + '.columns').join(gridRef + '.columnsCollection')
