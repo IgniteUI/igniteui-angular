@@ -14,7 +14,12 @@
         (pointerdown)="$event.preventDefault()">
 
         <!-- Columns area -->
-        <igx-chips-area #colArea>
+        <igx-chips-area #colArea
+        (dropped)="onDimDrop($event, colArea, 1)"
+        igxDrop
+        (igxDragEnter)="onAreaDragEnter($event, colArea)"
+        (igxDragLeave)="onAreaDragLeave($event, colArea)"
+        >
             <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.fieldName"
              [removable]="true" (remove)="columnRemoved($event)"
              (dragEnter)="onDimDragEnter($event)"
@@ -46,7 +51,12 @@
             <div #pivotContainer class="igx-grid__tr-action" [style.min-width.px] = "grid.pivotRowWidths" 
                 (pointerdown)="$event.preventDefault()" style='display: flex; align-items: flex-end;'>
                  <!-- Row area -->
-                 <igx-chips-area #rowArea>
+                 <igx-chips-area #rowArea 
+                 (dropped)="onDimDrop($event, rowArea, 0)"
+                 igxDrop
+                 (igxDragEnter)="onAreaDragEnter($event, rowArea)"
+                 (igxDragLeave)="onAreaDragLeave($event, rowArea)"
+                 >
                     <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="'true'" [id]="row.fieldName"
                      [removable]="true" (remove)="rowRemoved($event)"
                      (dragEnter)="onDimDragEnter($event)"

@@ -67,19 +67,40 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         event.owner.nativeElement.style.borderLeft = '';
     }
 
+    public onAreaDragEnter(event, area) {
+        const dragId = event.detail.owner.element.nativeElement.parentElement.id;
+        const isValue = this.grid.pivotConfiguration.values.find(x => x.member === dragId);
+        if (isValue) {
+            // cannot drag value in dimensions
+            return;
+        }
+        const lastElem = area.chipsList.last.nativeElement;
+        const targetElem = event.detail.originalEvent.target;
+        const targetOwner = event.detail.owner.element.nativeElement.parentElement;
+        if (targetOwner !== lastElem && targetElem.getBoundingClientRect().x >= lastElem.getBoundingClientRect().x) {
+            area.chipsList.last.nativeElement.style.borderRight = '1px solid red';
+        }
+    }
+    public onAreaDragLeave(event, area) {
+        area.chipsList.toArray().forEach(element => {
+            element.nativeElement.style.borderRight = '';
+        });
+    }
+
     public onDimDrop(event, area, dimension: PivotDimensionType) {
+        const dragId = event.dragChip?.id || event.dragData?.chip.id;
         const currentDim = dimension === PivotDimensionType.Row ? this.grid.pivotConfiguration.rows :
         this.grid.pivotConfiguration.columns;
         const chipsArray = area.chipsList.toArray();
-        const chip = chipsArray.find(x => x.id === event.dragChip.id);
+        const chip = chipsArray.find(x => x.id === dragId);
         const isNewChip = chip === undefined;
-        const currIndex = area.chipsList.toArray().indexOf(event.owner);
+        const chipIndex = chipsArray.indexOf(event.owner) !== -1 ? chipsArray.indexOf(event.owner) : chipsArray.length;
         if (isNewChip) {
             // chip moved from external collection
             const oppositeDim = dimension === PivotDimensionType.Row ? this.grid.pivotConfiguration.columns :
             this.grid.pivotConfiguration.rows;
-            const dim = oppositeDim.find(x => x.fieldName === event.dragChip.id);
-            if(!dim) {
+            const dim = oppositeDim.find(x => x.fieldName === dragId);
+            if (!dim) {
                 // you have dragged something that is not a dimension
                 return;
             }
@@ -87,14 +108,14 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
             const newDim = Object.assign({}, dim);
             newDim.enabled = true;
-            currentDim.splice(currIndex, 0, newDim);
+            currentDim.splice(chipIndex, 0, newDim);
             this.grid.setupColumns();
         } else {
             // chip from same collection, reordered.
-            const newDim = currentDim.find(x => x.fieldName === event.dragChip.id);
-            const dragChipIndex = chipsArray.indexOf(event.dragChip);
+            const newDim = currentDim.find(x => x.fieldName === dragId);
+            const dragChipIndex = chipsArray.indexOf(event.dragChip || event.dragData.chip);
             currentDim.splice(dragChipIndex, 1);
-            currentDim.splice(currIndex, 0, newDim);
+            currentDim.splice(dragChipIndex > chipIndex ? chipIndex : chipIndex - 1, 0, newDim);
         }
         this.grid.pipeTrigger++;
     }
