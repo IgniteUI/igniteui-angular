@@ -6,6 +6,7 @@ import {
 import { IBaseChipEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotRowComponent } from './pivot-row.component';
 
 export interface IgxGridRowSelectorsTemplateContext {
@@ -34,26 +35,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     @Input()
     public row: IgxPivotRowComponent;
 
-    public columnsOrderChanged(event: IChipsAreaReorderEventArgs) {
-        const newOrder = [];
-        for (const chip of event.chipsArray) {
-            const chipItem = this.grid.pivotConfiguration.columns.filter((item) => item.fieldName === chip.id)[0];
-            newOrder.push(chipItem);
-        }
-        this.grid.pivotConfiguration.columns = newOrder;
-        this.grid.setupColumns();
-        this.grid.pipeTrigger++;
-    }
-
-    public rowsOrderChanged(event: IChipsAreaReorderEventArgs) {
-        const newOrder = [];
-        for (const chip of event.chipsArray) {
-            const chipItem = this.grid.pivotConfiguration.rows.filter((item) => item.fieldName === chip.id)[0];
-            newOrder.push(chipItem);
-        }
-        this.grid.pivotConfiguration.rows = newOrder;
-    }
-
     public rowRemoved(event: IBaseChipEventArgs) {
         const row = this.grid.pivotConfiguration.rows.find(x => x.fieldName === event.owner.id);
         row.enabled = false;
@@ -71,6 +52,50 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         const value = this.grid.pivotConfiguration.values.find(x => x.member === event.owner.id);
         value.enabled = false;
         this.grid.setupColumns();
+        this.grid.pipeTrigger++;
+    }
+
+    public onDimDragEnter(event) {
+        const isValue = this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id);
+        if (isValue) {
+            // cannot drag value in dimensions
+            return;
+        }
+        event.owner.nativeElement.style.borderLeft = '1px solid red';
+    }
+    public onDimDragLeave(event) {
+        event.owner.nativeElement.style.borderLeft = '';
+    }
+
+    public onDimDrop(event, area, dimension: PivotDimensionType) {
+        const currentDim = dimension === PivotDimensionType.Row ? this.grid.pivotConfiguration.rows :
+        this.grid.pivotConfiguration.columns;
+        const chipsArray = area.chipsList.toArray();
+        const chip = chipsArray.find(x => x.id === event.dragChip.id);
+        const isNewChip = chip === undefined;
+        const currIndex = area.chipsList.toArray().indexOf(event.owner);
+        if (isNewChip) {
+            // chip moved from external collection
+            const oppositeDim = dimension === PivotDimensionType.Row ? this.grid.pivotConfiguration.columns :
+            this.grid.pivotConfiguration.rows;
+            const dim = oppositeDim.find(x => x.fieldName === event.dragChip.id);
+            if(!dim) {
+                // you have dragged something that is not a dimension
+                return;
+            }
+            dim.enabled = false;
+
+            const newDim = Object.assign({}, dim);
+            newDim.enabled = true;
+            currentDim.splice(currIndex, 0, newDim);
+            this.grid.setupColumns();
+        } else {
+            // chip from same collection, reordered.
+            const newDim = currentDim.find(x => x.fieldName === event.dragChip.id);
+            const dragChipIndex = chipsArray.indexOf(event.dragChip);
+            currentDim.splice(dragChipIndex, 1);
+            currentDim.splice(currIndex, 0, newDim);
+        }
         this.grid.pipeTrigger++;
     }
 }

@@ -14,8 +14,13 @@
         (pointerdown)="$event.preventDefault()">
 
         <!-- Columns area -->
-        <igx-chips-area (reorder)="columnsOrderChanged($event)">
-            <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.fieldName" [removable]="true" (remove)="columnRemoved($event)">
+        <igx-chips-area #colArea>
+            <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.fieldName"
+             [removable]="true" (remove)="columnRemoved($event)"
+             (dragEnter)="onDimDragEnter($event)"
+             (dragLeave)="onDimDragLeave($event)"
+             (dragDrop)="onDimDrop($event, colArea, 1)"
+             >
                 <igx-icon igxPrefix>view_column</igx-icon>
                 <igx-icon igxPrefix>filter_list</igx-icon>
                 {{col.fieldName}}
@@ -41,8 +46,13 @@
             <div #pivotContainer class="igx-grid__tr-action" [style.min-width.px] = "grid.pivotRowWidths" 
                 (pointerdown)="$event.preventDefault()" style='display: flex; align-items: flex-end;'>
                  <!-- Row area -->
-                 <igx-chips-area (reorder)="rowsOrderChanged($event)">
-                    <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="'true'" [id]="row.fieldName" [removable]="true" (remove)="rowRemoved($event)">
+                 <igx-chips-area #rowArea>
+                    <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="'true'" [id]="row.fieldName"
+                     [removable]="true" (remove)="rowRemoved($event)"
+                     (dragEnter)="onDimDragEnter($event)"
+                     (dragLeave)="onDimDragLeave($event)"
+                     (dragDrop)="onDimDrop($event, rowArea, 0)"
+                     >
                         <igx-icon igxPrefix>table_rows</igx-icon>
                         <igx-icon igxPrefix>filter_list</igx-icon>
                         {{ row.fieldName}}
