@@ -49,10 +49,11 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         _pipeTrigger?: number,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
+        const enabledRows = config.rows.filter(x => x.enabled);
         const data = collection ? collection.slice(0) : [];
         let totalLlv = 0;
         const prevDims = [];
-        for (const row of config.rows) {
+        for (const row of enabledRows) {
             const lvl = PivotUtil.getDimensionDepth(row);
             totalLlv += lvl;
             PivotUtil.flattenHierarchy(data, config, row, expansionStates, pivotKeys, totalLlv, prevDims, 0);
