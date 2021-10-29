@@ -17,8 +17,7 @@ export class PivotGridSampleComponent {
 
         {
             member: 'Country',
-            enabled: true,
-            childLevels: []
+            enabled: true
         }
         ]
 ,
@@ -26,30 +25,26 @@ rows: [
     {
         member: () => 'AllProd',
         enabled: true,
-        childLevels: [{
+        childLevel: {
         member: 'ProductCategory',
-        enabled: true,
-        childLevels: []
-        }]
+        enabled: true
+        }
     },
     {
         member: () => 'AllDate',
         enabled: true,
-        childLevels: [{
+        childLevel: {
         member: 'Date',
-        enabled: true,
-        childLevels: []
-        }]
+        enabled: true
+        }
     },
     {
         member: () => 'AllSel',
         enabled: true,
-        childLevels: [{
+        childLevel: {
         member: 'SellerName',
-        enabled: true,
-        childLevels: []
+        enabled: true
         }
-        ]
     }
     ],
         values: [
