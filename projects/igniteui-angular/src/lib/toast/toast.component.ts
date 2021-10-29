@@ -248,18 +248,18 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
         });
     }
 
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes['position'] && this._positionSettings) {
+            this._positionSettings.verticalDirection = this.calculatePosition();
+        }
+    }
+
     private calculatePosition() {
         return this.position === 'bottom'
             ? VerticalAlignment.Bottom
             : this.position === 'middle'
                 ? VerticalAlignment.Middle
                 : VerticalAlignment.Top;
-    }
-
-    public ngOnChanges(changes: SimpleChanges) {
-        if (changes['position'] && this._positionSettings) {
-            this._positionSettings.verticalDirection = this.calculatePosition();
-        }
     }
 }
 
