@@ -39,6 +39,7 @@ export * from './lib/data-operations/filtering-expressions-tree';
 export * from './lib/data-operations/filtering-condition';
 export * from './lib/data-operations/filtering-state.interface';
 export * from './lib/data-operations/filtering-strategy';
+export * from './lib/data-operations/pivot-strategy';
 export * from './lib/data-operations/groupby-expand-state.interface';
 export * from './lib/data-operations/groupby-record.interface';
 export * from './lib/data-operations/groupby-state.interface';
@@ -100,6 +101,7 @@ export * from './lib/select/public_api';
 export * from './lib/splitter/splitter-pane/splitter-pane.component';
 export * from './lib/splitter/splitter.component';
 export * from './lib/splitter/splitter.module';
+export * from './lib/stepper/public_api';
 export * from './lib/date-range-picker/public_api';
 export * from './lib/date-common/public_api';
 
