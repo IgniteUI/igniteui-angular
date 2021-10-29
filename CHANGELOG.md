@@ -11,6 +11,8 @@ All notable changes for each version of this project will be documented in this 
     - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
 - `IgxCombo`
     - Added `groupSortingDirection` input, which allows you to set groups sorting order.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added new directives for re-templating header sorting indicators - `IgxSortHeaderIconDirective`, `igxSortAscendingHeaderIcon` and `igxSortDescendingHeaderIcon`.
 
 ### General
 

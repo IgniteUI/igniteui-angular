@@ -1819,7 +1819,7 @@ export class GridFunctions {
 
     public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
         const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS))
-                                            .find(header => header.nativeElement.title === columnField);
+            .find(header => header.nativeElement.title === columnField);
         return headerTitle.parent;
     }
 
@@ -1867,7 +1867,7 @@ export class GridFunctions {
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
-        return header.query(By.css(SORT_ICON_CLASS));
+        return header.query(By.css(SORT_ICON_CLASS))?.query(By.css('igx-icon'));
     }
 
     public static getHeaderFilterIcon(header: DebugElement): DebugElement {
@@ -1875,12 +1875,12 @@ export class GridFunctions {
     }
 
     public static clickHeaderSortIcon(header: DebugElement) {
-        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
+        const sortIcon = this.getHeaderSortIcon(header);
         sortIcon.triggerEventHandler('click', new Event('click'));
     }
 
     public static verifyHeaderSortIndicator(header: DebugElement, sortedAsc = true, sortedDesc = false, sortable = true) {
-        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
+        const sortIcon = this.getHeaderSortIcon(header);
         if (sortable) {
             const sortIconText = sortedDesc ? SORTING_ICON_DESC_CONTENT : SORTING_ICON_ASC_CONTENT;
             expect(sortIcon.nativeElement.textContent.trim()).toEqual(sortIconText);

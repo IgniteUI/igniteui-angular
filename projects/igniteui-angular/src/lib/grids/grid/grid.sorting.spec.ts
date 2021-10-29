@@ -549,5 +549,26 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
         }));
+
+        it('Should allow setting custom templates for header sorting none/ascending/descending icons.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
+            fixture = TestBed.createComponent(SortByParityComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            const fieldName = 'Name';
+            const header = GridFunctions.getColumnHeader(fieldName, fixture, grid);
+            let icon = GridFunctions.getHeaderSortIcon(header);
+
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('unfold_more');
+
+            grid.sort({ fieldName, dir: SortingDirection.Asc, ignoreCase: false });
+            fixture.detectChanges();
+            icon = GridFunctions.getHeaderSortIcon(header);
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('expand_less');
+
+            grid.sort({ fieldName, dir: SortingDirection.Desc, ignoreCase: false });
+            fixture.detectChanges();
+            icon = GridFunctions.getHeaderSortIcon(header);
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('expand_more');
+        }));
     });
 });
