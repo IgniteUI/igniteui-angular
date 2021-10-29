@@ -8,8 +8,8 @@ export interface IPivotConfiguration {
     rows: IPivotDimension[] | null;
     columns: IPivotDimension[] | null;
     values: IPivotValue[] | null;
-    // A predefined or defined via the `igxPivotSelector` filter expression tree to be applied in the filter pipe.
-    filters: FilteringExpressionsTree | null;
+    // dimensions to be displayed in the filter area.
+    filters?: IPivotDimension[] | null;
 }
 
 export interface IPivotDimension {
@@ -21,6 +21,8 @@ export interface IPivotDimension {
     enabled: boolean;
     // additional field name when using member as a function
     fieldName?: string;
+    // A predefined or defined via the `igxPivotSelector` filter expression tree for the current dimension to be applied in the filter pipe.
+    filter?: FilteringExpressionsTree | null;
 }
 
 export interface IPivotValue {
@@ -46,5 +48,6 @@ export interface IPivotKeys {
 
 export enum PivotDimensionType {
     Row,
-    Column
+    Column,
+    Filter
 }

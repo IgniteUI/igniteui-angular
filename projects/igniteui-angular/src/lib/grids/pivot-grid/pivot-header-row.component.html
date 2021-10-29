@@ -1,15 +1,27 @@
 <div class="igx-grid-thead__wrapper" role="row" [style.width.px]="width" *ngIf="!row" >
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
-        <span #pivotFilterContainer class="igx-grid__tr-action" [style.min-width.px] = "grid.pivotRowWidths" 
-        (pointerdown)="$event.preventDefault()">
+        <div #pivotFilterContainer class="igx-grid__tr-action" [style.min-width.px] = "grid.pivotRowWidths" 
+        (pointerdown)="$event.preventDefault()" style='display: flex; align-items: flex-end;'>
               <!-- Filter area -->
-              <igx-chips-area>
-                <igx-chip *ngFor="let filter of grid.pivotConfiguration.filters" [id]="filter.fieldName" [removable]="true">
+              <igx-chips-area #filterArea 
+              (dropped)="onDimDrop($event, filterArea, 2)"
+              igxDrop
+              (igxDragEnter)="onAreaDragEnter($event, filterArea, 2)"
+              (igxDragLeave)="onAreaDragLeave($event, filterArea)">
+                <div *ngIf="grid.filterDimensions.length === 0">
+                <span class='igx-pivot__emptyChipArea'>Drop Filter  Fields here.</span>
+                </div>
+                <igx-chip *ngFor="let filter of grid.filterDimensions" [id]="filter.fieldName" [draggable]="true"
+                [removable]="true" (remove)="filterRemoved($event)"
+                (dragEnter)="onDimDragEnter($event, 2)"
+                (dragLeave)="onDimDragLeave($event)"
+                (dragDrop)="onDimDrop($event, filterArea, 2)"
+                >
                     <igx-icon igxPrefix>filter_list</igx-icon>
                     {{filter.fieldName}}
                 </igx-chip>
             </igx-chips-area>
-        </span>
+        </div>
         <div #pivotValueContainer [style.min-width.px] = "grid.unpinnedWidth" 
         (pointerdown)="$event.preventDefault()">
 

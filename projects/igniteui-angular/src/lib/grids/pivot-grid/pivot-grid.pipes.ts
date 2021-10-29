@@ -3,9 +3,10 @@ import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IPivotConfiguration, IPivotKeys } from './pivot-grid.interface';
+import { IPivotConfiguration, IPivotDimension, IPivotKeys } from './pivot-grid.interface';
 import { PivotColumnDimensionsStrategy, PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 /**
  * @hidden
  */
@@ -96,10 +97,20 @@ export class IgxPivotColumnPipe implements PipeTransform {
 export class IgxPivotGridFilterPipe implements PipeTransform {
 
     public transform(collection: any[],
-        expressionsTree: IFilteringExpressionsTree,
+        config: IPivotConfiguration,
         filterStrategy: IFilteringStrategy,
         advancedExpressionsTree: IFilteringExpressionsTree): any[] {
 
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters);
+        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+
+        const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        // add expression trees from all filters
+        enabledDimensions.forEach(x => {
+            if (x.filter) {
+                expressionsTree.filteringOperands.push(x.filter);
+            }
+        });
         const state = {
             expressionsTree,
             strategy: filterStrategy,

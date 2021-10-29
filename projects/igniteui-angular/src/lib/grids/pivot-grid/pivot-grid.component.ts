@@ -208,11 +208,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get rowDimensions() {
-        return this.pivotConfiguration.rows.filter(x => x.enabled);
+        return this.pivotConfiguration.rows.filter(x => x.enabled) || [];
     }
 
     public get columnDimensions() {
-        return this.pivotConfiguration.columns.filter(x => x.enabled);
+        return this.pivotConfiguration.columns.filter(x => x.enabled) || [];
+    }
+
+    public get filterDimensions() {
+        return this.pivotConfiguration.filters?.filter(x => x.enabled) || [];
     }
 
     public get values() {
