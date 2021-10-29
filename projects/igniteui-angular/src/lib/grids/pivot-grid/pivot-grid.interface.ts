@@ -1,5 +1,8 @@
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 
+
+export type PivotAggregation = (members: any[], data: any[]) => any;
+
 export interface IPivotConfiguration {
     rows: IPivotDimension[] | null;
     columns: IPivotDimension[] | null;
@@ -21,8 +24,10 @@ export interface IPivotDimension {
 
 export interface IPivotValue {
     member: string;
+    // display name if present shows instead of member for the column header of this value
+    displayName?: string;
     // aggregate function - can use one of the predefined like IgxNumberSummaryOperand.sum etc.
-    aggregate: (data: any[]) => any;
+    aggregate: PivotAggregation;
     // Enables/Disables a particular value from pivot aggregation.
     enabled: boolean;
     // Allow conditionally styling of the IgxPivotGrid cells
