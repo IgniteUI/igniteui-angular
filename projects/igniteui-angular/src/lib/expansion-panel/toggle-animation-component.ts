@@ -133,7 +133,8 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         if (opposite) {
             if (opposite.hasStarted()) {
                 // .getPosition() still returns 0 sometimes, regardless of the fix for https://github.com/angular/angular/issues/18891;
-                oppositePosition = (opposite as any)._renderer.engine.players[0].getPosition();
+                const renderer = (opposite as any)._renderer;
+                oppositePosition = renderer.engine.players[renderer.engine.players.length - 1].getPosition();
             }
 
             this.cleanUpPlayer(oppositeType);

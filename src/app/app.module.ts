@@ -156,6 +156,8 @@ import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-gr
 import { PaginationSampleComponent } from './pagination/pagination.component';
 import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
 import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
+import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
+import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -291,7 +293,9 @@ const components = [
     IgxColumnGroupingDirective,
     GridColumnTypesSampleComponent,
     GridLocalizationSampleComponent,
-    PivotGridSampleComponent
+    PivotGridSampleComponent,
+    PivotGridNoopSampleComponent,
+    IgxStepperSampleComponent
 ];
 
 @NgModule({

@@ -55,6 +55,7 @@
 @import './sparkline';
 @import './splitter';
 @import './switch';
+@import './stepper';
 @import './tabs';
 @import './time-picker';
 @import './toast';
@@ -118,6 +119,7 @@
 /// @property {Map} sparkline [$_light-sparkline]
 /// @property {Map} igx-splitter [$_light-splitter]
 /// @property {Map} igx-switch [$_light-switch]
+/// @property {Map} igx-stepper [$_light-stepper]
 /// @property {Map} igx-tabs [$_light-tabs]
 /// @property {Map} igx-time-picker [$_light-time-picker]
 /// @property {Map} igx-toast [$_light-toast]
@@ -177,6 +179,7 @@ $light-schema: (
     sparkline: $_light-sparkline,
     igx-splitter: $_light-splitter,
     igx-switch: $_light-switch,
+    igx-stepper: $_light-stepper,
     igx-tabs: $_light-tabs,
     igx-time-picker: $_light-time-picker,
     igx-toast: $_light-toast,
@@ -247,6 +250,7 @@ $light-fluent-schema: (
     sparkline: $_fluent-sparkline,
     igx-splitter: $_fluent-splitter,
     igx-switch: $_fluent-switch,
+    igx-stepper: $_fluent-stepper,
     igx-tabs: $_fluent-tabs,
     igx-time-picker: $_fluent-time-picker,
     igx-toast: $_fluent-toast,
@@ -312,6 +316,7 @@ $light-bootstrap-schema: (
     sparkline: $_bootstrap-sparkline,
     igx-splitter: $_bootstrap-splitter,
     igx-switch: $_bootstrap-switch,
+    igx-stepper: $_bootstrap-stepper,
     igx-tabs: $_bootstrap-tabs,
     igx-time-picker: $_bootstrap-time-picker,
     igx-toast: $_bootstrap-toast,
@@ -377,6 +382,7 @@ $light-indigo-schema: (
     sparkline: $_indigo-sparkline,
     igx-splitter: $_indigo-splitter,
     igx-switch: $_indigo-switch,
+    igx-stepper: $_indigo-stepper,
     igx-tabs: $_indigo-tabs,
     igx-time-picker: $_indigo-time-picker,
     igx-toast: $_indigo-toast,

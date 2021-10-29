@@ -549,8 +549,7 @@ describe('IgxTimePicker', () => {
                 hourColumn.triggerEventHandler('wheel', event);
                 fixture.detectChanges();
 
-                const overlay = document.getElementsByClassName(CSS_CLASS_OVERLAY)[0];
-                const overlayWrapper = overlay.children[0];
+                const overlayWrapper = document.getElementsByClassName(CSS_CLASS_TIMEPICKER)[0].parentNode.parentNode;
                 UIInteractions.simulateClickEvent(overlayWrapper);
                 tick();
                 fixture.detectChanges();
