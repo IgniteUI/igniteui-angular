@@ -51,14 +51,14 @@
          <igx-chips-area #valueArea
          (dropped)="onValueDrop($event, valueArea)"
          igxDrop
-         (igxDragEnter)="onAreaDragEnter($event, valueArea)"
+         (igxDragEnter)="onAreaDragEnter($event, valueArea,undefined)"
          (igxDragLeave)="onAreaDragLeave($event, valueArea)"
          >
          <div *ngIf="grid.values.length === 0">
              <span class='igx-pivot__emptyChipArea'>Drop Value Fields here.</span>
          </div>
             <igx-chip *ngFor="let value of grid.values" [draggable]="'true'" [id]="value.member" [removable]="true" (remove)="valueRemoved($event)"
-            (dragEnter)="onDimDragEnter($event)"
+            (dragEnter)="onDimDragEnter($event, undefined)"
             (dragLeave)="onDimDragLeave($event)"
             (dragDrop)="onValueDrop($event, valueArea)">
                 <igx-icon igxPrefix>functions</igx-icon>
