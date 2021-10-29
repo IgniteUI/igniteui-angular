@@ -550,7 +550,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
         }));
 
-        fit('Should allow setting custom templates for header sorting none/ascending/descending icons.', () => {
+        it('Should allow setting custom templates for header sorting none/ascending/descending icons.', () => {
             fixture = TestBed.createComponent(SortByParityComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
