@@ -17,7 +17,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `gesturesSupport` | boolean | Controls should the gestures should be supported. Defaults to `true`. |
 | `maximumIndicatorsCount` | number | The number of visible indicators. Defaults to `5`. |
 | `indicatorsOrientation` | CarouselIndicatorsOrientation | Controls whether the indicators should be previewed on top or on bottom of carousel. Defaults to `bottom`. |
-| `animationType` | CarouselAnimationType | Controls what animation should be played when slides are changing. Defaults to `slide`. |
+| `animationType` | HorizontalAnimationType | Controls what animation should be played when slides are changing. Defaults to `slide`. |
 | `total` | number | The number of slides the carousel currently has.  |
 | `current` | number | The index of the slide currently showing. |
 | `isPlaying` | boolean | Returns whether the carousel is paused/playing. |
