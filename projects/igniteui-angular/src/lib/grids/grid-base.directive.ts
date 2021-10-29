@@ -93,8 +93,9 @@ import { CharSeparatedValueData } from '../services/csv/char-separated-value-dat
 import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import {
-    IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective,
-    IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
+    IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective,
+    IgxHeaderCollapseIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
 } from './grid/grid.directives';
 import {
     GridKeydownTargetType,
@@ -1253,20 +1254,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public excelStyleHeaderIconTemplate: TemplateRef<any> = null;
 
     /**
-     * The custom template, if any, that should be used when rendering a header sorting indicator when the column is sorted in ascending order.
+     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in asc order.
      */
     @ContentChild(IgxSortAscendingHeaderIconDirective, { read: TemplateRef })
     public sortAscendingHeaderIconTemplate: TemplateRef<any> = null;
 
     /**
-     * The custom template, if any, that should be used when rendering a header sorting indicator when the column is sorted in descending order.
+     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in desc order.
      */
     @ContentChild(IgxSortDescendingHeaderIconDirective, { read: TemplateRef })
     public sortDescendingHeaderIconTemplate: TemplateRef<any> = null;
 
     /**
-    * The custom template, if any, that should be used when rendering a header sorting indicator when the column is not sorted.
-    */
+     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are not sorted.
+     */
     @ContentChild(IgxSortHeaderIconDirective, { read: TemplateRef })
     public sortHeaderIconTemplate: TemplateRef<any> = null;
 

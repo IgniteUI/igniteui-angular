@@ -550,7 +550,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
         }));
 
-        it('Should allow setting custom templates for header sorting none/ascending/descending icons.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
+        fit('Should allow setting custom templates for header sorting none/ascending/descending icons.', () => {
             fixture = TestBed.createComponent(SortByParityComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -569,6 +569,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
             icon = GridFunctions.getHeaderSortIcon(header);
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('expand_more');
-        }));
+        });
     });
 });

@@ -12,7 +12,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`
     - Added `groupSortingDirection` input, which allows you to set groups sorting order.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - Added new directives for re-templating header sorting indicators - `IgxSortHeaderIconDirective`, `igxSortAscendingHeaderIcon` and `igxSortDescendingHeaderIcon`.
+    - Added new directives for re-templating header sorting indicators - `IgxSortHeaderIconDirective`, `IgxSortAscendingHeaderIconDirective` and `IgxSortDescendingHeaderIconDirective`.
 
 ### General
 
