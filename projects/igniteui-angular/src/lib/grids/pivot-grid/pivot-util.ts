@@ -1,7 +1,6 @@
 
-import { IPivotConfiguration } from 'igniteui-angular';
 import { cloneValue } from '../../core/utils';
-import { IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
+import { IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 
 export class PivotUtil {
     public static getFieldsHierarchy(data: any[], dimensions: IPivotDimension[],
