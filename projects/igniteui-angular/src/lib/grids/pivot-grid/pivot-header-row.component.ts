@@ -1,10 +1,12 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
-    Input
+    ElementRef,
+    Input,
+    Renderer2
 } from '@angular/core';
 import { IBaseChipEventArgs } from '../../chips/chip.component';
-import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotRowComponent } from './pivot-row.component';
@@ -35,6 +37,16 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     @Input()
     public row: IgxPivotRowComponent;
 
+    private _dropIndicatorClass = 'igx-pivot-grid__drop-indicator';
+
+    constructor(
+        protected ref: ElementRef<HTMLElement>,
+        protected cdr: ChangeDetectorRef,
+        protected renderer: Renderer2,
+        ) {
+            super(ref, cdr);
+    }
+
     public rowRemoved(event: IBaseChipEventArgs) {
         const row = this.grid.pivotConfiguration.rows.find(x => x.fieldName === event.owner.id);
         row.enabled = false;
@@ -62,9 +74,12 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             // cannot drag between dimensions and value
             return;
         }
+        this.renderer.addClass(event.owner.nativeElement, this._dropIndicatorClass);
+        // TODO- remove once classes are added.
         event.owner.nativeElement.style.borderLeft = '1px solid red';
     }
     public onDimDragLeave(event) {
+        this.renderer.removeClass(event.owner.nativeElement, this._dropIndicatorClass);
         event.owner.nativeElement.style.borderLeft = '';
     }
 
@@ -80,11 +95,14 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         const targetElem = event.detail.originalEvent.target;
         const targetOwner = event.detail.owner.element.nativeElement.parentElement;
         if (targetOwner !== lastElem && targetElem.getBoundingClientRect().x >= lastElem.getBoundingClientRect().x) {
+            this.renderer.addClass(area.chipsList.last.nativeElement, this._dropIndicatorClass);
+            // TODO- remove once classes are added.
             area.chipsList.last.nativeElement.style.borderRight = '1px solid red';
         }
     }
     public onAreaDragLeave(event, area) {
         area.chipsList.toArray().forEach(element => {
+            this.renderer.removeClass(element.nativeElement, this._dropIndicatorClass);
             element.nativeElement.style.borderRight = '';
         });
     }

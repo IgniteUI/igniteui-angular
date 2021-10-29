@@ -204,7 +204,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public get pivotRowWidths() {
         const rowDimCount = this.rowDimensions.length;
-        return MINIMUM_COLUMN_WIDTH * rowDimCount;
+        return MINIMUM_COLUMN_WIDTH * rowDimCount || MINIMUM_COLUMN_WIDTH;
     }
 
     public get rowDimensions() {

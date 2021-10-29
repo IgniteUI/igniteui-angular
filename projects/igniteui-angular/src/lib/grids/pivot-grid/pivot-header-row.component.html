@@ -20,6 +20,9 @@
         (igxDragEnter)="onAreaDragEnter($event, colArea, 1)"
         (igxDragLeave)="onAreaDragLeave($event, colArea)"
         >
+        <div *ngIf="grid.columnDimensions.length === 0">
+            <span class='igx-pivot__emptyChipArea'>Drop Column Fields here.</span>
+        </div>
             <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.fieldName"
              [removable]="true" (remove)="columnRemoved($event)"
              (dragEnter)="onDimDragEnter($event, 1)"
@@ -39,6 +42,9 @@
          (igxDragEnter)="onAreaDragEnter($event, valueArea)"
          (igxDragLeave)="onAreaDragLeave($event, valueArea)"
          >
+         <div *ngIf="grid.values.length === 0">
+             <span class='igx-pivot__emptyChipArea'>Drop Value Fields here.</span>
+         </div>
             <igx-chip *ngFor="let value of grid.values" [draggable]="'true'" [id]="value.member" [removable]="true" (remove)="valueRemoved($event)"
             (dragEnter)="onDimDragEnter($event)"
             (dragLeave)="onDimDragLeave($event)"
@@ -65,6 +71,9 @@
                  (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)"
                  (igxDragLeave)="onAreaDragLeave($event, rowArea)"
                  >
+                    <div *ngIf="grid.rowDimensions.length === 0">
+                        <span class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
+                    </div>
                     <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="'true'" [id]="row.fieldName"
                      [removable]="true" (remove)="rowRemoved($event)"
                      (dragEnter)="onDimDragEnter($event, 0)"
