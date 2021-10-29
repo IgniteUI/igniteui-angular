@@ -135,32 +135,44 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         const chipsArray = area.chipsList.toArray();
         const chip = chipsArray.find(x => x.id === dragId);
         const isNewChip = chip === undefined;
-        const chipIndex = chipsArray.indexOf(event.owner) !== -1 ? chipsArray.indexOf(event.owner) : chipsArray.length;
+        //const chipIndex = chipsArray.indexOf(event.owner) !== -1 ? chipsArray.indexOf(event.owner) : chipsArray.length;
+        const chipIndex = currentDim.findIndex(x => x.fieldName === event.owner.id) !== -1 ?
+        currentDim.findIndex(x => x.fieldName === event.owner.id) : currentDim.length;
         if (isNewChip) {
             const allDims = this.grid.pivotConfiguration.rows
             .concat(this.grid.pivotConfiguration.columns)
             .concat(this.grid.pivotConfiguration.filters);
             // chip moved from external collection
-            const dim = allDims.find(x => x && x.fieldName === dragId);
-            if (!dim) {
+            const dims = allDims.filter(x => x && x.fieldName === dragId);
+            if (dims.length === 0) {
                 // you have dragged something that is not a dimension
                 return;
             }
-            dim.enabled = false;
+            dims.forEach(element => {
+                element.enabled = false;
+            });
+
+            const currentDimChild = currentDim.find(x => x && x.fieldName === dragId);
+            if (currentDimChild) {
+                currentDimChild.enabled = true;
+                const dragChipIndex = currentDim.indexOf(currentDimChild);
+                currentDim.splice(dragChipIndex, 1);
+                currentDim.splice(dragChipIndex > chipIndex ? chipIndex : chipIndex - 1, 0, currentDimChild);
+            } else {
+                const newDim = Object.assign({}, dims[0]);
+                newDim.enabled = true;
+                currentDim.splice(chipIndex, 0, newDim);
+            }
             const isDraggedFromColumn = !!this.grid.pivotConfiguration.columns?.find(x => x && x.fieldName === dragId);
             if (isDraggedFromColumn) {
                 // columns have changed.
                 this.grid.setupColumns();
             }
-
-            const newDim = Object.assign({}, dim);
-            newDim.enabled = true;
-            currentDim.splice(chipIndex, 0, newDim);
-
         } else {
             // chip from same collection, reordered.
             const newDim = currentDim.find(x => x.fieldName === dragId);
-            const dragChipIndex = chipsArray.indexOf(event.dragChip || event.dragData.chip);
+            //const dragChipIndex = chipsArray.indexOf(event.dragChip || event.dragData.chip);
+            const dragChipIndex = currentDim.findIndex(x => x.fieldName === dragId);
             currentDim.splice(dragChipIndex, 1);
             currentDim.splice(dragChipIndex > chipIndex ? chipIndex : chipIndex - 1, 0, newDim);
         }

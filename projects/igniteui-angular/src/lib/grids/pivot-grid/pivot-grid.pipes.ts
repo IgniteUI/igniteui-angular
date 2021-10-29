@@ -49,7 +49,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         _pipeTrigger?: number,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
-        const data = collection.slice(0);
+        const data = collection ? collection.slice(0) : [];
         let totalLlv = 0;
         const prevDims = [];
         for (const row of config.rows) {
