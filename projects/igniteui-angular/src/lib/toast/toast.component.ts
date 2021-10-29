@@ -8,9 +8,11 @@ import {
     Inject,
     Input,
     NgModule,
+    OnChanges,
     OnInit,
     Optional,
-    Output
+    Output,
+    SimpleChanges
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../core/navigation';
@@ -26,6 +28,7 @@ import { IgxNotificationsDirective } from '../directives/notification/notificati
 import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from '../animations/fade';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -63,7 +66,7 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
     selector: 'igx-toast',
     templateUrl: 'toast.component.html'
 })
-export class IgxToastComponent extends IgxNotificationsDirective implements OnInit {
+export class IgxToastComponent extends IgxNotificationsDirective implements OnInit, OnChanges {
     /**
      * @hidden
      */
@@ -118,6 +121,7 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      *
      * @memberof IgxToastComponent
      */
+    @DeprecateProperty('`position` is deprecated. We suggest using `positionSettings` property instead.')
     @Input()
     public get position(): IgxToastPosition {
         return this._position;
@@ -167,7 +171,6 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      }
 
      private _position: IgxToastPosition = 'bottom';
-
      private _positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Center,
         verticalDirection: VerticalAlignment.Bottom,
@@ -204,14 +207,15 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      * this.toast.open();
      * ```
      */
-    public open(message?: string) {
+    public open(message?: string, settings?: PositionSettings) {
         if (message !== undefined) {
             this.textMessage = message;
         }
-        requestAnimationFrame(() => {
-            this.strategy = new GlobalPositionStrategy(this.positionSettings);
-            super.open();
-        });
+        if (settings !== undefined) {
+            this.positionSettings = settings;
+        }
+        this.strategy = new GlobalPositionStrategy(this.positionSettings);
+        super.open();
     }
 
     /**
@@ -250,6 +254,12 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
             : this.position === 'middle'
                 ? VerticalAlignment.Middle
                 : VerticalAlignment.Top;
+    }
+
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes['position'] && this._positionSettings) {
+            this._positionSettings.verticalDirection = this.calculatePosition();
+        }
     }
 }
 

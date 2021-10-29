@@ -35,6 +35,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxColumnActionsComponent`
     - **Breaking Change** - The following input has been removed
         - Input `columns`. Use `igxGrid` `columns` input instead.        
+- `IgxToastComponent`
+    - **Deprecated** - The `position` input property has been deprecated. Use `positionSettings` input instead.   
 
 ## 12.2.3
 
