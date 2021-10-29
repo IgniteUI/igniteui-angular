@@ -163,7 +163,7 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
 /**
  * Event emitted when a row's pin state changes.
  */
-export interface IPinRowEventArgs extends IBaseEventArgs {
+export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
      * The ID of the row, that was pinned/unpinned.
      *   ID is either the primaryKey value or the data record instance.
@@ -172,7 +172,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs {
     row?: RowType;
     /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;
-    /** Whether or noy the row is pinned or unpinned. */
+    /** Whether or not the row is pinned or unpinned. */
     readonly isPinned: boolean;
 }
 
