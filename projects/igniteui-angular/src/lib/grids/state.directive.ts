@@ -79,6 +79,7 @@ export interface IColumnState {
     searchable: boolean;
     columnGroup: boolean;
     parent: any;
+    disableHiding: boolean;
 }
 
 export type GridFeatures = keyof IGridStateOptions;
@@ -186,7 +187,8 @@ export class IgxGridStateDirective {
                     searchable: c.searchable,
                     selectable: c.selectable,
                     parent: c.parent ? c.parent.header : null,
-                    columnGroup: c.columnGroup
+                    columnGroup: c.columnGroup,
+                    disableHiding: c.disableHiding
                 }));
                 return { columns: gridColumns };
             },
@@ -547,7 +549,7 @@ export class IgxGridStateDirective {
                 if (Array.isArray(expr.searchVal)) {
                     expr.searchVal = new Set(expr.searchVal);
                 } else {
-                    expr.searchVal = (dataType === 'date') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
+                    expr.searchVal = expr.searchVal && (dataType === 'date') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
                 }
                 expr.condition = this.generateFilteringCondition(dataType, expr.condition.name);
                 expressionsTree.filteringOperands.push(expr);

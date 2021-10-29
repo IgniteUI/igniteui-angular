@@ -105,7 +105,7 @@ export class IgxIconService {
      *   this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
      * ```
      */
-    public addSvgIcon(name: string, url: string, family: string = '') {
+    public addSvgIcon(name: string, url: string, family = this._family, stripMeta = false) {
         if (name && url) {
             const safeUrl = this._sanitizer.bypassSecurityTrustResourceUrl(url);
             if (!safeUrl) {
@@ -119,7 +119,7 @@ export class IgxIconService {
 
             if (!this.isSvgIconCached(name, family)) {
                 this.fetchSvg(url).subscribe((res) => {
-                    this.cacheSvgIcon(name, res, family);
+                    this.cacheSvgIcon(name, res, family, stripMeta);
                     this._iconLoaded.next({ name, value: res, family });
                 });
             }
@@ -135,13 +135,13 @@ export class IgxIconService {
      *   <path d="M74 74h54v54H74" /></svg>', 'svg-flags');
      * ```
      */
-    public addSvgIconFromText(name: string, iconText: string, family: string = '') {
+    public addSvgIconFromText(name: string, iconText: string, family: string = '', stripMeta = false) {
         if (name && iconText) {
-            if(this.isSvgIconCached(name, family)) {
+            if (this.isSvgIconCached(name, family)) {
                 return;
             }
 
-            this.cacheSvgIcon(name, iconText, family);
+            this.cacheSvgIcon(name, iconText, family, stripMeta);
         } else {
             throw new Error('You should provide at least `name` and `iconText` to register an svg icon.');
         }
@@ -154,8 +154,9 @@ export class IgxIconService {
      * ```
      */
     public isSvgIconCached(name: string, family: string = ''): boolean {
-        if(this._cachedSvgIcons.has(family)) {
-            const familyRegistry = this._cachedSvgIcons.get(family) as Map<string, SafeHtml>;
+        const familyClassName = this.familyClassName(family);
+        if (this._cachedSvgIcons.has(familyClassName)) {
+            const familyRegistry = this._cachedSvgIcons.get(familyClassName) as Map<string, SafeHtml>;
             return familyRegistry.has(name);
         }
 
@@ -169,7 +170,8 @@ export class IgxIconService {
      * ```
      */
     public getSvgIcon(name: string, family: string = '') {
-        return this._cachedSvgIcons.get(family)?.get(name);
+        const familyClassName = this.familyClassName(family);
+        return this._cachedSvgIcons.get(familyClassName)?.get(name);
     }
 
     /**
@@ -183,7 +185,9 @@ export class IgxIconService {
     /**
      * @hidden
      */
-    private cacheSvgIcon(name: string, value: string, family: string = '') {
+    private cacheSvgIcon(name: string, value: string, family = this._family, stripMeta: boolean) {
+        family = !!family ? family : this._family;
+
         if (name && value) {
             const doc = this._domParser.parseFromString(value, 'image/svg+xml');
             const svg = doc.querySelector('svg') as SVGElement;
@@ -195,6 +199,20 @@ export class IgxIconService {
             if (svg) {
                 svg.setAttribute('fit', '');
                 svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+                if (stripMeta) {
+                    const title = svg.querySelector('title');
+                    const desc = svg.querySelector('desc');
+
+                    if (title) {
+                        svg.removeChild(title);
+                    }
+
+                    if (desc) {
+                        svg.removeChild(desc);
+                    }
+                }
+
                 const safeSvg = this._sanitizer.bypassSecurityTrustHtml(svg.outerHTML);
                 this._cachedSvgIcons.get(family).set(name, safeSvg);
             }
