@@ -1,7 +1,11 @@
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IPivotDimensionStrategy } from '../../data-operations/pivot-strategy';
+
 
 export interface IPivotConfiguration {
+    rowStrategy?: IPivotDimensionStrategy | null;
+    columnStrategy?: IPivotDimensionStrategy | null;
     rows: IPivotDimension[] | null;
     columns: IPivotDimension[] | null;
     values: IPivotValue[] | null;
@@ -11,7 +15,7 @@ export interface IPivotConfiguration {
 
 export interface IPivotDimension {
     // allow defining a hierarchy when multiple sub groups need to be extracted from single member.
-    childLevels: IPivotDimension[];
+    childLevels?: IPivotDimension[];
     // field name which to use to extract value or function that extract the value.
     member: string | ((data: any) => any);
     // Enables/Disables a particular dimension from pivot structure.

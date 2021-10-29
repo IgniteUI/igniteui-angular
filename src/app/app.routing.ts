@@ -97,6 +97,7 @@ import { PaginationSampleComponent } from './pagination/pagination.component';
 import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
 import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
+import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 
 const appRoutes = [
     {
@@ -456,6 +457,10 @@ const appRoutes = [
     {
         path: 'pivotHierarchy',
         component: PivotGridHierarchySampleComponent
+    },
+    {
+        path: 'pivot-noop',
+        component: PivotGridNoopSampleComponent
     }
 ];
 
