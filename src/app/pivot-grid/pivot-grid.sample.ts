@@ -23,41 +23,39 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-            {
-                member: 'Country',
-                enabled: true,
-                childLevels: []
-            }
-        ],
-        rows: [
-            {
-                member: () => 'AllProd',
-                enabled: true,
-                childLevels: [{
-                    member: 'ProductCategory',
-                    enabled: true,
-                    childLevels: []
-                }]
-            },
-            {
-                member: () => 'AllDate',
-                enabled: true,
-                childLevels: [{
-                    member: 'Date',
-                    enabled: true,
-                    childLevels: []
-                }]
-            },
-            {
-                member: () => 'AllSel',
-                enabled: true,
-                childLevels: [{
-                    member: 'SellerName',
-                    enabled: true,
-                    childLevels: []
-                }]
-            }
-        ],
+
+        {
+            member: 'Country',
+            enabled: true
+        }
+        ]
+,
+rows: [
+    {
+        member: () => 'AllProd',
+        enabled: true,
+        childLevel: {
+        member: 'ProductCategory',
+        enabled: true
+        }
+    },
+    {
+        member: () => 'AllDate',
+        enabled: true,
+        childLevel: {
+        member: 'Date',
+        enabled: true
+        }
+    },
+    {
+        member: () => 'AllSel',
+        enabled: true,
+        childLevel: {
+        member: 'SellerName',
+        enabled: true
+        }
+    }
+    ],
         values: [
             {
                 member: 'UnitsSold',
