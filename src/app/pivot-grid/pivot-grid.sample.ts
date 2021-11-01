@@ -1,6 +1,16 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration } from 'igniteui-angular';
+import {
+    IgxPivotNumericAggregate,
+    IgxPivotGridComponent,
+    IPivotConfiguration,
+    PivotAggregation
+} from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
+
+export class IgxTotalSaleAggregate {
+    public static totalSale: PivotAggregation = (members, data: any) =>
+        data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
+}
 
 @Component({
     providers: [],
@@ -8,21 +18,17 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
     styleUrls: ['pivot-grid.sample.scss'],
     templateUrl: 'pivot-grid.sample.html'
 })
-
 export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-
             {
-                memberName: 'Country Test',
-                memberFunction: (data) => data.Country,
+                memberName: 'Country',
                 enabled: true,
                 childLevels: []
             }
-        ]
-        ,
+        ],
         rows: [
             {
                 memberName: 'AllProd',
@@ -33,15 +39,13 @@ export class PivotGridSampleComponent {
                     enabled: true,
                     childLevels: []
                 }]
-            }
-            ,
+            },
             {
                 memberName: 'AllDate',
                 memberFunction: () => 'AllDate',
                 enabled: true,
                 childLevels: [{
-                    memberName: 'Date and time',
-                    memberFunction: (data) => data.Date,
+                    memberName: 'Date',
                     enabled: true,
                     childLevels: []
                 }]
@@ -61,7 +65,7 @@ export class PivotGridSampleComponent {
         values: [
             {
                 member: 'UnitsSold',
-                aggregate: IgxNumberSummaryOperand.sum,
+                aggregate: IgxPivotNumericAggregate.sum,
                 enabled: true,
                 styles: {
                     upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
@@ -71,9 +75,15 @@ export class PivotGridSampleComponent {
                 formatter: (value) => value ? value + '$' : undefined
             },
             {
-                member: 'UnitPrice',
-                aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true
+                member: 'AmountOfSale',
+                displayName: 'Amount of Sale',
+                aggregate: IgxTotalSaleAggregate.totalSale,
+                enabled: true,
+                dataType: 'currency',
+                styles: {
+                    upFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 50,
+                    downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 50
+                },
             }
         ],
         filters: null

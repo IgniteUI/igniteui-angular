@@ -82,7 +82,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
 
     public columnGroupStates = new Map<string, boolean>();
-    public pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'};
+    public pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
     public isPivot = true;
     protected _defaultExpandState = true;
     private _data;
@@ -102,11 +102,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden
      */
     public ngAfterContentInit() {
-            // ignore any user defined columns and auto-generate based on pivot config.
-            this.columnList.reset([]);
-            Promise.resolve().then(() => {
-                this.setupColumns();
-            });
+        // ignore any user defined columns and auto-generate based on pivot config.
+        this.columnList.reset([]);
+        Promise.resolve().then(() => {
+            this.setupColumns();
+        });
     }
 
     /** @hidden */
@@ -207,18 +207,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return MINIMUM_COLUMN_WIDTH * rowDimCount;
     }
 
-   public toggleColumn(col: IgxColumnComponent) {
-       const state = this.columnGroupStates.get(col.field);
-       const newState = !state;
-       this.columnGroupStates.set(col.field, newState);
-       this.toggleGroup(col, newState);
-       this.reflow();
-   }
+    public toggleColumn(col: IgxColumnComponent) {
+        const state = this.columnGroupStates.get(col.field);
+        const newState = !state;
+        this.columnGroupStates.set(col.field, newState);
+        this.toggleGroup(col, newState);
+        this.reflow();
+    }
 
-   protected toggleGroup(col: IgxColumnComponent, newState: boolean) {
+    protected toggleGroup(col: IgxColumnComponent, newState: boolean) {
         if (this.hasMultipleValues) {
-            const fieldColumns =  col.children.filter(x => !x.columnGroup);
-            const groupColumns =  col.children.filter(x => x.columnGroup);
+            const fieldColumns = col.children.filter(x => !x.columnGroup);
+            const groupColumns = col.children.filter(x => x.columnGroup);
             groupColumns.forEach(groupColumn => {
                 groupColumn.hidden = newState;
                 this.resolveToggle(groupColumn);
@@ -228,23 +228,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             });
         } else {
             const parentCols = col.parent ? col.parent.children : this.columns.filter(x => x.level === 0);
-            const fieldColumn =  parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
-            const groupColumn =  parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
+            const fieldColumn = parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
+            const groupColumn = parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
             groupColumn.hidden = newState;
             this.resolveToggle(groupColumn);
             fieldColumn.hidden = !newState;
             if (newState) {
-            fieldColumn.headerTemplate = this.headerTemplate;
+                fieldColumn.headerTemplate = this.headerTemplate;
             } else {
-            fieldColumn.headerTemplate = undefined;
+                fieldColumn.headerTemplate = undefined;
             }
         }
-   }
+    }
 
-   protected resolveToggle(groupColumn: IgxColumnComponent) {
-    const hasChildGroup = groupColumn.children.filter(x => x.columnGroup).length > 0;
-        if (!groupColumn.hidden &&  hasChildGroup) {
-            const fieldChildren =  groupColumn.children.filter(x => !x.columnGroup);
+    protected resolveToggle(groupColumn: IgxColumnComponent) {
+        const hasChildGroup = groupColumn.children.filter(x => x.columnGroup).length > 0;
+        if (!groupColumn.hidden && hasChildGroup) {
+            const fieldChildren = groupColumn.children.filter(x => !x.columnGroup);
             const groupChildren = groupColumn.children.filter(x => x.columnGroup);
             groupChildren.forEach(group => {
                 this.resolveToggle(group);
@@ -269,26 +269,26 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden
      */
-     protected autogenerateColumns() {
-         let columns = [];
-         const data = this.gridAPI.get_data();
-         let fieldsMap;
-         if (this.pivotConfiguration.columnStrategy && this.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy) {
+    protected autogenerateColumns() {
+        let columns = [];
+        const data = this.gridAPI.get_data();
+        let fieldsMap;
+        if (this.pivotConfiguration.columnStrategy && this.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy) {
             const fields = this.generateDataFields(data);
             const rowFields = PivotUtil.flatten(this.pivotConfiguration.rows).map(x => x.memberName);
             const keyFields = Object.values(this.pivotKeys);
             const filteredFields = fields.filter(x => rowFields.indexOf(x) === -1 && keyFields.indexOf(x) === -1 &&
-             x.indexOf('_level') === -1 && x.indexOf('_records') === -1);
+                x.indexOf('_level') === -1 && x.indexOf('_records') === -1);
             fieldsMap = this.generateFromData(filteredFields);
-         } else {
+        } else {
             fieldsMap = PivotUtil.getFieldsHierarchy(
-            data,
-            this.pivotConfiguration.columns,
-            PivotDimensionType.Column,
-            {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+                data,
+                this.pivotConfiguration.columns,
+                PivotDimensionType.Column,
+                { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
             );
-         }
-         columns = this.generateColumnHierarchy(fieldsMap, data);
+        }
+        columns = this.generateColumnHierarchy(fieldsMap, data);
         this._autoGeneratedCols = columns;
 
         this.columnList.reset(columns);
@@ -303,11 +303,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         dataArr.forEach(arr => {
             let currentHierarchy = hierarchy;
             const path = [];
-            for(const val of arr) {
+            for (const val of arr) {
                 path.push(val);
                 let h = currentHierarchy.get(path.join('-'));
-                if(!h) {
-                    currentHierarchy.set(path.join('-'), { expandable: true, children: new Map<string, any>()});
+                if (!h) {
+                    currentHierarchy.set(path.join('-'), { expandable: true, children: new Map<string, any>() });
                     h = currentHierarchy.get(path.join('-'));
                 }
                 currentHierarchy = h.children;
@@ -316,22 +316,22 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return hierarchy;
     }
 
-    protected generateColumnHierarchy(fields:  Map<string, any>, data, parent = null): IgxColumnComponent[] {
+    protected generateColumnHierarchy(fields: Map<string, any>, data, parent = null): IgxColumnComponent[] {
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         let columns = [];
         fields.forEach((value, key) => {
             if (value.children == null || value.children.length === 0 || value.children.size === 0) {
                 const ref = this.hasMultipleValues ?
-                factoryColumnGroup.create(this.viewRef.injector) :
-                factoryColumn.create(this.viewRef.injector);
+                    factoryColumnGroup.create(this.viewRef.injector) :
+                    factoryColumn.create(this.viewRef.injector);
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                 ref.instance.field = key;
                 ref.instance.parent = parent;
                 ref.changeDetectorRef.detectChanges();
                 columns.push(ref.instance);
                 if (this.hasMultipleValues) {
-                    const measureChildren = this.getMeasureChildren(factoryColumn, data , ref.instance, false);
+                    const measureChildren = this.getMeasureChildren(factoryColumn, data, ref.instance, false);
                     ref.instance.children.reset(measureChildren);
                     columns = columns.concat(measureChildren);
                 }
@@ -344,7 +344,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 if (value.expandable) {
                     ref.instance.headerTemplate = this.headerTemplate;
                 }
-                if(!this.hasMultipleValues) {
+                if (!this.hasMultipleValues) {
                     const refSibling = factoryColumn.create(this.viewRef.injector);
                     refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                     refSibling.instance.field = key;
@@ -358,7 +358,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.changeDetectorRef.detectChanges();
                 columns.push(ref.instance);
                 if (this.hasMultipleValues) {
-                    const measureChildren = this.getMeasureChildren(factoryColumn, data , ref.instance, true);
+                    const measureChildren = this.getMeasureChildren(factoryColumn, data, ref.instance, true);
                     const nestedChildren = filteredChildren.concat(measureChildren);
                     const allChildren = children.concat(measureChildren);
                     ref.instance.children.reset(nestedChildren);
@@ -377,7 +377,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const cols = [];
         this.pivotConfiguration.values.forEach(val => {
             const ref = colFactory.create(this.viewRef.injector);
-            ref.instance.header = val.member;
+            ref.instance.header = val.displayName || val.member;
             ref.instance.field = parent.field + '-' + val.member;
             ref.instance.parent = parent;
             ref.instance.hidden = hidden;
