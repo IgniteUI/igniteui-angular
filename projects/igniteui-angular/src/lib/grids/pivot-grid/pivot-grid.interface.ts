@@ -30,7 +30,10 @@ export interface IPivotValue {
     member: string;
     // display name if present shows instead of member for the column header of this value
     displayName?: string;
-    // aggregate function - can use one of the predefined like IgxNumberSummaryOperand.sum etc.
+    /**
+     * Aggregation function - can be a custom implementation of PivotAggregation or
+     * use predefined ones from IgxPivotAggregate and its variants
+     */
     aggregate: PivotAggregation;
     // Enables/Disables a particular value from pivot aggregation.
     enabled: boolean;
