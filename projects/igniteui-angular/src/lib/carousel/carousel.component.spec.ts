@@ -11,7 +11,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
-import { CarouselAnimationType } from './carousel-base';
+import { HorizontalAnimationType } from './carousel-base';
 
 describe('Carousel', () => {
     configureTestSuite();
@@ -589,7 +589,7 @@ describe('Carousel', () => {
             await wait();
             expect(carousel.get(0).active).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
-            expect(carousel.animationType).toBe(CarouselAnimationType.slide);
+            expect(carousel.animationType).toBe(HorizontalAnimationType.slide);
             carousel.next();
             fixture.detectChanges();
             await wait(200);
@@ -616,12 +616,12 @@ describe('Carousel', () => {
 
         it('Test fade animation', async () => {
             await wait();
-            carousel.animationType = CarouselAnimationType.fade;
+            carousel.animationType = HorizontalAnimationType.fade;
             fixture.detectChanges();
 
             expect(carousel.get(0).active).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
-            expect(carousel.animationType).toBe(CarouselAnimationType.fade);
+            expect(carousel.animationType).toBe(HorizontalAnimationType.fade);
             carousel.next();
             fixture.detectChanges();
             await wait(200);
