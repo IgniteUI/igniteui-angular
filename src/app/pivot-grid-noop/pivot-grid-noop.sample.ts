@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import {
-    IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration, IPivotDimension, IPivotDimensionStrategy,
+    IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration, IPivotDimension,
     IPivotValue,
     NoopPivotDimensionsStrategy
 } from 'igniteui-angular';
