@@ -1,13 +1,24 @@
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
+    ComponentFactoryResolver,
+    ElementRef,
     forwardRef,
     HostBinding,
+    Inject,
     Input,
+    IterableDiffers,
+    LOCALE_ID,
+    NgZone,
     OnInit,
+    Optional,
+    QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    ViewChildren,
+    ViewContainerRef
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
@@ -24,6 +35,14 @@ import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { PivotUtil } from './pivot-util';
 import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
+import { DOCUMENT } from '@angular/common';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
+import { PlatformUtil } from '../../core/utils';
+import { IgxGridTransaction } from '../hierarchical-grid/public_api';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -39,7 +58,7 @@ const MINIMUM_COLUMN_WIDTH = 200;
         GridBaseAPIService,
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxPivotGridComponent) },
         IgxFilteringService,
-        IgxGridNavigationService,
+        IgxPivotGridNavigationService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
     ]
@@ -50,6 +69,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /** @hidden @internal */
     @ViewChild(IgxPivotHeaderRowComponent, { static: true })
     public theadRow: IgxPivotHeaderRowComponent;
+
+
 
     @Input()
     /**
@@ -80,14 +101,63 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @ViewChild('headerTemplate', { read: TemplateRef, static: true })
     public headerTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden @internal
+     */
+    @ViewChildren(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent })
+    public excelStyleFilteringComponents: QueryList<IgxGridExcelStyleFilteringComponent>;
+
 
     public columnGroupStates = new Map<string, boolean>();
+    public originalDataColumns;
     public pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'};
     public isPivot = true;
     protected _defaultExpandState = true;
     private _data;
     private _filteredData;
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
+
+
+    constructor(
+        public selectionService: IgxGridSelectionService,
+        public colResizingService: IgxColumnResizingService,
+        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        protected transactionFactory: IgxFlatTransactionFactory,
+        elementRef: ElementRef,
+        zone: NgZone,
+        @Inject(DOCUMENT) public document,
+        cdr: ChangeDetectorRef,
+        resolver: ComponentFactoryResolver,
+        differs: IterableDiffers,
+        viewRef: ViewContainerRef,
+        navigation: IgxPivotGridNavigationService,
+        filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
+        public summaryService: IgxGridSummaryService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(LOCALE_ID) localeId: string,
+        protected platform: PlatformUtil,
+        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
+        super(
+            selectionService,
+            colResizingService,
+            gridAPI,
+            transactionFactory,
+            elementRef,
+            zone,
+            document,
+            cdr,
+            resolver,
+            differs,
+            viewRef,
+            navigation,
+            filteringService,
+            overlayService,
+            summaryService,
+            _displayDensityOptions,
+            localeId,
+            platform);
+    }
 
     /**
      * @hidden
@@ -288,6 +358,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      protected autogenerateColumns() {
          let columns = [];
          const data = this.gridAPI.get_data();
+         this.originalDataColumns = this.generateOriginalColumns();
          let fieldsMap;
          if (this.pivotConfiguration.columnStrategy && this.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy) {
             const fields = this.generateDataFields(data);
@@ -311,6 +382,21 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (data && data.length > 0) {
             this.shouldGenerate = false;
         }
+    }
+
+    protected generateOriginalColumns() {
+        const data = this.gridAPI.get_data();
+        const fields = this.generateDataFields(data);
+        const columns = [];
+        const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
+        fields.forEach((field) => {
+            const ref = factory.create(this.viewRef.injector);
+            ref.instance.field = field;
+            ref.instance.dataType = this.resolveDataTypes(data[0][field]);
+            ref.changeDetectorRef.detectChanges();
+            columns.push(ref.instance);
+        });
+        return columns;
     }
 
     protected generateFromData(fields: string[]) {

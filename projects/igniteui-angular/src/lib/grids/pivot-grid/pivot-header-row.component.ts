@@ -72,6 +72,26 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         filter.enabled = false;
     }
 
+    public onFilteringIconClick(event, dimension) {
+        event.stopPropagation();
+        event.preventDefault();
+        // we are bound on pointerdown but excel filter listens on document click and closes :(
+        setTimeout(() => {
+            let dim = dimension;
+            let col;
+            while(dim) {
+                col = this.grid.originalDataColumns.find(x => x.field === dim.fieldName || x.field === dim.member);
+                if (col) {
+                    break;
+                } else {
+                    dim = dimension.childLevels[0];
+                }
+            }
+            this.grid.filteringService.toggleFilterDropdown(event.target, col);
+        }, 100);
+
+    }
+
     public onDimDragEnter(event, dimension: PivotDimensionType) {
         const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id) :
         !this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id);
