@@ -154,6 +154,7 @@ import { GridLocalizationSampleComponent } from './grid-localization/grid-locali
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
 import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
+import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -288,7 +289,8 @@ const components = [
     GridNestedPropsSampleComponent,
     IgxColumnGroupingDirective,
     GridColumnTypesSampleComponent,
-    GridLocalizationSampleComponent
+    GridLocalizationSampleComponent,
+    IgxStepperSampleComponent
 ];
 
 @NgModule({
