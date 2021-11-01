@@ -218,13 +218,15 @@ describe('Row Pinning #grid', () => {
             row.unpin();
             fix.detectChanges();
 
+            const unpinnedRow = grid.getRowByKey(row.rowID);
+
             expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(3);
-            // expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
-            //     isPinned: false,
-            //     rowID,
-            //     row,
-            //     cancel: true
-            // });
+            expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
+                isPinned: false,
+                rowID,
+                row: unpinnedRow,
+                cancel: true
+            });
             expect(row.pinned).toBe(true);
             sub.unsubscribe();
         });
