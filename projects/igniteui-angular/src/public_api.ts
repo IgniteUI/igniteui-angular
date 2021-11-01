@@ -102,6 +102,7 @@ export * from './lib/select/public_api';
 export * from './lib/splitter/splitter-pane/splitter-pane.component';
 export * from './lib/splitter/splitter.component';
 export * from './lib/splitter/splitter.module';
+export * from './lib/stepper/public_api';
 export * from './lib/date-range-picker/public_api';
 export * from './lib/date-common/public_api';
 
