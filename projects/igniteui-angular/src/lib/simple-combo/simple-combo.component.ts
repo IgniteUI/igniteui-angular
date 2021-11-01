@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Injector,
-    NgModule, Optional, Output
+    AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Inject, Injector,
+    NgModule, Optional, Output, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
+import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 import { IgxComboItemComponent } from '../combo/combo-item.component';
 import { IgxComboAPIService } from '../combo/combo.api';
-import { IGX_COMBO_COMPONENT } from '../combo/combo.common';
-import { IgxComboComponent, IgxComboModule, IgxComboState } from '../combo/combo.component';
+import { IgxComboBaseDirective, IGX_COMBO_COMPONENT } from '../combo/combo.common';
+import { IgxComboModule } from '../combo/combo.component';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
@@ -20,7 +21,7 @@ import { IgxTextSelectionModule } from '../directives/text-selection/text-select
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxIconModule, IgxIconService } from '../icon/public_api';
-import { IgxInputGroupModule, IgxInputGroupType, IgxInputState, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { IgxInputGroupModule, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 
 /** Emitted when an igx-simple-combo's selection is changing.  */
 export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -33,7 +34,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
 }
 
 /**
- *  Represents a drop-down list that provides filtering functionality, allowing users to choose a single option from a predefined list.
+ * Represents a drop-down list that provides filtering functionality, allowing users to choose a single option from a predefined list.
  *
  * @igxModule IgxSimpleComboModule
  * @igxTheme igx-combo-theme
@@ -60,7 +61,11 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ]
 })
-export class IgxSimpleComboComponent extends IgxComboComponent implements ControlValueAccessor, AfterViewInit {
+export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit {
+    /** @hidden @internal */
+    @ViewChild(IgxComboDropDownComponent, { static: true })
+    public dropdown: IgxComboDropDownComponent;
+
     /**
      * Emitted when item selection is changing, before the selection completes
      *
@@ -78,15 +83,16 @@ export class IgxSimpleComboComponent extends IgxComboComponent implements Contro
 
     constructor(protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService,
+        protected selectionService: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
         protected _iconService: IgxIconService,
         private platformUtil: PlatformUtil,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector) {
-        super(elementRef, cdr, selection, comboAPI,
+        super(elementRef, cdr, selectionService, comboAPI,
             _iconService, _displayDensityOptions, _inputGroupType, _injector);
+        this.comboAPI.register(this);
     }
 
     /**
@@ -99,7 +105,7 @@ export class IgxSimpleComboComponent extends IgxComboComponent implements Contro
      */
     public select(item: any): void {
         if (item !== null && item !== undefined) {
-            const newSelection = this.selection.add_items(this.id, item instanceof Array ? item : [item], true);
+            const newSelection = this.selectionService.add_items(this.id, item instanceof Array ? item : [item], true);
             this.setSelection(newSelection);
         }
     }
@@ -114,17 +120,17 @@ export class IgxSimpleComboComponent extends IgxComboComponent implements Contro
      */
     public deselect(item: any): void {
         if (item !== null && item !== undefined) {
-            const newSelection = this.selection.delete_items(this.id, item instanceof Array ? item : [item]);
+            const newSelection = this.selectionService.delete_items(this.id, item instanceof Array ? item : [item]);
             this.setSelection(newSelection);
         }
     }
 
     /** @hidden @internal */
     public writeValue(value: any) {
-        const oldSelection = this.selected;
-        this.selection.select_items(this.id, value ? [value] : [], true);
+        const oldSelection = this.selection;
+        this.selectionService.select_items(this.id, value ? [value] : [], true);
         this.cdr.markForCheck();
-        this._value = this.createDisplayText(this.selected, oldSelection);
+        this._value = this.createDisplayText(this.selection, oldSelection);
     }
 
     /** @hidden @internal */
@@ -138,7 +144,7 @@ export class IgxSimpleComboComponent extends IgxComboComponent implements Contro
             this.composing = false;
         });
         this.dropdown.closing.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            const selection = this.selection.first_item(this.id);
+            const selection = this.selectionService.first_item(this.id);
             this.comboInput.value = selection !== undefined && selection !== null ? selection : '';
         });
         this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -187,14 +193,12 @@ export class IgxSimpleComboComponent extends IgxComboComponent implements Contro
     /** @hidden @internal */
     public handleKeyUp(event: KeyboardEvent) {
         if (event.key === this.platformUtil.KEYMAP.ARROW_DOWN) {
-            this.dropdown.focusedItem = this.selection.first_item(this.id) || this.dropdown.items[0];
+            const firstItem = this.selectionService.first_item(this.id);
+            this.dropdown.focusedItem = firstItem && this.filteredData.length > 0
+                ? this.dropdown.items.find(i => i.itemID === firstItem)
+                : this.dropdown.items[0];
             this.dropdownContainer.nativeElement.focus();
         }
-    }
-
-    public set valid(valid: IgxComboState) {
-        this._valid = valid;
-        this.comboInput.valid = IgxInputState[IgxComboState[valid]];
     }
 
     /** @hidden @internal */
@@ -234,7 +238,7 @@ export class IgxSimpleComboComponent extends IgxComboComponent implements Contro
 
     protected setSelection(newSelection: any): void {
         const newSelectionAsArray = newSelection ? Array.from(newSelection) as IgxComboItemComponent[] : [];
-        const oldSelectionAsArray = Array.from(this.selection.get(this.id) || []);
+        const oldSelectionAsArray = Array.from(this.selectionService.get(this.id) || []);
         const displayText = this.createDisplayText(newSelectionAsArray, oldSelectionAsArray);
         const args: ISimpleComboSelectionChangingEventArgs = {
             newSelection: newSelectionAsArray[0],
@@ -249,7 +253,7 @@ export class IgxSimpleComboComponent extends IgxComboComponent implements Contro
                 && args.newSelection !== null
                 ? [args.newSelection]
                 : [];
-            this.selection.select_items(this.id, argsSelection, true);
+            this.selectionService.select_items(this.id, argsSelection, true);
             if (this._updateInput) {
                 this._value = displayText !== args.displayText
                     ? args.displayText
@@ -261,9 +265,9 @@ export class IgxSimpleComboComponent extends IgxComboComponent implements Contro
     }
 
     private clearSelection(ignoreFilter?: boolean): void {
-        let newSelection = this.selection.get_empty();
+        let newSelection = this.selectionService.get_empty();
         if (this.filteredData.length !== this.data.length && !ignoreFilter) {
-            newSelection = this.selection.delete_items(this.id, this.selection.get_all_ids(this.filteredData, this.valueKey));
+            newSelection = this.selectionService.delete_items(this.id, this.selectionService.get_all_ids(this.filteredData, this.valueKey));
         }
         this.setSelection(newSelection);
     }
