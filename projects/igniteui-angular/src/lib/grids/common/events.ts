@@ -169,7 +169,7 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
 /**
  * Event emitted when a row's pin state changes.
  */
-export interface IPinRowEventArgs extends IBaseEventArgs {
+export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
      * The row component instance, that was pinned/unpinned.
      * May be undefined if row does not exist in the current visible data.
@@ -182,7 +182,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs {
     readonly rowID: any;
     /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;
-    /** Whether or noy the row is pinned or unpinned. */
+    /** Whether or not the row is pinned or unpinned. */
     readonly isPinned: boolean;
 }
 
