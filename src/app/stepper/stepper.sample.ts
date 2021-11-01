@@ -146,9 +146,8 @@ export class IgxStepperSampleComponent implements AfterViewInit {
         }
     }
 
-    public activeChanged(event) {
+    public activeChanged() {
         console.log('GOLQM ACTIVE CHANGED');
-        // console.log(event);
     }
 
     public activeStepChange(ev) {
