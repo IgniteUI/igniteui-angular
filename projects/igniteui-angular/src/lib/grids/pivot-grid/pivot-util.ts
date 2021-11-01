@@ -189,7 +189,7 @@ export class PivotUtil {
     public static aggregate(records, values: IPivotValue[]) {
         const result = {};
         for (const pivotValue of values) {
-            result[pivotValue.member] = pivotValue.aggregate(records.map(r => r[pivotValue.member]));
+            result[pivotValue.member] = pivotValue.aggregate(records.map(r => r[pivotValue.member]), records);
         }
 
         return result;
