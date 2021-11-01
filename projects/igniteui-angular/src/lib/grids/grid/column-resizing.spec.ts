@@ -50,7 +50,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             headerResArea = GridFunctions.getHeaderResizeArea(headers[0]).nativeElement;
         }));
 
-        it('should define grid with resizable columns.', fakeAsync(() => {
+        fit('should define grid with resizable columns.', fakeAsync(() => {
 
             expect(grid.columns[0].width).toEqual('100px');
             expect(grid.columns[0].resizable).toBeTruthy();

@@ -1875,12 +1875,12 @@ export class GridFunctions {
     }
 
     public static clickHeaderSortIcon(header: DebugElement) {
-        const sortIcon = this.getHeaderSortIcon(header);
+        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
         sortIcon.triggerEventHandler('click', new Event('click'));
     }
 
     public static verifyHeaderSortIndicator(header: DebugElement, sortedAsc = true, sortedDesc = false, sortable = true) {
-        const sortIcon = this.getHeaderSortIcon(header);
+        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
         if (sortable) {
             const sortIconText = sortedDesc ? SORTING_ICON_DESC_CONTENT : SORTING_ICON_ASC_CONTENT;
             expect(sortIcon.nativeElement.textContent.trim()).toEqual(sortIconText);
