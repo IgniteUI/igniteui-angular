@@ -275,7 +275,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
          let fieldsMap;
          if (this.pivotConfiguration.columnStrategy && this.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy) {
             const fields = this.generateDataFields(data);
-            const rowFields = PivotUtil.flatten(this.pivotConfiguration.rows).map(x => x.fieldName);
+            const rowFields = PivotUtil.flatten(this.pivotConfiguration.rows).map(x => x.memberName);
             const keyFields = Object.values(this.pivotKeys);
             const filteredFields = fields.filter(x => rowFields.indexOf(x) === -1 && keyFields.indexOf(x) === -1 &&
              x.indexOf('_level') === -1 && x.indexOf('_records') === -1);

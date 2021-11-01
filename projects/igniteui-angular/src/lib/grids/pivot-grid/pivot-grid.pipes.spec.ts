@@ -21,20 +21,23 @@ describe('Pivot pipes', () => {
 
     const pivotConfigHierarchy: IPivotConfiguration = {
         columns: [{
-            member: () => 'All',
+            memberName: 'All',
+            memberFunction: () => 'All',
             enabled: true,
             childLevels: [{
-                member: 'Country',
+                memberName: 'Country',
                 enabled: true,
                 childLevels: []
             }]
         }],
         rows: [{
-            member: () => 'All',
+            memberName: 'All',
+            memberFunction: () => 'All',
             enabled: true,
             childLevels: [
                 {
-                    member: (d) => d.ProductCategory,
+                    memberName: 'ProductCategory',
+                    memberFunction: (d) => d.ProductCategory,
                     enabled: true,
                     childLevels: []
                 }
@@ -66,7 +69,7 @@ describe('Pivot pipes', () => {
     it('transforms flat data to pivot data single row dimension and no children are defined', () => {
         const config = Object.assign({}, pivotConfigHierarchy);
         config.rows = [{
-            member: 'ProductCategory',
+            memberName: 'ProductCategory',
             enabled: true,
             childLevels: []
         }];
@@ -221,12 +224,12 @@ describe('Pivot pipes', () => {
     it('transforms flat data to pivot data multiple row dimensions', () => {
         const config = Object.assign({}, pivotConfigHierarchy);
         config.rows = [{
-            member: 'ProductCategory',
+            memberName: 'ProductCategory',
             enabled: true,
             childLevels: []
         },
         {
-            member: 'Date',
+            memberName: 'Date',
             enabled: true,
             childLevels: []
         }];
@@ -297,19 +300,21 @@ describe('Pivot pipes', () => {
     it('transforms flat data to pivot data with multiple nested row dimensions', () => {
         const config = Object.assign({}, pivotConfigHierarchy);
         config.rows = [{
-            member: () => 'AllProd',
+            memberName: 'AllProd',
+            memberFunction: () => 'AllProd',
             enabled: true,
             childLevels: [{
-            member: 'ProductCategory',
+            memberName: 'ProductCategory',
             enabled: true,
             childLevels: []
             }]
         },
         {
-            member: () => 'AllDate',
+            memberName: 'AllDate',
+            memberFunction: () => 'AllDate',
             enabled: true,
             childLevels: [{
-            member: 'Date',
+            memberName: 'Date',
             enabled: true,
             childLevels: []
             }]
@@ -338,12 +343,12 @@ describe('Pivot pipes', () => {
     it('transforms flat data to pivot data 2 column dimensions', () => {
         const config = Object.assign({}, pivotConfigHierarchy);
         config.columns = [{
-            member: 'Country',
+            memberName: 'Country',
             enabled: true,
             childLevels:[]
             },
             {
-            member: 'Date',
+            memberName: 'Date',
             enabled: true,
             childLevels: []
             }];
@@ -364,17 +369,17 @@ describe('Pivot pipes', () => {
     it('transforms flat data to pivot data 3 column dimensions', () => {
         const config = Object.assign({}, pivotConfigHierarchy);
         config.columns = [{
-            member: 'Country',
+            memberName: 'Country',
             enabled: true,
             childLevels:[]
             },
             {
-            member: 'SellerName',
+            memberName: 'SellerName',
             enabled: true,
             childLevels:[]
             },
             {
-            member: 'Date',
+            memberName: 'Date',
             enabled: true,
             childLevels: []
             }];
@@ -436,9 +441,9 @@ describe('Pivot pipes', () => {
                 {ProductCategory:'Components', level:1, All:240,'All-USA':240}]
                 , level:0,'All-Bulgaria':774,'All-USA':829,'All-Uruguay':524}];
         config.columnStrategy =  NoopPivotDimensionsStrategy.instance();
-        config.columns[0].fieldName = 'All';
+        config.columns[0].memberName = 'All';
         config.rowStrategy  = NoopPivotDimensionsStrategy.instance();
-        config.rows[0].fieldName = 'All';
+        config.rows[0].memberName = 'All';
 
         const rowPipeResult = rowPipe.transform(preprocessedData, config, new Map<any, boolean>());
         const rowStateResult = rowStatePipe.transform(rowPipeResult, config, new Map<any, boolean>());
