@@ -1,7 +1,7 @@
-import { DataGenerator } from './test-util/data-generator';
-import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
+import { IgxGrouping } from '../grids/common/strategy';
 import { IGroupByRecord } from './groupby-record.interface';
-import { IgxGrouping } from './grouping-strategy';
+import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
+import { DataGenerator } from './test-util/data-generator';
 
 describe('Unit testing GroupingStrategy', () => {
     let dataGenerator: DataGenerator;

@@ -57,7 +57,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: CellType;
-        let cellElem: IgxGridCellComponent;
+        let cellElem: CellType;
         let cellDebug: DebugElement;
         let gridContent: DebugElement;
 
