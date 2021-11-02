@@ -121,7 +121,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         ref.instance.header = header;
         ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
         (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
-        if (dim.childLevels && dim.childLevels.length > 0 && lvl >= PivotUtil.getTotalLvl(this.rowData)) {
+        if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.rowData)) {
             ref.instance.headerTemplate = this.headerTemplate;
         } else if (lvl < PivotUtil.getTotalLvl(this.rowData)) {
             ref.instance.headerTemplate = this.headerTemplateGray;

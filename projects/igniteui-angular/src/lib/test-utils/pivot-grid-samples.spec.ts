@@ -55,22 +55,18 @@ export class IgxPivotGridTestBaseComponent {
         this.pivotConfigHierarchy = {
             columns: [{
                 memberName: 'Country',
-                enabled: true,
-                childLevels: []
+                enabled: true
             },
             ],
             rows: [{
                 memberName: 'All',
                 memberFunction: () => 'All',
                 enabled: true,
-                childLevels: [
-                    {
-                        memberName: 'ProductCategory',
-                        memberFunction: (data) => data.ProductCategory,
-                        enabled: true,
-                        childLevels: []
-                    }
-                ]
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    memberFunction: (data) => data.ProductCategory,
+                    enabled: true
+                }
             }],
             values: [
                 {

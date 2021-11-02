@@ -27,24 +27,20 @@ describe('Pivot pipes', () => {
                 memberName: 'All',
                 memberFunction: () => 'All',
                 enabled: true,
-                childLevels: [{
+                childLevel: {
                     memberName: 'Country',
-                    enabled: true,
-                    childLevels: []
-                }]
+                    enabled: true
+                }
             }],
             rows: [{
                 memberName: 'All',
                 memberFunction: () => 'All',
                 enabled: true,
-                childLevels: [
-                    {
-                        memberName: 'ProductCategory',
-                        memberFunction: (d) => d.ProductCategory,
-                        enabled: true,
-                        childLevels: []
-                    }
-                ]
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    memberFunction: (d) => d.ProductCategory,
+                    enabled: true
+                }
             }],
             values: [
                 {
@@ -77,8 +73,7 @@ describe('Pivot pipes', () => {
     it('transforms flat data to pivot data single row dimension and no children are defined', () => {
         pivotConfig.rows = [{
             memberName: 'ProductCategory',
-            enabled: true,
-            childLevels: []
+            enabled: true
         }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         expect(rowPipeResult).toEqual([
@@ -476,13 +471,11 @@ describe('Pivot pipes', () => {
     it('transforms flat data to pivot data multiple row dimensions', () => {
         pivotConfig.rows = [{
             memberName: 'ProductCategory',
-            enabled: true,
-            childLevels: []
+            enabled: true
         },
         {
             memberName: 'Date',
-            enabled: true,
-            childLevels: []
+            enabled: true
         }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expansionStates);
@@ -666,21 +659,19 @@ describe('Pivot pipes', () => {
             memberName: 'AllProd',
             memberFunction: () => 'AllProd',
             enabled: true,
-            childLevels: [{
+            childLevel: {
                 memberName: 'ProductCategory',
-                enabled: true,
-                childLevels: []
-            }]
+                enabled: true
+            }
         },
         {
             memberName: 'AllDate',
             memberFunction: () => 'AllDate',
             enabled: true,
-            childLevels: [{
+            childLevel: {
                 memberName: 'Date',
-                enabled: true,
-                childLevels: []
-            }]
+                enabled: true
+            }
         }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expansionStates);
@@ -717,13 +708,11 @@ describe('Pivot pipes', () => {
     it('transforms flat data to pivot data 2 column dimensions', () => {
         pivotConfig.columns = [{
             memberName: 'Country',
-            enabled: true,
-            childLevels: []
-        },
-        {
+            enabled: true
+            },
+            {
             memberName: 'Date',
-            enabled: true,
-            childLevels: []
+            enabled: true
         }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
@@ -748,18 +737,15 @@ describe('Pivot pipes', () => {
     it('transforms flat data to pivot data 3 column dimensions', () => {
         pivotConfig.columns = [{
             memberName: 'Country',
-            enabled: true,
-            childLevels: []
-        },
-        {
+            enabled: true
+            },
+            {
             memberName: 'SellerName',
-            enabled: true,
-            childLevels: []
-        },
-        {
+            enabled: true
+            },
+            {
             memberName: 'Date',
-            enabled: true,
-            childLevels: []
+            enabled: true
         }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
         const rowStateResult = rowStatePipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
