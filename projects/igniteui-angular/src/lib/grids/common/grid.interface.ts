@@ -82,7 +82,7 @@ export interface RowType {
     /** Deprecated, will be removed. data is the new property */
     rowData?: any;
     data?: any;
-    cells?: QueryList<CellType>;
+    cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
     pinned?: boolean;
     selected?: boolean;
@@ -93,7 +93,7 @@ export interface RowType {
     parent?: RowType;
     hasChildren?: boolean;
     treeRow? : ITreeGridRecord;
-    addRowUI: any;
+    addRowUI?: any;
     grid: GridType;
     beginAddRow?: () => void;
     update?: (value: any) => void;
