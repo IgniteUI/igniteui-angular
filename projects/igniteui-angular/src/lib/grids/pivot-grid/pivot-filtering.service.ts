@@ -30,5 +30,23 @@ export class IgxPivotFilteringService extends IgxFilteringService {
             (grid as any).setupColumns();
         }
     }
+    public clearFilter(field: string): void {
+        this.clear_filter(field);
+    }
+
+    public clear_filter(fieldName: string) {
+        super.clear_filter(fieldName);
+        const grid = this.grid;
+        const config = (grid as IgxPivotGridComponent).pivotConfiguration;
+        const allDimensions = PivotUtil.flatten(config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null));
+        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+        const dim = enabledDimensions.find(x => x.fieldName === fieldName || x.member === fieldName);
+        dim.filters = undefined;
+        grid.filteringPipeTrigger++;
+        if (PivotUtil.flatten(config.columns).indexOf(dim) !== -1) {
+            // update columns
+            (grid as any).setupColumns();
+        }
+    }
 
 }
