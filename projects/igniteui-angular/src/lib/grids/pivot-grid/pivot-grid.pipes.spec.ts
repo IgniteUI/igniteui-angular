@@ -1,58 +1,66 @@
 import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxNumberSummaryOperand } from '../summaries/grid-summary';
 import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 
 describe('Pivot pipes', () => {
-    // This pipe is a pure, stateless function so no need for BeforeEach
-    const rowPipe = new IgxPivotRowPipe();
-    const rowStatePipe = new IgxPivotRowExpansionPipe();
-    const columnPipe = new IgxPivotColumnPipe();
-    const expansionStates = new Map<any, boolean>();
-    const data = [
+    let rowPipe: IgxPivotRowPipe;
+    let rowStatePipe: IgxPivotRowExpansionPipe;
+    let columnPipe: IgxPivotColumnPipe;
+    let expansionStates: Map<any, boolean>;
+    let data: any[];
+    let pivotConfig: IPivotConfiguration;
+
+    configureTestSuite();
+    beforeEach(() => {
+        data = [
         { ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley', Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282 },
         { ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa', Country: 'USA', Date: '01/05/2019', UnitsSold: 296 },
         { ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia', Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68 },
         { ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David', Country: 'USA', Date: '04/07/2021', UnitsSold: 293 },
         { ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John', Country: 'USA', Date: '12/08/2021', UnitsSold: 240 },
         { ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry', Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456 },
-        { ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter', Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492 }
-    ];
-
-    const pivotConfigHierarchy: IPivotConfiguration = {
-        columns: [{
-            memberName: 'All',
-            memberFunction: () => 'All',
-            enabled: true,
-            childLevel: {
-                memberName: 'Country',
-                enabled: true
-            }
-        }],
-        rows: [{
-            memberName: 'All',
-            memberFunction: () => 'All',
-            enabled: true,
-            childLevel: {
-                memberName: 'ProductCategory',
-                memberFunction: (d) => d.ProductCategory,
-                enabled: true
-            }
-        }],
-        values: [
-            {
-                member: 'UnitsSold',
-                aggregate: IgxNumberSummaryOperand.sum,
-                enabled: true
-            }
-        ],
-        filters: null
-    };
+        { ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter', Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492 }];
+        pivotConfig = {
+            columns: [{
+                memberName: 'All',
+                memberFunction: () => 'All',
+                enabled: true,
+                childLevel: {
+                    memberName: 'Country',
+                    enabled: true
+                }
+            }],
+            rows: [{
+                memberName: 'All',
+                memberFunction: () => 'All',
+                enabled: true,
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    memberFunction: (d) => d.ProductCategory,
+                    enabled: true
+                }
+            }],
+            values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: IgxNumberSummaryOperand.sum,
+                    enabled: true
+                }
+            ],
+            filters: null
+        };
+        expansionStates = new Map<any, boolean>();
+        rowPipe = new IgxPivotRowPipe();
+        rowStatePipe = new IgxPivotRowExpansionPipe();
+        columnPipe = new IgxPivotColumnPipe();
+    });
 
     it('transforms flat data to pivot data', () => {
-        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfigHierarchy, expansionStates);
-        const columnPipeResult = columnPipe.transform(rowStatePipeResult, pivotConfigHierarchy, expansionStates);
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expansionStates);
+        const columnPipeResult = columnPipe.transform(rowStatePipeResult, pivotConfig, expansionStates);
         expect(columnPipeResult).toEqual([
             { All: 2127, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, All_level: 0 },
             { ProductCategory: 'Clothing', All: 1526, 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456, ProductCategory_level: 1 },
@@ -63,12 +71,11 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data single row dimension and no children are defined', () => {
-        const config = Object.assign({}, pivotConfigHierarchy);
-        config.rows = [{
+        pivotConfig.rows = [{
             memberName: 'ProductCategory',
             enabled: true
         }];
-        const rowPipeResult = rowPipe.transform(data, config, expansionStates);
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         expect(rowPipeResult).toEqual([
             {
                 ProductCategory: 'Clothing', records: [
@@ -146,7 +153,7 @@ describe('Pivot pipes', () => {
                     }
                 ], level: 0
             }]);
-        const columnPipeResult = columnPipe.transform(rowPipeResult, config, expansionStates);
+        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
         expect(columnPipeResult).toEqual([
             {
                 ProductCategory: 'Clothing', All: 1526, 'All-Bulgaria': 774, 'All-USA': 296,
@@ -161,8 +168,8 @@ describe('Pivot pipes', () => {
     it('allows setting expand/collapse state.', () => {
         const expanded = new Map<any, boolean>();
         expanded.set('All', false);
-        const rowPipeResult = rowPipe.transform(data, pivotConfigHierarchy, expanded);
-        const rowPipeCollapseResult = rowStatePipe.transform(rowPipeResult, pivotConfigHierarchy, expanded);
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expanded);
+        const rowPipeCollapseResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expanded);
         expect(rowPipeCollapseResult).toEqual([
             {
                 All: 'All', All_records: [
@@ -275,7 +282,7 @@ describe('Pivot pipes', () => {
             }]);
 
         expanded.set('All', true);
-        const rowPipeExpandResult = rowStatePipe.transform(rowPipeResult, pivotConfigHierarchy, expanded);
+        const rowPipeExpandResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expanded);
         expect(rowPipeExpandResult).toEqual([
             {
                 All: 'All', All_records: [
@@ -462,8 +469,7 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data multiple row dimensions', () => {
-        const config = Object.assign({}, pivotConfigHierarchy);
-        config.rows = [{
+        pivotConfig.rows = [{
             memberName: 'ProductCategory',
             enabled: true
         },
@@ -471,8 +477,8 @@ describe('Pivot pipes', () => {
             memberName: 'Date',
             enabled: true
         }];
-        const rowPipeResult = rowPipe.transform(data, config, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, config, expansionStates);
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expansionStates);
 
         expect(rowStatePipeResult).toEqual([
             {
@@ -649,8 +655,7 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data with multiple nested row dimensions', () => {
-        const config = Object.assign({}, pivotConfigHierarchy);
-        config.rows = [{
+        pivotConfig.rows = [{
             memberName: 'AllProd',
             memberFunction: () => 'AllProd',
             enabled: true,
@@ -668,9 +673,9 @@ describe('Pivot pipes', () => {
                 enabled: true
             }
         }];
-        const rowPipeResult = rowPipe.transform(data, config, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, config, expansionStates);
-        const columnPipeResult = columnPipe.transform(rowStatePipeResult, config, expansionStates);
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expansionStates);
+        const columnPipeResult = columnPipe.transform(rowStatePipeResult, pivotConfig, expansionStates);
         expect(columnPipeResult).toEqual([
             {
                 All: 2127, 'All-Bulgaria': 774, 'All-Uruguay': 524, 'All-USA': 829, AllDate: 'AllDate',
@@ -701,18 +706,17 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data 2 column dimensions', () => {
-        const config = Object.assign({}, pivotConfigHierarchy);
-        config.columns = [{
+        pivotConfig.columns = [{
             memberName: 'Country',
             enabled: true
             },
             {
             memberName: 'Date',
             enabled: true
-            }];
-        const rowPipeResult = rowPipe.transform(data, config, new Map<any, boolean>());
-        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfigHierarchy, new Map<any, boolean>());
-        const columnPipeResult = columnPipe.transform(rowStatePipeResult, config, new Map<any, boolean>());
+        }];
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
+        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const columnPipeResult = columnPipe.transform(rowStatePipeResult, pivotConfig, new Map<any, boolean>());
         /* eslint-disable quote-props */
         expect(columnPipeResult).toEqual([
             {
@@ -731,8 +735,7 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data 3 column dimensions', () => {
-        const config = Object.assign({}, pivotConfigHierarchy);
-        config.columns = [{
+        pivotConfig.columns = [{
             memberName: 'Country',
             enabled: true
             },
@@ -743,10 +746,10 @@ describe('Pivot pipes', () => {
             {
             memberName: 'Date',
             enabled: true
-            }];
-        const rowPipeResult = rowPipe.transform(data, config, new Map<any, boolean>());
-        const rowStateResult = rowStatePipe.transform(rowPipeResult, config, new Map<any, boolean>());
-        const columnPipeResult = columnPipe.transform(rowStateResult, config, new Map<any, boolean>());
+        }];
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
+        const rowStateResult = rowStatePipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const columnPipeResult = columnPipe.transform(rowStateResult, pivotConfig, new Map<any, boolean>());
         /* eslint-disable quote-props */
         expect(columnPipeResult).toEqual([
             {
@@ -767,8 +770,7 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data 2 value dimensions', () => {
-        const config = Object.assign({}, pivotConfigHierarchy);
-        config.values = [
+        pivotConfig.values = [
             {
                 member: 'UnitsSold',
                 aggregate: IgxNumberSummaryOperand.sum,
@@ -780,9 +782,9 @@ describe('Pivot pipes', () => {
                 enabled: true
             }
         ];
-        const rowPipeResult = rowPipe.transform(data, config, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfigHierarchy, new Map<any, boolean>());
-        const columnPipeResult = columnPipe.transform(rowStatePipeResult, config, expansionStates);
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const columnPipeResult = columnPipe.transform(rowStatePipeResult, pivotConfig, expansionStates);
         expect(columnPipeResult).toEqual([
             {
                 'All': 'All', 'All_level': 0, 'All-UnitsSold': 2127, 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86,
@@ -808,7 +810,6 @@ describe('Pivot pipes', () => {
     });
 
     it('allow setting NoopPivotDimensionsStrategy for rows/columns', () => {
-        const config = Object.assign({}, pivotConfigHierarchy);
         const preprocessedData = [
             {
                 All: 2127, All_records: [
@@ -818,14 +819,14 @@ describe('Pivot pipes', () => {
                     { ProductCategory: 'Components', level: 1, All: 240, 'All-USA': 240 }]
                 , level: 0, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524
             }];
-        config.columnStrategy = NoopPivotDimensionsStrategy.instance();
-        config.columns[0].memberName = 'All';
-        config.rowStrategy = NoopPivotDimensionsStrategy.instance();
-        config.rows[0].memberName = 'All';
+        pivotConfig.columnStrategy = NoopPivotDimensionsStrategy.instance();
+        pivotConfig.columns[0].memberName = 'All';
+        pivotConfig.rowStrategy = NoopPivotDimensionsStrategy.instance();
+        pivotConfig.rows[0].memberName = 'All';
 
-        const rowPipeResult = rowPipe.transform(preprocessedData, config, new Map<any, boolean>());
-        const rowStateResult = rowStatePipe.transform(rowPipeResult, config, new Map<any, boolean>());
-        const columnPipeResult = columnPipe.transform(rowStateResult, config, new Map<any, boolean>());
+        const rowPipeResult = rowPipe.transform(preprocessedData, pivotConfig, new Map<any, boolean>());
+        const rowStateResult = rowStatePipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const columnPipeResult = columnPipe.transform(rowStateResult, pivotConfig, new Map<any, boolean>());
 
         // same data but expanded
         expect(columnPipeResult).toEqual([
