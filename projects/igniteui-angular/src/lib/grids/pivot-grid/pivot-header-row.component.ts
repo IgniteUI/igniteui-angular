@@ -75,7 +75,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         filter.enabled = false;
     }
 
-    public onDimDragOver(event, dimension: PivotDimensionType) {
+    public onDimDragOver(event, dimension?: PivotDimensionType) {
         const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id) :
         !this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id);
         if (typeMismatch) {
@@ -109,7 +109,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         this._dropPos = DropPosition.AfterDropTarget;
     }
 
-    public onAreaDragEnter(event, area, dimension: PivotDimensionType) {
+    public onAreaDragEnter(event, area, dimension?: PivotDimensionType) {
         const dragId = event.detail.owner.element.nativeElement.parentElement.id;
         const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === dragId) :
         !this.grid.pivotConfiguration.values.find(x => x.member === dragId);

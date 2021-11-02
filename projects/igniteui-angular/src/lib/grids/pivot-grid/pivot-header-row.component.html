@@ -42,7 +42,7 @@
             </div>
             <div #pivotValueContainer [style.min-width.px]="grid.unpinnedWidth" (pointerdown)="$event.preventDefault()"
                 (dropped)="onValueDrop($event, valueArea)" igxDrop
-                (igxDragEnter)="onAreaDragEnter($event, valueArea,undefined)"
+                (igxDragEnter)="onAreaDragEnter($event, valueArea)"
                 (igxDragLeave)="onAreaDragLeave($event, valueArea)">
 
                 <div *ngIf="grid.values.length === 0">
