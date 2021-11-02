@@ -1,70 +1,59 @@
-<div class="igx-grid-thead__wrapper" role="row" [style.width.px]="width" *ngIf="!row" >
+<div class="igx-grid-thead__wrapper" role="row" [style.width.px]="width" *ngIf="!row">
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
-        <div #pivotFilterContainer class="igx-grid__tr-action" [style.min-width.px] = "grid.pivotRowWidths" 
-        (pointerdown)="$event.preventDefault()" style='display: flex; align-items: flex-end;'>
-              <!-- Filter area -->
-              <igx-chips-area #filterArea 
-              (dropped)="onDimDrop($event, filterArea, 2)"
-              igxDrop
-              (igxDragEnter)="onAreaDragEnter($event, filterArea, 2)"
-              (igxDragLeave)="onAreaDragLeave($event, filterArea)">
-                <div *ngIf="grid.filterDimensions.length === 0">
-                <span class='igx-pivot__emptyChipArea'>Drop Filter  Fields here.</span>
-                </div>
+        <div #pivotFilterContainer class="igx-grid__tr-action" [style.min-width.px]="grid.pivotRowWidths"
+            (igxDragEnter)="onAreaDragEnter($event, filterArea, 2)" (igxDragLeave)="onAreaDragLeave($event, filterArea)"
+            igxDrop (dropped)="onDimDrop($event, filterArea, 2)" (pointerdown)="$event.preventDefault()"
+            style='display: flex; align-items: flex-end;'>
+            <div *ngIf="grid.filterDimensions.length === 0">
+                <span class='igx-pivot__emptyChipArea'>Drop Filter Fields here.</span>
+            </div>
+            <!-- Filter area -->
+            <igx-chips-area #filterArea droppable='true' style="width:fit-content">
                 <igx-chip *ngFor="let filter of grid.filterDimensions" [id]="filter.fieldName" [draggable]="true"
-                [removable]="true" (remove)="filterRemoved($event)"
-                (dragEnter)="onDimDragEnter($event, 2)"
-                (dragLeave)="onDimDragLeave($event)"
-                (dragDrop)="onDimDrop($event, filterArea, 2)"
-                >
+                    [removable]="true" (remove)="filterRemoved($event)" (dragEnter)="onDimDragEnter($event, 2)"
+                    (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, filterArea, 2)">
                     <igx-icon igxPrefix>filter_list</igx-icon>
                     {{filter.fieldName}}
                 </igx-chip>
             </igx-chips-area>
         </div>
-        <div #pivotValueContainer [style.min-width.px] = "grid.unpinnedWidth" 
-        (pointerdown)="$event.preventDefault()">
 
-        <!-- Columns area -->
-        <igx-chips-area #colArea
-        (dropped)="onDimDrop($event, colArea, 1)"
-        igxDrop
-        (igxDragEnter)="onAreaDragEnter($event, colArea, 1)"
-        (igxDragLeave)="onAreaDragLeave($event, colArea)"
-        >
-        <div *ngIf="grid.columnDimensions.length === 0">
-            <span class='igx-pivot__emptyChipArea'>Drop Column Fields here.</span>
-        </div>
-            <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.fieldName"
-             [removable]="true" (remove)="columnRemoved($event)"
-             (dragEnter)="onDimDragEnter($event, 1)"
-             (dragLeave)="onDimDragLeave($event)"
-             (dragDrop)="onDimDrop($event, colArea, 1)"
-             >
-                <igx-icon igxPrefix>view_column</igx-icon>
-                <igx-icon igxPrefix>filter_list</igx-icon>
-                {{col.fieldName}}
-            </igx-chip>
-        </igx-chips-area>
+        <div>
+            <div #pivotColumnContainer (dropped)="onDimDrop($event, colArea, 1)" igxDrop
+                (igxDragEnter)="onAreaDragEnter($event, colArea, 1)" (igxDragLeave)="onAreaDragLeave($event, colArea)">
+                <div *ngIf="grid.columnDimensions.length === 0">
+                    <span class='igx-pivot__emptyChipArea'>Drop Column Fields here.</span>
+                </div>
+                <!-- Columns area -->
+                <igx-chips-area #colArea droppable='true' style="width:fit-content">
+                    <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.fieldName"
+                        [removable]="true" (remove)="columnRemoved($event)" (dragEnter)="onDimDragEnter($event, 1)"
+                        (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, colArea, 1)">
+                        <igx-icon igxPrefix>view_column</igx-icon>
+                        <igx-icon igxPrefix>filter_list</igx-icon>
+                        {{col.fieldName}}
+                    </igx-chip>
+                </igx-chips-area>
+            </div>
+            <div #pivotValueContainer [style.min-width.px]="grid.unpinnedWidth" (pointerdown)="$event.preventDefault()"
+                (dropped)="onValueDrop($event, valueArea)" igxDrop
+                (igxDragEnter)="onAreaDragEnter($event, valueArea,undefined)"
+                (igxDragLeave)="onAreaDragLeave($event, valueArea)">
 
-         <!-- Value area -->
-         <igx-chips-area #valueArea
-         (dropped)="onValueDrop($event, valueArea)"
-         igxDrop
-         (igxDragEnter)="onAreaDragEnter($event, valueArea,undefined)"
-         (igxDragLeave)="onAreaDragLeave($event, valueArea)"
-         >
-         <div *ngIf="grid.values.length === 0">
-             <span class='igx-pivot__emptyChipArea'>Drop Value Fields here.</span>
-         </div>
-            <igx-chip *ngFor="let value of grid.values" [draggable]="'true'" [id]="value.member" [removable]="true" (remove)="valueRemoved($event)"
-            (dragEnter)="onDimDragEnter($event, undefined)"
-            (dragLeave)="onDimDragLeave($event)"
-            (dragDrop)="onValueDrop($event, valueArea)">
-                <igx-icon igxPrefix>functions</igx-icon>
-                {{value.member}}
-            </igx-chip>
-        </igx-chips-area>
+                <div *ngIf="grid.values.length === 0">
+                    <span class='igx-pivot__emptyChipArea'>Drop Value Fields here.</span>
+                </div>
+                <!-- Value area -->
+                <igx-chips-area #valueArea droppable='true' style="width:fit-content">
+                    <igx-chip *ngFor="let value of grid.values" [draggable]="'true'" [id]="value.member"
+                        [removable]="true" (remove)="valueRemoved($event)"
+                        (dragEnter)="onDimDragEnter($event, undefined)" (dragLeave)="onDimDragLeave($event)"
+                        (dragDrop)="onValueDrop($event, valueArea)">
+                        <igx-icon igxPrefix>functions</igx-icon>
+                        {{value.member}}
+                    </igx-chip>
+                </igx-chips-area>
+            </div>
         </div>
     </div>
 </div>
@@ -74,24 +63,19 @@
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
 
         <ng-container *ngIf="!row">
-            <div #pivotContainer class="igx-grid__tr-action" [style.min-width.px] = "grid.pivotRowWidths" 
-                (pointerdown)="$event.preventDefault()" style='display: flex; align-items: flex-end;'>
-                 <!-- Row area -->
-                 <igx-chips-area #rowArea 
-                 (dropped)="onDimDrop($event, rowArea, 0)"
-                 igxDrop
-                 (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)"
-                 (igxDragLeave)="onAreaDragLeave($event, rowArea)"
-                 >
-                    <div *ngIf="grid.rowDimensions.length === 0">
-                        <span class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
-                    </div>
+            <div #pivotContainer class="igx-grid__tr-action" [style.min-width.px]="grid.pivotRowWidths"
+                (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)" (igxDragLeave)="onAreaDragLeave($event, rowArea)"
+                igxDrop (dropped)="onDimDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()"
+                style='display: flex; align-items: flex-end;'>
+
+                <div *ngIf="grid.rowDimensions.length === 0">
+                    <span class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
+                </div>
+                <!-- Row area -->
+                <igx-chips-area #rowArea droppable='true' style="width:fit-content">
                     <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="'true'" [id]="row.fieldName"
-                     [removable]="true" (remove)="rowRemoved($event)"
-                     (dragEnter)="onDimDragEnter($event, 0)"
-                     (dragLeave)="onDimDragLeave($event)"
-                     (dragDrop)="onDimDrop($event, rowArea, 0)"
-                     >
+                        [removable]="true" (remove)="rowRemoved($event)" (dragEnter)="onDimDragEnter($event, 0)"
+                        (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, rowArea, 0)">
                         <igx-icon igxPrefix>table_rows</igx-icon>
                         <igx-icon igxPrefix>filter_list</igx-icon>
                         {{ row.fieldName}}
@@ -103,10 +87,8 @@
         <!-- Pinned columns collection from the start -->
         <ng-container *ngIf="pinnedColumnCollection.length && grid.isPinningToStart">
             <ng-container *ngFor="let column of pinnedColumnCollection | igxTopLevel">
-                <igx-grid-header-group
-                    [ngClass]="column.headerGroupClasses"
-                    [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
-                    [column]="column"
+                <igx-grid-header-group [ngClass]="column.headerGroupClasses"
+                    [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                     [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                     [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
                 </igx-grid-header-group>
@@ -115,17 +97,12 @@
 
         <!-- Unpinned columns collection -->
         <ng-template igxGridFor #headerVirtualContainer let-column
-            [igxGridForOf]="unpinnedColumnCollection | igxTopLevel"
-            [igxForScrollContainer]="grid.parentVirtDir"
+            [igxGridForOf]="unpinnedColumnCollection | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir"
             [igxForContainerSize]=" row ? grid.pivotRowWidths : grid.unpinnedWidth"
-            [igxForTrackBy]="grid.trackColumnChanges"
-            [igxForSizePropName]="'calcPixelWidth'"
-            [igxForScrollOrientation]="'horizontal'"
-        >
-            <igx-grid-header-group
-                [ngClass]="column.headerGroupClasses"
-                [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
-                [column]="column"
+            [igxForTrackBy]="grid.trackColumnChanges" [igxForSizePropName]="'calcPixelWidth'"
+            [igxForScrollOrientation]="'horizontal'">
+            <igx-grid-header-group [ngClass]="column.headerGroupClasses"
+                [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                 [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
             </igx-grid-header-group>
@@ -134,10 +111,8 @@
         <!-- Pinned columns collection at the end -->
         <ng-container *ngIf="pinnedColumnCollection.length && !grid.isPinningToStart">
             <ng-container *ngFor="let column of pinnedColumnCollection | igxTopLevel">
-                <igx-grid-header-group
-                    [ngClass]="column.headerGroupClasses"
-                    [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
-                    [column]="column"
+                <igx-grid-header-group [ngClass]="column.headerGroupClasses"
+                    [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                     [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                     [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                     [style.left]="column.rightPinnedOffset">
@@ -147,4 +122,5 @@
     </div>
 </div>
 <!-- Header thumb area -->
-<div *ngIf="!row" class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize"></div>
+<div *ngIf="!row" class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize">
+</div>
