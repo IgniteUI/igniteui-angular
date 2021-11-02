@@ -104,7 +104,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
-    public set pagingMode(val: GridPagingMode) {
+    public set pagingMode(_val: GridPagingMode) {
     }
 
     /**
@@ -116,7 +116,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
-    public set hideRowSelectors(value: boolean) {
+    public set hideRowSelectors(_value: boolean) {
     }
 
     /**
@@ -128,7 +128,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
 
-    public set rowDraggable(val: boolean) {
+    public set rowDraggable(_val: boolean) {
     }
 
     /**
@@ -138,7 +138,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
-    public set dragIndicatorIconTemplate(val: TemplateRef<any>) {
+    public set dragIndicatorIconTemplate(_val: TemplateRef<any>) {
     }
 
     /**
@@ -150,7 +150,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
-    public set rowEditable(val: boolean) {
+    public set rowEditable(_val: boolean) {
     }
 
     /**
@@ -160,7 +160,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public get pinning() {
         return {};
     }
-    public set pinning(value) {
+    public set pinning(_value) {
     }
 
     /**
@@ -171,7 +171,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
-    public set summaryPosition(value: GridSummaryPosition) {
+    public set summaryPosition(_value: GridSummaryPosition) {
     }
 
     /**
@@ -182,7 +182,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
-    public set summaryCalculationMode(value: GridSummaryCalculationMode) {
+    public set summaryCalculationMode(_value: GridSummaryCalculationMode) {
     }
 
     /**
@@ -193,7 +193,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
-    public set showSummaryOnCollapse(value: boolean) {
+    public set showSummaryOnCollapse(_value: boolean) {
     }
 
     /**
@@ -218,7 +218,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
-    public set batchEditing(val: boolean) {
+    public set batchEditing(_val: boolean) {
     }
 
     /**
@@ -350,14 +350,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public isRecordPinnedByIndex(rowIndex: number) {
+    public isRecordPinnedByIndex(_rowIndex: number) {
         return null;
     }
 
     /**
      * @hidden @internal
      */
-    public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
+    public toggleColumnVisibility(_args: IColumnVisibilityChangedEventArgs) {
         return;
     }
 
@@ -376,13 +376,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public expandRow(rowID: any) {
+    public expandRow(_rowID: any) {
     }
 
     /**
      * @hidden @internal
      */
-    public collapseRow(rowID: any) {
+    public collapseRow(_rowID: any) {
     }
 
     /**
@@ -395,7 +395,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public getColumnByVisibleIndex(index: number): IgxColumnComponent {
+    public getColumnByVisibleIndex(_index: number): IgxColumnComponent {
         return;
     }
 
@@ -407,76 +407,76 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
-    public set totalRecords(total: number) {
+    public set totalRecords(_total: number) {
     }
 
     /**
      * @hidden @internal
      */
-    public moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
+    public moveColumn(_column: IgxColumnComponent, _target: IgxColumnComponent, _pos: DropPosition = DropPosition.AfterDropTarget) {
     }
 
     /**
      * @hidden @internal
      */
-    public addRow(data: any): void {
+    public addRow(_data: any): void {
     }
 
     /**
      * @hidden @internal
      */
-    public deleteRow(rowSelector: any): any {
+    public deleteRow(_rowSelector: any): any {
     }
 
     /**
      * @hidden @internal
      */
-    public updateCell(value: any, rowSelector: any, column: string): void {
+    public updateCell(_value: any, _rowSelector: any, _column: string): void {
     }
 
     /**
      * @hidden @internal
      */
-    public updateRow(value: any, rowSelector: any): void {
+    public updateRow(_value: any, _rowSelector: any): void {
     }
 
     /**
      * @hidden @internal
      */
-    public enableSummaries(...rest) {
+    public enableSummaries(..._rest) {
     }
 
     /**
      * @hidden @internal
      */
-    public disableSummaries(...rest) {
+    public disableSummaries(..._rest) {
     }
 
     /**
      * @hidden @internal
      */
-    public pinColumn(columnName: string | IgxColumnComponent, index?): boolean {
+    public pinColumn(_columnName: string | IgxColumnComponent, _index?): boolean {
         return;
     }
 
     /**
      * @hidden @internal
      */
-    public unpinColumn(columnName: string | IgxColumnComponent, index?): boolean {
+    public unpinColumn(_columnName: string | IgxColumnComponent, _index?): boolean {
         return;
     }
 
     /**
      * @hidden @internal
      */
-    public pinRow(rowID: any, index?: number, row?: RowType): boolean {
+    public pinRow(_rowID: any, _index?: number, _row?: RowType): boolean {
         return;
     }
 
     /**
      * @hidden @internal
      */
-    public unpinRow(rowID: any, row?: RowType): boolean {
+    public unpinRow(_rowID: any, _row?: RowType): boolean {
         return;
     }
 
@@ -518,32 +518,33 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public openAdvancedFilteringDialog(overlaySettings?: OverlaySettings) {
+    public openAdvancedFilteringDialog(_overlaySettings?: OverlaySettings) {
     }
 
     /**
      * @hidden @internal
      */
-    public closeAdvancedFilteringDialog(applyChanges: boolean) {
+    public closeAdvancedFilteringDialog(_applyChanges: boolean) {
     }
 
     /**
      * @hidden @internal
      */
-    public endEdit(commit = true, event?: Event) {
+    public endEdit(_commit = true, _event?: Event) {
     }
 
     /**
      * @hidden @internal
      */
-    public beginAddRowById(rowID: any, asChild?: boolean): void {
+    public beginAddRowById(_rowID: any, _asChild?: boolean): void {
     }
 
     /**
      * @hidden @internal
      */
-    public beginAddRowByIndex(index: number): void {
+    public beginAddRowByIndex(_index: number): void {
     }
+
 
     protected toggleGroup(col: IgxColumnComponent, newState: boolean) {
         if (this.hasMultipleValues) {
@@ -707,7 +708,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const cols = [];
         this.pivotConfiguration.values.forEach(val => {
             const ref = colFactory.create(this.viewRef.injector);
-            ref.instance.header = val.member;
+            ref.instance.header = val.displayName || val.member;
             ref.instance.field = parent.field + '-' + val.member;
             ref.instance.parent = parent;
             ref.instance.hidden = hidden;
