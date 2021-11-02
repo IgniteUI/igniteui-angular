@@ -30,7 +30,7 @@ import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.comp
 import { IgxGridCell } from '../grid-public-cell';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
-
+import { IGridGroupingStrategy } from '../common/strategy';
 let NEXT_ID = 0;
 
 export interface IGroupingDoneEventArgs extends IBaseEventArgs {
@@ -263,6 +263,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden
      */
+    protected _groupStrategy: IGridGroupingStrategy;
+    /**
+     * @hidden
+     */
     protected groupingDiffer;
     private _data?: any[] | null;
     private _hideGroupedColumns = false;
@@ -450,6 +454,25 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
 
         this._hideGroupedColumns = value;
+    }
+
+    /**
+     * Gets/Sets the grouping strategy of the grid.
+     *
+     * @remarks The default IgxGrouping extends from IgxSorting and a custom one can be used as a `sortStrategy` as well.
+     *
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [groupStrategy]="groupStrategy"></igx-grid>
+     * ```
+     */
+    @Input()
+    public get groupStrategy(): IGridGroupingStrategy {
+        return this._groupStrategy;
+    }
+
+    public set groupStrategy(value: IGridGroupingStrategy) {
+        this._groupStrategy = value;
     }
 
     /**

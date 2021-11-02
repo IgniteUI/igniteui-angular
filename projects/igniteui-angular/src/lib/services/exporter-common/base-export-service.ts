@@ -688,7 +688,7 @@ export abstract class IgxBaseExporter {
 
             if (hasGrouping && !this.options.ignoreGrouping) {
                 const groupsRecords = [];
-                DataUtil.group(cloneArray(gridData), groupedGridGroupingState, grid, groupsRecords);
+                DataUtil.group(cloneArray(gridData), groupedGridGroupingState, grid.groupStrategy, grid, groupsRecords);
                 gridData = groupsRecords;
             }
 

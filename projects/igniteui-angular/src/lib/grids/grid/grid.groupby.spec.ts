@@ -19,6 +19,7 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { IgxGrouping } from '../../data-operations/grouping-strategy';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
@@ -599,6 +600,21 @@ describe('IgxGrid - GroupBy #grid', () => {
         UIInteractions.simulateClickAndSelectEvent(firstCellElem);
         fix.detectChanges();
         expect(grid.groupingExpressionsChange.emit).toHaveBeenCalledTimes(0);
+    }));
+
+    it('should group unbound column with custom grouping strategy', fakeAsync(() => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.componentInstance.data.forEach((r, i) => {
+            r['fieldValue1'] = Math.floor(i / 3);
+            r['fieldValue2'] = Math.floor(i / 4);
+        });
+        fix.detectChanges();
+        fix.componentInstance.instance.groupBy({
+            fieldName: 'UnboundField', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
+        const groupRows = fix.componentInstance.instance.groupsRowList.toArray();
+        expect(groupRows.length).toEqual(4);
     }));
 
     // GroupBy + Sorting integration
@@ -1847,36 +1863,36 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('Should have the correct properties in the custom row selector template', fakeAsync(() => {
-            const fix = TestBed.createComponent(GridGroupByRowCustomSelectorsComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
+        const fix = TestBed.createComponent(GridGroupByRowCustomSelectorsComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
 
-            const grRow = grid.groupsRowList.toArray()[0];
-            const contextSelect = { selectedCount: 0, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
-            const contextUnselect = { selectedCount: 2, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
+        const grRow = grid.groupsRowList.toArray()[0];
+        const contextSelect = { selectedCount: 0, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
+        const contextUnselect = { selectedCount: 2, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
 
-            spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
+        spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
 
-            grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
-            fix.detectChanges();
-            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextSelect);
+        grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
+        fix.detectChanges();
+        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextSelect);
 
-            grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
-            fix.detectChanges();
-            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextUnselect);
-        }));
+        grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
+        fix.detectChanges();
+        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextUnselect);
+    }));
 
     // GroupBy + Resizing
     it('should retain same size for group row after a column is resized.', fakeAsync(() => {
@@ -3487,12 +3503,32 @@ export class DefaultGridComponent extends DataParent {
     }
 }
 
+const formatUnboundValueFunction = (rowData: any | undefined): string | undefined => rowData.fieldValue1 + ' ' + rowData.fieldValue2;
+
+
+class MySortingStrategy extends IgxGrouping {
+    protected getFieldValue(
+        obj: any,
+        key: string,
+        isDate = false,
+        isTime = false
+    ): unknown {
+        if (key !== 'UnboundField') {
+            return super.getFieldValue(obj, key, isDate, isTime);
+        }
+
+        return formatUnboundValueFunction(obj);
+    }
+}
+
 @Component({
     template: `
         <igx-grid
             [width]='width'
             [height]='height'
-            [data]="data">
+            [data]="data"
+            [sortStrategy]="sortStrategy"
+            [groupStrategy]="groupStrategy">
             <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
                 dataType="date"></igx-column>
@@ -3500,6 +3536,9 @@ export class DefaultGridComponent extends DataParent {
                 dataType="number"></igx-column>
             <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'UnboundField'" [header]="'Unbound Value'" [width]="200" [dataType]="'string'"
+                [sortable]="true" [groupable]="true" [formatter]="formatUnboundValue">
+            </igx-column>
             <igx-paginator></igx-paginator>
         </igx-grid>
     `
@@ -3510,6 +3549,13 @@ export class GroupableGridComponent extends DataParent {
 
     public width = '800px';
     public height = '700px';
+
+    public sortStrategy = new MySortingStrategy();
+    public groupStrategy = this.sortStrategy;
+
+    public formatUnboundValue(value: string, rowData: any | undefined): string | undefined {
+        return formatUnboundValueFunction(rowData);
+    }
 }
 
 @Component({

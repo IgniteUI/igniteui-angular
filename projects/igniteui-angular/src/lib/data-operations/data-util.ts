@@ -1,6 +1,5 @@
 import { IFilteringState } from './filtering-state.interface';
 
-import { IgxGrouping } from './grouping-strategy';
 import { IGroupByResult } from './grouping-result.interface';
 
 import { IPagingState, PagingError } from './paging-state.interface';
@@ -15,7 +14,13 @@ import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
 import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
 import { ISortingExpression } from './sorting-strategy';
-import { IGridSortingStrategy, IgxDataRecordSorting, IgxSorting } from '../grids/common/strategy';
+import {
+    IGridSortingStrategy,
+    IGridGroupingStrategy,
+    IgxDataRecordSorting,
+    IgxSorting,
+    IgxGrouping
+} from '../grids/common/strategy';
 
 /**
  * @hidden
@@ -73,9 +78,8 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState, grid: GridType = null,
+    public static group<T>(data: T[], state: IGroupingState, grouping: IGridGroupingStrategy = new IgxGrouping(), grid: GridType = null,
         groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
-        const grouping = new IgxGrouping();
         groupsRecords.splice(0, groupsRecords.length);
         return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
     }
