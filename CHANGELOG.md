@@ -52,8 +52,6 @@ All notable changes for each version of this project will be documented in this 
         - Input `columns`. Use `igxGrid` `columns` input instead.  
 - `IgxCarousel`
     - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`. 
-- `IgxToastComponent`
-    - **Deprecated** - The `position` input property has been deprecated. Use `positionSettings` input instead.        
 
 ## 12.2.3
 
