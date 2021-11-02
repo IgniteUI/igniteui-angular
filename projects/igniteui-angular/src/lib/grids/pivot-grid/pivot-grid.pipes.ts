@@ -98,20 +98,9 @@ export class IgxPivotColumnPipe implements PipeTransform {
 export class IgxPivotGridFilterPipe implements PipeTransform {
 
     public transform(collection: any[],
-        config: IPivotConfiguration,
+        expressionsTree: FilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,
         advancedExpressionsTree: IFilteringExpressionsTree): any[] {
-
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters);
-        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-
-        const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
-        // add expression trees from all filters
-        enabledDimensions.forEach(x => {
-            if (x.filter) {
-                expressionsTree.filteringOperands.push(x.filter);
-            }
-        });
         const state = {
             expressionsTree,
             strategy: filterStrategy,
