@@ -854,7 +854,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             const newRow = grid.gridAPI.get_row_by_index(1);
             expect(newRow.addRowUI).toBeTrue();
-            const newRowCells = newRow.cells.toArray();
+            const newRowCells = newRow.cells;
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, newRowCells as any);
         });
     });

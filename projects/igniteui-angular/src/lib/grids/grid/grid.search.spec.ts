@@ -610,7 +610,8 @@ describe('IgxGrid - search API #grid - ', () => {
             expect(cell.editMode).toBeTruthy();
 
             grid.findNext('casey');
-            grid.gridAPI.get_cell_by_index(0, 'Name').cdr.detectChanges();
+            //grid.gridAPI.get_cell_by_index(0, 'Name').cdr.detectChanges();
+            grid.gridAPI.get_cell_by_index(0, 'Name');
             grid.cdr.detectChanges();
             const highlights = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(cell.editMode).toBeFalsy();

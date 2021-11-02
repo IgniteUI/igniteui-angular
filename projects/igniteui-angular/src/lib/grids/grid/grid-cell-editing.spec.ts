@@ -886,7 +886,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 const rowIndex: number = e.cellID.rowIndex;
                 const row = grid.gridAPI.get_row_by_index(rowIndex);
-                grid.updateRow({[row.columns[e.cellID.columnID].field]: e.newValue}, row.rowID);
+                //grid.updateRow({[row.columns[e.cellID.columnID].field]: e.newValue}, row.rowID);
                 e.cancel = true;
             });
 
