@@ -3059,12 +3059,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public _setupServices() {
-        this.gridAPI.grid = this;
-        this.crudService.grid = this;
-        this.selectionService.grid = this;
-        this.navigation.grid = this;
-        this.filteringService.grid = this;
-        this.summaryService.grid = this;
+        this.gridAPI.grid = this as any;
+        this.crudService.grid = this as any;
+        this.selectionService.grid = this as any;
+        this.navigation.grid = this as any;
+        this.filteringService.grid = this as any;
+        this.summaryService.grid = this as any;
     }
 
     public _setupListeners() {
@@ -3108,7 +3108,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
-                    instance.initialize(this, this.overlayService, event.id);
+                    instance.initialize(this as any, this.overlayService, event.id);
                 }
             }
         });
@@ -4219,7 +4219,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     rowIndex: index
                 };
 
-                const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this);
+                const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this as any);
                 this.gridAPI.update_cell(cell);
                 this.cdr.detectChanges();
             }
@@ -4249,7 +4249,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (editableCell && editableCell.id.rowID === rowSelector) {
                 this.crudService.endCellEdit();
             }
-            const row = new IgxEditRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
+            const row = new IgxEditRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this as any);
             this.gridAPI.update_row(row, value);
 
             // TODO: fix for #5934 and probably break for #5763
@@ -4506,9 +4506,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             insertAtIndex: index,
             isPinned: true,
             rowID,
-            row
+            row,
+            cancel: false
         };
         this.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
 
         this.crudService.endEdit(false);
 
@@ -4542,9 +4547,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const eventArgs: IPinRowEventArgs = {
             isPinned: false,
             rowID,
-            row
+            row,
+            cancel: false
         };
         this.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
 
         this.crudService.endEdit(false);
         this._pinnedRecordIDs.splice(index, 1);
@@ -5657,8 +5667,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public getEmptyRecordObjectFor(inRow: IgxRowDirective) {
-        const row = { ...inRow?.rowData };
+    public getEmptyRecordObjectFor(inRow: RowType) {
+        const row = { ...inRow?.data };
         Object.keys(row).forEach(key => row[key] = undefined);
         const id = this.generateRowID();
         row[this.primaryKey] = id;
@@ -5799,7 +5809,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected beginAddRowForIndex(index: number, asChild: boolean = false) {
-        const row: RowType = index == null ?
+        // TODO is row from rowList suitable for enterAddRowMode
+        const row = index == null ?
             null : this.rowList.find(r => r.index === index);
         if (row !== undefined) {
             this.crudService.enterAddRowMode(row, asChild);

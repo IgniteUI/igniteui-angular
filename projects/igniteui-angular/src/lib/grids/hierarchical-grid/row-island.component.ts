@@ -260,7 +260,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public ngOnInit() {
-        this.filteringService.grid = this;
+        this.filteringService.grid = this as any;
         this.rootGrid = this.hgridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
         this.ri_columnListDiffer = this.differs.find([]).create(null);

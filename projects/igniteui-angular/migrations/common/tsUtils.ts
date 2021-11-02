@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
 import { Tree } from '@angular-devkit/schematics';
