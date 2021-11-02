@@ -6,10 +6,8 @@ import {
     Inject,
     Input,
     OnDestroy,
-    OnInit,
     Optional
 } from '@angular/core';
-import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import { IgxIconService } from '../../icon/public_api';
@@ -30,7 +28,7 @@ import { GridType } from '../common/grid.interface';
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html'
 })
-export class IgxGridToolbarComponent extends DisplayDensityBase implements OnInit, OnDestroy {
+export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDestroy {
 
     /**
      * When enabled, shows the indeterminate progress bar.
@@ -106,11 +104,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
         return this.displayDensity === 'compact';
     }
 
-    /** @hidden @internal */
-    @HostBinding('style.max-width.px')
-    @HostBinding('style.flex-basis.px')
-    public width = null;
-
     protected _grid: IgxGridBaseDirective;
     protected sub: Subscription;
 
@@ -123,12 +116,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
         super(_displayDensityOptions);
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
-    }
-
-    /** @hidden @internal */
-    public ngOnInit() {
-        this.grid.rendered$.pipe(first()).subscribe(() => this.width = this.grid.outerWidth);
-        this.sub = this.grid.resizeNotify.subscribe(() => this.width = this.grid.outerWidth);
     }
 
     /** @hidden @internal */

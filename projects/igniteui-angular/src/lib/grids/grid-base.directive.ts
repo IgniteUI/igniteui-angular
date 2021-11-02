@@ -54,7 +54,6 @@ import {
     Action,
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
@@ -940,6 +939,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public rowPinning = new EventEmitter<IPinRowEventArgs>();
+
+    /**
+     * Emitted when the pinned state of a row is changed.
+     *
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (rowPinned)="rowPin($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public rowPinned = new EventEmitter<IPinRowEventArgs>();
 
     /**
      * Emmited when the active node is changed.
@@ -4826,13 +4836,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
             return false;
         }
+
         const eventArgs: IPinRowEventArgs = {
             insertAtIndex: index,
             isPinned: true,
             rowID,
-            row
+            row,
+            cancel: false
         };
         this.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
 
         this.crudService.endEdit(false);
 
@@ -4840,8 +4856,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this.pipeTrigger++;
         if (this.gridAPI.grid) {
-            this.notifyChanges();
+            this.cdr.detectChanges();
+            this.rowPinned.emit(eventArgs);
         }
+
         return true;
     }
 
@@ -4864,15 +4882,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const eventArgs: IPinRowEventArgs = {
             isPinned: false,
             rowID,
-            row
+            row,
+            cancel: false
         };
         this.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
+
         this.crudService.endEdit(false);
         this._pinnedRecordIDs.splice(index, 1);
         this.pipeTrigger++;
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
+            this.rowPinned.emit(eventArgs);
         }
+
         return true;
     }
 
@@ -6926,7 +6952,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator ? row + (this.paginator.perPage * this.paginator.page) : row;
+            row = this.paginator && source === this.filteredSortedData ? row + (this.paginator.perPage * this.paginator.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;

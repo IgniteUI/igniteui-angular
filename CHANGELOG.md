@@ -2,6 +2,17 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.2.4
+
+### General
+- `igxGrid`
+    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
+
+## 12.2.3
+
+### General
+- **Breaking Change** - `IgxPercentSummaryOperand` and `IgxCurrencySummaryOperand` have been removed and `IgxNumberSummaryOperand` should be used instead. If you have used the percent or currency summary operands to extend a custom summary operand from them, then change the custom operand to extend from the number summary operand.
+
 ## 12.2.1
 
 ### New Features

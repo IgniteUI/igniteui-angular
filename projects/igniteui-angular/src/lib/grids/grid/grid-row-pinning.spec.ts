@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './public_api';
+import { IgxGridModule, IPinRowEventArgs } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../grid.common';
@@ -155,7 +155,6 @@ describe('Row Pinning #grid', () => {
             let row = grid.getRowByIndex(0);
             const rowID = row.key;
             row.pin();
-            fix.detectChanges();
 
             // Check pinned state with getRowByIndex after pin action
             expect(row.pinned).toBe(true);
@@ -163,18 +162,100 @@ describe('Row Pinning #grid', () => {
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
                 rowID,
-                insertAtIndex: undefined,
+                insertAtIndex: 0,
                 isPinned: true,
-                row
+                row,
+                cancel: false
             });
 
             row = grid.getRowByIndex(0);
             row.unpin();
-            fix.detectChanges();
             // Check pinned state with getRowByIndex after unpin action
             expect(row.pinned).toBe(false);
 
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
+        });
+
+        it('should emit rowPinned on pin/unpin.', () => {
+            spyOn(grid.rowPinned, 'emit').and.callThrough();
+
+            const row = grid.getRowByIndex(0);
+            const rowID = row.key;
+            row.pin();
+
+            // Check pinned state with getRowByIndex after pin action
+            expect(row.pinned).toBe(true);
+
+            expect(grid.rowPinned.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowPinned.emit).toHaveBeenCalledWith({
+                rowID,
+                insertAtIndex: 0,
+                isPinned: true,
+                row,
+                cancel: false
+            });
+
+            row.unpin();
+            // Check pinned state with getRowByIndex after unpin action
+            expect(row.pinned).toBe(false);
+
+            expect(grid.rowPinned.emit).toHaveBeenCalledTimes(2);
+        });
+
+        it(`Should be able to cancel rowPinning on pin/unpin event.`, () => {
+            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            let sub = grid.rowPinning.subscribe((e: IPinRowEventArgs) => {
+                e.cancel = true;
+            });
+
+            const row = grid.getRowByIndex(0);
+            const rowID = row.key;
+            expect(row.pinned).toBeFalsy();
+
+            row.pin();
+            fix.detectChanges();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                insertAtIndex: 0,
+                isPinned: true,
+                rowID,
+                row,
+                cancel: true
+            });
+            expect(row.pinned).toBeFalsy();
+
+            sub.unsubscribe();
+
+            row.pin();
+            fix.detectChanges();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                insertAtIndex: 0,
+                isPinned: true,
+                rowID,
+                row,
+                cancel: false
+            });
+            expect(row.pinned).toBe(true);
+
+            sub = grid.rowPinning.subscribe((e: IPinRowEventArgs) => {
+                e.cancel = true;
+            });
+
+            row.unpin();
+            fix.detectChanges();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(3);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                isPinned: false,
+                rowID,
+                row,
+                cancel: true
+            });
+            expect(row.pinned).toBe(true);
+            sub.unsubscribe();
         });
 
         it('should pin/unpin via grid API methods.', () => {
@@ -223,7 +304,6 @@ describe('Row Pinning #grid', () => {
             // unpin
             row = grid.gridAPI.get_row_by_index(0);
             row.unpin();
-            fix.detectChanges();
 
             expect(grid.pinnedRows.length).toBe(0);
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
@@ -429,8 +509,7 @@ describe('Row Pinning #grid', () => {
 
         it('should apply sorting to both pinned and unpinned rows.', () => {
             grid.gridAPI.get_row_by_index(1).pin();
-            grid.gridAPI.get_row_by_index(5).pin();
-            fix.detectChanges();
+            grid.gridAPI.get_row_by_index(6).pin();
 
             expect(grid.gridAPI.get_row_by_index(0).rowID).toBe(fix.componentInstance.data[1]);
             expect(grid.gridAPI.get_row_by_index(1).rowID).toBe(fix.componentInstance.data[5]);
@@ -573,7 +652,6 @@ describe('Row Pinning #grid', () => {
         it('should correctly apply paging state for grid and paginator when there are pinned rows.', () => {
             // pin the first row
             grid.gridAPI.get_row_by_index(0).pin();
-            fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(6);
             expect(grid.perPage).toEqual(5);
@@ -583,7 +661,6 @@ describe('Row Pinning #grid', () => {
 
             // pin the second row
             grid.gridAPI.get_row_by_index(2).pin();
-            fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(7);
             expect(grid.perPage).toEqual(5);
@@ -594,19 +671,17 @@ describe('Row Pinning #grid', () => {
 
         it('should have the correct records shown for pages with pinned rows', () => {
             grid.gridAPI.get_row_by_index(0).pin();
-            grid.gridAPI.get_row_by_index(1).pin();
-            fix.detectChanges();
 
             let rows = grid.rowList.toArray();
 
-            [1, 2, 1, 2, 3, 4, 5].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
+            [1, 1, 2, 3, 4, 5].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
 
             grid.paginate(2);
             fix.detectChanges();
 
             rows = grid.rowList.toArray();
 
-            [1, 2, 11, 12].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
+            [1, 11, 12].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
         });
     });
 
@@ -805,10 +880,8 @@ describe('Row Pinning #grid', () => {
             // Pin/Unpin with the methods
             firstRow.unpin();
             expect(firstRow.pinned).toBe(false);
-            fix.detectChanges();
             firstRow.pin();
             expect(firstRow.pinned).toBe(true);
-            fix.detectChanges();
 
             // Check again pinned row presence
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
@@ -855,7 +928,6 @@ describe('Row Pinning #grid', () => {
         it('should hide columns in pinned and unpinned area', () => {
             // pin 2nd data row
             grid.pinRow(fix.componentInstance.data[1]);
-            fix.detectChanges();
             const hiddenCol = grid.columns[1];
             hiddenCol.hidden = true;
             fix.detectChanges();
@@ -892,14 +964,9 @@ describe('Row Pinning #grid', () => {
 
         it('should keep the scrollbar sizes correct when partially filtering out pinned records', () => {
             grid.gridAPI.get_row_by_index(1).pin();
-            fix.detectChanges();
             grid.gridAPI.get_row_by_index(3).pin();
-            fix.detectChanges();
             grid.gridAPI.get_row_by_index(5).pin();
-            fix.detectChanges();
             grid.gridAPI.get_row_by_index(7).pin();
-            fix.detectChanges();
-
             fix.detectChanges();
             // 4 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(4 * grid.renderedRowHeight + 2);
@@ -929,9 +996,7 @@ describe('Row Pinning #grid', () => {
         it('should enter edit mode for the next editable cell when tabbing.', () => {
             const  gridContent = GridFunctions.getGridContent(fix);
             grid.gridAPI.get_row_by_index(0).pin();
-            fix.detectChanges();
             grid.gridAPI.get_row_by_index(3).pin();
-            fix.detectChanges();
 
             const firstEditable = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
             const secondEditable = grid.gridAPI.get_cell_by_index(1, 'CompanyName');
@@ -967,9 +1032,7 @@ describe('Row Pinning #grid', () => {
         it('should enter edit mode for the previous editable cell when shift+tabbing.', () => {
             const  gridContent = GridFunctions.getGridContent(fix);
             grid.gridAPI.get_row_by_index(0).pin();
-            fix.detectChanges();
             grid.gridAPI.get_row_by_index(3).pin();
-            fix.detectChanges();
 
             const firstEditable = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
             const secondEditable = grid.gridAPI.get_cell_by_index(1, 'CompanyName');
@@ -1017,7 +1080,6 @@ describe('Row Pinning #grid', () => {
 
         it('should navigate to bottom from top pinned row using Ctrl+ArrowDown', async () => {
             grid.gridAPI.get_row_by_index(5).pin();
-            fix.detectChanges();
 
             const firstRowCell = grid.gridAPI.get_row_by_index(0).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
@@ -1039,7 +1101,6 @@ describe('Row Pinning #grid', () => {
 
         it('should navigate and scroll to first unpinned row from top pinned row using ArrowDown', async () => {
             grid.gridAPI.get_row_by_index(5).pin();
-            fix.detectChanges();
 
             grid.navigateTo(10);
             await wait(DEBOUNCE_TIME);
@@ -1064,7 +1125,6 @@ describe('Row Pinning #grid', () => {
 
         it('should navigate to top pinned row from bottom unpinned row without scrolling using Ctrl+ArrowUp', async () => {
             grid.gridAPI.get_row_by_index(5).pin();
-            fix.detectChanges();
 
             grid.navigateTo(27);
             await wait(DEBOUNCE_TIME);
@@ -1095,7 +1155,6 @@ describe('Row Pinning #grid', () => {
         it('should navigate to top pinned row from first unpinned row using ArrowUp', async () => {
             grid.gridAPI.get_row_by_index(5).pin();
             grid.gridAPI.get_row_by_index(1).pin();
-            fix.detectChanges();
 
             const thirdRowCell = grid.gridAPI.get_row_by_index(2).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(thirdRowCell);
@@ -1118,7 +1177,6 @@ describe('Row Pinning #grid', () => {
         it('should navigate and scroll to top from bottom pinned row using Ctrl+ArrowUp', async () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             grid.gridAPI.get_row_by_index(5).pin();
-            fix.detectChanges();
 
             grid.navigateTo(26);
             await wait(DEBOUNCE_TIME);
@@ -1171,7 +1229,6 @@ describe('Row Pinning #grid', () => {
         it('should navigate to bottom pinned row from top unpinned row without scrolling using Ctrl+ArrowDown', async () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             grid.gridAPI.get_row_by_index(5).pin();
-            fix.detectChanges();
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
 
@@ -1199,7 +1256,6 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(5).pin();
             grid.gridAPI.get_row_by_index(1).pin();
             await wait(DEBOUNCE_TIME);
-            fix.detectChanges();
 
             grid.navigateTo(26);
             await wait(DEBOUNCE_TIME);
@@ -1228,8 +1284,6 @@ describe('Row Pinning #grid', () => {
         it('should navigate down from pinned to unpinned row when there are filtered out pinned rows', async () => {
             grid.gridAPI.get_row_by_index(5).pin();
             grid.gridAPI.get_row_by_index(1).pin();
-            fix.detectChanges();
-
             grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
