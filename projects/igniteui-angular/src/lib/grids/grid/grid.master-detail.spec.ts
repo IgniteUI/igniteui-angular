@@ -1,10 +1,10 @@
-import { Component, ViewChild, OnInit, DebugElement } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, QueryList } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
-import { IgxGridModule } from './public_api';
+import { CellType, IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -587,7 +587,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
-            expect(lastRow.cells[0].active).toBeTruthy();
+            expect((lastRow.cells as QueryList<CellType>).last.active).toBeTruthy();
         });
 
         it('Should navigate to the first data cell in the grid using Ctrl + Home.', async () => {
@@ -607,7 +607,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const fRow = grid.gridAPI.get_row_by_index(0);
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
-            expect(fRow.cells[0].active).toBeTruthy();
+            expect((fRow.cells as QueryList<CellType>).first.active).toBeTruthy();
         });
 
         it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async () => {
@@ -625,7 +625,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
-            expect(lastRow.cells[0].active).toBeTruthy();
+            expect((lastRow.cells as QueryList<CellType>).first.active).toBeTruthy();
         });
 
         it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async () => {
@@ -645,7 +645,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const fRow = grid.gridAPI.get_row_by_index(0);
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
-            expect(fRow.cells[fRow.cells.length-1].active).toBeTruthy();
+            expect((fRow.cells as QueryList<CellType>).last.active).toBeTruthy();
         });
 
         it(`Should navigate to the first/last row when using Ctrl+ArrowUp/ArrowDown

@@ -329,6 +329,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         }
     }
 
+    // TODO remove this if it only supports IE?
     /**
      * @hidden
      * Function that is called when we need to detect touch starting on a touch device on IE/Edge
@@ -342,7 +343,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         }
         // setPointerCaptureFName is the name of the function that is supported
         event.target[this.setPointerCaptureFName](this._pointer = event.pointerId);
-        this._gestureObject.addPointer(this._pointer);
+        // this._gestureObject.addPointer(this._pointer);
     }
 
     /**

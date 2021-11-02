@@ -1,8 +1,8 @@
-import { IgxGridModule, IgxGridComponent } from './public_api';
+import { IgxGridModule, IgxGridComponent, CellType } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { DebugElement } from '@angular/core';
+import { DebugElement, QueryList } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxAddRowComponent, IgxGridRowEditingTransactionComponent
@@ -854,7 +854,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             const newRow = grid.gridAPI.get_row_by_index(1);
             expect(newRow.addRowUI).toBeTrue();
-            const newRowCells = newRow.cells;
+            const newRowCells = (newRow.cells as QueryList<CellType>).toArray();
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, newRowCells as any);
         });
     });
