@@ -64,73 +64,69 @@ export enum PivotDimensionType {
 //     member: () => 'All Periods',
 //     enabled: true,
 //     fieldName: 'AllPeriods',
-//     childLevels: [{
+//     childLevel: {
 //         fieldName: 'Years',
 //         member: (rec) => {
 //             const recordValue = rec['Date'];
 //             return recordValue ? (new Date(recordValue)).getFullYear().toString() : rec['Years'];
 //         },
 //         enabled: true,
-//         childLevels: [
-//             {
+//         childLevel: {
 //                 member: (rec) => {
 //                     const recordValue = rec['Date'];
 //                     return recordValue ? new Date(recordValue).toLocaleString('default', { month: 'long' }) : rec['Months'];
 //                 },
 //                 enabled: true,
 //                 fieldName: 'Months',
-//                 childLevels: [
-//                     {
+//                 childLevel: {
 //                         member: 'Date',
 //                         fieldName:'Date',
-//                         enabled: true,
-//                         childLevels: []
-//                     }]
-//             }]
-//     }]
+//                         enabled: true
+//                     }
+//             }
+//     }
 // },
 
 export class IgxPivotDateDimension implements IPivotDimension {
+    public childLevel: IPivotDimension;
     public member = () => 'All Periods';
     public fieldName = 'AllPeriods';
     public enabled = true;
 
-    constructor(public childLevels: IPivotDimension[], public showQuarters = true) {
-        if (childLevels.length === 0) {
+    constructor(public inChildLevel: IPivotDimension, public showQuarters = false) {
+        if (!inChildLevel) {
             console.warn(`Please provide data child level to the pivot dimension.`);
             return;
         }
 
-        const monthDimension = {
+        const monthDimension: IPivotDimension = {
             fieldName: 'Months',
             member: (rec) => {
-                const recordValue = PivotUtil.extractValueFromDimension(childLevels[0], rec);
+                const recordValue = PivotUtil.extractValueFromDimension(inChildLevel, rec);
                 return recordValue ? new Date(recordValue).toLocaleString('default', { month: 'long' }) : rec['Months'];
             },
             enabled: true,
-            childLevels: this.childLevels
+            childLevel: this.inChildLevel
         };
 
-        const quarterDimension = {
+        const quarterDimension: IPivotDimension = {
             fieldName: 'Quarters',
             member: (rec) => {
-                const recordValue = PivotUtil.extractValueFromDimension(childLevels[0], rec);
+                const recordValue = PivotUtil.extractValueFromDimension(inChildLevel, rec);
                 return recordValue ? `Q` + Math.floor((new Date(recordValue).getMonth() + 1) / 3) : rec['Quarters'];
             },
             enabled: true,
-            childLevels: [monthDimension]
+            childLevel: monthDimension
         };
 
-        this.childLevels = [
-            {
-                fieldName: 'Years',
-                member: (rec) => {
-                    const recordValue = PivotUtil.extractValueFromDimension(childLevels[0], rec);
-                    return recordValue ? (new Date(recordValue)).getFullYear().toString() : rec['Years'];
-                },
-                enabled: true,
-                childLevels: [showQuarters ? quarterDimension : monthDimension]
-            }
-        ];
+        this.childLevel = {
+            fieldName: 'Years',
+            member: (rec) => {
+                const recordValue = PivotUtil.extractValueFromDimension(inChildLevel, rec);
+                return recordValue ? (new Date(recordValue)).getFullYear().toString() : rec['Years'];
+            },
+            enabled: true,
+            childLevel: showQuarters ? quarterDimension : monthDimension
+        };
     }
 }

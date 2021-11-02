@@ -25,38 +25,35 @@ export class PivotGridSampleComponent {
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
 
-        {
-            member: 'Country',
-            enabled: true
-        }
+            {
+                member: 'Country',
+                enabled: true
+            }
         ]
-,
-rows: [
-    {
-        member: () => 'AllProd',
-        enabled: true,
-        childLevel: {
-        member: 'ProductCategory',
-        enabled: true
-        }
-    },
-    {
-        member: () => 'AllDate',
-        enabled: true,
-        childLevel: {
-        member: 'Date',
-        enabled: true
-        }
-    },
-    {
-        member: () => 'AllSel',
-        enabled: true,
-        childLevel: {
-        member: 'SellerName',
-        enabled: true
-        }
-    }
-    ],
+        ,
+        rows: [
+            {
+                member: () => 'AllProd',
+                enabled: true,
+                childLevel: {
+                    member: 'ProductCategory',
+                    enabled: true
+                }
+            },
+            new IgxPivotDateDimension({
+                member: 'Date',
+                fieldName: 'Date',
+                enabled: true
+            }),
+            {
+                member: () => 'AllSel',
+                enabled: true,
+                childLevel: {
+                    member: 'SellerName',
+                    enabled: true
+                }
+            }
+        ],
         values: [
             {
                 member: 'UnitsSold',
