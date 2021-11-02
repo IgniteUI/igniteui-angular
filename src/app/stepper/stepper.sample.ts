@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HorizontalAnimationType } from 'projects/igniteui-angular/src/lib/carousel/carousel-base';
 import {
@@ -10,7 +10,7 @@ import { IgxStepperComponent } from 'projects/igniteui-angular/src/lib/stepper/s
     templateUrl: 'stepper.sample.html',
     styleUrls: ['stepper.sample.scss']
 })
-export class IgxStepperSampleComponent implements AfterViewInit {
+export class IgxStepperSampleComponent {
     @ViewChild('stepper', { static: true }) public stepper: IgxStepperComponent;
     public displayStep = false;
     public horizontalAnimationType: HorizontalAnimationType = 'slide';
@@ -117,9 +117,6 @@ export class IgxStepperSampleComponent implements AfterViewInit {
             phone: ['', Validators.required],
             dateTime: ['']
         });
-    }
-
-    public ngAfterViewInit() {
     }
 
     public toggleStepTypes(event) {

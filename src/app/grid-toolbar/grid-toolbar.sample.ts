@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { IgxCsvExporterService, IgxExcelExporterService, IgxColumnComponent, DisplayDensity } from 'igniteui-angular';
 
 @Component({
@@ -6,7 +6,7 @@ import { IgxCsvExporterService, IgxExcelExporterService, IgxColumnComponent, Dis
     styleUrls: ['grid-toolbar.sample.css'],
     templateUrl: 'grid-toolbar.sample.html'
 })
-export class GridToolbarSampleComponent implements OnInit {
+export class GridToolbarSampleComponent {
     public showToolbar = true;
     public title = 'Custom Title';
     public customContent = false;
@@ -30,9 +30,6 @@ export class GridToolbarSampleComponent implements OnInit {
     ];
 
     constructor() {
-    }
-
-    public ngOnInit() {
     }
 
     public toolbarExportClicked(obj) {

@@ -1,6 +1,6 @@
 import { IgxGridModule, IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
