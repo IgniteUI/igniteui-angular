@@ -8,7 +8,7 @@
                 <span class='igx-pivot__emptyChipArea'>Drop Filter Fields here.</span>
             </div>
             <!-- Filter area -->
-            <igx-chips-area #filterArea droppable='true' style="width:fit-content">
+            <igx-chips-area #filterArea droppable='true' style="width:fit-content; height: 100%;">
                 <igx-chip *ngFor="let filter of grid.filterDimensions" [id]="filter.fieldName" [draggable]="true"
                     [removable]="true" (remove)="filterRemoved($event)" (dragEnter)="onDimDragEnter($event, 2)"
                     (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, filterArea, 2)">
@@ -25,7 +25,7 @@
                     <span class='igx-pivot__emptyChipArea'>Drop Column Fields here.</span>
                 </div>
                 <!-- Columns area -->
-                <igx-chips-area #colArea droppable='true' style="width:fit-content">
+                <igx-chips-area #colArea droppable='true' style="width:fit-content; height: 100%;">
                     <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.fieldName"
                         [removable]="true" (remove)="columnRemoved($event)" (dragEnter)="onDimDragEnter($event, 1)"
                         (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, colArea, 1)">
@@ -44,7 +44,7 @@
                     <span class='igx-pivot__emptyChipArea'>Drop Value Fields here.</span>
                 </div>
                 <!-- Value area -->
-                <igx-chips-area #valueArea droppable='true' style="width:fit-content">
+                <igx-chips-area #valueArea droppable='true' style="width:fit-content; height: 100%;">
                     <igx-chip *ngFor="let value of grid.values" [draggable]="'true'" [id]="value.member"
                         [removable]="true" (remove)="valueRemoved($event)"
                         (dragEnter)="onDimDragEnter($event, undefined)" (dragLeave)="onDimDragLeave($event)"
@@ -72,7 +72,7 @@
                     <span class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
                 </div>
                 <!-- Row area -->
-                <igx-chips-area #rowArea droppable='true' style="width:fit-content">
+                <igx-chips-area #rowArea droppable='true' style="width:fit-content; height: 100%;">
                     <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="'true'" [id]="row.fieldName"
                         [removable]="true" (remove)="rowRemoved($event)" (dragEnter)="onDimDragEnter($event, 0)"
                         (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, rowArea, 0)">
