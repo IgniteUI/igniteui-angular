@@ -36,8 +36,7 @@ export class PivotGridNoopSampleComponent {
 
             {
                 memberName: 'Country',
-                enabled: true,
-                childLevels: []
+                enabled: true
             }
         ]
         ,
@@ -46,11 +45,10 @@ export class PivotGridNoopSampleComponent {
                 memberName: 'All',
                 memberFunction: () => 'AllProd',
                 enabled: true,
-                childLevels: [{
+                childLevel: {
                     memberName: 'ProductCategory',
-                    enabled: true,
-                    childLevels: []
-                }]
+                    enabled: true
+                }
             }
         ],
         values: [
