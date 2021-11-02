@@ -50,6 +50,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     public rowRemoved(event: IBaseChipEventArgs) {
         const row = this.grid.pivotConfiguration.rows.find(x => x.fieldName === event.owner.id);
         row.enabled = false;
+        this.grid.filteringService.clearFilter(row.fieldName);
         this.grid.pipeTrigger++;
     }
 
@@ -57,6 +58,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         const col = this.grid.pivotConfiguration.columns.find(x => x.fieldName === event.owner.id);
         col.enabled = false;
         this.grid.setupColumns();
+        this.grid.filteringService.clearFilter(col.fieldName);
         this.grid.pipeTrigger++;
     }
 
@@ -70,6 +72,8 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     public filterRemoved(event: IBaseChipEventArgs) {
         const filter = this.grid.pivotConfiguration.filters.find(x => x.fieldName === event.owner.id);
         filter.enabled = false;
+        this.grid.filteringService.clearFilter(filter.fieldName);
+        this.grid.pipeTrigger++;
     }
 
     public onFilteringIconPointerDown(event) {
