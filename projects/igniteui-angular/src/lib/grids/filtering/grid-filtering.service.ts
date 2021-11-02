@@ -555,7 +555,7 @@ export class IgxFilteringService implements OnDestroy {
         return true;
     }
 
-    private filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+    protected filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase: boolean) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
@@ -578,7 +578,7 @@ export class IgxFilteringService implements OnDestroy {
      * If createNewTree is true, filteringState will not be modified (because it directly affects the grid.filteringExpressionsTree),
      * but a new object is created and returned.
      */
-    private prepare_filtering_expression(
+    protected prepare_filtering_expression(
         filteringState: IFilteringExpressionsTree,
         fieldName: string,
         searchVal,

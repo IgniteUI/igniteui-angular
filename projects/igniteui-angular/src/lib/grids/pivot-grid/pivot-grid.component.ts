@@ -43,6 +43,7 @@ import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
 import { PlatformUtil } from '../../core/utils';
 import { IgxGridTransaction } from '../hierarchical-grid/public_api';
+import { IgxPivotFilteringService } from './pivot-filtering.service';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -57,7 +58,7 @@ const MINIMUM_COLUMN_WIDTH = 200;
         IgxGridSelectionService,
         GridBaseAPIService,
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxPivotGridComponent) },
-        IgxFilteringService,
+        { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
         IgxPivotGridNavigationService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
