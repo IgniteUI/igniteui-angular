@@ -16,6 +16,10 @@ export interface IGridSortingStrategy {
     sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[];
 }
 
+export interface IGridGroupingStrategy extends IGridSortingStrategy {
+    groupBy(data: any[], state: IGroupingState, grid?: any, groupsRecords?: any[], fullResult?: IGroupByResult): IGroupByResult;
+}
+
 export class IgxSorting implements IGridSortingStrategy {
     public sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[] {
         return this.sortDataRecursive(data, expressions, 0, grid);
@@ -160,6 +164,18 @@ export class IgxSorting implements IGridSortingStrategy {
             i += gbDataLen - 1;
         }
         return data;
+    }
+}
+
+export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
+    public groupBy(data: any[], state: IGroupingState, grid?: any,
+        groupsRecords?: any[], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
+        const metadata: IGroupByRecord[] = [];
+        const grouping = this.groupDataRecursive(data, state, 0, null, metadata, grid, groupsRecords, fullResult);
+        return {
+            data: grouping,
+            metadata
+        };
     }
 }
 

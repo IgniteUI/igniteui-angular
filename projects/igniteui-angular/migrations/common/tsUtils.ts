@@ -202,7 +202,8 @@ export const createProjectService = (serverHost: tss.server.ServerHost): tss.ser
         /* will load only global plug-ins */
         globalPlugins: [CUSTOM_TS_PLUGIN_NAME, NG_LANG_SERVICE_PACKAGE_NAME],
         allowLocalPluginLoads: false,
-        typingsInstaller: tss.server.nullTypingsInstaller
+        typingsInstaller: tss.server.nullTypingsInstaller,
+        session: undefined
     });
     projectService.setHostConfiguration({
         formatOptions: projectService.getHostFormatCodeOptions(),
