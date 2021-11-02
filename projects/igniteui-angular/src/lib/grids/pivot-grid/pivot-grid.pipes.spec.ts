@@ -23,22 +23,18 @@ describe('Pivot pipes', () => {
         columns: [{
             member: () => 'All',
             enabled: true,
-            childLevels: [{
+            childLevel: {
                 member: 'Country',
-                enabled: true,
-                childLevels: []
-            }]
+                enabled: true
+            }
         }],
         rows: [{
             member: () => 'All',
             enabled: true,
-            childLevels: [
-                {
-                    member: (d) => d.ProductCategory,
-                    enabled: true,
-                    childLevels: []
-                }
-            ]
+            childLevel: {
+                member: (d) => d.ProductCategory,
+                enabled: true
+            }
         }],
         values: [
             {
@@ -67,8 +63,7 @@ describe('Pivot pipes', () => {
         const config = Object.assign({}, pivotConfigHierarchy);
         config.rows = [{
             member: 'ProductCategory',
-            enabled: true,
-            childLevels: []
+            enabled: true
         }];
         const rowPipeResult = rowPipe.transform(data, config , expansionStates);
         expect(rowPipeResult).toEqual([
@@ -222,13 +217,11 @@ describe('Pivot pipes', () => {
         const config = Object.assign({}, pivotConfigHierarchy);
         config.rows = [{
             member: 'ProductCategory',
-            enabled: true,
-            childLevels: []
+            enabled: true
         },
         {
             member: 'Date',
-            enabled: true,
-            childLevels: []
+            enabled: true
         }];
         const rowPipeResult = rowPipe.transform(data, config, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, config, expansionStates);
@@ -299,20 +292,18 @@ describe('Pivot pipes', () => {
         config.rows = [{
             member: () => 'AllProd',
             enabled: true,
-            childLevels: [{
-            member: 'ProductCategory',
-            enabled: true,
-            childLevels: []
-            }]
+            childLevel: {
+                member: 'ProductCategory',
+                enabled: true
+            }
         },
         {
             member: () => 'AllDate',
             enabled: true,
-            childLevels: [{
-            member: 'Date',
-            enabled: true,
-            childLevels: []
-            }]
+            childLevel: {
+                member: 'Date',
+                enabled: true
+            }
         }];
         const rowPipeResult = rowPipe.transform(data, config, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, config, expansionStates);
@@ -339,13 +330,11 @@ describe('Pivot pipes', () => {
         const config = Object.assign({}, pivotConfigHierarchy);
         config.columns = [{
             member: 'Country',
-            enabled: true,
-            childLevels:[]
+            enabled: true
             },
             {
             member: 'Date',
-            enabled: true,
-            childLevels: []
+            enabled: true
             }];
         const rowPipeResult = rowPipe.transform(data, config, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfigHierarchy,  new Map<any, boolean>());
@@ -365,18 +354,15 @@ describe('Pivot pipes', () => {
         const config = Object.assign({}, pivotConfigHierarchy);
         config.columns = [{
             member: 'Country',
-            enabled: true,
-            childLevels:[]
+            enabled: true
             },
             {
             member: 'SellerName',
-            enabled: true,
-            childLevels:[]
+            enabled: true
             },
             {
             member: 'Date',
-            enabled: true,
-            childLevels: []
+            enabled: true
             }];
         const rowPipeResult = rowPipe.transform(data, config, new Map<any, boolean>());
         const rowStateResult = rowStatePipe.transform(rowPipeResult, config, new Map<any, boolean>());

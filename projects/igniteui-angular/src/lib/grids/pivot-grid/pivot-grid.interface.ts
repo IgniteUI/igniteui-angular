@@ -1,7 +1,11 @@
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IPivotDimensionStrategy } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
 
+
+
+export type PivotAggregation = (members: any[], data: any[]) => any;
 
 export interface IPivotConfiguration {
     rowStrategy?: IPivotDimensionStrategy | null;
@@ -15,7 +19,7 @@ export interface IPivotConfiguration {
 
 export interface IPivotDimension {
     // allow defining a hierarchy when multiple sub groups need to be extracted from single member.
-    childLevels?: IPivotDimension[];
+    childLevel?: IPivotDimension;
     // field name which to use to extract value or function that extract the value.
     member: string | ((data: any) => any);
     // Enables/Disables a particular dimension from pivot structure.
@@ -26,14 +30,19 @@ export interface IPivotDimension {
 
 export interface IPivotValue {
     member: string;
-    // aggregate function - can use one of the predefined like IgxNumberSummaryOperand.sum etc.
-    aggregate: (data: any[]) => any;
+    // display name if present shows instead of member for the column header of this value
+    displayName?: string;
+    /**
+     * Aggregation function - can be a custom implementation of PivotAggregation or
+     * use predefined ones from IgxPivotAggregate and its variants
+     */
+    aggregate: PivotAggregation;
     // Enables/Disables a particular value from pivot aggregation.
     enabled: boolean;
     // Allow conditionally styling of the IgxPivotGrid cells
     styles?: any;
     // Enables a data type specific template of the cells
-    dataType?: string;
+    dataType?: GridColumnDataType;
     // Applies display format to cell values.
     formatter?: (value: any, rowData?: any) => any;
 }
