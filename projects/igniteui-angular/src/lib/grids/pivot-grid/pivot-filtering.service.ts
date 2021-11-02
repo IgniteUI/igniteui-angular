@@ -25,6 +25,10 @@ export class IgxPivotFilteringService extends IgxFilteringService {
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         dim.filters = filteringTree;
         grid.filteringPipeTrigger++;
+        if (PivotUtil.flatten(config.columns).indexOf(dim) !== -1) {
+            // update columns
+            (grid as any).setupColumns();
+        }
     }
 
 }

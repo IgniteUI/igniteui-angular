@@ -41,9 +41,10 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
-import { PlatformUtil } from '../../core/utils';
+import { cloneArray, PlatformUtil } from '../../core/utils';
 import { IgxGridTransaction } from '../hierarchical-grid/public_api';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
+import { DataUtil } from '../../data-operations/data-util';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -424,7 +425,19 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         let columns = [];
         fields.forEach((value, key) => {
-            if (value.children == null || value.children.length === 0 || value.children.size === 0) {
+            let shouldGenerate = true;
+            if (value.dimension && value.dimension.filters) {
+                const state = {
+                    expressionsTree: value.dimension.filters.filteringOperands[0],
+                    strategy: this.filterStrategy,
+                    advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
+                };
+                const filtered = DataUtil.filter(cloneArray(value.records), state);
+                if (filtered.length === 0) {
+                    shouldGenerate = false;
+                }
+            }
+            if (shouldGenerate && (value.children == null || value.children.length === 0 || value.children.size === 0)) {
                 const ref = this.hasMultipleValues ?
                 factoryColumnGroup.create(this.viewRef.injector) :
                 factoryColumn.create(this.viewRef.injector);
@@ -439,7 +452,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     columns = columns.concat(measureChildren);
                 }
 
-            } else {
+            } else if(shouldGenerate) {
                 const ref = factoryColumnGroup.create(this.viewRef.injector);
                 ref.instance.parent = parent;
                 ref.instance.field = key;
