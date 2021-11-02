@@ -6,7 +6,6 @@ import {
     ElementRef,
     forwardRef,
     OnChanges,
-    OnInit,
     SimpleChanges,
     TemplateRef,
     ViewChild,

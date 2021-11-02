@@ -2,10 +2,12 @@ import {
     AfterContentInit,
     ChangeDetectionStrategy,
     Component,
+    EventEmitter,
     forwardRef,
     HostBinding,
     Input,
     OnInit,
+    Output,
     TemplateRef,
     ViewChild
 } from '@angular/core';
@@ -26,7 +28,11 @@ import { PivotUtil } from './pivot-util';
 import { GridPagingMode, GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
 import { WatchChanges } from '../watch-changes';
 import { OverlaySettings } from '../../services/public_api';
-import { IColumnVisibilityChangedEventArgs } from '../common/events';
+import {
+    IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
+    IColumnVisibilityChangedEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs,
+    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs
+} from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { RowType } from '../common/row.interface';
@@ -87,10 +93,153 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @ViewChild('headerTemplate', { read: TemplateRef, static: true })
     public headerTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden @interal
+     */
+    @Input()
+    public addRowEmptyTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public snackbarDisplayTime = 6000;
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public cellEdit = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public cellEditEnter = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnMoving = new EventEmitter<IColumnMovingEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnPin = new EventEmitter<IPinColumnCancellableEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnPinned = new EventEmitter<IPinColumnEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowAdd = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowAdded = new EventEmitter<IRowDataEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowDeleted = new EventEmitter<IRowDataEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowDelete = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowDragStart = new EventEmitter<IRowDragStartEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowEditEnter = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowEdit = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowPinning = new EventEmitter<IPinRowEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowPinned = new EventEmitter<IPinRowEventArgs>();
 
     public columnGroupStates = new Map<string, boolean>();
     public pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
     public isPivot = true;
+
+    /**
+     * @hidden @internal
+     */
+    public dragRowID = null;
+
     protected _defaultExpandState = true;
     private _data;
     private _filteredData;

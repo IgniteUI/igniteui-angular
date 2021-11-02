@@ -1,6 +1,6 @@
 import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { IgxNumberSummaryOperand } from '../summaries/grid-summary';
-import { IPivotConfiguration, IPivotValue } from './pivot-grid.interface';
+import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 
 describe('Pivot pipes', () => {
