@@ -28,7 +28,7 @@ export class PivotUtil {
 
     public static getDimensionDepth(dim) {
         let lvl = 0;
-        while(dim.childLevels && dim.childLevels.length > 0) {
+        while (dim.childLevels && dim.childLevels.length > 0) {
             lvl++;
             dim = dim.childLevels[0];
         }
@@ -37,7 +37,7 @@ export class PivotUtil {
 
     public static getDimensionLevel(dim, rec, pivotKeys) {
         let level = rec[dim.fieldName + '_' + pivotKeys.level];
-        while(dim.childLevels && dim.childLevels.length > 0 && level === undefined) {
+        while (dim.childLevels && dim.childLevels.length > 0 && level === undefined) {
             dim = dim.childLevels[0];
             level = rec[dim.fieldName + '_' + pivotKeys.level];
         }
@@ -49,71 +49,71 @@ export class PivotUtil {
         const defaultExpandState = true;
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
-                    const field = dim.fieldName;
-                    if(!field) {
-                        continue;
-                    }
-                    rec[field + '_' + pivotKeys.level] = currDimLvl;
-                    const expansionRowKey = PivotUtil.getRecordKey(rec, rec[field]);
-                    const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
-                    defaultExpandState :
-                    expansionStates.get(expansionRowKey);
-                    if (rec[field + '_' + pivotKeys.records] &&
-                      rec[field + '_' + pivotKeys.records].length > 0 &&
-                       isExpanded && lvl > 0) {
-                        let dimData = rec[field + '_' + pivotKeys.records];
-                        if (dim.childLevels && dim.childLevels.length > 0 ) {
-                            if (PivotUtil.getDimensionDepth(dim) > 1) {
-                                dimData = this.flattenHierarchy(dimData, config, dim.childLevels[0],
-                                    expansionStates, pivotKeys, lvl - 1, prevDims, currDimLvl + 1);
-                            } else {
-                                dimData.forEach(d => {
-                                    d[dim.childLevels[0].fieldName + '_' + pivotKeys.level] = currDimLvl + 1;
-                                });
-                            }
-                        }
-
-                        let prevDimRecs = [];
-                        const dimLevel = rec[field + '_' + pivotKeys.level];
-                        let prevDimLevel;
-                        let shouldConcat = true;
-                        const prevDim = prevDims ? prevDims[prevDims.length - 1] : null;
-                        if (prevDim) {
-                            let prevDimName = prevDim.fieldName;
-                            prevDimRecs = rec[prevDimName + '_' + pivotKeys.records];
-                            if(!prevDimRecs) {
-                                prevDimName =  prevDim.childLevels[0].fieldName;
-                                prevDimRecs = rec[prevDimName + '_' + pivotKeys.records];
-                            }
-                            prevDimLevel = rec[prevDimName + '_' + pivotKeys.level];
-                            shouldConcat = !!rec[field] && (prevDimLevel === undefined || prevDimLevel >= dimLevel);
-                        }
+            const field = dim.fieldName;
+            if (!field) {
+                continue;
+            }
+            rec[field + '_' + pivotKeys.level] = currDimLvl;
+            const expansionRowKey = PivotUtil.getRecordKey(rec, rec[field]);
+            const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
+                defaultExpandState :
+                expansionStates.get(expansionRowKey);
+            if (rec[field + '_' + pivotKeys.records] &&
+                rec[field + '_' + pivotKeys.records].length > 0 &&
+                isExpanded && lvl > 0) {
+                let dimData = rec[field + '_' + pivotKeys.records];
+                if (dim.childLevels && dim.childLevels.length > 0) {
+                    if (PivotUtil.getDimensionDepth(dim) > 1) {
+                        dimData = this.flattenHierarchy(dimData, config, dim.childLevels[0],
+                            expansionStates, pivotKeys, lvl - 1, prevDims, currDimLvl + 1);
+                    } else {
                         dimData.forEach(d => {
-                            if (prevDims && prevDims.length > 0) {
-                                if (!shouldConcat) {
-                                    d[dim.fieldName + '_' + pivotKeys.level] = currDimLvl;
-                                }
-                                prevDims.forEach(prev => {
-                                    const dimInfo = PivotUtil.getDimensionLevel(prev, rec, pivotKeys);
-                                    d[dimInfo.fieldName + '_' + pivotKeys.level] = dimInfo.level;
-                                });
-                            }
+                            d[dim.childLevels[0].fieldName + '_' + pivotKeys.level] = currDimLvl + 1;
                         });
-                        if (shouldConcat) {
-                            // concat
-                            data.splice(i + 1, 0, ...dimData);
-                            i += dimData.length;
-                        } else {
-                            // merge
-                            data.splice(i, 1, ...dimData);
-                            i += dimData.length - 1;
-                        }
                     }
+                }
+
+                let prevDimRecs = [];
+                const dimLevel = rec[field + '_' + pivotKeys.level];
+                let prevDimLevel;
+                let shouldConcat = true;
+                const prevDim = prevDims ? prevDims[prevDims.length - 1] : null;
+                if (prevDim) {
+                    let prevDimName = prevDim.fieldName;
+                    prevDimRecs = rec[prevDimName + '_' + pivotKeys.records];
+                    if (!prevDimRecs) {
+                        prevDimName = prevDim.childLevels[0].fieldName;
+                        prevDimRecs = rec[prevDimName + '_' + pivotKeys.records];
+                    }
+                    prevDimLevel = rec[prevDimName + '_' + pivotKeys.level];
+                    shouldConcat = !!rec[field] && (prevDimLevel === undefined || prevDimLevel >= dimLevel);
+                }
+                dimData.forEach(d => {
+                    if (prevDims && prevDims.length > 0) {
+                        if (!shouldConcat) {
+                            d[dim.fieldName + '_' + pivotKeys.level] = currDimLvl;
+                        }
+                        prevDims.forEach(prev => {
+                            const dimInfo = PivotUtil.getDimensionLevel(prev, rec, pivotKeys);
+                            d[dimInfo.fieldName + '_' + pivotKeys.level] = dimInfo.level;
+                        });
+                    }
+                });
+                if (shouldConcat) {
+                    // concat
+                    data.splice(i + 1, 0, ...dimData);
+                    i += dimData.length;
+                } else {
+                    // merge
+                    data.splice(i, 1, ...dimData);
+                    i += dimData.length - 1;
+                }
+            }
         }
-       return data;
+        return data;
     }
 
-    public static extractValuesForRow(dims: IPivotDimension[], recData: any,  pivotKeys: IPivotKeys) {
+    public static extractValuesForRow(dims: IPivotDimension[], recData: any, pivotKeys: IPivotKeys) {
         const values: any[] = [];
         let i = 0;
         for (const col of dims) {
@@ -128,11 +128,11 @@ export class PivotUtil {
             }
             if (recData.level && recData.level > 0) {
                 const childData = recData.records;
-                const res =  this.getFieldsHierarchy(childData, [col], PivotDimensionType.Row, pivotKeys);
+                const res = this.getFieldsHierarchy(childData, [col], PivotDimensionType.Row, pivotKeys);
                 const arrRes = Array.from(res.values());
                 arrRes.forEach(arr => {
                     if (arr.children) {
-                        arr.children =  Array.from(arr.children.values());
+                        arr.children = Array.from(arr.children.values());
                     }
                 });
                 return Array.from(arrRes);
@@ -164,14 +164,14 @@ export class PivotUtil {
         const newArr = arr.reduce((acc, item) => {
             item.level = lvl;
             acc.push(item);
-          if (Array.isArray(item.childLevels) && item.childLevels.length > 0) {
-            item.expandable = true;
-            acc = acc.concat(this.flatten(item.childLevels, lvl + 1));
-          }
-          return acc;
+            if (Array.isArray(item.childLevels) && item.childLevels.length > 0) {
+                item.expandable = true;
+                acc = acc.concat(this.flatten(item.childLevels, lvl + 1));
+            }
+            return acc;
         }, []);
         return newArr;
-      }
+    }
 
     public static applyAggregations(hierarchies, values, pivotKeys) {
         hierarchies.forEach((hierarchy) => {
@@ -210,12 +210,12 @@ export class PivotUtil {
     }
 
     public static processSubGroups(row, prevRowDims, siblingData, pivotKeys) {
-         // process combined groups
-         while(prevRowDims.length > 0) {
-               const prevRowDim = prevRowDims.shift();
-               const prevRowField = prevRowDim.fieldName;
-               const sameDimLvl = PivotUtil.getDimensionDepth(prevRowDim) === PivotUtil.getDimensionDepth(row);
-               for (const sibling of siblingData) {
+        // process combined groups
+        while (prevRowDims.length > 0) {
+            const prevRowDim = prevRowDims.shift();
+            const prevRowField = prevRowDim.fieldName;
+            const sameDimLvl = PivotUtil.getDimensionDepth(prevRowDim) === PivotUtil.getDimensionDepth(row);
+            for (const sibling of siblingData) {
                 const childCollection = sibling[prevRowField + '_' + pivotKeys.records] || [];
                 for (const child of childCollection) {
                     if (sameDimLvl) {
@@ -228,17 +228,17 @@ export class PivotUtil {
                     const keys = Object.assign({}, pivotKeys) as any;
                     keys[row.fieldName] = row.fieldName;
                     const hierarchyFields2 = PivotUtil
-                    .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
+                        .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                     const siblingData2 = PivotUtil
-                    .processHierarchy(hierarchyFields2, child ?? [], keys, 0);
+                        .processHierarchy(hierarchyFields2, child ?? [], keys, 0);
                     if (sameDimLvl) {
                         // add children to current level if dimensions have same depth
                         for (const sib of siblingData2) {
-                                if (sib[row.fieldName + '_' + pivotKeys.records]) {
-                                    child[row.fieldName + '_' + pivotKeys.records] =
+                            if (sib[row.fieldName + '_' + pivotKeys.records]) {
+                                child[row.fieldName + '_' + pivotKeys.records] =
                                     child[row.fieldName + '_' + pivotKeys.records].concat(sib[row.fieldName + '_' + pivotKeys.records]);
-                                    child[row.fieldName] = sib[row.fieldName];
-                                }
+                                child[row.fieldName] = sib[row.fieldName];
+                            }
                         }
                     } else {
                         // otherwise overwrite direct child collection
@@ -250,7 +250,7 @@ export class PivotUtil {
                     }
                 }
             }
-         }
+        }
     }
 
     public static processHierarchy(hierarchies, rec, pivotKeys, level = 0, rootData = false) {
@@ -294,16 +294,16 @@ export class PivotUtil {
     }
 
     public static getRecordKey(rec, key) {
-        const pivotKeys =  { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'};
+        const pivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
         const parentFields = [];
         for (const property in rec) {
             if (rec.hasOwnProperty(property) &&
-             Object.keys(pivotKeys).indexOf(property) === -1
-             && Object.keys(pivotKeys).filter(x => property.indexOf(x) !== -1).length === 0) {
-                 const currLevel = rec[property + '_level'];
-                 if (currLevel > 0) {
+                Object.keys(pivotKeys).indexOf(property) === -1
+                && Object.keys(pivotKeys).filter(x => property.indexOf(x) !== -1).length === 0) {
+                const currLevel = rec[property + '_level'];
+                if (currLevel > 0) {
                     parentFields.unshift(rec[property]);
-                 }
+                }
             }
         }
         return parentFields.concat(key).join('_');
@@ -325,7 +325,7 @@ export class PivotUtil {
             const obj = {};
             const multipleValues = values.length > 1;
             for (const value of values) {
-                if(h[pivotKeys.aggregations]) {
+                if (h[pivotKeys.aggregations]) {
                     if (multipleValues) {
                         obj[key + '-' + value.member] = h[pivotKeys.aggregations][value.member];
                     } else {
@@ -351,14 +351,14 @@ export class PivotUtil {
     }
 
     public static resolveFieldName(dimension, record) {
-         if (typeof dimension.member === 'string') {
+        if (typeof dimension.member === 'string') {
             dimension.fieldName = dimension.member;
             return dimension.member;
-         } else {
+        } else {
             const fieldName = (dimension && dimension.fieldName) ?? this.generateFieldValue(record);
             dimension.fieldName = fieldName;
             return fieldName;
-         }
+        }
     }
 
     private static generateFieldValue(rec) {
@@ -393,11 +393,11 @@ export class PivotUtil {
 
                 if (hierarchy.get(val.value).children.get(child.value)[recordsKey]) {
                     const copy = Object.assign({}, rec);
-                    if(rec[recordsKey]) {
+                    if (rec[recordsKey]) {
                         // not all nested children are valid
-                        const nestedValue =  hierarchy.get(val.value).children.get(child.value).value;
-                        const member = hierarchy.get(val.value).children.get(child.value).dimension.member;
-                        const validRecs = rec[recordsKey].filter(x => x[member] === nestedValue);
+                        const nestedValue = hierarchy.get(val.value).children.get(child.value).value;
+                        const dimension = hierarchy.get(val.value).children.get(child.value).dimension;
+                        const validRecs = rec[recordsKey].filter(x => this.extractValueFromDimension(dimension, x) === nestedValue);
                         copy[recordsKey] = validRecs;
                     }
                     hierarchy.get(val.value).children.get(child.value)[recordsKey].push(copy);
@@ -406,7 +406,7 @@ export class PivotUtil {
                 }
 
                 if (child.children && child.children.length > 0) {
-                    this.applyHierarchyChildren( hierarchy.get(val.value).children, child, rec, recordsKey);
+                    this.applyHierarchyChildren(hierarchy.get(val.value).children, child, rec, recordsKey);
                 }
             }
         }
