@@ -30,8 +30,8 @@ import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
 import { IColumnPipeArgs, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy } from '../../data-operations/sorting-strategy';
-import { IGridSortingStrategy } from './strategy';
-import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
+import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
@@ -473,6 +473,7 @@ export interface GridType extends IGridDataBindable {
     resizeNotify: Subject<void>;
 
     sortStrategy: IGridSortingStrategy;
+    groupStrategy?: IGridGroupingStrategy;
     filteringLogic: FilteringLogic;
     filterStrategy: IFilteringStrategy;
     allowAdvancedFiltering: boolean;

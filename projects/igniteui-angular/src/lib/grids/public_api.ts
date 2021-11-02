@@ -5,6 +5,7 @@ export * from './columns/interfaces';
 export * from './columns/column.module';
 export * from './headers/headers.module';
 export * from './common/events';
+export * from './common/strategy';
 export * from './filtering/base/filtering.module';
 export { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 export { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
