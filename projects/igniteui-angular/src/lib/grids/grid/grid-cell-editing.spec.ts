@@ -324,7 +324,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
         }));
 
         it('edit mode - leaves edit mode on blur', fakeAsync(/** height/width setter rAF */() => {
-            const rv = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
             const cell = grid.gridAPI.get_cell_by_index(0, 'firstName');
             const button = fixture.debugElement.query(By.css('.btnTest'));
 

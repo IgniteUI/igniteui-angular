@@ -82,7 +82,7 @@ export interface RowType {
     /** Deprecated, will be removed. data is the new property */
     rowData?: any;
     data?: any;
-    cells?: CellType[];
+    cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
     pinned?: boolean;
     selected?: boolean;

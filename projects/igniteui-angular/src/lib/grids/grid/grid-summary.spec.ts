@@ -2504,7 +2504,7 @@ class AllDataAvgSummary extends IgxSummaryOperand {
         super();
     }
 
-    public operate(data: any[], allData = [], fieldName = ''): IgxSummaryResult[] {
+    public operate(data: any[], _allData = [], fieldName = ''): IgxSummaryResult[] {
         const result = super.operate(data);
         if (fieldName === 'UnitsInStock') {
             result.push({
