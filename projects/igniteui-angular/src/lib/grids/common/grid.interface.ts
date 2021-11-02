@@ -31,7 +31,7 @@ import { IColumnPipeArgs, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
-import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
