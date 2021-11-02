@@ -89,6 +89,10 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
     }
 
     public getCellClass(col: any) {
+        const configuration = this.grid.pivotConfiguration;
+        if (configuration.values.length === 1) {
+            return configuration.values[0].styles;
+        }
         const colName = col.field.split('-');
         const measureName = colName[colName.length - 1];
         return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;

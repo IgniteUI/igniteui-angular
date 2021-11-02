@@ -541,6 +541,11 @@ export class AppComponent implements OnInit {
             name: 'Pivot Grid'
         },
         {
+            link: '/pivot-hierarchy',
+            icon: 'view_column',
+            name: 'Pivot Grid Hierarchy'
+        },
+        {
             link: '/pivot-noop',
             icon: 'view_column',
             name: 'Noop Pivot Grid'
