@@ -35,7 +35,7 @@ const SUMMARY_ROW = 'igx-grid-summary-row';
 const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 const DEBOUNCETIME = 30;
 
-fdescribe('IgxGrid - Row Editing #grid', () => {
+describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
