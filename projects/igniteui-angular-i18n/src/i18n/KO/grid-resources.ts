@@ -132,7 +132,8 @@ const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: '고정',
     igx_grid_actions_unpin_label: '고정 해제',
     igx_grid_actions_jumpUp_label: '위로 이동',
-    igx_grid_actions_jumpDown_label: '아래로 이동'
+    igx_grid_actions_jumpDown_label: '아래로 이동',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 

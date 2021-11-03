@@ -23,14 +23,10 @@ export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
 
     public pivotConfigHierarchy: IPivotConfiguration = {
-        columns: [
-
-            {
-                memberName: 'Country',
-                enabled: true
-            }
-        ]
-        ,
+        columns: [{
+            memberName: 'Country',
+            enabled: true
+        }],
         rows: [
             {
                 memberName: 'AllProd',
@@ -41,10 +37,18 @@ export class PivotGridSampleComponent {
                     enabled: true
                 }
             },
-            new IgxPivotDateDimension({
-                memberName: 'Date',
-                enabled: true
-            }),
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    years: false,
+                    quarters: true,
+                    months: false,
+                    total: true
+                }
+            ),
             {
                 memberName: 'AllSel',
                 memberFunction: () => 'AllSel',
@@ -111,4 +115,13 @@ export class PivotGridSampleComponent {
             ProductCategory: 'Components', UnitPrice: 16.05, SellerName: 'Walter Pang',
             Country: 'Bulgaria', City: 'Sofia', Date: '02/19/2013', UnitsSold: 492
         }];
+
+    public test: IgxPivotDateDimension;
+    constructor() {
+        this.test = new IgxPivotDateDimension({
+            memberName: 'Date',
+            enabled: true
+        });
+        this.test.childLevel;
+    }
 }

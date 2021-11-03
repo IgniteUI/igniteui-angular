@@ -132,7 +132,8 @@ const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: 'Fixiere',
     igx_grid_actions_unpin_label: 'Löse',
     igx_grid_actions_jumpUp_label: 'Springe hoch',
-    igx_grid_actions_jumpDown_label: 'Springe runter'
+    igx_grid_actions_jumpDown_label: 'Springe runter',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 /**
