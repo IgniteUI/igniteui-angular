@@ -20,12 +20,12 @@ export interface IPivotConfiguration {
 export interface IPivotDimension {
     // allow defining a hierarchy when multiple sub groups need to be extracted from single member.
     childLevel?: IPivotDimension;
-    // field name which to use to extract value or function that extract the value.
-    member: string | ((data: any) => any);
+    // field name which to use to extract value
+    memberName: string;
+    // function that extract the value
+    memberFunction?: (data: any) => any;
     // Enables/Disables a particular dimension from pivot structure.
     enabled: boolean;
-    // additional field name when using member as a function
-    fieldName?: string;
 }
 
 export interface IPivotValue {

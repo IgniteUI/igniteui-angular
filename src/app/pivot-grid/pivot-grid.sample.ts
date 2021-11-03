@@ -26,30 +26,31 @@ export class PivotGridSampleComponent {
         columns: [
 
             {
-                member: 'Country',
+                memberName: 'Country',
                 enabled: true
             }
         ]
         ,
         rows: [
             {
-                member: () => 'AllProd',
+                memberName: 'AllProd',
+                memberFunction: () => 'AllProd',
                 enabled: true,
                 childLevel: {
-                    member: 'ProductCategory',
+                    memberName: 'ProductCategory',
                     enabled: true
                 }
             },
             new IgxPivotDateDimension({
-                member: 'Date',
-                fieldName: 'Date',
+                memberName: 'Date',
                 enabled: true
             }),
             {
-                member: () => 'AllSel',
+                memberName: 'AllSel',
+                memberFunction: () => 'AllSel',
                 enabled: true,
                 childLevel: {
-                    member: 'SellerName',
+                    memberName: 'SellerName',
                     enabled: true
                 }
             }
