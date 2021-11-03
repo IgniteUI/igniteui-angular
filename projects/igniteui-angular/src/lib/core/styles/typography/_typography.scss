@@ -39,6 +39,7 @@
 @use '../components/slider/slider-theme' as *;
 @use '../components/snackbar/snackbar-theme' as *;
 @use '../components/switch/switch-theme' as *;
+@use '../components/stepper/stepper-theme';
 @use '../components/tabs/tabs-theme' as *;
 @use '../components/time-picker/time-picker-theme' as *;
 @use '../components/toast/toast-theme' as *;
@@ -80,6 +81,7 @@
     @include igx-slider-typography($type-scale);
     @include igx-snackbar-typography($type-scale);
     @include igx-switch-typography($type-scale);
+    @include igx-stepper-typography($type-scale);
     @include igx-tabs-typography($type-scale);
     @include igx-time-picker-typography($type-scale);
     @include igx-toast-typography($type-scale);

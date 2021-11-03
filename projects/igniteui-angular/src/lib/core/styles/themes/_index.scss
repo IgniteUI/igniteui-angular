@@ -426,6 +426,12 @@
         ));
     }
 
+    @if is-used('igx-stepper', $exclude) {
+        @include igx-stepper(igx-stepper-theme(
+            $schema: $schema
+        ));
+    }
+
     @if is-used('igx-toast', $exclude) {
         @include igx-toast(igx-toast-theme(
             $schema: $schema,

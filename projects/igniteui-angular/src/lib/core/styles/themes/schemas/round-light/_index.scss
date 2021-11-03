@@ -61,6 +61,7 @@
 @use '../shape/snackbar' as *;
 @use '../light/switch' as *;
 @use '../shape/switch' as *;
+@use '../light/stepper';
 @use '../light/tabs' as *;
 @use '../shape/tabs' as *;
 @use '../light/time-picker' as *;
@@ -110,6 +111,7 @@
 /// @property {Map} igx-slider [$light-slider]
 /// @property {Map} igx-snackbar [$light-snackbar]
 /// @property {Map} igx-switch [$light-switch]
+/// @property {Map} igx-stepper [$light-stepper]
 /// @property {Map} igx-tabs [$light-tabs]
 /// @property {Map} igx-time-picker [$light-time-picker]
 /// @property {Map} igx-toast [$light-toast]
@@ -137,6 +139,7 @@ $light-round-schema: (
     igx-circular-bar: extend($light-progress-circular, $default-shape-progress),
     igx-snackbar: extend($light-snackbar, $round-shape-snackbar),
     igx-switch: extend($light-switch, $round-shape-switch),
+    igx-stepper: extend($light-stepper, $round-shape-stepper),
     igx-tabs: extend($light-tabs, $round-shape-tabs),
     igx-time-picker: extend($light-time-picker, $round-shape-time-picker),
     igx-toast: extend($light-toast, $round-shape-toast),

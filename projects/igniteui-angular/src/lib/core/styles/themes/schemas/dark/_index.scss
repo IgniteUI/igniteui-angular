@@ -55,6 +55,7 @@
 @use './sparkline' as *;
 @use './splitter' as *;
 @use './switch' as *;
+@use './stepper';
 @use './tabs' as *;
 @use './time-picker' as *;
 @use './toast' as *;
@@ -118,6 +119,7 @@
 /// @property {Map} sparkline [$dark-sparkline]
 /// @property {Map} igx-splitter [$dark-splitter]
 /// @property {Map} igx-switch [$dark-switch]
+/// @property {Map} igx-stepper [$dark-stepper]
 /// @property {Map} igx-tabs [$dark-tabs]
 /// @property {Map} igx-time-picker [$dark-time-picker]
 /// @property {Map} igx-toast [$dark-toast]
@@ -177,6 +179,7 @@ $dark-schema: (
     sparkline: $dark-sparkline,
     igx-splitter: $dark-splitter,
     igx-switch: $dark-switch,
+    igx-stepper: $dark-stepper,
     igx-tabs: $dark-tabs,
     igx-time-picker: $dark-time-picker,
     igx-toast: $dark-toast,
@@ -246,6 +249,7 @@ $dark-material-schema: $dark-schema;
 /// @property {Map} sparkline [$dark-fluent-sparkline],
 /// @property {Map} igx-splitter [$dark-fluent-splitter],
 /// @property {Map} igx-switch [$dark-fluent-switch],
+/// @property {Map} igx-stepper [$dark-fluent-stepper],
 /// @property {Map} igx-tabs [$dark-fluent-tabs],
 /// @property {Map} igx-time-picker [$dark-fluent-time-picker],
 /// @property {Map} igx-toast [$dark-fluent-toast],
@@ -305,6 +309,7 @@ $dark-fluent-schema: (
     sparkline: $dark-fluent-sparkline,
     igx-splitter: $dark-fluent-splitter,
     igx-switch: $dark-fluent-switch,
+    igx-stepper: $dark-fluent-stepper,
     igx-tabs: $dark-fluent-tabs,
     igx-time-picker: $dark-fluent-time-picker,
     igx-toast: $dark-fluent-toast,
@@ -369,6 +374,7 @@ $dark-fluent-schema: (
 /// @property {Map} sparkline [$dark-bootstrap-sparkline],
 /// @property {Map} igx-splitter [$dark-bootstrap-splitter],
 /// @property {Map} igx-switch [$dark-bootstrap-switch],
+/// @property {Map} igx-stepper [$dark-bootstrap-stepper],
 /// @property {Map} igx-tabs [$dark-bootstrap-tabs],
 /// @property {Map} igx-time-picker [$dark-bootstrap-time-picker],
 /// @property {Map} igx-toast [$dark-bootstrap-toast],
@@ -428,6 +434,7 @@ $dark-bootstrap-schema: (
     sparkline: $dark-bootstrap-sparkline,
     igx-splitter: $dark-bootstrap-splitter,
     igx-switch: $dark-bootstrap-switch,
+    igx-stepper: $dark-bootstrap-stepper,
     igx-tabs: $dark-bootstrap-tabs,
     igx-time-picker: $dark-bootstrap-time-picker,
     igx-toast: $dark-bootstrap-toast,
@@ -492,6 +499,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} sparkline [$dark-indigo-sparkline]
 /// @property {Map} igx-splitter [$dark-indigo-splitter]
 /// @property {Map} igx-switch [$dark-indigo-switch]
+/// @property {Map} igx-stepper [$dark-indigo-stepper]
 /// @property {Map} igx-tabs [$dark-indigo-tabs]
 /// @property {Map} igx-time-picker [$dark-indigo-time-picker]
 /// @property {Map} igx-toast [$dark-indigo-toast]
@@ -551,6 +559,7 @@ $dark-indigo-schema: (
     sparkline: $dark-indigo-sparkline,
     igx-splitter: $dark-indigo-splitter,
     igx-switch: $dark-indigo-switch,
+    igx-stepper: $dark-indigo-stepper,
     igx-tabs: $dark-indigo-tabs,
     igx-time-picker: $dark-indigo-time-picker,
     igx-toast: $dark-indigo-toast,
