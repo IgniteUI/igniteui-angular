@@ -1,17 +1,23 @@
-import { AfterViewInit, Directive, ElementRef, NgModule, OnDestroy } from "@angular/core";
-import { fromEvent, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { PlatformUtil } from "../../core/utils";
+import { AfterViewInit, Directive, ElementRef, NgModule, OnDestroy } from '@angular/core';
+import { fromEvent, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { PlatformUtil } from '../../core/utils';
 
 @Directive({
     selector: '[igxFocusTrap]'
 })
 export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
-    /**
-     * @hidden
-     */
+     /** @hidden */
     public get element(): HTMLElement | null {
         return this.elementRef.nativeElement;
+    }
+
+    private destroy$ = new Subject();
+
+    /** @hidden */
+    constructor(
+        private elementRef: ElementRef,
+        protected platformUtil: PlatformUtil) {
     }
 
     /** @hidden */
@@ -25,21 +31,11 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
             });
     }
 
-    /**
-     * @hidden
-     */
-    constructor(
-        private elementRef: ElementRef,
-        protected platformUtil: PlatformUtil) {
-    }
-
     /** @hidden */
     public ngOnDestroy() {
         this.destroy$.next();
         this.destroy$.complete();
     }
-
-    private destroy$ = new Subject();
 
     private handleTab(event) {
         const elements = this.getFocusableElements(this.element);
@@ -59,8 +55,8 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
 
     private getFocusableElements(element: Element) {
         return Array.from(element.querySelectorAll(
-            'a[href], button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])'
-        )).filter(el => !el.hasAttribute('disabled') && !el.getAttribute("aria-hidden"));
+            'a[href], button, input, textarea, select, details,[tabindex]:not([tabindex='-1'])'
+        )).filter(el => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
     }
 
     private getFocusedElement(): HTMLElement | null {
