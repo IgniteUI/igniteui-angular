@@ -15,8 +15,10 @@ import { DisplayDensity } from '../../core/displayDensity';
 import { flatten } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ColumnType, GridType } from '../common/grid.interface';
+import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxGridHeaderComponent } from './grid-header.component';
 
 export interface IgxGridRowSelectorsTemplateContext {
     $implicit: {
@@ -107,12 +109,12 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     }
 
     /** Header components in the header row. */
-    public get headers() {
+    public get headers(): IgxGridHeaderComponent[] {
         return this.groups.map(group => group.header);
     }
 
     /** Filtering cell components in the header row. */
-    public get filters() {
+    public get filters(): IgxGridFilteringCellComponent[] {
         return this.groups.map(group => group.filter);
     }
 

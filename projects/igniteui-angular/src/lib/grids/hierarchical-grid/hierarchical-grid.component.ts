@@ -42,6 +42,7 @@ import { IgxGridCell } from '../grid-public-cell';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
 import { IgxGridComponent } from '../grid/grid.component';
+import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 
 let NEXT_ID = 0;
 
@@ -629,7 +630,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
     }
 
-    public get outletDirective() {
+    public get outletDirective(): IgxOverlayOutletDirective {
         return this.rootGrid._outletDirective;
     }
 
