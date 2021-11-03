@@ -90,11 +90,11 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         let dim = dimension;
         let col;
         while(dim) {
-            col = this.grid.originalDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
+            col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
             if (col) {
                 break;
             } else {
-                dim = dimension.childLevel;
+                dim = dim.childLevel;
             }
         }
         this.grid.filteringService.toggleFilterDropdown(event.target, col);

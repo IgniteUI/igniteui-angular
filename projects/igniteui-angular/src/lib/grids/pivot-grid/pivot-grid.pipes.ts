@@ -4,9 +4,12 @@ import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys } from './pivot-grid.interface';
-import { PivotColumnDimensionsStrategy, PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
+     PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { GridBaseAPIService, IgxGridBaseDirective } from '../hierarchical-grid/public_api';
+import { GridType } from '../common/grid.interface';
 /**
  * @hidden
  */
@@ -96,7 +99,7 @@ export class IgxPivotColumnPipe implements PipeTransform {
     pure: true
 })
 export class IgxPivotGridFilterPipe implements PipeTransform {
-
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
     public transform(collection: any[],
         config: IPivotConfiguration,
         filterStrategy: IFilteringStrategy,
@@ -115,7 +118,7 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
         });
         const state = {
             expressionsTree,
-            strategy: filterStrategy,
+            strategy: filterStrategy || new DimensionValuesFilteringStrategy(),
             advancedExpressionsTree
         };
 
@@ -123,7 +126,7 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
             return collection;
         }
 
-        const result = DataUtil.filter(cloneArray(collection), state);
+        const result = DataUtil.filter(cloneArray(collection), state, this.gridAPI.grid);
 
         return result;
     }
