@@ -101,8 +101,8 @@ describe('igxFocusTrap', () => {
         fix.detectChanges();
 
         const dialog = fix.componentInstance.dialog;
-        dialog.leftButtonLabel="left button"
-        dialog.rightButtonLabel="right button"
+        dialog.leftButtonLabel='left button"';
+        dialog.rightButtonLabel='right button';
         fix.detectChanges();
         dialog.open();
         fix.detectChanges();
