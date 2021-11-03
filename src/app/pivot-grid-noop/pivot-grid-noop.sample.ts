@@ -1,7 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration, IPivotDimension, IPivotDimensionStrategy,
-     IPivotValue,
-     NoopPivotDimensionsStrategy } from 'igniteui-angular';
+import {
+    IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration, IPivotDimension,
+    IPivotValue,
+    NoopPivotDimensionsStrategy
+} from 'igniteui-angular';
 
 
 
@@ -32,26 +34,23 @@ export class PivotGridNoopSampleComponent {
         rowStrategy: NoopPivotDimensionsStrategy.instance(),
         columns: [
 
-        {
-            member: 'Country',
-            enabled: true,
-            childLevels: []
-        }
+            {
+                memberName: 'Country',
+                enabled: true
+            }
         ]
-    ,
-    rows: [
-    {
-        fieldName: 'All',
-        member: () => 'AllProd',
-        enabled: true,
-        childLevels: [{
-        fieldName: 'ProductCategory',
-        member: 'ProductCategory',
-        enabled: true,
-        childLevels: []
-        }]
-    }
-    ],
+        ,
+        rows: [
+            {
+                memberName: 'All',
+                memberFunction: () => 'AllProd',
+                enabled: true,
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+            }
+        ],
         values: [
             {
                 member: 'UnitsSold',
@@ -66,9 +65,9 @@ export class PivotGridNoopSampleComponent {
         {
             ProductCategory: 'All', All: 1000, Bulgaria: 774, USA: 829, Uruguay: 524, All_records: [
                 { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456 },
-                { ProductCategory: 'Bikes', Uruguay: 68},
-                { ProductCategory: 'Accessories', USA: 293},
-                { ProductCategory: 'Components', USA: 240}
+                { ProductCategory: 'Bikes', Uruguay: 68 },
+                { ProductCategory: 'Accessories', USA: 293 },
+                { ProductCategory: 'Components', USA: 240 }
             ]
         }
     ];

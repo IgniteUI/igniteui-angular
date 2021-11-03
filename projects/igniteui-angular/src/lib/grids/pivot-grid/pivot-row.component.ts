@@ -89,6 +89,10 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
     }
 
     public getCellClass(col: any) {
+        const configuration = this.grid.pivotConfiguration;
+        if (configuration.values.length === 1) {
+            return configuration.values[0].styles;
+        }
         const colName = col.field.split('-');
         const measureName = colName[colName.length - 1];
         return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
@@ -108,13 +112,8 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
     }
 
     protected extractFromDimension(dim: IPivotDimension, index: number = 0, lvl = 0) {
-        const field = PivotUtil.resolveFieldName(dim, this.rowData);
-        let header = null;
-        if (typeof dim.member === 'string') {
-            header = this.rowData[dim.member];
-        } else if (typeof dim.member === 'function'){
-            header = dim.member.call(this, this.rowData);
-        }
+        const field = dim.memberName;
+        const header = this.rowData[field];
         const col = this._createColComponent(field, header, index, dim, lvl);
         return col;
     }
@@ -126,7 +125,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         ref.instance.header = header;
         ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
         (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
-        if (dim.childLevels && dim.childLevels.length > 0 && lvl >= PivotUtil.getTotalLvl(this.rowData)) {
+        if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.rowData)) {
             ref.instance.headerTemplate = this.headerTemplate;
         } else if (lvl < PivotUtil.getTotalLvl(this.rowData)) {
             ref.instance.headerTemplate = this.headerTemplateGray;

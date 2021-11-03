@@ -11,6 +11,7 @@
     igxDrop
     (enter)="onChipDragEnterHandler($event)"
     (leave)= "onChipDragLeaveHandler($event)"
+    (over)="onChipOverHandler($event)"
     (dropped)="onChipDrop($event)">
 
     <div #selectContainer [ngClass]="selectClass(selected)">

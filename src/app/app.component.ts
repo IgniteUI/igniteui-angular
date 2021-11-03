@@ -450,6 +450,11 @@ export class AppComponent implements OnInit {
             name: 'Snackbar'
         },
         {
+            link: '/stepper',
+            icon: 'format_list_bulleted',
+            name: 'Stepper'
+        },
+        {
             link: '/tabs',
             icon: 'tab',
             name: 'Tabs'
@@ -534,6 +539,11 @@ export class AppComponent implements OnInit {
             link: '/pivot',
             icon: 'view_column',
             name: 'Pivot Grid'
+        },
+        {
+            link: '/pivot-hierarchy',
+            icon: 'view_column',
+            name: 'Pivot Grid Hierarchy'
         },
         {
             link: '/pivot-noop',
