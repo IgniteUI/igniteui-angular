@@ -28,6 +28,7 @@ import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../service
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -2171,6 +2172,17 @@ describe('igxCombo', () => {
             expect(combo.dropdown.items.length).toEqual(4); // Add Item button is included
             expect(combo.dropdown.headers.length).toEqual(1);
             expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual(fallBackGroup);
+        });
+        it('should sort groups correctly', () => {
+            combo.groupSortingDirection = SortingDirection.Asc;
+            combo.toggle();
+            fixture.detectChanges();
+            expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('East North Central');
+
+            combo.groupSortingDirection = SortingDirection.Desc;
+            combo.toggle();
+            fixture.detectChanges();
+            expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('West South Cent');
         });
     });
     describe('Filtering tests: ', () => {
