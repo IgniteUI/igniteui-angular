@@ -46,26 +46,49 @@ describe('IgxToast', () => {
         expect(domToast.id).toBe('customToast');
     });
 
-    it('should be able to set custom positionSettings', () => {
-        const defaultPositionSettings = toast.positionSettings;
-        expect(defaultPositionSettings.horizontalDirection).toBe(-0.5);
-        expect(defaultPositionSettings.verticalDirection).toBe(0);
-        const newPositionSettings: PositionSettings = {
-            openAnimation: useAnimation(slideInLeft, { params: { duration: '1000ms' } }),
-            closeAnimation: useAnimation(slideInRight, { params: { duration: '1000ms' } }),
-            horizontalDirection: HorizontalAlignment.Center,
-            verticalDirection: VerticalAlignment.Middle,
-            horizontalStartPoint: HorizontalAlignment.Center,
-            verticalStartPoint: VerticalAlignment.Middle,
-            minSize: { height: 100, width: 100 }
-        };
-        toast.positionSettings = newPositionSettings;
+    it('should properly change verical position', () => {
+        expect(toast.position).toBe('bottom');
+        expect(toast.positionSettings.verticalDirection).toBe(0);
+
+        toast.position = 'top';
         fixture.detectChanges();
-        const customPositionSettings = toast.positionSettings;
-        expect(customPositionSettings.horizontalDirection).toBe(-0.5);
-        expect(customPositionSettings.verticalDirection).toBe(-0.5);
-        expect(customPositionSettings.openAnimation.options.params).toEqual({duration: '1000ms'});
-        expect(customPositionSettings.minSize).toEqual({height: 100, width: 100});
+        expect(toast.positionSettings.verticalDirection).toBe(-1);
+    });
+});
+
+describe('IgxToast with positionSettings', () => {
+    configureTestSuite();
+    beforeAll(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [ToastPositionSettingsTestComponent],
+            imports: [NoopAnimationsModule, IgxToastModule]
+        }).compileComponents();
+    }));
+
+    let fixture: ComponentFixture<ToastPositionSettingsTestComponent>;
+    let toast: IgxToastComponent;
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ToastPositionSettingsTestComponent);
+        toast = fixture.componentInstance.toast;
+        fixture.detectChanges();
+    });
+
+    it('should be able to change positionSettings', () => {
+        expect(toast.positionSettings.horizontalDirection).toBe(-1);
+        expect(toast.positionSettings.verticalDirection).toBe(-0.5);
+        toast.positionSettings = fixture.componentInstance.secondPositionSettings;
+        fixture.detectChanges();
+        expect(toast.positionSettings.horizontalDirection).toBe(-0.5);
+        expect(toast.positionSettings.verticalDirection).toBe(-0.5);
+    });
+
+    it('positionSettings passed in the open method should be applied', () => {
+        const positions = fixture.componentInstance.secondPositionSettings;
+        toast.open(undefined, positions);
+        fixture.detectChanges();
+        expect(toast.positionSettings.horizontalDirection).toBe(-0.5);
+        expect(toast.positionSettings.verticalDirection).toBe(-0.5);
     });
 });
 
@@ -75,5 +98,25 @@ describe('IgxToast', () => {
 class ToastInitializeTestComponent {
     @ViewChild(IgxToastComponent, { static: true })
     public toast: IgxToastComponent;
+}
+
+@Component({
+    template: `<igx-toast #toast [positionSettings]="firstPositionSettings"></igx-toast>`,
+})
+class ToastPositionSettingsTestComponent {
+    @ViewChild(IgxToastComponent, { static: true })
+    public toast: IgxToastComponent;
+    public firstPositionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Left,
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalStartPoint: HorizontalAlignment.Left,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
+    public secondPositionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Center,
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalStartPoint: HorizontalAlignment.Center,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
 }
 
