@@ -115,13 +115,4 @@ export class PivotGridSampleComponent {
             ProductCategory: 'Components', UnitPrice: 16.05, SellerName: 'Walter Pang',
             Country: 'Bulgaria', City: 'Sofia', Date: '02/19/2013', UnitsSold: 492
         }];
-
-    public test: IgxPivotDateDimension;
-    constructor() {
-        this.test = new IgxPivotDateDimension({
-            memberName: 'Date',
-            enabled: true
-        });
-        this.test.childLevel;
-    }
 }
