@@ -143,6 +143,8 @@ import { Action, StateUpdateEvent, TransactionEventOrigin } from '../services/tr
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { IGridSortingStrategy } from './common/strategy';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridHeaderComponent } from './headers/grid-header.component';
+import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -1128,7 +1130,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.theadRow.headerGroupContainer;
     }
 
-    public get filteringRow() {
+    public get filteringRow(): IgxGridFilteringRowComponent {
         return this.theadRow.filterRow;
     }
 
@@ -2035,7 +2037,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const headers = this.grid.headerCellList;
      * ```
      */
-    public get headerCellList() {
+    public get headerCellList(): IgxGridHeaderComponent[] {
         return this.headerGroupsList.map(headerGroup => headerGroup.header).filter(header => header);
     }
 

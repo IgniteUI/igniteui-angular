@@ -21,6 +21,7 @@ import { PlatformUtil } from '../../../core/utils';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { ColumnType, GridType } from '../../common/grid.interface';
+import { DisplayDensity } from '../../../core/displayDensity';
 
 /**
  * @hidden
@@ -332,7 +333,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public get displayDensity() {
+    public get displayDensity(): DisplayDensity {
         return this.grid.displayDensity;
     }
 
