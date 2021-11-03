@@ -428,7 +428,7 @@
 
     @if is-used('igx-stepper', $exclude) {
         @include igx-stepper(igx-stepper-theme(
-            $schema: $schema
+            $schema: $schema,
         ));
     }
 

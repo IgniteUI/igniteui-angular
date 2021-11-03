@@ -61,7 +61,8 @@
 @use '../shape/snackbar' as *;
 @use '../light/switch' as *;
 @use '../shape/switch' as *;
-@use '../light/stepper';
+@use '../light/stepper' as *;
+@use '../shape/stepper' as *;
 @use '../light/tabs' as *;
 @use '../shape/tabs' as *;
 @use '../light/time-picker' as *;

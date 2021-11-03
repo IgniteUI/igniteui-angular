@@ -63,7 +63,7 @@
 @use '../components/splitter/splitter-component' as splitter;
 @use '../components/snackbar/snackbar-component' as snackbar;
 @use '../components/switch/switch-component' as switch;
-@use '../components/stepper/stepper-component';
+@use '../components/stepper/stepper-component' as stepper;
 @use '../components/tabs/tabs-component' as tabs;
 @use '../components/toast/toast-component' as toast;
 @use '../components/tooltip/tooltip-component' as tooltip;
@@ -163,6 +163,7 @@
     @include splitter.component();
     @include snackbar.component();
     @include switch.component();
+    @include stepper.component();
     @include tabs.component();
     @include toast.component();
     @include tooltip.component();
