@@ -5544,10 +5544,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (!this.clipboardOptions.copyHeaders) {
             result = result.substring(result.indexOf('\n') + 1);
-            if (Object.values(data[0]).length === 1) {
-                result = result.substring(data[0], result.indexOf('\n'));
-            }
-        } else if (Object.values(data[0]).length === 1 && this.clipboardOptions.copyHeaders) {
+        }
+
+        if (Object.values(data[0]).length) {
             result = result.slice(0, -2);
         }
 
