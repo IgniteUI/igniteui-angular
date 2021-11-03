@@ -1,0 +1,38 @@
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// @type Map
+/// @property {Number} border-radius-indicator [1] - The border radius used for stepper indicator. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Number} border-radius-step-header [0] - The border radius used for stepper step-header. Can be a fraction between 0 and 1, pixels, or percent.
+$_default-shape-stepper: (
+    border-radius-indicator: 1,
+    border-radius-step-header: 0
+);
+
+$_round-shape-stepper: (
+    border-radius-indicator: 1,
+    border-radius-step-header: 32px
+);
+
+$_square-shape-stepper: (
+    border-radius-indicator: 0,
+    border-radius-step-header: 0
+);
+
+/// @type Map
+$_fluent-shape-stepper: (
+    border-radius-indicator: 2px,
+    border-radius-step-header: 2px
+);
+
+/// @type Map
+$_bootstrap-shape-stepper: (
+    border-radius-indicator: 2px,
+    border-radius-step-header: 2px
+);
+
+/// @type Map
+$_indigo-shape-stepper: extend($_default-shape-stepper);

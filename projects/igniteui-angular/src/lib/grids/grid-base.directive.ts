@@ -4686,9 +4686,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             insertAtIndex: index,
             isPinned: true,
             rowID,
-            row
+            row,
+            cancel: false
         };
         this.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
 
         this.crudService.endEdit(false);
 
@@ -4722,9 +4727,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const eventArgs: IPinRowEventArgs = {
             isPinned: false,
             rowID,
-            row
+            row,
+            cancel: false
         };
         this.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
 
         this.crudService.endEdit(false);
         this._pinnedRecordIDs.splice(index, 1);
