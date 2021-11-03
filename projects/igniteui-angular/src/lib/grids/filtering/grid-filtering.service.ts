@@ -13,14 +13,13 @@ import { OverlaySettings, VerticalAlignment } from '../../services/overlay/utili
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
 import { fadeIn } from '../../animations/main';
-import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { IgxIconService } from '../../icon/icon.service';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
-import { ElasticPositionStrategy } from '../../services/overlay/position/elastic-position-strategy';
+import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
 
 /**
  * @hidden
@@ -41,18 +40,16 @@ export class IgxFilteringService implements OnDestroy {
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private columnStartIndex = -1;
     private _filterMenuOverlaySettings: OverlaySettings = {
+        closeOnEscape: true,
         closeOnOutsideClick: true,
         modal: false,
-        // Was the Excel Position strategy created as a work-around for th
-        // previous implementation of how the component was created ??
-        positionStrategy: new ElasticPositionStrategy({
-            verticalStartPoint: VerticalAlignment.Middle,
+        positionStrategy: new ConnectedPositioningStrategy({
+            verticalStartPoint: VerticalAlignment.Top,
             openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' } }),
             closeAnimation: null
         }),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
-    private column;
     private lastActiveNode;
 
     constructor(
@@ -66,15 +63,11 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public toggleFilterDropdown(element: HTMLElement, column: ColumnType) {
-        if (this.column?.field === column.field) {
-            return;
-        }
 
-        this.column = column;
-        const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
+        const filterIcon = column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
         const filterIconTarget = element.querySelector(`.${filterIcon}`) as HTMLElement;
 
-        const { id, ref } = this.grid.createFilterDropdown(this.column, {
+        const { id, ref } = this.grid.createFilterDropdown(column, {
             ...this._filterMenuOverlaySettings,
             ...{ target: filterIconTarget }
         });
@@ -98,14 +91,9 @@ export class IgxFilteringService implements OnDestroy {
                 this.grid.theadRow.nativeElement.focus();
             });
 
+        this.grid.columnPinned.pipe(first()).subscribe(() => ref?.destroy());
         this._overlayService.show(id);
     }
-
-    // public hideExcelFiltering() {
-    //     if (this._componentOverlayId) {
-    //         this._overlayService.hide(this._componentOverlayId);
-    //     }
-    // }
 
     /**
      * Subscribe to grid's events.
