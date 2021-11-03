@@ -89,8 +89,7 @@ export enum PivotDimensionType {
 
 export class IgxPivotDateDimension implements IPivotDimension {
     public childLevel: IPivotDimension;
-    public member = () => 'All Periods';
-    public fieldName = 'AllPeriods';
+    public memberName = 'AllPeriods';
     public enabled = true;
 
     constructor(public inChildLevel: IPivotDimension, public showQuarters = false) {
@@ -100,18 +99,18 @@ export class IgxPivotDateDimension implements IPivotDimension {
         }
 
         const monthDimension: IPivotDimension = {
-            fieldName: 'Months',
-            member: (rec) => {
+            memberName: 'Months',
+            memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inChildLevel, rec);
                 return recordValue ? new Date(recordValue).toLocaleString('default', { month: 'long' }) : rec['Months'];
             },
             enabled: true,
-            childLevel: this.inChildLevel
+            childLevel: inChildLevel
         };
 
         const quarterDimension: IPivotDimension = {
-            fieldName: 'Quarters',
-            member: (rec) => {
+            memberName: 'Quarters',
+            memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inChildLevel, rec);
                 return recordValue ? `Q` + Math.floor((new Date(recordValue).getMonth() + 1) / 3) : rec['Quarters'];
             },
@@ -120,8 +119,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
         };
 
         this.childLevel = {
-            fieldName: 'Years',
-            member: (rec) => {
+            memberName: 'Years',
+            memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inChildLevel, rec);
                 return recordValue ? (new Date(recordValue)).getFullYear().toString() : rec['Years'];
             },
@@ -129,4 +128,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
             childLevel: showQuarters ? quarterDimension : monthDimension
         };
     }
+
+    public memberFunction() {
+        return 'All Periods';
+    } 
 }
