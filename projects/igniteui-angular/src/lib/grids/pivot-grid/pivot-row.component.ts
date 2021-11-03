@@ -112,15 +112,8 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
     }
 
     protected extractFromDimension(dim: IPivotDimension, index: number = 0, lvl = 0) {
-        const field = PivotUtil.resolveFieldName(dim, this.rowData);
-        let header = null;
-        if (typeof dim.member === 'string') {
-            header = this.rowData[dim.member];
-        } else if (typeof dim.member === 'function' && dim.fieldName) {
-            header = this.rowData[dim.fieldName];
-        } else {
-            header = dim.member.call(this, this.rowData);
-        }
+        const field = dim.memberName;
+        const header = this.rowData[field];
         const col = this._createColComponent(field, header, index, dim, lvl);
         return col;
     }
