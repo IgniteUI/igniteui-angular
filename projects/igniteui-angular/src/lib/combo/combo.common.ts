@@ -250,7 +250,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
     @Input()
-    public placeholder;
+    public placeholder: string;
 
     /**
      * Combo data source.
@@ -334,15 +334,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public get groupKey(): string {
         return this._groupKey;
     }
-
-    /**
-     * An @Input property that enabled/disables filtering in the list. The default is `true`.
-     * ```html
-     * <igx-combo [filterable]="false">
-     * ```
-     */
-    @Input()
-    public filterable = true;
 
     /**
      * An @Input property that sets groups sorting order.
@@ -713,22 +704,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected complexTemplate: TemplateRef<any>;
 
     /** @hidden @internal */
-    public get displaySearchInput(): boolean {
-        return this.filterable || this.allowCustomValues;
-    }
-
-    /** @hidden @internal */
-    public get filteredData(): any[] | null {
-        return this.filterable ? this._filteredData : this.data;
-    }
-
-    /** @hidden @internal */
-    public set filteredData(val: any[] | null) {
-        this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
-        this.checkMatch();
-    }
-
-    /** @hidden @internal */
     public get searchValue(): string {
         return this._searchValue;
     }
@@ -787,6 +762,29 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
     public get value(): string {
         return this._value;
+    }
+
+    /**
+     * Defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`
+     *
+     * ```typescript
+     * // get
+     * let state = this.combo.virtualizationState;
+     * ```
+     */
+    public get virtualizationState(): IForOfState {
+        return this.virtDir.state;
+    }
+    /**
+     * Sets the current state of the virtualized data.
+     *
+     * ```typescript
+     * // set
+     * this.combo.virtualizationState(state);
+     * ```
+     */
+    public set virtualizationState(state: IForOfState) {
+        this.virtDir.state = state;
     }
 
     /**
@@ -849,7 +847,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _data = [];
     protected _value = '';
     protected _groupKey = '';
+    protected _filteredData = [];
     protected _displayKey: string;
+    protected _remoteSelection = {};
     protected _valid = IgxComboState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<any>();
@@ -859,9 +859,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     private _type = null;
     private _dataType = '';
     private _searchValue = '';
-    private _filteredData = [];
     private _itemHeight = null;
-    private _remoteSelection = {};
     private _itemsMaxHeight = null;
     private _overlaySettings: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
@@ -994,20 +992,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
     public isItemSelected(item: any): boolean {
         return this.selectionService.is_item_selected(this.id, item);
-    }
-
-    /** @hidden @internal */
-    public focusSearchInput(opening?: boolean): void {
-        if (this.displaySearchInput && this.searchInput) {
-            this.searchInput.nativeElement.focus();
-        } else {
-            if (opening) {
-                this.dropdownContainer.nativeElement.focus();
-            } else {
-                this.comboInput.nativeElement.focus();
-                this.toggle();
-            }
-        }
     }
 
     /** @hidden @internal */
@@ -1157,28 +1141,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.manageRequiredAsterisk();
     };
 
-    /**
-     * Constructs the combo display value
-     * If remote, caches the key displayText
-     * If not, just combine the object.displayKeys
-     */
-    protected createDisplayText(newSelection: any[], oldSelection: any[]) {
-        let value = '';
-        if (this.isRemote) {
-            if (newSelection.length) {
-                const removedItems = oldSelection.filter(e => newSelection.indexOf(e) < 0);
-                const addedItems = newSelection.filter(e => oldSelection.indexOf(e) < 0);
-                this.registerRemoteEntries(addedItems);
-                this.registerRemoteEntries(removedItems, false);
-                value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
-            } else {
-                // If new selection is empty, clear all items
-                this.registerRemoteEntries(oldSelection, false);
-            }
-        } else {
-            value = this.concatDisplayText(newSelection);
+    /** if there is a valueKey - map the keys to data items, else - just return the keys */
+    protected convertKeysToItems(keys: any[]) {
+        if (this.comboAPI.valueKey === null) {
+            return keys;
         }
-        return value;
+        // map keys vs. filter data to retain the order of the selected items
+        return keys.map(key => this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
     }
 
     protected checkMatch(): void {
@@ -1200,7 +1169,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
-    private registerRemoteEntries(ids: any[], add = true) {
+    protected registerRemoteEntries(ids: any[], add = true) {
         if (add) {
             const selection = this.getValueDisplayPairs(ids);
             for (const entry of selection) {
@@ -1216,31 +1185,31 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     /**
      * For `id: any[]` returns a mapped `{ [combo.valueKey]: any, [combo.displayKey]: any }[]`
      */
-    private getValueDisplayPairs(ids: any[]) {
+    protected getValueDisplayPairs(ids: any[]) {
         return this.data.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => ({
             [this.valueKey]: e[this.valueKey],
             [this.displayKey]: e[this.displayKey]
         }));
     }
 
-    /** Returns a string that should be populated in the combo's text box */
-    private concatDisplayText(selection: any[]): string {
-        const value = this.displayKey !== null && this.displayKey !== undefined ?
-            this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
-            selection.join(', ');
-        return value;
+    protected getRemoteSelection(newSelection: any[], oldSelection: any[]): string {
+        if (!newSelection.length) {
+            // If new selection is empty, clear all items
+            this.registerRemoteEntries(oldSelection, false);
+            return '';
+        }
+        const removedItems = oldSelection.filter(e => newSelection.indexOf(e) < 0);
+        const addedItems = newSelection.filter(e => oldSelection.indexOf(e) < 0);
+        this.registerRemoteEntries(addedItems);
+        this.registerRemoteEntries(removedItems, false);
+        return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
     }
 
-    /** if there is a valueKey - map the keys to data items, else - just return the keys */
-    private convertKeysToItems(keys: any[]) {
-        if (this.comboAPI.valueKey === null) {
-            return keys;
-        }
-        // map keys vs. filter data to retain the order of the selected items
-        return keys.map(key => this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
-    }
+    public abstract get filteredData(): any[] | null;
+    public abstract set filteredData(val: any[] | null);
 
     public abstract handleOpened();
+    public abstract focusSearchInput(opening?: boolean);
 
     public abstract select(newItem: any): void;
     public abstract select(newItems: Array<any> | any, clearCurrentSelection?: boolean, event?: Event): void;
@@ -1251,4 +1220,5 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public abstract writeValue(value: any): void;
 
     protected abstract setSelection(newSelection: Set<any>, event?: Event): void;
+    protected abstract createDisplayText(newSelection: any[], oldSelection: any[]);
 }
