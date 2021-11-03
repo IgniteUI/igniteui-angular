@@ -12,7 +12,8 @@ import {
     ContentChild,
     AfterViewInit,
     AfterContentInit,
-    Directive
+    Directive,
+    Injectable
 } from '@angular/core';
 import {
     IgxProcessBarTextTemplateDirective,
@@ -41,6 +42,20 @@ export type IgxProgressType = (typeof IgxProgressType)[keyof typeof IgxProgressT
 export interface IChangeProgressEventArgs extends IBaseEventArgs {
     previousValue: number;
     currentValue: number;
+}
+
+/**
+ * @hidden
+ */
+@Injectable()
+export class IgxIntervalService {
+    public setInterval(callback: () => void, time: number) {
+        return setInterval(callback, time);
+    }
+
+    public clearInterval(intervalId: number) {
+        clearInterval(intervalId);
+    }
 }
 
 /**
@@ -91,8 +106,10 @@ export abstract class BaseProgressDirective {
     protected _animate = true;
     protected _step;
     protected _animation;
+    protected _valueInPercent;
+    protected _interval;
 
-    private _interval;
+    public constructor(protected _intervalService: IgxIntervalService) { }
 
     /**
      * Returns the value which update the progress indicator of the `progress bar`.
@@ -107,22 +124,26 @@ export abstract class BaseProgressDirective {
      */
     @Input()
     public get step(): number {
-        if (this._step) {
+        if (this._step) { 
             return this._step;
         }
-
         return this._max * ONE_PERCENT;
     }
 
     /**
-     * Sets the value by which progress indicator is updated. By default it is 1% of the maximum value.
+     * Sets the value by which progress indicator is updated. By default it is 1.
      * ```html
      * <igx-linear-bar [max]="200" [value]="0" [step]="1"></igx-linear-bar>
      * <igx-circular-bar [max]="200" [value]="0" [step]="1"></igx-circular-bar>
      * ```
      */
     public set step(val: number) {
-        this._step = Number(val);
+        const step = Number(val);
+        if (step > this.max) {
+            return;
+        }
+
+        this._step = step; 
     }
 
     /**
@@ -135,6 +156,11 @@ export abstract class BaseProgressDirective {
     @Input()
     public set animate(animate: boolean) {
         this._animate = animate;
+        if (animate) {
+            this.animationDuration = 2000;
+        } else {
+            this.animationDuration = 0;
+        }
     }
 
     /**
@@ -162,7 +188,21 @@ export abstract class BaseProgressDirective {
     @HostBinding('attr.aria-valuemax')
     @Input()
     public set max(maxNum: number) {
+        if (maxNum < MIN_VALUE || this._max === maxNum ||
+            (this._animation && this._animation.playState !== 'finished')) {
+            return;
+        }
+        
+                
+        if (maxNum < this._value) {
+            this._value = maxNum;
+        }
+
         this._max = maxNum;
+        // const value = this._value + Math.abs(this.step - this._value);
+        // this._value = toValue(this._value, maxNum);
+        // this.valueInPercent = toPercent(this.value, this._max);
+        this.runAnimation(this.value);
     }
 
     /**
@@ -230,14 +270,18 @@ export abstract class BaseProgressDirective {
      * Set value that indicates the current `IgxLinearProgressBarComponent` position.
      * ```html
      * <igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
-     * ```
+    * ```
      */
     public set value(val) {
-        if (this._animation && this._animation.playState !== 'finished') {
+        if (this._animation && this._animation.playState !== 'finished' || val < 0) {
             return;
         }
 
-        const valInRange = valueInRange(val, this.max);
+        let valInRange = valueInRange(val, this.max);
+        // if (this.step > this.value) {
+        //     this._value = this.step;
+        // }
+
         if (isNaN(valInRange) || this._value === val || this.indeterminate) {
             return;
         }
@@ -263,10 +307,10 @@ export abstract class BaseProgressDirective {
         if (this._animate) {
             const newToPercent = toPercent(newVal, this.max);
             const oldToPercent = toPercent(oldVal, this.max);
-            const duration = this.animationDuration / Math.abs(newToPercent - oldToPercent);
-            this._interval = setInterval(() =>
-                this.increase(newVal, stepDirection), duration);
+            const duration = this.animationDuration / Math.abs(newToPercent - oldToPercent) / (this._step ? this._step : 1);
             this.runAnimation(newVal);
+            this._interval = this._intervalService.setInterval(() =>
+                this.increase(newVal, stepDirection, newVal), duration);
         } else {
             this.updateProgress(newVal);
         }
@@ -277,11 +321,14 @@ export abstract class BaseProgressDirective {
     /**
      * @hidden
      */
-    protected increase(newValue: number, step: number) {
-        const targetValue = toPercent(newValue, this._max);
+    protected increase(valInPercent: number, step: number, newValue) {
+        const targetValue = toPercent(valInPercent, this._max);
         this._value = valueInRange(this._value, this._max) + step;
-        if (this.valueInPercent === targetValue) {
-            return clearInterval(this._interval);
+        if ((step > 0 && this.valueInPercent >= targetValue) || (step < 0 && this.valueInPercent <= targetValue)) {
+            if (this._value !== newValue) {
+                this._value = newValue;
+            }
+            return this._intervalService.clearInterval(this._interval);
         }
     }
 
@@ -300,7 +347,8 @@ export abstract class BaseProgressDirective {
      */
     private updateProgress(val: number) {
         this._value = valueInRange(val, this._max);
-        this.valueInPercent = toPercent(this._value, this._max);
+        // this.valueInPercent = toPercent(val, this._max);
+        this.runAnimation(val);
     }
 }
 let NEXT_LINEAR_ID = 0;
@@ -308,7 +356,8 @@ let NEXT_CIRCULAR_ID = 0;
 let NEXT_GRADIENT_ID = 0;
 @Component({
     selector: 'igx-linear-bar',
-    templateUrl: 'templates/linear-bar.component.html'
+    templateUrl: 'templates/linear-bar.component.html',
+    providers: [IgxIntervalService]
 })
 export class IgxLinearProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
     @HostBinding('attr.aria-valuemin')
@@ -416,8 +465,8 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
         width: '0%'
     };
 
-    constructor() {
-        super();
+    constructor(protected _intervalService: IgxIntervalService) {
+        super(_intervalService);
     }
 
     /**
@@ -482,7 +531,8 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 
 @Component({
     selector: 'igx-circular-bar',
-    templateUrl: 'templates/circular-bar.component.html'
+    templateUrl: 'templates/circular-bar.component.html',
+    providers: [IgxIntervalService]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterViewInit, AfterContentInit {
 
@@ -565,8 +615,8 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
         strokeOpacity: 1
     };
 
-    constructor(private renderer: Renderer2, private _directionality: IgxDirectionality) {
-        super();
+    constructor(private renderer: Renderer2, private _directionality: IgxDirectionality, protected _intervalService: IgxIntervalService) {
+        super(_intervalService);
     }
 
     public ngAfterContentInit() {
