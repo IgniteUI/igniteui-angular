@@ -20,7 +20,6 @@ describe(`Update to ${version}`, () => {
                 prefix: 'appPrefix'
             }
         }
-      };
     };
 
     beforeEach(() => {
@@ -30,21 +29,6 @@ describe(`Update to ${version}`, () => {
 
     const migrationName = 'migration-22';
     const lineBreaksAndSpaceRegex = /\s/g;
-
-    /* eslint-disable arrow-parens */
-    it('Should properly rename columns property to columnsCollection',  async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
-        `
-        import { IgxGridComponent } from 'igniteui-angular';
-        export class MyClass {
-            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
-            public grid1: IgxGridComponent;
-
-            public ngAfterViewInit() {
-                const columns = grid1.columns;
-            }
-        }
-        `);
 
     it('should rename CarouselAnimationType to HorizontalAnimationType', async () => {
         appTree.create(
@@ -61,6 +45,45 @@ describe(`Update to ${version}`, () => {
             public animationType: CarouselAnimationType = CarouselAnimationType.slide;
         }
         `);
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        const expectedContent = `import { Component, ViewChild } from '@angular/core';
+        import { HorizontalAnimationType } from 'igniteui-angular';
+
+        @Component({
+            selector: 'animationType',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class AnimationType {
+            public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
+        }
+        `;
+
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/test.component.ts'
+            )
+        ).toEqual(expectedContent);
+    });
+
+        /* eslint-disable arrow-parens */
+    it('Should properly rename columns property to columnsCollection',  async () => {
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `
+        import { IgxGridComponent } from 'igniteui-angular';
+        export class MyClass {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public grid1: IgxGridComponent;
+
+            public ngAfterViewInit() {
+                const columns = grid1.columns;
+            }
+        }
+        `);
+
         const tree = await schematicRunner
             .runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
@@ -164,23 +187,5 @@ describe(`Update to ${version}`, () => {
     </igx-grid>
 </div>
 `.replace(lineBreaksAndSpaceRegex, ''));
-        const expectedContent = `import { Component, ViewChild } from '@angular/core';
-        import { HorizontalAnimationType } from 'igniteui-angular';
-
-        @Component({
-            selector: 'animationType',
-            templateUrl: './test.component.html',
-            styleUrls: ['./test.component.scss']
-        })
-        export class AnimationType {
-            public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
-        }
-        `;
-
-        expect(
-            tree.readContent(
-                '/testSrc/appPrefix/component/test.component.ts'
-            )
-        ).toEqual(expectedContent);
     });
 });

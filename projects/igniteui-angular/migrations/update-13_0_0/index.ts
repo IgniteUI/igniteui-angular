@@ -6,8 +6,6 @@ import {
 import { UpdateChanges } from '../common/UpdateChanges';
 import { Element } from '@angular/compiler';
 import { findElementNodes, getSourceOffset, parseFile } from '../common/util';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { UpdateChanges } from '../common/UpdateChanges';
 
 const version = '13.0.0';
 
