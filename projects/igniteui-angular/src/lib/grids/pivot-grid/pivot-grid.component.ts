@@ -285,6 +285,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected calcGridHeadRow() {
     }
 
+    /**
+     * @hidden @internal
+     */
+    protected getDataBasedBodyHeight(): number {
+        const dvl = this.dataView?.length || 0;
+        return dvl < this._defaultTargetRecordNumber ? 0 : this.defaultTargetBodyHeight;
+    }
+
     protected get hasMultipleValues() {
         return this.values.length > 1;
     }
