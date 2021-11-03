@@ -40,6 +40,7 @@
 @import '../light/slider';
 @import '../light/snackbar';
 @import '../light/switch';
+@import '../light/stepper';
 @import '../light/tabs';
 @import '../light/time-picker';
 @import '../light/toast';
@@ -85,6 +86,7 @@
 /// @property {Map} igx-slider [$_light-slider]
 /// @property {Map} igx-snackbar [$_light-snackbar]
 /// @property {Map} igx-switch [$_light-switch]
+/// @property {Map} igx-stepper [$_light-stepper]
 /// @property {Map} igx-tabs [$_light-tabs]
 /// @property {Map} igx-time-picker [$_light-time-picker]
 /// @property {Map} igx-toast [$_light-toast]
@@ -112,6 +114,7 @@ $light-square-schema: (
     igx-circular-bar: extend($_light-progress-circular, $_default-shape-progress),
     igx-snackbar: extend($_light-snackbar, $_square-shape-snackbar),
     igx-switch: extend($_light-switch, $_square-shape-switch),
+    igx-stepper: extend($_light-stepper, $_square-shape-stepper),
     igx-tabs: extend($_light-tabs, $_square-shape-tabs),
     igx-time-picker: extend($_light-time-picker, $_square-shape-time-picker),
     igx-toast: extend($_light-toast, $_square-shape-toast),

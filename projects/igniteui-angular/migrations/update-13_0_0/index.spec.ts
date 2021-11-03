@@ -21,6 +21,7 @@ describe(`Update to ${version}`, () => {
             }
         }
       };
+    };
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
@@ -45,6 +46,21 @@ describe(`Update to ${version}`, () => {
         }
         `);
 
+    it('should rename CarouselAnimationType to HorizontalAnimationType', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts',
+            `import { Component, ViewChild } from '@angular/core';
+        import { CarouselAnimationType } from 'igniteui-angular';
+
+        @Component({
+            selector: 'animationType',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class AnimationType {
+            public animationType: CarouselAnimationType = CarouselAnimationType.slide;
+        }
+        `);
         const tree = await schematicRunner
             .runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
@@ -148,5 +164,23 @@ describe(`Update to ${version}`, () => {
     </igx-grid>
 </div>
 `.replace(lineBreaksAndSpaceRegex, ''));
+        const expectedContent = `import { Component, ViewChild } from '@angular/core';
+        import { HorizontalAnimationType } from 'igniteui-angular';
+
+        @Component({
+            selector: 'animationType',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class AnimationType {
+            public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
+        }
+        `;
+
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/test.component.ts'
+            )
+        ).toEqual(expectedContent);
     });
 });
