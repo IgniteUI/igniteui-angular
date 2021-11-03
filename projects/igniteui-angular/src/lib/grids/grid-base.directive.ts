@@ -5546,7 +5546,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             result = result.substring(result.indexOf('\n') + 1);
         }
 
-        if (Object.values(data[0]).length) {
+        if (Object.values(data[0]).length === 1) {
             result = result.slice(0, -2);
         }
 
