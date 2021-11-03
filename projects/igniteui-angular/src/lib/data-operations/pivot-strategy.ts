@@ -46,23 +46,21 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                     hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
                     // generate flat data from the hierarchies
                     data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
-                    row.fieldName = hierarchies.get(hierarchies.keys().next().value).dimension.fieldName;
                     prevRowDims.push(row);
                     prevDim = row;
                 } else {
                     const newData = [...data];
                     for (let i = 0; i < newData.length; i++) {
-                        const currData = newData[i][prevDim.fieldName + '_' + pivotKeys.records];
+                        const currData = newData[i][prevDim.memberName + '_' + pivotKeys.records];
                         const hierarchyFields = PivotUtil
                             .getFieldsHierarchy(currData, [row], PivotDimensionType.Row, pivotKeys);
                         const siblingData = PivotUtil
                             .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
-                        row.fieldName = hierarchyFields.get(hierarchyFields.keys().next().value).dimension.fieldName;
                         PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
 
                         PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
                         if (PivotUtil.getDimensionDepth(prevDim) > PivotUtil.getDimensionDepth(row)) {
-                            newData[i][row.fieldName + '_' + pivotKeys.records] = siblingData;
+                            newData[i][row.memberName + '_' + pivotKeys.records] = siblingData;
                         } else {
                             newData.splice(i , 1, ...siblingData);
                         }
