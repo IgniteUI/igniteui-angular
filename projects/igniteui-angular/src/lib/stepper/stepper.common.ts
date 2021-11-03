@@ -118,14 +118,14 @@ export interface IStepChangedEventArgs extends IBaseEventArgs {
 export const IgxStepperOrientation = {
     Horizontal: 'horizontal',
     Vertical: 'vertical'
-};
+} as const;
 export type IgxStepperOrientation = (typeof IgxStepperOrientation)[keyof typeof IgxStepperOrientation];
 
 export const IgxStepType = {
     Indicator: 'indicator',
     Title: 'title',
     Full: 'full'
-};
+} as const;
 export type IgxStepType = (typeof IgxStepType)[keyof typeof IgxStepType];
 
 export const IgxStepperTitlePosition = {
@@ -133,14 +133,14 @@ export const IgxStepperTitlePosition = {
     Top: 'top',
     End: 'end',
     Start: 'start'
-};
+} as const;
 export type IgxStepperTitlePosition = (typeof IgxStepperTitlePosition)[keyof typeof IgxStepperTitlePosition];
 
 export const VerticalAnimationType = {
     Grow: 'grow',
     Fade: 'fade',
     None: 'none'
-};
+} as const;
 export type VerticalAnimationType = (typeof VerticalAnimationType)[keyof typeof VerticalAnimationType];
 
 // Token
