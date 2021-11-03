@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Inject, Injector,
+    AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Injector,
     NgModule, Optional, Output, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
@@ -80,6 +80,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public composing = false;
 
     private _updateInput = false;
+
+    /** @hidden @internal */
+    public get filteredData(): any[] | null {
+        return this._filteredData;
+    }
+    /** @hidden @internal */
+    public set filteredData(val: any[] | null) {
+        this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
+        this.checkMatch();
+    }
 
     constructor(protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -231,6 +241,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.opened.emit({ owner: this });
     }
 
+    /** @hidden @internal */
+    public focusSearchInput(opening?: boolean): void {
+        if (opening) {
+            this.dropdownContainer.nativeElement.focus();
+        } else {
+            this.comboInput.nativeElement.focus();
+            this.toggle();
+        }
+    }
+
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
         return value.toString().toLowerCase().includes(this.searchValue.trim().toLowerCase());
@@ -262,6 +282,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this._onChangeCallback(args.newSelection);
             this._updateInput = true;
         }
+    }
+
+    protected createDisplayText(newSelection: any[], oldSelection: any[]) {
+        if (this.isRemote) {
+            return this.getRemoteSelection(newSelection, oldSelection);
+        }
+
+        return this.displayKey !== null && this.displayKey !== undefined
+            ? this.convertKeysToItems(newSelection).map(e => e[this.displayKey])[0]
+            : newSelection[0];
     }
 
     private clearSelection(ignoreFilter?: boolean): void {
