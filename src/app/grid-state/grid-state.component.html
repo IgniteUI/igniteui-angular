@@ -22,10 +22,10 @@
                             <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
                         </igx-grid-toolbar-actions>
                     </igx-grid-toolbar>
-                    <igx-column *ngFor="let c of initialColumns" [sortable]="c.sortable" [movable]="c.movable"
-                        [editable]="true" [hasSummary]="c.hasSummary" [filterable]="c.filterable"
-                        [groupable]="c.groupable" [field]="c.field" [header]="c.header" [dataType]="c.dataType"
-                        [pinned]="c.pinned" [hidden]="c.hidden">
+                    <igx-column *ngFor="let c of initialColumns" [sortable]="c.sortable" [editable]="true"
+                        [hasSummary]="c.hasSummary" [filterable]="c.filterable" [groupable]="c.groupable"
+                        [field]="c.field" [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned"
+                        [hidden]="c.hidden">
                     </igx-column>
 
                     <!-- Grid Detail View Template -->
@@ -53,22 +53,24 @@
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
             <ng-container *ngTemplateOutlet="controls; context: getContext(mcGrid)"></ng-container>
-                <igx-grid [id]="mcGridId" #mcGrid [igxGridState]="options" height="480px" [data]="localData" displayDensity="compact" [allowFiltering]="true">
-                    <igx-column [movable]="true" [resizable]="true" field="EmployeeID" [filterable]="false"></igx-column>
-                    <igx-column-group [movable]="true" [pinned]="false" header="Employee">
+            <igx-grid [id]="mcGridId" #mcGrid [igxGridState]="options" height="480px" [data]="localData"
+                displayDensity="compact" [allowFiltering]="true">
+                <igx-column [movable]="true" [resizable]="true" field="EmployeeID" [filterable]="false"></igx-column>
+                <igx-column-group [movable]="true" [pinned]="false" header="Employee">
+                    <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="Country"></igx-column>
+                    <igx-column-group [movable]="true" header="Employee Names">
+                        <igx-column [movable]="true" [pinned]="false" [sortable]="true" [resizable]="true"
+                            field="FirstName"></igx-column>
+                        <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="LastName"></igx-column>
+                    </igx-column-group>
+                </igx-column-group>
+                <igx-column-group header="Additional Information">
+                    <igx-column-group header="Data">
                         <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="Country"></igx-column>
-                        <igx-column-group [movable]="true" header="Employee Names">
-                            <igx-column [movable]="true" [pinned]="false" [sortable]="true" [resizable]="true" field="FirstName"></igx-column>
-                            <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="LastName"></igx-column>
-                        </igx-column-group>
+                        <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="Age"></igx-column>
                     </igx-column-group>
-                    <igx-column-group header="Additional Information">
-                        <igx-column-group header="Data">
-                            <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="Country"></igx-column>
-                            <igx-column [movable]="true" [sortable]="true" [resizable]="true" field="Age"></igx-column>
-                        </igx-column-group>
-                    </igx-column-group>
-                </igx-grid>
+                </igx-column-group>
+            </igx-grid>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
 
@@ -90,17 +92,17 @@
                 <ng-container *ngTemplateOutlet="controls; context: getContext(hGrid)"></ng-container>
                 <igx-hierarchical-grid #hierGrid [id]="hGridId" [data]="hierData" [showExpandAll]='true'
                     hasChildrenKey="hasChild" igxGridState columnSelection="multiple" displayDensity="cosy"
-                    rowSelection="multiple" [autoGenerate]="false" [allowFiltering]="true"
-                    primaryKey="ID" [height]="'1300px'" [width]="'100%'" #hGrid>
+                    rowSelection="multiple" [autoGenerate]="false" [allowFiltering]="true" primaryKey="ID"
+                    [height]="'1300px'" [width]="'100%'" #hGrid>
                     <igx-grid-toolbar [displayDensity]="hierGrid.displayDensity">
                         <igx-grid-toolbar-actions>
                             <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                             <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                         </igx-grid-toolbar-actions>
                     </igx-grid-toolbar>
-                    <igx-column *ngFor="let c of hierGridColumns" [sortable]="c.sortable" [movable]="c.movable"
-                        [editable]="true" [filterable]="c.filterable" [groupable]="c.groupable" [field]="c.field"
-                        [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned" [disableHiding]="true" [hidden]="c.hidden">
+                    <igx-column *ngFor="let c of hierGridColumns" [sortable]="c.sortable" [editable]="true"
+                        [filterable]="c.filterable" [groupable]="c.groupable" [field]="c.field" [header]="c.header"
+                        [dataType]="c.dataType" [pinned]="c.pinned" [disableHiding]="true" [hidden]="c.hidden">
                     </igx-column>
 
                     <igx-row-island primaryKey="ID" key="childData" height="450px" [showExpandAll]="true"
@@ -111,25 +113,23 @@
                                 <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                             </igx-grid-toolbar-actions>
                         </igx-grid-toolbar>
-                        <igx-column *ngFor="let c of hierGridColumns" [sortable]="c.sortable" [movable]="c.movable"
-                            [editable]="true" [filterable]="c.filterable" [groupable]="c.groupable" [field]="c.field"
-                            [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned" [hidden]="c.hidden">
+                        <igx-column *ngFor="let c of hierGridColumns" [sortable]="c.sortable" [editable]="true"
+                            [filterable]="c.filterable" [groupable]="c.groupable" [field]="c.field" [header]="c.header"
+                            [dataType]="c.dataType" [pinned]="c.pinned" [hidden]="c.hidden">
                         </igx-column>
 
                         <igx-row-island primaryKey="ID" [key]="'childData'" [autoGenerate]="false"
                             rowSelection="multiple" [allowFiltering]="true">
-                            <igx-column *ngFor="let c of hierGridColumns" [sortable]="c.sortable" [movable]="c.movable"
-                                [editable]="true" [filterable]="c.filterable" [groupable]="c.groupable"
-                                [field]="c.field" [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned"
-                                [hidden]="c.hidden">
+                            <igx-column *ngFor="let c of hierGridColumns" [sortable]="c.sortable" [editable]="true"
+                                [filterable]="c.filterable" [groupable]="c.groupable" [field]="c.field"
+                                [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned" [hidden]="c.hidden">
                             </igx-column>
 
                             <igx-row-island primaryKey="ID" [key]="'childData'" [autoGenerate]="false"
                                 rowSelection="multiple" [allowFiltering]="true">
-                                <igx-column *ngFor="let c of hierGridColumns" [sortable]="c.sortable"
-                                    [movable]="c.movable" [editable]="true" [filterable]="c.filterable"
-                                    [groupable]="c.groupable" [field]="c.field" [header]="c.header"
-                                    [dataType]="c.dataType" [pinned]="c.pinned" [hidden]="c.hidden">
+                                <igx-column *ngFor="let c of hierGridColumns" [sortable]="c.sortable" [editable]="true"
+                                    [filterable]="c.filterable" [groupable]="c.groupable" [field]="c.field"
+                                    [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned" [hidden]="c.hidden">
                                 </igx-column>
                             </igx-row-island>
                         </igx-row-island>
@@ -163,10 +163,9 @@
                         </igx-grid-toolbar-actions>
                     </igx-grid-toolbar>
                     <igx-column *ngFor="let c of treeGridColumns" [field]="c.field" [dataType]="c.dataType"
-                        [header]="c.header" [pinned]="c.pinned" [movable]="c.movable" [groupable]="false"
-                        [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true"
-                        [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary" [minWidth]="c.minWidth"
-                        [maxWidth]="c.maxWidth">
+                        [header]="c.header" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable"
+                        [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
+                        [hasSummary]="c.hasSummary" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
                     </igx-column>
                 </igx-tree-grid>
             </div>
@@ -201,7 +200,7 @@
                         [resizable]="true"></igx-column>
                     <igx-column field="Age" dataType="number" [sortable]="true" [editable]="true" [movable]="true"
                         [resizable]="true"></igx-column>
-                        <igx-paginator></igx-paginator>
+                    <igx-paginator></igx-paginator>
                 </igx-tree-grid>
             </div>
         </igx-expansion-panel-body>

@@ -7,11 +7,10 @@
     </div>
 
     <h4>Primary/Foreign key</h4>
-    <igx-tree-grid #grid1 [data]="data1" primaryKey="employeeID" foreignKey="PID"
-        [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees"
-        [batchEditing]="true"
-        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'800px'" [summaryCalculationMode]="summaryMode"
-        [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+    <igx-tree-grid #grid1 [moving]="true" [data]="data1" primaryKey="employeeID" foreignKey="PID"
+        [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees" [batchEditing]="true"
+        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'800px'"
+        [summaryCalculationMode]="summaryMode" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
         <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
             <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
             <igx-grid-toolbar-actions>
@@ -25,8 +24,8 @@
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
         <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
-            [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
-            [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
+            [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true"
+            [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
             [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
         </igx-column>
         <!-- <ng-template igxRowLoadingIndicator>
@@ -61,12 +60,10 @@
     </div>
 
     <h4>ChildData key</h4>
-    <igx-tree-grid #grid2
-        [data]="data2" primaryKey="employeeID" childDataKey="employees"
-        [batchEditing]="true"
-        [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees"
-        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'800px'" [summaryCalculationMode]="summaryMode"
-        [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+    <igx-tree-grid [moving]="true" #grid2 [data]="data2" primaryKey="employeeID" childDataKey="employees"
+        [batchEditing]="true" [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees"
+        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'800px'"
+        [summaryCalculationMode]="summaryMode" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
         <igx-grid-toolbar [displayDensity]="grid2.displayDensity">
             <app-grid-search-box [grid]="grid2" [style.width]="'300px'"></app-grid-search-box>
             <igx-grid-toolbar-actions>
@@ -80,8 +77,8 @@
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
         <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
-            [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
-            [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
+            [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true"
+            [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
             [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
         </igx-column>
     </igx-tree-grid>

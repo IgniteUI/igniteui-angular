@@ -156,7 +156,7 @@
     </div>
     <div class="grid-wrapper">
         <igx-tree-grid #treeGridHier [width]="'800px'" [height]="'600px'" [data]="treeGridHierData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" [columnSelection]="'single'" [rowSelection]="'multiple'" [paging]="false">
-            <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
+            <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
                 [hasSummary]="c.summary" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>
             <igx-grid-toolbar [displayDensity]="grid.displayDensity">
@@ -212,7 +212,7 @@
     </div>
     <div class="grid-wrapper">
         <igx-tree-grid #treeGrid [paging]='true' [allowFiltering]='true' [data]="treeData" [columnSelection]="'single'" primaryKey="employeeID" foreignKey="PID" [rowSelection]="'multiple'" [width]="'800px'" [height]="'600px'">
-            <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
+            <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
                 [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>
             <igx-grid-toolbar [displayDensity]="grid.displayDensity">

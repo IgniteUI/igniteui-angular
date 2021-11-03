@@ -122,10 +122,6 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         } else {
             this.children.forEach(child => child.hidden = this.hidden);
         }
-
-        this.children.forEach(child => {
-            child.movable = false;
-        });
     }
 
     /*

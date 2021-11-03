@@ -427,6 +427,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * Sets/gets whether the column is movable.
      * Default value is `false`.
+     *
+     * @deprecated
+     * Use `IgxGridComponent.moving` instead.
+     *
      * ```typescript
      * let isMovable = this.column.movable;
      * ```
@@ -436,8 +440,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    @WatchColumnChanges()
-    @notifyChanges()
     @Input()
     public movable = false;
     /**

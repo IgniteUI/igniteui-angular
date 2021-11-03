@@ -1416,9 +1416,9 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it(`Moving: Should exit edit mode when moving a column`, () => {
+            grid.moving = true;
             const column = grid.columnList.filter(c => c.field === 'ProductName')[0];
             const targetColumn = grid.columnList.filter(c => c.field === 'ProductID')[0];
-            column.movable = true;
 
             fix.detectChanges();
 

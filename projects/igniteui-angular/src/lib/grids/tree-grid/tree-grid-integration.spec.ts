@@ -153,8 +153,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', (async () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
 
-            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
-            column.movable = true;
+            treeGrid.moving = true;
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
@@ -267,8 +266,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', (async () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
-            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
-            column.movable = true;
+            treeGrid.moving = true;
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
@@ -1296,8 +1294,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         it('(UI) Should transform a non-tree column into a tree column when moving it first within a group', (async () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
 
-            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
-            column.movable = true;
+            treeGrid.moving = true;
 
             const header = TreeGridFunctions.getHeaderCellMultiColHeaders(fix, 'ID').nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 100, 90);
@@ -1325,8 +1322,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         it('(UI) Should transform a non-tree column of a column group to a tree column when its group is moved first', (async () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
 
-            const column = treeGrid.columnList.filter(c => c.header === 'General Information')[0];
-            column.movable = true;
+            treeGrid.moving = true;
             fix.detectChanges();
 
             // const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__item'))[0].nativeElement;

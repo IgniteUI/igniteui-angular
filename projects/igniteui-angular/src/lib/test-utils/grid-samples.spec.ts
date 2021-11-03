@@ -126,7 +126,6 @@ export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
         <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'600px'">
             <igx-column *ngFor="let c of columns" [field]="c.field"
                 [header]="c.field"
-                [movable]="c.movable"
                 [width]="c.width"
                 [editable]="true"
                 [pinned]="c.pinned"
@@ -762,7 +761,7 @@ export class GridHireDateComponent extends BasicGridComponent {
 @Component({
     template: `<div style="margin: 50px;">
             ${GridTemplateStrings.declareGrid(
-        '[height]="height" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"',
+        '[height]="height" [moving]="true" [width]="width" [moving]="true" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"',
         EventSubscriptions.columnMovingStart + EventSubscriptions.columnMoving + EventSubscriptions.columnMovingEnd,
         ColumnDefinitions.movableColumns)}</div>`
 })
@@ -811,7 +810,7 @@ export class MovableColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="300px" width="500px"`, '', ColumnDefinitions.movableColumns)
+    template: GridTemplateStrings.declareGrid(`[moving]="true" height="300px" width="500px"`, '', ColumnDefinitions.movableColumns)
 })
 export class MovableTemplatedColumnsComponent extends BasicGridComponent {
     public data = SampleTestData.personIDNameRegionData();
@@ -821,7 +820,7 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate" [paging]="paging"`,
+    template: GridTemplateStrings.declareGrid(`height="300px" width="500px" [moving]="true" [autoGenerate]="autoGenerate" [paging]="paging"`,
         EventSubscriptions.columnInit, '')
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
@@ -833,7 +832,6 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
     public paging = false;
 
     public columnInit(column: IgxColumnComponent) {
-        column.movable = true;
         column.sortable = true;
         column.width = '100px';
     }

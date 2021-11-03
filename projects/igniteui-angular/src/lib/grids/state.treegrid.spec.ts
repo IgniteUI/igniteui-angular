@@ -310,13 +310,12 @@ class HelperFunctions {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="800px" igxGridState
+    <igx-tree-grid [moving]="true" #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="800px" igxGridState
         primaryKey="ID" rowSelection="multiple" cellSelection="multiple">
 
         <igx-column *ngFor="let c of columns"
             [width]="c.width"
             [sortable]="c.sortable"
-            [movable]="c.movable"
             [editable]="c.editable"
             [sortingIgnoreCase]="c.sortingIgnoreCase"
             [filteringIgnoreCase]="c.sortingIgnoreCase"

@@ -269,6 +269,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
 
         it('Should reorder only movable columns when dropping the ghost image on an interactive area.', (async () => {
+            pending('Check applicability after moving behavior change');
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             expect(grid.columns[0].movable).toBeTruthy();
