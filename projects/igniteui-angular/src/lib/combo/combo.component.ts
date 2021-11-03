@@ -139,6 +139,15 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public autoFocusSearch = true;
 
     /**
+     * An @Input property that enabled/disables filtering in the list. The default is `true`.
+     * ```html
+     * <igx-combo [filterable]="false">
+     * ```
+     */
+    @Input()
+    public filterable = true;
+
+    /**
      * Defines the placeholder value for the combo dropdown search field
      *
      * ```typescript
@@ -165,6 +174,16 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         return !this.value && !this.placeholder;
     }
 
+    /** @hidden @internal */
+    public get filteredData(): any[] | null {
+        return this.filterable ? this._filteredData : this.data;
+    }
+    /** @hidden @internal */
+    public set filteredData(val: any[] | null) {
+        this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
+        this.checkMatch();
+    }
+
     /**
      * @hidden @internal
      */
@@ -187,27 +206,9 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this.comboAPI.register(this);
     }
 
-    /**
-     * Defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`
-     *
-     * ```typescript
-     * // get
-     * let state = this.combo.virtualizationState;
-     * ```
-     */
-    public get virtualizationState(): IForOfState {
-        return this.virtDir.state;
-    }
-    /**
-     * Sets the current state of the virtualized data.
-     *
-     * ```typescript
-     * // set
-     * this.combo.virtualizationState(state);
-     * ```
-     */
-    public set virtualizationState(state: IForOfState) {
-        this.virtDir.state = state;
+    /** @hidden @internal */
+    public get displaySearchInput(): boolean {
+        return this.filterable || this.allowCustomValues;
     }
 
     /**
@@ -390,6 +391,20 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this.opened.emit({ owner: this });
     }
 
+    /** @hidden @internal */
+    public focusSearchInput(opening?: boolean): void {
+        if (this.displaySearchInput && this.searchInput) {
+            this.searchInput.nativeElement.focus();
+        } else {
+            if (opening) {
+                this.dropdownContainer.nativeElement.focus();
+            } else {
+                this.comboInput.nativeElement.focus();
+                this.toggle();
+            }
+        }
+    }
+
     protected setSelection(newSelection: Set<any>, event?: Event): void {
         const removed = diffInSets(this.selectionService.get(this.id), newSelection);
         const added = diffInSets(newSelection, this.selectionService.get(this.id));
@@ -416,6 +431,20 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             }
             this._onChangeCallback(args.newSelection);
         }
+    }
+
+    protected createDisplayText(newSelection: any[], oldSelection: any[]) {
+        return this.isRemote
+            ? this.getRemoteSelection(newSelection, oldSelection)
+            : this.concatDisplayText(newSelection);
+    }
+
+    /** Returns a string that should be populated in the combo's text box */
+    private concatDisplayText(selection: any[]): string {
+        const value = this.displayKey !== null && this.displayKey !== undefined ?
+            this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
+            selection.join(', ');
+        return value;
     }
 }
 

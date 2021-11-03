@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform} from '@angular/core';
+import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -15,7 +15,7 @@ import { IComboFilteringOptions } from './combo.component';
 })
 export class IgxComboFilteringPipe implements PipeTransform {
     public transform(collection: any[], searchValue: any, displayKey: any,
-                    shouldFilter: boolean, filteringOptions: IComboFilteringOptions) {
+        filteringOptions: IComboFilteringOptions, shouldFilter = false) {
         if (!collection) {
             return [];
         }
@@ -25,10 +25,10 @@ export class IgxComboFilteringPipe implements PipeTransform {
             const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
             if (displayKey != null) {
                 return collection.filter(e => filteringOptions.caseSensitive ? e[displayKey].includes(searchTerm) :
-                                         e[displayKey].toString().toLowerCase().includes(searchTerm));
+                    e[displayKey].toString().toLowerCase().includes(searchTerm));
             } else {
                 return collection.filter(e => filteringOptions.caseSensitive ? e.includes(searchTerm) :
-                                         e.toString().toLowerCase().includes(searchTerm));
+                    e.toString().toLowerCase().includes(searchTerm));
             }
         }
     }
