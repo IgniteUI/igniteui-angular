@@ -199,7 +199,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
 
-            cellInput = cellElem.nativeElement.querySelector('[igxinput]');
+            cellInput = (cellElem as any).nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, newCellValue);
             fix.detectChanges();
 
@@ -464,7 +464,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it(`Should jump from first editable columns to overlay buttons`, () => {
-            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+            grid.gridAPI.get_cell_by_index(0, 'Downloads');
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -493,7 +493,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
-            targetCell =  grid.gridAPI.get_cell_by_index(0, 'Test');
+            targetCell =  grid.gridAPI.get_cell_by_index(0, 'Test') as any;
             UIInteractions.simulateClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -577,7 +577,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         it(`Should skip non-editable columns`, () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             const cellReleaseDate = grid.gridAPI.get_cell_by_index(0, 'ReleaseDate');
-            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads') as any;
 
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
@@ -604,7 +604,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.componentInstance.pinnedFlag = true;
             fix.detectChanges();
 
-            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads') as any;
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -634,7 +634,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.componentInstance.hiddenFlag = true;
             fix.detectChanges();
 
-            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads') as any;
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -675,7 +675,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             // jump over 1 hidden, pinned
 
-            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads') as any;
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -713,7 +713,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.componentInstance.columnGroupingFlag = true;
             fix.detectChanges();
 
-            targetCell = grid.gridAPI.get_cell_by_index(0, 'ReleaseDate');
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'ReleaseDate') as any;
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -756,7 +756,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.componentInstance.columnGroupingFlag = true;
             fix.detectChanges();
 
-            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads') as any;
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -788,7 +788,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
 
-            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads') as any;
             fix.detectChanges();
 
             UIInteractions.simulateClickAndSelectEvent(targetCell);
@@ -829,7 +829,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it(`Should focus last edited cell after click on editable buttons`, (async () => {
-            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads') as any;
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -1077,7 +1077,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND DISCARD on ESC KEYDOWN`, () => {
-            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName') as any;
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -1736,7 +1736,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 e.cancel = true;
             });
             const gridContent = GridFunctions.getGridContent(fix);
-            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName') as any;
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -1829,7 +1829,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
 
-            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName') as any;
             UIInteractions.simulateClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -1855,7 +1855,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 e.cancel = true;
             });
 
-            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName') as any;
             UIInteractions.simulateClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -1882,12 +1882,12 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
 
             const gridContent = GridFunctions.getGridContent(fix);
-            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName') as any;
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
             const expectedRes = 'New Name';
-            const cellInput = cellElem.nativeElement.querySelector('[igxinput]');
+            const cellInput = (cellElem as any).nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, expectedRes);
             fix.detectChanges();
 
@@ -2125,7 +2125,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let fix;
         let grid;
         let cell: CellType;
-        let cellElem: IgxGridCellComponent;
+        let cellElem: any;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fix.detectChanges();
@@ -2145,7 +2145,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             fix.detectChanges();
 
-            const cellInput = cellElem.nativeElement.querySelector('[igxinput]');
+            const cellInput = (cellElem as any).nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, newCellValue);
             fix.detectChanges();
 
@@ -2236,7 +2236,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(0);
 
-            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName') as any;
             UIInteractions.simulateClickAndSelectEvent(targetCell);
             fix.detectChanges();
             expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(1);
@@ -2262,7 +2262,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(rowToUpdate.inEditMode).toBe(true);
             expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(0);
 
-            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+            const targetCell = grid.gridAPI.get_cell_by_index(0, 'ProductName') as any;
             UIInteractions.simulateClickAndSelectEvent(targetCell);
             fix.detectChanges();
             expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(1);
@@ -2405,7 +2405,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             state = trans.getAggregatedChanges(false);
             expect(state.length).toEqual(0);
-            expect(cellElem.nativeElement.classList).not.toContain(ROW_EDITED_CLASS);
+            expect((cellElem as any).nativeElement.classList).not.toContain(ROW_EDITED_CLASS);
         });
 
         it('Should allow to change value of a cell with initial value of 0', () => {
