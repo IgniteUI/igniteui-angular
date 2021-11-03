@@ -9,14 +9,14 @@
             </div>
             <!-- Filter area -->
             <igx-chips-area #filterArea droppable='true' style="width:fit-content; height: 100%;">
-                <igx-chip *ngFor="let filter of grid.filterDimensions" [id]="filter.fieldName" [draggable]="true"
+                <igx-chip *ngFor="let filter of grid.filterDimensions" [id]="filter.memberName" [draggable]="true"
                     [removable]="true" (remove)="filterRemoved($event)"
                     (dragOver)="onDimDragOver($event, 2)"
                     (dragLeave)="onDimDragLeave($event)"
                     (dragDrop)="onDimDrop($event, filterArea, 2)"
                      >
                     <igx-icon igxPrefix>filter_list</igx-icon>
-                    {{filter.fieldName}}
+                    {{filter.memberName}}
                 </igx-chip>
             </igx-chips-area>
         </div>
@@ -29,14 +29,14 @@
                 </div>
                 <!-- Columns area -->
                 <igx-chips-area #colArea droppable='true' style="width:fit-content; height: 100%;">
-                    <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.fieldName"
+                    <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.memberName"
                         [removable]="true" (remove)="columnRemoved($event)"
                         (dragOver)="onDimDragOver($event, 1)"
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, colArea, 1)">
                         <igx-icon igxPrefix>view_column</igx-icon>
                         <igx-icon igxPrefix>filter_list</igx-icon>
-                        {{col.fieldName}}
+                        {{col.memberName}}
                     </igx-chip>
                 </igx-chips-area>
             </div>
@@ -79,14 +79,14 @@
                 </div>
                 <!-- Row area -->
                 <igx-chips-area #rowArea droppable='true' style="width:fit-content; height: 100%;">
-                    <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="'true'" [id]="row.fieldName"
+                    <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="'true'" [id]="row.memberName"
                         [removable]="true" (remove)="rowRemoved($event)"
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, rowArea, 0)"
                         (dragOver)="onDimDragOver($event, 0)">
                         <igx-icon igxPrefix>table_rows</igx-icon>
                         <igx-icon igxPrefix>filter_list</igx-icon>
-                        {{ row.fieldName}}
+                        {{ row.memberName}}
                     </igx-chip>
                 </igx-chips-area>
             </div>
