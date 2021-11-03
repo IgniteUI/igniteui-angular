@@ -27,7 +27,6 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CellType } from '../common/grid.interface';
-import { IgxGridCell } from '../grid-public-cell';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -36,7 +35,7 @@ const SUMMARY_ROW = 'igx-grid-summary-row';
 const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Row Editing #grid', () => {
+fdescribe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -262,7 +261,8 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Should display the banner below the edited row if it is not the last one', () => {
             cell.editMode = true;
-            const editRow = cellElem.intRow.nativeElement;
+      
+            const editRow = grid.gridAPI.get_row_by_index(2).nativeElement; //cellElem.row.nativeElement;
             const banner = GridFunctions.getRowEditingOverlay(fix);
 
             fix.detectChanges();
@@ -283,7 +283,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cellElem = grid.gridAPI.get_cell_by_index(lastItemIndex, 'ProductName');
             cell.editMode = true;
 
-            const editRow = cellElem.intRow.nativeElement;
+            const editRow = grid.gridAPI.get_row_by_index(lastItemIndex).nativeElement; 
             const banner = GridFunctions.getRowEditingOverlay(fix);
             fix.detectChanges();
 
@@ -450,8 +450,8 @@ describe('IgxGrid - Row Editing #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
-        let targetCell: IgxGridCellComponent;
-        let editedCell: IgxGridCellComponent;
+        let targetCell: CellType;
+        let editedCell: CellType;
         let editedCellDebug: DebugElement;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -856,7 +856,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: CellType;
-        let cellElem: IgxGridCellComponent;
+        let cellElem: CellType;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
@@ -1108,7 +1108,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: CellType;
-        let cellElem: IgxGridCellComponent;
+        let cellElem: CellType;
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
@@ -1116,6 +1116,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid = fix.componentInstance.grid;
             cell = grid.getCellByColumn(0, 'ProductName');
             cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+ 
         });
 
         it(`Paging: Should preserve the changes after page navigation`, () => {
@@ -1184,6 +1185,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         it(`Paging: Should exit edit mode when changing the page size while editing`, () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
+            grid.page
             grid.perPage = 7;
             fix.detectChanges();
 
@@ -1536,7 +1538,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: CellType;
-        let cellElem: IgxGridCellComponent;
+        let cellElem: CellType;
         let initialRow: RowType;
         let initialData: any;
         const $destroyer = new Subject<boolean>();
@@ -2646,7 +2648,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: CellType;
-        let cellElem: IgxGridCellComponent;
+        let cellElem: CellType;
         let groupRows;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
