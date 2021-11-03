@@ -26,6 +26,11 @@ All notable changes for each version of this project will be documented in this 
     - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
 - `IgxCombo`
     - Added `groupSortingDirection` input, which allows you to set groups sorting order.
+- `igxChip`
+    - Exposed drop directive related events for the chip when it's used as a drop target:
+         - `dragLeave`
+         - `dragDrop`
+         - `dragOver`
 
 ### General
 

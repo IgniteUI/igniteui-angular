@@ -83,7 +83,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         if (changes.rowData) {
             // generate new rowDimension on row data change
             this.rowDimension = [];
-            const rowDimConfig = this.grid.pivotConfiguration.rows;
+            const rowDimConfig = this.grid.rowDimensions;
             this.extractFromDimensions(rowDimConfig, 0);
         }
     }
