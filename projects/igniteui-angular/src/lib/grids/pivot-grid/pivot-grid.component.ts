@@ -204,8 +204,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         done: (colVals: any[]) => void) {
             let columnValues = [];
             const data = this.gridAPI.get_data();
+            const state = {
+                expressionsTree: dimExprTree,
+                strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
+                advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
+            };
+            const filtered = DataUtil.filter(data, state, this);
             const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
-                data,
+                filtered,
                 [dim],
                 PivotDimensionType.Column,
                 {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
