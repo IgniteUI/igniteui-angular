@@ -1,11 +1,12 @@
-import { AfterViewInit, ContentChild, Directive, ElementRef, HostBinding, Input, NgModule, ViewChild } from "@angular/core";
-import { IgxToggleDirective } from "igniteui-angular";
+import { AfterViewInit, Directive, ElementRef, NgModule, OnDestroy } from "@angular/core";
+import { fromEvent, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { PlatformUtil } from "../../core/utils";
 
 @Directive({
     selector: '[igxFocusTrap]'
 })
-export class IgxFocusTrapDirective implements AfterViewInit {
+export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
@@ -15,12 +16,13 @@ export class IgxFocusTrapDirective implements AfterViewInit {
 
     /** @hidden */
     public ngAfterViewInit(): void {
-        const modal = this.element.querySelector('.igx-toggle--hidden') as HTMLElement;
-        modal.addEventListener('keydown', event => {
-            if (event.key === this.platformUtil.KEYMAP.TAB) {
-                this.handleTab(event);
-            }
-        });
+        fromEvent(this.element, 'keydown')
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((event: KeyboardEvent) => {
+                if (event.key === this.platformUtil.KEYMAP.TAB) {
+                    this.handleTab(event);
+                }
+            });
     }
 
     /**
@@ -31,46 +33,35 @@ export class IgxFocusTrapDirective implements AfterViewInit {
         protected platformUtil: PlatformUtil) {
     }
 
-    private get target(): any {
-        return this.overlay.querySelector('.igx-toggle');
+    /** @hidden */
+    public ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
-    private get overlay(): Element {
-        return document.querySelector('.igx-overlay');
-    }
+    private destroy$ = new Subject();
 
     private handleTab(event) {
-        const elements = this.getFocusableElements(this.target);
+        const elements = this.getFocusableElements(this.element);
         if (elements.length > 0) {
-            const firstFocusableElement = elements[0] as HTMLElement;
-            const lastFocusableElement = elements[elements.length - 1] as HTMLElement;
             const focusedElement = this.getFocusedElement();
-            if (event.shiftKey) {
-                if (focusedElement === (this.target as HTMLElement) || focusedElement === firstFocusableElement) {
-                    lastFocusableElement.focus();
-                } else {
-                    const focusedElementIndex = elements.findIndex((element) => element as HTMLElement === focusedElement);
-                    (elements[focusedElementIndex - 1] as HTMLElement).focus();
-                }
-            } else {
-                if (focusedElement === (this.target as HTMLElement) || focusedElement === lastFocusableElement) {
-                    firstFocusableElement.focus();
-
-                } else {
-                    const focusedElementIndex = elements.findIndex((element) => element as HTMLElement === focusedElement);
-                    (elements[focusedElementIndex + 1] as HTMLElement).focus();
-                }
-            }
-            event.preventDefault();
+            const focusedElementIndex = elements.findIndex((element) => element as HTMLElement === focusedElement);
+            const direction = event.shiftKey ? -1 : 1;
+            let nextFocusableElementIndex = focusedElementIndex + direction;
+            nextFocusableElementIndex = nextFocusableElementIndex < 0 ? elements.length - 1 :
+                                        nextFocusableElementIndex >= elements.length ? 0 :
+                                        nextFocusableElementIndex;
+            (elements[nextFocusableElementIndex] as HTMLElement).focus();
         }
+
+        event.preventDefault();
     }
 
-    private getFocusableElements(element: Element){
+    private getFocusableElements(element: Element) {
         return Array.from(element.querySelectorAll(
             'a[href], button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])'
         )).filter(el => !el.hasAttribute('disabled') && !el.getAttribute("aria-hidden"));
     }
-
 
     private getFocusedElement(): HTMLElement | null {
         let activeElement =
