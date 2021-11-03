@@ -3298,6 +3298,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const ref = this.viewRef.createComponent(IgxGridExcelStyleFilteringComponent);
         ref.instance.initialize(column, this.overlayService);
         const id = this.overlayService.attach(ref.instance.element, options);
+        ref.instance.overlayComponentId = id;
         return { ref, id };
     }
 
