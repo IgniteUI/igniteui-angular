@@ -104,8 +104,8 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
         config: IPivotConfiguration,
         filterStrategy: IFilteringStrategy,
         advancedExpressionsTree: IFilteringExpressionsTree,
-        _filterPipeTrigger: boolean,
-        _pipeTrigger: boolean): any[] {
+        _filterPipeTrigger: number,
+        _pipeTrigger: number): any[] {
         const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
 
