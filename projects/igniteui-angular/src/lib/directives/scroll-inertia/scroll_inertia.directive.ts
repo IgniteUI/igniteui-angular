@@ -52,7 +52,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private _offsetDirection;
     private _lastMovedX;
     private _lastMovedY;
-    private _pointer;
     private _nextX;
     private _nextY;
     private parentElement;
