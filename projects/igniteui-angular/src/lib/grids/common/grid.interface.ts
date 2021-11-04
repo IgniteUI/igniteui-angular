@@ -33,6 +33,7 @@ import { ISortingExpression, ISortingStrategy } from '../../data-operations/sort
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
+import { IPinningConfig } from '../grid.common';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -189,6 +190,7 @@ export interface ColumnType {
 
     filterCellTemplate: TemplateRef<any>;
 
+    move(index: number): void;
     getAutoSize(): string;
     getResizableColUnderEnd(): MRLResizeColumnInfo[];
     getCellWidth(): string;
@@ -335,6 +337,7 @@ export interface GridType extends IGridDataBindable {
     _baseFontSize?: number;
     scrollSize: number;
 
+    pinning: IPinningConfig;
     expansionStates: Map<any, boolean>;
     parentVirtDir: any;
     tbody: any;
@@ -493,11 +496,16 @@ export interface GridType extends IGridDataBindable {
     groupingResult?: any[];
     groupingMetadata?: any[];
     selectedCells?: CellType[];
+    selectedRows: any[];
 
     toggleGroup?(groupRow: IGroupByRecord): void;
     clearGrouping?(field: string): void;
     groupBy?(expression: IGroupingExpression | Array<IGroupingExpression>): void;
 
+    getSelectedRanges(): GridSelectionRange[];
+    deselectAllColumns(): void;
+    deselectColumns(columns: string[] | ColumnType[]): void;
+    selectColumns(columns: string[] | ColumnType[]): void;
     selectedColumns(): ColumnType[];
     refreshSearch(): void;
     getDefaultExpandState(record: any): boolean;
