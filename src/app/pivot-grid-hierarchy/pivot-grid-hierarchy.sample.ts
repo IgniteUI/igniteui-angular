@@ -14,11 +14,12 @@ export class PivotGridHierarchySampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [{
-            memberName: 'AllProducts',
+            memberName: 'All',
             memberFunction: () => 'All',
             enabled: true,
             childLevel:
             {
+
                 memberName: 'Product',
                 memberFunction: (data) => data.Product.Name,
                 enabled: true,

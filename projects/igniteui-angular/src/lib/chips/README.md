@@ -167,6 +167,9 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 | `selectedChanging` | `IChipSelectEventArgs` | Fired when the chip is being selected/deselected. Cancellable |
 | `keyDown ` | `IChipKeyDownEventArgs` | Fired when the chip keyboard navigation is being used. |
 | `dragEnter ` | `IChipEnterDragAreaEventArgs` | Fired when another chip has entered the current chip area. |
+| `dragLeave ` | `IChipEnterDragAreaEventArgs` | Fired when another chip has left the current chip area. |
+| `dragDrop ` | `IChipEnterDragAreaEventArgs` | Fired when another chip has been dropped in the current chip area. |
+| `dragOver ` | `IChipEnterDragAreaEventArgs` | Fired when another chip has moved over the current chip area. |
 
 ## IgxChipsAreaComponent
 

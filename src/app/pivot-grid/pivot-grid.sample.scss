@@ -1,3 +1,8 @@
+.sample-column {
+    height: calc(100vh - 106px);
+    margin: 0 0 0 0 !important;
+}
+
 :host ::ng-deep {
     .upFont {
         color: lightgreen;
@@ -13,9 +18,5 @@
 
     .downFont1 {
         color: yellow;
-    }
-
-    .sample-column {
-        max-width: 900px;
     }
 }

@@ -184,8 +184,8 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     }
 
     constructor(
-        private ref: ElementRef<HTMLElement>,
-        private cdr: ChangeDetectorRef
+        protected ref: ElementRef<HTMLElement>,
+        protected cdr: ChangeDetectorRef
     ) { }
 
     /**

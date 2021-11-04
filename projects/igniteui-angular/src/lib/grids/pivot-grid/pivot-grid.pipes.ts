@@ -3,9 +3,10 @@ import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IPivotConfiguration, IPivotKeys } from './pivot-grid.interface';
+import { IPivotConfiguration, IPivotDimension, IPivotKeys } from './pivot-grid.interface';
 import { PivotColumnDimensionsStrategy, PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 /**
  * @hidden
  */
@@ -21,10 +22,12 @@ export class IgxPivotRowPipe implements PipeTransform {
         collection: any,
         config: IPivotConfiguration,
         _: Map<any, boolean>,
+        _pipeTrigger?: number,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
-       const rowStrategy = config.rowStrategy ||  PivotRowDimensionsStrategy.instance();
-       return rowStrategy.process(collection.slice(0), config.rows, config.values, pivotKeys);
+        const enabledRows = config.rows.filter(x => x.enabled);
+        const rowStrategy = config.rowStrategy ||  PivotRowDimensionsStrategy.instance();
+        return rowStrategy.process(collection.slice(0), enabledRows, config.values, pivotKeys);
     }
 }
 
@@ -43,12 +46,14 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         collection: any[],
         config: IPivotConfiguration,
         expansionStates: Map<any, boolean>,
+        _pipeTrigger?: number,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
-        const data = collection.slice(0);
+        const enabledRows = config.rows.filter(x => x.enabled);
+        const data = collection ? collection.slice(0) : [];
         let totalLlv = 0;
         const prevDims = [];
-        for (const row of config.rows) {
+        for (const row of enabledRows) {
             const lvl = PivotUtil.getDimensionDepth(row);
             totalLlv += lvl;
             PivotUtil.flattenHierarchy(data, config, row, expansionStates, pivotKeys, totalLlv, prevDims, 0);
@@ -72,10 +77,14 @@ export class IgxPivotColumnPipe implements PipeTransform {
         collection: any,
         config: IPivotConfiguration,
         _: Map<any, boolean>,
+        _pipeTrigger?: number,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
-        const colStrategy = config.columnStrategy ||  PivotColumnDimensionsStrategy.instance();
-        return colStrategy.process(collection, config.columns, config.values, pivotKeys);
+        const enabledColumns = config.columns.filter(x => x.enabled);
+        const enabledValues = config.values.filter(x => x.enabled);
+
+        const colStrategy = config.columnStrategy || PivotColumnDimensionsStrategy.instance();
+        return colStrategy.process(collection, enabledColumns, enabledValues, pivotKeys);
     }
 }
 
@@ -89,10 +98,20 @@ export class IgxPivotColumnPipe implements PipeTransform {
 export class IgxPivotGridFilterPipe implements PipeTransform {
 
     public transform(collection: any[],
-        expressionsTree: IFilteringExpressionsTree,
+        config: IPivotConfiguration,
         filterStrategy: IFilteringStrategy,
         advancedExpressionsTree: IFilteringExpressionsTree): any[] {
 
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters);
+        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+
+        const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        // add expression trees from all filters
+        enabledDimensions.forEach(x => {
+            if (x.filter) {
+                expressionsTree.filteringOperands.push(x.filter);
+            }
+        });
         const state = {
             expressionsTree,
             strategy: filterStrategy,

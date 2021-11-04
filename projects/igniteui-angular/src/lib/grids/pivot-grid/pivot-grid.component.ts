@@ -210,8 +210,24 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get pivotRowWidths() {
-        const rowDimCount = this.pivotConfiguration.rows.length;
-        return MINIMUM_COLUMN_WIDTH * rowDimCount;
+        const rowDimCount = this.rowDimensions.length;
+        return MINIMUM_COLUMN_WIDTH * rowDimCount || MINIMUM_COLUMN_WIDTH;
+    }
+
+    public get rowDimensions() {
+        return this.pivotConfiguration.rows.filter(x => x.enabled) || [];
+    }
+
+    public get columnDimensions() {
+        return this.pivotConfiguration.columns.filter(x => x.enabled) || [];
+    }
+
+    public get filterDimensions() {
+        return this.pivotConfiguration.filters?.filter(x => x.enabled) || [];
+    }
+
+    public get values() {
+        return this.pivotConfiguration.values.filter(x => x.enabled);
     }
 
     public toggleColumn(col: IgxColumnComponent) {
@@ -269,8 +285,16 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected calcGridHeadRow() {
     }
 
+    /**
+     * @hidden @internal
+     */
+    protected getDataBasedBodyHeight(): number {
+        const dvl = this.dataView?.length || 0;
+        return dvl < this._defaultTargetRecordNumber ? 0 : this.defaultTargetBodyHeight;
+    }
+
     protected get hasMultipleValues() {
-        return this.pivotConfiguration.values.length > 1;
+        return this.values.length > 1;
     }
 
     /**
@@ -289,10 +313,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             fieldsMap = this.generateFromData(filteredFields);
         } else {
             fieldsMap = PivotUtil.getFieldsHierarchy(
-                data,
-                this.pivotConfiguration.columns,
-                PivotDimensionType.Column,
-                { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+            data,
+            this.columnDimensions,
+            PivotDimensionType.Column,
+            {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
             );
         }
         columns = this.generateColumnHierarchy(fieldsMap, data);
@@ -385,7 +409,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected getMeasureChildren(colFactory, data, parent, hidden) {
         const cols = [];
-        this.pivotConfiguration.values.forEach(val => {
+        this.values.forEach(val => {
             const ref = colFactory.create(this.viewRef.injector);
             ref.instance.header = val.displayName || val.member;
             ref.instance.field = parent.field + '-' + val.member;
