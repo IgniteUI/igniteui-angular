@@ -72,8 +72,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             targetElem.addEventListener('touchstart', this.onTouchStart.bind(this));
             targetElem.addEventListener('touchmove', this.onTouchMove.bind(this));
             targetElem.addEventListener('touchend', this.onTouchEnd.bind(this));
-            targetElem.addEventListener('pointerdown', this.onPointerDown.bind(this));
-            targetElem.addEventListener('pointerup', this.onPointerUp.bind(this));
         });
     }
 
@@ -87,8 +85,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             targetElem.removeEventListener('touchstart', this.onTouchStart);
             targetElem.removeEventListener('touchmove', this.onTouchMove);
             targetElem.removeEventListener('touchend', this.onTouchEnd);
-            targetElem.removeEventListener('pointerdown', this.onPointerDown);
-            targetElem.removeEventListener('pointerup', this.onPointerUp);
         });
     }
 
@@ -316,37 +312,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         if (this.IgxScrollInertiaDirection === 'vertical') {
             this.preventParentScroll(event, false);
         }
-    }
-
-    /**
-     * @hidden
-     * Setting pointer capture on pointer down, so we can touch swipe the correct element.
-     */
-    protected onPointerDown(event) {
-        if (!event || (event.pointerType !== 2 && event.pointerType !== 'touch')) {
-            return true;
-        }
-        if (!this.IgxScrollInertiaScrollContainer) {
-            return;
-        }
-
-        event.target.setPointerCapture(this._pointer = event.pointerId);
-    }
-
-    /**
-     * @hidden
-     * Release pointer capture on end of touch.
-     */
-    protected onPointerUp(event) {
-        if (!this._pointer) {
-            return true;
-        }
-        if (!this.IgxScrollInertiaScrollContainer) {
-            return;
-        }
-
-        event.target.releasePointerCapture(this._pointer);
-        delete this._pointer;
     }
 
     protected _smoothWheelScroll(delta) {
