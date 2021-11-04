@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusTrapDirective, IgxFocusTrapModule } from './focus-trap.directive';
 
@@ -96,74 +96,36 @@ describe('igxFocusTrap', () => {
         expect(document.activeElement).toEqual(button.nativeElement);
     });
 
-    it('should focus focusable elements in dialog on Tab key pressed', () => {
-        const fix = TestBed.createComponent(TrapFocusDialogComponent);
+    it('should trap focus on element with non-focusable elements', fakeAsync(() => {
+        const fix = TestBed.createComponent(TrapFocusTestComponent);
         fix.detectChanges();
 
-        const dialog = fix.componentInstance.dialog;
-        dialog.leftButtonLabel='left button"';
-        dialog.rightButtonLabel='right button';
-        fix.detectChanges();
-        dialog.open();
+        fix.componentInstance.showInput = false;
+        fix.componentInstance.showButton = false;
         fix.detectChanges();
 
-        const buttons = fix.debugElement.queryAll(By.css('button'));
-        const toggle = fix.debugElement.query(By.directive(IgxToggleDirective));
+        const focusTrap = fix.debugElement.query(By.directive(IgxFocusTrapDirective));
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        tick();
         fix.detectChanges();
-        expect(document.activeElement).toEqual(buttons[0].nativeElement);
+        expect(document.activeElement).toEqual(focusTrap.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        tick();
         fix.detectChanges();
-        expect(document.activeElement).toEqual(buttons[1].nativeElement);
+        expect(document.activeElement).toEqual(focusTrap.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        tick();
         fix.detectChanges();
-        expect(document.activeElement).toEqual(buttons[0].nativeElement);
-
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
-        fix.detectChanges();
-        expect(document.activeElement).toEqual(buttons[1].nativeElement);
-
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
-        fix.detectChanges();
-        expect(document.activeElement).toEqual(buttons[0].nativeElement);
-
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
-        fix.detectChanges();
-        expect(document.activeElement).toEqual(buttons[1].nativeElement);
-    });
-
-    it('should trap focus on dialog modal with non-focusable elements', () => {
-        const fix = TestBed.createComponent(TrapFocusDialogComponent);
-        fix.detectChanges();
-
-        const dialog = fix.componentInstance.dialog;
-        fix.detectChanges();
-        dialog.open();
-        fix.detectChanges();
-
-        const toggle = fix.debugElement.query(By.directive(IgxToggleDirective));
-
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
-        fix.detectChanges();
-        expect(document.activeElement).toEqual(toggle.nativeElement);
-
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
-        fix.detectChanges();
-        expect(document.activeElement).toEqual(toggle.nativeElement);
-
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
-        fix.detectChanges();
-        expect(document.activeElement).toEqual(toggle.nativeElement);
-    });
-
+        expect(document.activeElement).toEqual(focusTrap.nativeElement);
+    }));
 });
 
 
 @Component({
-    template: `<div #wrapper igxFocusTrap>
+    template: `<div #wrapper igxFocusTrap tabindex="0">
                 <label for="uname"><b>Username</b></label><br>
                 <input type="text" *ngIf="showInput" placeholder="Enter Username" name="uname"><br>
                 <label for="psw"><b>Password</b></label><br>

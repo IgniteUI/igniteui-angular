@@ -7,7 +7,7 @@ import { PlatformUtil } from '../../core/utils';
     selector: '[igxFocusTrap]'
 })
 export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
-     /** @hidden */
+    /** @hidden */
     public get element(): HTMLElement | null {
         return this.elementRef.nativeElement;
     }
@@ -33,7 +33,6 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
 
     /** @hidden */
     public ngOnDestroy() {
-        this.destroy$.next();
         this.destroy$.complete();
     }
 
@@ -44,10 +43,16 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
             const focusedElementIndex = elements.findIndex((element) => element as HTMLElement === focusedElement);
             const direction = event.shiftKey ? -1 : 1;
             let nextFocusableElementIndex = focusedElementIndex + direction;
-            nextFocusableElementIndex = nextFocusableElementIndex < 0 ? elements.length - 1 :
-                                        nextFocusableElementIndex >= elements.length ? 0 :
-                                        nextFocusableElementIndex;
+            if (nextFocusableElementIndex < 0) {
+                nextFocusableElementIndex = elements.length - 1;
+            }
+            if (nextFocusableElementIndex >= elements.length) {
+                nextFocusableElementIndex = 0;
+            }
             (elements[nextFocusableElementIndex] as HTMLElement).focus();
+        } else {
+            this.element.tabIndex = 0;
+            this.element.focus();
         }
 
         event.preventDefault();
