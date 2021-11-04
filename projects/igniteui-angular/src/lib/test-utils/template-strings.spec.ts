@@ -19,7 +19,7 @@ export class GridTemplateStrings {
     </igx-grid>`;
 
     public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``,
-        toolbarDefinition = '', paginatorDefinition = '', templates: TemplateDefinitions = '') {
+        toolbarDefinition = '', paginatorDefinition = '', templateDefinitions: TemplateDefinitions = '') {
         return `<igx-grid [data]="data"
         ${attributes}
         ${events}
@@ -27,11 +27,11 @@ export class GridTemplateStrings {
         ${toolbarDefinition}
         ${columnDefinitions}
         ${paginatorDefinition}
-        ${templates}
+        ${templateDefinitions}
     </igx-grid>`;
     }
 
-    public static declareBasicGridWithColumns(columnDefinitions: ColumnDefinitions, templates?: TemplateDefinitions) {
+    public static declareBasicGridWithColumns(columnDefinitions: ColumnDefinitions) {
         return GridTemplateStrings.declareGrid(``, ``, columnDefinitions);
     }
 
