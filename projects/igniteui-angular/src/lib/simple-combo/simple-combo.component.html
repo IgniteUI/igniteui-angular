@@ -46,7 +46,7 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <igx-combo-item role="option" [singleMode]="true" [itemHeight]='itemHeight' (click)="close()" *igxFor="let item of data
             | comboFiltering:filterValue:displayKey:filteringOptions:true
-            | comboGrouping:groupKey:valueKey:groupSortingDirection;
+            | comboGrouping:groupKey:valueKey
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
             <ng-container *ngIf="item.isHeader">
