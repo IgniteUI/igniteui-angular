@@ -701,6 +701,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             cells = (aRow.cells as QueryList<CellType>).toArray();
             expect(cells[0].value).toBe(3, 'wrong third level row');
             aRow = treeGrid.gridAPI.get_row_by_index(3);
+            cells = (aRow.cells as QueryList<CellType>).toArray();
             expect(cells[0].value).toBe(7, 'wrong third level row');
 
             // collapse a second level row

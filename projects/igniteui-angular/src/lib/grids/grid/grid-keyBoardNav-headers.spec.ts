@@ -42,6 +42,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
             gridHeader = GridFunctions.getGridHeader(grid);
+            tick();
         }));
 
         it('when click on a header it should stay in the view', async () => {
@@ -61,7 +62,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should focus first header when the grid is scrolled', async () => {
             grid.navigateTo(7, 5);
-            await wait(150);
+            await wait(250);
             fix.detectChanges();
 
             gridHeader.nativeElement.focus(); //('focus', {});
