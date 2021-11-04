@@ -15,9 +15,9 @@
     SimpleChanges,
     Inject
 } from '@angular/core';
-import { formatPercent, formatCurrency } from '@angular/common';
+import { formatPercent } from '@angular/common';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { formatDate, PlatformUtil } from '../core/utils';
+import { formatCurrency, formatDate, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
@@ -305,7 +305,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case GridColumnDataType.Percent:
                 return formatPercent(this.value, locale, args.digitsInfo);
             case GridColumnDataType.Currency:
-                return formatCurrency(this.value, locale, args.display, this.currencyCode, args.digitsInfo);
+                return formatCurrency(this.value, this.currencyCode, args.display, args.digitsInfo, locale);
             case GridColumnDataType.Date:
             case GridColumnDataType.DateTime:
             case GridColumnDataType.Time:
