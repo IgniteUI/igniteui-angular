@@ -411,6 +411,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         filteringExpressionsTree: IFilteringExpressionsTree,
         done: (values: any[]) => void) => void;
 
+    /** @hidden @internal */
+    @ContentChildren(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent, descendants: false })
+    public excelStyleFilteringComponents: QueryList<IgxGridExcelStyleFilteringComponent>;
+
+    /** @hidden @internal */
+    public get excelStyleFilteringComponent() {
+        return this.excelStyleFilteringComponents?.first;
+    }
+
     public get headerGroups() {
         return this.theadRow.groups;
     }
@@ -3295,6 +3304,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden @internal */
     public createFilterDropdown(column: ColumnType, options: OverlaySettings) {
         options.outlet = this.outlet;
+        if (this.excelStyleFilteringComponent) {
+            this.excelStyleFilteringComponent.initialize(column, this.overlayService);
+            const id = this.overlayService.attach(this.excelStyleFilteringComponent.element, options);
+            this.excelStyleFilteringComponent.overlayComponentId = id;
+            return { id, ref: undefined };
+        }
         const ref = this.viewRef.createComponent(IgxGridExcelStyleFilteringComponent);
         ref.instance.initialize(column, this.overlayService);
         const id = this.overlayService.attach(ref.instance.element, options);

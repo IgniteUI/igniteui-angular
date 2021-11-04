@@ -19,15 +19,15 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
     for (const path of update.templateFiles) {
         findElementNodes(parseFile(host, path), TAGS)
-        .map(node => getSourceOffset(node as Element))
-        .forEach(offset => {
-            const { file, node } = offset;
-            if (file.content.includes('columns')) {
-                const gridRef = node.attrs.find(e => e.name.includes('#')).name.substring(1);
-                const content = file.content.split(gridRef + '.columns').join(gridRef + '.columnsCollection');
-                host.overwrite(path, content);
-            }
-        });
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { file, node } = offset;
+                if (file.content.includes('columns')) {
+                    const gridRef = node.attrs.find(e => e.name.includes('#')).name.substring(1);
+                    const content = file.content.split(gridRef + '.columns').join(gridRef + '.columnsCollection');
+                    host.overwrite(path, content);
+                }
+            });
     }
 
     const getIndicesOf = (searchStr, str) => {

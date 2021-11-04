@@ -86,7 +86,7 @@ export class IgxFilteringService implements OnDestroy {
             )
             .subscribe(() => {
                 this._overlayService.detach(id);
-                ref.destroy();
+                ref?.destroy();
                 this.grid.navigation.activeNode = this.lastActiveNode;
                 this.grid.theadRow.nativeElement.focus();
             });
