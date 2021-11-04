@@ -17,14 +17,14 @@ import { IgxRowDragDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule } from '../hierarchical-grid/public_api';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid/public_api';
 import { GridSelectionMode } from '../common/enums';
-import { RowType } from '../common/row.interface';
+import { RowType } from '../common/grid.interface';
 import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';
@@ -906,7 +906,6 @@ describe('Row Drag Tests #grid', () => {
 describe('Row Drag Tests #hGrid', () => {
     let fixture: ComponentFixture<any>;
     let dropAreaElement: Element;
-    let dragIndicatorElements: DebugElement[];
     let dragIndicatorElement: Element;
     let rowDragDirective: IgxRowDragDirective;
     let startPoint: Point;
@@ -937,7 +936,6 @@ describe('Row Drag Tests #hGrid', () => {
         fixture.detectChanges();
         dragGrid = fixture.componentInstance.hDragGrid;
         dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
-        dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
         dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
 
         // first level row
@@ -1014,7 +1012,6 @@ describe('Row Drag Tests #hGrid', () => {
         fixture = TestBed.createComponent(IgxHierarchicalGridCustomGhostTestComponent);
         dragGrid = fixture.componentInstance.hDragGrid;
         fixture.detectChanges();
-        dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
         dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
 
         // first level row
@@ -1295,7 +1292,7 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
     public dragGrid: IgxGridComponent;
     @ViewChild('dropGrid', { read: IgxGridComponent, static: true })
     public dropGrid: IgxGridComponent;
-    newData = [];
+    public newData = [];
     public currentSortExpressions;
 
     public onGroupingDoneHandler(sortExpr) {
@@ -1336,7 +1333,7 @@ export class IgxHierarchicalGridTestComponent {
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     public data;
-    newData = [];
+    public newData = [];
 
     constructor() {
         this.data = SampleTestData.generateHGridData(2, 3);
@@ -1374,7 +1371,7 @@ export class IgxHierarchicalGridCustomGhostTestComponent {
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     public data;
-    newData = [];
+    public newData = [];
 
     constructor() {
         this.data = SampleTestData.generateHGridData(2, 3);
@@ -1403,7 +1400,7 @@ export class IgxTreeGridTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     @ViewChild(IgxGridComponent, { static: true }) public dropGrid: IgxGridComponent;
     public data = SampleTestData.employeeScrollingData();
-    newData = [];
+    public newData = [];
 
     public onRowDrop(args) {
         args.cancel = true;

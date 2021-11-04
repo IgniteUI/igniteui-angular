@@ -17,13 +17,13 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection, ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
+import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 
 
 describe('IgxGrid Component Tests #grid', () => {

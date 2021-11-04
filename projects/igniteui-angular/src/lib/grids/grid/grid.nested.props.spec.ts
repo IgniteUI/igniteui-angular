@@ -8,13 +8,13 @@ import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxComboComponent, IgxComboModule } from '../../combo/public_api';
 import { IgxFocusModule } from '../../directives/focus/focus.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxInputGroupModule } from '../../input-group/public_api';
 import { IGridEditEventArgs } from '../common/events';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const first = <T>(array: T[]): T => array[0];
 

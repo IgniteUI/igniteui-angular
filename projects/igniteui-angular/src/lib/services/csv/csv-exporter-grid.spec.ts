@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
@@ -16,7 +15,7 @@ import { ReorderedColumnsComponent,
         ColumnsAddedOnInitComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';

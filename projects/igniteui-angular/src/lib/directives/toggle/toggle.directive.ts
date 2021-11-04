@@ -5,27 +5,23 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
+    Inject,
     Input,
     NgModule,
     OnDestroy,
     OnInit,
     Optional,
-    Output,
-    Inject
+    Output
 } from '@angular/core';
+import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
+import { CancelableBrowserEventArgs, IBaseEventArgs } from '../../core/utils';
+import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
+import { filter, first, takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import {
-    AbsoluteScrollStrategy,
-    ConnectedPositioningStrategy,
-    IPositionStrategy,
-    OverlayEventArgs,
-    OverlaySettings
-} from '../../services/public_api';
-import { filter, first, takeUntil } from 'rxjs/operators';
+import { IPositionStrategy } from '../../services/overlay/position/IPositionStrategy';
+import { OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings } from '../../services/overlay/utilities';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
-import { OverlayClosingEventArgs } from '../../services/overlay/utilities';
-import { CancelableBrowserEventArgs, IBaseEventArgs } from '../../core/utils';
 
 export interface ToggleViewEventArgs extends IBaseEventArgs {
     /** Id of the toggle view */

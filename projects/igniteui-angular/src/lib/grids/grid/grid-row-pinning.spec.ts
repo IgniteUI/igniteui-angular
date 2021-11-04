@@ -9,13 +9,13 @@ import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../grid.common';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridRowConditionalStylingComponent } from '../../test-utils/grid-base-components.spec';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -1304,14 +1304,11 @@ describe('Row Pinning #grid', () => {
     });
 
     describe(' Initial pinning', () => {
-        let gridContent: DebugElement;
-
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningWithInitialPinningComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid1;
             setupGridScrollDetection(fix, grid);
-            gridContent = GridFunctions.getGridContent(fix);
         }));
 
         it('should pin rows on OnInit.', () => {

@@ -9,14 +9,13 @@ import {
     CellSelectionNoneComponent,
     CellSelectionSingleComponent
 } from '../../test-utils/grid-samples.spec';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from '../common/enums';
 
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { DebugElement } from '@angular/core';
 import { DropPosition } from '../moving/moving.service';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
@@ -840,7 +839,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should return correct selected data when selected event is emitted', () => {
             let selectedData = [];
-            grid.selected.subscribe((e) => {
+            grid.selected.subscribe(() => {
                 selectedData = grid.getSelectedData();
             });
 
@@ -3234,7 +3233,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should return correct selected data when selected event is emitted using mouse click and kb navigation', () => {
             let selectedData = [];
-            grid.selected.subscribe((e) => {
+            grid.selected.subscribe(() => {
                 selectedData = grid.getSelectedData();
             });
 

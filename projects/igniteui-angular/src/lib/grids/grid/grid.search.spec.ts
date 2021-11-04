@@ -1,13 +1,12 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridModule, IgxGridComponent } from './public_api';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { BasicGridSearchComponent } from '../../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../../test-utils/grid-samples.spec';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -336,7 +335,6 @@ describe('IgxGrid - search API #grid - ', () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'HireDate').nativeElement;
 
             grid.findNext('1');
-            const activeHighlight = cell.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             const highlights = cell.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(5);
             verifyActiveHighlight(0);
@@ -344,12 +342,10 @@ describe('IgxGrid - search API #grid - ', () => {
 
         it('Active highlight should be updated when a column is pinned/unpinned', () => {
             let cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            let activeHighlight: any;
             let highlights: NodeListOf<Element>;
 
             grid.findNext('casey');
             cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -357,7 +353,6 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.columns[1].pinned = true;
             fix.detectChanges();
             cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -365,7 +360,6 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.columns[1].pinned = false;
             fix.detectChanges();
             cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -373,11 +367,9 @@ describe('IgxGrid - search API #grid - ', () => {
 
         it('Active highlight should be updated when a column is hidden/shown', () => {
             let cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            let activeHighlight: any;
             let highlights: NodeListOf<Element>;
 
             grid.findNext('casey');
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -385,7 +377,6 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.columns[0].hidden = true;
             fix.detectChanges();
             cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -393,7 +384,6 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.columns[0].hidden = false;
             fix.detectChanges();
             cellName = grid.gridAPI.get_cell_by_index(0, 'Name').nativeElement;
-            activeHighlight = cellName.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             highlights = cellName.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
@@ -405,7 +395,6 @@ describe('IgxGrid - search API #grid - ', () => {
 
             grid.findNext('an');
             fix.detectChanges();
-            let activeHighlight = getActiveHighlight();
             let highlights = getHighlights();
             expect(highlights.length).toBe(3);
             verifyActiveHighlight(0);
@@ -414,7 +403,6 @@ describe('IgxGrid - search API #grid - ', () => {
 
             grid.columns[1].hidden = true;
             fix.detectChanges();
-            activeHighlight = getActiveHighlight();
             highlights = getHighlights();
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);

@@ -9,11 +9,10 @@ import { IgxGridModule } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from '../cell.component';
 import { TransactionType, Transaction } from '../../services/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
@@ -27,8 +26,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RowType } from '../common/row.interface';
-import { CellType } from '../common/cell.interface';
+import { CellType } from '../common/grid.interface';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -452,7 +450,6 @@ describe('IgxGrid - Row Editing #grid', () => {
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
         let targetCell: IgxGridCellComponent;
-        let targetCellDebug: DebugElement;
         let editedCell: IgxGridCellComponent;
         let editedCellDebug: DebugElement;
 
@@ -581,7 +578,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             const cellReleaseDate = grid.gridAPI.get_cell_by_index(0, 'ReleaseDate');
             targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
-            targetCellDebug = GridFunctions.getRowCells(fix, 0)[0];
 
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
@@ -859,14 +855,12 @@ describe('IgxGrid - Row Editing #grid', () => {
     describe('Exit row editing', () => {
         let fix;
         let grid: IgxGridComponent;
-        let gridContent: DebugElement;
         let cell: CellType;
         let cellElem: IgxGridCellComponent;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            gridContent = GridFunctions.getGridContent(fix);
             cell = grid.getCellByColumn(0, 'ProductName');
             cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
         }));
@@ -1113,7 +1107,6 @@ describe('IgxGrid - Row Editing #grid', () => {
     describe('Integration', () => {
         let fix;
         let grid: IgxGridComponent;
-        let gridContent: DebugElement;
         let cell: CellType;
         let cellElem: IgxGridCellComponent;
 
@@ -1121,7 +1114,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            gridContent = GridFunctions.getGridContent(fix);
             cell = grid.getCellByColumn(0, 'ProductName');
             cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
         });
@@ -2048,7 +2040,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const cell = grid.getCellByColumn(0, '2');
             const cellElem = grid.gridAPI.get_cell_by_index(0, '2');
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             await wait(DEBOUNCETIME);
@@ -2072,7 +2063,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             const gridContent = GridFunctions.getGridContent(fix);
 
             const grid = fix.componentInstance.grid;
-            let cell = grid.getCellByColumn(0, 'ProductName');
             let cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
             spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
@@ -2083,7 +2073,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fix.detectChanges();
 
-            cell = grid.getCellByColumn(0, 'ReorderLevel');
             cellElem = grid.gridAPI.get_cell_by_index(0, 'ReorderLevel');
             expect(parseInt(GridFunctions.getRowEditingBannerText(fix), 10)).toEqual(1);
 

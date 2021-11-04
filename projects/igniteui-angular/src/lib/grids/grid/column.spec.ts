@@ -17,11 +17,11 @@ import {
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { getLocaleCurrencySymbol } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Column properties #grid', () => {
 

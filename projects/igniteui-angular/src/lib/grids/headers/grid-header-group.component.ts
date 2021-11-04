@@ -1,25 +1,23 @@
 import {
-    Component,
-    HostBinding,
-    Input,
-    ViewChild,
-    QueryList,
-    ViewChildren,
-    forwardRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
+    Component,
     DoCheck,
     ElementRef,
-    HostListener
+    forwardRef,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input,
+    QueryList,
+    ViewChild,
+    ViewChildren
 } from '@angular/core';
-import { IgxColumnComponent } from '../columns/column.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
-import { GridType } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { PlatformUtil } from '../../core/utils';
 
@@ -35,17 +33,6 @@ const Z_INDEX = 9999;
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
 
-    @HostBinding('style.-ms-grid-row-span')
-    public get gridRowSpan(): number {
-        return this.column.gridRowSpan;
-    }
-
-    @HostBinding('style.-ms-grid-column-span')
-    public get gridColumnSpan(): number {
-        return this.column.gridColumnSpan;
-    }
-
-
     @HostBinding('style.grid-row-end')
     public get rowEnd(): number {
         return this.column.rowEnd;
@@ -56,13 +43,11 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.column.colEnd;
     }
 
-    @HostBinding('style.-ms-grid-row')
     @HostBinding('style.grid-row-start')
     public get rowStart(): number {
         return this.column.rowStart;
     }
 
-    @HostBinding('style.-ms-grid-column')
     @HostBinding('style.grid-column-start')
     public get colStart(): number {
         return this.column.colStart;
@@ -79,7 +64,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     @Input()
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     @HostBinding('class.igx-grid-th--active')
     public get active() {
@@ -124,7 +109,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     public defaultCss = true;
 
     constructor(private cdr: ChangeDetectorRef,
-        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Inject(IGX_GRID_BASE) public grid: GridType,
         private ref: ElementRef<HTMLElement>,
         public colResizingService: IgxColumnResizingService,
         public filteringService: IgxFilteringService,
@@ -167,15 +152,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     /**
-     * Gets the grid of the header group.
-     *
-     * @memberof IgxGridHeaderGroupComponent
-     */
-    public get grid(): any {
-        return this.gridAPI.grid;
-    }
-
-    /**
      * Gets whether the header group belongs to a column that is filtered.
      *
      * @memberof IgxGridHeaderGroupComponent
@@ -202,7 +178,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @HostBinding('style.display')
     public get groupDisplayStyle(): string {
-        return this.grid.hasColumnLayouts && this.column.children && !this.platform.isIE ? 'flex' : '';
+        return this.grid.hasColumnLayouts && this.column.children ? 'flex' : '';
     }
 
     /**
