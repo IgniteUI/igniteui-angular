@@ -1,4 +1,4 @@
-import { Directive, Host, Input, EventEmitter, OnDestroy, Output, Inject } from '@angular/core';
+import { Directive,  Input, EventEmitter, OnDestroy, Output, Inject } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
