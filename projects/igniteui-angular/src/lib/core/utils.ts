@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
+import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import mergeWith from 'lodash.mergewith';
 import { Observable } from 'rxjs';
@@ -748,3 +748,5 @@ export const formatDate = (value: string | number | Date, format: string, locale
     }
     return _formatDate(value, format, locale, timezone);
 };
+
+export const formatCurrency = new CurrencyPipe(undefined).transform;

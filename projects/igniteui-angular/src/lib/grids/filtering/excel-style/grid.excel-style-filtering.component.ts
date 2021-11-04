@@ -19,14 +19,14 @@ import {
     ViewRef
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { resolveNestedPath, parseDate, uniqueDates, PlatformUtil, formatDate } from '../../../core/utils';
+import { resolveNestedPath, parseDate, uniqueDates, PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
 import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
-import { formatCurrency, formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
+import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
@@ -744,7 +744,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             case GridColumnDataType.Time:
                 return formatDate(element, format, locale, timezone);
             case GridColumnDataType.Currency:
-                return formatCurrency(element, locale, display, currencyCode ?? getLocaleCurrencyCode(locale), digitsInfo);
+                return formatCurrency(element, currencyCode ?? getLocaleCurrencyCode(locale), display, digitsInfo, locale);
             case GridColumnDataType.Number:
                 return formatNumber(element, locale, digitsInfo);
             case GridColumnDataType.Percent:
