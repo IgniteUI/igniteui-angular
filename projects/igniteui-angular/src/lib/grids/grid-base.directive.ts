@@ -5213,7 +5213,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const selectedColumns = this.grid.selectedColumns();
      * ```
      */
-    public selectedColumns(): IgxColumnComponent[] {
+    public selectedColumns(): ColumnType[] {
         const fields = this.selectionService.getSelectedColumns();
         return fields.map(field => this.getColumnByName(field)).filter(field => field);
     }
@@ -5228,12 +5228,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param columns
      * @param clearCurrentSelection if true clears the current selection
      */
-    public selectColumns(columns: string[] | IgxColumnComponent[], clearCurrentSelection?: boolean) {
+    public selectColumns(columns: string[] | ColumnType[], clearCurrentSelection?: boolean) {
         let fieldToSelect: string[] = [];
         if (columns.length === 0 || typeof columns[0] === 'string') {
             fieldToSelect = columns as string[];
         } else {
-            (columns as IgxColumnComponent[]).forEach(col => {
+            (columns as ColumnType[]).forEach(col => {
                 if (col.columnGroup) {
                     const children = col.allChildren.filter(c => !c.columnGroup).map(c => c.field);
                     fieldToSelect = [...fieldToSelect, ...children];
@@ -5248,7 +5248,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Deselect specified columns by filed.
+     * Deselect specified columns by field.
      *
      * @example
      * ```typescript
@@ -5256,12 +5256,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param columns
      */
-    public deselectColumns(columns: string[] | IgxColumnComponent[]) {
+    public deselectColumns(columns: string[] | ColumnType[]) {
         let fieldToDeselect: string[] = [];
         if (columns.length === 0 || typeof columns[0] === 'string') {
             fieldToDeselect = columns as string[];
         } else {
-            (columns as IgxColumnComponent[]).forEach(col => {
+            (columns as ColumnType[]).forEach(col => {
                 if (col.columnGroup) {
                     const children = col.allChildren.filter(c => !c.columnGroup).map(c => c.field);
                     fieldToDeselect = [...fieldToDeselect, ...children];
