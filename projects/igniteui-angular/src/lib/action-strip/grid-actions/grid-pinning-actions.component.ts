@@ -123,10 +123,10 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         const context = this.strip.context;
         const grid = context.grid;
         if (grid) {
-            this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
-            this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
-            this.iconService.addSvgIconFromText(jumpDown.name, jumpDown.value, 'imx-icons');
-            this.iconService.addSvgIconFromText(jumpUp.name, jumpDown.value, 'imx-icons');
+            this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons', true);
+            this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons', true);
+            this.iconService.addSvgIconFromText(jumpDown.name, jumpDown.value, 'imx-icons', true);
+            this.iconService.addSvgIconFromText(jumpUp.name, jumpDown.value, 'imx-icons', true);
         }
     }
 }
