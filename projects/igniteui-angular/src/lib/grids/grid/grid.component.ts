@@ -1074,8 +1074,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (index < 0 || index > this.dataView.length) {
             return undefined;
         }
-        // TODO
-        return new IgxGridRow((this as any) as GridType, index, rec);
+        return new IgxGridRow(this as any, index, rec);
     }
 
     /**
@@ -1172,14 +1171,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
 
         if (rec && this.isGroupByRecord(rec)) {
-            row = new IgxGroupByRow((this as any) as GridType, index, rec);
+            row = new IgxGroupByRow(this as any, index, rec);
         }
         if (rec && this.isSummaryRow(rec)) {
-            row = new IgxSummaryRow((this as any) as GridType, index, rec.summaries, GridInstanceType.Grid);
+            row = new IgxSummaryRow(this as any, index, rec.summaries, GridInstanceType.Grid);
         }
         // if found record is a no a groupby or summary row, return IgxGridRow instance
         if (!row && rec) {
-            row = new IgxGridRow((this as any) as GridType, index, rec);
+            row = new IgxGridRow(this as any, index, rec);
         }
 
         return row;

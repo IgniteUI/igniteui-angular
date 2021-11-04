@@ -14,10 +14,11 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
-import { IgxGridModule } from '../grid/public_api';
+import { CellType, IgxGridModule } from '../grid/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { IgxTreeGridComponent } from './tree-grid.component';
+import { QueryList } from '@angular/core';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
@@ -221,7 +222,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // expand a root level row
             let aRow = treeGrid.gridAPI.get_row_by_index(0);
-            expect(aRow.cells[0].value).toBe(147, 'wrong root level row');
+            let cells = (aRow.cells as QueryList<CellType>).toArray();
+            expect(cells[0].value).toBe(147, 'wrong root level row');
             expect(aRow.expanded).toBe(false);
             aRow.expanded = true;
             fix.detectChanges();
@@ -230,7 +232,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // expand a second level row
             aRow = treeGrid.gridAPI.get_row_by_index(3);
-            expect(aRow.cells[0].value).toBe(317, 'wrong second level row');
+            cells = (aRow.cells as QueryList<CellType>).toArray();
+            expect(cells[0].value).toBe(317, 'wrong second level row');
             expect(aRow.expanded).toBe(false);
             aRow.expanded = true;
             fix.detectChanges();
@@ -239,9 +242,11 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // check third level rows are having the correct values
             aRow = treeGrid.gridAPI.get_row_by_index(4);
-            expect(aRow.cells[0].value).toBe(711, 'wrong third level row');
+            cells = (aRow.cells as QueryList<CellType>).toArray();
+            expect(cells[0].value).toBe(711, 'wrong third level row');
             aRow = treeGrid.gridAPI.get_row_by_index(5);
-            expect(aRow.cells[0].value).toBe(998, 'wrong third level row');
+            cells = (aRow.cells as QueryList<CellType>).toArray();
+            expect(cells[0].value).toBe(998, 'wrong third level row');
 
             // collapse a second level row
             aRow = treeGrid.gridAPI.get_row_by_index(3);
@@ -671,7 +676,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // expand a root level row
             let aRow = treeGrid.gridAPI.get_row_by_index(0);
-            expect(aRow.cells[0].value).toBe(1, 'wrong root level row');
+            let cells = (aRow.cells as QueryList<CellType>).toArray();
+            expect(cells[0].value).toBe(1, 'wrong root level row');
             expect(aRow.expanded).toBe(false);
             aRow.expanded = true;
             fix.detectChanges();
@@ -681,7 +687,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // expand a second level row
             aRow = treeGrid.gridAPI.get_row_by_index(1);
-            expect(aRow.cells[0].value).toBe(2, 'wrong second level row');
+            cells = (aRow.cells as QueryList<CellType>).toArray();
+            expect(cells[0].value).toBe(2, 'wrong second level row');
             expect(aRow.expanded).toBe(false);
             aRow.expanded = true;
             fix.detectChanges();
@@ -691,9 +698,10 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // check third level rows are having the correct values
             aRow = treeGrid.gridAPI.get_row_by_index(2);
-            expect(aRow.cells[0].value).toBe(3, 'wrong third level row');
+            cells = (aRow.cells as QueryList<CellType>).toArray();
+            expect(cells[0].value).toBe(3, 'wrong third level row');
             aRow = treeGrid.gridAPI.get_row_by_index(3);
-            expect(aRow.cells[0].value).toBe(7, 'wrong third level row');
+            expect(cells[0].value).toBe(7, 'wrong third level row');
 
             // collapse a second level row
             aRow = treeGrid.gridAPI.get_row_by_index(1);

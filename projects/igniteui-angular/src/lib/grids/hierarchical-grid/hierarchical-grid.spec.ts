@@ -2,7 +2,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridCreatedEventArgs, IgxHierarchicalGridModule } from './public_api';
-import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -187,7 +187,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     it('should render last cell of rows fully visible when columns does not have width specified and without scrollbar', fakeAsync(() => {
         pending('This test is really flaky. If you call an additional change detection, the whole widths get whacky!');
 
-        const firstRowCell: HTMLElement = hierarchicalGrid.hgridAPI.get_row_by_index(0).cells[0].nativeElement;
+        const firstRowCell: HTMLElement = (hierarchicalGrid.hgridAPI.get_row_by_index(0).cells as QueryList<CellType>).first.nativeElement;
         const cellLeftOffset = firstRowCell.offsetLeft + firstRowCell.parentElement.offsetLeft + firstRowCell.offsetWidth;
         const gridWidth = hierarchicalGrid.nativeElement.offsetWidth;
         expect(cellLeftOffset).not.toBeGreaterThan(gridWidth);

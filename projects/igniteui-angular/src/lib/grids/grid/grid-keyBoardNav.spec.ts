@@ -369,7 +369,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(fix.componentInstance.selectedCell.column.visibleIndex).toEqual(2);
             // Verify columns
-            let cells = grid.gridAPI.get_row_by_index(0).cells;
+            let cells = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray();
             expect(cells.length).toEqual(5);
             expect(cells[0].column.field).toEqual('col1');
             expect(cells[1].column.field).toEqual('col3');
@@ -387,7 +387,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(fix.componentInstance.selectedCell.column.visibleIndex).toEqual(0);
 
-            cells = grid.gridAPI.get_row_by_index(0).cells;
+            cells = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray();
             expect(cells.length).toEqual(5);
             expect(cells[0].column.field).toEqual('col1');
             expect(cells[1].column.field).toEqual('col3');

@@ -684,7 +684,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             return undefined;
         }
 
-        return new IgxHierarchicalGridRow((this as any) as GridType, index, rec);
+        return new IgxHierarchicalGridRow(this as any, index, rec);
     }
 
     /**
@@ -1039,7 +1039,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const rec: any = data ?? this.dataView[index];
 
         if (!row && rec && !rec.childGridsData) {
-            row = new IgxHierarchicalGridRow((this as any) as GridType, index, rec);
+            row = new IgxHierarchicalGridRow(this as any, index, rec);
         }
 
         return row;
