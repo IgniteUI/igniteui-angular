@@ -96,15 +96,6 @@ export const addDependencies = (options: Options) => async (tree: Tree, context:
 
     await includeDependencies(pkgJson, context, tree);
 
-    // Add web-animations-js to dependencies
-    Object.keys(pkgJson.peerDependencies).forEach(pkg => {
-        if (pkg.includes('web-animations')) {
-            const version = pkgJson.peerDependencies[pkg];
-            addPackageToPkgJson(tree, pkg, version, PackageTarget.REGULAR);
-            logIncludingDependency(context, pkg, version);
-            return;
-        }
-    });
 
     addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], PackageTarget.DEV);
 };

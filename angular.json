@@ -75,9 +75,6 @@
                   "with": "src/environments/environment.hmr.ts"
                 }
               ]
-            },
-            "es5": {
-              "tsConfig": "src/tsconfig-es5.app.json"
             }
           }
         },
@@ -93,10 +90,6 @@
             "hmr": {
               "hmr": true,
               "browserTarget": "igniteui-dev-demos:build:hmr"
-            },
-            "es5": {
-              "hmr": true,
-              "browserTarget": "igniteui-dev-demos:build:es5"
             }
           }
         },
