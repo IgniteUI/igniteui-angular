@@ -14,7 +14,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
-import { DebugElement } from '@angular/core';
+import { DebugElement, QueryList } from '@angular/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from '../common/grid.interface';
 
@@ -841,7 +841,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(2);
-            expect(row.cells[0].selected).toBe(true);
+            expect((row.cells as QueryList<CellType>).toArray()[0].selected).toBe(true);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowUp', gridContent);
             await wait(DEBOUNCETIME);

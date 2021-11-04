@@ -62,8 +62,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('ContactTitle').hidden).toBeFalsy();
 
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
+            const firstRowCells = gridFirstRow.cells;
+            const headerCells = grid.headerGroupsList[0].children;
 
             // headers are aligned to cells
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
@@ -236,8 +236,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             // group1 should be hidden on init, check DOM
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
+            const firstRowCells = gridFirstRow.cells;
+            const headerCells = grid.headerGroupsList[0].children;
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
 
@@ -363,8 +363,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(column.hidden).toBeTrue();
 
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
+            const firstRowCells = gridFirstRow.cells;
+            const headerCells = grid.headerGroupsList[0].children;
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
 
@@ -407,8 +407,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('ContactTitle').pinned).toBeFalsy();
 
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
+            const firstRowCells = gridFirstRow.cells;
+            const headerCells = grid.headerGroupsList[0].children;
             const pinnedCells = firstRowCells
                 .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
@@ -597,8 +597,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('Fax').pinned).toBeTruthy();
             expect(grid.getColumnByName('Phone').pinned).toBeTruthy();
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
+            const firstRowCells = gridFirstRow.cells;
+            const headerCells = grid.headerGroupsList[0].children;
             const pinnedCells = firstRowCells
                 .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
@@ -776,8 +776,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('Address').pinned).toBeTruthy();
             expect(grid.getColumnByName('County').pinned).toBeTruthy();
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
+            const firstRowCells = gridFirstRow.cells;
+            const headerCells = grid.headerGroupsList[0].children;
             const pinnedCells = firstRowCells
                 .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
@@ -815,8 +815,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(filterIcons.length).not.toBe(0);
 
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
+            const firstRowCells = gridFirstRow.cells;
+            const headerCells = grid.headerGroupsList[0].children;
             const pinnedCells = firstRowCells
                 .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 

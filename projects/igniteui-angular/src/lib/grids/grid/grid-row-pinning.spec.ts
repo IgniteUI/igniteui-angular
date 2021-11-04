@@ -787,12 +787,10 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.gridAPI.get_row_by_index(0).pinned).toBeTruthy();
             const gridPinnedRow = grid.pinnedRows[0];
-            const pinnedRowCells = gridPinnedRow.cells.toArray();
-            // const headerCells = grid.headerGroups.first.children.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
+            const headerCells = grid.headerGroupsList[0].children;
 
             // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, pinnedRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridPinnedRow.cells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridPinnedRow, fix.componentInstance.colGroups);
 
             // unpin
@@ -804,9 +802,8 @@ describe('Row Pinning #grid', () => {
             expect(row.pinned).toBeFalsy();
 
             const gridUnpinnedRow = grid.gridAPI.get_row_by_index(1);
-            const unpinnedRowCells = (gridUnpinnedRow.cells as QueryList<CellType>).toArray();
 
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridUnpinnedRow.cells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
         });
 
@@ -829,12 +826,10 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.gridAPI.get_row_by_index(fix.componentInstance.data.length).pinned).toBeTruthy();
             const gridPinnedRow = grid.pinnedRows[0];
-            const pinnedRowCells = gridPinnedRow.cells.toArray();
-            // const headerCells = grid.headerGroups.first.children.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
+            const headerCells = grid.headerGroupsList[0].children;
 
             // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, pinnedRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridPinnedRow.cells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridPinnedRow, fix.componentInstance.colGroups);
 
             // unpin
@@ -846,9 +841,8 @@ describe('Row Pinning #grid', () => {
             expect(row.pinned).toBeFalsy();
 
             const gridUnpinnedRow = grid.gridAPI.get_row_by_index(1);
-            const unpinnedRowCells = gridUnpinnedRow.cells;
 
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells as any);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridUnpinnedRow.cells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
         });
 

@@ -1966,10 +1966,12 @@ export class GridFunctions {
         return null;
     }
 
-    public static verifyLayoutHeadersAreAligned(headerGroups: IgxGridHeaderGroupComponent[], rowCells: CellType[]) {
-        for (let i = 0; i < headerGroups.length; i++) {
-            const widthDiff = headerGroups[i].header.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
-            const heightDiff = headerGroups[i].header.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
+    public static verifyLayoutHeadersAreAligned(headerGroups: any, rowCells: any) {
+        const rowCellsArr = rowCells.toArray ? rowCells.toArray() : rowCells;
+        const headerGroupsArr = headerGroups.toArray();
+        for (let i = 0; i < headerGroupsArr.length; i++) {
+            const widthDiff = headerGroupsArr[i].header.nativeElement.clientWidth - rowCellsArr[i].nativeElement.clientWidth;
+            const heightDiff = headerGroupsArr[i].header.nativeElement.clientHeight - rowCellsArr[i].nativeElement.clientHeight;
             expect(widthDiff).toBeLessThanOrEqual(1);
             expect(heightDiff).toBeLessThanOrEqual(3);
         }

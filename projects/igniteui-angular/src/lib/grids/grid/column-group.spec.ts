@@ -548,7 +548,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             // check header and content have same size.
             const col1Header = grid.getColumnByName('Country').headerCell.nativeElement;
-            const cell1 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>)[0].nativeElement;
+            const cell1 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[0].nativeElement;
             expect(col1Header.offsetWidth).toEqual(cell1.offsetWidth);
 
             const col2Header = grid.getColumnByName('Region').headerCell.nativeElement;

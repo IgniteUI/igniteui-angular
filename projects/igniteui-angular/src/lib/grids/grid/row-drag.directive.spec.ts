@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, QueryList } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -22,7 +22,7 @@ import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule } from '../hier
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid/public_api';
 import { GridSelectionMode } from '../common/enums';
-import { RowType } from '../common/grid.interface';
+import { CellType, RowType } from '../common/grid.interface';
 import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../row.directive';
@@ -486,10 +486,10 @@ describe('Row Drag Tests #grid', () => {
         }));
         const verifyDragAndDropRowCellValues = (dragRowIndex: number, dropRowIndex: number) => {
             const dragRow = dragGrid.gridAPI.get_row_by_index(dragRowIndex);
-            const dragRowCells = dragRow.cells;
+            const dragRowCells = (dragRow.cells as QueryList<CellType>).toArray();
 
             const dropRow = dropGrid.gridAPI.get_row_by_index(dropRowIndex);
-            const dropRowCells = dropRow.cells;
+            const dropRowCells = (dropRow.cells as QueryList<CellType>).toArray();
             for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex++) {
                 expect(dropRowCells[cellIndex].value).toEqual(dragRowCells[cellIndex].value);
             }
