@@ -25,12 +25,10 @@ Ignite UI for Angular arrives with an extensive library of data visualizations t
 
 Some of the Angular chart types included are: [Polar chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart), [Pie chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart), [Donut chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart), [Bubble chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart), [Area chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/area-chart), [Treemap chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart), and many others. And if you look for [Angular financial charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart), with Ignite UI you can get the same features as the ones you come across with Google Finance and Yahoo Finance Charts. 
 
-### [**Install our VSCode Toolbox extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-toolbox)
-![](https://dl.infragistics.com/tools/extensions/angular-toolbox/toolbox.gif)
-### [**Install our VSCode tooltip extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-tooltips)
-![](https://dl.infragistics.com/tools/extensions/angular-tooltips/tooltip_preview.gif)
-
-**IMPORTANT** The repository has been renamed from `igniteui-js-blocks` to `igniteui-angular`. Read more on our new [naming convention](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-github-repo-name-changes).
+### Build Apps with Ignite UI for Angular faster using our [App Builder](https://www.infragistics.com/products/indigo-design/app-builder)
+![5661 drag drop](https://user-images.githubusercontent.com/1472513/132676597-09eec222-42f7-40ff-bd0d-fe8b91fd0c1c.gif)
+### Generate your Angular code projects using the [App Builder](https://www.infragistics.com/products/indigo-design/app-builder)
+![0871 change-preview-code](https://user-images.githubusercontent.com/1472513/132676607-3851f308-416b-45d6-99bc-c34266b55c44.gif)
  
 ### Current List of Components Include:
 
@@ -67,6 +65,7 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |select|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/select/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select)|||||
 |slider|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/slider/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider/slider)|||||
 |snackbar|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/snackbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar)|||||
+|stepper|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/stepper/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper)|
 |switch|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/switch/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch)|||||
 |tabs|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tabs/tabs/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)|||||
 |time picker|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/time-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker)|||||
