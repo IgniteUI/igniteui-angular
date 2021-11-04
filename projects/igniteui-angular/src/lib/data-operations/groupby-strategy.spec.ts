@@ -1,6 +1,5 @@
 import { DataGenerator } from './test-util/data-generator';
-import { DefaultSortingStrategy } from './sorting-strategy';
-import { SortingDirection } from './sorting-expression.interface';
+import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IgxGrouping } from './grouping-strategy';
 

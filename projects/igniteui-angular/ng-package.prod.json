@@ -2,16 +2,12 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/igniteui-angular",
   "lib": {
-    "entryFile": "src/public_api.ts",
-    "umdModuleIds": {
-      "@juggle/resize-observer": "ResizeObserver"
-    }
+    "entryFile": "src/public_api.ts"
   },
   "allowedNonPeerDependencies": [
       "@types/hammerjs",
       "hammerjs",
       "jszip",
-      "@juggle/resize-observer",
       "igniteui-trial-watermark",
       "lodash.mergewith",
       "uuid",

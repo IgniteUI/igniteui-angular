@@ -13,7 +13,7 @@ export const scssImport =
     + `@import '~minireset.css/minireset';\n`;
 
 
-export const addResetCss = (workspace: workspaces.WorkspaceDefinition , host: Tree): boolean => {
+export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tree): boolean => {
     const project = workspace.projects.get(workspace.extensions['defaultProject'] as string);
     let addPackage;
     const styleExts = ['scss', 'sass', 'css', 'less', 'styl'];

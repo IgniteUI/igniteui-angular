@@ -3,8 +3,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from '../common/events';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -17,7 +16,7 @@ import {
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { CellType } from '../common/cell.interface';
+import { CellType } from '../common/grid.interface';
 
 const DEBOUNCETIME = 30;
 

@@ -10,8 +10,8 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DropPosition } from '../moving/moving.service';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - multi-column headers #grid', () => {
 

@@ -3,11 +3,10 @@ import {
     Component,
     Input
 } from '@angular/core';
-import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.component';
 import { IgxTreeGridRow } from '../grid-public-row';
-import { RowType } from '../common/row.interface';
+import { RowType } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,10 +15,6 @@ import { RowType } from '../common/row.interface';
     providers: [HammerGesturesManager]
 })
 export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
-
-    private get treeGridAPI(): IgxTreeGridAPIService {
-        return this.gridAPI as IgxTreeGridAPIService;
-    }
 
     /**
      * @hidden
@@ -49,7 +44,8 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
      */
     @Input()
     public get row(): RowType {
-        return new IgxTreeGridRow(this.grid, this.intRow.index, this.intRow.rowData);
+        // TODO: Fix types
+        return new IgxTreeGridRow(this.grid as any, this.intRow.index, this.intRow.rowData);
     }
 
     /**
@@ -57,7 +53,7 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
      */
     public toggle(event: Event) {
         event.stopPropagation();
-        this.treeGridAPI.set_row_expansion_state(this.intRow.rowID, !this.intRow.expanded, event);
+        this.grid.gridAPI.set_row_expansion_state(this.intRow.rowID, !this.intRow.expanded, event);
     }
 
     /**

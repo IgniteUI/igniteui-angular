@@ -21,9 +21,8 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid/public_api';

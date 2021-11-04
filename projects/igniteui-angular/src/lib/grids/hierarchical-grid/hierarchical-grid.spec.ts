@@ -1,17 +1,16 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { CellType, IgxHierarchicalGridModule } from './public_api';
+import { IGridCreatedEventArgs, IgxHierarchicalGridModule } from './public_api';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxRowIslandComponent, IGridCreatedEventArgs } from './row-island.component';
+import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
-import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
+import { CellType, IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
@@ -1455,7 +1454,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         expect(nestedGridOverlayActionsContent).toBe('Row Edit Actions');
     });
 
-    it(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened 
+    it(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened
             row island with <= 2 data records`, async () => {
         hierarchicalGrid.primaryKey = 'ID';
         hierarchicalGrid.rowEditable = true;

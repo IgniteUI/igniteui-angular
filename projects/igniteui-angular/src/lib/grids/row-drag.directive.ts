@@ -1,11 +1,8 @@
 import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
-import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { fromEvent, Subscription } from 'rxjs';
-import { IgxGridBaseDirective } from './grid/public_api';
+import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
-import { GridType } from './common/grid.interface';
-import { IgxHierarchicalRowComponent } from './hierarchical-grid/hierarchical-row.component';
-import { IgxRowDirective } from './row.directive';
+import { RowType } from './common/grid.interface';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
@@ -21,6 +18,7 @@ const cellActiveClass = 'igx-grid__td--active';
     selector: '[igxRowDrag]'
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
+
     @Input('igxRowDrag')
     public set data(value: any) {
         this._data = value;
@@ -32,7 +30,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     private subscription$: Subscription;
     private _rowDragStarted = false;
-    private get row(): IgxRowDirective<IgxGridBaseDirective & GridType> {
+
+    private get row(): RowType {
         return this._data;
     }
 
@@ -97,7 +96,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         super.onPointerUp(event);
         if (!dropArea && this.ghostElement) {
             this.ghostElement.addEventListener('transitionend', this.transitionEndEvent, false);
-        }   else {
+        } else {
             this.endDragging();
         }
     }
@@ -114,7 +113,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
         // check if there is an expander icon and create the ghost at the corresponding position
         if (this.isHierarchicalGrid) {
-            const row = this.row as IgxHierarchicalRowComponent;
+            const row = this.row as any;
             if (row.expander) {
                 const expanderWidth = row.expander.nativeElement.getBoundingClientRect().width;
                 this._ghostHostX += expanderWidth;
@@ -182,16 +181,12 @@ export class IgxDragIndicatorIconDirective {
     selector: '[igxRowDragGhost]'
 })
 
-export class IgxRowDragGhostDirective  {
+export class IgxRowDragGhostDirective {
     constructor(public templateRef: TemplateRef<any>) { }
 }
 
 @NgModule({
     declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
-    entryComponents: [],
     exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
-    imports: []
 })
-
-export class IgxRowDragModule {
-}
+export class IgxRowDragModule { }

@@ -1,6 +1,5 @@
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DefaultSortingStrategy } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupByAreaTestComponent, IgxTreeGridGroupingComponent } from '../../test-utils/tree-grid-components.spec';
@@ -8,6 +7,7 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridComponent } from './tree-grid.component';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxTreeGrid', () => {
     configureTestSuite();

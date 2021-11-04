@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
@@ -10,6 +9,7 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 

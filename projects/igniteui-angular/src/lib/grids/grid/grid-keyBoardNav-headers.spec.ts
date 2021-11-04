@@ -4,7 +4,6 @@ import {
     IgxGridModule
 } from './public_api';
 import { IgxGridComponent } from './grid.component';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -18,6 +17,7 @@ import { GridSelectionMode, FilterMode } from '../common/enums';
 import { IActiveNodeChangeEventArgs } from '../common/events';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const DEBOUNCETIME = 30;
 

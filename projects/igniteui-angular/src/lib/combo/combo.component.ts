@@ -40,7 +40,7 @@ import { EditorProvider } from '../core/edit-provider';
 import { IgxInputState, IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 import { caseSensitive } from '@igniteui/material-icons-extended';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../data-operations/sorting-strategy';
 
 /**
  * @hidden
@@ -1661,27 +1661,46 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
  * @hidden
  */
 @NgModule({
-    declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboGroupingPipe,
-        IgxComboFilteringPipe, IgxComboDropDownComponent, IgxComboAddItemComponent,
-        IgxComboItemDirective,
-        IgxComboEmptyDirective,
-        IgxComboHeaderItemDirective,
-        IgxComboHeaderDirective,
-        IgxComboFooterDirective,
+    declarations: [
+        IgxComboAddItemComponent,
         IgxComboAddItemDirective,
-        IgxComboToggleIconDirective,
-        IgxComboClearIconDirective],
-    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboAddItemComponent,
-        IgxComboItemDirective,
-        IgxComboEmptyDirective,
-        IgxComboHeaderItemDirective,
-        IgxComboHeaderDirective,
-        IgxComboFooterDirective,
-        IgxComboAddItemDirective,
-        IgxComboToggleIconDirective,
         IgxComboClearIconDirective,
-        IgxInputGroupModule],
-    imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule]
+        IgxComboComponent,
+        IgxComboDropDownComponent,
+        IgxComboEmptyDirective,
+        IgxComboFilteringPipe,
+        IgxComboFooterDirective,
+        IgxComboGroupingPipe,
+        IgxComboHeaderDirective,
+        IgxComboHeaderItemDirective,
+        IgxComboItemComponent,
+        IgxComboItemDirective,
+        IgxComboToggleIconDirective
+    ],
+    exports: [
+        IgxComboAddItemDirective,
+        IgxComboClearIconDirective,
+        IgxComboComponent,
+        IgxComboEmptyDirective,
+        IgxComboFooterDirective,
+        IgxComboHeaderDirective,
+        IgxComboHeaderItemDirective,
+        IgxComboItemDirective,
+        IgxComboToggleIconDirective,
+        IgxInputGroupModule
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IgxButtonModule,
+        IgxCheckboxModule,
+        IgxDropDownModule,
+        IgxForOfModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxRippleModule,
+        IgxToggleModule,
+        ReactiveFormsModule
+    ]
 })
 export class IgxComboModule { }

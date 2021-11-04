@@ -1,7 +1,6 @@
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { CellType, IgxTreeGridModule } from './public_api';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
@@ -19,12 +18,13 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
-import { IgxGridTransaction } from '../grid-base.directive';
 import { IgxTreeGridRow } from '../grid/public_api';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
 import { DropPosition } from '../moving/moving.service';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
+import { IgxGridTransaction } from '../common/types';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
@@ -1727,7 +1727,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             const firstColumnField = treeGrid.columns[0].field;
             const pinnedChipExpectedPosition = treeGrid.gridAPI.get_cell_by_index(1, firstColumnField);
-            const pinnedRow = pinnedChipExpectedPosition.row;
 
             expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
         });

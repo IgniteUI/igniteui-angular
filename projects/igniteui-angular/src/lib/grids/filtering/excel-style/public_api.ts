@@ -8,3 +8,4 @@ export * from './excel-style-search.component';
 export * from './excel-style-selecting.component';
 export * from './excel-style-sorting.component';
 export * from './grid.excel-style-filtering.component';
+export * from './excel-style-date-expression.component';

@@ -23,8 +23,7 @@ import {
     LOCALE_ID
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
-import { GridBaseAPIService } from '../api.service';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowDataEventArgs, IRowToggleEventArgs } from '../common/events';
 import {
@@ -34,7 +33,6 @@ import {
     TransactionEventOrigin,
     StateUpdateEvent
 } from '../../services/transaction/transaction';
-import { HierarchicalTransactionService, IgxOverlayService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -43,21 +41,22 @@ import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { GridType } from '../common/grid.interface';
+import { CellType, GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridInstanceType, GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
-import { RowType } from '../common/row.interface';
-import { IgxAddRow, IgxGridCRUDService } from '../common/crud.service';
+import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
-import { CellType } from '../common/cell.interface';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
+import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
+import { IgxOverlayService } from '../../services/overlay/overlay';
+import { IgxGridTransaction } from '../common/types';
 
 let NEXT_ID = 0;
 
@@ -79,7 +78,6 @@ let NEXT_ID = 0;
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
     providers: [
@@ -87,8 +85,9 @@ let NEXT_ID = 0;
         IgxGridSummaryService,
         IgxGridNavigationService,
         { provide: IgxGridSelectionService, useClass: IgxTreeGridSelectionService },
-        { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
-        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxTreeGridComponent) },
+        // { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+        { provide: IGX_GRID_SERVICE_BASE, useClass: IgxTreeGridAPIService },
+        { provide: IGX_GRID_BASE, useExisting: forwardRef(() => IgxTreeGridComponent) },
         IgxFilteringService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
@@ -384,14 +383,15 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     // Kind of stupid
-    private get _gridAPI(): IgxTreeGridAPIService {
-        return this.gridAPI as IgxTreeGridAPIService;
-    }
+    // private get _gridAPI(): IgxTreeGridAPIService {
+    //     return this.gridAPI as IgxTreeGridAPIService;
+    // }
 
     constructor(
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
-        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
+        // public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         protected transactionFactory: IgxHierarchicalTransactionFactory,
         private _elementRef: ElementRef<HTMLElement>,
         private _zone: NgZone,
@@ -408,8 +408,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         @Inject(LOCALE_ID) localeId: string,
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?:
-        HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-        ) {
+            HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
+    ) {
         super(selectionService, colResizingService, gridAPI, transactionFactory,
             _elementRef, _zone, document, cdr, resolver, differs, viewRef, navigation,
             filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
@@ -448,7 +448,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         // TODO: cascade selection logic should be refactor to be handled in the already existing subs
         this.rowAddedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
-                let rec = this._gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
+                let rec = this.gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec && rec.parent) {
                     this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(
                         new Set([rec.parent]), rec.parent.rowID);
@@ -456,7 +456,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                     // The record is still not available
                     // Wait for the change detection to update records through pipes
                     requestAnimationFrame(() => {
-                        rec = this._gridAPI.get_rec_by_id(this.primaryKey ?
+                        rec = this.gridAPI.get_rec_by_id(this.primaryKey ?
                             args.data[this.primaryKey] : args.data);
                         if (rec && rec.parent) {
                             this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(
@@ -471,7 +471,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.rowDeletedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 if (args.data) {
-                    const rec = this._gridAPI.get_rec_by_id(
+                    const rec = this.gridAPI.get_rec_by_id(
                         this.primaryKey ? args.data[this.primaryKey] : args.data);
                     this.handleCascadeSelection(args, rec);
                 } else {
@@ -715,7 +715,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        return this._gridAPI.deleteRowById(rowId);
+        return this.gridAPI.deleteRowById(rowId);
 
     }
 
@@ -900,7 +900,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 if (event.actions[0].transaction.type === 'add') {
-                    const rec = this._gridAPI.get_rec_by_id(event.actions[0].transaction.id);
+                    const rec = this.gridAPI.get_rec_by_id(event.actions[0].transaction.id);
                     this.handleCascadeSelection(event, rec);
                 } else {
                     this.handleCascadeSelection(event);
@@ -936,9 +936,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         if (typeof (row) !== 'number') {
             const rowData = row;
-            const rowID = this._gridAPI.get_row_id(rowData);
+            const rowID = this.gridAPI.get_row_id(rowData);
             record = this.processedRecords.get(rowID);
-            this._gridAPI.expand_path_to_record(record);
+            this.gridAPI.expand_path_to_record(record);
 
             if (this.paginator) {
                 const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
@@ -1001,7 +1001,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         // return only row components (i.e. records in view).
         const rowToDeselect = this.records.get(recordID);
         this.selectionService.deselectRow(recordID);
-        this._gridAPI.get_selected_children(rowToDeselect, selectedChildren);
+        this.gridAPI.get_selected_children(rowToDeselect, selectedChildren);
         if (selectedChildren.length > 0) {
             selectedChildren.forEach(x => this.deselectChildren(x));
         }
@@ -1074,7 +1074,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         // Wait for the change detection to update records through the pipes
         requestAnimationFrame(() => {
             if (rec === null) {
-                rec = this._gridAPI.get_rec_by_id((event as StateUpdateEvent).actions[0].transaction.id);
+                rec = this.gridAPI.get_rec_by_id((event as StateUpdateEvent).actions[0].transaction.id);
             }
             if (rec && rec.parent) {
                 this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(

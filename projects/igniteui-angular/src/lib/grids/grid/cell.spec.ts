@@ -12,7 +12,7 @@ import { VirtualGridComponent, NoScrollsComponent,
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { IgxGridCellComponent } from '../cell.component';
-import { CellType } from '../common/cell.interface';
+import { CellType } from '../common/grid.interface';
 
 describe('IgxGrid - Cell component #grid', () => {
 

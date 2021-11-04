@@ -1,7 +1,6 @@
 ﻿import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from './public_api';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -28,6 +27,7 @@ import {
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
 describe('IgxGrid - Column Pinning #grid', () => {

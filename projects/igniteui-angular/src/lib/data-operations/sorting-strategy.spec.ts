@@ -1,6 +1,6 @@
 import { DataGenerator } from './test-util/data-generator';
-import { IgxSorting, DefaultSortingStrategy } from './sorting-strategy';
-import { SortingDirection } from './sorting-expression.interface';
+import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
+import { IgxSorting } from '../grids/common/strategy';
 
 describe('Unit testing SortingStrategy', () => {
     let dataGenerator: DataGenerator;

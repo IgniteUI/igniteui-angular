@@ -36,7 +36,6 @@ const run = (id) => {
 const listener = (event) => run(event.data);
 
 // Use function instead of arrow function to workaround an issue in codesandbox
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function setImmediate(cb: () => void, ...args) {
     if (window.setImmediate) {
         return window.setImmediate(cb);
@@ -57,7 +56,6 @@ export function setImmediate(cb: () => void, ...args) {
     return counter;
 }
 
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function clearImmediate(id: any) {
     if (window.clearImmediate) {
         return window.clearImmediate(id);

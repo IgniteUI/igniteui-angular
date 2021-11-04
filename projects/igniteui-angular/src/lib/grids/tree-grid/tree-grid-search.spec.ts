@@ -9,8 +9,8 @@ import {
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';

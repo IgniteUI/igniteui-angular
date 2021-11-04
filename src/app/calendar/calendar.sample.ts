@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, IViewDateChangeEventArgs } from 'igniteui-angular';
 
 @Component({
@@ -6,7 +6,7 @@ import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, IViewDateChang
     templateUrl: 'calendar.sample.html',
     styleUrls: ['calendar.sample.scss']
 })
-export class CalendarSampleComponent implements OnInit, AfterViewInit {
+export class CalendarSampleComponent implements OnInit {
     @ViewChild('calendar', { static: true })
     private calendar: IgxCalendarComponent;
     @ViewChild('calendar1', { static: true })
@@ -28,9 +28,6 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
         this.calendar.selectDate([ new Date(this.today.getFullYear(), this.today.getMonth(), 10),
                         new Date(this.today.getFullYear(), this.today.getMonth(), 17),
                         new Date(this.today.getFullYear(), this.today.getMonth(), 27)]);
-    }
-
-    public ngAfterViewInit() {
     }
 
     public selectPTOdays(dates: Date | Date[]) {

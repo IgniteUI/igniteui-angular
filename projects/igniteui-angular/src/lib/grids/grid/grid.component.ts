@@ -3,11 +3,9 @@ import {
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
     forwardRef, OnInit, AfterViewInit, ContentChildren
 } from '@angular/core';
-import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { cloneArray, IBaseEventArgs } from '../../core/utils';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
@@ -24,17 +22,15 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode, GridInstanceType } from '../common/enums';
-import { GridType } from '../common/grid.interface';
+import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
-import { RowType } from '../common/row.interface';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
-import { CellType } from '../common/cell.interface';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
-import { IGridGroupingStrategy } from '../../data-operations/grouping-strategy';
-
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { IGridGroupingStrategy } from '../common/strategy';
 let NEXT_ID = 0;
 
 export interface IGroupingDoneEventArgs extends IBaseEventArgs {
@@ -64,14 +60,14 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     providers: [
         IgxGridCRUDService,
         IgxGridNavigationService,
         IgxGridSummaryService,
         IgxGridSelectionService,
-        { provide: GridBaseAPIService, useClass: IgxGridAPIService },
-        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxGridComponent) },
+        // { provide: GridBaseAPIService, useClass: IgxGridAPIService },
+        { provide: IGX_GRID_SERVICE_BASE, useClass: IgxGridAPIService },
+        { provide: IGX_GRID_BASE, useExisting: forwardRef(() => IgxGridComponent) },
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService,
@@ -873,7 +869,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     owner: tmlpOutlet,
                     index: this.dataView.indexOf(rowData),
                     templateID: {
-                        type:'detailRow',
+                        type: 'detailRow',
                         id: rowID
                     }
                 };
@@ -882,7 +878,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 return {
                     $implicit: rowData.detailsData,
                     templateID: {
-                        type:'detailRow',
+                        type: 'detailRow',
                         id: rowID
                     },
                     index: this.dataView.indexOf(rowData)

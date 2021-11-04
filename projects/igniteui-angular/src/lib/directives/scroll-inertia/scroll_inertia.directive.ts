@@ -1,6 +1,5 @@
 import { Directive, Input, ElementRef, NgZone, OnInit, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlatformUtil } from '../../core/utils';
 
 /**
  * @hidden
@@ -51,7 +50,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private _totalMovedX;
     private _offsetRecorded;
     private _offsetDirection;
-    private _touchPrevented;
     private _lastMovedX;
     private _lastMovedY;
     private _gestureObject;
@@ -68,7 +66,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private baseDeltaMultiplier = 1 / 120;
     private firefoxDeltaMultiplier = 1 / 30;
 
-    constructor(private element: ElementRef, private _zone: NgZone, private platform: PlatformUtil) { }
+    constructor(private element: ElementRef, private _zone: NgZone) { }
 
     public ngOnInit(): void {
         this._zone.runOutsideAngular(() => {
@@ -118,14 +116,11 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         if (evt.ctrlKey) {
             return;
         }
-        if (evt.shiftKey && this.platform.isIE) {
-            evt.preventDefault();
-        }
         let scrollDeltaX;
         let scrollDeltaY;
         const scrollStep = this.wheelStep;
         const minWheelStep = 1 / this.wheelStep;
-        const smoothing = this.smoothingDuration !== 0 && !this.platform.isIE;
+        const smoothing = this.smoothingDuration !== 0;
 
         this._startX = this.IgxScrollInertiaScrollContainer.scrollLeft;
         this._startY = this.IgxScrollInertiaScrollContainer.scrollTop;
@@ -212,7 +207,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
      * Function that is called the first moment we start interacting with the content on a touch device
      */
     protected onTouchStart(event) {
-        if (typeof MSGesture === 'function' || !this.IgxScrollInertiaScrollContainer) {
+        if (!this.IgxScrollInertiaScrollContainer) {
             return false;
         }
 
@@ -239,7 +234,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         this._offsetRecorded = false;
         this._offsetDirection = 0;
 
-        this._touchPrevented = false;
         if (this.IgxScrollInertiaDirection === 'vertical') {
             this.preventParentScroll(event, false);
         }
@@ -250,10 +244,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
      * Function that is called when we need to scroll the content based on touch interactions
      */
     protected onTouchMove(event) {
-        if (typeof MSGesture === 'function') {
-            this._touchPrevented = false;
-            return false;
-        }
         if (!this.IgxScrollInertiaScrollContainer) {
             return;
         }
@@ -295,10 +285,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
         this._totalMovedX += this._lastMovedX;
 
-        let scrolledXY; // Object: {x, y}
         /*	Do not scroll using touch untill out of the swipeToleranceX bounds */
         if (Math.abs(this._totalMovedX) < this.swipeToleranceX && !this._offsetRecorded) {
-            scrolledXY = this._scrollTo(this._startX, destY);
+            this._scrollTo(this._startX, destY);
         } else {
             /*	Record the direction the first time we are out of the swipeToleranceX bounds.
             *	That way we know which direction we apply the offset so it doesn't hickup when moving out of the swipeToleranceX bounds */
@@ -309,12 +298,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
             /*	Scroll with offset ammout of swipeToleranceX in the direction we have exited the bounds and
             don't change it after that ever until touchend and again touchstart */
-            scrolledXY = this._scrollTo(destX - this._offsetDirection * this.swipeToleranceX,
-                destY);
-        }
-
-        if (scrolledXY.x === 0 && scrolledXY.y === 0) {
-            this._touchPrevented = true;
+            this._scrollTo(destX - this._offsetDirection * this.swipeToleranceX, destY);
         }
 
         // On Safari preventing the touchmove would prevent default page scroll behaviour even if there is the element doesn't have overflow
@@ -324,9 +308,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     }
 
     protected onTouchEnd(event) {
-        if (typeof MSGesture === 'function') {
-            return;
-        }
         let speedX = 0;
         let speedY = 0;
 
@@ -353,8 +334,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
      * Function that is called when we need to detect touch starting on a touch device on IE/Edge
      */
     protected onPointerDown(event) {
-        if (!event || (event.pointerType !== 2 && event.pointerType !== 'touch') ||
-            typeof MSGesture !== 'function') {
+        if (!event || (event.pointerType !== 2 && event.pointerType !== 'touch')) {
             return true;
         }
         if (!this.IgxScrollInertiaScrollContainer) {
@@ -362,12 +342,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         }
         // setPointerCaptureFName is the name of the function that is supported
         event.target[this.setPointerCaptureFName](this._pointer = event.pointerId);
-
-        // create gestureObject only one time to prevent overlapping during intertia
-        if (!this._gestureObject) {
-            this._gestureObject = new MSGesture();
-            this._gestureObject.target = this.parentElement;
-        }
         this._gestureObject.addPointer(this._pointer);
     }
 

@@ -11,7 +11,6 @@ import {
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
-import { IgxGridExcelStyleFilteringComponent, FilterListItem } from './grid.excel-style-filtering.component';
 import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { GridColumnDataType } from '../../../data-operations/data-util';
@@ -19,12 +18,13 @@ import {
     IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand, IgxDateTimeFilteringOperand, IgxTimeFilteringOperand
 } from '../../../data-operations/filtering-condition';
-import { ExpressionUI } from '../grid-filtering.service';
 import { Subject } from 'rxjs';
 import { IgxListComponent } from '../../../list/public_api';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../../core/utils';
+import { BaseFilteringComponent } from './base-filtering.component';
+import { ExpressionUI, FilterListItem } from './common';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -136,7 +136,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private _addToCurrentFilter: FilterListItem;
     private destroy$ = new Subject<boolean>();
 
-    constructor(public cdr: ChangeDetectorRef, public esf: IgxGridExcelStyleFilteringComponent, protected platform: PlatformUtil) {
+    constructor(public cdr: ChangeDetectorRef, public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
         esf.loadingStart.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.displayedListData = [];
             this.isLoading = true;

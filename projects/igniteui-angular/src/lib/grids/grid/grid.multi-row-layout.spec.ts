@@ -4,11 +4,10 @@ import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ICellPosition } from '../common/events';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -103,8 +102,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         // verify block style
-        expect(grid.columnList.first.getGridTemplate(false, false)).toBe('200px 200px 200px');
-        expect(grid.columnList.first.getGridTemplate(true, false)).toBe('repeat(3,1fr)');
+        expect(grid.columnList.first.getGridTemplate(false)).toBe('200px 200px 200px');
+        expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
 
         // creating an incomplete layout 2
         fixture.componentInstance.colGroups = [{
@@ -119,8 +118,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
 
-        expect(grid.columnList.first.getGridTemplate(false, false)).toBe('200px 200px 200px');
-        expect(grid.columnList.first.getGridTemplate(true, false)).toBe('repeat(3,1fr)');
+        expect(grid.columnList.first.getGridTemplate(false)).toBe('200px 200px 200px');
+        expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
 
     }));
     it('should initialize correctly when no column widths are set.', fakeAsync(() => {
@@ -810,13 +809,13 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // check group block and column header height
         const firstLayout = grid.columnList.toArray()[0];
         expect(grid.multiRowLayoutRowSize).toEqual(2);
-        expect(firstLayout.getGridTemplate(true, false)).toEqual('repeat(2,1fr)');
+        expect(firstLayout.getGridTemplate(true)).toEqual('repeat(2,1fr)');
         expect(firstLayout.headerGroup.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
         expect(grid.getColumnByName('Fax').headerCell.nativeElement.offsetHeight).toBe(grid.rowHeight + 1);
 
         const secondLayout = grid.columnList.toArray()[2];
         const contactNameColumn = grid.getColumnByName('ContactName');
-        expect(contactNameColumn.getGridTemplate(true, false)).toEqual('repeat(2,1fr)');
+        expect(contactNameColumn.getGridTemplate(true)).toEqual('repeat(2,1fr)');
         expect(secondLayout.headerGroup.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
 
         // check cell height in row. By default should span 1 row

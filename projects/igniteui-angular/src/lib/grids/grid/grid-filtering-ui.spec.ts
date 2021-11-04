@@ -21,8 +21,7 @@ import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxBadgeComponent } from '../../badge/badge.component';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
 import { DatePipe } from '@angular/common';
@@ -50,6 +49,7 @@ import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
+import { formatDate } from '../../core/utils';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -4430,7 +4430,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
+            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
             expect((input as HTMLInputElement).value).toMatch(inputText);
 
             // Click 'apply' button to apply filter.
@@ -4477,7 +4477,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
+            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
             expect((input as HTMLInputElement).value).toMatch(inputText);
 
             // Click 'apply' button to apply filter.
@@ -4524,7 +4524,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
+            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
             expect((input as HTMLInputElement).value).toMatch(inputText);
 
             // Click 'apply' button to apply filter.
@@ -4576,7 +4576,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
+            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
             expect((input as HTMLInputElement).value).toMatch(inputText);
 
             // Click 'apply' button to apply filter.
