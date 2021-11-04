@@ -10,10 +10,11 @@ import { IListResourceStrings, ListResourceStringsEN } from './list-resources';
 import { CalendarResourceStringsEN, ICalendarResourceStrings } from './calendar-resources';
 import { IInputResourceStrings, InputResourceStringsEN } from './input-resources';
 import { ITreeResourceStrings, TreeResourceStringsEN } from './tree-resources';
+import { IActionStripResourceStrings, ActionStripResourceStringsEN } from './action-strip-resources';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
     ICarouselResourceStrings, IChipResourceStrings, IInputResourceStrings, IDatePickerResourceStrings, IDateRangePickerResourceStrings,
-    IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings { }
+    IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings, IActionStripResourceStrings { }
 
 /**
  * @hidden
@@ -38,7 +39,8 @@ export const CurrentResourceStrings = {
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
     ListResStrings: cloneValue(ListResourceStringsEN),
     InputResStrings: cloneValue(InputResourceStringsEN),
-    TreeResStrings: cloneValue(TreeResourceStringsEN)
+    TreeResStrings: cloneValue(TreeResourceStringsEN),
+    ActionStripResourceStrings: cloneValue(ActionStripResourceStringsEN)
 };
 
 const updateResourceStrings = (currentStrings: IResourceStrings, newStrings: IResourceStrings) => {
@@ -74,5 +76,6 @@ export const getCurrentResourceStrings = (): IResourceStrings => ({
     ...CurrentResourceStrings.ListResStrings,
     ...CurrentResourceStrings.PaginatorResStrings,
     ...CurrentResourceStrings.TimePickerResStrings,
-    ...CurrentResourceStrings.TreeResStrings
+    ...CurrentResourceStrings.TreeResStrings,
+    ...CurrentResourceStrings.ActionStripResourceStrings
 });
