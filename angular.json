@@ -90,7 +90,7 @@
             "hmr": {
               "hmr": true,
               "browserTarget": "igniteui-dev-demos:build:hmr"
-            },
+            }
           }
         },
         "extract-i18n": {
