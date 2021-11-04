@@ -154,7 +154,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * @internal
      */
     private registerIcons() {
-        this.iconService.addSvgIconFromText(addRow.name, addRow.value, 'imx-icons');
-        this.iconService.addSvgIconFromText(addChild.name, addChild.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(addRow.name, addRow.value, 'imx-icons', true,);
+        this.iconService.addSvgIconFromText(addChild.name, addChild.value, 'imx-icons', true);
     }
 }
