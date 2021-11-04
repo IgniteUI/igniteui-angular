@@ -1,4 +1,4 @@
-import { Directive, Host, Input, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Directive, Host, Input, EventEmitter, OnDestroy, Output, Inject } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
@@ -99,7 +99,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
         return this.toolbar.grid;
     }
 
-    constructor(@Host() protected toolbar: IgxToolbarToken) { }
+    constructor(@Inject(IgxToolbarToken) protected toolbar: IgxToolbarToken) { }
 
     public ngOnDestroy() {
         this.$destroy.next();
