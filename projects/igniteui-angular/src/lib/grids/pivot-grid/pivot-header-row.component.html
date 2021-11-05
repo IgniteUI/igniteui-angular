@@ -106,7 +106,7 @@
         <!-- Unpinned columns collection -->
         <ng-template igxGridFor #headerVirtualContainer let-column
             [igxGridForOf]="unpinnedColumnCollection | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir"
-            [igxForContainerSize]=" row ? grid.pivotRowWidths : grid.unpinnedWidth"
+            [igxForContainerSize]="grid.unpinnedWidth"
             [igxForTrackBy]="grid.trackColumnChanges" [igxForSizePropName]="'calcPixelWidth'"
             [igxForScrollOrientation]="'horizontal'">
             <igx-grid-header-group [ngClass]="column.headerGroupClasses"
