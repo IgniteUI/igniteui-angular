@@ -1,14 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusTrapDirective, IgxFocusTrapModule } from './focus-trap.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxCheckboxModule } from '../../checkbox/checkbox.component';
-import { IgxDialogComponent, IgxDialogModule } from '../../dialog/dialog.component';
 import { IgxDatePickerModule } from '../../date-picker/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleDirective } from 'igniteui-angular';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 describe('igxFocusTrap', () => {
@@ -16,10 +14,9 @@ describe('igxFocusTrap', () => {
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
-                TrapFocusTestComponent,
-                TrapFocusDialogComponent
+                TrapFocusTestComponent
             ],
-            imports: [IgxFocusTrapModule, IgxCheckboxModule, IgxDatePickerModule, IgxDialogModule, NoopAnimationsModule]
+            imports: [IgxFocusTrapModule, IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 
