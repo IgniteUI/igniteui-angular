@@ -19,12 +19,13 @@ import { GridType } from '../common/grid.interface';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IPivotConfiguration, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
+import { IPivotConfiguration, IPivotDimension, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { PivotUtil } from './pivot-util';
 import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -351,7 +352,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         let columns = [];
-        fields.forEach((value, key) => {
+        if (fields.size === 0) {
+            return columns;
+        }
+        const first = fields.keys().next().value;
+        const dim: IPivotDimension = fields.get(first).dimension;
+        let currentFields = fields;
+        if (dim.sortDirection) {
+            const reverse = (dim.sortDirection === SortingDirection.Desc ? -1 : 1);
+            currentFields = new Map([...fields.entries()].sort((a, b) => reverse * (a > b ? 1 : a < b ? -1 : 0)));
+        }
+        currentFields.forEach((value, key) => {
             if (value.children == null || value.children.length === 0 || value.children.size === 0) {
                 const ref = this.hasMultipleValues ?
                     factoryColumnGroup.create(this.viewRef.injector) :

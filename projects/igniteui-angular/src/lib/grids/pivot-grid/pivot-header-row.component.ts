@@ -76,7 +76,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         filter.enabled = false;
     }
 
-    public onChipSort(event, dimension: IPivotDimension) {
+    public onChipSort(event, dimension: IPivotDimension, dimensionType: PivotDimensionType) {
         if (!dimension.sortDirection) {
             dimension.sortDirection = SortingDirection.None;
         }
@@ -89,6 +89,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             dim = dim.childLevel;
         }
         this.grid.pipeTrigger++;
+        if (dimensionType === PivotDimensionType.Column) {
+            this.grid.setupColumns();
+        }
     }
 
     public onDimDragOver(event, dimension?: PivotDimensionType) {

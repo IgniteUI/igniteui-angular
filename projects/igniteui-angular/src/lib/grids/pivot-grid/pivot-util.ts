@@ -156,7 +156,7 @@ export class PivotUtil {
             const value = this.extractValueFromDimension(col, recData);
             path.push(value);
             const newValue = path.join('-');
-            lvlCollection.push({ value: newValue });
+            lvlCollection.push({ value: newValue, dimension: col });
             lvlCollection[0].expandable = col.expandable;
             if (!lvlCollection[0].children) {
                 lvlCollection[0].children = [];

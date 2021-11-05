@@ -23,10 +23,14 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-
             {
-                memberName: 'Country',
-                enabled: true
+                memberName: 'AllCountries',
+                memberFunction: () => 'AllCountries',
+                enabled: true,
+                childLevel: {
+                    memberName: 'Country',
+                    enabled: true
+                }
             }
         ]
         ,

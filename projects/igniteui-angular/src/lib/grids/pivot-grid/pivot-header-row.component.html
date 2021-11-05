@@ -14,11 +14,9 @@
                     (dragOver)="onDimDragOver($event, 2)"
                     (dragLeave)="onDimDragLeave($event)"
                     (dragDrop)="onDimDrop($event, filterArea, 2)"
-                    (click)="onChipSort($event, filter)"
                      >
                     <igx-icon igxPrefix>filter_list</igx-icon>
                     {{filter.memberName}}
-                    <igx-icon *ngIf="filter.sortDirection"  igxSuffix> {{ filter.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
                 </igx-chip>
             </igx-chips-area>
         </div>
@@ -36,7 +34,7 @@
                         (dragOver)="onDimDragOver($event, 1)"
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, colArea, 1)"
-                        (click)="onChipSort($event, col)"
+                        (click)="onChipSort($event, col, 1)"
                         >
                         <igx-icon igxPrefix>view_column</igx-icon>
                         <igx-icon igxPrefix>filter_list</igx-icon>
@@ -90,7 +88,7 @@
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, rowArea, 0)"
                         (dragOver)="onDimDragOver($event, 0)"
-                        (click)="onChipSort($event, row)">
+                        (click)="onChipSort($event, row, 0)">
                         <igx-icon igxPrefix>table_rows</igx-icon>
                         <igx-icon igxPrefix>filter_list</igx-icon>
                         {{ row.memberName}}
