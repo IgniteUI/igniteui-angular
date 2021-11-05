@@ -36,23 +36,14 @@ export class PivotGridSampleComponent {
                 enabled: true
             },
             {
-                memberName: 'AllDate',
-                memberFunction: () => 'AllDate',
-                enabled: true,
-                childLevel: {
-                    memberName: 'Years',
-                    memberFunction: (rec) => {
-                        const recordValue = rec['Date'];
-                        return recordValue ? (new Date(recordValue)).getFullYear().toString() : rec['Years'];
-                        },
-                        enabled: true,
-                        childLevel: {
-                            memberName: 'Date',
-                            dataType: GridColumnDataType.Date,
-                            enabled: true
-                        }
-                }
+                memberName: 'SellerName',
+                enabled: true
             },
+            {
+                memberName: 'Date',
+                dataType: GridColumnDataType.Date,
+                enabled: true
+            }
         ],
         values: [
             {
@@ -97,6 +88,10 @@ export class PivotGridSampleComponent {
         {
             ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David Haley',
             Country: 'UK', City: 'London', Date: '04/07/2012', UnitsSold: 293
+        },
+        {
+            ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David Haley',
+            Country: 'UK', City: 'London', Date: '04/07/2011', UnitsSold: 293
         },
         {
             ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John Smith',

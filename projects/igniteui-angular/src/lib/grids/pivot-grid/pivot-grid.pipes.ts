@@ -4,11 +4,12 @@ import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys } from './pivot-grid.interface';
-import { DefaultPivotSortingStrategy, PivotColumnDimensionsStrategy, PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { DefaultPivotSortingStrategy,
+     PivotColumnDimensionsStrategy, PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { GridBaseAPIService, IgxGridBaseDirective } from '../hierarchical-grid/public_api';
 import { GridType } from '../common/grid.interface';
 /**
@@ -154,12 +155,18 @@ export class IgxPivotGridSortingPipe implements PipeTransform {
                     fieldName: x.memberName,
                     strategy: DefaultPivotSortingStrategy.instance()
                 });
+            } else {
+                expressions.push({
+                    dir: SortingDirection.None,
+                    fieldName: x.memberName,
+                    strategy: DefaultPivotSortingStrategy.instance()
+                });
             }
         });
         if (!expressions.length) {
             result = collection;
         } else {
-            result = DataUtil.sort(cloneArray(collection), expressions, sorting, this.gridAPI.grid);
+            result = DataUtil.sort(cloneArray(collection, true), expressions, sorting, this.gridAPI.grid);
         }
 
         return result;
