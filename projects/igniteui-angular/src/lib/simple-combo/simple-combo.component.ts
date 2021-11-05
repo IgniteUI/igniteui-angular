@@ -79,7 +79,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public composing = false;
 
-    private _updateInput = false;
+    private _updateInput = true;
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
@@ -121,18 +121,15 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /**
-     * Deselect a defined item
+     * Deselect the currently selected item
      *
      * @param item the items to be deselected
      * ```typescript
      * this.combo.deselect("New York");
      * ```
      */
-    public deselect(item: any): void {
-        if (item !== null && item !== undefined) {
-            const newSelection = this.selectionService.delete_items(this.id, item instanceof Array ? item : [item]);
-            this.setSelection(newSelection);
-        }
+    public deselect(): void {
+        this.clearSelection();
     }
 
     /** @hidden @internal */
@@ -225,7 +222,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         this.clearSelection(true);
         if (this.collapsed) {
-            this.getEditElement().focus();
+            this.open();
         } else {
             this.focusSearchInput(true);
         }
