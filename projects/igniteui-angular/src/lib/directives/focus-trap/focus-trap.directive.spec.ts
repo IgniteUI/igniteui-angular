@@ -136,12 +136,3 @@ class TrapFocusTestComponent {
     public showInput = true;
     public showButton = true;
 }
-
-@Component({
-    template: `<div #wrapper>
-                            <igx-dialog #dialog title="dialog" message="message">
-                            </igx-dialog>
-                        </div>` })
-class TrapFocusDialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
-}
