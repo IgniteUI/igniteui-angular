@@ -301,7 +301,7 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | `close`          | Closes dropdown            | `void`               | `None`                      |
 | `toggle`         | Toggles dropdown           | `void`               | `None`                      |
 | `select`         | Select a defined item      | `void`               | newItem: `any`              |
-| `deselect`       | Deselect a defined item    | `void`               | item: `any`                |
+| `deselect`       | Deselect the currently selected item    | `void`               | `None`         |
 
 
 ### Events
