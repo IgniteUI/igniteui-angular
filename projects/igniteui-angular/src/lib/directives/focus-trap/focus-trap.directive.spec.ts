@@ -9,7 +9,7 @@ import { IgxDatePickerModule } from '../../date-picker/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
-describe('igxFocusTrap', () => {
+fdescribe('igxFocusTrap', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -122,7 +122,7 @@ describe('igxFocusTrap', () => {
 
 
 @Component({
-    template: `<div #wrapper igxFocusTrap tabindex="0">
+    template: `<div #wrapper [igxFocusTrap]="true" tabindex="0">
                 <label for="uname"><b>Username</b></label><br>
                 <input type="text" *ngIf="showInput" placeholder="Enter Username" name="uname"><br>
                 <label for="psw"><b>Password</b></label><br>

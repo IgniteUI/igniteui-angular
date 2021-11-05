@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, NgModule, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, NgModule, OnDestroy } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../core/utils';
@@ -13,6 +13,7 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
     }
 
     private destroy$ = new Subject();
+    private _focusTrap: boolean;
 
     /** @hidden */
     constructor(
@@ -20,15 +21,30 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
         protected platformUtil: PlatformUtil) {
     }
 
+    /**
+     * Sets the type of the button.
+     *
+     * @example
+     * ```html
+     * <button igxButton="icon"></button>
+     * ```
+     */
+    @Input('igxFocusTrap')
+    public set focusTrap(focusTrap: boolean) {
+        this._focusTrap = focusTrap || true;
+    }
+
     /** @hidden */
     public ngAfterViewInit(): void {
-        fromEvent(this.element, 'keydown')
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((event: KeyboardEvent) => {
-                if (event.key === this.platformUtil.KEYMAP.TAB) {
-                    this.handleTab(event);
-                }
-            });
+        if (this._focusTrap) {
+            fromEvent(this.element, 'keydown')
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((event: KeyboardEvent) => {
+                    if (event.key === this.platformUtil.KEYMAP.TAB) {
+                        this.handleTab(event);
+                    }
+                });
+        }
     }
 
     /** @hidden */
@@ -51,7 +67,6 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
             }
             (elements[nextFocusableElementIndex] as HTMLElement).focus();
         } else {
-            this.element.tabIndex = 0;
             this.element.focus();
         }
 
