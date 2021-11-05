@@ -3,9 +3,9 @@ import {
     IgxPivotNumericAggregate,
     IgxPivotGridComponent,
     IPivotConfiguration,
-    PivotAggregation
+    PivotAggregation,
+    GridColumnDataType
 } from 'igniteui-angular';
-import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 export class IgxTotalSaleAggregate {
     public static totalSale: PivotAggregation = (members, data: any) =>
@@ -32,32 +32,27 @@ export class PivotGridSampleComponent {
         ,
         rows: [
             {
-                memberName: 'AllProd',
-                memberFunction: () => 'AllProd',
-                enabled: true,
-                childLevel: {
-                    memberName: 'ProductCategory',
-                    enabled: true
-                }
+                memberName: 'ProductCategory',
+                enabled: true
             },
             {
                 memberName: 'AllDate',
                 memberFunction: () => 'AllDate',
                 enabled: true,
                 childLevel: {
-                    memberName: 'Date',
-                    enabled: true
+                    memberName: 'Years',
+                    memberFunction: (rec) => {
+                        const recordValue = rec['Date'];
+                        return recordValue ? (new Date(recordValue)).getFullYear().toString() : rec['Years'];
+                        },
+                        enabled: true,
+                        childLevel: {
+                            memberName: 'Date',
+                            dataType: GridColumnDataType.Date,
+                            enabled: true
+                        }
                 }
             },
-            {
-                memberName: 'AllSel',
-                memberFunction: () => 'AllSel',
-                enabled: true,
-                childLevel: {
-                    memberName: 'SellerName',
-                    enabled: true
-                }
-            }
         ],
         values: [
             {
