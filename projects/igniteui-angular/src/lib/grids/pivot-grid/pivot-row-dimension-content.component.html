@@ -1,0 +1,15 @@
+<div role="rowgroup" class="igx-grid-thead__wrapper" [style.width.px]="width"
+    [attr.aria-activedescendant]="activeDescendant" [class.igx-grid__tr--mrl]="hasMRL">
+    <!-- Column headers area -->
+    <div class="igx-grid__tr" role="row" [style.width.px]="width">
+        <!-- Unpinned columns collection -->
+        <ng-template ngFor #headerVirtualContainer let-column
+            [ngForOf]="unpinnedColumnCollection | igxTopLevel">
+            <igx-grid-header-group [ngClass]="column.headerGroupClasses"
+                [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
+                [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+            </igx-grid-header-group>
+        </ng-template>
+    </div>
+</div>

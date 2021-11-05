@@ -1,4 +1,4 @@
-<div class="igx-grid-thead__wrapper" role="row" [style.width.px]="width" *ngIf="!row">
+<div class="igx-grid-thead__wrapper" role="row" [style.width.px]="width">
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
         <div #pivotFilterContainer class="igx-grid__tr-action" [style.min-width.px]="grid.pivotRowWidths"
             (igxDragEnter)="onAreaDragEnter($event, filterArea, 2)" (igxDragLeave)="onAreaDragLeave($event, filterArea)"
@@ -68,7 +68,7 @@
     <!-- Column headers area -->
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
 
-        <ng-container *ngIf="!row">
+        <ng-container>
             <div #pivotContainer class="igx-grid__tr-action" [style.min-width.px]="grid.pivotRowWidths"
                 (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)" (igxDragLeave)="onAreaDragLeave($event, rowArea)"
                 igxDrop (dropped)="onDimDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()"
@@ -130,5 +130,5 @@
     </div>
 </div>
 <!-- Header thumb area -->
-<div *ngIf="!row" class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize">
+<div class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize">
 </div>
