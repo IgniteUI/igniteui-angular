@@ -149,6 +149,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             if (this.composing) {
                 this.comboInput.focus();
             }
+            if (this.comboInput.value.length === 0) {
+                this.dropdown.focusedItem = this.dropdown.items[0];
+                this.dropdownContainer.nativeElement.focus();
+            }
         });
         this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.composing = false;
@@ -156,12 +160,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.dropdown.closing.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const selection = this.selectionService.first_item(this.id);
             this.comboInput.value = selection !== undefined && selection !== null ? selection : '';
+            this._onChangeCallback(selection);
         });
-        this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (!this.comboInput.value.length) {
-                this.clearSelection();
-            }
-        });
+
         super.ngAfterViewInit();
     }
 
@@ -171,6 +172,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this._onChangeCallback(this.searchValue);
         if (this.collapsed) {
             this.open();
+            this.virtDir.scrollTo(0);
         }
         super.handleInputChange(event);
     }
@@ -248,6 +250,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         } else {
             this.comboInput.nativeElement.focus();
             this.toggle();
+        }
+    }
+
+    /** @hidden @internal */
+    public onClick(event: Event) {
+        super.onClick(event);
+        if (this.comboInput.value.length === 0) {
+            this.virtDir.scrollTo(0);
         }
     }
 
