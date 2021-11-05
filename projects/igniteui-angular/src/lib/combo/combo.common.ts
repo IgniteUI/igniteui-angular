@@ -55,8 +55,7 @@ export interface IgxComboBase {
     isItemSelected(itemID: any): boolean;
     select(item: any): void;
     select(itemIDs: any[], clearSelection?: boolean, event?: Event): void;
-    deselect(item: any): void;
-    deselect(itemIDs: any[], event?: Event): void;
+    deselect(...args: [] | [itemIDs: any[], event?: Event]): void;
 }
 
 let NEXT_ID = 0;
@@ -1214,8 +1213,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public abstract select(newItem: any): void;
     public abstract select(newItems: Array<any> | any, clearCurrentSelection?: boolean, event?: Event): void;
 
-    public abstract deselect(item: any): void;
-    public abstract deselect(items: Array<any>, event?: Event): void;
+    public abstract deselect(...args: [] | [items: Array<any>, event?: Event]): void;
 
     public abstract writeValue(value: any): void;
 
