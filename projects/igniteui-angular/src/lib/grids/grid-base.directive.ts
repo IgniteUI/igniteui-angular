@@ -1124,23 +1124,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public footer: ElementRef;
 
     public get headerContainer() {
-        return this.theadRow.headerContainer;
+        return this.theadRow?.headerContainer;
     }
 
     public get headerSelectorContainer() {
-        return this.theadRow.headerSelectorContainer;
+        return  this.theadRow?.headerSelectorContainer;
     }
 
     public get headerDragContainer() {
-        return this.theadRow.headerDragContainer;
+        return this.theadRow?.headerDragContainer;
     }
 
     public get headerGroupContainer() {
-        return this.theadRow.headerGroupContainer;
+        return this.theadRow?.headerGroupContainer;
     }
 
     public get filteringRow(): IgxGridFilteringRowComponent {
-        return this.theadRow.filterRow;
+        return this.theadRow?.filterRow;
     }
 
     /** @hidden @internal */
@@ -5029,7 +5029,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get unpinnedDataView(): any[] {
-        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf || [];
+        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer?.igxForOf || [];
     }
 
     /**
