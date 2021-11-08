@@ -20,6 +20,10 @@ describe('igxFocusTrap', () => {
         }).compileComponents();
     }));
 
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
+
     it('should focus focusable elements on Tab key pressed', () => {
         const fix = TestBed.createComponent(TrapFocusTestComponent);
         fix.detectChanges();
