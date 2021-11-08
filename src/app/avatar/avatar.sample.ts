@@ -5,5 +5,5 @@ import { Component } from '@angular/core';
     styleUrls: ['avatar.sample.css'],
     templateUrl: `avatar.sample.html`
 })
-export class AvatartSampleComponent {
+export class AvatarSampleComponent {
 }

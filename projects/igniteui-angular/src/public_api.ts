@@ -100,6 +100,7 @@ export * from './lib/select/public_api';
 export * from './lib/splitter/splitter-pane/splitter-pane.component';
 export * from './lib/splitter/splitter.component';
 export * from './lib/splitter/splitter.module';
+export * from './lib/stepper/public_api';
 export * from './lib/date-range-picker/public_api';
 export * from './lib/date-common/public_api';
 
@@ -126,5 +127,6 @@ export { IListResourceStrings } from './lib/core/i18n/list-resources';
 export { ITreeResourceStrings } from './lib/core/i18n/tree-resources';
 export { IInputResourceStrings } from './lib/core/i18n/input-resources';
 export { IChipResourceStrings } from './lib/core/i18n/chip-resources';
+export { IActionStripResourceStrings } from './lib/core/i18n/action-strip-resources';
 export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';

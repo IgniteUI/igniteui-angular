@@ -4652,9 +4652,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             insertAtIndex: index,
             isPinned: true,
             rowID,
-            row
+            row,
+            cancel: false
         };
         this.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
 
         this.crudService.endEdit(false);
 
@@ -4688,9 +4693,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const eventArgs: IPinRowEventArgs = {
             isPinned: false,
             rowID,
-            row
+            row,
+            cancel: false
         };
         this.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
 
         this.crudService.endEdit(false);
         this._pinnedRecordIDs.splice(index, 1);
@@ -5510,7 +5520,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 data = selectedData;
                 result = this.prepareCopyData(event, data);
             }
-
             if (this.platform.isIE) {
                 (window as any).clipboardData.setData('Text', result);
                 return;
@@ -5535,6 +5544,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (!this.clipboardOptions.copyHeaders) {
             result = result.substring(result.indexOf('\n') + 1);
+        }
+
+        if (Object.values(data[0]).length === 1) {
+            result = result.slice(0, -2);
         }
 
         event.preventDefault();
