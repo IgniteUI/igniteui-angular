@@ -2710,7 +2710,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.today;
-        
+
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridDatesFilteringComponent);
             fix.detectChanges();
@@ -2725,8 +2725,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix,
                 grid,
                 cal.timedelta(today, 'day', 15),
-                "ReleaseDate",
-                IgxDateFilteringOperand.instance().condition("equals")
+                'ReleaseDate',
+                IgxDateFilteringOperand.instance().condition('equals')
             );
         }));
 
@@ -2734,9 +2734,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             emitFilteringDoneOnResetClick(
                 fix,
                 grid,
-                "search",
-                "ProductName",
-                IgxStringFilteringOperand.instance().condition("contains")
+                'search',
+                'ProductName',
+                IgxStringFilteringOperand.instance().condition('contains')
             );
         }));
 
@@ -2745,8 +2745,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix,
                 grid,
                 100,
-                "Downloads",
-                IgxStringFilteringOperand.instance().condition("equals")
+                'Downloads',
+                IgxStringFilteringOperand.instance().condition('equals')
             );
         }));
 
@@ -2755,8 +2755,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix,
                 grid,
                 cal.timedelta(today, 'day', 15),
-                "ReleaseDate",
-                IgxDateFilteringOperand.instance().condition("equals")
+                'ReleaseDate',
+                IgxDateFilteringOperand.instance().condition('equals')
             );
         }));
 
@@ -2764,9 +2764,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             emitFilteringDoneOnInputClear(
                 fix,
                 grid,
-                "search",
-                "ProductName",
-                IgxStringFilteringOperand.instance().condition("contains")
+                'search',
+                'ProductName',
+                IgxStringFilteringOperand.instance().condition('contains')
             );
         }));
 
@@ -2775,8 +2775,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix,
                 grid,
                 3,
-                "Downloads",
-                IgxStringFilteringOperand.instance().condition("equals")
+                'Downloads',
+                IgxStringFilteringOperand.instance().condition('equals')
             );
         }));
 
@@ -2785,8 +2785,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix,
                 grid,
                 cal.timedelta(today, 'day', 15),
-                "ReleaseDate",
-                IgxDateFilteringOperand.instance().condition("equals"),
+                'ReleaseDate',
+                IgxDateFilteringOperand.instance().condition('equals'),
                 1,
                 4
             );
@@ -2796,9 +2796,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             verifyRemoveChipFromHeader(
                 fix,
                 grid,
-                "I",
-                "ProductName",
-                IgxStringFilteringOperand.instance().condition("startsWith"),
+                'I',
+                'ProductName',
+                IgxStringFilteringOperand.instance().condition('startsWith'),
                 2,
                 1
             );
@@ -2809,8 +2809,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix,
                 grid,
                 100,
-                "Downloads",
-                IgxStringFilteringOperand.instance().condition("equals"),
+                'Downloads',
+                IgxStringFilteringOperand.instance().condition('equals'),
                 1,
                 2
             );
@@ -6496,7 +6496,7 @@ const verifyChipVisibility = (fix, index: number, shouldBeFullyVisible: boolean)
 };
 
 const emitFilteringDoneOnResetClick = (fix, grid, filterVal: any, columnName: string, condition) => {
-    filterGrid(fix, grid, columnName, filterVal, condition)
+    filterGrid(fix, grid, columnName, filterVal, condition);
 
     const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
     verifyEmitFilteringDone(grid, filteringExpressions, 1);
@@ -6513,7 +6513,7 @@ const emitFilteringDoneOnResetClick = (fix, grid, filterVal: any, columnName: st
 };
 
 const emitFilteringDoneOnInputClear = (fix, grid, filterVal, columnName, condition) => {
-    filterGrid(fix, grid, columnName, filterVal, condition)
+    filterGrid(fix, grid, columnName, filterVal, condition);
 
     GridFunctions.clickFilterCellChip(fix, columnName);
 
@@ -6545,7 +6545,7 @@ const verifyRemoveChipFromHeader = (fix, grid, filterVal, columnName, condition,
 
     const emptyFilter = new FilteringExpressionsTree(null, columnName);
     verifyEmitFilteringDone(grid, emptyFilter, 2);
-}
+};
 
 const closeChipFromFiteringUIRow = (fix, grid, columnName, index) => {
     GridFunctions.clickFilterCellChip(fix, columnName);
@@ -6561,7 +6561,7 @@ const closeChipFromFiteringUIRow = (fix, grid, columnName, index) => {
 
     const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
     verifyEmitFilteringDone(grid, filteringExpressions, 1);
-}
+};
 
 const verifyEmitFilteringDone = (grid, filteringExpressions, calledTimes) => {
     const args = { owner: grid, cancel: false, filteringExpressions };
@@ -6569,10 +6569,10 @@ const verifyEmitFilteringDone = (grid, filteringExpressions, calledTimes) => {
     expect(grid.filtering.emit).toHaveBeenCalledTimes(calledTimes);
     expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
     expect(grid.filteringDone.emit).toHaveBeenCalledTimes(calledTimes);
-}
+};
 
 const filterGrid = (fix, grid, columnName, filterVal, condition) => {
     grid.filter(columnName, filterVal, condition);
     tick(100);
     fix.detectChanges();
-}
+};
