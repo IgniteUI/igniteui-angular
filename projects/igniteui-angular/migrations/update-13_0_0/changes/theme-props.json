@@ -2,6 +2,51 @@
     "$schema": "../../common/schema/theme-props.schema.json",
     "changes": [
         {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-theme"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-light-theme"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-dark-theme"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-fluent-light-theme"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-fluent-dark-theme"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-bootstrap-light-theme"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-bootstrap-dark-theme"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-indigo-light-theme"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-indigo-dark-theme"
+        },
+        {
             "name": "$_default-shape-action-strip",
             "replaceWith": "$default-shape-action-strip"
         },
