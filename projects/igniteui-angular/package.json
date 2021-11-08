@@ -75,6 +75,14 @@
         "uuid": "^8.3.0",
         "@igniteui/material-icons-extended": "^2.10.0"
     },
+    "exports": {
+        "./schematics/*": {
+            "default": "./schematics/*"
+        },
+        "./migrations/*": {
+            "default": "./migrations/*"
+        }
+    },
     "peerDependencies": {
         "@angular/common": "^13.0.0",
         "@angular/core": "^13.0.0",
