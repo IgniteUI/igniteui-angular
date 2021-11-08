@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
-import { DebugElement } from '@angular/core';
+import { DebugElement, QueryList } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
@@ -20,6 +20,7 @@ import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     OneColPerGroupGridComponent, NestedColumnGroupsGridComponent,
     DynamicGridComponent, NestedColGroupsWithTemplatesGridComponent,
     DynamicColGroupsGridComponent } from '../../test-utils/grid-mch-sample.spec';
+import { CellType } from '../common/grid.interface';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid-thead__title';
@@ -498,15 +499,15 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             // check header and content have same size.
             const col1Header = grid.getColumnByName('Country').headerCell.nativeElement;
-            const cell1 = grid.gridAPI.get_row_by_index(0).cells.toArray()[0].nativeElement;
+            const cell1 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).first.nativeElement;
             expect(col1Header.offsetWidth).toEqual(cell1.offsetWidth);
 
             let col2Header = grid.getColumnByName('Region').headerCell.nativeElement;
-            let cell2 = grid.gridAPI.get_row_by_index(0).cells.toArray()[1].nativeElement;
+            let cell2 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1].nativeElement;
             expect(col2Header.offsetWidth - cell2.offsetWidth).toBeLessThanOrEqual(1);
 
             let col3Header = grid.getColumnByName('City').headerCell.nativeElement;
-            let cell3 = grid.gridAPI.get_row_by_index(0).cells.toArray()[2].nativeElement;
+            let cell3 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[2].nativeElement;
             expect(col3Header.offsetWidth).toEqual(cell3.offsetWidth);
 
             // check that if grid is resized, group size is updated.
@@ -521,11 +522,11 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(locationColGroup.width).toBe(expectedWidth);
 
             col2Header = grid.getColumnByName('Region').headerCell.nativeElement;
-            cell2 = grid.gridAPI.get_row_by_index(0).cells.toArray()[1].nativeElement;
+            cell2 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1].nativeElement;
             expect(col2Header.offsetWidth - cell2.offsetWidth).toBeLessThanOrEqual(1);
 
             col3Header = grid.getColumnByName('City').headerCell.nativeElement;
-            cell3 = grid.gridAPI.get_row_by_index(0).cells.toArray()[2].nativeElement;
+            cell3 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[2].nativeElement;
             expect(col3Header.offsetWidth).toEqual(cell3.offsetWidth);
         });
 
@@ -547,15 +548,15 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             // check header and content have same size.
             const col1Header = grid.getColumnByName('Country').headerCell.nativeElement;
-            const cell1 = grid.gridAPI.get_row_by_index(0).cells.toArray()[0].nativeElement;
+            const cell1 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[0].nativeElement;
             expect(col1Header.offsetWidth).toEqual(cell1.offsetWidth);
 
             const col2Header = grid.getColumnByName('Region').headerCell.nativeElement;
-            const cell2 = grid.gridAPI.get_row_by_index(0).cells.toArray()[1].nativeElement;
+            const cell2 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1].nativeElement;
             expect(col2Header.offsetWidth - cell2.offsetWidth).toBeLessThanOrEqual(1);
 
             const col3Header = grid.getColumnByName('City').headerCell.nativeElement;
-            const cell3 = grid.gridAPI.get_row_by_index(0).cells.toArray()[2].nativeElement;
+            const cell3 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[2].nativeElement;
             expect(col3Header.offsetWidth).toEqual(cell3.offsetWidth);
         });
 

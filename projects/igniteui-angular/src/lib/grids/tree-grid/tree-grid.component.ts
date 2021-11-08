@@ -431,7 +431,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this, rowIndex, column.field);
+            return new IgxGridCell(this as any, rowIndex, column.field);
         }
     }
 
@@ -751,7 +751,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (index < 0 || index >= this.filteredSortedData.length) {
             return undefined;
         }
-        return new IgxTreeGridRow(this, index, rec);
+        return new IgxTreeGridRow(this as any, index, rec);
     }
 
     /**
@@ -799,7 +799,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.field === columnField);
         if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this, rowIndex, columnField);
+            return new IgxGridCell(this as any, rowIndex, columnField);
         }
     }
 
@@ -819,7 +819,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByKey(rowSelector);
         const column = this.columnList.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this, row.index, columnField);
+            return new IgxGridCell(this as any, row.index, columnField);
         }
     }
 
@@ -864,14 +864,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const rec: any = data ?? this.dataView[index];
 
         if (this.isSummaryRow(rec)) {
-            row = new IgxSummaryRow(this, index, rec.summaries, GridInstanceType.TreeGrid);
+            row = new IgxSummaryRow(this as any, index, rec.summaries, GridInstanceType.TreeGrid);
         }
 
         if (!row && rec) {
             const isTreeRow = this.isTreeRow(rec);
             const dataRec = isTreeRow ? rec.data : rec;
             const treeRow = isTreeRow ? rec : undefined;
-            row = new IgxTreeGridRow(this, index, dataRec, treeRow);
+            row = new IgxTreeGridRow(this as any, index, dataRec, treeRow);
         }
 
         return row;

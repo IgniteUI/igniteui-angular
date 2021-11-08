@@ -997,7 +997,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     private getCellType(useRow?: boolean): CellType {
         const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.rowData) : this.intRow.index;
-        // TOOD: Fix types
+        // TODO: Fix types
         return new IgxGridCell(this.grid, rowID, this.column.field);
     }
 }

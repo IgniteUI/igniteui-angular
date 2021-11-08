@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, Output, EventEmitter, Host } from '@angular/core';
+import { Component, ContentChild, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 import { IgxExcelTextDirective, IgxCSVTextDirective } from './common';
@@ -93,7 +93,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
     public isExporting = false;
 
     constructor(
-        @Host() protected toolbar: IgxToolbarToken,
+        @Inject(IgxToolbarToken) protected toolbar: IgxToolbarToken,
         private excelExporter: IgxExcelExporterService,
         private csvExporter: IgxCsvExporterService,
     ) {

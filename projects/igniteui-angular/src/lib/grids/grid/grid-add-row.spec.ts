@@ -1,8 +1,8 @@
-import { IgxGridModule, IgxGridComponent } from './public_api';
+import { IgxGridModule, IgxGridComponent, CellType } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { DebugElement } from '@angular/core';
+import { DebugElement, QueryList } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxAddRowComponent, IgxGridRowEditingTransactionComponent
@@ -844,18 +844,15 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.rowEditable = true;
             fixture.detectChanges();
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            // const headerCells = grid.headerGroups.first.children.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
+            const headerCells = grid.headerGroupsList[0].children;
             // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridFirstRow.cells);
 
             gridFirstRow.beginAddRow();
             fixture.detectChanges();
             const newRow = grid.gridAPI.get_row_by_index(1);
             expect(newRow.addRowUI).toBeTrue();
-            const newRowCells = newRow.cells.toArray();
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, newRowCells as any);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, newRow.cells);
         });
     });
 

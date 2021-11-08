@@ -7,7 +7,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
-import { IgxGridModule } from './public_api';
+import { IgxGridModule, IgxGrouping } from './public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -19,7 +19,6 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { IgxGrouping } from '../../data-operations/grouping-strategy';
 
 describe('IgxGrid - GroupBy #grid', () => {
 

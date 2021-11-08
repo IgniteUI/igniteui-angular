@@ -1124,23 +1124,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public footer: ElementRef;
 
     public get headerContainer() {
-        return this.theadRow.headerContainer;
+        return this.theadRow?.headerContainer;
     }
 
     public get headerSelectorContainer() {
-        return this.theadRow.headerSelectorContainer;
+        return  this.theadRow?.headerSelectorContainer;
     }
 
     public get headerDragContainer() {
-        return this.theadRow.headerDragContainer;
+        return this.theadRow?.headerDragContainer;
     }
 
     public get headerGroupContainer() {
-        return this.theadRow.headerGroupContainer;
+        return this.theadRow?.headerGroupContainer;
     }
 
     public get filteringRow(): IgxGridFilteringRowComponent {
-        return this.theadRow.filterRow;
+        return this.theadRow?.filterRow;
     }
 
     /** @hidden @internal */
@@ -3070,12 +3070,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public _setupServices() {
-        this.gridAPI.grid = this;
-        this.crudService.grid = this;
-        this.selectionService.grid = this;
-        this.navigation.grid = this;
-        this.filteringService.grid = this;
-        this.summaryService.grid = this;
+        this.gridAPI.grid = this as any;
+        this.crudService.grid = this as any;
+        this.selectionService.grid = this as any;
+        this.navigation.grid = this as any;
+        this.filteringService.grid = this as any;
+        this.summaryService.grid = this as any;
     }
 
     public _setupListeners() {
@@ -3119,7 +3119,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
-                    instance.initialize(this, this.overlayService, event.id);
+                    instance.initialize(this as any, this.overlayService, event.id);
                 }
             }
         });
@@ -4237,7 +4237,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     rowIndex: index
                 };
 
-                const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this);
+                const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this as any);
                 this.gridAPI.update_cell(cell);
                 this.cdr.detectChanges();
             }
@@ -4267,7 +4267,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (editableCell && editableCell.id.rowID === rowSelector) {
                 this.crudService.endCellEdit();
             }
-            const row = new IgxEditRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
+            const row = new IgxEditRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this as any);
             this.gridAPI.update_row(row, value);
 
             // TODO: fix for #5934 and probably break for #5763
@@ -5029,7 +5029,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get unpinnedDataView(): any[] {
-        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf || [];
+        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer?.igxForOf || [];
     }
 
     /**
@@ -5228,7 +5228,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const selectedColumns = this.grid.selectedColumns();
      * ```
      */
-    public selectedColumns(): IgxColumnComponent[] {
+    public selectedColumns(): ColumnType[] {
         const fields = this.selectionService.getSelectedColumns();
         return fields.map(field => this.getColumnByName(field)).filter(field => field);
     }
@@ -5243,12 +5243,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param columns
      * @param clearCurrentSelection if true clears the current selection
      */
-    public selectColumns(columns: string[] | IgxColumnComponent[], clearCurrentSelection?: boolean) {
+    public selectColumns(columns: string[] | ColumnType[], clearCurrentSelection?: boolean) {
         let fieldToSelect: string[] = [];
         if (columns.length === 0 || typeof columns[0] === 'string') {
             fieldToSelect = columns as string[];
         } else {
-            (columns as IgxColumnComponent[]).forEach(col => {
+            (columns as ColumnType[]).forEach(col => {
                 if (col.columnGroup) {
                     const children = col.allChildren.filter(c => !c.columnGroup).map(c => c.field);
                     fieldToSelect = [...fieldToSelect, ...children];
@@ -5263,7 +5263,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Deselect specified columns by filed.
+     * Deselect specified columns by field.
      *
      * @example
      * ```typescript
@@ -5271,12 +5271,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param columns
      */
-    public deselectColumns(columns: string[] | IgxColumnComponent[]) {
+    public deselectColumns(columns: string[] | ColumnType[]) {
         let fieldToDeselect: string[] = [];
         if (columns.length === 0 || typeof columns[0] === 'string') {
             fieldToDeselect = columns as string[];
         } else {
-            (columns as IgxColumnComponent[]).forEach(col => {
+            (columns as ColumnType[]).forEach(col => {
                 if (col.columnGroup) {
                     const children = col.allChildren.filter(c => !c.columnGroup).map(c => c.field);
                     fieldToDeselect = [...fieldToDeselect, ...children];
@@ -5685,8 +5685,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public getEmptyRecordObjectFor(inRow: IgxRowDirective) {
-        const row = { ...inRow?.rowData };
+    public getEmptyRecordObjectFor(inRow: RowType) {
+        const row = { ...inRow?.data };
         Object.keys(row).forEach(key => row[key] = undefined);
         const id = this.generateRowID();
         row[this.primaryKey] = id;
@@ -5827,7 +5827,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected beginAddRowForIndex(index: number, asChild: boolean = false) {
-        const row: RowType = index == null ?
+        // TODO is row from rowList suitable for enterAddRowMode
+        const row = index == null ?
             null : this.rowList.find(r => r.index === index);
         if (row !== undefined) {
             this.crudService.enterAddRowMode(row, asChild);

@@ -235,13 +235,13 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 const cellContactName = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 const range = {
-                    rowStart: cellContactName.rowIndex,
-                    rowEnd: cellContactName.rowIndex,
+                    rowStart: cellContactName.row.index,
+                    rowEnd: cellContactName.row.index,
                     columnStart: cellContactName.visibleColumnIndex,
                     columnEnd: cellContactName.visibleColumnIndex
                 };
                 grid.selectRange(range);
-                grid.navigation.activeNode = { row: cellContactName.rowIndex, column: cellContactName.visibleColumnIndex };
+                grid.navigation.activeNode = { row: cellContactName.row.index, column: cellContactName.visibleColumnIndex };
                 fix.detectChanges();
 
                 grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowRight'));

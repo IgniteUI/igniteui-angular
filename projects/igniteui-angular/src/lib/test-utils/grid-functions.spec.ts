@@ -1,5 +1,5 @@
 
-import { DebugElement } from '@angular/core';
+import { DebugElement, QueryList } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture, tick } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group/public_api';
@@ -23,6 +23,8 @@ import { IgxGridHeaderRowComponent } from '../grids/headers/grid-header-row.comp
 import { IgxGridRowComponent } from '../grids/grid/grid-row.component';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { SortingDirection } from '../data-operations/sorting-strategy';
+import { IgxRowDirective } from '../grids/row.directive';
+
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -230,15 +232,15 @@ export class GridFunctions {
         resolve();
     });
 
-    public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
-        const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
+    public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxRowDirective) {
+        const rowDE = fix.debugElement.queryAll(By.directive(IgxRowDirective)).find(el => el.componentInstance === row);
         const expandCellDE = rowDE.query(By.directive(IgxGridExpandableCellComponent));
         expandCellDE.componentInstance.toggle(new MouseEvent('click'));
         fix.detectChanges();
     }
 
-    public static getMasterRowDetailDebug(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
-        const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
+    public static getMasterRowDetailDebug(fix: ComponentFixture<any>, row: IgxRowDirective) {
+        const rowDE = fix.debugElement.queryAll(By.directive(IgxRowDirective)).find(el => el.componentInstance === row);
         const detailDE = rowDE.parent.children
             .find(el => el.attributes['detail'] === 'true' && el.attributes['data-rowindex'] === row.index + 1 + '');
         return detailDE;
@@ -248,7 +250,7 @@ export class GridFunctions {
         return fix.debugElement.queryAll(By.css('div[detail="true"]')).sort((a, b) => a.context.index - b.context.index);
     }
 
-    public static getRowExpandIconName(row: IgxGridRowComponent) {
+    public static getRowExpandIconName(row: IgxRowDirective) {
         return row.element.nativeElement.querySelector('igx-icon').textContent;
     }
 
@@ -933,7 +935,7 @@ export class GridFunctions {
         const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerGroup = headerGroups.find((hg) => {
             const col: IgxColumnComponent = hg.componentInstance.column;
-            return col.field === columnField && (forGrid ? forGrid === col.grid : true);
+            return col.field === columnField && (forGrid ? forGrid.gridAPI.grid === col.grid : true);
         });
         const filterCell = headerGroup.query(By.css(FILTER_UI_CELL));
         const chip = filterCell.query(By.css('igx-chip'));
@@ -1895,7 +1897,7 @@ export class GridFunctions {
         return fix.nativeElement.querySelectorAll(DRAG_INDICATOR_CLASS);
     }
 
-    public static isCellPinned(cell: IgxGridCellComponent): boolean {
+    public static isCellPinned(cell: CellType): boolean {
         return cell.nativeElement.classList.contains(CELL_PINNED_CLASS);
     }
 
@@ -1964,10 +1966,12 @@ export class GridFunctions {
         return null;
     }
 
-    public static verifyLayoutHeadersAreAligned(headerGroups: IgxGridHeaderGroupComponent[], rowCells: IgxGridCellComponent[]) {
-        for (let i = 0; i < headerGroups.length; i++) {
-            const widthDiff = headerGroups[i].header.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
-            const heightDiff = headerGroups[i].header.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
+    public static verifyLayoutHeadersAreAligned(headerGroups: any, rowCells: any) {
+        const rowCellsArr = rowCells.toArray ? rowCells.toArray() : rowCells;
+        const headerGroupsArr = headerGroups.toArray();
+        for (let i = 0; i < headerGroupsArr.length; i++) {
+            const widthDiff = headerGroupsArr[i].header.nativeElement.clientWidth - rowCellsArr[i].nativeElement.clientWidth;
+            const heightDiff = headerGroupsArr[i].header.nativeElement.clientHeight - rowCellsArr[i].nativeElement.clientHeight;
             expect(widthDiff).toBeLessThanOrEqual(1);
             expect(heightDiff).toBeLessThanOrEqual(3);
         }

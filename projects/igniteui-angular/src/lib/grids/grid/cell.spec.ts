@@ -21,7 +21,7 @@ describe('IgxGrid - Cell component #grid', () => {
         let grid: IgxGridComponent;
         let cellElem: DebugElement;
         let firstCell: CellType;
-        let firstCellElem: IgxGridCellComponent;
+        let firstCellElem: CellType;
 
         configureTestSuite((() => {
             TestBed.configureTestingModule({

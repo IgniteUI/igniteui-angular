@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
+import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef, Inject } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -10,13 +10,13 @@ import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFiltering
     IgxStringFilteringOperand, IFilteringOperation} from '../data-operations/filtering-condition';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
-import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IPinningConfig } from './grid.common';
 import { delay, take } from 'rxjs/operators';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
+import { GridType, IGX_GRID_BASE } from './common/grid.interface';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -98,7 +98,7 @@ export class IgxGridStateDirective {
 
     private featureKeys: GridFeatures[] = [];
     private state: IGridState;
-    private currGrid: IgxGridBaseDirective;
+    private currGrid: GridType;
     private _options: IGridStateOptions = {
         columns: true,
         filtering: true,
@@ -402,7 +402,7 @@ export class IgxGridStateDirective {
      * @hidden
      */
     constructor(
-        @Host() @Optional() public grid: IgxGridBaseDirective,
+        @Host() @Optional() @Inject(IGX_GRID_BASE) public grid: GridType,
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) { }
 
