@@ -6,11 +6,14 @@ import {
 import { UpdateChanges } from '../common/UpdateChanges';
 import { Element } from '@angular/compiler';
 import { findElementNodes, getSourceOffset, parseFile } from '../common/util';
+import { nativeImport } from '../common/import-helper.js';
 
 const version = '13.0.0';
 
-export default (): Rule => (host: Tree, context: SchematicContext) => {
+export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
+
+    const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
 
     const update = new UpdateChanges(__dirname, host, context);
     const GRIDS = ['IgxGridComponent', 'IgxTreeGridComponent', 'IgxHierarchicalGridComponent'];
@@ -18,7 +21,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     const tsFiles = update.tsFiles;
 
     for (const path of update.templateFiles) {
-        findElementNodes(parseFile(host, path), TAGS)
+        findElementNodes(parseFile(new HtmlParser(), host, path), TAGS)
             .map(node => getSourceOffset(node as Element))
             .forEach(offset => {
                 const { file, node } = offset;
