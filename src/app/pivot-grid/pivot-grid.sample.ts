@@ -34,7 +34,13 @@ export class PivotGridSampleComponent {
         rows: [{
             memberName: 'City',
             enabled: true
-        }, {
+        },
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                }
+            ), {
             memberFunction: () => 'All',
             memberName: 'AllProducts',
             enabled: true,
