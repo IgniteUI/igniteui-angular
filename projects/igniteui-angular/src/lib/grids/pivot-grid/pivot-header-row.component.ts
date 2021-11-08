@@ -7,9 +7,12 @@ import {
     Renderer2
 } from '@angular/core';
 import { IBaseChipEventArgs } from '../../chips/chip.component';
+import { GridColumnDataType } from '../../data-operations/data-util';
+import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
-import { PivotDimensionType } from './pivot-grid.interface';
+import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
+import { IPivotAggregator, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotRowComponent } from './pivot-row.component';
 
 export interface IgxGridRowSelectorsTemplateContext {
@@ -35,9 +38,13 @@ export interface IgxGridRowSelectorsTemplateContext {
     templateUrl: './pivot-header-row.component.html'
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
+
     @Input()
     public row: IgxPivotRowComponent;
 
+    public aggregateList: IPivotAggregator[] = [];
+
+    public value: IPivotValue;
     private _dropPos = DropPosition.AfterDropTarget;
     private _dropLeftIndicatorClass = 'igx-pivot-grid__drop-indicator--left';
     private _dropRightIndicatorClass = 'igx-pivot-grid__drop-indicator--right';
@@ -73,6 +80,22 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     public filterRemoved(event: IBaseChipEventArgs) {
         const filter = this.grid.pivotConfiguration.filters.find(x => x.memberName === event.owner.id);
         filter.enabled = false;
+    }
+
+    public onSummaryClick(event, value: IPivotValue) {
+        this.value = value;
+        this.aggregateList = this.getAggregatorsForValue(value);
+    }
+
+    public onAggregationChange(event: ISelectionEventArgs) {
+        if (!this.isSelected(event.newSelection.value)) {
+            this.value.aggregate = event.newSelection.value.aggregator;
+            this.grid.pipeTrigger++;
+        }
+    }
+
+    public isSelected(val: IPivotAggregator) {
+        return this.value.aggregate.name === val.aggregator.name;
     }
 
     public onDimDragOver(event, dimension?: PivotDimensionType) {
@@ -225,5 +248,21 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             default:
                 return null;
         }
+    }
+
+    protected getAggregatorsForValue(value: IPivotValue): IPivotAggregator[] {
+         const dataType = value.dataType || this.grid.resolveDataTypes(this.grid.data[0][value.member]);
+         switch (dataType) {
+            case GridColumnDataType.Number:
+            case GridColumnDataType.Currency:
+                 return new IgxPivotNumericAggregate().aggregators;
+            case GridColumnDataType.Date:
+            case GridColumnDataType.DateTime:
+                    return new IgxPivotDateAggregate().aggregators;
+            case GridColumnDataType.Time:
+                return new IgxPivotTimeAggregate().aggregators;
+             default:
+                return new IgxPivotAggregate().aggregators;
+         }
     }
 }

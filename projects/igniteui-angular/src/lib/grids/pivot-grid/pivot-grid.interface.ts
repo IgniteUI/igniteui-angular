@@ -6,6 +6,12 @@ import { IPivotDimensionStrategy } from '../../data-operations/pivot-strategy';
 
 export type PivotAggregation = (members: any[], data: any[]) => any;
 
+export interface IPivotAggregator {
+    key: string;
+    label: string;
+    aggregator: (members: number[]) => any;
+}
+
 export interface IPivotConfiguration {
     rowStrategy?: IPivotDimensionStrategy | null;
     columnStrategy?: IPivotDimensionStrategy | null;

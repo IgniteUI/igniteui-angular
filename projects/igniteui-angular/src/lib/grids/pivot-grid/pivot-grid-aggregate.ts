@@ -1,7 +1,15 @@
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxTimeSummaryOperand } from '../summaries/grid-summary';
+import { IPivotAggregator } from './pivot-grid.interface';
 
 
 export class IgxPivotAggregate {
+    public get aggregators() {
+        return [{
+            key: 'count',
+            label: 'Count',
+            aggregator: IgxPivotAggregate.count
+        }];
+    }
     /**
      * Counts all the records in the data source.
      * If filtering is applied, counts only the filtered records.
@@ -17,6 +25,35 @@ export class IgxPivotAggregate {
 }
 
 export class IgxPivotNumericAggregate extends IgxPivotAggregate {
+
+    public get aggregators() {
+        let result: IPivotAggregator[] = [];
+        result = result.concat(super.aggregators);
+        result.push({
+            key: 'min',
+            label: 'Min',
+            aggregator: IgxPivotNumericAggregate.min
+        });
+        result.push({
+            key: 'max',
+            label: 'Max',
+            aggregator: IgxPivotNumericAggregate.max
+        });
+
+        result.push({
+            key: 'sum',
+            label: 'Sum',
+            aggregator: IgxPivotNumericAggregate.sum
+        });
+
+        result.push({
+            key: 'average',
+            label: 'Avg',
+            aggregator: IgxPivotNumericAggregate.average
+        });
+        return result;
+    }
+
     /**
      * Returns the minimum numeric value in the provided data records.
      * If filtering is applied, returns the minimum value in the filtered data records.
@@ -71,6 +108,21 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
 }
 
 export class IgxPivotDateAggregate extends IgxPivotAggregate {
+    public get aggregators() {
+        let result: IPivotAggregator[] = [];
+        result = result.concat(super.aggregators);
+        result.push({
+            key: 'latest',
+            label: 'Latest',
+            aggregator: IgxPivotDateAggregate.latest
+        });
+        result.push({
+            key: 'earliest',
+            label: 'Earliest',
+            aggregator: IgxPivotDateAggregate.earliest
+        });
+        return result;
+    }
     /**
      * Returns the latest date value in the data records.
      * If filtering is applied, returns the latest date value in the filtered data records.
@@ -99,6 +151,22 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
 }
 
 export class IgxPivotTimeAggregate extends IgxPivotAggregate {
+    public get aggregators() {
+        let result: IPivotAggregator[] = [];
+        result = result.concat(super.aggregators);
+        result.push({
+            key: 'latestTime',
+            label: 'Latest Time',
+            aggregator: IgxPivotTimeAggregate.latestTime
+        });
+        result.push({
+            key: 'earliestTime',
+            label: 'Earliest Time',
+            aggregator: IgxPivotTimeAggregate.earliestTime
+        });
+        return result;
+    }
+
     /**
      * Returns the latest time value in the data records. Compare only the time part of the date.
      * If filtering is applied, returns the latest time value in the filtered data records.
