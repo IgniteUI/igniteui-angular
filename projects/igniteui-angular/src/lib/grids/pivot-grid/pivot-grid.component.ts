@@ -717,6 +717,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public beginAddRowByIndex(_index: number): void {
     }
 
+    /**
+     * @hidden @internal
+     */
+    public get totalHeight() {
+        return this.calcHeight;
+    }
 
     protected toggleGroup(col: IgxColumnComponent, newState: boolean) {
         if (this.hasMultipleValues) {
