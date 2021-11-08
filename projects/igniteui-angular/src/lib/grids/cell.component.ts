@@ -706,20 +706,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * @deprecated in version 8.2.0. Use 'selected' property instead
-     *
-     * Gets whether the cell is selected.
-     *
-     * ```typescript
-     * let isCellSelected = thid.cell.isCellSelected();
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    public isCellSelected() {
-        return this.selectionService.selected(this.selectionNode);
-    }
-
-    /**
      * @hidden
      * @internal
      */
