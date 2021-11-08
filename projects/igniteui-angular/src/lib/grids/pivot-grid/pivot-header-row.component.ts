@@ -4,11 +4,15 @@ import {
     Component,
     ElementRef,
     Input,
-    Renderer2
+    OnInit,
+    Renderer2,
+    ViewChild
 } from '@angular/core';
 import { IBaseChipEventArgs } from '../../chips/chip.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
+import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
+import { AutoPositionStrategy } from '../../services/public_api';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
@@ -37,7 +41,7 @@ export interface IgxGridRowSelectorsTemplateContext {
     selector: 'igx-pivot-header-row',
     templateUrl: './pivot-header-row.component.html'
 })
-export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
+export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnInit {
 
     @Input()
     public row: IgxPivotRowComponent;
@@ -48,6 +52,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     private _dropPos = DropPosition.AfterDropTarget;
     private _dropLeftIndicatorClass = 'igx-pivot-grid__drop-indicator--left';
     private _dropRightIndicatorClass = 'igx-pivot-grid__drop-indicator--right';
+    private valueData: Map<string, IPivotAggregator[]>;
 
     constructor(
         protected ref: ElementRef<HTMLElement>,
@@ -55,6 +60,34 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         protected renderer: Renderer2,
         ) {
             super(ref, cdr);
+    }
+
+    public ngOnInit() {
+        this.valueData = new Map();
+        const values = this.grid.pivotConfiguration.values;
+        values.forEach(val => {
+            let defaultAggr = this.getAggregatorsForValue(val);
+            const isDefault = defaultAggr.find(x => x.aggregator.name === val.aggregate.name);
+            // resolve custom aggregations
+            if(!isDefault && this.grid.data[0][val.member] !== undefined) {
+                // if field exists, then we can apply default aggregations and add the custom one.
+                defaultAggr.unshift({
+                    key: 'custom',
+                    label: 'Custom',
+                    aggregator: val.aggregate
+                });
+            } else if(!isDefault) {
+                // otherwise this is a custom aggregation that is not compatible
+                // with the defaults, since it operates on field that is not in the data
+                // leave only the custom one.
+                defaultAggr = [{
+                    key: 'custom',
+                    label: val.displayName || 'Custom',
+                    aggregator: val.aggregate
+                }];
+            }
+            this.valueData.set(val.member, defaultAggr);
+        });
     }
 
     public rowRemoved(event: IBaseChipEventArgs) {
@@ -84,7 +117,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
     public onSummaryClick(event, value: IPivotValue) {
         this.value = value;
-        this.aggregateList = this.getAggregatorsForValue(value);
+        this.aggregateList = this.valueData.get(value.member);
     }
 
     public onAggregationChange(event: ISelectionEventArgs) {

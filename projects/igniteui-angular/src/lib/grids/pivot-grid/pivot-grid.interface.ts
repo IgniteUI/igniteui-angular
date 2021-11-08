@@ -9,7 +9,7 @@ export type PivotAggregation = (members: any[], data: any[]) => any;
 export interface IPivotAggregator {
     key: string;
     label: string;
-    aggregator: (members: number[]) => any;
+    aggregator: (members: any[], data?: any[]) => any;
 }
 
 export interface IPivotConfiguration {
