@@ -8,11 +8,12 @@ import {
     Renderer2,
     ViewChild
 } from '@angular/core';
+import { first } from 'rxjs/operators';
 import { IBaseChipEventArgs } from '../../chips/chip.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, VerticalAlignment } from '../../services/public_api';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/public_api';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
@@ -53,8 +54,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     private _dropLeftIndicatorClass = 'igx-pivot-grid__drop-indicator--left';
     private _dropRightIndicatorClass = 'igx-pivot-grid__drop-indicator--right';
     private valueData: Map<string, IPivotAggregator[]>;
-    private _subMenuPositionSettings = {
-        verticalStartPoint: VerticalAlignment.Bottom
+    private _subMenuPositionSettings: PositionSettings = {
+        verticalStartPoint: VerticalAlignment.Bottom,
+        closeAnimation: undefined
     };
     private _subMenuOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
@@ -125,24 +127,15 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     }
 
     public onSummaryClick(eventArgs, value: IPivotValue, dropdown: IgxDropDownComponent) {
-        this.value = value;
-        this.aggregateList = this.valueData.get(value.member);
         this._subMenuOverlaySettings.target = eventArgs.currentTarget;
         if (dropdown.collapsed) {
-            dropdown.open(this._subMenuOverlaySettings);
+            this.updateDropDown(value, dropdown);
         } else {
-            this._subMenuOverlaySettings.positionStrategy.position(
-                (dropdown as any).toggleDirective.elementRef.nativeElement.parentElement,
-                undefined,
-                undefined,
-                false,
-                eventArgs.currentTarget);
-        }
-    }
-
-    public onClosing(evt) {
-        if (evt.event && (this._subMenuOverlaySettings.target as HTMLElement).contains(evt.event.target)) {
-            evt.cancel = true;
+            // close for previous chip
+            dropdown.close();
+            dropdown.closed.pipe(first()).subscribe(() => {
+              this.updateDropDown(value, dropdown);
+            });
         }
     }
 
@@ -323,5 +316,11 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
              default:
                 return new IgxPivotAggregate().aggregators;
          }
+    }
+
+    protected updateDropDown(value: IPivotValue, dropdown) {
+        this.value = value;
+        this.aggregateList = this.valueData.get(value.member);
+        dropdown.open(this._subMenuOverlaySettings);
     }
 }
