@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    EventEmitter,
     ComponentFactoryResolver,
     ElementRef,
     forwardRef,
@@ -14,6 +15,7 @@ import {
     LOCALE_ID,
     NgZone,
     OnInit,
+    Output,
     Optional,
     QueryList,
     TemplateRef,
@@ -35,6 +37,17 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { PivotUtil } from './pivot-util';
+import { GridPagingMode, GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
+import { WatchChanges } from '../watch-changes';
+import { OverlaySettings } from '../../services/public_api';
+import {
+    IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
+    IColumnVisibilityChangedEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs,
+    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs
+} from '../common/events';
+import { IgxGridRowComponent } from '../grid/grid-row.component';
+import { DropPosition } from '../moving/moving.service';
+import { RowType } from '../common/row.interface';
 import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
@@ -106,20 +119,287 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public headerTemplate: TemplateRef<any>;
 
     /**
+     * @hidden @interal
+     */
+    @Input()
+    public addRowEmptyTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public snackbarDisplayTime = 6000;
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public cellEdit = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public cellEditEnter = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnMoving = new EventEmitter<IColumnMovingEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnPin = new EventEmitter<IPinColumnCancellableEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnPinned = new EventEmitter<IPinColumnEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowAdd = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowAdded = new EventEmitter<IRowDataEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowDeleted = new EventEmitter<IRowDataEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowDelete = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowDragStart = new EventEmitter<IRowDragStartEventArgs>();
+    /**
      * @hidden @internal
      */
     @ViewChildren(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent })
     public excelStyleFilteringComponents: QueryList<IgxGridExcelStyleFilteringComponent>;
 
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowEditEnter = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowEdit = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowPinning = new EventEmitter<IPinRowEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public rowPinned = new EventEmitter<IPinRowEventArgs>();
 
     public columnGroupStates = new Map<string, boolean>();
     public dimensionDataColumns;
     public pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'};
     public isPivot = true;
+
+    /**
+     * @hidden @internal
+     */
+    public dragRowID = null;
+
     protected _defaultExpandState = true;
     private _data;
     private _filteredData;
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get pagingMode() {
+        return;
+    }
+
+    public set pagingMode(_val: GridPagingMode) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @WatchChanges()
+    @Input()
+    public get hideRowSelectors() {
+        return;
+    }
+
+    public set hideRowSelectors(_value: boolean) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get rowDraggable(): boolean {
+        return;
+    }
+
+
+    public set rowDraggable(_val: boolean) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get dragIndicatorIconTemplate(): TemplateRef<any> {
+        return;
+    }
+
+    public set dragIndicatorIconTemplate(_val: TemplateRef<any>) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @WatchChanges()
+    @Input()
+    public get rowEditable(): boolean {
+        return;
+    }
+
+    public set rowEditable(_val: boolean) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get pinning() {
+        return {};
+    }
+    public set pinning(_value) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get summaryPosition() {
+        return;
+    }
+
+    public set summaryPosition(_value: GridSummaryPosition) {
+    }
+
+    /**
+     * @hidden @interal
+     */
+    @Input()
+    public get summaryCalculationMode() {
+        return;
+    }
+
+    public set summaryCalculationMode(_value: GridSummaryCalculationMode) {
+    }
+
+    /**
+     * @hidden @interal
+     */
+    @Input()
+    public get showSummaryOnCollapse() {
+        return;
+    }
+
+    public set showSummaryOnCollapse(_value: boolean) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get hiddenColumnsCount() {
+        return null;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get pinnedColumnsCount() {
+        return null;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get batchEditing(): boolean {
+        return;
+    }
+
+    public set batchEditing(_val: boolean) {
+    }
 
 
     constructor(
@@ -344,6 +624,211 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.reflow();
     }
 
+    /**
+     * @hidden @internal
+     */
+    public isRecordPinnedByIndex(_rowIndex: number) {
+        return null;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public toggleColumnVisibility(_args: IColumnVisibilityChangedEventArgs) {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public expandAll() {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public collapseAll() {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public expandRow(_rowID: any) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public collapseRow(_rowID: any) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get pinnedRows(): IgxGridRowComponent[] {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public getColumnByVisibleIndex(_index: number): IgxColumnComponent {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get totalRecords(): number {
+        return;
+    }
+
+    public set totalRecords(_total: number) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public moveColumn(_column: IgxColumnComponent, _target: IgxColumnComponent, _pos: DropPosition = DropPosition.AfterDropTarget) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public addRow(_data: any): void {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public deleteRow(_rowSelector: any): any {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public updateCell(_value: any, _rowSelector: any, _column: string): void {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public updateRow(_value: any, _rowSelector: any): void {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public enableSummaries(..._rest) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public disableSummaries(..._rest) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public pinColumn(_columnName: string | IgxColumnComponent, _index?): boolean {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public unpinColumn(_columnName: string | IgxColumnComponent, _index?): boolean {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public pinRow(_rowID: any, _index?: number, _row?: RowType): boolean {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public unpinRow(_rowID: any, _row?: RowType): boolean {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get pinnedRowHeight() {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get hasEditableColumns(): boolean {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get hasSummarizedColumns(): boolean {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get hasMovableColumns(): boolean {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get pinnedDataView(): any[] {
+        return [];
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public openAdvancedFilteringDialog(_overlaySettings?: OverlaySettings) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public closeAdvancedFilteringDialog(_applyChanges: boolean) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public endEdit(_commit = true, _event?: Event) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public beginAddRowById(_rowID: any, _asChild?: boolean): void {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public beginAddRowByIndex(_index: number): void {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get totalHeight() {
+        return this.calcHeight;
+    }
+
     protected toggleGroup(col: IgxColumnComponent, newState: boolean) {
         if (this.hasMultipleValues) {
             const fieldColumns = col.children.filter(x => !x.columnGroup);
@@ -389,6 +874,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @internal
      */
     protected calcGridHeadRow() {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected getDataBasedBodyHeight(): number {
+        const dvl = this.dataView?.length || 0;
+        return dvl < this._defaultTargetRecordNumber ? 0 : this.defaultTargetBodyHeight;
     }
 
     protected get hasMultipleValues() {
