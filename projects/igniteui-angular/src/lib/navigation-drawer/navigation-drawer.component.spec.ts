@@ -273,7 +273,7 @@ describe('Navigation Drawer', () => {
     }));
 
     it('should stay at 100% parent height when pinned', waitForAsync(() => {
-        const template = `<div style="height: 100%">
+        const template = `<div style="height: 100%; position: relative;">
                             <igx-nav-drawer
                                 [pin]="pin"
                                 pinThreshold="false"
