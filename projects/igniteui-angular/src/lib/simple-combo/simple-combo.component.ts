@@ -18,7 +18,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxForOfModule } from '../directives/for-of/for_of.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxIconModule, IgxIconService } from '../icon/public_api';
 import { IgxInputGroupModule, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
@@ -147,8 +147,18 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.comboInput.focus();
             }
             if (this.comboInput.value.length === 0) {
-                this.dropdown.focusedItem = this.dropdown.items[0];
+                this.dropdown.navigateFirst();
                 this.dropdownContainer.nativeElement.focus();
+            }
+            if (this.selection.length > 0) {
+                const index = this.virtDir.igxForOf.findIndex(e => {
+                    let current = e[this.valueKey];
+                    if (this.valueKey === null || this.valueKey === undefined) {
+                        current = e;
+                    }
+                    return current === this.selection[0];
+                });
+                this.dropdown.navigateItem(index);
             }
         });
         this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -169,7 +179,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this._onChangeCallback(this.searchValue);
         if (this.collapsed) {
             this.open();
-            this.virtDir.scrollTo(0);
+            this.dropdown.navigateFirst();
         }
         super.handleInputChange(event);
     }
@@ -223,6 +233,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.clearSelection(true);
         if (this.collapsed) {
             this.open();
+            this.dropdown.navigateFirst();
         } else {
             this.focusSearchInput(true);
         }
