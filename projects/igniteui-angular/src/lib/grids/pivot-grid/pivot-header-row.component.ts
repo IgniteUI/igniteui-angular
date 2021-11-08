@@ -5,15 +5,15 @@ import {
     ElementRef,
     Input,
     OnInit,
-    Renderer2,
-    ViewChild
+    Renderer2
 } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IBaseChipEventArgs } from '../../chips/chip.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/public_api';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings,
+     PositionSettings, VerticalAlignment } from '../../services/public_api';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
