@@ -9,7 +9,7 @@ import { IgxFocusTrapModule } from "igniteui-angular";
 
 Basic initialization
 ```html
-<div igxFocusTrap tabindex="0">
+<div [igxFocusTrap]="true" tabindex="0">
     <input type="text" name="uname">
     <input type="password" name="psw">
     <button>SIGN IN</button>

@@ -23,7 +23,7 @@ All notable changes for each version of this project will be documented in this 
 - Added `IgxFocusTrap` directive, which traps the Tab key focus within an element.
 
     ```html
-   <div #wrapper igxFocusTrap tabindex="0">
+   <div #wrapper [igxFocusTrap]="true" tabindex="0">
         <input type="text" placeholder="Enter Username" name="uname">
         <input type="password" placeholder="Enter Password" name="psw">
         <button>SIGN IN</button>
