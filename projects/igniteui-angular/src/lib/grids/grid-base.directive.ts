@@ -5388,7 +5388,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 data = selectedData;
                 result = this.prepareCopyData(event, data);
             }
-
             event.clipboardData.setData('text/plain', result);
         }
     }
@@ -5409,6 +5408,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (!this.clipboardOptions.copyHeaders) {
             result = result.substring(result.indexOf('\n') + 1);
+        }
+
+        if (Object.values(data[0]).length === 1) {
+            result = result.slice(0, -2);
         }
 
         event.preventDefault();
