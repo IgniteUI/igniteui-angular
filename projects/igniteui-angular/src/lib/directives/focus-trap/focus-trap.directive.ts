@@ -13,7 +13,7 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
     }
 
     private destroy$ = new Subject();
-    private _focusTrap: boolean;
+    private _focusTrap: boolean = true;
 
     /** @hidden */
     constructor(
@@ -22,29 +22,32 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Sets the type of the button.
+     * Sets whether the Tab key focus is trapped within the element.
      *
      * @example
      * ```html
-     * <button igxButton="icon"></button>
+     * <div igxFocusTrap="true"></div>
      * ```
      */
     @Input('igxFocusTrap')
     public set focusTrap(focusTrap: boolean) {
-        this._focusTrap = focusTrap || true;
+        this._focusTrap = focusTrap;
+    }
+
+    /** @hidden */
+    public get focusTrap(): boolean {
+        return this._focusTrap;
     }
 
     /** @hidden */
     public ngAfterViewInit(): void {
-        if (this._focusTrap) {
             fromEvent(this.element, 'keydown')
                 .pipe(takeUntil(this.destroy$))
                 .subscribe((event: KeyboardEvent) => {
-                    if (event.key === this.platformUtil.KEYMAP.TAB) {
+                    if (this._focusTrap && event.key === this.platformUtil.KEYMAP.TAB) {
                         this.handleTab(event);
                     }
                 });
-        }
     }
 
     /** @hidden */

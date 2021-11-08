@@ -9,7 +9,7 @@ import { IgxDatePickerModule } from '../../date-picker/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
-fdescribe('igxFocusTrap', () => {
+describe('igxFocusTrap', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -118,11 +118,57 @@ fdescribe('igxFocusTrap', () => {
         fix.detectChanges();
         expect(document.activeElement).toEqual(focusTrap.nativeElement);
     }));
+
+    it('should be able to set focusTrap dynamically', fakeAsync(() => {
+        const fix = TestBed.createComponent(TrapFocusTestComponent);
+        fix.detectChanges();
+
+        const focusTrap = fix.debugElement.query(By.directive(IgxFocusTrapDirective));
+        const button = fix.debugElement.query(By.css('button'));
+        const inputs = fix.debugElement.queryAll(By.css('input'));
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(inputs[0].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(inputs[1].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(button.nativeElement);
+
+        button.nativeElement.blur();
+        fix.detectChanges();
+
+        fix.componentInstance.focusTrap = false;
+        fix.detectChanges();
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        fix.detectChanges();
+        expect(document.activeElement).not.toEqual(inputs[0].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        fix.detectChanges();
+        expect(document.activeElement).not.toEqual(inputs[1].nativeElement);
+
+        fix.componentInstance.focusTrap = true;
+        fix.detectChanges();
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(inputs[0].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(button.nativeElement);
+    }));
 });
 
 
 @Component({
-    template: `<div #wrapper [igxFocusTrap]="true" tabindex="0">
+    template: `<div #wrapper [igxFocusTrap]="focusTrap" tabindex="0">
                 <label for="uname"><b>Username</b></label><br>
                 <input type="text" *ngIf="showInput" placeholder="Enter Username" name="uname"><br>
                 <label for="psw"><b>Password</b></label><br>
@@ -132,4 +178,5 @@ fdescribe('igxFocusTrap', () => {
 class TrapFocusTestComponent {
     public showInput = true;
     public showButton = true;
+    public focusTrap = true;
 }
