@@ -464,61 +464,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             verifyFilterRowUI(input, close, reset, false);
         }));
 
-        it('Should emit filteringDone when we clicked reset', fakeAsync(() => {
-            spyOn(grid.filtering, 'emit');
-            spyOn(grid.filteringDone, 'emit');
-
-            const filterVal = 'search';
-            const columnName = 'ProductName';
-
-            grid.filter(columnName, filterVal, IgxStringFilteringOperand.instance().condition('contains'));
-            tick(100);
-            fix.detectChanges();
-
-            const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
-            const args = { owner: grid, cancel: false, filteringExpressions };
-            expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-            expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
-            expect(grid.filteringDone.emit).toHaveBeenCalledTimes(1);
-
-            GridFunctions.clickFilterCellChip(fix, columnName);
-            GridFunctions.resetFilterRow(fix);
-
-            const emptyFilter = new FilteringExpressionsTree(null, columnName);
-            expect(grid.filtering.emit).toHaveBeenCalledWith({ owner: grid, cancel: false, filteringExpressions: emptyFilter });
-            expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
-            expect(grid.filteringDone.emit).toHaveBeenCalledTimes(2);
-
-            const filterUiRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            const reset = filterUiRow.queryAll(By.css('button'))[0];
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toEqual(true);
-        }));
-
-        it('Should emit filteringDone when clear the input of filteringUI', fakeAsync(() => {
-            spyOn(grid.filtering, 'emit');
-            spyOn(grid.filteringDone, 'emit');
-            const columnName = 'ProductName';
-            const filterValue = 'search';
-            grid.filter(columnName, filterValue, IgxStringFilteringOperand.instance().condition('contains'));
-            tick(100);
-            fix.detectChanges();
-
-            GridFunctions.clickFilterCellChip(fix, columnName);
-
-            spyOn(grid.filteringDone, 'emit');
-
-            grid.filteringRow.onClearClick();
-            tick(100);
-            fix.detectChanges();
-
-            const emptyFilter = new FilteringExpressionsTree(null, columnName);
-            const args = { owner: grid, cancel: false, filteringExpressions: emptyFilter };
-            expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
-        }));
-
         it('Removing second condition removes the And/Or button', fakeAsync(() => {
             const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             const expression = {
@@ -822,42 +767,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(GridFunctions.getFilterRowLeftArrowButton(fix)).not.toBe(null);
             expect(GridFunctions.getFilterRowRightArrowButton(fix)).not.toBe(null);
-        }));
-
-        it('should update UI when chip is removed from header cell.', fakeAsync(() => {
-            spyOn(grid.filtering, 'emit');
-            spyOn(grid.filteringDone, 'emit');
-
-            const columnName = 'ProductName';
-            grid.filter(columnName, 'I', IgxStringFilteringOperand.instance().condition('startsWith'));
-            tick(30);
-            fix.detectChanges();
-
-            expect(grid.rowList.length).toEqual(2);
-
-            const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
-            const args = { owner: grid, cancel: false, filteringExpressions };
-            expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-            expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
-            expect(grid.filteringDone.emit).toHaveBeenCalledTimes(1);
-
-            const filteringCells = GridFunctions.getFilteringCells(fix);
-            const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
-
-            // remove chip
-            ControlsFunction.clickChipRemoveButton(stringCellChip.nativeElement);
-            tick(30);
-            fix.detectChanges();
-
-            expect(grid.rowList.length).toEqual(8);
-
-            const emptyFilter = new FilteringExpressionsTree(null, columnName);
-            args.filteringExpressions = emptyFilter;
-            expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-            expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(emptyFilter);
-            expect(grid.filteringDone.emit).toHaveBeenCalledTimes(2);
         }));
 
         it('should update UI when chip is removed from filter row.', fakeAsync(() => {
@@ -2792,6 +2701,131 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(1);
+        }));
+    });
+
+    describe('Filtering events', () => {
+        let fix: ComponentFixture<any>;
+        let grid: IgxGridComponent;
+
+        const cal = SampleTestData.timeGenerator;
+        const today = SampleTestData.today;
+        
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridDatesFilteringComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+
+            spyOn(grid.filtering, 'emit');
+            spyOn(grid.filteringDone, 'emit');
+        }));
+
+        it('Should emit filteringDone when we clicked reset - Date column type', fakeAsync(() => {
+            emitFilteringDoneOnResetClick(
+                fix,
+                grid,
+                cal.timedelta(today, 'day', 15),
+                "ReleaseDate",
+                IgxDateFilteringOperand.instance().condition("equals")
+            );
+        }));
+
+        it('Should emit filteringDone when we clicked reset - String column type', fakeAsync(() => {
+            emitFilteringDoneOnResetClick(
+                fix,
+                grid,
+                "search",
+                "ProductName",
+                IgxStringFilteringOperand.instance().condition("contains")
+            );
+        }));
+
+        it('Should emit filteringDone when we clicked reset - Number column type', fakeAsync(() => {
+            emitFilteringDoneOnResetClick(
+                fix,
+                grid,
+                100,
+                "Downloads",
+                IgxStringFilteringOperand.instance().condition("equals")
+            );
+        }));
+
+        it('Should emit filteringDone when clear the input of filteringUI - Date column type', fakeAsync(() => {
+            emitFilteringDoneOnInputClear(
+                fix,
+                grid,
+                cal.timedelta(today, 'day', 15),
+                "ReleaseDate",
+                IgxDateFilteringOperand.instance().condition("equals")
+            );
+        }));
+
+        it('Should emit filteringDone when clear the input of filteringUI - String column type', fakeAsync(() => {
+            emitFilteringDoneOnInputClear(
+                fix,
+                grid,
+                "search",
+                "ProductName",
+                IgxStringFilteringOperand.instance().condition("contains")
+            );
+        }));
+
+        it('Should emit filteringDone when clear the input of filteringUI - Number column type', fakeAsync(() => {
+            emitFilteringDoneOnInputClear(
+                fix,
+                grid,
+                3,
+                "Downloads",
+                IgxStringFilteringOperand.instance().condition("equals")
+            );
+        }));
+
+        it('should update UI when chip is removed from header cell - Date column type.', fakeAsync(() => {
+            verifyRemoveChipFromHeader(
+                fix,
+                grid,
+                cal.timedelta(today, 'day', 15),
+                "ReleaseDate",
+                IgxDateFilteringOperand.instance().condition("equals"),
+                1,
+                4
+            );
+        }));
+
+        it('should update UI when chip is removed from header cell - String column type.', fakeAsync(() => {
+            verifyRemoveChipFromHeader(
+                fix,
+                grid,
+                "I",
+                "ProductName",
+                IgxStringFilteringOperand.instance().condition("startsWith"),
+                2,
+                1
+            );
+        }));
+
+        it('should update UI when chip is removed from header cell - Number column type.', fakeAsync(() => {
+            verifyRemoveChipFromHeader(
+                fix,
+                grid,
+                100,
+                "Downloads",
+                IgxStringFilteringOperand.instance().condition("equals"),
+                1,
+                2
+            );
+        }));
+
+        it('should emit filteringDone after chip is close from filtering row - Date column type', fakeAsync(() => {
+            closeChipFromFiteringUIRow(fix, grid, 'ReleaseDate', 4);
+        }));
+
+        it('should emit filteringDone after chip is close from filtering row - String column type', fakeAsync(() => {
+            closeChipFromFiteringUIRow(fix, grid, 'ProductName', 9);
+        }));
+
+        it('should emit filteringDone after chip is close from filtering row - Number column type', fakeAsync(() => {
+            closeChipFromFiteringUIRow(fix, grid, 'Downloads', 7);
         }));
     });
 });
@@ -6460,3 +6494,85 @@ const verifyChipVisibility = (fix, index: number, shouldBeFullyVisible: boolean)
     expect(chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right)
         .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
 };
+
+const emitFilteringDoneOnResetClick = (fix, grid, filterVal: any, columnName: string, condition) => {
+    filterGrid(fix, grid, columnName, filterVal, condition)
+
+    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    verifyEmitFilteringDone(grid, filteringExpressions, 1);
+
+    GridFunctions.clickFilterCellChip(fix, columnName);
+    GridFunctions.resetFilterRow(fix);
+
+    const emptyFilter = new FilteringExpressionsTree(null, columnName);
+    verifyEmitFilteringDone(grid, emptyFilter, 2);
+
+    const filterUiRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+    const reset = filterUiRow.queryAll(By.css('button'))[0];
+    expect(reset.nativeElement.classList.contains('igx-button--disabled')).toEqual(true);
+};
+
+const emitFilteringDoneOnInputClear = (fix, grid, filterVal, columnName, condition) => {
+    filterGrid(fix, grid, columnName, filterVal, condition)
+
+    GridFunctions.clickFilterCellChip(fix, columnName);
+
+    spyOn(grid.filteringDone, 'emit');
+
+    grid.filteringRow.onClearClick();
+    tick(100);
+    fix.detectChanges();
+
+    const emptyFilter = new FilteringExpressionsTree(null, columnName);
+    verifyEmitFilteringDone(grid, emptyFilter, 2);
+};
+
+const verifyRemoveChipFromHeader = (fix, grid, filterVal, columnName, condition, rowListLength, cellIndex) => {
+    filterGrid(fix, grid, columnName, filterVal, condition);
+
+    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    verifyEmitFilteringDone(grid, filteringExpressions, 1);
+
+    const filteringCells = GridFunctions.getFilteringCells(fix);
+    const stringCellChip = filteringCells[cellIndex].query(By.css('igx-chip'));
+
+    // remove chip
+    ControlsFunction.clickChipRemoveButton(stringCellChip.nativeElement);
+    tick(30);
+    fix.detectChanges();
+
+    expect(grid.rowList.length).toEqual(8);
+
+    const emptyFilter = new FilteringExpressionsTree(null, columnName);
+    verifyEmitFilteringDone(grid, emptyFilter, 2);
+}
+
+const closeChipFromFiteringUIRow = (fix, grid, columnName, index) => {
+    GridFunctions.clickFilterCellChip(fix, columnName);
+
+    const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+    const close = filterUIRow.queryAll(By.css('button'))[1];
+
+    GridFunctions.openFilterDDAndSelectCondition(fix, index);
+
+    close.triggerEventHandler('click', null);
+    tick();
+    fix.detectChanges();
+
+    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    verifyEmitFilteringDone(grid, filteringExpressions, 1);
+}
+
+const verifyEmitFilteringDone = (grid, filteringExpressions, calledTimes) => {
+    const args = { owner: grid, cancel: false, filteringExpressions };
+    expect(grid.filtering.emit).toHaveBeenCalledWith(args);
+    expect(grid.filtering.emit).toHaveBeenCalledTimes(calledTimes);
+    expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
+    expect(grid.filteringDone.emit).toHaveBeenCalledTimes(calledTimes);
+}
+
+const filterGrid = (fix, grid, columnName, filterVal, condition) => {
+    grid.filter(columnName, filterVal, condition);
+    tick(100);
+    fix.detectChanges();
+}
