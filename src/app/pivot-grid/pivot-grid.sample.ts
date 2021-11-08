@@ -30,35 +30,20 @@ export class PivotGridSampleComponent {
             }
         ]
         ,
-        rows: [
-            {
-                memberName: 'AllProd',
-                memberFunction: () => 'AllProd',
-                enabled: true,
-                childLevel: {
+        rows: [{
+            memberName: 'City',
+            enabled: true
+        }, {
+            memberFunction: () => 'All',
+            memberName: 'AllProducts',
+            enabled: true,
+            childLevel:
+                {
+                    memberFunction: (data) => data.ProductCategory,
                     memberName: 'ProductCategory',
                     enabled: true
                 }
-            },
-            {
-                memberName: 'AllDate',
-                memberFunction: () => 'AllDate',
-                enabled: true,
-                childLevel: {
-                    memberName: 'Date',
-                    enabled: true
-                }
-            },
-            {
-                memberName: 'AllSel',
-                memberFunction: () => 'AllSel',
-                enabled: true,
-                childLevel: {
-                    memberName: 'SellerName',
-                    enabled: true
-                }
-            }
-        ],
+        }],
         values: [
             {
                 member: 'UnitsSold',
