@@ -13,7 +13,7 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
     }
 
     private destroy$ = new Subject();
-    private _focusTrap: boolean = true;
+    private _focusTrap = true;
 
     /** @hidden */
     constructor(
