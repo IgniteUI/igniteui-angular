@@ -352,7 +352,7 @@ describe('IgxSimpleCombo', () => {
 
             productIndex = 42;
             combo.virtualScrollContainer.scrollTo(productIndex);
-            await wait();
+            await wait(100);
             fixture.detectChanges();
             verifyComboData();
             // index is at bottom
@@ -361,7 +361,7 @@ describe('IgxSimpleCombo', () => {
 
             productIndex = 485;
             combo.virtualScrollContainer.scrollTo(productIndex);
-            await wait(30);
+            await wait(100);
             fixture.detectChanges();
             verifyComboData();
             expect(combo.virtualizationState.startIndex + combo.virtualizationState.chunkSize - 1)
@@ -369,13 +369,13 @@ describe('IgxSimpleCombo', () => {
 
             productIndex = 873;
             combo.virtualScrollContainer.scrollTo(productIndex);
-            await wait();
+            await wait(100);
             fixture.detectChanges();
             verifyComboData();
 
             productIndex = 649;
             combo.virtualScrollContainer.scrollTo(productIndex);
-            await wait();
+            await wait(100);
             fixture.detectChanges();
             verifyComboData();
         }));
