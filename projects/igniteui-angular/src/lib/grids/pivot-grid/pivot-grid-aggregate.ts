@@ -3,7 +3,15 @@ import { IPivotAggregator } from './pivot-grid.interface';
 
 
 export class IgxPivotAggregate {
-    public get aggregators() {
+    /**
+     * Gets array with default aggregator function for base aggregation.
+     * ```typescript
+     * IgxPivotAggregate.aggregators();
+     * ```
+     *
+     * @memberof IgxPivotAggregate
+     */
+    public static aggregators() {
         return [{
             key: 'count',
             label: 'Count',
@@ -26,9 +34,17 @@ export class IgxPivotAggregate {
 
 export class IgxPivotNumericAggregate extends IgxPivotAggregate {
 
-    public get aggregators() {
+    /**
+     * Gets array with default aggregator function for numeric aggregation.
+     * ```typescript
+     * IgxPivotAggregate.aggregators();
+     * ```
+     *
+     * @memberof IgxPivotAggregate
+     */
+    public static aggregators() {
         let result: IPivotAggregator[] = [];
-        result = result.concat(super.aggregators);
+        result = result.concat(super.aggregators());
         result.push({
             key: 'min',
             label: 'Min',
@@ -108,9 +124,17 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
 }
 
 export class IgxPivotDateAggregate extends IgxPivotAggregate {
-    public get aggregators() {
+    /**
+     * Gets array with default aggregator function for date aggregation.
+     * ```typescript
+     * IgxPivotDateAggregate.aggregators();
+     * ```
+     *
+     * @memberof IgxPivotAggregate
+     */
+    public static aggregators() {
         let result: IPivotAggregator[] = [];
-        result = result.concat(super.aggregators);
+        result = result.concat(super.aggregators());
         result.push({
             key: 'latest',
             label: 'Latest',
@@ -151,9 +175,17 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
 }
 
 export class IgxPivotTimeAggregate extends IgxPivotAggregate {
-    public get aggregators() {
+    /**
+     * Gets array with default aggregator function for time aggregation.
+     * ```typescript
+     * IgxPivotTimeAggregate.aggregators();
+     * ```
+     *
+     * @memberof IgxPivotAggregate
+     */
+    public static aggregators() {
         let result: IPivotAggregator[] = [];
-        result = result.concat(super.aggregators);
+        result = result.concat(super.aggregators());
         result.push({
             key: 'latestTime',
             label: 'Latest Time',

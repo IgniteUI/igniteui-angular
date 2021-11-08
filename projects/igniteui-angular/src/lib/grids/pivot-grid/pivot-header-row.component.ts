@@ -307,14 +307,14 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
          switch (dataType) {
             case GridColumnDataType.Number:
             case GridColumnDataType.Currency:
-                 return new IgxPivotNumericAggregate().aggregators;
+                 return IgxPivotNumericAggregate.aggregators();
             case GridColumnDataType.Date:
             case GridColumnDataType.DateTime:
-                    return new IgxPivotDateAggregate().aggregators;
+                    return IgxPivotDateAggregate.aggregators();
             case GridColumnDataType.Time:
-                return new IgxPivotTimeAggregate().aggregators;
+                return IgxPivotTimeAggregate.aggregators();
              default:
-                return new IgxPivotAggregate().aggregators;
+                return IgxPivotAggregate.aggregators();
          }
     }
 
