@@ -55,7 +55,7 @@
                          (dragLeave)="onDimDragLeave($event)"
                          (dragOver)="onDimDragOver($event)"
                          (dragDrop)="onValueDrop($event, valueArea)">
-                         <div igxPrefix (click)='onSummaryClick($event, value)' (pointerdown)='$event.stopPropagation()' [igxToggleAction]="dropdown"
+                         <div igxPrefix (mousedown)='onSummaryClick($event, value, dropdown)' (pointerdown)='$event.stopPropagation()'
                          [igxDropDownItemNavigation]="dropdown">
                             <igx-icon>functions</igx-icon>
                             <igx-icon>arrow_drop_down</igx-icon>
@@ -137,7 +137,7 @@
 <div *ngIf="!row" class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize">
 </div>
 
-<igx-drop-down #dropdown (selectionChanging)='onAggregationChange($event)'>
+<igx-drop-down #dropdown (selectionChanging)='onAggregationChange($event)' (closing)="onClosing($event)">
     <igx-drop-down-item *ngFor="let item of aggregateList" [selected] ='isSelected(item)' [value]='item'>
         {{ item.label }}
     </igx-drop-down-item>

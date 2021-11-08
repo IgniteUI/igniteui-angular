@@ -12,7 +12,7 @@ import { IBaseChipEventArgs } from '../../chips/chip.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
-import { AutoPositionStrategy } from '../../services/public_api';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, VerticalAlignment } from '../../services/public_api';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
@@ -53,6 +53,15 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     private _dropLeftIndicatorClass = 'igx-pivot-grid__drop-indicator--left';
     private _dropRightIndicatorClass = 'igx-pivot-grid__drop-indicator--right';
     private valueData: Map<string, IPivotAggregator[]>;
+    private _subMenuPositionSettings = {
+        verticalStartPoint: VerticalAlignment.Bottom
+    };
+    private _subMenuOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: true,
+        modal: false,
+        positionStrategy: new AutoPositionStrategy(this._subMenuPositionSettings),
+        scrollStrategy: new AbsoluteScrollStrategy()
+    };
 
     constructor(
         protected ref: ElementRef<HTMLElement>,
@@ -115,9 +124,26 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         filter.enabled = false;
     }
 
-    public onSummaryClick(event, value: IPivotValue) {
+    public onSummaryClick(eventArgs, value: IPivotValue, dropdown: IgxDropDownComponent) {
         this.value = value;
         this.aggregateList = this.valueData.get(value.member);
+        this._subMenuOverlaySettings.target = eventArgs.currentTarget;
+        if (dropdown.collapsed) {
+            dropdown.open(this._subMenuOverlaySettings);
+        } else {
+            this._subMenuOverlaySettings.positionStrategy.position(
+                (dropdown as any).toggleDirective.elementRef.nativeElement.parentElement,
+                undefined,
+                undefined,
+                false,
+                eventArgs.currentTarget);
+        }
+    }
+
+    public onClosing(evt) {
+        if (evt.event && (this._subMenuOverlaySettings.target as HTMLElement).contains(evt.event.target)) {
+            evt.cancel = true;
+        }
     }
 
     public onAggregationChange(event: ISelectionEventArgs) {
