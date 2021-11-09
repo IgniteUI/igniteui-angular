@@ -36,7 +36,8 @@ describe('IgxGrid - Grid Paging #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 PagingComponent,
-                GridWithUndefinedDataComponent
+                GridWithUndefinedDataComponent,
+                RemotePagingComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         });
