@@ -8,6 +8,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { useAnimation } from '@angular/animations';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
 import { slideOutBottom, slideInTop } from '../animations/main';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
@@ -79,6 +80,68 @@ describe('Dialog', () => {
         expect(dialog.message).toEqual(expectedMessage);
         const messageDebugElement = fixture.debugElement.query(By.css('.igx-dialog__window-content'));
         expect(messageDebugElement.nativeElement.textContent.trim()).toEqual(expectedMessage);
+    });
+
+    it('Should focus focusable elements in dialog on Tab key pressed', () => {
+        const fix = TestBed.createComponent(DialogComponent);
+        fix.detectChanges();
+
+        const dialog = fix.componentInstance.dialog;
+        dialog.open();
+        fix.detectChanges();
+
+        const buttons = fix.debugElement.queryAll(By.css('button'));
+        const toggle = fix.debugElement.query(By.directive(IgxToggleDirective));
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(buttons[0].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(buttons[1].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(buttons[0].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(buttons[1].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(buttons[0].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(buttons[1].nativeElement);
+    });
+
+    it('should trap focus on dialog modal with non-focusable elements', () => {
+        const fix = TestBed.createComponent(AlertComponent);
+        fix.detectChanges();
+
+        const dialog = fix.componentInstance.dialog;
+        dialog.leftButtonLabel = '';
+        fix.detectChanges();
+
+        dialog.open();
+        fix.detectChanges();
+
+        const toggle = fix.debugElement.query(By.directive(IgxToggleDirective));
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(toggle.nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(toggle.nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(toggle.nativeElement);
     });
 
     it('Should open and close dialog when set values to IsOpen', fakeAsync(() => {

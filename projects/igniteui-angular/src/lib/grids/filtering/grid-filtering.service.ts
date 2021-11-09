@@ -74,15 +74,15 @@ export class IgxFilteringService implements OnDestroy {
 
         this._overlayService.opening
             .pipe(
-                takeUntil(this.destroy$),
-                first(overlay => overlay.id === id)
+                first(overlay => overlay.id === id),
+                takeUntil(this.destroy$)
             )
             .subscribe(() => this.lastActiveNode = this.grid.navigation.activeNode);
 
         this._overlayService.closed
             .pipe(
-                takeUntil(this.destroy$),
-                first(overlay => overlay.id === id)
+                first(overlay => overlay.id === id),
+                takeUntil(this.destroy$)
             )
             .subscribe(() => {
                 this._overlayService.detach(id);

@@ -8,7 +8,7 @@ import { UpdateChanges } from '../common/UpdateChanges';
 
 const version = '8.2.6';
 
-export default (): Rule => (host: Tree, context: SchematicContext) => {
+export default (): Rule => async (host: Tree, context: SchematicContext) => {
     const themes = ['$_base-dark-grid-pagination',
         '$_dark-grid-pagination',
         '$_dark-fluent-grid-pagination',
