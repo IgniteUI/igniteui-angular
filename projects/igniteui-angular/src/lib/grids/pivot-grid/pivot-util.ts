@@ -209,20 +209,18 @@ export class PivotUtil {
     }
 
     public static processSubGroups(row, prevRowDims, siblingData, pivotKeys) {
+        const prevRowDimsIter = prevRowDims.slice(0);
         // process combined groups
-        while (prevRowDims.length > 0) {
-            const prevRowDim = prevRowDims.shift();
+        while (prevRowDimsIter.length > 0) {
+            const prevRowDim = prevRowDimsIter.pop();
             const prevRowField = prevRowDim.memberName;
-            const sameDimLvl = PivotUtil.getDimensionDepth(prevRowDim) === PivotUtil.getDimensionDepth(row);
             for (const sibling of siblingData) {
                 const childCollection = sibling[prevRowField + '_' + pivotKeys.records] || [];
                 for (const child of childCollection) {
-                    if (sameDimLvl) {
-                        child[row.memberName] = sibling[row.memberName];
-                    }
                     if (!child[pivotKeys.records]) {
                         continue;
                     }
+                    child[row.memberName] = sibling[row.memberName];
                     child[row.memberName + '_' + pivotKeys.records] = [];
                     const keys = Object.assign({}, pivotKeys) as any;
                     keys[row.memberName] = row.memberName;
@@ -230,22 +228,22 @@ export class PivotUtil {
                         .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                     const siblingData2 = PivotUtil
                         .processHierarchy(hierarchyFields2, child ?? [], keys, 0);
-                    if (sameDimLvl) {
-                        // add children to current level if dimensions have same depth
-                        for (const sib of siblingData2) {
-                            if (sib[row.memberName + '_' + pivotKeys.records]) {
-                                child[row.memberName + '_' + pivotKeys.records] =
-                                    child[row.memberName + '_' + pivotKeys.records].concat(sib[row.memberName + '_' + pivotKeys.records]);
-                                child[row.memberName] = sib[row.memberName];
-                            }
+
+                    // add children to current level
+                    for (const sib of siblingData2) {
+                        if (sib[row.memberName + '_' + pivotKeys.records]) {
+                            child[row.memberName + '_' + pivotKeys.records] =
+                                child[row.memberName + '_' + pivotKeys.records].concat(sib[row.memberName + '_' + pivotKeys.records]);
+                            child[row.memberName] = sib[row.memberName];
                         }
-                    } else {
-                        // otherwise overwrite direct child collection
-                        child[row.memberName + '_' + pivotKeys.records] = siblingData2;
                     }
+
                     PivotUtil.processSiblingProperties(child, siblingData2, keys);
-                    if (prevRowDims.length > 0) {
-                        this.processSubGroups(row, prevRowDims.slice(0), siblingData2, pivotKeys);
+                    if (prevRowDim.childLevel) {
+                        // Get child dimensions now as well since we go a level deeper into the hierarchy.
+                        // Keep above level dims as well since lower level dims correspond to upper sibling dims as well.
+                        const childDimensions = prevRowDims.filter(dim => !!dim.childLevel).map(dim => dim.childLevel);
+                        this.processSubGroups(row, [...prevRowDims, ...childDimensions], childCollection, pivotKeys);
                     }
                 }
             }

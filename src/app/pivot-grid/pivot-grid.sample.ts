@@ -39,6 +39,9 @@ export class PivotGridSampleComponent {
                 {
                     memberName: 'Date',
                     enabled: true
+                },
+                {
+                    months: false
                 }
             ), {
             memberFunction: () => 'All',
