@@ -68,4 +68,45 @@ describe(`Update to ${version}`, () => {
             )
         ).toEqual(expectedContent);
     });
+
+    it('should remove paging and paginationTemplate property and define a igx-paginator component with custom content', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<div class="columnHidingContainer">
+    <div *ngFor="let col of grid.columns">
+        {{col.field}}
+    </div>
+</div>
+<div class="gridContainer">
+    <igx-grid igxPreventDocumentScroll #grid [data]="data" [autoGenerate]="false" width="100%" height="560px" columnWidth="200px"
+        [allowFiltering]="true">
+        <igx-column [field]="'ID'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'ContactName'" dataType="string" [sortable]="true" [disableHiding]="true"></igx-column>
+        <igx-column [field]="'ContactTitle'" dataType="string" [sortable]="true" [disableHiding]="true"></igx-column>
+        <igx-column [field]="'City'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'CompanyName'" dataType="string" [sortable]="true"></igx-column>
+    </igx-grid>
+</div>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
+            .toEqual(`
+<div class="columnHidingContainer">
+    <div *ngFor="let col of grid.columns">
+        {{col.field}}
+    </div>
+</div>
+<div class="gridContainer">
+    <igx-grid igxPreventDocumentScroll #grid [data]="data" [autoGenerate]="false" width="100%" height="560px" columnWidth="200px"
+        [allowFiltering]="true">
+        <igx-column [field]="'ID'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'ContactName'" dataType="string" [sortable]="true" [disableHiding]="true"></igx-column>
+        <igx-column [field]="'ContactTitle'" dataType="string" [sortable]="true" [disableHiding]="true"></igx-column>
+        <igx-column [field]="'City'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'CompanyName'" dataType="string" [sortable]="true"></igx-column>
+    </igx-grid>
+</div>
+`.replace(lineBreaksAndSpaceRegex, ''));
+    });
 });
