@@ -18,7 +18,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxForOfModule } from '../directives/for-of/for_of.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
-import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxIconModule, IgxIconService } from '../icon/public_api';
 import { IgxInputGroupModule, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
@@ -142,14 +142,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public ngAfterViewInit() {
-        this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this.composing) {
-                this.comboInput.focus();
-            }
-            if (this.comboInput.value.length === 0) {
-                this.dropdown.navigateFirst();
-                this.dropdownContainer.nativeElement.focus();
-            }
+        this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
                     let current = e[this.valueKey];
@@ -159,6 +152,15 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                     return current === this.selection[0];
                 });
                 this.dropdown.navigateItem(index);
+            }
+        });
+        this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.composing) {
+                this.comboInput.focus();
+            }
+            if (this.comboInput.value.length === 0) {
+                this.dropdown.navigateFirst();
+                this.dropdownContainer.nativeElement.focus();
             }
         });
         this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -217,6 +219,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 ? this.dropdown.items.find(i => i.itemID === firstItem)
                 : this.dropdown.items[0];
             this.dropdownContainer.nativeElement.focus();
+        }
+    }
+
+    /** @hidden @internal */
+    public handleItemKeyDown(event: KeyboardEvent) {
+        if (event.key === this.platformUtil.KEYMAP.ARROW_UP && event.altKey) {
+            this.close();
         }
     }
 
