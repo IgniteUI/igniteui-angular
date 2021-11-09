@@ -273,7 +273,7 @@ describe('Navigation Drawer', () => {
     }));
 
     it('should stay at 100% parent height when pinned', waitForAsync(() => {
-        const template = `<div style="height: 500px; position: relative;">
+        const template = `<div style="height: 100%; position: relative;">
                             <igx-nav-drawer
                                 [pin]="pin"
                                 pinThreshold="false"
@@ -291,7 +291,7 @@ describe('Navigation Drawer', () => {
 
                 fixture.componentInstance.pin = false;
                 fixture.detectChanges();
-                expect(navdrawer.clientHeight).toEqual(500);
+                expect(navdrawer.clientHeight).toEqual(document.documentElement.clientHeight);
 
                 fixture.componentInstance.pin = true;
                 fixture.detectChanges();
