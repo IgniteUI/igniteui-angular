@@ -485,7 +485,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         expect(grid.rowList.length).toBe(5);
     }));
 
-    fit('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', fakeAsync(() => {
+    it('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', fakeAsync(() => {
         fix = TestBed.createComponent(RemotePagingComponent);
         fix.detectChanges();
         tick();
