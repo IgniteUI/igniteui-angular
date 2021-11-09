@@ -28,7 +28,6 @@ import { IgxNotificationsDirective } from '../directives/notification/notificati
 import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -110,6 +109,8 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
     public isVisibleChange = new EventEmitter<ToggleViewEventArgs>();
 
     /**
+     * @deprecated in version 12.2.3. We suggest using `positionSettings` property instead
+     *
      * Sets/gets the position of the toast.
      * If not set, the `position` attribute will have value `IgxToastPosition.Bottom`.
      * ```html
@@ -121,7 +122,6 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      *
      * @memberof IgxToastComponent
      */
-    @DeprecateProperty('`position` is deprecated. We suggest using `positionSettings` property instead.')
     @Input()
     public get position(): IgxToastPosition {
         return this._position;

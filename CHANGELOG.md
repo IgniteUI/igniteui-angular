@@ -20,12 +20,36 @@ All notable changes for each version of this project will be documented in this 
 
     - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/stepper/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Stepper-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper).
 
+- Added `IgxFocusTrap` directive, which traps the Tab key focus within an element.
+
+    ```html
+   <div #wrapper [igxFocusTrap]="true" tabindex="0">
+        <input type="text" placeholder="Enter Username" name="uname">
+        <input type="password" placeholder="Enter Password" name="psw">
+        <button>SIGN IN</button>
+    </div>
+    ```
+
+- Added `IgxSimpleComboComponent`
+    - The `igx-simple-combo` which is a modification of the `igx-combo` component that allows single selection and has the appropriate UI and behavior for that. It inherits most of the `igx-combo`'s API.
+    - Allows the selection of single items in a filterable list.
+    - Supports custom values, keyboard navigation, validation, customized positioning of the item list via overlay settings.
+    - Example:
+    ```html
+    <igx-simple-combo [(ngModel)]="item" [allowCustomValues]="true" [placeholder]="'Search'" [data]="items">
+        <label igxLabel>Items</label>
+        <igx-hint>Please select an item from the dropdown list.</igx-hint>
+    </igx-simple-combo>
+    ```
+
 - `IgxCsvExporterService`, `IgxExcelExporterService`
     - Exporter services are no longer required to be provided in the application since they are now injected on a root level.
 - `IgxGridToolbarPinningComponent`, `IgxGridToolbarHidingComponent`
     - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
 - `IgxCombo`
     - Added `groupSortingDirection` input, which allows you to set groups sorting order.
+- `IgxDialog`
+    - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
 
 ### General
 
@@ -60,7 +84,7 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - **Breaking Change** - `IgxPercentSummaryOperand` and `IgxCurrencySummaryOperand` have been removed and `IgxNumberSummaryOperand` should be used instead. If you have used the percent or currency summary operands to extend a custom summary operand from them, then change the custom operand to extend from the number summary operand.
 - `IgxToastComponent`
-    - **Deprecated** - The `position` input property has been deprecated. Use `positionSettings` input instead.   
+    - **Deprecated** - The `position` input property has been deprecated. Use `positionSettings` input instead.
 ## 12.2.1
 
 ### New Features
@@ -3685,4 +3709,4 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
-    
+
