@@ -270,8 +270,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
 
         this.composing = false;
-        // explicitly update selection so that we don't have to force CD
+        // explicitly update selection and trigger text selection so that we don't have to force CD
         this.textSelection.selected = true;
+        this.textSelection.trigger();
         const selection = this.selectionService.first_item(this.id);
         this._value = selection !== undefined && selection !== null ? selection : '';
         this.comboInput.focus();

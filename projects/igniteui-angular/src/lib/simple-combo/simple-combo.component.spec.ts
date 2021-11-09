@@ -326,59 +326,6 @@ describe('IgxSimpleCombo', () => {
             const comboData = combo.data;
             expect(comboData).toEqual(data);
         });
-        it('should bind combo data to remote service data', (async () => {
-            let productIndex = 0;
-            fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
-            fixture.detectChanges();
-            combo = fixture.componentInstance.instance;
-
-            const verifyComboData = () => {
-                fixture.detectChanges();
-                let ind = combo.virtualScrollContainer.state.startIndex;
-                for (let itemIndex = 0; itemIndex < 10; itemIndex++) {
-                    expect(combo.data[itemIndex].id).toEqual(ind);
-                    expect(combo.data[itemIndex].product).toEqual('Product ' + ind);
-                    const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
-                    const dropdownItems = dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
-                    expect(dropdownItems[itemIndex].innerText.trim()).toEqual('Product ' + ind);
-                    ind++;
-                }
-            };
-
-            combo.toggle();
-            fixture.detectChanges();
-            verifyComboData();
-            expect(combo.virtualizationState.startIndex).toEqual(productIndex);
-
-            productIndex = 42;
-            combo.virtualScrollContainer.scrollTo(productIndex);
-            await wait(100);
-            fixture.detectChanges();
-            verifyComboData();
-            // index is at bottom
-            expect(combo.virtualizationState.startIndex + combo.virtualizationState.chunkSize - 1)
-                .toEqual(productIndex);
-
-            productIndex = 485;
-            combo.virtualScrollContainer.scrollTo(productIndex);
-            await wait(100);
-            fixture.detectChanges();
-            verifyComboData();
-            expect(combo.virtualizationState.startIndex + combo.virtualizationState.chunkSize - 1)
-                .toEqual(productIndex);
-
-            productIndex = 873;
-            combo.virtualScrollContainer.scrollTo(productIndex);
-            await wait(100);
-            fixture.detectChanges();
-            verifyComboData();
-
-            productIndex = 649;
-            combo.virtualScrollContainer.scrollTo(productIndex);
-            await wait(100);
-            fixture.detectChanges();
-            verifyComboData();
-        }));
         it('should render empty template when combo data source is not set', () => {
             fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
