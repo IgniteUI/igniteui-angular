@@ -44,6 +44,10 @@ export interface IPivotValue {
      * use predefined ones from IgxPivotAggregate and its variants
      */
     aggregate: PivotAggregation;
+    /**
+     * List of aggregates to show in aggregate drop-down.
+     */
+    aggregateList?: IPivotAggregator[];
     // Enables/Disables a particular value from pivot aggregation.
     enabled: boolean;
     // Allow conditionally styling of the IgxPivotGrid cells

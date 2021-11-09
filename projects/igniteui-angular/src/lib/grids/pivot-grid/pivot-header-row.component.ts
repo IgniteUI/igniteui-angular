@@ -42,7 +42,7 @@ export interface IgxGridRowSelectorsTemplateContext {
     selector: 'igx-pivot-header-row',
     templateUrl: './pivot-header-row.component.html'
 })
-export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnInit {
+export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
     @Input()
     public row: IgxPivotRowComponent;
@@ -73,10 +73,10 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
             super(ref, cdr);
     }
 
-    public ngOnInit() {
-        this.valueData = new Map();
-        const values = this.grid.pivotConfiguration.values;
-        values.forEach(val => {
+    public getAggregateList(val: IPivotValue): IPivotAggregator[] {
+            if (val.aggregateList) {
+                return val.aggregateList;
+            }
             let defaultAggr = this.getAggregatorsForValue(val);
             const isDefault = defaultAggr.find(x => x.aggregator.name === val.aggregate.name);
             // resolve custom aggregations
@@ -97,9 +97,8 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
                     aggregator: val.aggregate
                 }];
             }
-            this.valueData.set(val.member, defaultAggr);
-        });
-    }
+            return defaultAggr;
+        }
 
     public rowRemoved(event: IBaseChipEventArgs) {
         const row = this.grid.pivotConfiguration.rows.find(x => x.memberName === event.owner.id);
@@ -147,7 +146,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     }
 
     public isSelected(val: IPivotAggregator) {
-        return this.value.aggregate.name === val.aggregator.name;
+        return this.value.aggregate === val.aggregator;
     }
 
     public onDimDragOver(event, dimension?: PivotDimensionType) {
@@ -320,7 +319,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
 
     protected updateDropDown(value: IPivotValue, dropdown) {
         this.value = value;
-        this.aggregateList = this.valueData.get(value.member);
+        this.aggregateList = this.getAggregateList(value);
         dropdown.open(this._subMenuOverlaySettings);
     }
 }

@@ -10,6 +10,26 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 export class IgxTotalSaleAggregate {
     public static totalSale: PivotAggregation = (members, data: any) =>
         data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
+
+    public static totalMin: PivotAggregation = (members, data: any) => {
+        let min = 0;
+        if (data.length === 1) {
+            min = data[0].UnitPrice * data[0].UnitsSold;
+        } else if (data.length > 1) {
+            min = data.reduce((a, b) => Math.min(a.UnitPrice * a.UnitsSold, b.UnitPrice * b.UnitsSold));
+        }
+        return min;
+    };
+
+    public static totalMax: PivotAggregation = (members, data: any) => {
+        let max = 0;
+        if (data.length === 1) {
+            max = data[0].UnitPrice * data[0].UnitsSold;
+        } else if (data.length > 1) {
+            max = data.reduce((a, b) => Math.max(a.UnitPrice * a.UnitsSold, b.UnitPrice * b.UnitsSold));
+        }
+        return max;
+    };
 }
 
 @Component({
@@ -75,6 +95,19 @@ export class PivotGridSampleComponent {
                 member: 'AmountOfSale',
                 displayName: 'Amount of Sale',
                 aggregate: IgxTotalSaleAggregate.totalSale,
+                aggregateList: [{
+                    key: 'sum',
+                    aggregator: IgxTotalSaleAggregate.totalSale,
+                    label: 'Sum Sale'
+                },{
+                    key: 'min',
+                    aggregator: IgxTotalSaleAggregate.totalMin,
+                    label: 'Min Sale'
+                },{
+                    key: 'max',
+                    aggregator: IgxTotalSaleAggregate.totalMax,
+                    label: 'Max Sale'
+                }],
                 enabled: true,
                 dataType: 'currency',
                 styles: {
