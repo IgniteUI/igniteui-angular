@@ -13,11 +13,11 @@ import { IgxComboBaseDirective, IGX_COMBO_COMPONENT } from '../combo/combo.commo
 import { IgxComboModule } from '../combo/combo.component';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
+import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxForOfModule } from '../directives/for-of/for_of.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
+import { IgxTextSelectionDirective, IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxIconModule, IgxIconService } from '../icon/public_api';
@@ -75,6 +75,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      */
     @Output()
     public selectionChanging = new EventEmitter<ISimpleComboSelectionChangingEventArgs>();
+
+    @ViewChild(IgxTextSelectionDirective, { static: true })
+    private textSelection: IgxTextSelectionDirective;
 
     /** @hidden @internal */
     public composing = false;
@@ -163,14 +166,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.dropdownContainer.nativeElement.focus();
             }
         });
-        this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.composing = false;
-        });
-        this.dropdown.closing.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            const selection = this.selectionService.first_item(this.id);
-            this.comboInput.value = selection !== undefined && selection !== null ? selection : '';
-            this._onChangeCallback(selection);
-        });
 
         super.ngAfterViewInit();
     }
@@ -183,7 +178,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.open();
             this.dropdown.navigateFirst();
         }
+        if (!this.comboInput.value.trim()) {
+            // handle clearing of input by space
+            this.clearSelection();
+            this._onChangeCallback(null);
+        }
         super.handleInputChange(event);
+        this.composing = true;
     }
 
     /** @hidden @internal */
@@ -197,6 +198,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             event.preventDefault();
             event.stopPropagation();
             this.close();
+            // manually trigger text selection as it will not be triggered during editing
+            this.textSelection.trigger();
             return;
         }
         if (event.key === this.platformUtil.KEYMAP.BACKSPACE
@@ -205,10 +208,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.clearSelection();
         }
         super.handleKeyDown(event);
-        this.composing = event.key !== this.platformUtil.KEYMAP.ARROW_DOWN
-            && event.key !== this.platformUtil.KEYMAP.ARROW_LEFT
-            && event.key !== this.platformUtil.KEYMAP.ARROW_RIGHT
-            && event.key !== this.platformUtil.KEYMAP.TAB;
     }
 
     /** @hidden @internal */
@@ -250,6 +249,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
         this.comboInput.value = this.filterValue = this.searchValue = '';
         this.dropdown.focusedItem = null;
+        this.composing = false;
         this.comboInput.focus();
     }
 
@@ -258,6 +258,24 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.triggerCheck();
         this.dropdownContainer.nativeElement.focus();
         this.opened.emit({ owner: this });
+    }
+
+    /** @hidden @internal */
+    public handleClosing(e: IBaseCancelableBrowserEventArgs) {
+        const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
+        this.closing.emit(args);
+        e.cancel = args.cancel;
+        if (e.cancel) {
+            return;
+        }
+
+        this.composing = false;
+        // explicitly update selection so that we don't have to force CD
+        this.textSelection.selected = true;
+        const selection = this.selectionService.first_item(this.id);
+        this._value = selection !== undefined && selection !== null ? selection : '';
+        this.comboInput.focus();
+        this._onChangeCallback(selection);
     }
 
     /** @hidden @internal */
@@ -302,7 +320,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 : [];
             this.selectionService.select_items(this.id, argsSelection, true);
             if (this._updateInput) {
-                this._value = displayText !== args.displayText
+                this.comboInput.value = this._value = displayText !== args.displayText
                     ? args.displayText
                     : this.createDisplayText([args.newSelection], [args.oldSelection]);
             }
