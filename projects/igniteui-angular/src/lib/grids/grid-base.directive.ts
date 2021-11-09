@@ -4051,7 +4051,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public get showAddButton() {
-        return this.rowEditable && this.dataView.length === 0 && this.columns.length > 0;
+        return this.rowEditable && this.dataView.length === 0 && this.columnList.length > 0;
     }
 
     /**
@@ -4059,7 +4059,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public get showDragIcons(): boolean {
-        return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
+        return this.rowDraggable && this.columnList.length > this.hiddenColumnsCount;
     }
 
     /**
@@ -6848,7 +6848,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _columnsReordered(column: IgxColumnComponent) {
         this.notifyChanges();
         if (this.hasColumnLayouts) {
-            this.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.columnList.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         // after reordering is done reset cached column collections.
         this.resetColumnCollections();

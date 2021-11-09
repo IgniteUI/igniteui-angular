@@ -936,7 +936,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     public get index(): number {
-        return this.grid.columns.indexOf(this);
+        return this.grid.columnList.toArray().indexOf(this);
     }
 
     /**
@@ -1990,7 +1990,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         grid.resetCaches();
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columnList.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
         const eventArgs: IPinColumnEventArgs = { column: this, insertAtIndex: index, isPinned: true };
@@ -2069,7 +2069,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columnList.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
 
