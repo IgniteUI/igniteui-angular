@@ -4,12 +4,10 @@
 
 ## Milestone 19 (Due by Nov, 2021)
 
-1. Stepper component [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
+1. **DONE** Stepper component [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
 2. Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
-3. **DONE** Themes: Refactor Grid theme [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
-4. Make IgxDropDownBaseToken public [#10103](https://github.com/IgniteUI/igniteui-angular/issues/10103)
-5. Classes to indicate position of auto overlay [#9481](https://github.com/IgniteUI/igniteui-angular/issues/9481)
-6. onFilterDone property to expose additional information [#10243](https://github.com/IgniteUI/igniteui-angular/issues/10243)
+3. **DONE** Themes: Refactor Grid theme [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556) 
+6. **DONE** onFilterDone property to expose additional information [#10243](https://github.com/IgniteUI/igniteui-angular/issues/10243)
 7. IgxCombo with single selection [#9832](https://github.com/IgniteUI/igniteui-angular/issues/9832)
 
 ## Going down the road
@@ -17,7 +15,7 @@
 # Due in 2021
 
 1. Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
-2. Grid grouping for an unbound field [#10223](https://github.com/IgniteUI/igniteui-angular/issues/10223)
+2. Classes to indicate position of auto overlay [#9481](https://github.com/IgniteUI/igniteui-angular/issues/9481)
 4. Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205)
 5. Column moving feature on grid level [#10176](https://github.com/IgniteUI/igniteui-angular/issues/10176)
 6. Grid summary custom templating [#7981](https://github.com/IgniteUI/igniteui-angular/issues/7981)
