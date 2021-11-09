@@ -19,7 +19,6 @@ import { GridBaseAPIService } from './api.service';
 import { PlatformUtil } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from './selection/selection.service';
-import { DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
@@ -661,19 +660,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         protected zone: NgZone,
         private touchManager: HammerGesturesManager,
         protected platformUtil: PlatformUtil) { }
-
-    /**
-     * @deprecated
-     * Gets whether the cell is selected.
-     * ```typescript
-     * let isCellSelected = thid.cell.isCellSelected();
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    @DeprecateMethod(`'isCellSelected' is deprecated. Use 'selected' property instead.`)
-    public isCellSelected() {
-        return this.selectionService.selected(this.selectionNode);
-    }
 
     /**
      * @hidden
