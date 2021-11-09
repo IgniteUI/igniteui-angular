@@ -273,7 +273,7 @@ describe('Navigation Drawer', () => {
     }));
 
     it('should stay at 100% parent height when pinned', waitForAsync(() => {
-        const template = `<div style="height: 100%;">
+        const template = `<div style="height: 100%; position: relative;">
                             <igx-nav-drawer
                                 [pin]="pin"
                                 pinThreshold="false"
@@ -284,6 +284,7 @@ describe('Navigation Drawer', () => {
         TestBed.overrideComponent(TestComponentPin, { set: { template } });
         TestBed.compileComponents()
             .then(() => {
+                document.body.style.overflow = 'hidden';
                 const fixture = TestBed.createComponent(TestComponentPin);
                 fixture.detectChanges();
                 const windowHeight = window.innerHeight;
@@ -292,7 +293,7 @@ describe('Navigation Drawer', () => {
 
                 fixture.componentInstance.pin = false;
                 fixture.detectChanges();
-                expect(navdrawer.clientHeight).toEqual(windowHeight - document.body.scrollHeight);
+                expect(navdrawer.clientHeight).toEqual(windowHeight);
 
                 fixture.componentInstance.pin = true;
                 fixture.detectChanges();
