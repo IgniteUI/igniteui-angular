@@ -43,7 +43,7 @@
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
-        [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
+        [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id" (keydown)="handleItemKeyDown($event)">
         <igx-combo-item role="option" [singleMode]="true" [itemHeight]='itemHeight' (click)="close()" *igxFor="let item of data
             | comboFiltering:filterValue:displayKey:filteringOptions:true
             | comboGrouping:groupKey:valueKey:groupSortingDirection;
