@@ -188,4 +188,68 @@ describe(`Update to ${version}`, () => {
 </div>
 `.replace(lineBreaksAndSpaceRegex, ''));
     });
+
+    it('should remove exporter services from module.ts files', async () => {
+        appTree.create('/testSrc/appPrefix/component/app.module.ts', `
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AppComponent } from "./app.component";
+import { IgxExcelExporterService } from "igniteui-angular";
+import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
+
+@NgModule({
+bootstrap: [AppComponent],
+declarations: [
+    AppComponent,
+    ExcelExportComponent
+],
+imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule
+],
+providers: [IgxExcelExporterService],
+entryComponents: [],
+schemas: []
+})
+export class AppModule {}
+`);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/app.module.ts')
+        ).toEqual( `
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AppComponent } from "./app.component";
+// IgxExcelExporterService has been removed. Exporter services can now be used without providing.
+import { /*IgxExcelExporterService*/ } from "igniteui-angular";
+import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
+
+@NgModule({
+bootstrap: [AppComponent],
+declarations: [
+    AppComponent,
+    ExcelExportComponent
+],
+imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule
+],
+// IgxExcelExporterService has been removed. Exporter services can now be used without providing.
+providers: [/*IgxExcelExporterService*/],
+entryComponents: [],
+schemas: []
+})
+export class AppModule {}
+`);
+    });
 });

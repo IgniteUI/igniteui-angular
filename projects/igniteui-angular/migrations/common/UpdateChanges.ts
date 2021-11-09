@@ -98,6 +98,18 @@ export class UpdateChanges {
         return this._tsFiles;
     }
 
+    private _ModuletTsFiles: string[] = [];
+    public get moduleTsFiles(): string[] {
+        if (!this._ModuletTsFiles.length) {
+            this.sourceDirsVisitor((fulPath, entry) => {
+                if (fulPath.endsWith('.module.ts')) {
+                    this._ModuletTsFiles.push(entry.path);
+                }
+            });
+        }
+        return this._ModuletTsFiles;
+    }
+
     private _sassFiles: string[] = [];
     /** Sass (both .scss and .sass) files in the project being updated. */
     public get sassFiles(): string[] {
