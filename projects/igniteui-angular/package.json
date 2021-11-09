@@ -87,5 +87,16 @@
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"
     },
-    "schematics": "./schematics/collection.json"
+    "schematics": "./schematics/collection.json",
+    "exports": {
+        "./lib/core/styles/themes/index": {
+            "sass": "./lib/core/styles/themes/_index.scss"
+        },
+        "./theming": {
+            "sass": "./lib/core/styles/themes/_index.scss"
+        },
+        "./themes": {
+            "sass": "./lib/core/styles/themes/_index.scss"
+        }
+    }
 }
