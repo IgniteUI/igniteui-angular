@@ -26,6 +26,11 @@ All notable changes for each version of this project will be documented in this 
     - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
 - `IgxCombo`
     - Added `groupSortingDirection` input, which allows you to set groups sorting order.
+- `igxChip`
+    - Exposed drop directive related events for the chip when it's used as a drop target:
+         - `dragLeave`
+         - `dragDrop`
+         - `dragOver`
 
 ### General
 
@@ -53,13 +58,14 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - The following input has been removed
         - Input `columns`. Use `igxGrid` `columns` input instead.
 - `IgxCarousel`
-    - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`. 
+    - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
 
 ## 12.2.3
 
 ### General
 - **Breaking Change** - `IgxPercentSummaryOperand` and `IgxCurrencySummaryOperand` have been removed and `IgxNumberSummaryOperand` should be used instead. If you have used the percent or currency summary operands to extend a custom summary operand from them, then change the custom operand to extend from the number summary operand.
-
+- `IgxToastComponent`
+    - **Deprecated** - The `position` input property has been deprecated. Use `positionSettings` input instead.   
 ## 12.2.1
 
 ### New Features

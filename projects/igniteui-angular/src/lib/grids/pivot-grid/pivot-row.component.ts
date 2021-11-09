@@ -6,7 +6,6 @@ import {
     ElementRef,
     forwardRef,
     OnChanges,
-    OnInit,
     SimpleChanges,
     TemplateRef,
     ViewChild,
@@ -16,7 +15,7 @@ import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxRowDirective } from '../row.directive';
 import { GridBaseAPIService, IgxColumnComponent } from '../hierarchical-grid/public_api';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IPivotDimension } from './pivot-grid.interface';
+import { IPivotDimension, IPivotDimensionData } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 
 
@@ -41,7 +40,11 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      @ViewChild('headerTemplateGray', { read: TemplateRef, static: true })
      public headerTemplateGray: TemplateRef<any>;
 
-    public rowDimension: IgxColumnComponent[] = [];
+    public rowDimensionData: IPivotDimensionData[] = [];
+
+    public get rowDimension() {
+        return this.rowDimensionData?.map(x => x.column);
+    }
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxPivotGridComponent>,
@@ -66,7 +69,8 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      * @internal
      */
     public getRowDimensionKey(col: IgxColumnComponent) {
-            const key =  PivotUtil.getRecordKey(this.rowData, this.rowData[col.field]);
+            const dimData = this.rowDimensionData.find(x => x.column === col);
+            const key =  PivotUtil.getRecordKey(this.rowData, dimData.dimension, dimData.prevDimensions);
             return key;
     }
 
@@ -82,8 +86,8 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.rowData) {
             // generate new rowDimension on row data change
-            this.rowDimension = [];
-            const rowDimConfig = this.grid.pivotConfiguration.rows;
+            this.rowDimensionData = [];
+            const rowDimConfig = this.grid.rowDimensions;
             this.extractFromDimensions(rowDimConfig, 0);
         }
     }
@@ -102,12 +106,19 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         let dimIndex = 0;
         let currentLvl = 0;
         currentLvl += level;
+        const prev = [];
         for (const dim of rowDimConfig) {
             const dimData = PivotUtil.getDimensionLevel(dim, this.rowData,
                   { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'});
             dimIndex += dimData.level;
             currentLvl += dimData.level;
-            this.rowDimension.push(this.extractFromDimension(dimData.dimension, dimIndex, currentLvl));
+            const column = this.extractFromDimension(dimData.dimension, dimIndex, currentLvl);
+            this.rowDimensionData.push({
+                column,
+                dimension: dimData.dimension,
+                prevDimensions: [...prev]
+            });
+            prev.push(dimData.dimension);
         }
     }
 

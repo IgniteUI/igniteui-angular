@@ -14,16 +14,18 @@ export class PivotGridHierarchySampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [{
-            memberName: 'AllProducts',
+            memberName: 'All',
+            memberFunction: () => 'All',
             enabled: true,
             childLevel:
             {
-                memberName: 'ProductName',
+
+                memberName: 'Product',
                 memberFunction: (data) => data.Product.Name,
                 enabled: true,
                 childLevel:
                 {
-                    memberName: 'SellerCity',
+                    memberName: 'City',
                     memberFunction: (data) => data.Seller.City,
                     enabled: true,
                 }
@@ -32,11 +34,12 @@ export class PivotGridHierarchySampleComponent {
         },
         ],
         rows: [{
-            memberName: 'AllSellers',
+            memberName: 'AllSeller',
+            memberFunction: () => 'All',
             enabled: true,
             childLevel:
             {
-                memberName: 'SellerName',
+                memberName: 'Seller',
                 memberFunction: (data) => data.Seller.Name,
                 enabled: true,
             }
