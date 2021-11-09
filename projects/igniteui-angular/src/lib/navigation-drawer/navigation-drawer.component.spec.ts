@@ -284,7 +284,7 @@ describe('Navigation Drawer', () => {
         TestBed.overrideComponent(TestComponentPin, { set: { template } });
         TestBed.compileComponents()
             .then(() => {
-                document.body.style.overflow = "hidden";
+                document.body.style.overflow = 'hidden';
                 const fixture = TestBed.createComponent(TestComponentPin);
                 fixture.detectChanges();
                 const windowHeight = window.innerHeight;
