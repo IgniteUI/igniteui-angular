@@ -284,14 +284,16 @@ describe('Navigation Drawer', () => {
         TestBed.overrideComponent(TestComponentPin, { set: { template } });
         TestBed.compileComponents()
             .then(() => {
+                document.body.style.overflow = "hidden";
                 const fixture = TestBed.createComponent(TestComponentPin);
+                fixture.detectChanges();
                 const windowHeight = window.innerHeight;
                 const container = fixture.debugElement.query(By.css('div')).nativeElement;
                 const navdrawer = fixture.debugElement.query(By.css('igx-nav-drawer > aside')).nativeElement;
 
                 fixture.componentInstance.pin = false;
                 fixture.detectChanges();
-                expect(navdrawer.clientHeight).toEqual(document.documentElement.clientHeight);
+                expect(navdrawer.clientHeight).toEqual(windowHeight);
 
                 fixture.componentInstance.pin = true;
                 fixture.detectChanges();
