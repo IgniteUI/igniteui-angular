@@ -284,7 +284,6 @@ describe('Navigation Drawer', () => {
         TestBed.overrideComponent(TestComponentPin, { set: { template } });
         TestBed.compileComponents()
             .then(() => {
-                document.body.style.overflow = 'hidden';
                 const fixture = TestBed.createComponent(TestComponentPin);
                 fixture.detectChanges();
                 const windowHeight = window.innerHeight;
@@ -293,7 +292,7 @@ describe('Navigation Drawer', () => {
 
                 fixture.componentInstance.pin = false;
                 fixture.detectChanges();
-                expect(navdrawer.clientHeight).toEqual(windowHeight);
+                expect(navdrawer.clientHeight).toEqual(windowHeight - document.body.scrollHeight);
 
                 fixture.componentInstance.pin = true;
                 fixture.detectChanges();
