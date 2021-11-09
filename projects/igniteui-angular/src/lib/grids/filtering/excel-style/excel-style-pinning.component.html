@@ -1,7 +1,8 @@
 <div *ngIf="esf.column"
     [ngClass]="esf.column.pinned ? 'igx-excel-filter__actions-unpin' : 'igx-excel-filter__actions-pin'"
     (click)="esf.onPin()"
-    tabindex="0">
+    tabindex="0"
+    role="menuitem">
     <span>{{ esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin }}</span>
     <igx-icon family="imx-icons" name="{{ esf.column.pinned ? 'unpin-left' : 'pin-left' }}"></igx-icon>
 </div>

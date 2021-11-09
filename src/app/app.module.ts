@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
-    IgxIconModule, IgxBottomNavModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
+    IgxIconModule, IgxBottomNavModule, IgxGridModule, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxInputGroupModule,
     IgxIconService, DisplayDensityToken, DisplayDensity,
     IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService, IgxButtonGroupModule,
@@ -17,7 +17,7 @@ import { SharedModule } from './shared/shared.module';
 import { routing } from './routing';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 import { AppComponent } from './app.component';
-import { AvatartSampleComponent } from './avatar/avatar.sample';
+import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
@@ -28,6 +28,7 @@ import { ChipsSampleComponent } from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
+import { ShadowGridSampleComponent } from './drag-drop/shadow-dom-grid/shadow-grid-sample';
 import { MaskSampleComponent, DisplayFormatPipe, InputFormatPipe } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
@@ -153,6 +154,7 @@ import { GridLocalizationSampleComponent } from './grid-localization/grid-locali
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
 import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
+import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -161,7 +163,7 @@ const components = [
     AutocompletePipeContains,
     AutocompleteGroupPipeContains,
     AutocompleteSampleComponent,
-    AvatartSampleComponent,
+    AvatarSampleComponent,
     BadgeSampleComponent,
     BannerSampleComponent,
     ButtonSampleComponent,
@@ -176,6 +178,7 @@ const components = [
     DisplayDensityDropDownComponent,
     DropDownVirtualComponent,
     DragDropSampleComponent,
+    ShadowGridSampleComponent,
     ComboSampleComponent,
     IconSampleComponent,
     InputSampleComponent,
@@ -286,7 +289,8 @@ const components = [
     GridNestedPropsSampleComponent,
     IgxColumnGroupingDirective,
     GridColumnTypesSampleComponent,
-    GridLocalizationSampleComponent
+    GridLocalizationSampleComponent,
+    IgxStepperSampleComponent
 ];
 
 @NgModule({
@@ -325,9 +329,7 @@ const components = [
         HierarchicalRemoteService,
         GridBaseAPIService,
         IgxGridHierarchicalPipe,
-        IgxExcelExporterService,
         IgxIconService,
-        IgxCsvExporterService,
         IgxOverlayService,
         { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) },
         {

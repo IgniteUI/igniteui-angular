@@ -13,6 +13,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridType } from '../common/grid.interface';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IGridGroupingStrategy } from '../../data-operations/grouping-strategy';
 import { GridPagingMode } from '../common/enums';
 
 /**
@@ -60,7 +61,8 @@ export class IgxGridGroupingPipe implements PipeTransform {
     }
 
     public transform(collection: any[], expression: IGroupingExpression | IGroupingExpression[],
-        expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
+        expansion: IGroupByExpandState | IGroupByExpandState[],
+        groupingStrategy: IGridGroupingStrategy, defaultExpanded: boolean,
         id: string, groupsRecords: any[], _pipeTrigger: number): IGroupByResult {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
@@ -79,7 +81,7 @@ export class IgxGridGroupingPipe implements PipeTransform {
         } else {
             state.expansion = grid.groupingExpansionState;
             state.defaultExpanded = grid.groupsExpanded;
-            result = DataUtil.group(cloneArray(collection), state, grid, groupsRecords, fullResult);
+            result = DataUtil.group(cloneArray(collection), state, groupingStrategy, grid, groupsRecords, fullResult);
         }
         grid.groupingFlatResult = result.data;
         grid.groupingResult = fullResult.data;

@@ -162,7 +162,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: row.rowData,
                 cancel: false,
                 owner: grid,
-                isAddRow: row.addRow,
+                isAddRow: row.addRowUI,
                 event: jasmine.anything() as any
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellEditArgs);
@@ -190,7 +190,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: initialRowData,
                 oldValue: row.rowData,
                 owner: grid,
-                isAddRow: row.addRow,
+                isAddRow: row.addRowUI,
                 event: jasmine.anything() as any
             };
 
@@ -226,7 +226,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: row.rowData,
                 cancel: false,
                 owner: grid,
-                isAddRow: row.addRow,
+                isAddRow: row.addRowUI,
                 event: jasmine.anything() as any
             };
 
@@ -247,7 +247,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: row.rowData,
                 newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
                 owner: grid,
-                isAddRow: row.addRow,
+                isAddRow: row.addRowUI,
                 event: jasmine.anything() as any
             };
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
@@ -1105,7 +1105,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             row.delete();
             fix.detectChanges();
             expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
-            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(1);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(2);
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(true);
         });
     });
@@ -1512,7 +1512,6 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it(`Hiding: Should show correct value when showing the column again`, waitForAsync(async () => {
             fix.componentInstance.showToolbar = true;
-            grid.columnHiding = true;
             fix.detectChanges();
             await fix.whenStable();
             fix.detectChanges();
@@ -2090,7 +2089,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.componentInstance.buttons.last.element.nativeElement.click();
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
-            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(1);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(2);
         }));
 
         it('Empty template', fakeAsync(/** height/width setter rAF */() => {
@@ -2176,7 +2175,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: row.rowData,
                 newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
                 owner: grid,
-                isAddRow: row.addRow,
+                isAddRow: row.addRowUI,
                 event: jasmine.anything() as any
             };
 

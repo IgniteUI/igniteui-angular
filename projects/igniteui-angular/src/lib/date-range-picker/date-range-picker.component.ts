@@ -392,6 +392,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return this.getComponentDensityClass('igx-date-range-picker__label');
     }
 
+    private get required(): boolean {
+        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
+            const error = this._ngControl.control.validator({} as AbstractControl);
+            return (error && error.required) ? true : false;
+        }
+
+        return false;
+    }
+
     private get calendar(): IgxCalendarComponent {
         return this._calendar;
     }
@@ -402,15 +411,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private get dialogOverlaySettings(): OverlaySettings {
         return Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
-    }
-
-    private get required(): boolean {
-        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
-            const error = this._ngControl.control.validator({} as AbstractControl);
-            return (error && error.required) ? true : false;
-        }
-
-        return false;
     }
 
     private _resourceStrings = CurrentResourceStrings.DateRangePickerResStrings;
@@ -767,6 +767,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private updateValue(value: DateRange) {
         this._value = value ? value : null;
         this.updateInputs();
+        this.updateCalendar();
     }
 
     private updateValidityOnBlur() {
@@ -847,6 +848,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private updateCalendar(): void {
+        if (!this.calendar) {
+             return;
+        }
         this.calendar.disabledDates = [];
         const minValue = this.parseMinValue(this.minValue);
         if (minValue) {

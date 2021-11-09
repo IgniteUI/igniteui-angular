@@ -127,11 +127,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         }
         const context = this.strip.context;
         const grid = context.grid;
-        const record = grid.deleteRow(context.rowID);
-        if (record !== null && record !== undefined) {
-            //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
-            grid.rowDeleted.emit({ data: record });
-        }
+        grid.deleteRow(context.rowID);
 
         this.strip.hide();
     }
@@ -149,7 +145,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
             console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
             return;
         }
-        grid.beginAddRowByIndex(context.rowID, context.index, asChild, event);
+        grid.gridAPI.crudService.enterAddRowMode(context, asChild, event);
         this.strip.hide();
     }
 
@@ -158,7 +154,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * @internal
      */
     private registerIcons() {
-        this.iconService.addSvgIconFromText(addRow.name, addRow.value, 'imx-icons');
-        this.iconService.addSvgIconFromText(addChild.name, addChild.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(addRow.name, addRow.value, 'imx-icons', true,);
+        this.iconService.addSvgIconFromText(addChild.name, addChild.value, 'imx-icons', true);
     }
 }

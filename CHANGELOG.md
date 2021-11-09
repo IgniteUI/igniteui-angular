@@ -2,6 +2,116 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.0.0
+
+### New Features
+- Added `IgxStepper` component
+    - Highly customizable component that visualizes content as a process and shows its progress by dividing the content into chronological `igx-steps`.
+    - Exposed API to control features like step validation, styling, orientation, and easy-to-use keyboard navigation.
+    - Code example below:
+
+    ```html
+   <igx-stepper>
+        <igx-step *ngFor="let step of stepsData" >
+            ...
+        </igx-step>
+    </igx-stepper>
+    ```
+
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/stepper/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Stepper-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper).
+
+- `IgxCsvExporterService`, `IgxExcelExporterService`
+    - Exporter services are no longer required to be provided in the application since they are now injected on a root level.
+- `IgxGridToolbarPinningComponent`, `IgxGridToolbarHidingComponent`
+    - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
+- `IgxCombo`
+    - Added `groupSortingDirection` input, which allows you to set groups sorting order.
+
+### General
+
+- `IgxDialog`
+    - **Breaking Change** - The default positionSettings open/close animation has been changed to `fadeIn`/`fadeOut`. The open/close animation can be set through the position settings, e.g. change the animation to the previously default open/close animation:
+
+    ```typescript
+    import { slideInBottom, slideOutTop } from 'igniteui-angular';
+
+    @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
+    public newPositionSettings: PositionSettings = {
+        openAnimation: useAnimation(slideInBottom, { params: { fromPosition: 'translateY(100%)' } }),
+        closeAnimation: useAnimation(slideOutTop, { params: { toPosition: 'translateY(-100%)'} })
+    };
+    this.alert.positionSettings = this.newPositionSettings;
+    ```
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - **Breaking Change** - The following deprecated inputs have been removed
+        - Inputs  `showToolbar`, `toolbarTitle`, `columnHiding`, `columnHidingTitle`, `hiddenColumnsText`,
+        `columnPinning`, `columnPinningTitle`, `pinnedColumnsText`.
+        Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
+- `igxGrid`
+    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
+- `IgxColumnActionsComponent`
+    - **Breaking Change** - The following input has been removed
+        - Input `columns`. Use `igxGrid` `columns` input instead.
+- `IgxCarousel`
+    - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
+
+## 12.2.3
+
+### General
+- **Breaking Change** - `IgxPercentSummaryOperand` and `IgxCurrencySummaryOperand` have been removed and `IgxNumberSummaryOperand` should be used instead. If you have used the percent or currency summary operands to extend a custom summary operand from them, then change the custom operand to extend from the number summary operand.
+- `IgxToastComponent`
+    - **Deprecated** - The `position` input property has been deprecated. Use `positionSettings` input instead.   
+## 12.2.1
+
+### New Features
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - new `rowPinned` event is emitted after a row is pinned/unpinned and grid has already refreshed its state to represent the pinned/unpinned rows in the DOM.
+
+## 12.2.0
+
+### New Features
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - Added capability to restore the state of multi column headers with `IgxGridStateDirective`.
+    - Introduced new 'rowStyles' and 'rowClasses' grid properties which allows to define a custom styling on each grid row
+    - Introduced two new *cancellable* outputs related to CRUD - `rowDelete` and `rowAdd`. Both use an `IGridEditEventArgs` object as an event argument.
+        ```html
+        <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" (rowDelete)="rowDelete($event)" [autoGenerate]="true"></igx-grid>
+        ```
+    - Added two public methods that spawn the add row UI for an arbitrary record in the current data view. One that accepts a rowID to use as the row the UI spawns under and the other accepting an index that has a distinct implementation for `IgxTreeGrid`. Please, refer to the official documentation for more information: [Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-adding) and [Tree Grid Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/row-adding).
+
+        _Note:_ That the new record is still added at the end of the data view, after the end-user submits it.
+        ```typescript
+        this.grid.beginAddRowById('ALFKI');             // spawns the add row UI under the row with PK 'ALFKI'
+        this.grid.beginAddRowById(null);                // spawns the add row UI as the first record
+        this.grid.beginAddRowByIndex(10);               // spawns the add row UI at index 10
+        this.grid.beginAddRowByIndex(0);                // spawns the add row UI as the first record
+        this.treeGrid.beginAddRowById('ALFKI', true);   // spawns the add row UI to add a child for the row with PK 'ALFKI'
+        this.treeGrid.beginAddRowByIndex(10, true);     // spawns the add row UI to add a child for the row at index 10
+        this.treeGrid.beginAddRowByIndex(null);         // spawns the add row UI as the first record
+        ```
+    - Added `headerStyles` and `headerGroupStyles` inputs to the column component.
+        Similar to `cellStyles` is exposes a way to bind CSS properties and style the grid headers.
+- `igxTreeGrid`
+    - Added `TreeGridMatchingRecordsOnlyFilteringStrategy`, which allows you to display only the records matching particular filtering condition without any trace for their parents.
+- `IgxSnackbarComponent`
+    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
+- `IgxToastComponent`
+    - Introduced new 'positionSettings' input which allows to define a custom animation and position.
+
+### General
+- `igxGrid`, `igxHierarchicalGrid`, `igxTreeGrid`
+    - 'oddRowCSS' and 'evenRowCSS' properties has been deprecated
+    - The column formatter callback signature now accepts the row data as an additional argument:
+        ```typescript
+        formatter(value: any, rowData?: any)
+        ```
+        The `rowData` argument may be `undefined` in remote scenarios/applying the callback on filtering labels so make sure to check its availability.
+- `IgxForOf` - now takes margins into account when calculating the space that each element takes.
+
+    _Note:_ If your virtualized items contain margins, please calculate them into the `itemSize` value for the best possible initial virtualized state.
+- `IgxExcelExporterService`
+    - Added support for freezing column headers in **Excel**. By default, the column headers would not be frozen but this behavior can be controlled by the `freezeHeaders` option of the IgxExcelExporterOptions object.
+
 ## 12.1.0
 
 ### New Features
@@ -32,7 +142,7 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added `batchEditing` - an `Input` property for controlling what type of transaction service is provided for the grid.
-    Setting `<igx-grid [batchEditing]="true">` is the same as providing `[{ provide: IgxGridTransaction, useClass: IgxTransactionService }]`. 
+    Setting `<igx-grid [batchEditing]="true">` is the same as providing `[{ provide: IgxGridTransaction, useClass: IgxTransactionService }]`.
     - **Deprecation** - Providing a transaction service for the grid via `providers: [IgxTransactionService]` is now deprecated and will be removed in a future patch.
     Instead, use the new `batchEditing` property to control the grid's Transactions.
 
@@ -46,14 +156,14 @@ All notable changes for each version of this project will be documented in this 
         - `IgxGridCellComponent`,  `IgxTreeGridCellComponent`, `IgxHierarchicalGridCellComponent` are no longer exposed in the public API. Instead, a new class `IgxGridCell` replaces all of these. It is a facade class which exposes only the public API of the above mentioned. Automatic migration will change these imports with `CellType`, which is the interface implemented by `IgxGridCell`
     - **Behavioral changes**
     - `getCellByKey`, `getCellByColumn`, `getCellByColumnVisibleIndex`, `row.cells`, `column.cells`, `grid.selectedCells` now return an `IgxGridCell` the `CellType` interface.
-    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitetd in `cellClick`, `selected`, `contextMenu` and `doubleClick` events. 
+    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitted in `cellClick`, `selected`, `contextMenu` and `doubleClick` events.
     - `let-cell` property in cell template is now `CellType`.
     - `getCellByColumnVisibleIndex` is now deprecated and will be removed in next major version. Use `getCellByKey`, `getCellByColumn` instead.
 
 - `Transactions`
     - Added `IgxFlatTransactionFactory` - the singleton service instantiates a new `TransactionService<Transaction, State>` given a `transaction type`.
     - Added `IgxHierarchicalTransactionFactory` - the singleton service instantiates a new `HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>` given a `transaction type`.
-    
+
 - `Toolbar Actions`
     - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
 
@@ -3575,3 +3685,4 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
+    

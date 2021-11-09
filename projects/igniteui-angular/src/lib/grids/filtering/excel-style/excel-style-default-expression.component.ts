@@ -155,6 +155,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return this.column.filters.condition(value);
     }
 
+    public getConditionFriendlyName(name: string): string {
+        return this.grid.resourceStrings[`igx_grid_filter_${name}`] || name;
+    }
+
     public onValuesInput(eventArgs) {
         this.expressionUI.expression.searchVal = DataUtil.parseValue(this.column.dataType, eventArgs.target.value);
     }

@@ -8,9 +8,11 @@ import {
     Inject,
     Input,
     NgModule,
+    OnChanges,
     OnInit,
     Optional,
     Output,
+    SimpleChanges
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../core/navigation';
@@ -19,12 +21,14 @@ import {
     HorizontalAlignment,
     VerticalAlignment,
     GlobalPositionStrategy,
-    OverlaySettings,
     PositionSettings
 } from '../services/public_api';
 import { mkenum } from '../core/utils';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
 import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
+import { useAnimation } from '@angular/animations';
+import { fadeIn, fadeOut } from '../animations/fade';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -62,8 +66,7 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
     selector: 'igx-toast',
     templateUrl: 'toast.component.html'
 })
-export class IgxToastComponent extends IgxNotificationsDirective
-    implements OnInit {
+export class IgxToastComponent extends IgxNotificationsDirective implements OnInit, OnChanges {
     /**
      * @hidden
      */
@@ -118,8 +121,62 @@ export class IgxToastComponent extends IgxNotificationsDirective
      *
      * @memberof IgxToastComponent
      */
+    @DeprecateProperty('`position` is deprecated. We suggest using `positionSettings` property instead.')
     @Input()
-    public position: IgxToastPosition = 'bottom';
+    public get position(): IgxToastPosition {
+        return this._position;
+    }
+
+    public set position(position: IgxToastPosition) {
+        if (position) {
+            this._position = position;
+            this._positionSettings.verticalDirection = this.calculatePosition();
+        }
+    }
+
+    /**
+     * Get the position and animation settings used by the toast.
+     * ```typescript
+     * @ViewChild('toast', { static: true }) public toast: IgxToastComponent;
+     * let currentPosition: PositionSettings = this.toast.positionSettings
+     * ```
+     */
+     @Input()
+     public get positionSettings(): PositionSettings {
+         return this._positionSettings;
+     }
+
+     /**
+      * Set the position and animation settings used by the toast.
+      * ```html
+      * <igx-toast [positionSettings]="newPositionSettings"></igx-toast>
+      * ```
+      * ```typescript
+      * import { slideInTop, slideOutBottom } from 'igniteui-angular';
+      * ...
+      * @ViewChild('toast', { static: true }) public toast: IgxToastComponent;
+      *  public newPositionSettings: PositionSettings = {
+      *      openAnimation: useAnimation(slideInTop, { params: { duration: '1000ms', fromPosition: 'translateY(100%)'}}),
+      *      closeAnimation: useAnimation(slideOutBottom, { params: { duration: '1000ms', fromPosition: 'translateY(0)'}}),
+      *      horizontalDirection: HorizontalAlignment.Left,
+      *      verticalDirection: VerticalAlignment.Middle,
+      *      horizontalStartPoint: HorizontalAlignment.Left,
+      *      verticalStartPoint: VerticalAlignment.Middle
+      *  };
+      * this.toast.positionSettings = this.newPositionSettings;
+      * ```
+      */
+     public set positionSettings(settings: PositionSettings) {
+         this._positionSettings = settings;
+     }
+
+     private _position: IgxToastPosition = 'bottom';
+     private _positionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Center,
+        verticalDirection: VerticalAlignment.Bottom,
+        openAnimation: useAnimation(fadeIn),
+        closeAnimation: useAnimation(fadeOut),
+     };
 
     /**
      * Gets the nativeElement of the toast.
@@ -150,23 +207,30 @@ export class IgxToastComponent extends IgxNotificationsDirective
      * this.toast.open();
      * ```
      */
-    public open(message?: string | OverlaySettings) {
+    public open(message?: string, settings?: PositionSettings) {
         if (message !== undefined) {
             this.textMessage = message;
         }
-
-        const toastSettings: PositionSettings = {
-            horizontalDirection: HorizontalAlignment.Center,
-            verticalDirection:
-                this.position === 'bottom'
-                    ? VerticalAlignment.Bottom
-                    : this.position === 'middle'
-                        ? VerticalAlignment.Middle
-                        : VerticalAlignment.Top
-        };
-
-        this.strategy = new GlobalPositionStrategy(toastSettings);
+        if (settings !== undefined) {
+            this.positionSettings = settings;
+        }
+        this.strategy = new GlobalPositionStrategy(this.positionSettings);
         super.open();
+    }
+
+    /**
+     * Opens or closes the toast, depending on its current state.
+     *
+     * ```typescript
+     * this.toast.toggle();
+     * ```
+     */
+     public toggle() {
+        if (this.collapsed || this.isClosing) {
+            this.open();
+        } else {
+            this.close();
+        }
     }
 
     /**
@@ -182,6 +246,20 @@ export class IgxToastComponent extends IgxNotificationsDirective
             const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
             this.isVisibleChange.emit(closedEventArgs);
         });
+    }
+
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes['position'] && this._positionSettings) {
+            this._positionSettings.verticalDirection = this.calculatePosition();
+        }
+    }
+
+    private calculatePosition() {
+        return this.position === 'bottom'
+            ? VerticalAlignment.Bottom
+            : this.position === 'middle'
+                ? VerticalAlignment.Middle
+                : VerticalAlignment.Top;
     }
 }
 

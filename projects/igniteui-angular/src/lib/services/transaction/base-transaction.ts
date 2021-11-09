@@ -87,7 +87,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         if (!state) {
             return null;
         }
-        if (mergeChanges) {
+        if (mergeChanges && state.recordRef) {
             return this.updateValue(state);
         }
         return state.value;

@@ -6,7 +6,7 @@ const GridResourceStringsDA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_groupByArea_select_message: 'Vælg alle rækker i gruppen med navnet {0} og værdi {1}.',
     igx_grid_groupByArea_deselect_message: 'Fravælg alle rækker i gruppen med navnet {0} og værdi {1}.',
     igx_grid_emptyFilteredGrid_message: 'Ingen poster fundet',
-    igx_grid_emptyGrid_message: 'Gitter har ingen data',
+    igx_grid_emptyGrid_message: 'Tabel har ingen data',
     igx_grid_filter: 'Filter',
     igx_grid_filter_row_close: 'Luk',
     igx_grid_filter_row_reset: 'Nulstil',

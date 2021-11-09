@@ -65,3 +65,14 @@
 
     <button igxButton="raised" (click)="hideGroupableRow()">Show/Hide groupable row</button>
 </div>
+
+<div class="wrapper">
+    <h3>Selection Performance</h3>
+    <igx-grid [data]="data2" [allowFiltering]="true" cellSelection="none" width="1200px"
+    height="500px" rowSelection="multiple" [groupingExpressions]="perfGrpExpr">
+        <igx-column field="STATUS" header="Status" width="200px" [groupable]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="FIELD" header="Field" width="200px" [groupable]="true" [sortable]="true">
+        </igx-column>
+    </igx-grid>
+</div>

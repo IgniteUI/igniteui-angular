@@ -363,6 +363,20 @@
             "definedIn": [
                 "IgxTooltipTargetDirective"
             ]
+        },
+        {
+            "member": "remote",
+            "replaceWith": "Remote",
+            "definedIn": [
+                "GridPagingMode"
+            ]
+        },
+        {
+            "member": "local",
+            "replaceWith": "Local",
+            "definedIn": [
+                "GridPagingMode"
+            ]
         }
     ]
 }

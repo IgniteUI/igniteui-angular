@@ -49,7 +49,7 @@ import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridInstanceType, GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
-import { IgxGridCRUDService } from '../common/crud.service';
+import { IgxAddRow, IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
 import { CellType } from '../common/cell.interface';
@@ -606,18 +606,43 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * Enters add mode by spawning the UI with the context of the specified row by index.
+     *
+     * @remarks
+     * Accepted values for index are integers from 0 to this.grid.dataView.length
+     * @remarks
+     * When adding the row as a child, the parent row is the specified row.
+     * @remarks
+     * To spawn the UI on top, call the function with index = null or a negative number.
+     * In this case trying to add this row as a child will result in error.
+     * @example
+     * ```typescript
+     * this.grid.beginAddRowByIndex(10);
+     * this.grid.beginAddRowByIndex(10, true);
+     * this.grid.beginAddRowByIndex(null);
+     * ```
+     * @param index - The index to spawn the UI at. Accepts integers from 0 to this.grid.dataView.length
+     * @param asChild - Whether the record should be added as a child. Only applicable to igxTreeGrid.
+     */
+    public beginAddRowByIndex(index: number, asChild?: boolean): void {
+        if (index === null || index < 0) {
+            return this.beginAddRowById(null, asChild);
+        }
+        return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index, this.dataView), asChild);
+    }
+
+    /**
      * @hidden
      */
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
         return {
-            $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
+            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
             templateID: {
                 type: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
                 id: null
             },
-            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false,
-            addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
+            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false
         };
     }
 
@@ -657,14 +682,18 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
-    public getEmptyRecordObjectFor(rec) {
-        const row = { ...rec };
-        const data = rec || {};
+    /**
+     * @hidden @internal
+     */
+    public getEmptyRecordObjectFor(inTreeRow) {
+        const treeRowRec = inTreeRow?.treeRow || null;
+        const row = { ...treeRowRec };
+        const data = treeRowRec?.data || {};
         row.data = { ...data };
         Object.keys(row.data).forEach(key => {
             // persist foreign key if one is set.
             if (this.foreignKey && key === this.foreignKey) {
-                row.data[key] = rec.data[key];
+                row.data[key] = treeRowRec.data[key];
             } else {
                 row.data[key] = undefined;
             }
@@ -678,7 +707,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
         row.rowID = id;
         row.data[this.primaryKey] = id;
-        return row;
+        return { rowID: id, data: row.data, recordRef: row };
     }
 
     /** @hidden */
@@ -822,6 +851,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return record.rowID !== undefined && record.data;
     }
 
+    /** @hidden */
+    public getUnpinnedIndexById(id) {
+        return this.unpinnedRecords.findIndex(x => x.data[this.primaryKey] === id);
+    }
+
     /**
      * @hidden
      */
@@ -883,10 +917,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
-    }
-
-    protected getUnpinnedIndexById(id) {
-        return this.unpinnedRecords.findIndex(x => x.data[this.primaryKey] === id);
     }
 
     /**

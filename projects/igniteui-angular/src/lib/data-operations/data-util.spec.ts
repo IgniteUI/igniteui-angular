@@ -263,7 +263,7 @@ const testGroupBy = () => {
             // sort
             const res = DataUtil.sort(data, [expr]);
             // group by
-            DataUtil.group(res, state, null, groupRecords);
+            DataUtil.group(res, state, undefined, null, groupRecords);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
@@ -279,7 +279,7 @@ const testGroupBy = () => {
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2]);
              // group by
-            DataUtil.group(sorted, state, null, groupRecords);
+            DataUtil.group(sorted, state, undefined, null, groupRecords);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
@@ -487,9 +487,9 @@ const testMerging = () => {
     describe('Test merging', () => {
         it('Should merge add transactions correctly', () => {
             const data = SampleTestData.personIDNameData();
-            const addRow4 = { ID: 4, Name: 'Peter' };
-            const addRow5 = { ID: 5, Name: 'Mimi' };
-            const addRow6 = { ID: 6, Name: 'Pedro' };
+            const addRow4 = { ID: 4, IsEmployed: true, Name: 'Peter' };
+            const addRow5 = { ID: 5, IsEmployed: true, Name: 'Mimi' };
+            const addRow6 = { ID: 6, IsEmployed: false, Name: 'Pedro' };
             const transactions: Transaction[] = [
                 { id: addRow4.ID, newValue: addRow4, type: TransactionType.ADD },
                 { id: addRow5.ID, newValue: addRow5, type: TransactionType.ADD },

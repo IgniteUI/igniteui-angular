@@ -12,6 +12,7 @@
         <ng-container *ngFor="let child of column.children" >
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
                 [ngClass]="child.headerGroupClasses"
+                [ngStyle]="child.headerGroupStyles | igxHeaderGroupStyle:child:grid.pipeTrigger"
                 [column]="child"
                 [igxColumnMovingDrag]="child"
                 [ghostHost]="grid.outlet.nativeElement"
@@ -70,6 +71,7 @@
         <ng-container *ngFor="let child of column.children">
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
                 [ngClass]="child.headerGroupClasses"
+                [ngStyle]="child.headerGroupStyles | igxHeaderGroupStyle:child:grid.pipeTrigger"
                 [column]="child"
                 [style.min-width]="child.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts"
                 [style.flex-basis]="child.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts">
@@ -86,6 +88,7 @@
         class="igx-grid-th--fw"
         [id]="grid.id + '_' + column.field"
         [ngClass]="column.headerClasses"
+        [ngStyle]="column.headerStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
         [igxColumnMovingDrag]="column"
         [ghostHost]="grid.outlet.nativeElement"
         [attr.droppable]="true"

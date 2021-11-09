@@ -33,6 +33,7 @@ import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.comp
 import { IgxGridCell } from '../grid-public-cell';
 import { CellType } from '../common/cell.interface';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
+import { IGridGroupingStrategy } from '../../data-operations/grouping-strategy';
 
 let NEXT_ID = 0;
 
@@ -266,6 +267,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden
      */
+    protected _groupStrategy: IGridGroupingStrategy;
+    /**
+     * @hidden
+     */
     protected groupingDiffer;
     private _data?: any[] | null;
     private _hideGroupedColumns = false;
@@ -453,6 +458,25 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
 
         this._hideGroupedColumns = value;
+    }
+
+    /**
+     * Gets/Sets the grouping strategy of the grid.
+     *
+     * @remarks The default IgxGrouping extends from IgxSorting and a custom one can be used as a `sortStrategy` as well.
+     *
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [groupStrategy]="groupStrategy"></igx-grid>
+     * ```
+     */
+    @Input()
+    public get groupStrategy(): IGridGroupingStrategy {
+        return this._groupStrategy;
+    }
+
+    public set groupStrategy(value: IGridGroupingStrategy) {
+        this._groupStrategy = value;
     }
 
     /**
@@ -672,6 +696,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public clearGrouping(name?: string | Array<string>): void {
         this._gridAPI.clear_groupby(name);
+        this.calculateGridSizes();
         this.notifyChanges(true);
     }
 
@@ -865,14 +890,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
         return {
-            $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
+            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
             templateID: {
                 type: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
                 id: null
             },
-            disabled: this.isGhostRecord(rowData),
-            addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
+            disabled: this.isGhostRecord(rowData)
         };
     }
 
@@ -1029,7 +1053,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        if (index < 0 || index >= this.dataView.length) {
+        if (index < 0) {
             return undefined;
         }
         return this.createRow(index);
@@ -1140,8 +1164,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
+        let rec: any;
 
-        const rec: any = data ?? this.dataView[index];
+        if (index < 0 || index >= this.dataView.length) {
+            if (index >= this.dataView.length){
+                const virtIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
+                rec = data ?? this.dataView[virtIndex];
+            }
+        }else {
+            rec = data ?? this.dataView[index];
+        }
 
         if (rec && this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this, index, rec);

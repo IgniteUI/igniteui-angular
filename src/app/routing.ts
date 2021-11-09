@@ -1,6 +1,6 @@
 import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
 import { RouterModule } from '@angular/router';
-import { AvatartSampleComponent } from './avatar/avatar.sample';
+import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
@@ -125,6 +125,7 @@ import { GridLocalizationSampleComponent } from './grid-localization/grid-locali
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
 import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
+import { IgxStepperSampleComponent as StepperSampleComponent } from './stepper/stepper.sample';
 
 const appRoutes = [
     {
@@ -146,7 +147,7 @@ const appRoutes = [
     },
     {
         path: 'avatar',
-        component: AvatartSampleComponent
+        component: AvatarSampleComponent
     },
     {
         path: 'badge',
@@ -598,6 +599,10 @@ const appRoutes = [
     },{
         path: 'pagination',
         component: PaginationSampleComponent
+    },
+    {
+        path: 'stepper',
+        component: StepperSampleComponent
     }
 ];
 

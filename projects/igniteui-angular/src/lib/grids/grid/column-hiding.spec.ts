@@ -843,10 +843,6 @@ describe('Column Hiding UI #grid', () => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            grid.showToolbar = true;
-            grid.toolbarTitle = 'Grid Toolbar Title';
-            grid.hiddenColumnsText = 'Hidden';
-            grid.columnHiding = true;
             grid.columns[2].hidden = true;
             fix.componentInstance.showInline = false;
             fix.detectChanges();

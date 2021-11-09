@@ -111,7 +111,7 @@
                         {{
                             isDate(expressionItem.expression.searchVal)
                             ? getFormatter(expressionItem.expression.fieldName)
-                                ? (expressionItem.expression.searchVal | columnFormatter:getFormatter(expressionItem.expression.fieldName))
+                                ? (expressionItem.expression.searchVal | columnFormatter:getFormatter(expressionItem.expression.fieldName):undefined)
                                 : (expressionItem.expression.searchVal | date:getFormat(expressionItem.expression.fieldName):undefined:grid.locale)
                             : expressionItem.expression.searchVal
                         }}
@@ -162,7 +162,7 @@
                         <igx-icon family="imx-icons" [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
                         </igx-icon>
                     </igx-prefix>
-                    <igx-select-item *ngFor="let condition of getConditionList()" [value]="condition">
+                    <igx-select-item *ngFor="let condition of getConditionList()" [value]="condition" [text]="getConditionFriendlyName(condition)">
                         <div class="igx-grid__filtering-dropdown-items">
                             <igx-icon family="imx-icons"
                                       [name]="selectedColumn.filters.condition(condition).iconName">

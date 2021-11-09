@@ -2,12 +2,53 @@
 
 # Current Milestone
 
-## Milestone 17 (Due by August, 2021)
+## Milestone 19 (Due by Nov, 2021)
 
-1.  **[DONE]** Accordion component to Ignite UI for Angular [#9559](https://github.com/IgniteUI/igniteui-angular/issues/9559)
+1. **DONE** Stepper component [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
+2. Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
+3. **DONE** Themes: Refactor Grid theme [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556) 
+6. **DONE** onFilterDone property to expose additional information [#10243](https://github.com/IgniteUI/igniteui-angular/issues/10243)
+7. IgxCombo with single selection [#9832](https://github.com/IgniteUI/igniteui-angular/issues/9832)
+
+## Going down the road
+
+# Due in 2021
+
+1. Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
+2. Classes to indicate position of auto overlay [#9481](https://github.com/IgniteUI/igniteui-angular/issues/9481)
+4. Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205)
+5. Column moving feature on grid level [#10176](https://github.com/IgniteUI/igniteui-angular/issues/10176)
+6. Grid summary custom templating [#7981](https://github.com/IgniteUI/igniteui-angular/issues/7981)
+7. IgxLinearProgressBar: animate initial progress [#10068](https://github.com/IgniteUI/igniteui-angular/issues/10068)
+8. Improve sorting experience for users [#9674](https://github.com/IgniteUI/igniteui-angular/issues/9674)
+9. IgxCombo: being able to set groups sorting order [#10125](https://github.com/IgniteUI/igniteui-angular/issues/10125)
+10. Getting only one sort and one filter event after changing the state of grid using setState function [#8064](https://github.com/IgniteUI/igniteui-angular/issues/8064)
+11. IgxGridState directive to save disableHiding property [#9304](https://github.com/IgniteUI/igniteui-angular/issues/9304)
+12. Template grid excel filter footer [#10183](https://github.com/IgniteUI/igniteui-angular/issues/10183)
+13. Igx Grid Sort Icon Change [#10217](https://github.com/IgniteUI/igniteui-angular/issues/10217)
+
+# Due in 2022
+
+1. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
+2. Grid Cell Merging [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
+
+# Previous Milestone
+
+## Milestone 18 (Released October 4th, 2021)
+
+1. **[DONE]** Add row at top of grid [#9675](https://github.com/IgniteUI/igniteui-angular/issues/9675)
+2. **[DONE]** Grid row styles and classes [#9969](https://github.com/IgniteUI/igniteui-angular/issues/9969)
+3. **[DONE]** Freezing Columns/Rows on Export to Excel (Angular) [#9863](https://github.com/IgniteUI/igniteui-angular/issues/9863)
+4. **[DONE]** Persistent State directive for column group [#8516](https://github.com/IgniteUI/igniteui-angular/issues/8516)
+5. **[DONE]** IgxTreeGrid: display only filtered records [#9923](https://github.com/IgniteUI/igniteui-angular/issues/9923)
+6. **[DONE]** Snackbar support for animation customization [#10126](https://github.com/IgniteUI/igniteui-angular/issues/10126)
+
+## Milestone 17 (Released August 2nd, 2021)
+
+1. **[DONE]** Accordion component to Ignite UI for Angular [#9559](https://github.com/IgniteUI/igniteui-angular/issues/9559)
 2. **[DONE]** Expose a column input for passing additional data/state in the template contexts of the column [#9020](https://github.com/IgniteUI/igniteui-angular/issues/9020)
-3.  **[DONE]** Expose a new cell-like object API for the data grids [#9555](https://github.com/IgniteUI/igniteui-angular/issues/9555)
-4.  **[DONE]** Change the way igxGrid allows using the igxPaginator [#9097](https://github.com/IgniteUI/igniteui-angular/issues/9097)
+3. **[DONE]** Expose a new cell-like object API for the data grids [#9555](https://github.com/IgniteUI/igniteui-angular/issues/9555)
+4. **[DONE]** Change the way igxGrid allows using the igxPaginator [#9097](https://github.com/IgniteUI/igniteui-angular/issues/9097)
 5. **[DONE]** Tree Grid Grouping Pipe and Group Area [#9184](https://github.com/IgniteUI/igniteui-angular/issues/9184)
 6. **[DONE]** Grid Multi Column Headers to exported excel [#6288](https://github.com/IgniteUI/igniteui-angular/issues/6288)
 7. **[DONE]** Snackbar IToggleView [#9677](https://github.com/IgniteUI/igniteui-angular/issues/9677)
@@ -15,16 +56,6 @@
 9. **[DONE]** IgxPaginator Component should be templatable [#9587](https://github.com/IgniteUI/igniteui-angular/issues/9587)
 10. **[DONE]** Editable cell styling support [#9630](https://github.com/IgniteUI/igniteui-angular/issues/9630)
 11. **[DONE]** Excel Export Service - onColumnExport Allow to modify columnIndex Property [#8874](https://github.com/IgniteUI/igniteui-angular/issues/8874)
-
-## Going down the road
-
-1. Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
-2. Grid Cell Merging
-3. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
-4. Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
-5. Themes: Split themes and aid with Grid refactoring [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
-
-# Previous Milestone
 
 ## Milestone 16 (Released May 14th, 2021)
 
