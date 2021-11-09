@@ -20,12 +20,24 @@ All notable changes for each version of this project will be documented in this 
 
     - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/stepper/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Stepper-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper).
 
+- Added `IgxFocusTrap` directive, which traps the Tab key focus within an element.
+
+    ```html
+   <div #wrapper [igxFocusTrap]="true" tabindex="0">
+        <input type="text" placeholder="Enter Username" name="uname">
+        <input type="password" placeholder="Enter Password" name="psw">
+        <button>SIGN IN</button>
+    </div>
+    ```
+
 - `IgxCsvExporterService`, `IgxExcelExporterService`
     - Exporter services are no longer required to be provided in the application since they are now injected on a root level.
 - `IgxGridToolbarPinningComponent`, `IgxGridToolbarHidingComponent`
     - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
 - `IgxCombo`
     - Added `groupSortingDirection` input, which allows you to set groups sorting order.
+- `IgxDialog`
+    - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
 
 ### General
 
