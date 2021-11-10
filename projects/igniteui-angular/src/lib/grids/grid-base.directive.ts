@@ -3820,23 +3820,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    public get columns(): IgxColumnComponent[] {
-        return this._columns;
-    }
-
-    /**
      * Gets an array of `IgxColumnComponent`s.
      *
      * @example
      * ```typescript
-     * const colums = this.grid.columnsCollection.
+     * const colums = this.grid.columns.
      * ```
      */
-    public get columnsCollection(): IgxColumnComponent[] {
+    public get columns(): IgxColumnComponent[] {
         return this._rendered ? this._columns : [];
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get columnsCollection(): IgxColumnComponent[] {
+        return this._columns;
     }
 
     /**
@@ -5451,7 +5451,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             result = result.substring(result.indexOf('\n') + 1);
         }
 
-        if (Object.values(data[0]).length === 1) {
+        if (data && data.length > 0 && Object.values(data[0]).length === 1) {
             result = result.slice(0, -2);
         }
 
@@ -6773,7 +6773,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         // Make sure we don't exceed unpinned area min width and get pinned and unpinned col collections.
         // We take into account top level columns (top level groups and non groups).
         // If top level is unpinned the pinning handles all children to be unpinned as well.
-        for (const column of this._columns) {
+        for (const column of this.columnList) {
             if (column.pinned && !column.parent) {
                 pinnedColumns.push(column);
             } else if (column.pinned && column.parent) {

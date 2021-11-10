@@ -113,7 +113,7 @@ describe('Column Pinning UI #grid', () => {
         });
 
         it('Checks order of columns after unpinning', () => {
-            for (const column of grid.columns) {
+            for (const column of grid.columnsCollection) {
                 column.pin();
             }
             fix.detectChanges();
@@ -233,7 +233,7 @@ describe('Column Pinning UI #grid', () => {
             spyOn(grid.columnPin, 'emit').and.callThrough();
             spyOn(grid.columnPinned, 'emit').and.callThrough();
 
-            grid.columns[0].pin();
+            grid.columnsCollection[0].pin();
 
             expect(grid.columnPin.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnPin.emit).toHaveBeenCalledWith(
@@ -244,12 +244,12 @@ describe('Column Pinning UI #grid', () => {
                     { column: grid.getColumnByName('ID'), insertAtIndex: 0, isPinned: true });
 
             // columnPin should not be fired if column is already pinned
-            grid.columns[0].pin();
+            grid.columnsCollection[0].pin();
 
             expect(grid.columnPin.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnPinned.emit).toHaveBeenCalledTimes(1);
 
-            grid.columns[0].unpin();
+            grid.columnsCollection[0].unpin();
 
             expect(grid.columnPin.emit).toHaveBeenCalledTimes(2);
             expect(grid.columnPin.emit).toHaveBeenCalledWith(
@@ -266,9 +266,9 @@ describe('Column Pinning UI #grid', () => {
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
             fix.detectChanges();
 
-            verifyColumnIsPinned(grid.columns[0], true, 3);
-            verifyColumnIsPinned(grid.columns[1], true, 3);
-            verifyColumnIsPinned(grid.columns[2], true, 3);
+            verifyColumnIsPinned(grid.columnsCollection[0], true, 3);
+            verifyColumnIsPinned(grid.columnsCollection[1], true, 3);
+            verifyColumnIsPinned(grid.columnsCollection[2], true, 3);
         });
 
         it('toolbar should contain only pinnable columns', () => {
@@ -280,7 +280,7 @@ describe('Column Pinning UI #grid', () => {
 
             expect(GridFunctions.getOverlay(fix).querySelectorAll('igx-checkbox').length).toEqual(5);
 
-            grid.columns[0].disablePinning = true;
+            grid.columnsCollection[0].disablePinning = true;
             fix.detectChanges();
 
             pinningUIButton.click();
@@ -290,7 +290,7 @@ describe('Column Pinning UI #grid', () => {
         });
 
             it('Checks order of columns after unpinning', () => {
-            for (const column of grid.columns) {
+            for (const column of grid.columnsCollection) {
                 column.pin();
             }
             fix.detectChanges();
@@ -333,22 +333,22 @@ describe('Column Pinning UI #grid', () => {
             fix.detectChanges();
 
             verifyCheckbox(columnName, true, false, columnChooserElement);
-            expect(grid.columns[1].allChildren.every((col) => col.pinned)).toBe(true);
+            expect(grid.columnsCollection[1].allChildren.every((col) => col.pinned)).toBe(true);
         });
 
         it('- unpinning group column unpins all children.', () => {
             const columnName = 'General Information';
-            grid.columns[0].unpin();
-            grid.columns[1].pin();
+            grid.columnsCollection[0].unpin();
+            grid.columnsCollection[1].pin();
             fix.detectChanges();
 
             verifyCheckbox(columnName, true, false, columnChooserElement);
-            expect(grid.columns[1].allChildren.every((col) => col.pinned)).toBe(true);
+            expect(grid.columnsCollection[1].allChildren.every((col) => col.pinned)).toBe(true);
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, columnName);
             fix.detectChanges();
             verifyCheckbox(columnName, false, false, columnChooserElement);
-            expect(grid.columns[1].allChildren.every((col) => !col.pinned)).toBe(true);
+            expect(grid.columnsCollection[1].allChildren.every((col) => !col.pinned)).toBe(true);
         });
     });
 
