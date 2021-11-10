@@ -170,17 +170,27 @@ Write migrations.
 
 ## Deprecating methods
 When a method is deprecated a few steps have to be done:
-1. Add deprecation warning message by decorating the method with `@DeprecateMethod` decorator from `deprecateDecorators.ts` file.
+1. Add the `@deprecated` tag at the begging of the method description followed by the version in which the method has been deprecated and what can be used instead. Example:
+```ts
+/**
+ * @deprecated in version 12.1.0. Use 'data' instead
+ *
+ * The data record that populates the row
+ */
+public getRowData(): any {
+    return this.data;
+}
+```
 2. Ensure that the deprecated method is no longer used in IgniteUI for Angular codebase, samples and documentation snippets.
 3. Write migrations.
 
 ## Deprecating class properties
 When a class property is deprecated a few steps have to be done:
-1. Add deprecation warning message by decorating the property with `@DeprecateProperty` decorator from `deprecateDecorators.ts` file.
+1. Add the `@deprecated` tag at the begging of the property description followed by the version in which the property has been deprecated and what can be used instead.
 2. Ensure that the deprecated property is no longer used in IgniteUI for Angular codebase, samples and documentation snippets.
 3. Write migrations.
 
-NOTE: TypeScript disallows decorating both the get and set accessor for a single member. Instead, all decorators for the member must be applied to the first accessor specified in document order. This is because decorators apply to a Property Descriptor, which combines both the get and set accessor, not each declaration separately.
+NOTE: TypeScript disallows adding descriptions to both the get and set accessor for a single member. Instead, the description for the member must be applied to the first accessor specified in document order. Having this in mind the `@deprecated` tag is applied only once.
 
 # Testing a PR
 In order to test a pull request that is awaiting test, perform the following actions.
