@@ -444,7 +444,7 @@ export class IgxGridSelectionService {
 
     /** Select the specified row and emit event. */
     public selectRowById(rowID, clearPrevSelection?, event?): void {
-        if (!this.grid.isRowSelectable || this.isRowDeleted(rowID)) {
+        if (!(this.grid.isRowSelectable || this.grid.isPivot) || this.isRowDeleted(rowID)) {
             return;
         }
         clearPrevSelection = !this.grid.isMultiRowSelectionEnabled || clearPrevSelection;
@@ -487,6 +487,17 @@ export class IgxGridSelectionService {
 
     public isRowSelected(rowID): boolean {
         return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
+    }
+
+    public isPivotRowSelected(rowID): boolean {
+        let contains = false;
+        this.rowSelection.forEach(x => {
+            if (rowID.includes(x)) {
+                contains = true;
+                return;
+            }
+        });
+        return this.rowSelection.size > 0 && contains;
     }
 
     public isRowInIndeterminateState(rowID): boolean {

@@ -31,18 +31,23 @@ export class PivotGridSampleComponent {
         ]
         ,
         rows: [{
-            memberName: 'City',
-            enabled: true
+            memberName: 'All cities',
+            memberFunction: () => 'All Cities',
+            enabled: true,
+            childLevel: {
+                memberName: 'City',
+                enabled: true
+            }
         }, {
-            memberFunction: () => 'All',
+            memberFunction: () => 'AllProducts',
             memberName: 'AllProducts',
             enabled: true,
             childLevel:
-                {
-                    memberFunction: (data) => data.ProductCategory,
-                    memberName: 'ProductCategory',
-                    enabled: true
-                }
+            {
+                memberFunction: (data) => data.ProductCategory,
+                memberName: 'ProductCategory',
+                enabled: true
+            }
         }],
         values: [
             {
@@ -100,4 +105,8 @@ export class PivotGridSampleComponent {
             ProductCategory: 'Components', UnitPrice: 16.05, SellerName: 'Walter Pang',
             Country: 'Bulgaria', City: 'Sofia', Date: '02/19/2013', UnitsSold: 492
         }];
+
+        public test() {
+           console.log(this.grid1.selectedColumns());
+        }
 }
