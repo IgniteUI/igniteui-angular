@@ -3820,11 +3820,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     * @internal
+     * Gets an array of `IgxColumnComponent`s.
+     *
+     * @example
+     * ```typescript
+     * const colums = this.grid.columns.
+     * ```
      */
     public get columns(): IgxColumnComponent[] {
         return this._rendered ? this._columns : [];
+    }
+
+    /**
+     * @internal
+     */
+    public get columnsCollection(): IgxColumnComponent[] {
+        return this._columns;
     }
 
     /**
