@@ -3832,6 +3832,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
      * @internal
      */
     public get columnsCollection(): IgxColumnComponent[] {
