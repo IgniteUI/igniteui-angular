@@ -6,30 +6,30 @@
 [![npm version](https://badge.fury.io/js/igniteui-angular.svg)](https://badge.fury.io/js/igniteui-angular)
 [![Discord](https://img.shields.io/discord/836634487483269200?logo=discord&logoColor=ffffff)](https://discord.gg/39MjrTRqds)
 
-[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch UI kits, supporting directives for [Angular](https://angular.io/) by Infragistics. Ignite UI for Angular is designed to enable developers to build enterprise-ready, high-performance HTML5 & JavaScript apps for modern desktop browsers. With the use of all features, the world’s fastest Angular grid, 60+ real-time Angular charts, and more, you are empowered to engineer excellent mobile experiences and deliver progressive web apps (PWA’s) targeting Google's Angular framework. 
+[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch UI kits, supporting directives for [Angular](https://angular.io/) by Infragistics. Ignite UI for Angular is designed to enable developers to build enterprise-ready, high-performance HTML5 & JavaScript apps for modern desktop browsers. With the use of all features, the world’s fastest Angular grid, 60+ real-time Angular charts, and more, you are empowered to engineer excellent mobile experiences and deliver progressive web apps (PWA’s) targeting Google's Angular framework.
 
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 
- 
+
 ### Angular Data Grid Overview
 
-The Ignite UI for [Angular Data Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) equips you with all the necessary features for manipulating and visualizing tabular data in a series of rows and columns with ease. You can find powerful grid elements for no-lag scrolling while rendering and going through millions of data points. 
+The Ignite UI for [Angular Data Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) equips you with all the necessary features for manipulating and visualizing tabular data in a series of rows and columns with ease. You can find powerful grid elements for no-lag scrolling while rendering and going through millions of data points.
 
-Built for optimization and speed, our [Angular grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) component lets you quickly bind data with very little code and allows you to implement a variety of events in order to tailor different behaviors. 
+Built for optimization and speed, our [Angular grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) component lets you quickly bind data with very little code and allows you to implement a variety of events in order to tailor different behaviors.
 
 #### [View running Grid samples here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
 
 ### Angular Charts & Graphs Overview
 
-Ignite UI for Angular arrives with an extensive library of data visualizations that enable stunning, interactive charts and dashboards for your modern web and mobile apps. All of them are designed to work flawlessly on every modern browser and provide complete touch as well as interactivity. Our comprehensive [Angular Charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/chart-overview) component supports more than 65 chart types that let you display all sorts of data representations and statistics. And with the rich and easy-to-use API, you can plot various types of charts. 
+Ignite UI for Angular arrives with an extensive library of data visualizations that enable stunning, interactive charts and dashboards for your modern web and mobile apps. All of them are designed to work flawlessly on every modern browser and provide complete touch as well as interactivity. Our comprehensive [Angular Charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/chart-overview) component supports more than 65 chart types that let you display all sorts of data representations and statistics. And with the rich and easy-to-use API, you can plot various types of charts.
 
-Some of the Angular chart types included are: [Polar chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart), [Pie chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart), [Donut chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart), [Bubble chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart), [Area chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/area-chart), [Treemap chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart), and many others. And if you look for [Angular financial charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart), with Ignite UI you can get the same features as the ones you come across with Google Finance and Yahoo Finance Charts. 
+Some of the Angular chart types included are: [Polar chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart), [Pie chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart), [Donut chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart), [Bubble chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart), [Area chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/area-chart), [Treemap chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart), and many others. And if you look for [Angular financial charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart), with Ignite UI you can get the same features as the ones you come across with Google Finance and Yahoo Finance Charts.
 
 ### Build Apps with Ignite UI for Angular faster using our [App Builder](https://www.infragistics.com/products/indigo-design/app-builder)
 ![5661 drag drop](https://user-images.githubusercontent.com/1472513/132676597-09eec222-42f7-40ff-bd0d-fe8b91fd0c1c.gif)
 ### Generate your Angular code projects using the [App Builder](https://www.infragistics.com/products/indigo-design/app-builder)
 ![0871 change-preview-code](https://user-images.githubusercontent.com/1472513/132676607-3851f308-416b-45d6-99bc-c34266b55c44.gif)
- 
+
 ### Current List of Components Include:
 
 |Components|Status|||Directives|Status|||
@@ -63,6 +63,7 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |navigation drawer|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/navigation-drawer/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)|||||
 |radio|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/radio/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio-button)|||||
 |select|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/select/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select)|||||
+|simple-combo|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/simple-combo/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/simple-combo)|||||
 |slider|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/slider/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider/slider)|||||
 |snackbar|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/snackbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar)|||||
 |stepper|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/stepper/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper)|
@@ -237,14 +238,14 @@ Developer support is provided as part of the commercial, paid-for license via [I
 Community support for open source usage of this product is available at [StackOverflow](https://stackoverflow.com/questions/tagged/ignite-ui-angular).
 
 ## License
-This is a commercial product, requiring a valid paid-for license for commercial use.  
+This is a commercial product, requiring a valid paid-for license for commercial use.
 This product is free to use for non-commercial educational use for students in K through 12 grades or University programs, and for educators to use in a classroom setting as examples / tools in their curriculum.
 In order for us to verify your eligibility for free usage, please [register for trial](https://Infragistics.com/Angular) and open a support ticket with a request for free license.
 
-To acquire a license for commercial usage, please [register for trial](https://Infragistics.com/Angular) and refer to the purchasing options in the pricing section on the product page.  
+To acquire a license for commercial usage, please [register for trial](https://Infragistics.com/Angular) and refer to the purchasing options in the pricing section on the product page.
 
-© Copyright 2020 INFRAGISTICS. All Rights Reserved. 
-The Infragistics Ultimate license & copyright applies to this distribution. 
+© Copyright 2020 INFRAGISTICS. All Rights Reserved.
+The Infragistics Ultimate license & copyright applies to this distribution.
 For information on that license, please go to our website [https://www.infragistics.com/legal/license](https://www.infragistics.com/legal/license).
 
 
