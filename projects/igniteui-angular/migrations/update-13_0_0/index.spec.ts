@@ -69,6 +69,18 @@ describe(`Update to ${version}`, () => {
         ).toEqual(expectedContent);
     });
 
+    it('should rename IgxComboComponent selectItems to select', () => {
+        pending('LS must be setup for tests.');
+    });
+
+    it('should rename IgxComboComponent deselectItems to deselect', () => {
+        pending('LS must be setup for tests.');
+    });
+
+    it('should rename IgxComboComponent selectedItems() to selected', () => {
+        pending('LS must be setup for tests.');
+    });
+
     it('should remove paging and paginationTemplate property and define a igx-paginator component with custom content', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
