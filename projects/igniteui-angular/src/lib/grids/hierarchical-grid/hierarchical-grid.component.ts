@@ -596,9 +596,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
 
         if (this.parent) {
-            this._displayDensity = this.rootGrid._displayDensity;
+            this._displayDensity = this.rootGrid.displayDensity;
             this.rootGrid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this._displayDensity = this.rootGrid._displayDensity;
+                this._displayDensity = this.rootGrid.displayDensity;
                 this.notifyChanges(true);
                 this.cdr.markForCheck();
             });
@@ -622,6 +622,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
         this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
         this.excelStyleHeaderIconTemplate = this.rootGrid.excelStyleHeaderIconTemplate;
+        this.sortAscendingHeaderIconTemplate = this.rootGrid.sortAscendingHeaderIconTemplate;
+        this.sortDescendingHeaderIconTemplate = this.rootGrid.sortDescendingHeaderIconTemplate;
+        this.sortHeaderIconTemplate = this.rootGrid.sortHeaderIconTemplate;
         this.hasChildrenKey = this.parentIsland ?
             this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
             this.rootGrid.hasChildrenKey;
@@ -630,7 +633,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     public get outletDirective(): IgxOverlayOutletDirective {
-        return this.rootGrid._outletDirective;
+        return this.rootGrid.outlet;
     }
 
     /**
@@ -882,7 +885,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public get rootGrid() {
+    public get rootGrid(): GridType {
         let currGrid = this;
         while (currGrid.parent) {
             currGrid = currGrid.parent;
@@ -1044,7 +1047,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return row;
     }
 
-    protected getChildGrids(inDeph?: boolean) {
+    /** @hidden @internal */
+    public getChildGrids(inDeph?: boolean) {
         return this.hgridAPI.getChildGrids(inDeph);
     }
 

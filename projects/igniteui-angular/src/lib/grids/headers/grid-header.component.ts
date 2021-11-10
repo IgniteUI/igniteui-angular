@@ -43,6 +43,12 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     protected defaultESFHeaderIconTemplate: TemplateRef<any>;
 
     /**
+     * @hidden
+     */
+    @ViewChild('defaultSortHeaderIconTemplate', { read: TemplateRef, static: true })
+    protected defaultSortHeaderIconTemplate;
+
+    /**
      * Returns the `aria-selected` of the header.
      */
     @HostBinding('attr.aria-selected')
@@ -127,6 +133,21 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
      */
     public get esfIconTemplate() {
         return this.grid.excelStyleHeaderIconTemplate || this.defaultESFHeaderIconTemplate;
+    }
+
+    /**
+     * @hidden
+     */
+    public get sortIconTemplate() {
+        if (this.sortDirection === SortingDirection.None && this.grid.sortHeaderIconTemplate) {
+            return this.grid.sortHeaderIconTemplate;
+        } else if (this.sortDirection === SortingDirection.Asc && this.grid.sortAscendingHeaderIconTemplate) {
+            return this.grid.sortAscendingHeaderIconTemplate;
+        } else if (this.sortDirection === SortingDirection.Desc && this.grid.sortDescendingHeaderIconTemplate) {
+            return this.grid.sortDescendingHeaderIconTemplate;
+        } else {
+            return this.defaultSortHeaderIconTemplate;
+        }
     }
 
     public get sorted() {

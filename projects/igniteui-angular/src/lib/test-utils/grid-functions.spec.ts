@@ -1822,7 +1822,7 @@ export class GridFunctions {
 
     public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
         const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS))
-                                            .find(header => header.nativeElement.title === columnField);
+            .find(header => header.nativeElement.title === columnField);
         return headerTitle.parent;
     }
 
@@ -1870,7 +1870,7 @@ export class GridFunctions {
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
-        return header.query(By.css(SORT_ICON_CLASS));
+        return header.query(By.css(SORT_ICON_CLASS))?.query(By.css('igx-icon'));
     }
 
     public static getHeaderFilterIcon(header: DebugElement): DebugElement {
