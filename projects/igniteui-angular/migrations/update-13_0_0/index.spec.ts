@@ -69,8 +69,20 @@ describe(`Update to ${version}`, () => {
         ).toEqual(expectedContent);
     });
 
-        /* eslint-disable arrow-parens */
-    it('Should properly rename columns property to columnsCollection',  async () => {
+    it('should rename IgxComboComponent selectItems to select', () => {
+        pending('LS must be setup for tests.');
+    });
+
+    it('should rename IgxComboComponent deselectItems to deselect', () => {
+        pending('LS must be setup for tests.');
+    });
+
+    it('should rename IgxComboComponent selectedItems() to selected', () => {
+        pending('LS must be setup for tests.');
+    });
+
+    /* eslint-disable arrow-parens */
+    it('Should properly rename columns property to columnsCollection', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
         import { IgxGridComponent } from 'igniteui-angular';
@@ -105,7 +117,7 @@ describe(`Update to ${version}`, () => {
         );
     });
 
-    it('Should properly rename columns property to columnsCollection - treeGrid',  async () => {
+    it('Should properly rename columns property to columnsCollection - treeGrid', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
         import { IgxTreeGridComponent } from 'igniteui-angular';
