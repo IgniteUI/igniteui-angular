@@ -420,7 +420,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public uniqueColumnValuesStrategy: (column: IgxColumnComponent,
+    public uniqueColumnValuesStrategy: (column: ColumnType,
         filteringExpressionsTree: IFilteringExpressionsTree,
         done: (values: any[]) => void) => void;
 
@@ -6048,7 +6048,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._cdrRequests = false;
     }
 
-    protected resolveOutlet() {
+    /** @hidden @internal */
+    public resolveOutlet() {
         return this._userOutletDirective ? this._userOutletDirective : this._outletDirective;
     }
 
