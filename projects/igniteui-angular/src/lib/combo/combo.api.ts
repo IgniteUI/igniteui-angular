@@ -45,9 +45,9 @@ export class IgxComboAPIService {
             return;
         }
         if (!selected) {
-            this.combo.selectItems([itemID], false, event);
+            this.combo.select([itemID], false, event);
         } else {
-            this.combo.deselectItems([itemID], event);
+            this.combo.deselect([itemID], event);
         }
     }
 

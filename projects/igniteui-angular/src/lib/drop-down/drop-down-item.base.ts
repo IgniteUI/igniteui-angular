@@ -1,11 +1,9 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
 import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Output, EventEmitter } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { showMessage } from '../core/deprecateDecorators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
 let NEXT_ID = 0;
-let warningShown = false;
 
 /**
  * An abstract class defining a drop-down item:
@@ -57,10 +55,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     @Input()
     public get index(): number {
         if (this._index === null) {
-            warningShown = showMessage(
-                'IgxDropDownItemBaseDirective: Automatic index is deprecated.' +
-                'Bind in the template instead using `<igx-drop-down-item [index]="i"` instead.`',
-                warningShown);
             return this.itemIndex;
         }
         return this._index;
