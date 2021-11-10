@@ -936,7 +936,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     public get index(): number {
-        return this.grid.columns.indexOf(this);
+        return (this.grid as any).columnsCollection.indexOf(this);
     }
 
     /**
@@ -1246,7 +1246,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Gets the cells of the column.
      * ```typescript
-     * let columnCells = this.column._cells;
+     * let columnCells = this.column.cells;
      * ```
      *
      */
