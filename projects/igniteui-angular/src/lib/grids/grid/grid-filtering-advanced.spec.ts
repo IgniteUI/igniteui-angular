@@ -1777,7 +1777,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                     return 3;
                 }
             };
-            grid.columnsCollection[2].formatter = downloadsFormatter;
+            grid.columnList.get(2).formatter = downloadsFormatter;
             fix.detectChanges();
 
             grid.openAdvancedFilteringDialog();
@@ -1811,7 +1811,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const formattedStrategy = new FormattedValuesFilteringStrategy(['ProductName']);
             grid.filterStrategy = formattedStrategy;
             const anotherFieldFormatter = (value: any, rowData: any) => rowData.ID + ':' + value;
-            grid.columnsCollection[1].formatter = anotherFieldFormatter;
+            grid.columnList.get(1).formatter = anotherFieldFormatter;
             fix.detectChanges();
 
             grid.openAdvancedFilteringDialog();

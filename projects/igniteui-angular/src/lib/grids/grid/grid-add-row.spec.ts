@@ -286,7 +286,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should generate correct row ID based on the primary column type', () => {
-            const column = grid.columnsCollection.find(col => col.field === grid.primaryKey);
+            const column = grid.columnList.find(col => col.field === grid.primaryKey);
             const type = column.dataType;
 
             const row = grid.gridAPI.get_row_by_index(0);
@@ -948,7 +948,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
 
-            grid.moveColumn(grid.columnsCollection[1], grid.columnsCollection[2]);
+            grid.moveColumn(grid.columnList.get(1), grid.columnList.get(2));
             fixture.detectChanges();
 
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
