@@ -36,9 +36,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({
-    name: 'comboGrouping'
-})
+@Pipe({ name: 'comboGrouping' })
 export class IgxComboGroupingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }

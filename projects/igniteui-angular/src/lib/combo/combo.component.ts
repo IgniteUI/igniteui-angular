@@ -461,9 +461,12 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         IgxComboEmptyDirective,
         IgxComboFilteringPipe,
         IgxComboFooterDirective,
-        IgxComboAddItemDirective,
-        IgxComboToggleIconDirective,
-        IgxComboClearIconDirective
+        IgxComboGroupingPipe,
+        IgxComboHeaderDirective,
+        IgxComboHeaderItemDirective,
+        IgxComboItemComponent,
+        IgxComboItemDirective,
+        IgxComboToggleIconDirective
     ],
     exports: [
         IgxComboAddItemComponent,
