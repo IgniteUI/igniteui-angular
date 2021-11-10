@@ -1110,16 +1110,16 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
         tick();
         fixture.detectChanges();
         // check parent cols
-        expect(hierarchicalGrid.columns.length).toBe(4);
-        expect(hierarchicalGrid.columns[0].field).toBe('ID');
-        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
-        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
-        expect(hierarchicalGrid.columns[3].field).toBe('Col2');
+        expect(hierarchicalGrid.columnsCollection.length).toBe(4);
+        expect(hierarchicalGrid.columnsCollection[0].field).toBe('ID');
+        expect(hierarchicalGrid.columnsCollection[1].field).toBe('ProductName');
+        expect(hierarchicalGrid.columnsCollection[2].field).toBe('Col1');
+        expect(hierarchicalGrid.columnsCollection[3].field).toBe('Col2');
         // check child cols
-        expect(child1Grid.columns.length).toBe(3);
-        expect(hierarchicalGrid.columns[0].field).toBe('ID');
-        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
-        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
+        expect(child1Grid.columnsCollection.length).toBe(3);
+        expect(hierarchicalGrid.columnsCollection[0].field).toBe('ID');
+        expect(hierarchicalGrid.columnsCollection[1].field).toBe('ProductName');
+        expect(hierarchicalGrid.columnsCollection[2].field).toBe('Col1');
     }));
 
     it('should update columns for expanded child when adding column to row island', fakeAsync(() => {

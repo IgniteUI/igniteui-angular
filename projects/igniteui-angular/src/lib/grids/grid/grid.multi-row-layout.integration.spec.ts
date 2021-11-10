@@ -941,8 +941,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             // ContactName
-            expect(grid.columns[1].width).toEqual('300px');
-            expect(grid.columns[1].cells[0].value).toEqual('Maria Anders');
+            expect(grid.columnsCollection[1].width).toEqual('300px');
+            expect(grid.columnsCollection[1].cells[0].value).toEqual('Maria Anders');
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[1].children[1].nativeElement;
@@ -981,8 +981,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             // Phone
-            expect(grid.columns[4].width).toEqual('200px');
-            expect(grid.columns[4].cells[0].value).toEqual('030-0074321');
+            expect(grid.columnsCollection[4].width).toEqual('200px');
+            expect(grid.columnsCollection[4].cells[0].value).toEqual('030-0074321');
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[4].children[1].nativeElement;
@@ -1021,8 +1021,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             // PostalCode
-            expect(grid.columns[8].width).toEqual('200px');
-            expect(grid.columns[8].cells[0].value).toEqual('12209');
+            expect(grid.columnsCollection[8].width).toEqual('200px');
+            expect(grid.columnsCollection[8].cells[0].value).toEqual('12209');
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[8].children[1].nativeElement;
@@ -1061,8 +1061,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             // CompanyName
-            expect(grid.columns[7].width).toEqual('200px');
-            expect(grid.columns[7].cells[0].value).toEqual('Alfreds Futterkiste');
+            expect(grid.columnsCollection[7].width).toEqual('200px');
+            expect(grid.columnsCollection[7].cells[0].value).toEqual('Alfreds Futterkiste');
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[7].children[1].nativeElement;
@@ -1101,8 +1101,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             // CompanyName
-            expect(grid.columns[7].width).toEqual('200px');
-            expect(grid.columns[7].cells[0].value).toEqual('Alfreds Futterkiste');
+            expect(grid.columnsCollection[7].width).toEqual('200px');
+            expect(grid.columnsCollection[7].cells[0].value).toEqual('Alfreds Futterkiste');
 
             const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 700px 100px 100px 200px');
@@ -1144,7 +1144,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             // City
-            expect(grid.columns[5].cells[0].value).toEqual('Berlin');
+            expect(grid.columnsCollection[5].cells[0].value).toEqual('Berlin');
 
             let groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 700px 100px 100px 200px');

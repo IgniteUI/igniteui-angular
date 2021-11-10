@@ -165,7 +165,7 @@ export class IgxGridStateDirective {
         },
         columns: {
             getFeatureState: (context: IgxGridStateDirective): IGridState => {
-                const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => ({
+                const gridColumns: IColumnState[] = context.currGrid.columnList.map((c) => ({
                     pinned: c.pinned,
                     sortable: c.sortable,
                     filterable: c.filterable,
