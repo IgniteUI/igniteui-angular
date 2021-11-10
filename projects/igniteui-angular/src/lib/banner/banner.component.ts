@@ -13,8 +13,7 @@ import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-com
 
 export interface BannerEventArgs extends IBaseEventArgs {
     /**
-     * @deprecated
-     * To get a reference to the banner, use `owner` instead.
+     * @deprecated in 12.1.0. To get a reference to the banner, use `owner` instead
      */
     banner: IgxBannerComponent;
     event?: Event;

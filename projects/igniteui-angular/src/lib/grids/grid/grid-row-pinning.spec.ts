@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './public_api';
+import { IgxGridModule, IPinRowEventArgs } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../grid.common';
@@ -164,7 +164,8 @@ describe('Row Pinning #grid', () => {
                 rowID,
                 insertAtIndex: 0,
                 isPinned: true,
-                row
+                row,
+                cancel: false
             });
 
             row = grid.getRowByIndex(0);
@@ -190,7 +191,8 @@ describe('Row Pinning #grid', () => {
                 rowID,
                 insertAtIndex: 0,
                 isPinned: true,
-                row
+                row,
+                cancel: false
             });
 
             row.unpin();
@@ -198,6 +200,62 @@ describe('Row Pinning #grid', () => {
             expect(row.pinned).toBe(false);
 
             expect(grid.rowPinned.emit).toHaveBeenCalledTimes(2);
+        });
+
+        it(`Should be able to cancel rowPinning on pin/unpin event.`, () => {
+            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            let sub = grid.rowPinning.subscribe((e: IPinRowEventArgs) => {
+                e.cancel = true;
+            });
+
+            const row = grid.getRowByIndex(0);
+            const rowID = row.key;
+            expect(row.pinned).toBeFalsy();
+
+            row.pin();
+            fix.detectChanges();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                insertAtIndex: 0,
+                isPinned: true,
+                rowID,
+                row,
+                cancel: true
+            });
+            expect(row.pinned).toBeFalsy();
+
+            sub.unsubscribe();
+
+            row.pin();
+            fix.detectChanges();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                insertAtIndex: 0,
+                isPinned: true,
+                rowID,
+                row,
+                cancel: false
+            });
+            expect(row.pinned).toBe(true);
+
+            sub = grid.rowPinning.subscribe((e: IPinRowEventArgs) => {
+                e.cancel = true;
+            });
+
+            row.unpin();
+            fix.detectChanges();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(3);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                isPinned: false,
+                rowID,
+                row,
+                cancel: true
+            });
+            expect(row.pinned).toBe(true);
+            sub.unsubscribe();
         });
 
         it('should pin/unpin via grid API methods.', () => {
