@@ -5807,6 +5807,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            console.log("Actual items length is: " + listItems.length);
             expect(listItems.length).toBe(3, 'incorrect rendered list items count');
 
             const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
