@@ -29,6 +29,9 @@ import { IgxGridFilteringModule } from './filtering/base/filtering.module';
 import { IgxRowDirective } from './row.directive';
 import {
     IgxExcelStyleHeaderIconDirective,
+    IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective,
+    IgxSortHeaderIconDirective,
     IgxGroupAreaDropDirective,
     IgxHeaderCollapseIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
@@ -59,6 +62,9 @@ import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
         IgxHeaderExpandIndicatorDirective,
         IgxHeaderCollapseIndicatorDirective,
         IgxExcelStyleHeaderIconDirective,
+        IgxSortAscendingHeaderIconDirective,
+        IgxSortDescendingHeaderIconDirective,
+        IgxSortHeaderIconDirective,
         IgxGroupAreaDropDirective,
         IgxGroupByMetaPipe
     ],
@@ -94,6 +100,9 @@ import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
         IgxHeaderExpandIndicatorDirective,
         IgxHeaderCollapseIndicatorDirective,
         IgxExcelStyleHeaderIconDirective,
+        IgxSortAscendingHeaderIconDirective,
+        IgxSortDescendingHeaderIconDirective,
+        IgxSortHeaderIconDirective,
         IgxGroupAreaDropDirective,
         IgxGroupByMetaPipe
     ],
