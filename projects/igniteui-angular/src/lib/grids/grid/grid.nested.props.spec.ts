@@ -545,9 +545,9 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
         expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
         expect(cell.editMode).toBeTruthy();
-        expect(combo.selectedItems().length).toEqual(3);
+        expect(combo.selection.length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -607,9 +607,9 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
         expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
         expect(cell.editMode).toBeTruthy();
-        expect(combo.selectedItems().length).toEqual(3);
+        expect(combo.selection.length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -675,9 +675,9 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(grid.rowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
         expect(row.inEditMode).toBeTruthy();
         expect(cell.editMode).toBeTruthy();
-        expect(combo.selectedItems().length).toEqual(3);
+        expect(combo.selection.length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -738,9 +738,9 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(grid.rowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
         expect(row.inEditMode).toBeTruthy();
         expect(cell.editMode).toBeTruthy();
-        expect(combo.selectedItems().length).toEqual(3);
+        expect(combo.selection.length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 

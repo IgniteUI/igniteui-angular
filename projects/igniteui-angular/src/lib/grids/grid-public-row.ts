@@ -1,4 +1,3 @@
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { CellType } from './common/cell.interface';
 import { IgxEditRow } from './common/crud.service';
@@ -66,20 +65,17 @@ abstract class BaseRow implements RowType {
     }
 
     /**
-     * @deprecated Use 'data' instead.
+     * @deprecated Use 'data' instead
      *
      * The data record that populates the row
      */
-    @DeprecateProperty(`'rowData' property is deprecated. Use 'data' instead.`)
     public get rowData(): any {
         return this.data;
     }
 
     /**
-     * @deprecated Use 'key' instead.
-     *
+     * @deprecated Use 'key' instead
      */
-    @DeprecateProperty(`'rowID' property is deprecated. Use 'key' instead.`)
     public get rowID(): any {
         return this.key;
     }

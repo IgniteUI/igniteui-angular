@@ -2,7 +2,7 @@
 name: Question
 about: Get general information or clarification
 title: ''
-labels: 'question'
+labels: ':question: question'
 assignees: ''
 projects: IgniteUI/16
 

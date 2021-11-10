@@ -40,7 +40,6 @@ import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { CellType } from '../common/cell.interface';
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -286,7 +285,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * @deprecated
+     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
+     *
      * Returns a `CellType` object that matches the conditions.
      *
      * @example
@@ -296,7 +296,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @param rowIndex
      * @param index
      */
-    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
