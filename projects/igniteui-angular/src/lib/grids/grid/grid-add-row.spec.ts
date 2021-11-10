@@ -844,15 +844,14 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.rowEditable = true;
             fixture.detectChanges();
             const gridFirstRow = grid.rowList.first;
-            const headerCells = grid.headerGroupsList[0].children;
             // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridFirstRow.cells);
+            GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
 
             gridFirstRow.beginAddRow();
             fixture.detectChanges();
             const newRow = grid.gridAPI.get_row_by_index(1);
             expect(newRow.addRowUI).toBeTrue();
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, newRow.cells);
+            GridFunctions.verifyLayoutHeadersAreAligned(grid, newRow);
         });
     });
 
