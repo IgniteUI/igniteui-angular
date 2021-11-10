@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
-import { showMessage } from '../../core/deprecateDecorators';
+import { showMessage } from '../../core/utils';
 import { addRow, addChild  } from '@igniteui/material-icons-extended';
 
 @Component({
