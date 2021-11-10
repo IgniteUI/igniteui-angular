@@ -319,6 +319,9 @@ export interface GridType extends IGridDataBindable {
     rowLoadingIndicatorTemplate?: TemplateRef<any>;
     headSelectorTemplate: TemplateRef<any>;
     rowSelectorTemplate: TemplateRef<any>;
+    sortHeaderIconTemplate: TemplateRef<any>;
+    sortAscendingHeaderIconTemplate: TemplateRef<any>;
+    sortDescendingHeaderIconTemplate: TemplateRef<any>;
     dragIndicatorIconTemplate: any;
     dragIndicatorIconBase: any;
     disableTransitions: boolean;
