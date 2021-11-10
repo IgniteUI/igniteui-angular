@@ -4256,7 +4256,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param val
      */
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public paginate(val: number): void {
         this.paginator?.paginate(val);
     }
