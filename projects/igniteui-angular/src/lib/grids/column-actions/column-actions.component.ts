@@ -16,7 +16,6 @@ import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 /**
@@ -173,15 +172,15 @@ export class IgxColumnActionsComponent implements DoCheck {
     }
 
     /**
+     * @deprecated Use grid input instead.
+     *
      * Gets the grid columns to provide an action for.
      *
-     * @deprecated
      * @example
      * ```typescript
      * let gridColumns = this.columnActions.columns;
      * ```
      */
-    @DeprecateProperty(`Deprecated. Use 'grid' input instead.`)
     @Input()
     public get columns() {
         return this.grid?.columns;
