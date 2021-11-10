@@ -1978,9 +1978,7 @@ export class GridFunctions {
 
         for (let i = 0; i < firstRowCells.length; i++) {
             const dataCell = firstRowCells[i];
-            const headerCell = headerCells.find(h => {
-                return h.header === dataCell.column.field || h.title === dataCell.column.field;
-            });
+            const headerCell = headerCells.find(h => h.column.index === dataCell.column.index);
             const widthDiff = headerCell?.nativeElement.clientWidth - dataCell?.nativeElement.clientWidth;
             const heightDiff = headerCell?.nativeElement.clientHeight - dataCell?.nativeElement.clientHeight;
             expect(widthDiff).toBeLessThanOrEqual(1);
