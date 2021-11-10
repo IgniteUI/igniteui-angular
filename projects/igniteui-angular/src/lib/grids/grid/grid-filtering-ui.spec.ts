@@ -2746,7 +2746,37 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 grid,
                 100,
                 'Downloads',
-                IgxStringFilteringOperand.instance().condition('equals')
+                IgxNumberFilteringOperand.instance().condition('equals')
+            );
+        }));
+
+        it('Should emit filteringDone when we clicked reset - Currency column type', fakeAsync(() => {
+            emitFilteringDoneOnResetClick(
+                fix,
+                grid,
+                100000,
+                'Revenue',
+                IgxNumberFilteringOperand.instance().condition('equals')
+            );
+        }));
+
+        it('Should emit filteringDone when we clicked reset - Boolean column type', fakeAsync(() => {
+            emitFilteringDoneOnResetClick(
+                fix,
+                grid,
+                true,
+                'Released',
+                IgxBooleanFilteringOperand.instance().condition('true')
+            );
+        }));
+
+        it('Should emit filteringDone when we clicked reset - DateTime column type', fakeAsync(() => {
+            emitFilteringDoneOnResetClick(
+                fix,
+                grid,
+                cal.timedelta(today, 'hour', 1),
+                'ReleaseTime',
+                IgxDateTimeFilteringOperand.instance().condition('equals')
             );
         }));
 
@@ -2776,7 +2806,37 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 grid,
                 3,
                 'Downloads',
-                IgxStringFilteringOperand.instance().condition('equals')
+                IgxNumberFilteringOperand.instance().condition('equals')
+            );
+        }));
+
+        it('Should emit filteringDone when clear the input of filteringUI - Currency column type', fakeAsync(() => {
+            emitFilteringDoneOnInputClear(
+                fix,
+                grid,
+                100000,
+                'Revenue',
+                IgxNumberFilteringOperand.instance().condition('equals')
+            );
+        }));
+
+        it('Should emit filteringDone when clear the input of filteringUI - Boolean column type', fakeAsync(() => {
+            emitFilteringDoneOnInputClear(
+                fix,
+                grid,
+                true,
+                'Released',
+                IgxBooleanFilteringOperand.instance().condition('true')
+            );
+        }));
+
+        it('Should emit filteringDone when clear the input of filteringUI - DateTime column type', fakeAsync(() => {
+            emitFilteringDoneOnInputClear(
+                fix,
+                grid,
+                cal.timedelta(today, 'hour', 1),
+                'ReleaseTime',
+                IgxDateTimeFilteringOperand.instance().condition('equals')
             );
         }));
 
@@ -2810,9 +2870,45 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 grid,
                 100,
                 'Downloads',
-                IgxStringFilteringOperand.instance().condition('equals'),
+                IgxNumberFilteringOperand.instance().condition('equals'),
                 1,
                 2
+            );
+        }));
+
+        it('should update UI when chip is removed from header cell - Currency column type.', fakeAsync(() => {
+            verifyRemoveChipFromHeader(
+                fix,
+                grid,
+                100000,
+                'Revenue',
+                IgxNumberFilteringOperand.instance().condition('equals'),
+                1,
+                7
+            );
+        }));
+
+        it('should update UI when chip is removed from header cell - Boolean column type.', fakeAsync(() => {
+            verifyRemoveChipFromHeader(
+                fix,
+                grid,
+                true,
+                'Released',
+                IgxBooleanFilteringOperand.instance().condition('true'),
+                3,
+                3
+            );
+        }));
+
+        it('should update UI when chip is removed from header cell - DateTime column type.', fakeAsync(() => {
+            verifyRemoveChipFromHeader(
+                fix,
+                grid,
+                cal.timedelta(today, 'hour', 1),
+                'ReleaseTime',
+                IgxDateTimeFilteringOperand.instance().condition('equals'),
+                3,
+                6
             );
         }));
 
@@ -2826,6 +2922,18 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('should emit filteringDone after chip is close from filtering row - Number column type', fakeAsync(() => {
             closeChipFromFiteringUIRow(fix, grid, 'Downloads', 7);
+        }));
+
+        it('should emit filteringDone after chip is close from filtering row - Currency column type', fakeAsync(() => {
+            closeChipFromFiteringUIRow(fix, grid, 'Revenue', 7);
+        }));
+
+        it('should emit filteringDone after chip is close from filtering row - Boolean column type', fakeAsync(() => {
+            closeChipFromFiteringUIRow(fix, grid, 'Released', 1);
+        }));
+
+        it('should emit filteringDone after chip is close from filtering row - DateTime column type', fakeAsync(() => {
+            closeChipFromFiteringUIRow(fix, grid, 'ReleaseTime', 4);
         }));
     });
 });
@@ -5340,7 +5448,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     ReleaseDateTime: null,
                     ReleaseTime: new Date(2010, 4, 27, 23, 0, 0),
                     Released: false,
-                    AnotherField: 'BWord'
+                    AnotherField: 'BWord',
+                    Revenue: 60000
                 },
                 {
                     Downloads: 127,
@@ -5350,7 +5459,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     ReleaseDateTime: null,
                     ReleaseTime: new Date(2021, 4, 27, 1, 0, 0),
                     Released: true,
-                    AnotherField: 'bWord'
+                    AnotherField: 'bWord',
+                    Revenue: 50000
                 },
                 {
                     Downloads: 20,
@@ -5360,7 +5470,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     ReleaseDateTime: null,
                     ReleaseTime: new Date(2015, 4, 27, 12, 0, 0),
                     Released: null,
-                    AnotherField: 'aWord'
+                    AnotherField: 'aWord',
+                    Revenue: 100000
                 }
             ];
             fix.componentInstance.data = data;
@@ -6517,7 +6628,7 @@ const emitFilteringDoneOnInputClear = (fix, grid, filterVal, columnName, conditi
 
     GridFunctions.clickFilterCellChip(fix, columnName);
 
-    spyOn(grid.filteringDone, 'emit');
+    // spyOn(grid.filteringDone, 'emit');
 
     grid.filteringRow.onClearClick();
     tick(100);

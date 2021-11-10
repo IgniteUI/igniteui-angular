@@ -1091,6 +1091,12 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter">
         </igx-column>
+        <igx-column width="100px" [field]="'ReleaseTime'" [header]="'Release Time'" [filterable]="filterable"
+            dataType="dateTime">
+        </igx-column>
+        <igx-column width="100px" [field]="'Revenue'" [header]="'Revenue'" [filterable]="filterable"
+            dataType="currency">
+        </igx-column>
     </igx-grid>`
 })
 export class IgxGridDatesFilteringComponent extends BasicGridComponent {
