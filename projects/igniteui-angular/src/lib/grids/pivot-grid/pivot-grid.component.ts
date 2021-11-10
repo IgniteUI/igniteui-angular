@@ -239,6 +239,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
+    public selectedPivotKeys = new Map<string, any[]>();
+
+    /**
+     * @hidden @internal
+     */
     public dragRowID = null;
 
     protected _defaultExpandState = true;
@@ -371,6 +376,16 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public set batchEditing(_val: boolean) {
     }
 
+    public get selectedRows(): any[] {
+        const selectedRowKeys = this.selectionService.getSelectedRows();
+        const selectedRowIds = [];
+        this.selectedPivotKeys.forEach((value, key) => {
+            if (selectedRowKeys.find(x => key.includes(x)) && !selectedRowIds.find(x => x === value)) {
+                selectedRowIds.push(value);
+            }
+        });
+        return selectedRowIds;
+    }
     /**
      * @hidden
      */
@@ -799,10 +814,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             fieldsMap = this.generateFromData(filteredFields);
         } else {
             fieldsMap = PivotUtil.getFieldsHierarchy(
-            data,
-            this.columnDimensions,
-            PivotDimensionType.Column,
-            {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+                data,
+                this.columnDimensions,
+                PivotDimensionType.Column,
+                { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
             );
         }
         columns = this.generateColumnHierarchy(fieldsMap, data);
