@@ -1611,11 +1611,14 @@
         }
 
         .sort-icon {
-            width: rem(15px);
-            height: rem(15px);
-            min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
-            font-size: rem(15px);
             position: relative;
+            display: flex;
+
+            igx-icon {
+                width: rem(15px);
+                height: rem(15px);
+                font-size: rem(15px);
+            }
 
             &::after {
                 content: attr(data-sortIndex);
