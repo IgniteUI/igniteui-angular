@@ -441,7 +441,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
      * @hidden @internal
      */
     public createAddRowParent(row: RowType, newRowAsChild?: boolean) {
-        const rowIndex = row ? row.index : this.grid.rowList.length - 1;
+        const rowIndex = row ? row.index : -1;
         const rowId = row ? row.rowID : (rowIndex >= 0 ? this.grid.rowList.last.rowID : null);
 
         const isInPinnedArea = this.grid.isRecordPinnedByViewIndex(rowIndex);
