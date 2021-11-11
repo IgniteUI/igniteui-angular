@@ -28,7 +28,6 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { ISelectionEventArgs } from '../drop-down/public_api';
 import { IgxIconService } from '../icon/public_api';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/inputGroupType';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/public_api';
@@ -40,8 +39,7 @@ import {
     IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboHeaderItemDirective, IgxComboItemDirective, IgxComboToggleIconDirective
 } from './combo.directives';
 import {
-    IComboFilteringOptions, IComboItemAdditionEvent, IComboSearchInputEventArgs,
-    IComboSelectionChangingEventArgs
+    IComboFilteringOptions, IComboItemAdditionEvent, IComboSearchInputEventArgs
 } from './public_api';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
@@ -117,6 +115,22 @@ export enum IgxComboState {
 @Directive()
 export abstract class IgxComboBaseDirective extends DisplayDensityBase implements IgxComboBase, OnInit, DoCheck,
     AfterViewInit, OnDestroy, ControlValueAccessor {
+    /**
+     * Defines whether the caseSensitive icon should be shown in the search input
+     *
+     * ```typescript
+     * // get
+     * let myComboShowSearchCaseIcon = this.combo.showSearchCaseIcon;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [showSearchCaseIcon]='true'></igx-combo>
+     * ```
+     */
+    @Input()
+    public showSearchCaseIcon = false;
+
     /**
      * Set custom overlay settings that control how the combo's list of items is displayed.
      * Set:
@@ -430,17 +444,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public set type(val: IgxInputGroupType) {
         this._type = val;
     }
-
-    /**
-     * Emitted when item selection is changing, before the selection completes
-     *
-     * ```html
-     * <igx-combo (selectionChanging)='handleSelection()'></igx-combo>
-     * ```
-     */
-    // TODO: any for old/new selection?
-    @Output()
-    public selectionChanging = new EventEmitter<IComboSelectionChangingEventArgs | ISelectionEventArgs>();
 
     /**
      * Emitted before the dropdown is opened
@@ -882,6 +885,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     public abstract dropdown: IgxComboDropDownComponent;
 
+    public abstract selectionChanging: EventEmitter<any>;
+
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -1140,6 +1145,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
                 this.valid = IgxComboState.INITIAL;
             }
         }
+    }
+
+    /** @hidden @internal */
+    public toggleCaseSensitive() {
+        this.filteringOptions = { caseSensitive: !this.filteringOptions.caseSensitive };
     }
 
     protected onStatusChanged = () => {
