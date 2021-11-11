@@ -69,8 +69,10 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         SERVICES.forEach(service => {
             if (content.indexOf(service) > -1) {
                 const commentedService = '/*' + service + '*/';
+                const commentedServiceWithComa = '/*' + service + ',*/';
                 content = content.replace(new RegExp(service, 'gi'), commentedService);
-                const indexes = getIndicesOf(commentedService, content);
+                content = content.replace(new RegExp('[/][*]' + service + '[*][/]\\s*[,]', 'gi'), commentedServiceWithComa);
+                const indexes = getIndicesOf('/*' + service, content);
                 indexes.reverse().forEach(index => {
                     const preceedingContent = content.substring(0, index);
                     const newLineIndex = preceedingContent.lastIndexOf('\n');
