@@ -71,7 +71,11 @@ export class IgxPivotGridTestBaseComponent {
             values: [
                 {
                     member: 'UnitsSold',
-                    aggregate: IgxPivotNumericAggregate.sum,
+                    aggregate: {
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'sum',
+                        label: 'SUM',
+                    },
                     enabled: true,
                     // dataType: 'currency',
                     formatter: (value) => value ? value + '$' : undefined,
@@ -79,7 +83,11 @@ export class IgxPivotGridTestBaseComponent {
                 },
                 {
                     member: 'UnitPrice',
-                    aggregate: IgxPivotNumericAggregate.sum,
+                    aggregate:{
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'sum',
+                        label: 'SUM',
+                    },
                     enabled: true,
                     dataType: 'currency'
                 }
