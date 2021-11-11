@@ -318,15 +318,15 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Check for empty filter grid message and body less than 100px
-            const columns = fixture.componentInstance.grid.columns;
-            grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
+            const columns = fixture.componentInstance.grid.columnList;
+            grid.filter(columns.get(0).field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
             tick(100);
             expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
-            grid.clearFilter(columns[0].field);
+            grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
             tick(100);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
@@ -368,15 +368,15 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(loadingIndicator).toBeNull();
 
             // Check for empty filter grid message and body less than 100px
-            const columns = fixture.componentInstance.grid.columns;
-            grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
+            const columns = fixture.componentInstance.grid.columnList;
+            grid.filter(columns.get(0).field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
             tick(100);
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
-            grid.clearFilter(columns[0].field);
+            grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
             tick(100);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
@@ -420,14 +420,14 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
 
             // Check for empty filter grid message and body less than 100px
-            const columns = fixture.componentInstance.grid.columns;
-            grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
+            const columns = fixture.componentInstance.grid.columnList;
+            grid.filter(columns.get(0).field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
             tick(100);
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
-            grid.clearFilter(columns[0].field);
+            grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
             tick(100);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(300);
@@ -773,8 +773,8 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fix.componentInstance.grid;
 
-            expect(grid.columns[0].width).not.toBeLessThan(136);
-            expect(grid.columns[2].width).not.toBeLessThan(136);
+            expect(grid.columnList.get(0).width).not.toBeLessThan(136);
+            expect(grid.columnList.get(2).width).not.toBeLessThan(136);
             expect(grid.width).toMatch('100%');
             expect(grid.rowList.length).toBeGreaterThan(0);
         }));
@@ -787,9 +787,9 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fix.componentInstance.grid;
 
-            expect(grid.columns[0].width).not.toBeLessThan(136);
-            expect(grid.columns[4].width).not.toBeLessThan(136);
-            expect(grid.columns[6].width).not.toBeLessThan(136);
+            expect(grid.columnList.get(0).width).not.toBeLessThan(136);
+            expect(grid.columnList.get(4).width).not.toBeLessThan(136);
+            expect(grid.columnList.get(6).width).not.toBeLessThan(136);
             expect(grid.width).toMatch('100%');
             expect(grid.rowList.length).toBeGreaterThan(0);
         }));
@@ -803,8 +803,8 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fix.componentInstance.grid;
 
-            expect(grid.columns[0].width).not.toBeLessThan(136);
-            expect(grid.columns[4].width).not.toBeLessThan(136);
+            expect(grid.columnList.get(0).width).not.toBeLessThan(136);
+            expect(grid.columnList.get(4).width).not.toBeLessThan(136);
             expect(grid.columns[14].width).not.toBeLessThan(136);
             expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
         }));
@@ -818,8 +818,8 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fix.componentInstance.grid;
 
-            expect(grid.columns[0].width).not.toBeLessThan(136);
-            expect(grid.columns[4].width).not.toBeLessThan(136);
+            expect(grid.columnList.get(0).width).not.toBeLessThan(136);
+            expect(grid.columnList.get(4).width).not.toBeLessThan(136);
             expect(grid.columns[100].width).not.toBeLessThan(136);
             expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
@@ -834,19 +834,19 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
 
             expect(grid.width).toEqual('100%');
-            expect(grid.columns[0].width).toEqual('100px');
-            expect(grid.columns[4].width).toEqual('100px');
+            expect(grid.columnList.get(0).width).toEqual('100px');
+            expect(grid.columnList.get(4).width).toEqual('100px');
 
             const actualGridWidth = grid.nativeElement.clientWidth;
             const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
-                parseInt(grid.columns[0].width, 10) -
-                parseInt(grid.columns[4].width, 10)) / 3),
+                parseInt(grid.columnList.get(0).width, 10) -
+                parseInt(grid.columnList.get(4).width, 10)) / 3),
                 parseInt(MIN_COL_WIDTH, 10));
             expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
 
-            expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
-            expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
-            expect(parseInt(grid.columns[3].width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(1).width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(2).width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(3).width, 10)).toEqual(expectedDefWidth);
 
             grid.columns.forEach((column) => {
                 const width = parseInt(column.width, 10);
@@ -870,19 +870,19 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
 
             expect(grid.width).toEqual('600px');
-            expect(grid.columns[0].width).toEqual('100px');
-            expect(grid.columns[4].width).toEqual('100px');
+            expect(grid.columnList.get(0).width).toEqual('100px');
+            expect(grid.columnList.get(4).width).toEqual('100px');
 
             const actualGridWidth = grid.nativeElement.clientWidth;
             const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
-                parseInt(grid.columns[0].width, 10) -
-                parseInt(grid.columns[4].width, 10)) / 3),
+                parseInt(grid.columnList.get(0).width, 10) -
+                parseInt(grid.columnList.get(4).width, 10)) / 3),
                 parseInt(MIN_COL_WIDTH, 10));
             expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
 
-            expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
-            expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
-            expect(parseInt(grid.columns[3].width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(1).width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(2).width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(3).width, 10)).toEqual(expectedDefWidth);
 
             grid.columns.forEach((column) => {
                 const width = parseInt(column.width, 10);
@@ -906,20 +906,20 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
 
             expect(grid.width).toEqual('100%');
-            expect(grid.columns[0].width).toEqual('100px');
-            expect(grid.columns[4].width).toEqual('100px');
+            expect(grid.columnList.get(0).width).toEqual('100px');
+            expect(grid.columnList.get(4).width).toEqual('100px');
 
             const actualGridWidth = grid.unpinnedWidth;
 
             const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
-                parseInt(grid.columns[0].width, 10) -
-                parseInt(grid.columns[4].width, 10)) / 3),
+                parseInt(grid.columnList.get(0).width, 10) -
+                parseInt(grid.columnList.get(4).width, 10)) / 3),
                 parseInt(MIN_COL_WIDTH, 10));
             expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
 
-            expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
-            expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
-            expect(parseInt(grid.columns[3].width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(1).width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(2).width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(3).width, 10)).toEqual(expectedDefWidth);
 
             grid.columns.forEach((column) => {
                 const width = parseInt(column.width, 10);
@@ -943,9 +943,9 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
 
             expect(grid.width).toEqual('100%');
-            expect(grid.columns[0].width).toEqual('200px');
-            expect(grid.columns[3].width).toEqual('200px');
-            expect(grid.columns[5].width).toEqual('200px');
+            expect(grid.columnList.get(0).width).toEqual('200px');
+            expect(grid.columnList.get(3).width).toEqual('200px');
+            expect(grid.columnList.get(5).width).toEqual('200px');
             expect(grid.columns[10].width).toEqual('200px');
             expect(grid.columns[25].width).toEqual('200px');
 
@@ -953,9 +953,9 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const expectedDefWidth = Math.max(Math.floor((actualGridWidth - 5 * 200) / 25), parseInt(MIN_COL_WIDTH, 10));
             expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
-            expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
-            expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
-            expect(parseInt(grid.columns[4].width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(1).width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(2).width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columnList.get(4).width, 10)).toEqual(expectedDefWidth);
 
             grid.columns.forEach((column) => {
                 const width = parseInt(column.width, 10);
@@ -981,9 +981,9 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
 
             expect(grid.width).toEqual('800px');
-            expect(grid.columns[0].width).toEqual('200px');
-            expect(grid.columns[3].width).toEqual('200px');
-            expect(grid.columns[5].width).toEqual('200px');
+            expect(grid.columnList.get(0).width).toEqual('200px');
+            expect(grid.columnList.get(3).width).toEqual('200px');
+            expect(grid.columnList.get(5).width).toEqual('200px');
             expect(grid.columns[10].width).toEqual('200px');
             expect(grid.columns[25].width).toEqual('200px');
 
@@ -1013,9 +1013,9 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
 
             expect(grid.width).toEqual('100%');
-            expect(grid.columns[0].width).toEqual('500px');
-            expect(grid.columns[3].width).toEqual('500px');
-            expect(grid.columns[5].width).toEqual('500px');
+            expect(grid.columnList.get(0).width).toEqual('500px');
+            expect(grid.columnList.get(3).width).toEqual('500px');
+            expect(grid.columnList.get(5).width).toEqual('500px');
             expect(grid.columns[10].width).toEqual('500px');
             expect(grid.columns[50].width).toEqual('500px');
 
@@ -1043,9 +1043,9 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
 
             expect(grid.width).toEqual('800px');
-            expect(grid.columns[0].width).toEqual('500px');
-            expect(grid.columns[3].width).toEqual('500px');
-            expect(grid.columns[5].width).toEqual('500px');
+            expect(grid.columnList.get(0).width).toEqual('500px');
+            expect(grid.columnList.get(3).width).toEqual('500px');
+            expect(grid.columnList.get(5).width).toEqual('500px');
             expect(grid.columns[10].width).toEqual('500px');
             expect(grid.columns[50].width).toEqual('500px');
 
@@ -1623,13 +1623,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            expect(grid.columns[1].width).toEqual('150px');
-            expect(grid.columns[2].width).toEqual('150px');
+            expect(grid.columnList.get(1).width).toEqual('150px');
+            expect(grid.columnList.get(2).width).toEqual('150px');
 
             const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             expect(hScroll.nativeElement.hidden).toBe(true);
 
-            grid.columns[0].width = '70%';
+            grid.columnList.get(0).width = '70%';
             fix.detectChanges();
             await wait(16);
             // check UI
@@ -1657,7 +1657,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             expect(hScroll.nativeElement.hidden).toBe(true);
-            grid.columns[0].width = '70%';
+            grid.columnList.get(0).width = '70%';
             fix.detectChanges();
             await wait(16);
             grid.width = '1000px';
@@ -1688,7 +1688,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
-            grid.columns[0].width = '70%';
+            grid.columnList.get(0).width = '70%';
 
             fix.detectChanges();
             await wait(16);
@@ -1717,8 +1717,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             fix.detectChanges();
-            grid.columns[0].width = '50%';
-            grid.columns[1].width = '100px';
+            grid.columnList.get(0).width = '50%';
+            grid.columnList.get(1).width = '100px';
             fix.detectChanges();
             await wait(16);
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
@@ -1761,7 +1761,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             grid.width = '100%';
             fix.detectChanges();
-            grid.columns[0].width = '50%';
+            grid.columnList.get(0).width = '50%';
             fix.detectChanges();
 
             // hide
@@ -1769,13 +1769,13 @@ describe('IgxGrid Component Tests #grid', () => {
             // simulate resize observer reflow
             grid.reflow();
 
-            expect(grid.columns[0].width).toBe('50%');
+            expect(grid.columnList.get(0).width).toBe('50%');
 
             grid.nativeElement.style.display = '';
             // simulate resize observer reflow
             grid.reflow();
 
-            expect(grid.columns[0].width).toBe('50%');
+            expect(grid.columnList.get(0).width).toBe('50%');
         });
     });
 
@@ -2319,7 +2319,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
 
-            grid.navigateTo(grid.data.length - 1, grid.columns.length - 1);
+            grid.navigateTo(grid.data.length - 1, grid.columnList.length - 1);
             await wait(100);
             fix.detectChanges();
 

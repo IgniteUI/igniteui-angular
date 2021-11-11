@@ -134,7 +134,7 @@ describe('Excel Exporter', () => {
             await wait();
 
             const grid = fix.componentInstance.grid;
-            grid.columns[0].hidden = true;
+            grid.columnList.get(0).hidden = true;
             options.ignoreColumnsVisibility = false;
             fix.detectChanges();
 
@@ -160,21 +160,21 @@ describe('Excel Exporter', () => {
             let wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
-            grid.columns[0].hidden = true;
+            grid.columnList.get(0).hidden = true;
             fix.detectChanges();
 
             expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
 
-            grid.columns[0].hidden = false;
+            grid.columnList.get(0).hidden = false;
             fix.detectChanges();
 
             expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
-            grid.columns[0].hidden = undefined;
+            grid.columnList.get(0).hidden = undefined;
             fix.detectChanges();
 
             expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
@@ -220,7 +220,7 @@ describe('Excel Exporter', () => {
             let wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
 
-            grid.columns[1].pinned = false;
+            grid.columnList.get(1).pinned = false;
             fix.detectChanges();
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
@@ -312,8 +312,8 @@ describe('Excel Exporter', () => {
             await wait();
 
             const grid = fix.componentInstance.grid;
-            grid.columns[1].hidden = true;
-            grid.columns[2].hidden = true;
+            grid.columnList.get(1).hidden = true;
+            grid.columnList.get(2).hidden = true;
             const columnWidths = [100, 200, 0, null];
             fix.detectChanges();
 
@@ -373,7 +373,7 @@ describe('Excel Exporter', () => {
                 cols.push({ header: value.header, index: value.columnIndex });
             });
 
-            grid.columns[0].hidden = true;
+            grid.columnList.get(0).hidden = true;
             options.ignoreColumnsVisibility = false;
             fix.detectChanges();
 
@@ -497,8 +497,8 @@ describe('Excel Exporter', () => {
             await wait();
 
             const grid = fix.componentInstance.grid;
-            grid.columns[1].header = 'My header';
-            grid.columns[1].sortable = true;
+            grid.columnList.get(1).header = 'My header';
+            grid.columnList.get(1).sortable = true;
             grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false});
             const sortField = grid.sortingExpressions[0].fieldName;
             fix.detectChanges();
@@ -519,7 +519,7 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
 
             // Set column formatters
-            grid.columns[0].formatter = ((val: number) => {
+            grid.columnList.get(0).formatter = ((val: number) => {
                 const numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine' , 'ten'];
                 return numbers[val - 1];
             });
@@ -973,7 +973,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should skip the formatter when columnExporting skipFormatter is true', async () => {
-            treeGrid.columns[4].formatter = ((val: number) => {
+            treegrid.columnList.get(4).formatter = ((val: number) => {
                 const t = Math.floor(val / 10);
                 const o = val % 10;
                 return val + parseFloat(((t + o) / 12).toFixed(2));
@@ -1036,21 +1036,21 @@ describe('Excel Exporter', () => {
         });
 
         it('should export grid with multi column headers and moved column', async () => {
-            grid.columns[0].move(2);
+            grid.columnList.get(0).move(2);
             fix.detectChanges();
 
             await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersDataWithMovedColumn, false);
         });
 
         it('should export grid with hidden column', async () => {
-            grid.columns[0].hidden = true;
+            grid.columnList.get(0).hidden = true;
             fix.detectChanges();
 
             await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersDataWithHiddenColumn, false);
         });
 
         it('should export grid with hidden column and ignoreColumnVisibility set to true', async () => {
-            grid.columns[0].hidden = true;
+            grid.columnList.get(0).hidden = true;
             options.ignoreColumnsVisibility = true;
             fix.detectChanges();
 
@@ -1058,15 +1058,15 @@ describe('Excel Exporter', () => {
         });
 
         it('should export grid with pinned column group', async () => {
-            grid.columns[1].pinned = true;
+            grid.columnList.get(1).pinned = true;
             fix.detectChanges();
 
             await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersDataWithPinnedColumn, false);
         });
 
         it('should export grid with collapsed and expanded multi column headers', async () => {
-            GridFunctions.clickGroupExpandIndicator(fix, grid.columns[1]);
-            GridFunctions.clickGroupExpandIndicator(fix, grid.columns[7]);
+            GridFunctions.clickGroupExpandIndicator(fix, grid.columnList.get(1));
+            GridFunctions.clickGroupExpandIndicator(fix, grid.columnList.get(7));
             fix.detectChanges();
             await exportAndVerify(grid, options, actualData.exportCollapsedAndExpandedMultiColumnHeadersData, false);
         });

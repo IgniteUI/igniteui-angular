@@ -112,7 +112,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         it('should display horizontal scroll bar when column width is set in %', () => {
             fix.detectChanges();
 
-            grid.columns[0].width = '50%';
+            grid.columnList.get(0).width = '50%';
             fix.detectChanges();
 
             const horizontalScroll = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');

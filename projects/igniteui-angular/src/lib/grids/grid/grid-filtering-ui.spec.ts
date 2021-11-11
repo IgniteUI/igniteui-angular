@@ -1038,7 +1038,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('should update UI when filtering via the API.', fakeAsync(() => {
             grid.width = '1600px';
-            grid.columns[1].width = '400px';
+            grid.columnList.get(1).width = '400px';
             fix.detectChanges();
 
             const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
@@ -1074,7 +1074,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('should display view more icon in filter cell if chips don\'t fit in the cell.', fakeAsync(() => {
-            grid.columns[1].width = '200px';
+            grid.columnList.get(1).width = '200px';
             fix.detectChanges();
 
             const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
@@ -1121,7 +1121,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should allow setting filtering conditions through filteringExpressionsTree.', fakeAsync(() => {
-            grid.columns[1].width = '150px';
+            grid.columnList.get(1).width = '150px';
             fix.detectChanges();
 
             // Add initial filtering conditions
@@ -2167,7 +2167,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                     return 3;
                 }
             };
-            grid.columns[2].formatter = downloadsFormatter;
+            grid.columnList.get(2).formatter = downloadsFormatter;
             fix.detectChanges();
 
             GridFunctions.clickFilterCellChipUI(fix, 'Downloads');
@@ -2187,7 +2187,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const formattedStrategy = new FormattedValuesFilteringStrategy(['ProductName']);
             grid.filterStrategy = formattedStrategy;
             const anotherFieldFormatter = (value: any, rowData: any) => rowData.ID + ':' + value;
-            grid.columns[1].formatter = anotherFieldFormatter;
+            grid.columnList.get(1).formatter = anotherFieldFormatter;
             fix.detectChanges();
 
             GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
@@ -2389,7 +2389,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         });
 
         it('Should display view more indicator when column is resized so not all filters are visible.', fakeAsync(() => {
-            grid.columns[1].width = '250px';
+            grid.columnList.get(1).width = '250px';
             fix.detectChanges();
 
             // Add initial filtering conditions
@@ -2443,7 +2443,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should correctly resize the current column that filtering the row is rendered for.', fakeAsync(() => {
-            grid.columns[1].width = '250px';
+            grid.columnList.get(1).width = '250px';
             fix.detectChanges();
 
             // Enable resizing
@@ -2477,7 +2477,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         // Filtering + Resizing
         it('Should correctly render all filtering chips when column is resized so all filter are visible.', fakeAsync(() => {
-            grid.columns[2].width = '100px';
+            grid.columnList.get(2).width = '100px';
             fix.detectChanges();
 
             // Add initial filtering conditions
@@ -2827,7 +2827,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should sort the grid properly, when clicking Ascending button.', fakeAsync(() => {
-            grid.columns[2].sortable = true;
+            grid.columnList.get(2).sortable = true;
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -2851,7 +2851,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should sort the grid properly, when clicking Descending button.', fakeAsync(() => {
-            grid.columns[2].sortable = true;
+            grid.columnList.get(2).sortable = true;
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -2875,7 +2875,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should (sort ASC)/(sort DESC) when clicking the respective sort button.', fakeAsync(() => {
-            grid.columns[2].sortable = true;
+            grid.columnList.get(2).sortable = true;
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -2902,7 +2902,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should toggle correct Ascending/Descending button on opening when sorting is applied.', fakeAsync(() => {
-            grid.columns[2].sortable = true;
+            grid.columnList.get(2).sortable = true;
             grid.sortingExpressions.push({ dir: SortingDirection.Asc, fieldName: 'Downloads' });
             fix.detectChanges();
 
@@ -2916,7 +2916,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move column left/right when clicking buttons.', fakeAsync(() => {
-            grid.columns[2].movable = true;
+            grid.columnList.get(2).movable = true;
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -2927,30 +2927,30 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             moveLeft.click();
             fix.detectChanges();
 
-            expect(grid.columns[2].field).toBe('ProductName');
-            expect(grid.columns[1].field).toBe('Downloads');
+            expect(grid.columnList.get(2).field).toBe('ProductName');
+            expect(grid.columnList.get(1).field).toBe('Downloads');
 
             moveLeft.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columns[1].field).toBe('ID');
-            expect(grid.columns[0].field).toBe('Downloads');
+            expect(grid.columnList.get(1).field).toBe('ID');
+            expect(grid.columnList.get(0).field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft);
 
             moveRight.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columns[0].field).toBe('ID');
-            expect(grid.columns[1].field).toBe('Downloads');
+            expect(grid.columnList.get(0).field).toBe('ID');
+            expect(grid.columnList.get(1).field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
         }));
 
         it('Should right pin and unpin column after moving it left/right when clicking buttons.', fakeAsync(() => {
             grid.pinning.columns = 1;
 
-            const columnToPin = grid.columns[grid.columns.length - 2];
+            const columnToPin = grid.columnList.get(grid.columnList.length - 2);
             columnToPin.pinned = true;
             fix.detectChanges();
 
@@ -3001,7 +3001,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should unpin column when clicking buttons.', fakeAsync(() => {
-            grid.columns[2].pinned = true;
+            grid.columnList.get(2).pinned = true;
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -3026,7 +3026,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.columnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnVisibilityChanged.emit).toHaveBeenCalledWith(args);
 
-            GridFunctions.verifyColumnIsHidden(grid.columns[2], true, 7);
+            GridFunctions.verifyColumnIsHidden(grid.columnList.get(2), true, 7);
         }));
 
         it('Should not select values in list if two values with And operator are entered.', fakeAsync(() => {
@@ -3922,7 +3922,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         });
 
         it('Column formatter should skip the \'SelectAll\' list item', fakeAsync(() => {
-            grid.columns[4].formatter = (val: Date) => new Intl.DateTimeFormat('bg-BG').format(val);
+            grid.columnList.get(4).formatter = (val: Date) => new Intl.DateTimeFormat('bg-BG').format(val);
             grid.cdr.detectChanges();
 
             // Open excel style filtering component
@@ -5224,9 +5224,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     return 'Other';
                 }
             };
-            grid.columns[1].formatter = productNameFormatter;
+            grid.columnList.get(1).formatter = productNameFormatter;
 
-            GridFunctions.clickExcelFilterIcon(fix, grid.columns[1].field);
+            GridFunctions.clickExcelFilterIcon(fix, grid.columnList.get(1).field);
             await wait(200);
             fix.detectChanges();
 
@@ -5427,7 +5427,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move column left/right when clicking buttons from template', fakeAsync(() => {
-            grid.columns[2].movable = true;
+            grid.columnList.get(2).movable = true;
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -5438,23 +5438,23 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             moveLeft.click();
             fix.detectChanges();
 
-            expect(grid.columns[2].field).toBe('ProductName');
-            expect(grid.columns[1].field).toBe('Downloads');
+            expect(grid.columnList.get(2).field).toBe('ProductName');
+            expect(grid.columnList.get(1).field).toBe('Downloads');
 
             moveLeft.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columns[1].field).toBe('ID');
-            expect(grid.columns[0].field).toBe('Downloads');
+            expect(grid.columnList.get(1).field).toBe('ID');
+            expect(grid.columnList.get(0).field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft);
 
             moveRight.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columns[0].field).toBe('ID');
-            expect(grid.columns[1].field).toBe('Downloads');
+            expect(grid.columnList.get(0).field).toBe('ID');
+            expect(grid.columnList.get(1).field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
         }));
 
@@ -5941,7 +5941,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // hide
             GridFunctions.clickHideIconInExcelStyleFiltering(fix, false);
             fix.detectChanges();
-            expect(grid.columns[1].hidden).toBeTruthy();
+            expect(grid.columnList.get(1).hidden).toBeTruthy();
         }));
 
         it('Column selection button should be visible/hidden when column is selectable/not selectable', () => {
