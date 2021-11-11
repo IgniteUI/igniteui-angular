@@ -52,6 +52,8 @@ All notable changes for each version of this project will be documented in this 
     - Added new directives for re-templating header sorting indicators - `IgxSortHeaderIconDirective`, `IgxSortAscendingHeaderIconDirective` and `IgxSortDescendingHeaderIconDirective`.
 - `IgxDialog`
     - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
+- `IgxProgressBar`
+    - Exposed new animationDuration input - sets the duration of the progress animation. 
 
 ### General
 
