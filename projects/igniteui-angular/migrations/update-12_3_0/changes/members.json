@@ -7,6 +7,20 @@
             "definedIn": [
                 "IgxGridComponent"
             ]
+        },
+        {
+            "member": "columnsCollection",
+            "replaceWith": "columns",
+            "definedIn": [
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "columnsCollection",
+            "replaceWith": "columns",
+            "definedIn": [
+                "IgxTreeGridComponent"
+            ]
         }
     ]
 }

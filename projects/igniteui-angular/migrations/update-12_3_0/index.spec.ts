@@ -30,6 +30,7 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-22';
 
     it('Should properly rename columnsCollection property to columns',  async () => {
+        pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
         import { IgxGridComponent } from 'igniteui-angular';
@@ -63,6 +64,7 @@ describe(`Update to ${version}`, () => {
     });
 
     it('Should properly rename columnsCollection property to columns - treeGrid',  async () => {
+        pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
         import { IgxTreeGridComponent } from 'igniteui-angular';
