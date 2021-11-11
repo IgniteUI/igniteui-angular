@@ -145,7 +145,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * @hidden
      */
     public parentIsland: IgxRowIslandComponent;
-    public abstract rootGrid;
+    public abstract rootGrid: GridType;
 
     public abstract expandChildren: boolean;
 

@@ -74,8 +74,9 @@ import { CharSeparatedValueData } from '../services/csv/char-separated-value-dat
 import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import {
-    IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
-    IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective, IgxExcelStyleHeaderIconDirective
+    IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective,
+    IgxHeaderCollapseIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
 } from './grid/grid.directives';
 import {
     GridKeydownTargetType,
@@ -420,7 +421,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public uniqueColumnValuesStrategy: (column: IgxColumnComponent,
+    public uniqueColumnValuesStrategy: (column: ColumnType,
         filteringExpressionsTree: IFilteringExpressionsTree,
         done: (values: any[]) => void) => void;
 
@@ -1258,6 +1259,24 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
     public excelStyleHeaderIconTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in asc order.
+     */
+    @ContentChild(IgxSortAscendingHeaderIconDirective, { read: TemplateRef })
+    public sortAscendingHeaderIconTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in desc order.
+     */
+    @ContentChild(IgxSortDescendingHeaderIconDirective, { read: TemplateRef })
+    public sortDescendingHeaderIconTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are not sorted.
+     */
+    @ContentChild(IgxSortHeaderIconDirective, { read: TemplateRef })
+    public sortHeaderIconTemplate: TemplateRef<any> = null;
 
     /**
      * @hidden
@@ -3832,14 +3851,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    public get columnsCollection(): IgxColumnComponent[] {
-        return this._columns;
-    }
-
-    /**
      * Gets an array of the pinned `IgxColumnComponent`s.
      *
      * @example
@@ -6048,7 +6059,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._cdrRequests = false;
     }
 
-    protected resolveOutlet() {
+    /** @hidden @internal */
+    public resolveOutlet() {
         return this._userOutletDirective ? this._userOutletDirective : this._outletDirective;
     }
 

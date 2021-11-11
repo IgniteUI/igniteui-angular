@@ -21,7 +21,7 @@ import { GridSelectionRange } from './types';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { DropPosition, IgxColumnMovingService } from '../moving/moving.service';
-import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { Observable, Subject } from 'rxjs';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
@@ -286,6 +286,7 @@ export interface GridType extends IGridDataBindable {
 
     tfoot: ElementRef<HTMLElement>;
     paginator: IgxPaginatorComponent;
+    paginatorList?: QueryList<IgxPaginatorComponent>;
     crudService: any;
     summaryService: any;
 
@@ -309,6 +310,7 @@ export interface GridType extends IGridDataBindable {
 
     hasVisibleColumns: boolean;
     hasExpandableChildren?: boolean;
+    showExpandAll?: boolean;
 
     hiddenColumnsCount: number;
     pinnedColumnsCount: number;
@@ -319,6 +321,11 @@ export interface GridType extends IGridDataBindable {
     rowLoadingIndicatorTemplate?: TemplateRef<any>;
     headSelectorTemplate: TemplateRef<any>;
     rowSelectorTemplate: TemplateRef<any>;
+    sortHeaderIconTemplate: TemplateRef<any>;
+    sortAscendingHeaderIconTemplate: TemplateRef<any>;
+    sortDescendingHeaderIconTemplate: TemplateRef<any>;
+    headerCollapseIndicatorTemplate: TemplateRef<any>;
+    headerExpandIndicatorTemplate: TemplateRef<any>;
     dragIndicatorIconTemplate: any;
     dragIndicatorIconBase: any;
     disableTransitions: boolean;
@@ -411,7 +418,7 @@ export interface GridType extends IGridDataBindable {
     lastChildGrid?: GridType;
     toolbarOutlet?: ViewContainerRef;
     paginatorOutlet?: ViewContainerRef;
-    flatData?: any[];
+    flatData?: any[] | null;
     childRow?: any;
     expansionDepth?: number;
     childDataKey?: any;
@@ -430,7 +437,7 @@ export interface GridType extends IGridDataBindable {
     processedRootRecords?: ITreeGridRecord[];
     rootRecords?: ITreeGridRecord[];
     records?: Map<any, ITreeGridRecord>;
-    processedExpandedFlatData?: any[];
+    processedExpandedFlatData?: any[] | null;
     processedRecords?: Map<any, ITreeGridRecord>;
 
     activeNodeChange: EventEmitter<IActiveNodeChangeEventArgs>;
@@ -453,6 +460,7 @@ export interface GridType extends IGridDataBindable {
     columnPin: EventEmitter<IPinColumnCancellableEventArgs>;
     columnVisibilityChanging: EventEmitter<IColumnVisibilityChangingEventArgs>;
     columnVisibilityChanged: EventEmitter<IColumnVisibilityChangedEventArgs>;
+    batchEditingChange?: EventEmitter<boolean>;
     onDensityChanged: EventEmitter<IDensityChangedEventArgs>;
     rowAdd: EventEmitter<IGridEditEventArgs>;
     rowAdded: EventEmitter<IRowDataEventArgs>;
@@ -487,6 +495,7 @@ export interface GridType extends IGridDataBindable {
     advancedFilteringExpressionsTree: IFilteringExpressionsTree;
     advancedFilteringExpressionsTreeChange: EventEmitter<IFilteringExpressionsTree>;
 
+    batchEditing: boolean;
     groupingExpansionState?: IGroupByExpandState[];
     groupingExpressions?: IGroupingExpression[];
     groupingExpressionsChange?: EventEmitter<IGroupingExpression[]>;
@@ -501,6 +510,7 @@ export interface GridType extends IGridDataBindable {
     toggleGroup?(groupRow: IGroupByRecord): void;
     clearGrouping?(field: string): void;
     groupBy?(expression: IGroupingExpression | Array<IGroupingExpression>): void;
+    resolveOutlet?(): IgxOverlayOutletDirective;
 
     getSelectedRanges(): GridSelectionRange[];
     deselectAllColumns(): void;
@@ -541,6 +551,7 @@ export interface GridType extends IGridDataBindable {
     isGhostRecord(rec: any): boolean;
     isTreeRow?(rec: any): boolean;
     isChildGridRecord?(rec: any): boolean;
+    getChildGrids?(inDepth?: boolean): any[];
     isHierarchicalRecord?(record: any): boolean;
     columnToVisibleIndex(key: string | number): number;
     moveColumn(column: ColumnType, target: ColumnType, pos: DropPosition): void;

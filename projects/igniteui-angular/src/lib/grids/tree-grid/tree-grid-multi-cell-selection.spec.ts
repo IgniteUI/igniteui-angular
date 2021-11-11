@@ -256,7 +256,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 4);
 
             for (let i = 4; i > 2; i--) {
-                cell = treeGrid.gridAPI.get_cell_by_index(3, treeGrid.columnsCollection[i].field);
+                cell = treeGrid.gridAPI.get_cell_by_index(3, treeGrid.columnList.get(i).field);
                 UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
                 await wait(30);
                 fix.detectChanges();
@@ -1058,7 +1058,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         expect(startCell.active).toBe(true);
 
         for (let i = 5; i < 7; i++) {
-            const cell = treeGrid.gridAPI.get_cell_by_index(i, treeGrid.columnsCollection[i - 3].field);
+            const cell = treeGrid.gridAPI.get_cell_by_index(i, treeGrid.columnList.get(i - 3).field);
             UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, i - 3);
@@ -1072,7 +1072,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         }
 
         for (let i = 2; i >= 0; i--) {
-            const cell = treeGrid.gridAPI.get_cell_by_index(1, treeGrid.columnsCollection[i].field);
+            const cell = treeGrid.gridAPI.get_cell_by_index(1, treeGrid.columnList.get(i).field);
             UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, 1, 1, i);
@@ -1086,7 +1086,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         }
 
         for (let i = 8; i > 6; i--) {
-            const cell = treeGrid.gridAPI.get_cell_by_index(i, treeGrid.columnsCollection[9 - i].field);
+            const cell = treeGrid.gridAPI.get_cell_by_index(i, treeGrid.columnList.get(9 - i).field);
             UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 9 - i);

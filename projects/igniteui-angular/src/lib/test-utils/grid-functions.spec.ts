@@ -24,6 +24,7 @@ import { IgxGridRowComponent } from '../grids/grid/grid-row.component';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../grids/row.directive';
+import { GridType, RowType } from '../grids/common/grid.interface';
 
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -1821,7 +1822,7 @@ export class GridFunctions {
 
     public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
         const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS))
-                                            .find(header => header.nativeElement.title === columnField);
+            .find(header => header.nativeElement.title === columnField);
         return headerTitle.parent;
     }
 
@@ -1869,7 +1870,7 @@ export class GridFunctions {
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
-        return header.query(By.css(SORT_ICON_CLASS));
+        return header.query(By.css(SORT_ICON_CLASS))?.query(By.css('igx-icon'));
     }
 
     public static getHeaderFilterIcon(header: DebugElement): DebugElement {
@@ -1966,29 +1967,37 @@ export class GridFunctions {
         return null;
     }
 
-    public static verifyLayoutHeadersAreAligned(headerGroups: any, rowCells: any) {
-        const rowCellsArr = rowCells.toArray ? rowCells.toArray() : rowCells;
-        const headerGroupsArr = headerGroups.toArray();
-        for (let i = 0; i < headerGroupsArr.length; i++) {
-            const widthDiff = headerGroupsArr[i].header.nativeElement.clientWidth - rowCellsArr[i].nativeElement.clientWidth;
-            const heightDiff = headerGroupsArr[i].header.nativeElement.clientHeight - rowCellsArr[i].nativeElement.clientHeight;
+    public static verifyLayoutHeadersAreAligned(grid: GridType, row: RowType, verifyPinnedCells?: boolean) {
+        let firstRowCells = (row.cells as QueryList<CellType>).toArray();
+        const headerCells = grid.headerCellList;
+
+        if (verifyPinnedCells) {
+            firstRowCells = firstRowCells
+                .filter(c => c.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
+        }
+
+        for (let i = 0; i < firstRowCells.length; i++) {
+            const dataCell = firstRowCells[i];
+            const headerCell = headerCells.find(h => h.column.index === dataCell.column.index);
+            const widthDiff = headerCell?.nativeElement.clientWidth - dataCell?.nativeElement.clientWidth;
+            const heightDiff = headerCell?.nativeElement.clientHeight - dataCell?.nativeElement.clientHeight;
             expect(widthDiff).toBeLessThanOrEqual(1);
             expect(heightDiff).toBeLessThanOrEqual(3);
         }
     }
 
-    public static verifyDOMMatchesLayoutSettings(row, colSettings) {
-        const firstRowCells = row.cells.toArray();
+    public static verifyDOMMatchesLayoutSettings(grid: GridType, row: RowType, colSettings) {
+        const firstRowCells = (row.cells as QueryList<CellType>).toArray();
         const rowElem = row.nativeElement;
         const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl-block');
 
         colSettings.forEach((groupSetting, index) => {
             // check group has rendered block
-            const groupBlock = mrlBlocks[index];
+            const groupBlock = mrlBlocks[index] as any;
             const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
             expect(groupBlock).not.toBeNull();
             groupSetting.columns.forEach((col, colIndex) => {
-                const cell = cellsFromBlock[colIndex];
+                const cell = cellsFromBlock[colIndex] as any;
                 const cellElem = cell.nativeElement;
                 // check correct attributes are applied
                 expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
