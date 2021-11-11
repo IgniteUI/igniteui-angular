@@ -1,5 +1,5 @@
 import {
-    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Optional
+    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Optional, Input
 } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
@@ -20,6 +20,10 @@ import { PlatformUtil } from '../core/utils';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
+    /** @hidden @internal */
+    @Input()
+    public singleMode = false;
+
     /**
      * @hidden
      * @internal
@@ -192,9 +196,13 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     private handleEnter() {
         if (this.isAddItemFocused()) {
             this.combo.addItemToCollection();
-        } else {
-            this.close();
+            return;
         }
+        if (this.singleMode && this.focusedItem) {
+            this.combo.select(this.focusedItem.itemID);
+        }
+
+        this.close();
     }
 
     private handleSpace() {

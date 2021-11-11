@@ -42,7 +42,8 @@ import {
     IgxTooltipModule,
     IgxSelectModule,
     IgxDateRangePickerModule,
-    IgxTreeModule
+    IgxTreeModule,
+    IgxSimpleComboModule
 } from 'igniteui-angular';
 
 
@@ -62,6 +63,7 @@ const igniteModules = [
     IgxCheckboxModule,
     IgxChipsModule,
     IgxComboModule,
+    IgxSimpleComboModule,
     IgxDatePickerModule,
     IgxDialogModule,
     IgxDropDownModule,
