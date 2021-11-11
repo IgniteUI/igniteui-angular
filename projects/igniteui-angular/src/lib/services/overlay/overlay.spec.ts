@@ -516,7 +516,7 @@ describe('igxOverlay', () => {
             expect((overlayDiv.children[1] as HTMLElement).style.visibility).toEqual('hidden');
         }));
 
-        it('Should show and hide component via directive.', fakeAsync(() => {
+        xit('Should show and hide component via directive.', fakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleDynamicWithDirectiveComponent);
             fixture.detectChanges();
             fixture.componentInstance.show();
