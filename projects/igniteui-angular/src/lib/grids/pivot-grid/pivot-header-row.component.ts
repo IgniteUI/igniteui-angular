@@ -4,11 +4,10 @@ import {
     Component,
     ElementRef,
     Input,
-    OnInit,
     Renderer2
 } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { IBaseChipEventArgs } from '../../chips/chip.component';
+import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
@@ -78,7 +77,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
                 return val.aggregateList;
             }
             let defaultAggr = this.getAggregatorsForValue(val);
-            const isDefault = defaultAggr.find(x => x.aggregator.name === val.aggregate.key);
+            const isDefault = defaultAggr.find(x => x.key === val.aggregate.key);
             // resolve custom aggregations
             if (!isDefault && this.grid.data[0][val.member] !== undefined) {
                 // if field exists, then we can apply default aggregations and add the custom one.
@@ -117,15 +116,15 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         filter.enabled = false;
     }
 
-    public onSummaryClick(eventArgs, value: IPivotValue, dropdown: IgxDropDownComponent) {
+    public onSummaryClick(eventArgs, value: IPivotValue, dropdown: IgxDropDownComponent, chip: IgxChipComponent) {
         this._subMenuOverlaySettings.target = eventArgs.currentTarget;
         if (dropdown.collapsed) {
-            this.updateDropDown(value, dropdown);
+            this.updateDropDown(value, dropdown, chip);
         } else {
             // close for previous chip
             dropdown.close();
             dropdown.closed.pipe(first()).subscribe(() => {
-              this.updateDropDown(value, dropdown);
+              this.updateDropDown(value, dropdown, chip);
             });
         }
     }
@@ -309,8 +308,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
          }
     }
 
-    protected updateDropDown(value: IPivotValue, dropdown) {
+    protected updateDropDown(value: IPivotValue, dropdown: IgxDropDownComponent, chip: IgxChipComponent) {
         this.value = value;
+        dropdown.width = chip.nativeElement.clientWidth + 'px';
         this.aggregateList = this.getAggregateList(value);
         dropdown.open(this._subMenuOverlaySettings);
     }

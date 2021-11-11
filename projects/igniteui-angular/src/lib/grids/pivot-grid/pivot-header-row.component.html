@@ -50,12 +50,12 @@
                 </div>
                 <!-- Value area -->
                 <igx-chips-area #valueArea droppable='true' style="width:fit-content; height: 100%;">
-                    <igx-chip *ngFor="let value of grid.values" [draggable]="'true'" [id]="value.member"
+                    <igx-chip #currChip *ngFor="let value of grid.values" [draggable]="'true'" [id]="value.member"
                         [removable]="true" (remove)="valueRemoved($event)"
                          (dragLeave)="onDimDragLeave($event)"
                          (dragOver)="onDimDragOver($event)"
                          (dragDrop)="onValueDrop($event, valueArea)">
-                         <div igxPrefix (click)='onSummaryClick($event, value, dropdown)' (pointerdown)='$event.stopPropagation()'
+                         <div igxPrefix (click)='onSummaryClick($event, value, dropdown, currChip)' (pointerdown)='$event.stopPropagation()'
                          [igxDropDownItemNavigation]="dropdown">
                             <igx-icon>functions</igx-icon>
                             <igx-icon>arrow_drop_down</igx-icon>
