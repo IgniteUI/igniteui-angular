@@ -7,7 +7,7 @@ import {
 } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
-import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
+import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
@@ -123,7 +123,7 @@ export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
 
 @Component({
     template: `
-        <igx-grid #grid1 [data]="data" [columnPinning]='true' [width]="'900px'" [height]="'600px'">
+        <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'600px'">
             <igx-column *ngFor="let c of columns" [field]="c.field"
                 [header]="c.field"
                 [movable]="c.movable"
@@ -157,6 +157,14 @@ export class ColumnCellFormatterComponent extends BasicGridComponent {
 
     public multiplier(value: number): string {
         return `${value * value}`;
+    }
+
+    public containsY(_: number, data: { ID: number; Name: string }) {
+        return data.Name.includes('y') ? 'true' : 'false';
+    }
+
+    public boolFormatter(value: boolean): string {
+        return value ? 'check' : 'close';
     }
 }
 
@@ -285,11 +293,6 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
     public operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'min' || obj.key === 'max') {
-                const summaryResult = obj.summaryResult;
-                // apply formatting to float numbers
-                if (Number(summaryResult) === summaryResult) {
-                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
-                }
                 return obj;
             }
         });
@@ -1496,7 +1499,7 @@ export class IgxGridExternalAdvancedFilteringComponent extends BasicGridComponen
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [showToolbar]="true">
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
@@ -1611,7 +1614,11 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
 @Component({
     template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="600px" [rowEditable]="true">
-        <igx-grid-toolbar *ngIf="showToolbar"></igx-grid-toolbar>
+        <igx-grid-toolbar *ngIf="showToolbar">
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
         <igx-column field="ProductID" header="Product ID" [editable]="false" width="200px"></igx-column>
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px">
         </igx-column>
@@ -1811,6 +1818,8 @@ export class IgxGridPercentColumnComponent extends BasicGridComponent {
 export class IgxGridDateTimeColumnComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductDateTimeData();
     public paging = false;
+
+    public testFormatter = (val: string) => 'test' + val;
 }
 
 @Component({
@@ -2025,7 +2034,7 @@ export class CollapsibleColumnGroupTestComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px" [columnHiding]="true" [columnSelection]="'multiple'">
+    <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px" [columnSelection]="'multiple'">
         <igx-column-group header="General Information" >
             <igx-column  field="CompanyName" ></igx-column>
             <igx-column-group header="Person Details">
@@ -2205,7 +2214,7 @@ export class IgxGridFilteringBindingComponent extends BasicGridComponent impleme
 
 @Component({
     template: `
-    <igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [showToolbar]="true"
+    <igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true"
         [(advancedFilteringExpressionsTree)]="filterTree" >
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
         </igx-column>
@@ -2267,7 +2276,10 @@ export class NoColumnWidthGridComponent extends BasicGridComponent {
     template: GridTemplateStrings.declareGrid(
         '',
         '',
-        ColumnDefinitions.idFirstLastNameSortable)
+        ColumnDefinitions.idFirstLastNameSortable,
+        '',
+        '',
+        TemplateDefinitions.sortIconTemplates)
 })
 export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
     public sort(data: any[], fieldName: string, dir: SortingDirection) {

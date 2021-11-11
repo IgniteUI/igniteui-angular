@@ -596,8 +596,9 @@ export class GridFunctions {
         const ddItems = ddList.nativeElement.children;
         let i;
         for (i = 0; i < ddItems.length; i++) {
-            if (ddItems[i].textContent === cond) {
-                ddItems[i].click();
+            const ddItem = ddItems[i].querySelector('.igx-grid__filtering-dropdown-items span');
+            if (ddItem.textContent === cond) {
+                ddItem.click();
                 tick(100);
                 return;
             }
@@ -1818,7 +1819,7 @@ export class GridFunctions {
 
     public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
         const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS))
-                                            .find(header => header.nativeElement.title === columnField);
+            .find(header => header.nativeElement.title === columnField);
         return headerTitle.parent;
     }
 
@@ -1866,7 +1867,7 @@ export class GridFunctions {
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
-        return header.query(By.css(SORT_ICON_CLASS));
+        return header.query(By.css(SORT_ICON_CLASS))?.query(By.css('igx-icon'));
     }
 
     public static getHeaderFilterIcon(header: DebugElement): DebugElement {

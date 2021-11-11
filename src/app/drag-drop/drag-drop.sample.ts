@@ -8,7 +8,8 @@ import {
     IgxInsertDropStrategy,
     IDragBaseEventArgs,
     IgxDragLocation,
-    DragDirection
+    DragDirection,
+    IDropDroppedEventArgs
 } from 'igniteui-angular';
 
 @Component({
@@ -49,6 +50,12 @@ export class DragDropSampleComponent {
 
     @ViewChild('toggleForm', { read: IgxDragDirective, static: true })
     public toggleFormDrag: IgxDragDirective;
+
+    @ViewChild('toggleForm1', { static: true })
+    public toggleForm1: IgxToggleDirective;
+
+    @ViewChild('toggleForm', { read: IgxDragDirective, static: true })
+    public toggleFormDrag1: IgxDragDirective;
 
     @ViewChildren('listItem', { read: IgxDragDirective })
     public listNotesDirs: QueryList<IgxDragDirective>;
@@ -160,6 +167,22 @@ export class DragDropSampleComponent {
 
     public openDialog() {
         this.toggleForm.open(this.overlaySettings);
+
+        if (!this.toggleStartPageX && !this.toggleStartPageY) {
+            this.toggleStartPageX = this.toggleFormDrag.pageX;
+            this.toggleStartPageY = this.toggleFormDrag.pageY;
+        }
+        this.toggleFormDrag.setLocation(new IgxDragLocation(this.toggleStartPageX, this.toggleStartPageY));
+    }
+
+    public openOverlappingDialog() {
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new GlobalPositionStrategy(),
+            scrollStrategy: new NoOpScrollStrategy(),
+            modal: false,
+            closeOnOutsideClick: false
+        };
+        this.toggleForm1.open(overlaySettings);
 
         if (!this.toggleStartPageX && !this.toggleStartPageY) {
             this.toggleStartPageX = this.toggleFormDrag.pageX;
@@ -374,5 +397,19 @@ export class DragDropSampleComponent {
 
     public dragClick() {
         console.log('click');
+    }
+
+    public onDragMove(e) {
+        const deltaX = e.nextPageX - e.pageX;
+        const deltaY = e.nextPageY - e.pageY;
+        e.cancel = true;
+        this.toggleForm.setOffset(deltaX, deltaY);
+      }
+
+    public onItemDropped(event: IDropDroppedEventArgs) {
+      const dropDivArea: HTMLElement = event.owner.element.nativeElement;
+      const draggedEl = event.drag.element.nativeElement;
+      dropDivArea.appendChild(draggedEl);
+      event.cancel = true;
     }
 }

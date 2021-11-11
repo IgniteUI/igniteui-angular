@@ -50,6 +50,7 @@
 @import '../components/tabs/tabs-theme';
 @import '../components/scrollbar/scrollbar-theme';
 @import '../components/switch/switch-theme';
+@import '../components/stepper/stepper-theme';
 @import '../components/snackbar/snackbar-theme';
 @import '../components/slider/slider-theme';
 @import '../components/splitter/splitter-theme';
@@ -443,6 +444,10 @@
             $hover-shadow: if($elevation == false, none, null),
             $disabled-shadow: if($elevation == false, none, null),
         ));
+    }
+
+    @if not(index($exclude, 'igx-stepper')) {
+        @include igx-stepper(igx-stepper-theme($schema: $schema));
     }
 
     @if not(index($exclude, 'igx-tabs')) {

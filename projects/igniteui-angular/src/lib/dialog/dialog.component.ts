@@ -1,4 +1,3 @@
-import { useAnimation } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
     Component,
@@ -22,8 +21,9 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services/public_api';
-import { slideInBottom, slideOutTop } from '../animations/slide/index';
+import {fadeIn, fadeOut} from '../animations/fade/index';
 import { IgxFocusModule } from '../directives/focus/focus.directive';
+import { IgxFocusTrapModule } from '../directives/focus-trap/focus-trap.directive';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 
 let DIALOG_ID = 0;
@@ -110,6 +110,16 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         this._overlayDefaultSettings.closeOnEscape = val;
         this._closeOnEscape = val;
     }
+
+    /**
+     * An @Input property to set whether the Tab key focus is trapped within the dialog when opened.
+     * Defaults to `true`.
+     * ```html
+     * <igx-dialog focusTrap="false""></igx-dialog>
+     * ```
+     */
+    @Input()
+    public focusTrap = true;
 
     /**
      * An @Input property controlling the `title` of the dialog.
@@ -459,8 +469,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     protected destroy$ = new Subject<boolean>();
 
     private _positionSettings: PositionSettings = {
-        openAnimation: useAnimation(slideInBottom, { params: { fromPosition: 'translateY(100%)' } }),
-        closeAnimation: useAnimation(slideOutTop, { params: { toPosition: 'translateY(-100%)' } })
+        openAnimation: fadeIn,
+        closeAnimation: fadeOut
     };
 
     private _overlayDefaultSettings: OverlaySettings;
@@ -620,6 +630,6 @@ export interface IDialogCancellableEventArgs extends IDialogEventArgs, Cancelabl
 @NgModule({
     declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
     exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
-    imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule, IgxFocusModule]
+    imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule, IgxFocusModule, IgxFocusTrapModule]
 })
 export class IgxDialogModule { }

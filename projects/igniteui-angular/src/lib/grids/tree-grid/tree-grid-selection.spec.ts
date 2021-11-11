@@ -1208,7 +1208,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             endTransition();
 
             const addRow = treeGrid.gridAPI.get_row_by_index(9);
-            expect(addRow.addRow).toBeTrue();
+            expect(addRow.addRowUI).toBeTrue();
 
             treeGrid.gridAPI.crudService.endEdit(true);
             await wait(100);

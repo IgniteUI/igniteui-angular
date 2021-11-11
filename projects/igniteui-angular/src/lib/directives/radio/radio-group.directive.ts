@@ -16,7 +16,6 @@ import { IgxRippleModule } from '../ripple/ripple.directive';
 import { takeUntil } from 'rxjs/operators';
 import { noop, Subject } from 'rxjs';
 import { mkenum } from '../../core/utils';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 /**
  * Determines the Radio Group alignment
@@ -129,16 +128,15 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
 
     /**
-     * An @Input property that allows you to disable the radio group. By default it's false.
-     *
      * @deprecated in version 12.2.0
+     *
+     * An input property that allows you to disable the radio group. By default it's false.
      *
      * @example
      *  ```html
      * <igx-radio-group disabled></igx-radio-group>
      * ```
      */
-    @DeprecateProperty('`disabled` is deprecated.')
     @Input()
     public get disabled(): boolean {
         return this._disabled;
@@ -149,9 +147,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
 
     /**
-     * Sets/gets the position of the `label` in the child radio buttons.
-     *
      * @deprecated in version 12.2.0
+     *
+     * Sets/gets the position of the `label` in the child radio buttons.
      *
      * @remarks
      * If not set, `labelPosition` will have value `"after"`.
@@ -161,7 +159,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * <igx-radio-group labelPosition = "before"></igx-radio-group>
      * ```
      */
-    @DeprecateProperty('`labelPosition` is deprecated.')
     @Input()
     public get labelPosition(): RadioLabelPosition | string {
         return this._labelPosition;
@@ -435,7 +432,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     private _selectRadioButton() {
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
-                if (!this._value) {
+                if (this._value === null) {
                     // no value - uncheck all radio buttons
                     if (button.checked) {
                         button.checked = false;

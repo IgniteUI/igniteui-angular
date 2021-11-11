@@ -126,11 +126,31 @@ describe('IgxGrid - Column properties #grid', () => {
         const grid = fix.componentInstance.grid;
         const formatter = fix.componentInstance.multiplier;
 
+        const boolFormatter = fix.componentInstance.boolFormatter;
+
         expect(grid.columnList.first.formatter).toBeDefined();
 
         for (let i = 0; i < 3; i++) {
             const cell = grid.gridAPI.get_cell_by_index(i, 'ID');
             expect(cell.nativeElement.textContent).toMatch(formatter(cell.value));
+
+            const cellBool = grid.gridAPI.get_cell_by_index(i, 'IsEmployed');
+            expect(cellBool.nativeElement.textContent).toMatch(boolFormatter(cellBool.value));
+        }
+    });
+
+    it('should correctly pass row data context for the format callback', () => {
+        const fix = TestBed.createComponent(ColumnCellFormatterComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const formatter = fix.componentInstance.containsY;
+        grid.getColumnByName('ID').formatter = formatter;
+        fix.detectChanges();
+
+        for (let i = 0; i < 2; i++) {
+            const cell = grid.gridAPI.get_cell_by_index(i, 'ID');
+            expect(cell.nativeElement.textContent).toMatch('true');
         }
     });
 
@@ -146,18 +166,18 @@ describe('IgxGrid - Column properties #grid', () => {
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.textContent).toMatch('ID');
-        expect(headers[1].nativeElement.textContent).toMatch('Name');
+        expect(headers[2].nativeElement.textContent).toMatch('Name');
 
         // Swap columns
         grid.moveColumn(grid.columnList.first, grid.columnList.last);
         fix.detectChanges();
 
-        expect(grid.columnList.first.field).toMatch('Name');
+        expect(grid.columnList.first.field).toMatch('IsEmployed');
         expect(grid.columnList.last.field).toMatch('ID');
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        expect(headers[0].nativeElement.textContent).toMatch('Name');
-        expect(headers[1].nativeElement.textContent).toMatch('ID');
+        expect(headers[0].nativeElement.textContent).toMatch('IsEmployed');
+        expect(headers[1].nativeElement.textContent).toMatch('Name');
     });
 
     it('should support adding and removing columns through a declared iterable', fakeAsync(/** columnList.changes rAF */() => {
@@ -426,6 +446,41 @@ describe('IgxGrid - Column properties #grid', () => {
 
         const row = grid.gridAPI.get_row_by_index(0);
         row.cells.forEach(cell => expect(cell.nativeElement.getAttribute('style')).toMatch('background: black'));
+    });
+
+    it('should apply custom CSS bindings to grid headers', () => {
+        const fix = TestBed.createComponent(ColumnHaederClassesComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+
+
+        const styles = {
+            background: 'rebeccapurple',
+            color: 'white'
+        };
+
+        grid.columns.forEach(col => col.headerStyles = styles);
+        fix.detectChanges();
+
+        grid.headerCellList.forEach(header => expect(header.nativeElement.getAttribute('style')).toMatch('background: rebeccapurple'));
+
+    });
+
+    it('should apply custom CSS bindings to grid header groups', () => {
+        const fix = TestBed.createComponent(ColumnHaederClassesComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+
+
+        const styles = {
+            background: 'rebeccapurple',
+            color: 'white'
+        };
+
+        grid.columns.forEach(col => col.headerGroupStyles = styles);
+        fix.detectChanges();
+
+        grid.headerGroupsList.forEach(hGroup => expect(hGroup.nativeElement.getAttribute('style')).toMatch('background: rebeccapurple'));
     });
 
     it('should set title attribute on column header spans', () => {

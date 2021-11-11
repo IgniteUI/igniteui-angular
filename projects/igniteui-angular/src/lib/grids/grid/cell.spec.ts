@@ -7,7 +7,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
-import { VirtualGridComponent, NoScrollsComponent, NoColumnWidthGridComponent } from '../../test-utils/grid-samples.spec';
+import { VirtualGridComponent, NoScrollsComponent,
+    NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { IgxGridCellComponent } from '../cell.component';
@@ -384,6 +385,40 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(grid.getColumnByName('ProductName')._cells[4].nativeElement.classList).toContain('test2');
             expect(grid.getColumnByName('InStock')._cells[4].nativeElement.classList).toContain('test2');
             expect(grid.getColumnByName('OrderDate')._cells[4].nativeElement.classList).toContain('test2');
+        }));
+    });
+
+    describe('Cell properties', () => {
+        configureTestSuite((() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridDateTimeColumnComponent
+                ],
+                imports: [NoopAnimationsModule, IgxGridModule]
+            });
+        }));
+
+        it('verify that value of the cell title is correctly', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const receiveTime = grid.getColumnByName('ReceiveTime');
+
+            expect(receiveTime._cells[0].title).toEqual('8:37:11 AM');
+            expect(receiveTime._cells[5].title).toEqual('12:47:42 PM');
+
+            const product = grid.getColumnByName('ProductName');
+
+            expect(product._cells[2].title).toEqual('Antons Cajun Seasoning');
+            expect(product._cells[6].title).toEqual('Queso Cabrales');
+
+            product.formatter = fixture.componentInstance.testFormatter;
+            fixture.detectChanges();
+
+            expect(product._cells[2].title).toEqual('testAntons Cajun Seasoning');
+            expect(product._cells[6].title).toEqual('testQueso Cabrales');
+
         }));
     });
 });

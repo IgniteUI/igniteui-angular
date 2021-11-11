@@ -428,9 +428,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
 
     /** @hidden @internal */
     public writeValue(value: boolean) {
-        if (typeof value === 'boolean') {
-            this._checked = value;
-        }
+        this._checked = value;
     }
 
     /** @hidden @internal */
@@ -452,6 +450,11 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     /** @hidden @internal */
     public registerOnTouched(fn: () => void) {
         this._onTouchedCallback = fn;
+    }
+
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
     }
 
     /** @hidden @internal */

@@ -40,7 +40,6 @@ import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { CellType } from '../common/cell.interface';
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -91,7 +90,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
     /** @hidden @internal */
-    @ContentChildren(IgxPaginatorComponent, {descendants: true})
+    @ContentChildren(IgxPaginatorComponent, { descendants: true })
     public paginatorList: QueryList<IgxPaginatorComponent>;
 
     @ViewChild('toolbarOutlet', { read: ViewContainerRef })
@@ -206,7 +205,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /** @hidden @internal */
     public get paginator() {
         const id = this.id;
-        return  (!this.parentIsland && this.paginationComponents?.first) || this.rootGrid.paginatorList?.find((pg) =>
+        return (!this.parentIsland && this.paginationComponents?.first) || this.rootGrid.paginatorList?.find((pg) =>
             pg.nativeElement.offsetParent?.id === id);
     }
 
@@ -286,7 +285,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * @deprecated
+     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
+     *
      * Returns a `CellType` object that matches the conditions.
      *
      * @example
@@ -296,7 +296,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @param rowIndex
      * @param index
      */
-     @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
@@ -328,6 +327,30 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return !!this.childLayoutKeys.length;
     }
 
+    /**
+     * @hidden
+     */
+    public get resolveRowEditContainer() {
+        if (this.parentIsland && this.parentIsland.rowEditCustom) {
+            return this.parentIsland.rowEditContainer;
+        }
+        return this.rowEditContainer;
+    }
+
+    /**
+     * @hidden
+     */
+    public get resolveRowEditActions() {
+        return this.parentIsland ? this.parentIsland.rowEditActions : this.rowEditActions;
+    }
+
+    /**
+     * @hidden
+     */
+    public get resolveRowEditText() {
+        return this.parentIsland ? this.parentIsland.rowEditText : this.rowEditText;
+    }
+
     /** @hidden */
     public hideActionStrip() {
         if (!this.parent) {
@@ -338,6 +361,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                 ri.actionStrip?.hide();
             });
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public get parentRowOutletDirective() {
+        // Targeting parent outlet in order to prevent hiding when outlet
+        // is present at a child grid and is attached to a row.
+        return this.parent ? this.parent.rowOutletDirective : this.outlet;
     }
 
     /**
@@ -409,6 +441,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
         this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
         this.excelStyleHeaderIconTemplate = this.rootGrid.excelStyleHeaderIconTemplate;
+        this.sortAscendingHeaderIconTemplate = this.rootGrid.sortAscendingHeaderIconTemplate;
+        this.sortDescendingHeaderIconTemplate = this.rootGrid.sortDescendingHeaderIconTemplate;
+        this.sortHeaderIconTemplate = this.rootGrid.sortHeaderIconTemplate;
         this.hasChildrenKey = this.parentIsland ?
             this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
             this.rootGrid.hasChildrenKey;
@@ -659,14 +694,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             }
         } else {
             return {
-                $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
+                $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
                 templateID: {
                     type: 'dataRow',
                     id: null
                 },
                 index: this.getDataViewIndex(rowIndex, pinned),
-                disabled: this.isGhostRecord(rowData),
-                addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
+                disabled: this.isGhostRecord(rowData)
             };
         }
     }

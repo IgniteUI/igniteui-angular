@@ -61,7 +61,8 @@ export interface OutOfViewPort {
 
 export interface PositionSettings {
     /**
-     * @deprecated Set the target point/element in the overlay settings instead.
+     * @deprecated in version 10.2.0. Set the target point/element in the overlay settings instead
+     *
      * Attaching target for the component to show
      */
     target?: Point | HTMLElement;
@@ -147,8 +148,14 @@ export interface OverlayInfo {
     initialSize?: Size;
     hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
-    closeAnimationPlayer?: AnimationPlayer;
     openAnimationInnerPlayer?: any;
+    // calling animation.destroy in detach fires animation.done. This should not happen
+    // this is why we should trace if animation ever started
+    openAnimationDetaching?: boolean;
+    closeAnimationPlayer?: AnimationPlayer;
+    // calling animation.destroy in detach fires animation.done. This should not happen
+    // this is why we should trace if animation ever started
+    closeAnimationDetaching?: boolean;
     closeAnimationInnerPlayer?: any;
     ngZone: NgZone;
     transformX?: number;

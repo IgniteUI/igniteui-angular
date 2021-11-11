@@ -1,7 +1,6 @@
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { CellType } from './common/cell.interface';
-import { IgxRow } from './common/crud.service';
+import { IgxEditRow } from './common/crud.service';
 import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
 import { RowType } from './common/row.interface';
 import { IgxGridCell } from './grid-public-cell';
@@ -66,20 +65,17 @@ abstract class BaseRow implements RowType {
     }
 
     /**
-     * @deprecated Use 'data' instead.
+     * @deprecated Use 'data' instead
      *
      * The data record that populates the row
      */
-    @DeprecateProperty(`'rowData' property is deprecated. Use 'data' instead.`)
     public get rowData(): any {
         return this.data;
     }
 
     /**
-     * @deprecated Use 'key' instead.
-     *
+     * @deprecated Use 'key' instead
      */
-    @DeprecateProperty(`'rowID' property is deprecated. Use 'key' instead.`)
     public get rowID(): any {
         return this.key;
     }
@@ -211,7 +207,7 @@ abstract class BaseRow implements RowType {
      * ```
      */
     public pin(): boolean {
-        return this.grid.pinRow(this.key);
+        return this.grid.pinRow(this.key, this.index);
     }
 
     /**
@@ -241,7 +237,7 @@ abstract class BaseRow implements RowType {
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.key) {
             this.grid.transactions.endPending(false);
         }
-        const row = new IgxRow(this.key, this.index, this.data, this.grid);
+        const row = new IgxEditRow(this.key, this.index, this.data, this.grid);
         this.grid.gridAPI.update_row(row, value);
         this.grid.notifyChanges();
     }

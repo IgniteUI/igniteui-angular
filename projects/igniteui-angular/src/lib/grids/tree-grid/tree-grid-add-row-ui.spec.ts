@@ -74,7 +74,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             endTransition();
 
             const addRow = treeGrid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRow).toBeTrue();
+            expect(addRow.addRowUI).toBeTrue();
 
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
@@ -90,7 +90,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             row.beginAddChild();
             fix.detectChanges();
             const addRow = treeGrid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRow).toBeTrue();
+            expect(addRow.addRowUI).toBeTrue();
         });
 
         it('should allow adding sibling to child row via the API.', () => {
@@ -118,7 +118,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             expect(treeGrid.rowList.length).toBe(0);
 
             // begin add row for empty grid
-            treeGrid.beginAddRowByIndex(null, -1);
+            treeGrid.crudService.enterAddRowMode(null);
             fix.detectChanges();
             endTransition();
 

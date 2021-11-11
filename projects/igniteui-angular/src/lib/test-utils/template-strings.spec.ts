@@ -19,14 +19,15 @@ export class GridTemplateStrings {
     </igx-grid>`;
 
     public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``,
-            toolbarDefinition = '', paginatorDefinition = '') {
+        toolbarDefinition = '', paginatorDefinition = '', templateDefinitions: TemplateDefinitions = '') {
         return `<igx-grid [data]="data"
-        ${ attributes}
-        ${ events}
+        ${attributes}
+        ${events}
         >
-        ${ toolbarDefinition }
-        ${ columnDefinitions}
-        ${ paginatorDefinition }
+        ${toolbarDefinition}
+        ${columnDefinitions}
+        ${paginatorDefinition}
+        ${templateDefinitions}
     </igx-grid>`;
     }
 
@@ -217,6 +218,7 @@ export class ColumnDefinitions {
 
     public static idNameFormatter = `
         <igx-column field="ID" [formatter]="multiplier"></igx-column>
+        <igx-column field="IsEmployed" [dataType]="'boolean'"></igx-column>
         <igx-column field="Name"></igx-column>
     `;
 
@@ -485,6 +487,20 @@ export class ColumnDefinitions {
                 <igx-column field="PostalCode"></igx-column>
             </igx-column-group>
         </igx-column-group>
+    `;
+}
+
+export class TemplateDefinitions {
+    public static sortIconTemplates = `
+        <ng-template igxSortHeaderIcon>
+            <igx-icon>unfold_more</igx-icon>
+        </ng-template>
+        <ng-template igxSortAscendingHeaderIcon>
+            <igx-icon>expand_less</igx-icon>
+        </ng-template>
+        <ng-template igxSortDescendingHeaderIcon>
+            <igx-icon>expand_more</igx-icon>
+        </ng-template>
     `;
 }
 

@@ -25,6 +25,18 @@ import {
     swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
 } from '../animations/main';
 import { setImmediate } from './setImmediate';
+import { isDevMode } from '@angular/core';
+
+/**
+ * @hidden
+ */
+export const showMessage = (message: string, isMessageShown: boolean): boolean => {
+    if (!isMessageShown && isDevMode()) {
+        console.warn(message);
+    }
+
+    return true;
+};
 
 export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
 
@@ -501,6 +513,8 @@ export const yieldingLoop = (count: number, chunkSize: number, callback: (index:
     };
     chunk();
 };
+
+export const isConstructor = (ref: any) => typeof ref === 'function' && Boolean(ref.prototype) && Boolean(ref.prototype.constructor);
 
 export const reverseAnimationResolver = (animation: AnimationReferenceMetadata): AnimationReferenceMetadata =>
     oppositeAnimation.get(animation) ?? animation;

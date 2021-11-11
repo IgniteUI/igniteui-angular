@@ -22,7 +22,7 @@ import { IgxColumnComponent } from './columns/column.component';
 import { TransactionType } from '../services/transaction/transaction';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { IgxRow } from './common/crud.service';
+import { IgxAddRow, IgxEditRow } from './common/crud.service';
 import { GridType } from './common/grid.interface';
 import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
@@ -37,7 +37,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @hidden
      */
     @Output()
-    onAnimationEnd = new EventEmitter<IgxRowDirective<T>>();
+    addAnimationEnd = new EventEmitter<IgxRowDirective<T>>();
 
     /**
      * @hidden
@@ -138,13 +138,10 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         this.gridAPI.set_row_expansion_state(this.rowID, val);
     }
 
-    @Input()
-    public get addRow(): any {
-        return this._addRow;
-    }
-
-    public set addRow(v: any) {
-        this._addRow = v;
+    public get addRowUI(): any {
+        return !!this.grid.crudService.row &&
+            this.grid.crudService.row.getClassName() === IgxAddRow.name &&
+            this.grid.crudService.row.id === this.rowID;
     }
 
     @HostBinding('style.min-height.px')
@@ -154,11 +151,11 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             const maxRowSpan = this.grid.multiRowLayoutRowSize;
             height = height * maxRowSpan;
         }
-        return this.addRow ? height : null;
+        return this.addRowUI ? height : null;
     }
 
     get cellHeight() {
-        return this.addRow && !this.inEditMode ? null : this.grid.rowHeight || 32;
+        return this.addRowUI && !this.inEditMode ? null : this.grid.rowHeight || 32;
     }
 
     /**
@@ -212,14 +209,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @HostBinding('attr.data-rowIndex')
     get dataRowIndex() {
         return this.index;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostBinding('class')
-    get styleClasses(): string {
-        return this.resolveClasses();
     }
 
     /**
@@ -400,10 +389,11 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @internal
      */
     public defaultCssClass = 'igx-grid__tr';
+
     /**
      * @hidden
      */
-    public animateAdd = false;
+    public triggerAddAnimationClass = false;
 
     protected destroy$ = new Subject<any>();
     protected _rowData: any;
@@ -485,7 +475,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.transactions.endPending(false);
         }
-        const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
+        const row = new IgxEditRow(this.rowID, this.index, this.rowData, this.grid);
         this.gridAPI.update_row(row, value);
         this.cdr.markForCheck();
     }
@@ -510,7 +500,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * Pins the specified row.
-     * This method emits `rowPinning` event.
+     * This method emits `rowPinning`\`rowPinned` event.
      *
      * ```typescript
      * // pin the selected row from the grid
@@ -523,7 +513,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * Unpins the specified row.
-     * This method emits `rowPinning` event.
+     * This method emits `rowPinning`\`rowPinned` event.
      *
      * ```typescript
      * // unpin the selected row from the grid
@@ -557,10 +547,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         return this.pinned && this.disabled && visibleColumnIndex === 0;
     }
 
-    public animationEndHandler() {
-        this.onAnimationEnd.emit(this);
-    }
-
     /**
      * Spawns the add row UI for the specific row.
      *
@@ -571,22 +557,22 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     public beginAddRow() {
-        this.grid.beginAddRowByIndex(this.rowID, this.index);
+        this.grid.crudService.enterAddRowMode(this);
     }
 
     /**
      * @hidden
      */
-    protected resolveClasses(): string {
-        const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
-        const selectedClass = this.selected ? 'igx-grid__tr--selected' : '';
-        const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
-        const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
-        const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
-        const mrlClass = this.grid.hasColumnLayouts ? 'igx-grid__tr--mrl' : '';
-        const dragClass = this.dragging ? 'igx-grid__tr--drag' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}
-         ${deletedClass} ${mrlClass} ${dragClass}`.trim();
+    public triggerAddAnimation() {
+        this.triggerAddAnimationClass = true;
+    }
+
+    /**
+     * @hidden
+     */
+    public animationEndHandler() {
+        this.triggerAddAnimationClass = false;
+        this.addAnimationEnd.emit(this);
     }
 
     /**

@@ -1,4 +1,4 @@
-<igx-input-group #inputGroup [displayDensity]="displayDensity" [type]="type" (click)="onInputClick($event)">
+<igx-input-group #inputGroup [displayDensity]="displayDensity" [type]="type" (click)="onClick($event)">
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
@@ -51,8 +51,8 @@
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <igx-combo-item role="option" [itemHeight]='itemHeight' *igxFor="let item of data
-            | comboFiltering:filterValue:displayKey:filterable:filteringOptions
-            | comboGrouping:groupKey:valueKey;
+            | comboFiltering:filterValue:displayKey:filteringOptions:filterable
+            | comboGrouping:groupKey:valueKey:groupSortingDirection;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
             <ng-container *ngIf="item.isHeader">

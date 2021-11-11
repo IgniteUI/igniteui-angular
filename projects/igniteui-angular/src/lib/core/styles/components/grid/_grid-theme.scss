@@ -1441,6 +1441,16 @@
             padding-top: 0 !important;
         }
 
+        .igx-input-group__bundle {
+            border: none !important;
+        }
+
+        igx-prefix,
+        igx-suffix {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
         igx-date-range-picker {
             height: 100%;
         }
@@ -1593,11 +1603,14 @@
         }
 
         .sort-icon {
-            width: rem(15px);
-            height: rem(15px);
-            min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
-            font-size: rem(15px);
             position: relative;
+            display: flex;
+
+            igx-icon {
+                width: rem(15px);
+                height: rem(15px);
+                font-size: rem(15px);
+            }
 
             &::after {
                 content: attr(data-sortIndex);
