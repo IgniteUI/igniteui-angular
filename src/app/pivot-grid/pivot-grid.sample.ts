@@ -3,9 +3,9 @@ import {
     IgxPivotNumericAggregate,
     IgxPivotGridComponent,
     IPivotConfiguration,
-    PivotAggregation,
-    GridColumnDataType
+    PivotAggregation
 } from 'igniteui-angular';
+import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 export class IgxTotalSaleAggregate {
     public static totalSale: PivotAggregation = (members, data: any) =>
@@ -23,32 +23,27 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
+
             {
-                memberName: 'AllCountries',
-                memberFunction: () => 'AllCountries',
-                enabled: true,
-                childLevel: {
-                    memberName: 'Country',
-                    enabled: true
-                }
+                memberName: 'Country',
+                enabled: true
             }
         ]
         ,
-        rows: [
-            {
-                memberName: 'ProductCategory',
-                enabled: true
-            },
-            {
-                memberName: 'SellerName',
-                enabled: true
-            },
-            {
-                memberName: 'Date',
-                dataType: GridColumnDataType.Date,
-                enabled: true
-            }
-        ],
+        rows: [{
+            memberName: 'City',
+            enabled: true
+        }, {
+            memberFunction: () => 'All',
+            memberName: 'AllProducts',
+            enabled: true,
+            childLevel:
+                {
+                    memberFunction: (data) => data.ProductCategory,
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+        }],
         values: [
             {
                 member: 'UnitsSold',
@@ -92,10 +87,6 @@ export class PivotGridSampleComponent {
         {
             ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David Haley',
             Country: 'UK', City: 'London', Date: '04/07/2012', UnitsSold: 293
-        },
-        {
-            ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David Haley',
-            Country: 'UK', City: 'London', Date: '04/07/2011', UnitsSold: 293
         },
         {
             ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John Smith',
