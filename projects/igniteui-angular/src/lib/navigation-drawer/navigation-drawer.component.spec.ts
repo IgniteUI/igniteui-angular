@@ -487,7 +487,7 @@ describe('Navigation Drawer', () => {
         done();
     });
 
-    xit('should update pin based on window width (pinThreshold)', async (done) => {
+    it('should update pin based on window width (pinThreshold)', async (done) => {
         const template = `'<igx-nav-drawer [(pin)]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
         TestBed.overrideComponent(TestComponentPin, {
             set: {
@@ -523,7 +523,7 @@ describe('Navigation Drawer', () => {
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
-        await wait(200);
+        await wait(1000);
         expect(fixture.componentInstance.navDrawer.pin).toBe(true, 'Should pin on window resize over threshold');
         expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on window resize over threshold');
 
@@ -531,7 +531,7 @@ describe('Navigation Drawer', () => {
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
-        await wait(200);
+        await wait(1000);
         expect(fixture.componentInstance.navDrawer.pin).toBe(false, 'Should un-pin on window resize below threshold');
         expect(fixture.componentInstance.pin).toBe(false, 'Parent pin update on window resize below threshold');
         fixture.componentInstance.pinThreshold = 500;
