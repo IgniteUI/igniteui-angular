@@ -513,7 +513,7 @@ describe('Navigation Drawer', () => {
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
-        await wait(200);
+        await wait(1000);
         expect(fixture.componentInstance.navDrawer.pin).toBe(false, `Shouldn't change state on resize if window width is the same`);
         expect(fixture.componentInstance.pin).toBe(true, 'Parent component pin remain on resize if window width is the same');
         fixture.componentInstance.pin = true;
