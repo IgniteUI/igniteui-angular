@@ -3949,8 +3949,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click 'Add Filter' button.
             GridFunctions.clickAddFilterExcelStyleCustomFiltering(fix);
             tick(200);
-            fix.detectChanges();
-
 
             // Verify last expression is currently in view inside the expressions container.
             const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
