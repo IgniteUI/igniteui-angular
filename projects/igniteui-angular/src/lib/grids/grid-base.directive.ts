@@ -2839,7 +2839,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteringStrategy: IFilteringStrategy;
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
-    private _sortingOptions: ISortingOptions = { mode: 'multiple' } ;
+    protected _sortingOptions: ISortingOptions = { mode: 'multiple' };
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;

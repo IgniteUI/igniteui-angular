@@ -10,6 +10,7 @@ import { ISortingExpression } from '../../data-operations/sorting-expression.int
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { RowType } from './row.interface';
 import { CellType } from './cell.interface';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 export { GridSelectionRange } from '../selection/selection.service';
 
 export interface IGridClipboardEvent {
@@ -207,7 +208,8 @@ export interface IActiveNodeChangeEventArgs extends IBaseEventArgs {
 }
 
 export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
-    sortingExpressions: ISortingExpression | Array<ISortingExpression>;
+    sortingExpressions?: ISortingExpression | Array<ISortingExpression>;
+    groupingExpressions?: IGroupingExpression | Array<IGroupingExpression>;
 }
 
 export interface IFilteringEventArgs extends IBaseEventArgs, CancelableEventArgs {

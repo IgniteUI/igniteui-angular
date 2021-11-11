@@ -104,6 +104,7 @@ export interface FlatGridType extends GridType {
     toggleGroup(groupRow: IGroupByRecord): void;
     clearGrouping(field: string): void;
     groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void;
+    sortGrouping(expression: IGroupingExpression | Array<IGroupingExpression>): void;
 }
 
 /**

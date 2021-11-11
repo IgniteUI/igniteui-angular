@@ -7,7 +7,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { cloneArray, IBaseEventArgs } from '../../core/utils';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
@@ -33,6 +33,7 @@ import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.comp
 import { IgxGridCell } from '../grid-public-cell';
 import { CellType } from '../common/cell.interface';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
+import { ISortingEventArgs } from '../common/events';
 
 let NEXT_ID = 0;
 
@@ -376,8 +377,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._gridAPI.arrange_sorting_expressions();
             this.notifyChanges();
         } else {
+            //To do: remove coupling
             // setter called before grid is registered in grid API service
-            this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
+            this.groupingExpressions.unshift.apply(this._groupingExpressions);
         }
         if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columnList) {
             const groupedCols: IgxColumnComponent[] = [];
@@ -537,6 +539,40 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         };
     }
 
+    public sortGrouping(expression: IGroupingExpression | Array<IGroupingExpression>): void {
+        const groupingState = cloneArray(this.groupingExpressions);
+        
+        if (expression instanceof Array) {
+            for (const each of expression) {
+                if (each.dir === SortingDirection.None) {
+                    this.gridAPI.remove_grouping_expression(each.fieldName);
+                }
+                this.gridAPI.prepare_grouping_expression([groupingState], each);
+            }
+        } else {
+            if (expression.dir === SortingDirection.None) {
+                this.gridAPI.remove_grouping_expression(expression.fieldName);
+            }
+             
+            this.gridAPI.prepare_grouping_expression([groupingState], expression);
+        }
+
+        const eventArgs: ISortingEventArgs = { owner: this, groupingExpressions: groupingState, cancel: false };
+        this.sorting.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
+
+        this.crudService.endEdit(false);
+        if (expression instanceof Array) {
+            this.gridAPI.sort_groupBy_multiple(expression);
+        } else {
+            this.gridAPI.sort_decoupled(expression);
+        }
+        requestAnimationFrame(() => this.sortingDone.emit(expression));
+    }
+    
     /**
      * @hidden @internal
      */
@@ -955,6 +991,20 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 }
             });
         });
+
+        this.groupingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe((groupingExpressions: IGroupingExpression[]) => {
+            if (!this.groupingExpressions || !this.groupingExpressions.length) {
+                return;
+            }
+            
+            groupingExpressions.forEach((sortExpr: IGroupingExpression) => {
+                const fieldName = sortExpr.fieldName;
+                const groupingExpr = this.groupingExpressions.find(ex => ex.fieldName === fieldName);
+                if (groupingExpr) {
+                    groupingExpr.dir = sortExpr.dir;
+                }
+            });
+        });
     }
 
     /**
@@ -1222,7 +1272,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     protected _applyGrouping() {
-        this._gridAPI.sort_multiple(this._groupingExpressions);
+        this._gridAPI.sort_groupBy_multiple(this._groupingExpressions);
     }
 
     private _setupNavigationService() {

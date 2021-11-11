@@ -17,7 +17,7 @@ import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from '../columns/column.component';
-import { GridType } from '../common/grid.interface';
+import { FlatGridType, GridType } from '../common/grid.interface';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 
 /**
@@ -52,7 +52,7 @@ export abstract class IgxGroupByAreaDirective {
 
     /** The parent grid containing the component. */
     @Input()
-    public grid: GridType;
+    public grid: FlatGridType & GridType;
 
     /**
      * The group-by expressions provided by the parent grid.
@@ -116,7 +116,12 @@ export abstract class IgxGroupByAreaDirective {
         if (!this.grid.getColumnByName(id).groupable) {
             return;
         }
-        this.updateSorting(id);
+
+        if (this.grid.groupingExpressions) {
+            this.updateGroupSorting(id);
+        } else {
+            this.updateSorting(id);
+        }
     }
 
      public onDragDrop(event) {
@@ -163,6 +168,12 @@ export abstract class IgxGroupByAreaDirective {
         const expr = this.grid.sortingExpressions.find(e => e.fieldName === id);
         expr.dir = 3 - expr.dir;
         this.grid.sort(expr);
+    }
+
+    protected updateGroupSorting(id: string) {
+        const expr = this.grid.groupingExpressions.find(e => e.fieldName === id);
+        expr.dir = 3 - expr.dir;
+        this.grid.sortGrouping(expr);
     }
 
     protected expressionsChanged() {

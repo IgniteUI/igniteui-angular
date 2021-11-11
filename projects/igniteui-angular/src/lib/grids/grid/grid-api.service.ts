@@ -12,18 +12,16 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
     public groupBy(expression: IGroupingExpression): void {
         const groupingState = cloneArray(this.grid.groupingExpressions);
-        const sortingState = cloneArray(this.grid.sortingExpressions);
-        this.prepare_sorting_expression([sortingState, groupingState], expression);
+        this.prepare_grouping_expression([groupingState], expression);
         this.grid.groupingExpressions = groupingState;
         this.arrange_sorting_expressions();
     }
 
     public groupBy_multiple(expressions: IGroupingExpression[]): void {
         const groupingState = cloneArray(this.grid.groupingExpressions);
-        const sortingState = cloneArray(this.grid.sortingExpressions);
 
         for (const each of expressions) {
-            this.prepare_sorting_expression([sortingState, groupingState], each);
+            this.prepare_grouping_expression([groupingState], each);
         }
 
         this.grid.groupingExpressions = groupingState;
@@ -134,7 +132,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
     public arrange_sorting_expressions() {
         const groupingState = this.grid.groupingExpressions;
-        this.grid.sortingExpressions.sort((a, b) => {
+        this.grid.groupingExpressions.sort((a, b) => {
             const groupExprA = groupingState.find((expr) => expr.fieldName === a.fieldName);
             const groupExprB = groupingState.find((expr) => expr.fieldName === b.fieldName);
             if (groupExprA && groupExprB) {
