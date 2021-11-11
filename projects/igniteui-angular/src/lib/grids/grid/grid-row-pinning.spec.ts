@@ -601,7 +601,7 @@ describe('Row Pinning #grid', () => {
 
         it('should calculate groupby row summaries only within unpinned collection', () => {
             // enable summaries for each column
-            grid.columns.forEach(c => {
+            grid.columnList.forEach(c => {
                 c.hasSummary = true;
             });
             fix.detectChanges();

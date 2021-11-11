@@ -216,7 +216,7 @@ describe('IgxGrid - Summaries #grid', () => {
             });
 
             it('Last column summary cell should be aligned according to its data cells', fakeAsync(/** height/width setter rAF */() => {
-                grid.columns.forEach(c => {
+                grid.columnList.forEach(c => {
                     c.width = '150px';
                 });
                 grid.getColumnByName('UnitsInStock').hasSummary = true;

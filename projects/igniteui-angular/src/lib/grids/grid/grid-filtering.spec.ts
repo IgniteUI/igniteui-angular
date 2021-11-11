@@ -808,7 +808,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick(30);
         fix.detectChanges();
 
-        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(grid.columns.length);
+        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(grid.columnList.length);
         expect(grid.rowList.length).toEqual(1);
 
         const filteringExpressions = grid.filteringExpressionsTree;

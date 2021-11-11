@@ -5807,7 +5807,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+            const uniqueValues = new Set<string>();
+            grid.data.forEach(r => {
+                const val = grid.getColumnByName('ReleaseDate').formatter(r.ReleaseDate);
+                uniqueValues.add(val);
+            });
+            // +1 stands for the Select All option
+            expect(listItems.length).toBe(uniqueValues.size + 1, 'incorrect rendered list items count');
 
             const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkboxElements[0].click();
