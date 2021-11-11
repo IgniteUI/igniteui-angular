@@ -142,11 +142,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.isLoading = true;
         });
         esf.loadingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.isLoading = false;
             this.refreshSize();
+            this.isLoading = false;
         });
         esf.initialized.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
+                this.refreshSize();
                 this.searchInput.nativeElement.focus();
             });
         });
@@ -166,7 +167,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
-        this.refreshSize();
+        requestAnimationFrame(this.refreshSize);
     }
 
     public ngOnDestroy(): void {
@@ -177,10 +178,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public refreshSize() {
-        requestAnimationFrame(() => {
-            this.virtDir?.recalcUpdateSizes();
-        });
+    public refreshSize = () => {
+        this.virtDir.igxForContainerSize = this.containerSize;
+        this.virtDir.igxForItemSize = this.itemSize;
+        this.virtDir.recalcUpdateSizes();
+        this.cdr.detectChanges();
     }
 
     /**
@@ -244,7 +246,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get containerSize() {
-        if (this.list && this.esf.listData.length) {
+        if (this.esf.listData.length) {
             return this.list.element.nativeElement.offsetHeight;
         }
 
@@ -431,7 +433,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-     private rejectNonNumericalEntries(): void {
+    private rejectNonNumericalEntries(): void {
         const regExp = /[^0-9\.,eE\-]/g;
         if (this.searchValue && regExp.test(this.searchValue)) {
             this.searchInput.value = this.searchValue.replace(regExp, '');
