@@ -14,7 +14,7 @@ export class IgxPivotAggregate {
     public static aggregators() {
         return [{
             key: 'count',
-            label: 'Count',
+            label: 'COUNT',
             aggregator: IgxPivotAggregate.count
         }];
     }
@@ -47,24 +47,24 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
         result = result.concat(super.aggregators());
         result.push({
             key: 'min',
-            label: 'Min',
+            label: 'MIN',
             aggregator: IgxPivotNumericAggregate.min
         });
         result.push({
             key: 'max',
-            label: 'Max',
+            label: 'MAX',
             aggregator: IgxPivotNumericAggregate.max
         });
 
         result.push({
             key: 'sum',
-            label: 'Sum',
+            label: 'SUM',
             aggregator: IgxPivotNumericAggregate.sum
         });
 
         result.push({
             key: 'average',
-            label: 'Avg',
+            label: 'AVG',
             aggregator: IgxPivotNumericAggregate.average
         });
         return result;
@@ -137,12 +137,12 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
         result = result.concat(super.aggregators());
         result.push({
             key: 'latest',
-            label: 'Latest',
+            label: 'LATEST',
             aggregator: IgxPivotDateAggregate.latest
         });
         result.push({
             key: 'earliest',
-            label: 'Earliest',
+            label: 'EARLIEST',
             aggregator: IgxPivotDateAggregate.earliest
         });
         return result;
@@ -188,12 +188,12 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
         result = result.concat(super.aggregators());
         result.push({
             key: 'latestTime',
-            label: 'Latest Time',
+            label: 'LATEST',
             aggregator: IgxPivotTimeAggregate.latestTime
         });
         result.push({
             key: 'earliestTime',
-            label: 'Earliest Time',
+            label: 'EARLIEST',
             aggregator: IgxPivotTimeAggregate.earliestTime
         });
         return result;

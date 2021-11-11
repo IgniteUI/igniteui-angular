@@ -78,24 +78,16 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
                 return val.aggregateList;
             }
             let defaultAggr = this.getAggregatorsForValue(val);
-            const isDefault = defaultAggr.find(x => x.aggregator.name === val.aggregate.name);
+            const isDefault = defaultAggr.find(x => x.aggregator.name === val.aggregate.key);
             // resolve custom aggregations
-            if(!isDefault && this.grid.data[0][val.member] !== undefined) {
+            if (!isDefault && this.grid.data[0][val.member] !== undefined) {
                 // if field exists, then we can apply default aggregations and add the custom one.
-                defaultAggr.unshift({
-                    key: 'custom',
-                    label: 'Custom',
-                    aggregator: val.aggregate
-                });
-            } else if(!isDefault) {
+                defaultAggr.unshift(val.aggregate);
+            } else if (!isDefault) {
                 // otherwise this is a custom aggregation that is not compatible
                 // with the defaults, since it operates on field that is not in the data
                 // leave only the custom one.
-                defaultAggr = [{
-                    key: 'custom',
-                    label: val.displayName || 'Custom',
-                    aggregator: val.aggregate
-                }];
+                defaultAggr = [val.aggregate];
             }
             return defaultAggr;
         }
@@ -140,13 +132,13 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
     public onAggregationChange(event: ISelectionEventArgs) {
         if (!this.isSelected(event.newSelection.value)) {
-            this.value.aggregate = event.newSelection.value.aggregator;
+            this.value.aggregate = event.newSelection.value;
             this.grid.pipeTrigger++;
         }
     }
 
     public isSelected(val: IPivotAggregator) {
-        return this.value.aggregate === val.aggregator;
+        return this.value.aggregate.key === val.key;
     }
 
     public onDimDragOver(event, dimension?: PivotDimensionType) {

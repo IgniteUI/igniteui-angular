@@ -47,12 +47,20 @@ export class PivotGridHierarchySampleComponent {
         values: [
             {
                 member: 'NumberOfUnits',
-                aggregate: IgxNumberSummaryOperand.sum,
+                aggregate: {
+                    aggregator:  IgxNumberSummaryOperand.sum,
+                    key: 'sum',
+                    label: 'Sum'
+                },
                 enabled: true
 
             }, {
                 member: 'Value',
-                aggregate: IgxNumberSummaryOperand.sum,
+                aggregate: {
+                    aggregator:  IgxNumberSummaryOperand.sum,
+                    key: 'sum',
+                    label: 'Sum'
+                },
                 enabled: true,
                 formatter: (val) => val ? parseFloat(val).toFixed(2) : undefined
             }

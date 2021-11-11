@@ -43,7 +43,7 @@ export interface IPivotValue {
      * Aggregation function - can be a custom implementation of PivotAggregation or
      * use predefined ones from IgxPivotAggregate and its variants
      */
-    aggregate: PivotAggregation;
+    aggregate: IPivotAggregator;
     /**
      * List of aggregates to show in aggregate drop-down.
      */

@@ -54,7 +54,11 @@ export class PivotGridNoopSampleComponent {
         values: [
             {
                 member: 'UnitsSold',
-                aggregate: IgxNumberSummaryOperand.sum,
+                aggregate: {
+                    aggregator:  IgxNumberSummaryOperand.sum,
+                    key: 'sum',
+                    label: 'Sum'
+                },
                 enabled: true
             },
         ],
