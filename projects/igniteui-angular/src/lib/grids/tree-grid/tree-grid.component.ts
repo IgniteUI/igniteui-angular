@@ -49,11 +49,10 @@ import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridInstanceType, GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
-import { IgxAddRow, IgxGridCRUDService } from '../common/crud.service';
+import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
 import { CellType } from '../common/cell.interface';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DOCUMENT } from '@angular/common';
@@ -416,7 +415,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @deprecated
+     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
+     *
      * Returns a `CellType` object that matches the conditions.
      *
      * @example
@@ -426,7 +426,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param rowIndex
      * @param index
      */
-    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
