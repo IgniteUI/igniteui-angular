@@ -5811,6 +5811,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkboxElements[0].click();
+            tick();
+            fix.detectChanges();
+
             checkboxElements[2].click();
             tick();
             fix.detectChanges();
