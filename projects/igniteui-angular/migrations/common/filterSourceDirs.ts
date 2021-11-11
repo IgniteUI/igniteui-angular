@@ -2,9 +2,9 @@ import { filter, Rule, SchematicContext, Tree } from '@angular-devkit/schematics
 import { getWorkspace, getWorkspacePath, getProjectPaths } from './util';
 
 /**
- * Filter tree to project source dirs
- *
  * @deprecated Temporary
+ *
+ * Filter tree to project source dirs
  */
 export const filterSourceDirs = (host: Tree, context: SchematicContext): Rule => {
     const configPath = getWorkspacePath(host);
