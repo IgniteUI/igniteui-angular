@@ -13,8 +13,8 @@ export class IgxPivotAggregate {
      */
     public static aggregators() {
         return [{
-            key: 'count',
-            label: 'COUNT',
+            key: 'COUNT',
+            label: 'Count',
             aggregator: IgxPivotAggregate.count
         }];
     }
@@ -46,25 +46,25 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
         let result: IPivotAggregator[] = [];
         result = result.concat(super.aggregators());
         result.push({
-            key: 'min',
-            label: 'MIN',
+            key: 'MIN',
+            label: 'Minimum',
             aggregator: IgxPivotNumericAggregate.min
         });
         result.push({
-            key: 'max',
-            label: 'MAX',
+            key: 'MAX',
+            label: 'Maximum',
             aggregator: IgxPivotNumericAggregate.max
         });
 
         result.push({
-            key: 'sum',
-            label: 'SUM',
+            key: 'SUM',
+            label: 'Sum',
             aggregator: IgxPivotNumericAggregate.sum
         });
 
         result.push({
-            key: 'average',
-            label: 'AVG',
+            key: 'AVG',
+            label: 'Average',
             aggregator: IgxPivotNumericAggregate.average
         });
         return result;
@@ -136,13 +136,13 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
         let result: IPivotAggregator[] = [];
         result = result.concat(super.aggregators());
         result.push({
-            key: 'latest',
-            label: 'LATEST',
+            key: 'LATEST',
+            label: 'Latest Date',
             aggregator: IgxPivotDateAggregate.latest
         });
         result.push({
-            key: 'earliest',
-            label: 'EARLIEST',
+            key: 'EARLIEST',
+            label: 'Earliest Date',
             aggregator: IgxPivotDateAggregate.earliest
         });
         return result;
@@ -187,13 +187,13 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
         let result: IPivotAggregator[] = [];
         result = result.concat(super.aggregators());
         result.push({
-            key: 'latestTime',
-            label: 'LATEST',
+            key: 'LATEST',
+            label: 'Latest Time',
             aggregator: IgxPivotTimeAggregate.latestTime
         });
         result.push({
-            key: 'earliestTime',
-            label: 'EARLIEST',
+            key: 'EARLIEST',
+            label: 'Earliest Time',
             aggregator: IgxPivotTimeAggregate.earliestTime
         });
         return result;

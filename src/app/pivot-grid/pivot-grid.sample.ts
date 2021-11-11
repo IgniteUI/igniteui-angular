@@ -83,9 +83,9 @@ export class PivotGridSampleComponent {
             {
                 member: 'UnitsSold',
                 aggregate: {
-                    key: 'sum',
+                    key: 'SUM',
                     aggregator: IgxPivotNumericAggregate.sum,
-                    label: 'SUM'
+                    label: 'Sum'
                  },
                 enabled: true,
                 styles: {
@@ -99,22 +99,22 @@ export class PivotGridSampleComponent {
                 member: 'AmountOfSale',
                 displayName: 'Amount of Sale',
                 aggregate: {
-                    key: 'sum',
+                    key: 'SUM',
                     aggregator: IgxTotalSaleAggregate.totalSale,
-                    label: 'SUM Sale'
+                    label: 'Sum of Sale'
                 },
                 aggregateList: [{
-                    key: 'sum',
+                    key: 'SUM',
                     aggregator: IgxTotalSaleAggregate.totalSale,
-                    label: 'SUM Sale'
+                    label: 'Sum of Sale'
                 },{
-                    key: 'min',
+                    key: 'MIN',
                     aggregator: IgxTotalSaleAggregate.totalMin,
-                    label: 'MIN Sale'
+                    label: 'Minimum of Sale'
                 },{
-                    key: 'max',
+                    key: 'MAX',
                     aggregator: IgxTotalSaleAggregate.totalMax,
-                    label: 'MAX Sale'
+                    label: 'Maximum of Sale'
                 }],
                 enabled: true,
                 dataType: 'currency',
