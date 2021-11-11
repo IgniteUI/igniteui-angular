@@ -1002,7 +1002,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        grid.columnsCollection[0].width = '500px';
+        grid.columnList.get(0).width = '500px';
         fix.detectChanges();
         const groupRows = grid.groupsRowList.toArray();
         groupRows[0].toggle();
@@ -1927,7 +1927,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
         fix.detectChanges();
 
-        expect(grid.columnsCollection[0].width).toEqual('550px');
+        expect(grid.columnList.get(0).width).toEqual('550px');
 
         grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
@@ -2870,7 +2870,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
         tick();
-        const expr = grid.columnsCollection.map(val => ({ fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true }));
+        const expr = grid.columnList.map(val => ({ fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true }));
         grid.groupBy(expr);
         tick();
         expect(grid.groupsRowList.toArray().length).toBe(0);
@@ -2880,7 +2880,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        grid.columnsCollection[0].header = 'Custom Header Text';
+        grid.columnList.get(0).header = 'Custom Header Text';
         tick();
         fix.detectChanges();
 
@@ -3409,7 +3409,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait();
 
         grid.paging = false;
-        grid.columnsCollection[1].groupingComparer = (a, b) => {
+        grid.columnList.get(1).groupingComparer = (a, b) => {
             if (a instanceof Date && b instanceof Date &&
                 a.getFullYear() === b.getFullYear()) {
                 return 0;

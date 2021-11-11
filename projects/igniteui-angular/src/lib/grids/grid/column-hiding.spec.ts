@@ -125,11 +125,11 @@ describe('Column Hiding UI #grid', () => {
 
             expect(fix.componentInstance.hiddenColumnsCount).toBe(3);
 
-            grid.columnsCollection[2].hidden = false;
+            grid.columnList.get(2).hidden = false;
             fix.detectChanges();
             expect(fix.componentInstance.hiddenColumnsCount).toBe(4);
 
-            grid.columnsCollection[0].hidden = true;
+            grid.columnList.get(0).hidden = true;
             fix.detectChanges();
             expect(fix.componentInstance.hiddenColumnsCount).toBe(3);
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(0);
@@ -144,7 +144,7 @@ describe('Column Hiding UI #grid', () => {
         }));
 
         it('allows hiding a column whose disabled=undefined.', () => {
-            grid.columnsCollection[3].disableHiding = undefined;
+            grid.columnList.get(3).disableHiding = undefined;
             fix.detectChanges();
 
             verifyCheckbox('Released', true, false, columnChooserElement);
@@ -189,7 +189,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('does not show any items when all columns disabled is true.', () => {
-            grid.columnsCollection.forEach((col) => col.disableHiding = true);
+            grid.columnList.forEach((col) => col.disableHiding = true);
             fix.detectChanges();
 
             const checkboxes = GridFunctions.getColumnChooserItems(columnChooserElement);
@@ -256,7 +256,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('enables the column checkbox and "Show All" button after changing disabled of a hidden column.', () => {
-            grid.columnsCollection.forEach((col) => col.disableHiding = true);
+            grid.columnList.forEach((col) => col.disableHiding = true);
             const name = 'Downloads';
             grid.getColumnByName(name).disableHiding = false;
             fix.detectChanges();
@@ -458,7 +458,7 @@ describe('Column Hiding UI #grid', () => {
             spyOn(grid.columnVisibilityChanged, 'emit');
             spyOn(grid.columnVisibilityChanging, 'emit');
 
-            grid.columnsCollection[1].disableHiding = false;
+            grid.columnList.get(1).disableHiding = false;
             columnChooser.filterCriteria = 're';
             fix.detectChanges();
 
@@ -568,7 +568,7 @@ describe('Column Hiding UI #grid', () => {
             spyOn(grid.columnVisibilityChanged, 'emit');
             spyOn(grid.columnVisibilityChanging, 'emit');
 
-            grid.columnsCollection[1].disableHiding = false;
+            grid.columnList.get(1).disableHiding = false;
             fix.detectChanges();
             const colLength = columnChooser.columnItems.length;
             columnChooser.checkAllColumns();
@@ -639,18 +639,18 @@ describe('Column Hiding UI #grid', () => {
             fix.detectChanges();
 
             ControlsFunction.verifyButtonIsDisabled(showAll.nativeElement);
-            expect(grid.columnsCollection[2].hidden).toBe(false, 'Downloads column is not hidden!');
+            expect(grid.columnList.get(2).hidden).toBe(false, 'Downloads column is not hidden!');
 
             UIInteractions.triggerInputEvent(filterInput, '');
             fix.detectChanges();
 
             ControlsFunction.verifyButtonIsDisabled(showAll.nativeElement);
-            expect(grid.columnsCollection[0].hidden).toBe(false, 'ID column is not shown!');
+            expect(grid.columnList.get(0).hidden).toBe(false, 'ID column is not shown!');
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ID');
             fix.detectChanges();
 
             ControlsFunction.verifyButtonIsDisabled(showAll.nativeElement, false);
-            expect(grid.columnsCollection[0].hidden).toBe(true, 'ID column is not hidden!');
+            expect(grid.columnList.get(0).hidden).toBe(true, 'ID column is not hidden!');
         });
 
         it('height can be controlled via columnsAreaMaxHeight input.', () => {
@@ -680,7 +680,7 @@ describe('Column Hiding UI #grid', () => {
 
             expect(grid.calcHeight).toEqual(expectedHeight);
 
-            grid.columnsCollection[3].hidden = true;
+            grid.columnList.get(3).hidden = true;
             fix.detectChanges();
             expect(grid.scr.nativeElement.hidden).toBe(true);
 
@@ -727,9 +727,9 @@ describe('Column Hiding UI #grid', () => {
             verifyCheckbox('ContactName', false, false, columnChooserElement);
             verifyCheckbox('ContactTitle', false, false, columnChooserElement);
 
-            verifyColumnIsHidden(grid.columnsCollection[3], true, 4);
-            verifyColumnIsHidden(grid.columnsCollection[4], true, 4);
-            verifyColumnIsHidden(grid.columnsCollection[5], true, 4);
+            verifyColumnIsHidden(grid.columnList.get(3), true, 4);
+            verifyColumnIsHidden(grid.columnList.get(4), true, 4);
+            verifyColumnIsHidden(grid.columnList.get(5), true, 4);
 
             verifyCheckbox('CompanyName', true, false, columnChooserElement);
             verifyCheckbox('General Information', true, false, columnChooserElement);
@@ -737,9 +737,9 @@ describe('Column Hiding UI #grid', () => {
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'Person Details');
             fix.detectChanges();
 
-            verifyColumnIsHidden(grid.columnsCollection[3], false, 7);
-            verifyColumnIsHidden(grid.columnsCollection[4], false, 7);
-            verifyColumnIsHidden(grid.columnsCollection[5], false, 7);
+            verifyColumnIsHidden(grid.columnList.get(3), false, 7);
+            verifyColumnIsHidden(grid.columnList.get(4), false, 7);
+            verifyColumnIsHidden(grid.columnList.get(5), false, 7);
 
             verifyCheckbox('Person Details', true, false, columnChooserElement);
             verifyCheckbox('ContactName', true, false, columnChooserElement);
@@ -833,7 +833,7 @@ describe('Column Hiding UI #grid', () => {
             columnChooser.filterCriteria = '';
             fix.detectChanges();
             for (let i = 1; i < 6; i++) {
-                verifyColumnIsHidden(grid.columnsCollection[i], true, 2);
+                verifyColumnIsHidden(grid.columnList.get(i), true, 2);
             }
         });
     });
@@ -843,7 +843,7 @@ describe('Column Hiding UI #grid', () => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            grid.columnsCollection[2].hidden = true;
+            grid.columnList.get(2).hidden = true;
             fix.componentInstance.showInline = false;
             fix.detectChanges();
 
@@ -858,7 +858,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('shows the proper icon when no columns are hidden.', () => {
-            grid.columnsCollection[2].hidden = false;
+            grid.columnList.get(2).hidden = false;
             fix.detectChanges();
 
             const btnText = getColumnHidingButton(fix).innerText.toLowerCase();

@@ -936,7 +936,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     public get index(): number {
-        return (this.grid as any).columnsCollection.indexOf(this);
+        return (this.grid as any)._columns.indexOf(this);
     }
 
     /**
