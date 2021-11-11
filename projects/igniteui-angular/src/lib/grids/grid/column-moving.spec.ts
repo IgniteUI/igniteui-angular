@@ -185,7 +185,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.visibleColumns[2].field).toEqual('LastName');
         });
 
-        fit('Should not break vertical or horizontal scrolling after columns are reordered programmatically', (async () => {
+        it('Should not break vertical or horizontal scrolling after columns are reordered programmatically', (async () => {
             let columnsList = grid.columnList;
 
             // step 1 - move a column
