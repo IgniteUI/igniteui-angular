@@ -844,7 +844,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const first = fields.keys().next().value;
         const dim: IPivotDimension = fields.get(first).dimension;
         let currentFields = fields;
-        if (dim.sortDirection) {
+        if (dim && dim.sortDirection) {
             const reverse = (dim.sortDirection === SortingDirection.Desc ? -1 : 1);
             currentFields = new Map([...fields.entries()].sort((a, b) => reverse * (a > b ? 1 : a < b ? -1 : 0)));
         }
