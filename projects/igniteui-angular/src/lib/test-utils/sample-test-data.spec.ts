@@ -1142,6 +1142,79 @@ export class SampleTestData {
         }
     ]);
 
+    public static employeeSmallPrimaryForeignKeyTreeData = () => ([
+        {
+            ID: 147,
+            ParentID: -1,
+            Name: 'John Winchester',
+            HireDate: new Date(2008, 3, 20),
+            Age: 55,
+        },
+        {
+            ID: 475,
+            ParentID: 147,
+            Name: 'Michael Langdon',
+            HireDate: new Date(2011, 6, 3),
+            Age: 30,
+        },
+        {
+            ID: 957,
+            ParentID: 147,
+            Name: 'Thomas Hardy',
+            HireDate: new Date(2009, 6, 19),
+            Age: 29,
+        },
+        {
+            ID: 317,
+            ParentID: 147,
+            Name: 'Monica Reyes',
+            HireDate: new Date(2014, 8, 18),
+            Age: 31,
+        },
+        {
+            ID: 711,
+            ParentID: 317,
+            Name: 'Roland Mendel',
+            HireDate: new Date(2015, 9, 17),
+            Age: 35
+        },
+        {
+            ID: 998,
+            ParentID: 317,
+            Name: 'Sven Ottlieb',
+            HireDate: new Date(2009, 10, 11),
+            Age: 44
+        },
+        {
+            ID: 299,
+            ParentID: 317,
+            Name: 'Peter Lewis',
+            HireDate: new Date(2018, 3, 18),
+            Age: 25
+        },
+        {
+            ID: 19,
+            ParentID: -1,
+            Name: 'Yang Wang',
+            HireDate: new Date(2010, 1, 1),
+            Age: 61,
+        },
+        {
+            ID: 847,
+            ParentID: -1,
+            Name: 'Ana Sanders',
+            HireDate: new Date(2014, 1, 22),
+            Age: 42,
+        },
+        {
+            ID: 663,
+            ParentID: 847,
+            Name: 'Elizabeth Richards',
+            HireDate: new Date(2017, 11, 9),
+            Age: 25
+        }
+    ]);
+
     /* Search tree data: Every employee node has ID, Name, HireDate, Age, JobTitle and Employees */
     public static employeeSearchTreeData = () => ([
         {
@@ -1399,7 +1472,6 @@ export class SampleTestData {
             Age: 25,
             OnPTO: false
         },
-
         {
             ID: 141,
             ParentID: 663,

@@ -973,3 +973,23 @@ export class IgxTreeGridGroupByAreaTestComponent {
     @ViewChild(IgxTreeGridGroupByAreaComponent, { static: true }) public groupByArea: IgxTreeGridGroupByAreaComponent;
 }
 
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" [allowFiltering]="true"
+    [rowSelection]="'multipleCascade'" [rowEditable]="true" width="900px" height="600px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-action-strip #actionStrip>
+            <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
+    public actionStrip: IgxActionStripComponent;
+    public data = SampleTestData.employeeSmallPrimaryForeignKeyTreeData();
+}
