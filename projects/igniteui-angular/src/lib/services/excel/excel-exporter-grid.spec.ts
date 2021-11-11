@@ -973,7 +973,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should skip the formatter when columnExporting skipFormatter is true', async () => {
-            treegrid.columnList.get(4).formatter = ((val: number) => {
+            treeGrid.columnList.get(4).formatter = ((val: number) => {
                 const t = Math.floor(val / 10);
                 const o = val % 10;
                 return val + parseFloat(((t + o) / 12).toFixed(2));

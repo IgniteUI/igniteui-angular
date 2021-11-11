@@ -124,7 +124,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             column.move(2);
 
             columnsList = grid.columnList;
-            const args = { source: grid.columnList.get(2), target: columnList.get(1), cancel: false };
+            const args = { source: columnsList.get(2), target: columnsList.get(1), cancel: false };
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledWith(args);
         });
@@ -197,8 +197,8 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             columnsList = grid.columnList;
 
-            expect(columnsList0.field).toEqual('ID');
-            expect(columnsList.get1.field).toEqual('LastName');
+            expect(columnsList.get(0).field).toEqual('ID');
+            expect(columnsList.get(1).field).toEqual('LastName');
             expect(columnsList.get(2).field).toEqual('Name');
 
             // step 2 - verify vertical scrolling is not broken

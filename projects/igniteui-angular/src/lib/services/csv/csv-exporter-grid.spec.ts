@@ -461,8 +461,8 @@ describe('CSV Grid Exporter', () => {
         });
 
         it('should skip the column formatter when columnExportinging skipFormatter is true.', async () => {
-            treegrid.columnList.get(3).formatter = ((val: string) => val.toLowerCase());
-            treegrid.columnList.get(4).formatter = ((val: number) =>
+            treeGrid.columnList.get(3).formatter = ((val: string) => val.toLowerCase());
+            treeGrid.columnList.get(4).formatter = ((val: number) =>
                  val * 12 // months
             );
             treeGrid.cdr.detectChanges();
