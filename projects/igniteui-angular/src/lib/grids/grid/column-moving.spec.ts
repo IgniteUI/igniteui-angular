@@ -51,7 +51,7 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('Should be able to reorder columns.', (() => {
-            let columnsList = grid.columnList;
+            const columnsList = grid.columnList;
             grid.moveColumn(columnsList.get(0), columnsList.get(2));
 
             expect(columnsList.get(0).field).toEqual('Name');
