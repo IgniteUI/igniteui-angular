@@ -68,8 +68,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
                 if (!this.grid.selectedPivotKeys.get(key)) {
                     this.grid.selectedPivotKeys.set(key, this.rowData);
                 }
-            }
-            else {
+            } else {
                 this.grid.selectedPivotKeys.delete(key);
             }
         });
@@ -136,7 +135,10 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      * @hidden @internal
      */
     public selectPivotRow(col: any, event?: any) {
-        event.stopPropagation();
+        if (this.grid.rowSelection === 'none') {
+            return;
+        }
+        event?.stopPropagation();
         const key = this.getRowDimensionKey(col);
         if (this.grid.selectionService.isRowSelected(key)) {
             this.grid.selectionService.deselectRow(key, event);

@@ -1,11 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxPivotNumericAggregate } from '../grids/pivot-grid/pivot-grid-aggregate';
 import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
-import { IPivotConfiguration } from '../grids/pivot-grid/pivot-grid.interface';
+import { IPivotConfiguration, PivotAggregation } from '../grids/pivot-grid/pivot-grid.interface';
+
+
+export class IgxTotalSaleAggregate {
+    public static totalSale: PivotAggregation = (members, data: any) =>
+        data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
+}
 
 @Component({
     template: `
-    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy">
+    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
+        [rowSelection]="'single'" [columnSelection]="'single'">
     </igx-pivot-grid>`
 })
 export class IgxPivotGridTestBaseComponent {
@@ -89,4 +96,58 @@ export class IgxPivotGridTestBaseComponent {
     }
     public callback = (rowData: any, columnKey: any) => rowData[columnKey] >= 5;
     public callback1 = (rowData: any, columnKey: any) => rowData[columnKey] < 5;
+}
+
+@Component({
+    template: `
+    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
+        [rowSelection]="'single'" [columnSelection]="'single'">
+    </igx-pivot-grid>`
+})
+export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestBaseComponent {
+    constructor() {
+        super();
+        this.pivotConfigHierarchy = {
+            columns: [
+
+                {
+                    memberName: 'Country',
+                    enabled: true
+                }
+            ]
+            ,
+            rows: [{
+                memberName: 'All cities',
+                memberFunction: () => 'All Cities',
+                enabled: true,
+                childLevel: {
+                    memberName: 'City',
+                    enabled: true
+                }
+            }, {
+                memberFunction: () => 'AllProducts',
+                memberName: 'AllProducts',
+                enabled: true,
+                childLevel:
+                {
+                    memberFunction: (data) => data.ProductCategory,
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+            }],
+            values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: IgxPivotNumericAggregate.sum,
+                    enabled: true
+                },
+                {
+                    member: 'AmountOfSale',
+                    displayName: 'Amount of Sale',
+                    aggregate: IgxTotalSaleAggregate.totalSale,
+                    enabled: true
+                }
+            ]
+        };
+    }
 }

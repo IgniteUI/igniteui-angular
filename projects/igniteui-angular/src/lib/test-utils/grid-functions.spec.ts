@@ -23,6 +23,7 @@ import { parseDate } from '../core/utils';
 import { IgxGridHeaderRowComponent } from '../grids/headers/grid-header-row.component';
 import { IgxGridRowComponent } from '../grids/grid/grid-row.component';
 import { IgxGridCellComponent } from '../grids/cell.component';
+import { IgxPivotRowComponent } from '../grids/pivot-grid/pivot-row.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -153,6 +154,11 @@ export class GridFunctions {
         } else {
             throw new Error('More than one column group found.');
         }
+    }
+
+    public static getPivotRows(fix): DebugElement[] {
+        const rows: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxPivotRowComponent));
+        return rows;
     }
 
     /**
