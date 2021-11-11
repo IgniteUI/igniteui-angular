@@ -5,10 +5,27 @@ All notable changes for each version of this project will be documented in this 
 ## 13.0.0
 
 ### New Features
+- Added `IgxStepper` component
+    - Highly customizable component that visualizes content as a process and shows its progress by dividing the content into chronological `igx-steps`.
+    - Exposed API to control features like step validation, styling, orientation, and easy-to-use keyboard navigation.
+    - Code example below:
+
+    ```html
+   <igx-stepper>
+        <igx-step *ngFor="let step of stepsData" >
+            ...
+        </igx-step>
+    </igx-stepper>
+    ```
+
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/stepper/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Stepper-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper).
+
 - `IgxCsvExporterService`, `IgxExcelExporterService`
     - Exporter services are no longer required to be provided in the application since they are now injected on a root level.
 - `IgxGridToolbarPinningComponent`, `IgxGridToolbarHidingComponent`
     - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
+- `IgxCombo`
+    - Added `groupSortingDirection` input, which allows you to set groups sorting order.
 
 ### General
 
@@ -30,9 +47,19 @@ All notable changes for each version of this project will be documented in this 
         - Inputs  `showToolbar`, `toolbarTitle`, `columnHiding`, `columnHidingTitle`, `hiddenColumnsText`,
         `columnPinning`, `columnPinningTitle`, `pinnedColumnsText`.
         Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
+- `igxGrid`
+    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
 - `IgxColumnActionsComponent`
     - **Breaking Change** - The following input has been removed
-        - Input `columns`. Use `igxGrid` `columns` input instead.        
+        - Input `columns`. Use `igxGrid` `columns` input instead.
+- `IgxCarousel`
+    - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`. 
+
+## 12.2.3
+
+### General
+- **Breaking Change** - `IgxPercentSummaryOperand` and `IgxCurrencySummaryOperand` have been removed and `IgxNumberSummaryOperand` should be used instead. If you have used the percent or currency summary operands to extend a custom summary operand from them, then change the custom operand to extend from the number summary operand.
+
 ## 12.2.1
 
 ### New Features
@@ -3657,3 +3684,4 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
+    
