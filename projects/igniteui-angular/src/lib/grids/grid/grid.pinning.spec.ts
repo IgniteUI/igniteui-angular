@@ -445,7 +445,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should not reject pinning a column if unpinned area width is less than 20% of the grid width', () => {
 
-                grid.columns.forEach((column) => {
+                grid.columnList.forEach((column) => {
                     switch (column.index) {
                         case 0:
                         case 1:
@@ -457,7 +457,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 fix.detectChanges();
 
-                grid.columns.forEach((column) => {
+                grid.columnList.forEach((column) => {
                     switch (column.index) {
                         case 0:
                         case 1:
@@ -601,7 +601,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should correctly pin columns with their summaries to end.', () => {
 
-                grid.columns.forEach(col => {
+                grid.columnList.forEach(col => {
                     if (col.field === 'CompanyName' || col.field === 'ContactName') {
                         col.hasSummary = true;
                     }

@@ -2872,7 +2872,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
         tick();
-        const expr = grid.columns.map(val => ({ fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true }));
+        const expr = grid.columnList.map(val => ({ fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true }));
         grid.groupBy(expr);
         tick();
         expect(grid.groupsRowList.toArray().length).toBe(0);

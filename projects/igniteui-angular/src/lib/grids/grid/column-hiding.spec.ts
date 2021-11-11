@@ -189,7 +189,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('does not show any items when all columns disabled is true.', () => {
-            grid.columns.forEach((col) => col.disableHiding = true);
+            grid.columnList.forEach((col) => col.disableHiding = true);
             fix.detectChanges();
 
             const checkboxes = GridFunctions.getColumnChooserItems(columnChooserElement);
@@ -256,7 +256,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('enables the column checkbox and "Show All" button after changing disabled of a hidden column.', () => {
-            grid.columns.forEach((col) => col.disableHiding = true);
+            grid.columnList.forEach((col) => col.disableHiding = true);
             const name = 'Downloads';
             grid.getColumnByName(name).disableHiding = false;
             fix.detectChanges();
@@ -285,7 +285,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('enables the column checkbox and "Hide All" button after changing disabled of a visible column.', () => {
-            grid.columns.forEach((col) => col.disableHiding = true);
+            grid.columnList.forEach((col) => col.disableHiding = true);
             const name = 'Released';
             grid.getColumnByName(name).disableHiding = false;
             fix.detectChanges();
@@ -833,7 +833,7 @@ describe('Column Hiding UI #grid', () => {
             columnChooser.filterCriteria = '';
             fix.detectChanges();
             for (let i = 1; i < 6; i++) {
-                verifyColumnIsHidden(grid.columns[i], true, 2);
+                verifyColumnIsHidden(grid.columnList.get(i), true, 2);
             }
         });
     });

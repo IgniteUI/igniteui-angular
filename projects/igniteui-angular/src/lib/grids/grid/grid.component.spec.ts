@@ -805,7 +805,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(grid.columnList.get(0).width).not.toBeLessThan(136);
             expect(grid.columnList.get(4).width).not.toBeLessThan(136);
-            expect(grid.columns[14].width).not.toBeLessThan(136);
+            expect(grid.columnList.get(14).width).not.toBeLessThan(136);
             expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
         }));
 
@@ -820,7 +820,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(grid.columnList.get(0).width).not.toBeLessThan(136);
             expect(grid.columnList.get(4).width).not.toBeLessThan(136);
-            expect(grid.columns[100].width).not.toBeLessThan(136);
+            expect(grid.columnList.get(100).width).not.toBeLessThan(136);
             expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         }));
@@ -848,7 +848,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(grid.columnList.get(2).width, 10)).toEqual(expectedDefWidth);
             expect(parseInt(grid.columnList.get(3).width, 10)).toEqual(expectedDefWidth);
 
-            grid.columns.forEach((column) => {
+            grid.columnList.forEach((column) => {
                 const width = parseInt(column.width, 10);
                 const minWidth = parseInt(grid.columnWidth, 10);
                 if (column.index !== 0 && column.index !== 4) {
@@ -884,7 +884,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(grid.columnList.get(2).width, 10)).toEqual(expectedDefWidth);
             expect(parseInt(grid.columnList.get(3).width, 10)).toEqual(expectedDefWidth);
 
-            grid.columns.forEach((column) => {
+            grid.columnList.forEach((column) => {
                 const width = parseInt(column.width, 10);
                 const minWidth = parseInt(grid.columnWidth, 10);
                 if (column.index !== 0 && column.index !== 4) {
@@ -921,7 +921,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(grid.columnList.get(2).width, 10)).toEqual(expectedDefWidth);
             expect(parseInt(grid.columnList.get(3).width, 10)).toEqual(expectedDefWidth);
 
-            grid.columns.forEach((column) => {
+            grid.columnList.forEach((column) => {
                 const width = parseInt(column.width, 10);
                 const minWidth = parseInt(grid.columnWidth, 10);
                 if (column.index !== 0 && column.index !== 4) {
@@ -946,8 +946,8 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columnList.get(0).width).toEqual('200px');
             expect(grid.columnList.get(3).width).toEqual('200px');
             expect(grid.columnList.get(5).width).toEqual('200px');
-            expect(grid.columns[10].width).toEqual('200px');
-            expect(grid.columns[25].width).toEqual('200px');
+            expect(grid.columnList.get(10).width).toEqual('200px');
+            expect(grid.columnList.get(25).width).toEqual('200px');
 
             const actualGridWidth = grid.nativeElement.clientWidth;
 
@@ -957,7 +957,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(grid.columnList.get(2).width, 10)).toEqual(expectedDefWidth);
             expect(parseInt(grid.columnList.get(4).width, 10)).toEqual(expectedDefWidth);
 
-            grid.columns.forEach((column) => {
+            grid.columnList.forEach((column) => {
                 const width = parseInt(column.width, 10);
                 const minWidth = parseInt(grid.columnWidth, 10);
                 if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
@@ -984,14 +984,14 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columnList.get(0).width).toEqual('200px');
             expect(grid.columnList.get(3).width).toEqual('200px');
             expect(grid.columnList.get(5).width).toEqual('200px');
-            expect(grid.columns[10].width).toEqual('200px');
-            expect(grid.columns[25].width).toEqual('200px');
+            expect(grid.columnList.get(10).width).toEqual('200px');
+            expect(grid.columnList.get(25).width).toEqual('200px');
 
             const actualGridWidth = grid.nativeElement.clientWidth;
             const expectedDefWidth = Math.max(Math.floor((actualGridWidth - 5 * 200) / 25), parseInt(MIN_COL_WIDTH, 10));
             expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
 
-            grid.columns.forEach((column) => {
+            grid.columnList.forEach((column) => {
                 const width = parseInt(column.width, 10);
                 const minWidth = parseInt(grid.columnWidth, 10);
                 if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
@@ -1016,10 +1016,10 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columnList.get(0).width).toEqual('500px');
             expect(grid.columnList.get(3).width).toEqual('500px');
             expect(grid.columnList.get(5).width).toEqual('500px');
-            expect(grid.columns[10].width).toEqual('500px');
-            expect(grid.columns[50].width).toEqual('500px');
+            expect(grid.columnList.get(10).width).toEqual('500px');
+            expect(grid.columnList.get(50).width).toEqual('500px');
 
-            grid.columns.forEach((column) => {
+            grid.columnList.forEach((column) => {
                 const width = parseInt(column.width, 10);
                 const minWidth = parseInt(grid.columnWidth, 10);
                 if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
@@ -1046,10 +1046,10 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columnList.get(0).width).toEqual('500px');
             expect(grid.columnList.get(3).width).toEqual('500px');
             expect(grid.columnList.get(5).width).toEqual('500px');
-            expect(grid.columns[10].width).toEqual('500px');
-            expect(grid.columns[50].width).toEqual('500px');
+            expect(grid.columnList.get(10).width).toEqual('500px');
+            expect(grid.columnList.get(50).width).toEqual('500px');
 
-            grid.columns.forEach((column) => {
+            grid.columnList.forEach((column) => {
                 const width = parseInt(column.width, 10);
                 const minWidth = parseInt(grid.columnWidth, 10);
                 if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
@@ -1398,7 +1398,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
                 expect(headers.length).toEqual(5);
                 for (let i = 0; i < headers.length; i++) {
-                    expect(headers[i].context.column.field).toEqual(grid.columns[i].field);
+                    expect(headers[i].context.column.field).toEqual(grid.columnList.get(i).field);
                 }
             });
 

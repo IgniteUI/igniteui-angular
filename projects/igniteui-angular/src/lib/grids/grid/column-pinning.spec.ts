@@ -113,7 +113,7 @@ describe('Column Pinning UI #grid', () => {
         });
 
         it('Checks order of columns after unpinning', () => {
-            for (const column of grid.columns) {
+            for (const column of grid.columnList) {
                 column.pin();
             }
             fix.detectChanges();
@@ -290,7 +290,7 @@ describe('Column Pinning UI #grid', () => {
         });
 
             it('Checks order of columns after unpinning', () => {
-            for (const column of grid.columns) {
+            for (const column of grid.columnList) {
                 column.pin();
             }
             fix.detectChanges();

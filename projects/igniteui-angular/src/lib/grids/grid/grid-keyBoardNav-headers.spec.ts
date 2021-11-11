@@ -658,7 +658,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         it('Group by: Should be able group columns with keyboard when hideGroupedColumns is true', fakeAsync(() => {
             grid.width = '1000px';
             grid.hideGroupedColumns = true;
-            grid.columns.forEach(c => c.groupable = true);
+            grid.columnList.forEach(c => c.groupable = true);
             fix.detectChanges();
             tick(100);
             let header = GridFunctions.getColumnHeader('ID', fix);
@@ -1224,7 +1224,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('Features Integration: should nor be possible to sort, filter or groupBy column group', () => {
             grid.allowAdvancedFiltering = true;
-            grid.columns.forEach(c => {
+            grid.columnList.forEach(c => {
 c.sortable = true; c.groupable = true;
 });
             fix.detectChanges();

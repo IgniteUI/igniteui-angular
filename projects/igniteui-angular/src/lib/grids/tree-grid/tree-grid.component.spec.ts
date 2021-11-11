@@ -133,7 +133,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix.detectChanges();
             const expectedColumns = ['ID', 'ParentID', 'Name', 'JobTitle', 'Age'];
 
-            expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
+            expect(grid.columnList.map(c => c.field)).toEqual(expectedColumns);
         }));
     });
 

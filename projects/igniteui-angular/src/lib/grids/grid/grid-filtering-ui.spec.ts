@@ -2346,7 +2346,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
 
             // Hide another column and verify the filtering results remain the same.
-            const column = grid.columns.find((c) => c.field === 'Released');
+            const column = grid.columnList.find((c) => c.field === 'Released');
             column.hidden = true;
             fix.detectChanges();
             expect(grid.rowList.length).toEqual(2);
@@ -2447,7 +2447,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Enable resizing
-            grid.columns.forEach(col => col.resizable = true);
+            grid.columnList.forEach(col => col.resizable = true);
             fix.detectChanges();
 
             const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
@@ -2492,7 +2492,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Enable resizing
-            grid.columns.forEach(col => col.resizable = true);
+            grid.columnList.forEach(col => col.resizable = true);
             fix.detectChanges();
             grid.cdr.detectChanges();
 
@@ -3396,7 +3396,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             spyOn(grid.columnVisibilityChanging, 'emit');
             spyOn(grid.columnVisibilityChanged, 'emit');
 
-            const column = grid.columns.find((col) => col.field === 'ProductName');
+            const column = grid.columnList.find((col) => col.field === 'ProductName');
             GridFunctions.verifyColumnIsHidden(column, false, 8);
 
             // Open excel style filtering component and hide 'ProductName' column through header icon
@@ -3557,7 +3557,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         });
 
         it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
-            const column = grid.columns.find((c) => c.field === 'ProductName');
+            const column = grid.columnList.find((c) => c.field === 'ProductName');
             column.sortable = true;
             column.movable = true;
             fix.detectChanges();
@@ -3621,7 +3621,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('display density is properly applied on the excel style custom filtering dialog', fakeAsync(() => {
-            const column = grid.columns.find((c) => c.field === 'ProductName');
+            const column = grid.columnList.find((c) => c.field === 'ProductName');
             column.sortable = true;
             column.movable = true;
             fix.detectChanges();
@@ -4202,7 +4202,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should display the ESF based on the filterIcon within the grid', async () => {
             // Test prerequisites
             grid.width = '800px';
-            for (const column of grid.columns) {
+            for (const column of grid.columnList) {
                 column.width = '300px';
             }
             await wait(16);
@@ -5370,7 +5370,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            const filterableColumns = grid.columns.filter((c) => c.filterable === true);
+            const filterableColumns = grid.columnList.filter((c) => c.filterable === true);
             for (const column of filterableColumns) {
                 // Open ESF.
                 GridFunctions.clickExcelFilterIcon(fix, column.field);
@@ -5878,12 +5878,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Adjust column widths, so their group can be pinned.
             const columnFields = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'AnotherField'];
             columnFields.forEach((columnField) => {
-                const col = grid.columns.find((c) => c.field === columnField);
+                const col = grid.columnList.find((c) => c.field === columnField);
                 col.width = '100px';
             });
             fix.detectChanges();
             // Make 'AnotherField' column movable.
-            const column = grid.columns.find((c) => c.field === 'AnotherField');
+            const column = grid.columnList.find((c) => c.field === 'AnotherField');
             column.movable = true;
             fix.detectChanges();
 
