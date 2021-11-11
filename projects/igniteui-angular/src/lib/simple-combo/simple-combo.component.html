@@ -1,4 +1,4 @@
-<igx-input-group #inputGroup [displayDensity]="displayDensity" [type]="type">
+<igx-input-group #inputGroup [displayDensity]="displayDensity" [suppressInputAutofocus]="true" [type]="type">
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
@@ -10,9 +10,9 @@
     </ng-container>
 
     <input #comboInput igxInput [value]="value" (input)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
-        (keydown)="handleKeyDown($event)" (blur)="onBlur()" [attr.placeholder]="placeholder"
-        aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy"
-        [disabled]="disabled" [igxTextSelection]="!composing" />
+        (keydown)="handleKeyDown($event)" (blur)="onBlur()" [attr.placeholder]="placeholder" aria-autocomplete="both"
+        [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" [disabled]="disabled"
+        [igxTextSelection]="!composing" />
 
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
@@ -24,6 +24,11 @@
         </ng-container>
         <igx-icon *ngIf="!clearIconTemplate">
             clear
+        </igx-icon>
+    </igx-suffix>
+    <igx-suffix *ngIf="showSearchCaseIcon">
+        <igx-icon family="imx-icons" name="case-sensitive" [active]="filteringOptions.caseSensitive"
+            (click)="toggleCaseSensitive()">
         </igx-icon>
     </igx-suffix>
     <igx-suffix class="igx-combo__toggle-button">
@@ -43,8 +48,9 @@
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
-        [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id" (keydown)="handleItemKeyDown($event)">
-        <igx-combo-item role="option" [singleMode]="true" [itemHeight]='itemHeight' (click)="close()" *igxFor="let item of data
+        [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id"
+        (keydown)="handleItemKeyDown($event)">
+        <igx-combo-item role="option" [singleMode]="true" [itemHeight]='itemHeight' (click)="handleItemClick()" *igxFor="let item of data
             | comboFiltering:filterValue:displayKey:filteringOptions:true
             | comboGrouping:groupKey:valueKey
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
@@ -68,7 +74,7 @@
             <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty">
             </ng-container>
         </div>
-        <igx-combo-add-item [itemHeight]="itemHeight" *ngIf="isAddButtonVisible()"
+        <igx-combo-add-item #addItem [itemHeight]="itemHeight" *ngIf="isAddButtonVisible()"
             [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item" role="button"
             aria-label="Add Item" [index]="virtualScrollContainer.igxForOf.length">
             <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault">
