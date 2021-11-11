@@ -3,7 +3,6 @@ import {
     Component,
     HostBinding,
     Input,
-    forwardRef,
     OnInit,
     TemplateRef,
     QueryList,
@@ -84,9 +83,8 @@ let NEXT_ID = 0;
         IgxGridSummaryService,
         IgxGridNavigationService,
         { provide: IgxGridSelectionService, useClass: IgxTreeGridSelectionService },
-        // { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxTreeGridAPIService },
-        { provide: IGX_GRID_BASE, useExisting: forwardRef(() => IgxTreeGridComponent) },
+        { provide: IGX_GRID_BASE, useExisting: IgxTreeGridComponent },
         IgxFilteringService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
