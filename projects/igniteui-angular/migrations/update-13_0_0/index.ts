@@ -66,30 +66,18 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
     for (const path of moduleTsFiles) {
         let content = host.read(path)?.toString();
+        const servicesInFile = [];
         SERVICES.forEach(service => {
             if (content.indexOf(service) > -1) {
-                const commentedService = '/*' + service + '*/';
-                const commentedServiceWithComa = '/*' + service + ',*/';
-                content = content.replace(new RegExp(service, 'gi'), commentedService);
-                content = content.replace(new RegExp('[/][*]' + service + '[*][/]\\s*[,]', 'gi'), commentedServiceWithComa);
-                const indexes = getIndicesOf('/*' + service, content);
-                indexes.reverse().forEach(index => {
-                    const preceedingContent = content.substring(0, index);
-                    const newLineIndex = preceedingContent.lastIndexOf('\n');
-                    const comment = '// ' + service + ' has been removed. Exporter services can now be used without providing.';
-                    if (newLineIndex > -1) {
-                        const newPreceedingContent =
-                            [preceedingContent.slice(0, newLineIndex), '\n' + comment, preceedingContent.slice(newLineIndex)].join('');
-                        content = content.replace(preceedingContent, newPreceedingContent);
-                    } else {
-                        // service is mentioned on the first row
-                        content = comment + '\n' + content;
-                    }
-                });
-
-                host.overwrite(path, content);
+                servicesInFile.push(service);
             }
         });
+
+        if (servicesInFile.length > 0) {
+            const comment = '// ' + servicesInFile.join(' and ') + ' no longer need to be manually provided and can be safely removed.';
+            content = comment + content;
+            host.overwrite(path, content);
+        }
     }
 
     update.applyChanges();

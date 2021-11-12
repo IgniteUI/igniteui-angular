@@ -201,14 +201,14 @@ describe(`Update to ${version}`, () => {
 `.replace(lineBreaksAndSpaceRegex, ''));
     });
 
-    it('should remove exporter services from module.ts files', async () => {
+    it('should insert a comment when exporter services are present in module.ts files', async () => {
         appTree.create('/testSrc/appPrefix/component/app.module.ts', `
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppComponent } from "./app.component";
-import { IgxExcelExporterService, OtherService } from "igniteui-angular";
+import { IgxCsvExporterService, IgxExcelExporterService } from "igniteui-angular";
 import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
 
 @NgModule({
@@ -222,7 +222,10 @@ imports: [
     BrowserAnimationsModule,
     FormsModule
 ],
-providers: [IgxExcelExporterService , OtherService],
+providers: [
+    IgxCsvExporterService,
+    IgxExcelExporterService
+],
 entryComponents: [],
 schemas: []
 })
@@ -235,14 +238,14 @@ export class AppModule {}
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/app.module.ts')
-        ).toEqual( `
+        ).toEqual(
+`// IgxCsvExporterService and IgxExcelExporterService no longer need to be manually provided and can be safely removed.
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppComponent } from "./app.component";
-// IgxExcelExporterService has been removed. Exporter services can now be used without providing.
-import { /*IgxExcelExporterService,*/ OtherService } from "igniteui-angular";
+import { IgxCsvExporterService, IgxExcelExporterService } from "igniteui-angular";
 import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
 
 @NgModule({
@@ -256,8 +259,10 @@ imports: [
     BrowserAnimationsModule,
     FormsModule
 ],
-// IgxExcelExporterService has been removed. Exporter services can now be used without providing.
-providers: [/*IgxExcelExporterService,*/ OtherService],
+providers: [
+    IgxCsvExporterService,
+    IgxExcelExporterService
+],
 entryComponents: [],
 schemas: []
 })
