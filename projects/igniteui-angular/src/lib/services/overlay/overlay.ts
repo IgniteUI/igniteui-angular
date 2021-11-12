@@ -458,6 +458,9 @@ export class IgxOverlayService implements OnDestroy {
             console.error('Wrong id provided in overlay.reposition method. Id: ' + id);
             return;
         }
+        if (!overlayInfo.visible) {
+            return;
+        }
         const contentElement = overlayInfo.elementRef.nativeElement.parentElement;
         const contentElementRect = contentElement.getBoundingClientRect();
         overlayInfo.settings.positionStrategy.position(
