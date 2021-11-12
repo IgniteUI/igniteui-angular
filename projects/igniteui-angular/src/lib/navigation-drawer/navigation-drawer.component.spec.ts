@@ -512,8 +512,8 @@ describe('Navigation Drawer', () => {
         fixture.detectChanges();
         window.dispatchEvent(new Event('resize'));
 
-        expect(() => fixture.detectChanges()).not.toThrow();
-        await fixture.whenStable();
+        // wait for debounce
+        await wait(200);
         expect(fixture.componentInstance.navDrawer.pin).toBe(false, `Shouldn't change state on resize if window width is the same`);
         expect(fixture.componentInstance.pin).toBe(true, 'Parent component pin remain on resize if window width is the same');
         fixture.componentInstance.pin = true;
@@ -522,16 +522,16 @@ describe('Navigation Drawer', () => {
         widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
         window.dispatchEvent(new Event('resize'));
 
-        expect(() => fixture.detectChanges()).not.toThrow();
-        await fixture.whenStable();
+        // wait for debounce
+        await wait(200);
         expect(fixture.componentInstance.navDrawer.pin).toBe(true, 'Should pin on window resize over threshold');
         expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on window resize over threshold');
 
         widthSpyOverride.and.returnValue(768);
         window.dispatchEvent(new Event('resize'));
 
-        expect(() => fixture.detectChanges()).not.toThrow();
-        await fixture.whenStable();
+        // wait for debounce
+        await wait(200);
         expect(fixture.componentInstance.navDrawer.pin).toBe(false, 'Should un-pin on window resize below threshold');
         expect(fixture.componentInstance.pin).toBe(false, 'Parent pin update on window resize below threshold');
         fixture.componentInstance.pinThreshold = 500;
