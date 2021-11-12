@@ -334,7 +334,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
                 this.panelExpanding.emit(evArgs);
                 if (evArgs.cancel) {
                     args.cancel = true;
-                    this._expandedPanels.delete(args.owner);
                     return;
                 }
                 if (this.singleBranchExpand) {
