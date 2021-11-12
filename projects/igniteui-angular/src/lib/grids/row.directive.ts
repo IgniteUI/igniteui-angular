@@ -336,7 +336,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      *
      * ```typescript
      * handleRowSelection(event) {
-     *  // the grid on which the rowSelected event was triggered
+     *  // the grid on which the rowSelectionChanging event was triggered
      *  const grid = event.row.grid;
      * }
      * ```
@@ -344,7 +344,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```html
      *  <igx-grid
      *    [data]="data"
-     *    (rowSelected)="handleRowSelection($event)">
+     *    (rowSelectionChanging)="handleRowSelection($event)">
      *  </igx-grid>
      * ```
      */

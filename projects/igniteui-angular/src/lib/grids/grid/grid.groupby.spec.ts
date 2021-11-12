@@ -1173,7 +1173,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
-            const selectionSpy = spyOn(grid.rowSelected, 'emit');
+            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
 
@@ -1263,7 +1263,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
-            const selectionSpy = spyOn(grid.rowSelected, 'emit');
+            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
 

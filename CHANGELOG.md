@@ -73,6 +73,7 @@ All notable changes for each version of this project will be documented in this 
         - Inputs  `showToolbar`, `toolbarTitle`, `columnHiding`, `columnHidingTitle`, `hiddenColumnsText`,
         `columnPinning`, `columnPinningTitle`, `pinnedColumnsText`.
         Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
+    - **Breaking Change** - The `rowSelected` event is renamed to `rowSelectionChanging` to better reflect its function
 - `igxGrid`
     - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
 - `IgxColumnActionsComponent`

@@ -578,7 +578,7 @@ export class IgxGridSelectionService {
             oldSelection: currSelection, newSelection,
             added, removed, event, cancel: false
         };
-        this.grid.rowSelected.emit(args);
+        this.grid.rowSelectionChanging.emit(args);
         if (args.cancel) {
             return;
         }
