@@ -4678,8 +4678,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click 'Select All' checkbox.
             let selectAllCbInput = visibleListItems[0];
-            selectAllCbInput.click();
+            UIInteractions.simulateClickEvent(selectAllCbInput);
             tick(100);
+            fix.detectChanges();
 
             // Verify all visible data list items are unchecked.
             for (const dataListItem of dataListItems) {
@@ -4688,7 +4689,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click 'Select All' checkbox.
             selectAllCbInput = visibleListItems[0];
-            selectAllCbInput.click();
+            UIInteractions.simulateClickEvent(selectAllCbInput);
+            tick(100);
             fix.detectChanges();
 
             // Verify all visible data list items are checked.
