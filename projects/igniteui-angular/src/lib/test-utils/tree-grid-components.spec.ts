@@ -930,7 +930,7 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
             [childDataKey]="childDataKey" expansionDepth="0" width="900px" height="1000px">
         <igx-tree-grid-group-by-area
             [grid]="treeGrid"
-            [(expressions)]='groupingExpressions'
+            [expressions]="groupingExpressions"
             [hideGroupedColumns]="false">
         </igx-tree-grid-group-by-area>
         <igx-column [field]='groupKey' [resizable]='true' [width]="'250px'" [hidden]="groupingExpressions.length === 0"></igx-column>

@@ -5149,6 +5149,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify that the dialog is closed on pressing Escape.
             inputNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            fix.detectChanges();
+            flush();
+
             excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             expect(excelMenu).toBeNull();
 
