@@ -3571,7 +3571,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.paginator) {
                 this.paginator.perPage = this._perPage !== DEFAULT_ITEMS_PER_PAGE ? this._perPage : this.paginator.perPage;
-                this.paginator.totalRecords = this.totalRecords;
+                this.paginator.totalRecords = this.totalRecords ? this.totalRecords : this.paginator.totalRecords;
                 this.paginator.overlaySettings = { outlet: this.outlet };
             }
             this._rendered = true;
