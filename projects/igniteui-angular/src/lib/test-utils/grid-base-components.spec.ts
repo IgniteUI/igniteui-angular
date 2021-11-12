@@ -3,6 +3,7 @@ import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnActionsComponent } from '../grids/column-actions/column-actions.component';
+import { GridPagingMode } from '../grids/common/enums';
 
 @Component({
     template: `
@@ -92,6 +93,18 @@ export class BasicGridSearchComponent extends GridWithSizeComponent {
 export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
     public perPage = 3;
+    public data = SampleTestData.personJobDataFull();
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid('[pagingMode]="pagingMode"',
+        '', ColumnDefinitions.idNameJobTitle, '',
+        '<igx-paginator [perPage]="perPage" [totalRecords]="totalRecords"></igx-paginator>')
+})
+export class RemotePagingComponent extends GridWithSizeComponent {
+    public pagingMode = GridPagingMode.Remote;
+    public perPage = 3;
+    public totalRecords = 10;
     public data = SampleTestData.personJobDataFull();
 }
 
