@@ -2,8 +2,11 @@ import { DOCUMENT, formatNumber, getLocaleNumberFormat, NumberFormatStyle } from
 import {
     AfterContentInit,
     AfterViewInit,
+    ApplicationRef,
     ChangeDetectorRef,
+    ComponentFactory,
     ComponentFactoryResolver,
+    ComponentRef,
     ContentChild,
     ContentChildren,
     Directive,
@@ -13,10 +16,12 @@ import {
     HostBinding,
     HostListener,
     Inject,
+    Injector,
     Input,
     IterableChangeRecord,
     IterableDiffers,
     LOCALE_ID,
+    NgModuleRef,
     NgZone,
     OnDestroy,
     OnInit,
@@ -2929,6 +2934,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
+        private appRef: ApplicationRef,
+        private moduleRef: NgModuleRef<any>,
+        private factoryResolver: ComponentFactoryResolver,
+        private injector: Injector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -3354,11 +3363,34 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.excelStyleFilteringComponent.overlayComponentId = id;
             return { id, ref: undefined };
         }
-        const ref = this.viewRef.createComponent(IgxGridExcelStyleFilteringComponent);
+        const ref = this.createComponentInstance(IgxGridExcelStyleFilteringComponent);
         ref.instance.initialize(column, this.overlayService);
         const id = this.overlayService.attach(ref.instance.element, options);
         ref.instance.overlayComponentId = id;
         return { ref, id };
+    }
+
+    private createComponentInstance(component: any) {
+        let dynamicFactory: ComponentFactory<any>;
+        const factoryResolver = this.moduleRef
+            ? this.moduleRef.componentFactoryResolver
+            : this.factoryResolver;
+        try {
+            dynamicFactory = factoryResolver.resolveComponentFactory(component);
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+
+        const injector = this.moduleRef
+            ? this.moduleRef.injector
+            : this.injector;
+        const dynamicComponent: ComponentRef<any> = dynamicFactory.create(
+            injector
+        );
+        this.appRef.attachView(dynamicComponent.hostView);
+
+        return dynamicComponent;
     }
 
     /** @hidden @internal */
