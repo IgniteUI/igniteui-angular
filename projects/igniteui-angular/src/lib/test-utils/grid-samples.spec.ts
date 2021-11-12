@@ -7,7 +7,7 @@ import {
 } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
-import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
+import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
@@ -2276,7 +2276,10 @@ export class NoColumnWidthGridComponent extends BasicGridComponent {
     template: GridTemplateStrings.declareGrid(
         '',
         '',
-        ColumnDefinitions.idFirstLastNameSortable)
+        ColumnDefinitions.idFirstLastNameSortable,
+        '',
+        '',
+        TemplateDefinitions.sortIconTemplates)
 })
 export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
     public sort(data: any[], fieldName: string, dir: SortingDirection) {
