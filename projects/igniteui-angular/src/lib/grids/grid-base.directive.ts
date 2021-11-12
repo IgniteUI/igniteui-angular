@@ -3547,6 +3547,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (this._advancedFilteringOverlayId) {
             this.overlayService.detach(this._advancedFilteringOverlayId);
+            delete this._advancedFilteringOverlayId;
         }
 
         this.overlayIDs.forEach(overlayID => {
