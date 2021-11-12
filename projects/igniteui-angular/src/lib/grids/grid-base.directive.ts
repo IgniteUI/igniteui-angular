@@ -2804,6 +2804,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _userOutletDirective: IgxOverlayOutletDirective;
     protected _transactions: TransactionService<Transaction, State>;
     protected _batchEditing = false;
+    protected _sortingOptions: ISortingOptions = { mode: 'multiple' };
 
     /** @hidden @internal */
     public get paginator() {
@@ -2839,7 +2840,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteringStrategy: IFilteringStrategy;
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
-    protected _sortingOptions: ISortingOptions = { mode: 'multiple' };
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;

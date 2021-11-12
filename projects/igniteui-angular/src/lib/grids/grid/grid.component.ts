@@ -565,7 +565,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public sortGrouping(expression: IGroupingExpression | Array<IGroupingExpression>): void {
         const groupingState = cloneArray(this.groupingExpressions);
-        
+
         if (expression instanceof Array) {
             for (const each of expression) {
                 if (each.dir === SortingDirection.None) {
@@ -577,7 +577,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             if (expression.dir === SortingDirection.None) {
                 this.gridAPI.remove_grouping_expression(expression.fieldName);
             }
-             
+ 
             this.gridAPI.prepare_grouping_expression([groupingState], expression);
         }
 
@@ -596,7 +596,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
         requestAnimationFrame(() => this.sortingDone.emit(expression));
     }
-    
+
     /**
      * @hidden @internal
      */
@@ -1020,7 +1020,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             if (!this.groupingExpressions || !this.groupingExpressions.length) {
                 return;
             }
-            
+
             groupingExpressions.forEach((sortExpr: IGroupingExpression) => {
                 const fieldName = sortExpr.fieldName;
                 const groupingExpr = this.groupingExpressions.find(ex => ex.fieldName === fieldName);
