@@ -1433,6 +1433,8 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
         const secondLevelGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
         expect(secondLevelGrid).not.toBeNull();
+
+        secondLevelGrid.primaryKey = 'ID';
         customFixture.detectChanges();
 
         expect(GridFunctions.getRowEditingOverlay(customFixture)).toBeNull();

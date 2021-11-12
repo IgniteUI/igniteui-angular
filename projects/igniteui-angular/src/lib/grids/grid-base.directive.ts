@@ -7204,11 +7204,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         settings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
-        const targetRow = !pinned ? this.gridAPI.get_row_by_key(rowID) : this.pinnedRows.find(x => x.rowID === rowID);
+        const targetRow = !pinned ?
+            this.gridAPI.get_row_by_key(rowID) as IgxRowDirective
+            : this.pinnedRows.find(x => x.rowID === rowID) as IgxRowDirective;
         if (!targetRow) {
             return;
         }
-        settings.target = (targetRow as IgxRowDirective).element.nativeElement;
+        settings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 }
