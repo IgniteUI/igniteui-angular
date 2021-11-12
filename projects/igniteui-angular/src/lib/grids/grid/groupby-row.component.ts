@@ -218,13 +218,9 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
         }
         event.stopPropagation();
         if (this.areAllRowsInTheGroupSelected) {
-            this.groupRow.records.forEach(row => {
-                this.gridSelection.deselectRow(this.getRowID(row), event);
-            });
+            this.gridSelection.deselectRows(this.groupRow.records.map(x => this.getRowID(x)));
         } else {
-            this.groupRow.records.forEach(row => {
-                this.gridSelection.selectRowById(this.getRowID(row), false, event);
-            });
+            this.gridSelection.selectRows(this.groupRow.records.map(x => this.getRowID(x)));
         }
     }
 
