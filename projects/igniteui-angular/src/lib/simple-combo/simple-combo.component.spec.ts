@@ -31,6 +31,7 @@ const CSS_CLASS_INPUTGROUP_WRAPPER = 'igx-input-group__wrapper';
 const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
 const CSS_CLASS_INPUTGROUP_MAINBUNDLE = 'igx-input-group__bundle-main';
 const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
+const CSS_CLASS_ADDBUTTON = 'igx-combo__add-item';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 const defaultDropdownItemHeight = 40;
@@ -473,7 +474,7 @@ describe('IgxSimpleCombo', () => {
             tick();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
-            expect(combo.open).toHaveBeenCalledTimes(2);
+            expect(combo.open).toHaveBeenCalledTimes(1);
 
             combo.handleKeyDown(UIInteractions.getKeyboardEvent('keydown', 'ArrowUp'));
             tick();
@@ -504,13 +505,48 @@ describe('IgxSimpleCombo', () => {
             expect(combo.closed.emit).not.toHaveBeenCalled();
             expect(combo.selection.length).toEqual(1);
         });
+
+        it('should clear the selection on tab/blur if the search text does not match any value', fakeAsync(() => {
+            // allowCustomValues does not matter
+            combo.select(combo.data[2][combo.valueKey]);
+            fixture.detectChanges();
+            expect(combo.selection.length).toBe(1);
+            expect(input.nativeElement.value).toEqual('Massachusetts');
+
+            UIInteractions.setInputElementValue(input.nativeElement, 'MassachusettsL');
+            fixture.detectChanges();
+            combo.onBlur();
+            tick();
+            fixture.detectChanges();
+            expect(input.nativeElement.value.length).toEqual(0);
+            expect(combo.selection.length).toEqual(0);
+        }));
+
+        it('should move the focus to the AddItem button with ArrowDown when allowCustomItems is true', fakeAsync(() => {
+            fixture.componentInstance.allowCustomValues = true;
+            fixture.detectChanges();
+            UIInteractions.setInputElementValue(input.nativeElement, 'MassachusettsL');
+            fixture.detectChanges();
+            combo.open();
+            fixture.detectChanges();
+            const addItemButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`));
+            expect(addItemButton).toBeDefined();
+
+            input.nativeElement.focus();
+            fixture.detectChanges();
+
+            combo.onArrowDown(new Event('keydown'));
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(addItemButton.nativeElement);
+        }));
     });
 });
 
 @Component({
     template: `
 <igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
-[valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging($event)">
+[valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging($event)"
+[allowCustomValues]="allowCustomValues">
 <ng-template igxComboItem let-display let-key="valueKey">
 <div class="state-card--simple">
 <span class="small-red-circle"></span>
@@ -531,6 +567,7 @@ class IgxSimpleComboSampleComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
     public combo: IgxSimpleComboComponent;
     public density: DisplayDensity = DisplayDensity.cosy;
+    public allowCustomValues = false;
 
     public items = [];
     public initData = [];
