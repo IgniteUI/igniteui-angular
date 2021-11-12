@@ -773,6 +773,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         }
         if (this._overlayId) {
             this._overlayService.detach(this._overlayId);
+            delete this._overlayId;
         }
     }
 
