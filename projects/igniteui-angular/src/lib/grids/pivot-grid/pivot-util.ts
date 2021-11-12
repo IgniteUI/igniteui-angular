@@ -220,7 +220,6 @@ export class PivotUtil {
                     if (!child[pivotKeys.records]) {
                         continue;
                     }
-                    child[row.memberName] = sibling[row.memberName];
                     child[row.memberName + '_' + pivotKeys.records] = [];
                     const keys = Object.assign({}, pivotKeys) as any;
                     keys[row.memberName] = row.memberName;
@@ -249,7 +248,7 @@ export class PivotUtil {
                     // Get child dimensions now as well since we go a level deeper into the hierarchy.
                     // Keep above level dims as well since lower level dims correspond to upper sibling dims as well.
                     const childDimensions = prevRowDims.filter(dim => !!dim.childLevel).map(dim => dim.childLevel);
-                    this.processSubGroups(row, [...childDimensions], childCollection, pivotKeys);
+                    this.processSubGroups(row, [...prevRowDims, ...childDimensions], childCollection, pivotKeys);
                 }
             }
         }
