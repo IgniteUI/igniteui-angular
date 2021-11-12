@@ -254,7 +254,7 @@ describe('IgxGrid - Column Selection #grid', () => {
 
         it('verify method deselectColumns', () => {
             spyOn(grid.columnSelected, 'emit').and.callThrough();
-            grid.columns.forEach(col => col.selected = true);
+            grid.columnList.forEach(col => col.selected = true);
 
             const colUnits = grid.getColumnByName('UnitsInStock');
             const colOrderDate = grid.getColumnByName('OrderDate');
@@ -296,7 +296,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             // deselect all columns
             grid.deselectAllColumns();
             fix.detectChanges();
-            GridSelectionFunctions.verifyColumnsSelected(grid.columns, false);
+            GridSelectionFunctions.verifyColumnsSelected(grid.columnList.toArray(), false);
             expect(grid.selectedColumns()).toEqual([]);
 
             // Set selectable false to a column

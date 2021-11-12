@@ -3949,8 +3949,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click 'Add Filter' button.
             GridFunctions.clickAddFilterExcelStyleCustomFiltering(fix);
             tick(200);
-            fix.detectChanges();
-
 
             // Verify last expression is currently in view inside the expressions container.
             const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
@@ -4680,8 +4678,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click 'Select All' checkbox.
             let selectAllCbInput = visibleListItems[0];
-            selectAllCbInput.click();
+            UIInteractions.simulateClickEvent(selectAllCbInput);
             tick(100);
+            fix.detectChanges();
 
             // Verify all visible data list items are unchecked.
             for (const dataListItem of dataListItems) {
@@ -4690,7 +4689,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click 'Select All' checkbox.
             selectAllCbInput = visibleListItems[0];
-            selectAllCbInput.click();
+            UIInteractions.simulateClickEvent(selectAllCbInput);
+            tick(100);
             fix.detectChanges();
 
             // Verify all visible data list items are checked.
@@ -5807,10 +5807,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+            const uniqueValues = new Set<string>();
+            grid.data.forEach(r => {
+                const val = grid.getColumnByName('ReleaseDate').formatter(r.ReleaseDate);
+                uniqueValues.add(val);
+            });
+            // +1 stands for the Select All option
+            expect(listItems.length).toBe(uniqueValues.size + 1, 'incorrect rendered list items count');
 
             const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkboxElements[0].click();
+            tick();
+            fix.detectChanges();
+
             checkboxElements[2].click();
             tick();
             fix.detectChanges();
