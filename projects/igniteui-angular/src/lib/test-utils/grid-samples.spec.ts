@@ -237,13 +237,13 @@ export class RowSelectionWithoutPrimaryKeyComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` rowSelection = "multiple"`,
-        EventSubscriptions.rowSelected,
+        EventSubscriptions.rowSelectionChanging,
         ColumnDefinitions.productBasic)
 })
 export class SelectionCancellableComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
 
-    public rowSelected(evt) {
+    public rowSelectionChanging(evt) {
         if (evt.added.length > 0 && (evt.added[0].ProductID) % 2 === 0) {
             evt.newSelection = evt.oldSelection || [];
         }
@@ -1090,6 +1090,12 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
         </igx-column>
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter">
+        </igx-column>
+        <igx-column width="100px" [field]="'ReleaseTime'" [header]="'Release Time'" [filterable]="filterable"
+            dataType="dateTime">
+        </igx-column>
+        <igx-column width="100px" [field]="'Revenue'" [header]="'Revenue'" [filterable]="filterable"
+            dataType="currency">
         </igx-column>
     </igx-grid>`
 })

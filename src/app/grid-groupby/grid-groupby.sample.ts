@@ -3,7 +3,7 @@ import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 
 import {
     IgxGridComponent, SortingDirection, ISortingExpression,
-    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode
+    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs
 } from 'igniteui-angular';
 
 @Component({
@@ -33,7 +33,7 @@ export class GridGroupBySampleComponent implements OnInit {
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) { }
 
     public ngOnInit(): void {
-        for (let i = 0; i < 60; i++) {
+        for (let i = 0; i < 2500; i++) {
             this.data2.push(...Array(10).fill({ STATUS: 'A', FIELD: 'some text' }));
             this.data2.push(...Array(10).fill({ STATUS: 'B', FIELD: 'some text' }));
             this.data2.push(...Array(10).fill({ STATUS: 'C', FIELD: 'some text' }));
@@ -173,5 +173,9 @@ export class GridGroupBySampleComponent implements OnInit {
     public hideGroupableRow() {
         this.grid1.showGroupArea = !this.grid1.showGroupArea;
         this.grid1.cdr.detectChanges();
+    }
+
+    public rowSelectionChanged(e: IRowSelectionEventArgs) {
+        console.log(e);
     }
 }
