@@ -474,11 +474,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```html
-     * <igx-grid #grid (rowSelected)="onCellClickChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid (rowSelectionChanging)="rowSelectionChanging($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public rowSelected = new EventEmitter<IRowSelectionEventArgs>();
+    public rowSelectionChanging = new EventEmitter<IRowSelectionEventArgs>();
 
     /**
      *  Emitted when `IgxColumnComponent` is selected.

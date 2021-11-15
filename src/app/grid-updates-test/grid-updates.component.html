@@ -2,13 +2,13 @@
 <button (click)="stop()">Stop</button>
 
 <igx-grid
-    displayDensity="compact" 
+    displayDensity="compact"
     width="800px" height = "400px"
     [data]="data"
     [allowFiltering]="true"
     primaryKey = "id"
     filterMode="excelStyleFilter"
-    (rowSelected)="handleRowSelectionChange($event)"
+    (rowSelectionChanging)="handleRowSelectionChange($event)"
     rowSelection="single"
     #grid>
     <igx-column *ngFor="let each of nestedConfigColumns"
