@@ -79,9 +79,9 @@ $material-flat-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Color} border-color [igx-color: (grays, 300)] - The outline color of the button.
-/// @prop {Color} focus-border-color [igx-color: ('grays', 300)] - The focused border color of the button.
-/// @prop {Color} disabled-border-color [igx-color: ('grays', 300)] - The disabled focused border color of the button.
+/// @prop {Map} border-color [igx-color: (grays, 300)] - The outline color of the button.
+/// @prop {Map} focus-border-color [igx-color: ('grays', 300)] - The focused border color of the button.
+/// @prop {Color} disabled-border-color [transparent] - The disabled focused border color of the button.
 /// @requires {function} extend
 /// @requires {Map} $material-flat-button
 $material-outlined-button: extend(
@@ -97,9 +97,7 @@ $material-outlined-button: extend(
             igx-color: ('grays', 300)
         ),
 
-        disabled-border-color: (
-            igx-color: ('grays', 300)
-        ),
+        disabled-border-color: transparent,
     )
 );
 
