@@ -386,6 +386,21 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(component.selectedItem).toEqual(combo.data[4]);
         }));
+
+        it('should clear selection w/o valueKey', fakeAsync(() => {
+            fixture = TestBed.createComponent(ComboModelBindingComponent);
+            fixture.detectChanges();
+            const component = fixture.componentInstance;
+            combo = fixture.componentInstance.combo;
+            component.items = ['One', 'Two', 'Three', 'Four', 'Five'];
+            combo.select('Three');
+            fixture.detectChanges();
+            expect(combo.selection).toEqual(['Three']);
+            combo.handleClear(new MouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toEqual('');
+        }));
+
         it('should properly bind to values w/o valueKey', fakeAsync(() => {
             fixture = TestBed.createComponent(ComboModelBindingComponent);
             fixture.detectChanges();
