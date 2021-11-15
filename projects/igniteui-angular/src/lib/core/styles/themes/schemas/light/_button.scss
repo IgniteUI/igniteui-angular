@@ -13,8 +13,8 @@
 /// @prop {Color} border-color [transparent] - The outline color of the button.
 /// @prop {Color} focus-border-color [transparent] - The focused border color of the button.
 /// @prop {Color} disabled-border-color [transparent] - The disabled border color of the button.
-/// @prop {Color} disabled-background [igx-color: ('grays', 100)] - The disabled background color of the button.
-/// @prop {Color} disabled-foreground [igx-color: ('grays', 400)] - The disabled foreground color of the button.
+/// @prop {Color} disabled-background [igx-color: ('grays', 300)] - The disabled background color of the button.
+/// @prop {Color} disabled-foreground [igx-color: ('grays', 500)] - The disabled foreground color of the button.
 $material-base-button: (
     variant: 'material',
 
@@ -27,11 +27,11 @@ $material-base-button: (
     disabled-border-color: transparent,
 
     disabled-background: (
-        igx-color: ('grays', 100)
+        igx-color: ('grays', 300)
     ),
 
     disabled-foreground: (
-        igx-color: ('grays', 400)
+        igx-color: ('grays', 500)
     ),
 );
 
@@ -79,9 +79,9 @@ $material-flat-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Map} border-color [igx-color: (grays, 300)] - The outline color of the button.
+/// @prop {Map} border-color [igx-color: ('secondary', 500)] - The outline color of the button.
 /// @prop {Map} focus-border-color [igx-color: ('grays', 300)] - The focused border color of the button.
-/// @prop {Color} disabled-border-color [transparent] - The disabled focused border color of the button.
+/// @prop {Map} disabled-border-color [igx-color: ('grays', 300)] - The disabled focused border color of the button.
 /// @requires {function} extend
 /// @requires {Map} $material-flat-button
 $material-outlined-button: extend(
@@ -90,14 +90,16 @@ $material-outlined-button: extend(
         selector: '[igxButton="outlined"], .igx-button--outlined',
 
         border-color: (
-            igx-color: ('grays', 300)
+            igx-color: ('secondary', 300)
         ),
 
         focus-border-color: (
             igx-color: ('grays', 300)
         ),
 
-        disabled-border-color: transparent,
+        disabled-border-color: (
+            igx-color: ('grays', 300)
+        ),
     )
 );
 
