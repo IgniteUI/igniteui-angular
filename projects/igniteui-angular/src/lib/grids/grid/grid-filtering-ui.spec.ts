@@ -5612,7 +5612,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            spyOn(grid.columnSelected, 'emit');
+            spyOn(grid.columnSelectionChanging, 'emit');
             const column = grid.getColumnByName('Downloads');
             fix.componentInstance.esf.column = column;
             fix.detectChanges();
@@ -5620,13 +5620,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnSelectionChanging.emit).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
 
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(2);
+            expect(grid.columnSelectionChanging.emit).toHaveBeenCalledTimes(2);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, false);
 
             // Test in single selection mode
@@ -5642,7 +5642,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(3);
+            expect(grid.columnSelectionChanging.emit).toHaveBeenCalledTimes(3);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
@@ -6116,7 +6116,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            spyOn(grid.columnSelected, 'emit');
+            spyOn(grid.columnSelectionChanging, 'emit');
             const column = grid.getColumnByName('Downloads');
             fix.componentInstance.esf.column = column;
             fix.detectChanges();
@@ -6124,13 +6124,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnSelectionChanging.emit).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
 
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(2);
+            expect(grid.columnSelectionChanging.emit).toHaveBeenCalledTimes(2);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, false);
 
             // Test in single selection mode
@@ -6146,7 +6146,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(3);
+            expect(grid.columnSelectionChanging.emit).toHaveBeenCalledTimes(3);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
