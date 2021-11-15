@@ -4093,22 +4093,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    public get columns(): IgxColumnComponent[] {
-        return this._columns;
-    }
-
-    /**
      * Gets an array of `IgxColumnComponent`s.
      *
      * @example
      * ```typescript
-     * const colums = this.grid.columnsCollection.
+     * const colums = this.grid.columns.
      * ```
      */
-    public get columnsCollection(): IgxColumnComponent[] {
+    public get columns(): IgxColumnComponent[] {
         return this._rendered ?  this._columns : [];
     }
 
@@ -5725,7 +5717,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             result = result.substring(result.indexOf('\n') + 1);
         }
 
-        if (Object.values(data[0]).length === 1) {
+        if (data && data.length > 0 && Object.values(data[0]).length === 1) {
             result = result.slice(0, -2);
         }
 
@@ -6186,7 +6178,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.summaryService.clearSummaryCache();
         this.pipeTrigger++;
         this.notifyChanges();
-    };
+    }
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);

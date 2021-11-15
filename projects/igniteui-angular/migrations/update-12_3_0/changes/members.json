@@ -1,0 +1,26 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "columnsCollection",
+            "replaceWith": "columns",
+            "definedIn": [
+                "IgxGridComponent"
+            ]
+        },
+        {
+            "member": "columnsCollection",
+            "replaceWith": "columns",
+            "definedIn": [
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "columnsCollection",
+            "replaceWith": "columns",
+            "definedIn": [
+                "IgxTreeGridComponent"
+            ]
+        }
+    ]
+}
