@@ -64,6 +64,7 @@ export * from './lib/carousel/public_api';
 export * from './lib/checkbox/checkbox.component';
 export * from './lib/chips/public_api';
 export * from './lib/combo/public_api';
+export * from './lib/simple-combo/public_api';
 export * from './lib/date-picker/public_api';
 export * from './lib/dialog/dialog.component';
 export * from './lib/drop-down/public_api';
