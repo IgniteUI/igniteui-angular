@@ -7,8 +7,12 @@ import { IPivotDimensionStrategy } from '../../data-operations/pivot-strategy';
 export type PivotAggregation = (members: any[], data: any[]) => any;
 
 export interface IPivotAggregator {
+    // Aggregation unique key.
     key: string;
+    // Aggregation label to show in the UI.
     label: string;
+    // Aggregator function can be a custom implementation of PivotAggregation or
+    // use predefined ones from IgxPivotAggregate and its variants.
     aggregator: (members: any[], data?: any[]) => any;
 }
 
@@ -40,8 +44,7 @@ export interface IPivotValue {
     // display name if present shows instead of member for the column header of this value
     displayName?: string;
     /**
-     * Aggregation function - can be a custom implementation of PivotAggregation or
-     * use predefined ones from IgxPivotAggregate and its variants
+     * Active aggregator definition with key, label and aggregator.
      */
     aggregate: IPivotAggregator;
     /**
