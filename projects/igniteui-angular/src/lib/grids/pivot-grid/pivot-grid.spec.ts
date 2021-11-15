@@ -71,6 +71,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         });
         it('should allow showing custom aggregations via pivot configuration.', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration.values = [];
             pivotGrid.pivotConfiguration.values.push({
                 member: 'AmountOfSale',
                 displayName: 'Amount of Sale',
@@ -114,9 +115,9 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
              // check chip and row values
              content = valueChip.querySelector('.igx-chip__content');
              expect(content.textContent.trim()).toBe('MIN(Amount of Sale)');
-             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Bulgaria-AmountOfSale').value).toBe(3612.42);
-             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'USA-AmountOfSale').value).toBe(0);
-             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Uruguay-AmountOfSale').value).toBe(242.08);
+             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Bulgaria').value).toBe(3612.42);
+             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'USA').value).toBe(0);
+             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Uruguay').value).toBe(242.08);
         });
     });
 });
