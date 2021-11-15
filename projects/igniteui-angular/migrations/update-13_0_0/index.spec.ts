@@ -202,8 +202,8 @@ describe(`Update to ${version}`, () => {
     });
 
     it('should insert a comment when exporter services are present in module.ts files', async () => {
-        appTree.create('/testSrc/appPrefix/component/app.module.ts', `
-import { NgModule } from "@angular/core";
+        appTree.create('/testSrc/appPrefix/component/app.module.ts',
+`import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
