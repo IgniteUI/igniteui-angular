@@ -1798,7 +1798,8 @@ export class SampleTestData {
             ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
             ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
             Released: false,
-            AnotherField: 'a'
+            AnotherField: 'a',
+            Revenue: 100000
         },
         {
             Downloads: 127,
@@ -1808,7 +1809,8 @@ export class SampleTestData {
             ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', -1),
             ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', -1),
             Released: true,
-            AnotherField: 'a'
+            AnotherField: 'a',
+            Revenue: 40000
         },
         {
             Downloads: 20,
@@ -1818,7 +1820,8 @@ export class SampleTestData {
             ReleaseDateTime: null,
             ReleaseTime: null,
             Released: null,
-            AnotherField: 'a'
+            AnotherField: 'a',
+            Revenue: 9000
         },
         {
             Downloads: null,
@@ -1828,7 +1831,8 @@ export class SampleTestData {
             ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', -10),
             ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', -10),
             Released: true,
-            AnotherField: 'a'
+            AnotherField: 'a',
+            Revenue: 10000
         },
         {
             Downloads: 100,
@@ -1838,7 +1842,8 @@ export class SampleTestData {
             ReleaseDateTime: undefined,
             ReleaseTime: undefined,
             Released: false,
-            AnotherField: 'a'
+            AnotherField: 'a',
+            Revenue: 30000
         },
         {
             Downloads: 702,
@@ -1848,7 +1853,8 @@ export class SampleTestData {
             ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'second', 20),
             ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'second', 20),
             Released: null,
-            AnotherField: 'Custom'
+            AnotherField: 'Custom',
+            Revenue: 60000
         },
         {
             Downloads: 0,
@@ -1858,7 +1864,8 @@ export class SampleTestData {
             ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', +10),
             ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', +10),
             Released: true,
-            AnotherField: 'custoM'
+            AnotherField: 'custoM',
+            Revenue: 10000
         },
         {
             Downloads: 1000,
@@ -1868,7 +1875,8 @@ export class SampleTestData {
             ReleaseDateTime: SampleTestData.todayFullDate,
             ReleaseTime: SampleTestData.todayFullDate,
             Released: undefined,
-            AnotherField: 'custom'
+            AnotherField: 'custom',
+            Revenue: 50000
         }
     ]);
 
