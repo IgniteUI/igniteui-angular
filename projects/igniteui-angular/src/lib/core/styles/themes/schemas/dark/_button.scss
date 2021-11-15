@@ -76,8 +76,17 @@ $material-fab-button-dark: extend($material-fab-button, $material-base-button-da
 
 /// @requires {Map} $material-outlined-button
 /// @requires {Map} $material-base-button-dark
+/// @prop {Map} disabled-border-color [igx-color: ('grays', 100, .3)] - The disabled focused border color of the button.
 /// @requires {function} extend
-$material-outlined-button-dark: extend($material-outlined-button, $material-base-button-dark);
+$material-outlined-button-dark: extend(
+    $material-outlined-button,
+    $material-base-button-dark,
+    (
+        disabled-border-color: (
+            igx-color: ('grays', 100, .3)
+        ),
+    )
+);
 
 /// Generates a dark material button schema.
 /// @type {Map}
