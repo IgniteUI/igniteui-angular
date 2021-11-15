@@ -70,7 +70,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      *
      * ```typescript
      * handleRowSelection(event) {
-     *  // the grid on which the rowSelected event was triggered
+     *  // the grid on which the rowSelectionChanging event was triggered
      *  const grid = event.row.grid;
      * }
      * ```
@@ -78,7 +78,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * ```html
      *  <igx-grid
      *    [data]="data"
-     *    (rowSelected)="handleRowSelection($event)">
+     *    (rowSelectionChanging)="handleRowSelection($event)">
      *  </igx-grid>
      * ```
      */
