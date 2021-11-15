@@ -30,6 +30,11 @@
         <ng-template igxCell let-cell="cell" let-val let-row>
             ${{val}}
         </ng-template>
+        <ng-template igxCustomSummaryCell let-summaryResults>
+        <span>Custom summary cell:</span>
+           <span>Number of Summaries: {{ summaryResults.length }}</span>
+           <span>FirstSummary - {{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span>
+        </ng-template>
     </igx-column>
     <igx-column field="OrderDate" [width]="cw" [dataType]="'date'" [hasSummary]="false" [sortable]="true">
     </igx-column>

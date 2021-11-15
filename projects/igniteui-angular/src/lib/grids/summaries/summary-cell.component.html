@@ -1,5 +1,10 @@
 <ng-container *ngIf="hasSummary">
-    <ng-container *ngFor="let summary of summaryResults">
+    <ng-container
+        *ngTemplateOutlet="column.customSummaryCellTemplate ? column.customSummaryCellTemplate : defaultSummary; context: { $implicit: summaryResults, summaryResults: summaryResults}">
+    </ng-container>
+
+    <ng-template #defaultSummary>
+        <ng-container *ngFor="let summary of summaryResults" >
             <div class="igx-grid-summary__item" [style.height.px]="itemHeight">
 
                 <ng-container *ngIf="visibleColumnIndex === 0 && firstCellIndentation >= 0">
@@ -29,5 +34,6 @@
                     }}
                 </span>
             </div>
-    </ng-container>
+        </ng-container>
+    </ng-template>
 </ng-container>
