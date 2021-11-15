@@ -21,6 +21,16 @@
             "definedIn": [
                 "IgxComboBaseDirective"
             ]
+        },
+        {
+            "member": "rowSelected",
+            "replaceWith": "rowSelectionChanging",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
         }
     ]
 }
