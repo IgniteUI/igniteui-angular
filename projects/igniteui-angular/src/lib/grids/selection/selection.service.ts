@@ -408,7 +408,6 @@ export class IgxGridSelectionService {
         const addedRows = allRowIDs.filter((rID) => !this.isRowSelected(rID));
         const newSelection = this.rowSelection.size ? this.getSelectedRows().concat(addedRows) : addedRows;
         this.indeterminateRows.clear();
-        this.selectedRowsChange.next();
         this.emitRowSelectionEvent(newSelection, addedRows, [], event);
     }
 
@@ -419,10 +418,10 @@ export class IgxGridSelectionService {
         }
         clearPrevSelection = !this.grid.isMultiRowSelectionEnabled || clearPrevSelection;
 
-        const newSelection = clearPrevSelection ? [rowID] : this.getSelectedRows().indexOf(rowID) !== -1 ?
-            this.getSelectedRows() : [...this.getSelectedRows(), rowID];
-        const removed = clearPrevSelection ? this.getSelectedRows() : [];
-        this.selectedRowsChange.next();
+        const selectedRows = this.getSelectedRows();
+        const newSelection = clearPrevSelection ? [rowID] : this.rowSelection.has(rowID) ?
+            selectedRows : [...selectedRows, rowID];
+        const removed = clearPrevSelection ? selectedRows : [];
         this.emitRowSelectionEvent(newSelection, [rowID], removed, event);
     }
 
@@ -433,9 +432,42 @@ export class IgxGridSelectionService {
         }
         const newSelection = this.getSelectedRows().filter(r => r !== rowID);
         if (this.rowSelection.size && this.rowSelection.has(rowID)) {
-            this.selectedRowsChange.next();
             this.emitRowSelectionEvent(newSelection, [], [rowID], event);
         }
+    }
+
+    /** Select the specified rows and emit event. */
+    public selectRows(keys: any[], clearPrevSelection?: boolean, event?): void {
+        if (!this.grid.isMultiRowSelectionEnabled) {
+            return;
+        }
+
+        const rowsToSelect = keys.filter(x => !this.isRowDeleted(x) && !this.rowSelection.has(x));
+        if (!rowsToSelect.length && !clearPrevSelection) {
+            // no valid/additional rows to select and no clear
+            return;
+        }
+
+        const selectedRows = this.getSelectedRows();
+        const newSelection = clearPrevSelection ? rowsToSelect : [...selectedRows, ...rowsToSelect];
+        const keysAsSet = new Set(rowsToSelect);
+        const removed = clearPrevSelection ? selectedRows.filter(x => !keysAsSet.has(x)) : [];
+        this.emitRowSelectionEvent(newSelection, rowsToSelect, removed, event);
+    }
+
+    public deselectRows(keys: any[], event?): void {
+        if (!this.rowSelection.size) {
+            return;
+        }
+
+        const rowsToDeselect = keys.filter(x => this.rowSelection.has(x));
+        if (!rowsToDeselect.length) {
+            return;
+        }
+
+        const keysAsSet = new Set(rowsToDeselect);
+        const newSelection = this.getSelectedRows().filter(r => !keysAsSet.has(r));
+        this.emitRowSelectionEvent(newSelection, [], rowsToDeselect, event);
     }
 
     /** Select specified rows. No event is emitted. */
@@ -478,7 +510,6 @@ export class IgxGridSelectionService {
 
         const added = this.getRowIDs(rows).filter(rID => !this.isRowSelected(rID));
         const newSelection = this.getSelectedRows().concat(added);
-        this.selectedRowsChange.next();
         this.emitRowSelectionEvent(newSelection, added, [], event);
     }
 
@@ -517,7 +548,7 @@ export class IgxGridSelectionService {
             oldSelection: currSelection, newSelection,
             added, removed, event, cancel: false
         };
-        this.grid.rowSelected.emit(args);
+        this.grid.rowSelectionChanging.emit(args);
         if (args.cancel) {
             return;
         }
