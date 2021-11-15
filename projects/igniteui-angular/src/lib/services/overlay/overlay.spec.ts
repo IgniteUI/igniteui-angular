@@ -262,7 +262,8 @@ describe('igxOverlay', () => {
                         hostView: '',
                         location: mockElementRef,
                         changeDetectorRef: { detectChanges: () => { } },
-                        destroy: () => { }
+                        destroy: () => { },
+                        onDestroy: () => { }
                     })
                 })
             };

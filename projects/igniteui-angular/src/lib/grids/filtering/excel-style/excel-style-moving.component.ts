@@ -48,11 +48,9 @@ export class IgxExcelStyleMovingComponent {
             if (this.esf.column.isLastPinned && moveDirection === 1 && this.esf.grid.isPinningToStart) {
                 targetColumn = this.esf.grid.unpinnedColumns[0];
                 moveDirection = 0;
-                this.esf.closeDropdown();
             } else if (this.esf.column.isFirstPinned && moveDirection === 0 && !this.esf.grid.isPinningToStart) {
                 targetColumn = this.esf.grid.unpinnedColumns[this.esf.grid.unpinnedColumns.length - 1];
                 moveDirection = 1;
-                this.esf.closeDropdown();
             } else {
                 targetColumn = this.findColumn(moveDirection, this.esf.grid.pinnedColumns);
             }
@@ -63,12 +61,10 @@ export class IgxExcelStyleMovingComponent {
                 targetColumn = targetColumn.topLevelParent;
             }
             moveDirection = 1;
-            this.esf.closeDropdown();
         } else if (this.esf.grid.unpinnedColumns.indexOf(this.esf.column) === this.esf.grid.unpinnedColumns.length - 1 &&
             moveDirection === 1 && !this.esf.grid.isPinningToStart) {
             targetColumn = this.esf.grid.pinnedColumns[0];
             moveDirection = 0;
-            this.esf.closeDropdown();
         } else {
             targetColumn = this.findColumn(moveDirection, this.esf.grid.unpinnedColumns);
         }
