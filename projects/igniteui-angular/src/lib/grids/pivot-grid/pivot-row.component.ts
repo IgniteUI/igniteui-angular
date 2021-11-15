@@ -40,6 +40,12 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      @ViewChild('headerTemplateGray', { read: TemplateRef, static: true })
      public headerTemplateGray: TemplateRef<any>;
 
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('headerDefaultTemplate', { read: TemplateRef, static: true })
+    public headerTemplateDefault: TemplateRef<any>;
+
     public rowDimensionData: IPivotDimensionData[] = [];
 
     public get rowDimension() {
@@ -76,6 +82,10 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
 
     public getExpandState(col: IgxColumnComponent) {
         return this.grid.gridAPI.get_row_expansion_state(this.getRowDimensionKey(col));
+    }
+
+    public getLevel(col: IgxColumnComponent) {
+        return this.rowData[col.field + '_level'];
     }
 
 
@@ -140,6 +150,8 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
             ref.instance.headerTemplate = this.headerTemplate;
         } else if (lvl < PivotUtil.getTotalLvl(this.rowData)) {
             ref.instance.headerTemplate = this.headerTemplateGray;
+        } else {
+            ref.instance.headerTemplate = this.headerTemplateDefault;
         }
         return ref.instance;
     }

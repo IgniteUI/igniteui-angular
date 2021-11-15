@@ -99,17 +99,23 @@
 
 
     <ng-template #headerTemplate let-column>
-        <div class="igx-grid__tr--header">
+        <div class="igx-grid__tr--header" class='igx-grid__row-indentation--level-{{getLevel(column)}}'>
             <igx-icon [attr.draggable]="false"
                       (click)="grid.toggleRow(getRowDimensionKey(column))"
                       style='cursor: pointer;'>
-                      {{ getExpandState(column) ? 'expand_more' : 'expand_less'}}</igx-icon>
+                      {{ getExpandState(column) ? 'expand_more' : 'chevron_right'}}</igx-icon>
             {{column.header}}
         </div>
     </ng-template>
 
     <ng-template #headerTemplateGray let-column>
-        <div class="igx-grid__tr--header" style='color:gray'>
+        <div class="igx-grid__tr--header" style='color:gray' class='igx-grid__row-indentation--level-{{getLevel(column)}}'>
+            {{column.header}}
+        </div>
+    </ng-template>
+
+    <ng-template #headerDefaultTemplate let-column>
+        <div class="igx-grid__tr--header" class='igx-grid__row-indentation--level-{{getLevel(column)}}'>
             {{column.header}}
         </div>
     </ng-template>

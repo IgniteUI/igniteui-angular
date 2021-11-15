@@ -30,10 +30,7 @@ export class PivotGridSampleComponent {
             }
         ]
         ,
-        rows: [{
-            memberName: 'City',
-            enabled: true
-        }, {
+        rows: [ {
             memberFunction: () => 'All',
             memberName: 'AllProducts',
             enabled: true,
@@ -41,7 +38,11 @@ export class PivotGridSampleComponent {
                 {
                     memberFunction: (data) => data.ProductCategory,
                     memberName: 'ProductCategory',
-                    enabled: true
+                    enabled: true,
+                    childLevel: {
+                        memberName: 'City',
+                        enabled: true
+                    }
                 }
         }],
         values: [
