@@ -25,6 +25,7 @@ export class IgxPivotRowPipe implements PipeTransform {
         config: IPivotConfiguration,
         _: Map<any, boolean>,
         _pipeTrigger?: number,
+        __?,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
         const enabledRows = config.rows.filter(x => x.enabled);
@@ -49,6 +50,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         config: IPivotConfiguration,
         expansionStates: Map<any, boolean>,
         _pipeTrigger?: number,
+        __?,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
         const enabledRows = config.rows.filter(x => x.enabled);
@@ -61,7 +63,20 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
             PivotUtil.flattenHierarchy(data, config, row, expansionStates, pivotKeys, totalLlv, prevDims, 0);
             prevDims.push(row);
         }
+        this.cleanState(data, pivotKeys);
         return data;
+    }
+
+    private cleanState(data, pivotKeys) {
+        data.forEach(rec => {
+            const keys = Object.keys(rec);
+            //remove all record keys from final data since we don't need them anymore.
+            keys.forEach(k => {
+                if (k.indexOf(pivotKeys.records) !== -1) {
+                    delete rec[k];
+                }
+            });
+        });
     }
 }
 
@@ -80,6 +95,7 @@ export class IgxPivotColumnPipe implements PipeTransform {
         config: IPivotConfiguration,
         _: Map<any, boolean>,
         _pipeTrigger?: number,
+        __?,
         pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
     ): any[] {
         const enabledColumns = config.columns.filter(x => x.enabled);
@@ -140,16 +156,15 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
 })
 export class IgxPivotGridSortingPipe implements PipeTransform {
 
-    public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
-        id: string, pipeTrigger: number, pinned?): any[] {
+    public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy, pipeTrigger: number): any[] {
         let result: any[];
 
         if (!expressions.length) {
             result = collection;
         } else {
+            // TODO - sort recursively in all records collections.
             result = DataUtil.sort(cloneArray(collection), expressions, sorting);
         }
-
         return result;
     }
 }
