@@ -15,7 +15,7 @@
                     (dragLeave)="onDimDragLeave($event)"
                     (dragDrop)="onDimDrop($event, filterArea, 2)"
                      >
-                    <igx-icon igxPrefix>filter_list</igx-icon>
+                    <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, filter)'>filter_list</igx-icon>
                     {{filter.memberName}}
                 </igx-chip>
             </igx-chips-area>
@@ -35,7 +35,7 @@
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, colArea, 1)">
                         <igx-icon igxPrefix>view_column</igx-icon>
-                        <igx-icon igxPrefix>filter_list</igx-icon>
+                        <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, col)'>filter_list</igx-icon>
                         {{col.memberName}}
                     </igx-chip>
                 </igx-chips-area>
@@ -85,7 +85,7 @@
                         (dragDrop)="onDimDrop($event, rowArea, 0)"
                         (dragOver)="onDimDragOver($event, 0)">
                         <igx-icon igxPrefix>table_rows</igx-icon>
-                        <igx-icon igxPrefix>filter_list</igx-icon>
+                        <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
                         {{ row.memberName}}
                     </igx-chip>
                 </igx-chips-area>
