@@ -93,8 +93,9 @@ import { CharSeparatedValueData } from '../services/csv/char-separated-value-dat
 import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import {
-    IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
-    IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective, IgxExcelStyleHeaderIconDirective
+    IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective,
+    IgxHeaderCollapseIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
 } from './grid/grid.directives';
 import {
     GridKeydownTargetType,
@@ -765,8 +766,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
-     @Output()
-     public rowAdd = new EventEmitter<IGridEditEventArgs>();
+    @Output()
+    public rowAdd = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after column is resized.
@@ -1251,6 +1252,24 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
     public excelStyleHeaderIconTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in asc order.
+     */
+    @ContentChild(IgxSortAscendingHeaderIconDirective, { read: TemplateRef })
+    public sortAscendingHeaderIconTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in desc order.
+     */
+    @ContentChild(IgxSortDescendingHeaderIconDirective, { read: TemplateRef })
+    public sortDescendingHeaderIconTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are not sorted.
+     */
+    @ContentChild(IgxSortHeaderIconDirective, { read: TemplateRef })
+    public sortHeaderIconTemplate: TemplateRef<any> = null;
 
     /**
      * @hidden
@@ -3437,26 +3456,26 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public setUpPaginator() {
         if (this.paginator) {
             this.paginator.pageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
-            .subscribe((page: number) => {
-                this.pageChange.emit(page);
-            });
+                .subscribe((page: number) => {
+                    this.pageChange.emit(page);
+                });
             this.paginator.pagingDone.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
-            .subscribe((args: IPageEventArgs) => {
-                this.selectionService.clear(true);
-                this.pagingDone.emit({ previous: args.previous, current: args.current });
-                this.crudService.endEdit(false);
-                this.pipeTrigger++;
-                this.navigateTo(0);
-                this.notifyChanges();
-            });
+                .subscribe((args: IPageEventArgs) => {
+                    this.selectionService.clear(true);
+                    this.pagingDone.emit({ previous: args.previous, current: args.current });
+                    this.crudService.endEdit(false);
+                    this.pipeTrigger++;
+                    this.navigateTo(0);
+                    this.notifyChanges();
+                });
             this.paginator.perPageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
-            .subscribe((perPage: number) => {
-                this.selectionService.clear(true);
-                this.perPageChange.emit(perPage);
-                this.paginator.page = 0;
-                this.crudService.endEdit(false);
-                this.notifyChanges();
-            });
+                .subscribe((perPage: number) => {
+                    this.selectionService.clear(true);
+                    this.perPageChange.emit(perPage);
+                    this.paginator.page = 0;
+                    this.crudService.endEdit(false);
+                    this.notifyChanges();
+                });
         } else {
             this.markForCheck();
         }
@@ -3552,7 +3571,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.paginator) {
                 this.paginator.perPage = this._perPage !== DEFAULT_ITEMS_PER_PAGE ? this._perPage : this.paginator.perPage;
-                this.paginator.totalRecords = this.totalRecords;
+                this.paginator.totalRecords = this.totalRecords ? this.totalRecords : this.paginator.totalRecords;
                 this.paginator.overlaySettings = { outlet: this.outlet };
             }
             this._rendered = true;
@@ -3927,7 +3946,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get columnsCollection(): IgxColumnComponent[] {
-        return this._rendered ?  this._columns : [];
+        return this._rendered ? this._columns : [];
     }
 
     /**
@@ -5479,7 +5498,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const selectedColumns = this.gridAPI.grid.selectedColumns();
         const columnData = this.getSelectedColumnsData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
         let selectedData;
-        if (event.type === 'copy'){
+        if (event.type === 'copy') {
             selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
         };
 
@@ -5981,8 +6000,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected subscribeToTransactions(): void {
         this.transactionChange$.next();
-        this.transactions.onStateUpdate.pipe(takeUntil(merge(this.destroy$,this.transactionChange$)))
-        .subscribe(this.transactionStatusUpdate.bind(this));
+        this.transactions.onStateUpdate.pipe(takeUntil(merge(this.destroy$, this.transactionChange$)))
+            .subscribe(this.transactionStatusUpdate.bind(this));
     }
 
     protected transactionStatusUpdate(event: StateUpdateEvent) {
@@ -6742,10 +6761,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let selectionMap;
         if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid' && selectionCollection.size > 0) {
             selectionMap = isRemote ? Array.from(selectionCollection) :
-            Array.from(selectionCollection).filter((tuple) => tuple[0] < source.length);
-        }else {
+                Array.from(selectionCollection).filter((tuple) => tuple[0] < source.length);
+        } else {
             selectionMap = isRemote ? Array.from(this.selectionService.selection) :
-            Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
+                Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
         }
 
         if (this.cellSelection === GridSelectionMode.single && activeEl) {
