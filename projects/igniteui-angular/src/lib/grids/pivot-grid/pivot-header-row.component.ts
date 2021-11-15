@@ -35,8 +35,6 @@ export interface IgxGridRowSelectorsTemplateContext {
     templateUrl: './pivot-header-row.component.html'
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
-    @Input()
-    public row: IgxPivotRowComponent;
 
     private _dropPos = DropPosition.AfterDropTarget;
     private _dropLeftIndicatorClass = 'igx-pivot-grid__drop-indicator--left';
