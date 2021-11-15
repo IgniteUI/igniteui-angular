@@ -183,7 +183,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      */
     @Input()
     public get columns() {
-        return this.grid?.columns;
+        return (this.grid as any)?._columns;
     }
 
     public set columns(value) {
