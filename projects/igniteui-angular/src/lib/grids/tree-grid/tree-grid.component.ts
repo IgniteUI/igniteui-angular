@@ -482,7 +482,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                     // if a row has been added and before commiting the transaction deleted
                     const leafRowsDirectParents = new Set<any>();
                     this.records.forEach(record => {
-                        if (record && !record.children && record.parent) {
+                        if (record && (!record.children || record.children.length === 0) && record.parent) {
                             leafRowsDirectParents.add(record.parent);
                         }
                     });
@@ -499,7 +499,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 const leafRowsDirectParents = new Set<any>();
                 this.records.forEach(record => {
-                    if (record && !record.children && record.parent) {
+                    if (record && (!record.children || record.children.length === 0) && record.parent) {
                         leafRowsDirectParents.add(record.parent);
                     }
                 });
