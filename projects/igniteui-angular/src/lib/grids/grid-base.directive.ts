@@ -289,8 +289,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Emitted after the current page is changed.
      *
-     * @deprecated in version 12.1.0
-     * Use the corresponding output exposed by the `igx-paginator` component instead.
      *
      * @example
      * ```html
@@ -310,8 +308,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Emitted when `perPage` property value of the grid is changed.
      *
-     * @deprecated in version 12.1.0
-     * Use the corresponding output exposed by the `igx-paginator` component instead.
      *
      * @example
      * ```html
@@ -338,8 +334,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets/Sets the styling classes applied to all even `IgxGridRowComponent`s in the grid.
      *
-     * @deprecated
-     * `evenRowCSS` is deprecated. We suggest using `rowClasses` property instead.
      *
      * @example
      * ```html
@@ -354,8 +348,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets/Sets the styling classes applied to all odd `IgxGridRowComponent`s in the grid.
      *
-     * @deprecated
-     * `oddRowCSS` is deprecated. We suggest using `rowClasses` property instead.
      *
      * @example
      * ```html
@@ -714,8 +706,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Emitted after paging is performed.
      *
-     * @deprecated in version 12.1.x
-     * `pagingDone` is deprecated. Use the corresponding output exposed by the `igx-paginator` component instead.
      *
      * @remarks
      * Returns an object consisting of the previous and next pages.
@@ -1528,8 +1518,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets/Sets whether the paging feature is enabled.
      *
-     * @deprecated in version 12.1.x
-     * `paging` is deprecated
      *
      * @remarks
      * The default state is disabled (false).
@@ -1555,8 +1543,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets/Sets the current page index.
      *
-     * @deprecated in version 12.1.x
-     * `page` is deprecated. Use the `page` property from the `igx-paginator` component instead.
      *
      * @example
      * ```html
@@ -1583,8 +1569,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets/Sets the number of visible items per page.
      *
-     * @deprecated in version 12.1.x
-     * `perPage` is deprecated. Use the `perPage` property from the `igx-paginator` component instead.
      *
      * @remarks
      * The default is 15.
@@ -3977,8 +3961,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets the total number of pages.
      *
-     * @deprecated in version 12.1.0
-     * `totalPages` is deprecated. Use the corresponding property exposed by the `igx-paginator`.
      *
      * @example
      * ```typescript
@@ -3994,8 +3976,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets if the current page is the first page.
      *
-     * @deprecated in version 12.1.0
-     * `isFirstPage` is deprecated. Use the corresponding property exposed by the `igx-paginator`.'
      *
      * @example
      * ```typescript
@@ -4011,8 +3991,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Goes to the next page, if the grid is not already at the last page.
      *
-     * @deprecated in version 12.1.0
-     * 'Use the corresponding method exposed by the `igx-paginator`.'
      *
      * @example
      * ```typescript
@@ -4029,8 +4007,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Goes to the previous page, if the grid is not already at the first page.
      *
-     * @deprecated in version 12.1.0
-     * 'Use the corresponding method exposed by the `igx-paginator`.'
      * @example
      * ```
      */
@@ -4070,8 +4046,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Returns if the current page is the last page.
      *
-     * @deprecated in version 12.1.0
-     * `isLastPage` is deprecated. Use the corresponding property exposed by the `igx-paginator`.'
      *
      * @example
      * ```typescript
@@ -4188,8 +4162,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Goes to the desired page index.
      *
-     * @deprecated in version 12.1.x
-     * 'Use the corresponding method exposed by the `igx-paginator`.'
      *
      * @example
      * ```typescript
