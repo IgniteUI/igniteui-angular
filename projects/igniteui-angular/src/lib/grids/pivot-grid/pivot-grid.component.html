@@ -33,8 +33,9 @@
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree
         | pivotGridRow:pivotConfiguration:expansionStates:pipeTrigger
-        | pivotGridRowExpansion:pivotConfiguration:expansionStates:pipeTrigger
-        | pivotGridColumn:pivotConfiguration:expansionStates:pipeTrigger"
+        | pivotGridColumn:pivotConfiguration:expansionStates:pipeTrigger
+        | pivotGridColumnSort:sortingExpressions:sortStrategy:id:pipeTrigger:true
+        | pivotGridRowExpansion:pivotConfiguration:expansionStates:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"

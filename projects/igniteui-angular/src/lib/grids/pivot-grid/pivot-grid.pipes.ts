@@ -7,6 +7,8 @@ import { IPivotConfiguration, IPivotDimension, IPivotKeys } from './pivot-grid.i
 import { PivotColumnDimensionsStrategy, PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 /**
  * @hidden
  */
@@ -123,6 +125,30 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
         }
 
         const result = DataUtil.filter(cloneArray(collection), state);
+
+        return result;
+    }
+}
+
+
+/**
+ * @hidden
+ */
+ @Pipe({
+    name: 'pivotGridColumnSort',
+    pure: true
+})
+export class IgxPivotGridSortingPipe implements PipeTransform {
+
+    public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
+        id: string, pipeTrigger: number, pinned?): any[] {
+        let result: any[];
+
+        if (!expressions.length) {
+            result = collection;
+        } else {
+            result = DataUtil.sort(cloneArray(collection), expressions, sorting);
+        }
 
         return result;
     }

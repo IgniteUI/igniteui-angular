@@ -2,7 +2,8 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxGridModule } from '../grid/grid.module';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
-import { IgxPivotRowPipe, IgxPivotColumnPipe, IgxPivotGridFilterPipe, IgxPivotRowExpansionPipe } from './pivot-grid.pipes';
+import { IgxPivotRowPipe, IgxPivotColumnPipe, IgxPivotGridFilterPipe,
+   IgxPivotRowExpansionPipe, IgxPivotGridSortingPipe } from './pivot-grid.pipes';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 
@@ -17,7 +18,8 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
     IgxPivotRowPipe,
     IgxPivotRowExpansionPipe,
     IgxPivotColumnPipe,
-    IgxPivotGridFilterPipe
+    IgxPivotGridFilterPipe,
+    IgxPivotGridSortingPipe
   ],
   exports: [
     IgxGridModule,
@@ -27,7 +29,8 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
     IgxPivotRowExpansionPipe,
     IgxPivotRowPipe,
     IgxPivotColumnPipe,
-    IgxPivotGridFilterPipe
+    IgxPivotGridFilterPipe,
+    IgxPivotGridSortingPipe
   ],
   imports: [
     IgxGridModule,
