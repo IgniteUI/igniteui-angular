@@ -803,7 +803,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.notifyChanges();
     }
 
-    public isSelected(rowData: any): boolean {
+    public isRowSelected(rowData: any): boolean {
         const primaryKey = this.primaryKey;
         const rowId = primaryKey ? rowData[primaryKey] : rowData;
 
