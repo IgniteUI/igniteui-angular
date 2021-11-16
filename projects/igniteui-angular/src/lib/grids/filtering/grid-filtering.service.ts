@@ -81,7 +81,7 @@ export class IgxFilteringService implements OnDestroy {
             this.initFilteringSettings();
             this.column = column;
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
-            const filterIconTarget = element.querySelector(`.${filterIcon}`) as HTMLElement;
+            const filterIconTarget = element.querySelector(`.${filterIcon}`) as HTMLElement || element;
 
             this._filterMenuOverlaySettings.target = filterIconTarget;
             this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
@@ -555,7 +555,7 @@ export class IgxFilteringService implements OnDestroy {
         return true;
     }
 
-    private filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+    protected filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase: boolean) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
@@ -578,7 +578,7 @@ export class IgxFilteringService implements OnDestroy {
      * If createNewTree is true, filteringState will not be modified (because it directly affects the grid.filteringExpressionsTree),
      * but a new object is created and returned.
      */
-    private prepare_filtering_expression(
+    protected prepare_filtering_expression(
         filteringState: IFilteringExpressionsTree,
         fieldName: string,
         searchVal,

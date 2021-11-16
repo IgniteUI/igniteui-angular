@@ -60,7 +60,7 @@ export class PivotUtil {
                 continue;
             }
             rec[field + '_' + pivotKeys.level] = currDimLvl;
-            const expansionRowKey = PivotUtil.getRecordKey(rec, rec[field]);
+            const expansionRowKey = PivotUtil.getRecordKey(rec, dim, prevDims);
             const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
                 defaultExpandState :
                 expansionStates.get(expansionRowKey);
@@ -156,7 +156,7 @@ export class PivotUtil {
             const value = this.extractValueFromDimension(col, recData);
             path.push(value);
             const newValue = path.join('-');
-            lvlCollection.push({ value: newValue });
+            lvlCollection.push({ value: newValue, dimension: col });
             lvlCollection[0].expandable = col.expandable;
             if (!lvlCollection[0].children) {
                 lvlCollection[0].children = [];
@@ -299,20 +299,17 @@ export class PivotUtil {
         return leafs;
     }
 
-    public static getRecordKey(rec, key) {
-        const pivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
+    public static getRecordKey(rec, currentDim: IPivotDimension, prevDims: IPivotDimension[]) {
         const parentFields = [];
-        for (const property in rec) {
-            if (rec.hasOwnProperty(property) &&
-                Object.keys(pivotKeys).indexOf(property) === -1
-                && Object.keys(pivotKeys).filter(x => property.indexOf(x) !== -1).length === 0) {
-                const currLevel = rec[property + '_level'];
-                if (currLevel > 0) {
-                    parentFields.unshift(rec[property]);
-                }
-            }
+        const field = currentDim.memberName;
+        const value = rec[field];
+        for(const prev of prevDims) {
+            const dimData = PivotUtil.getDimensionLevel(prev, rec,
+                { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'});
+                parentFields.push(rec[dimData.dimension.memberName]);
         }
-        return parentFields.concat(key).join('_');
+        parentFields.push(value);
+        return parentFields.join('_');
     }
 
     public static getTotalLvl(rec) {

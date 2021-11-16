@@ -1,8 +1,7 @@
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IPivotDimensionStrategy } from '../../data-operations/pivot-strategy';
-
-
+import { IgxColumnComponent } from '../columns/column.component';
 
 export type PivotAggregation = (members: any[], data: any[]) => any;
 
@@ -72,4 +71,10 @@ export enum PivotDimensionType {
     Row,
     Column,
     Filter
+}
+
+export interface IPivotDimensionData {
+    column: IgxColumnComponent;
+    dimension: IPivotDimension;
+    prevDimensions: IPivotDimension[];
 }
