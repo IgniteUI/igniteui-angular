@@ -20,19 +20,6 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     const TAGS = ['igx-grid', 'igx-tree-grid', 'igx-hierarchical-grid'];
     const tsFiles = update.tsFiles;
 
-    for (const path of update.templateFiles) {
-        findElementNodes(parseFile(new HtmlParser(), host, path), TAGS)
-            .map(node => getSourceOffset(node as Element))
-            .forEach(offset => {
-                const { file, node } = offset;
-                if (file.content.includes('columns')) {
-                    const gridRef = node.attrs.find(e => e.name.includes('#')).name.substring(1);
-                    const content = file.content.split(gridRef + '.columns').join(gridRef + '.columnsCollection');
-                    host.overwrite(path, content);
-                }
-            });
-    }
-
     const getIndicesOf = (searchStr, str) => {
         if (searchStr.length === 0) {
             return [];
@@ -46,23 +33,5 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         }
         return indexes;
     };
-
-    for (const path of tsFiles) {
-        let content = host.read(path)?.toString();
-        GRIDS.forEach(grid => {
-            if (content.indexOf(grid) > -1) {
-                const indexes = getIndicesOf('@ViewChild', content);
-                indexes.forEach(index => {
-                    const viewChildRef = content.substring(index, content.indexOf(';', index)).replace(/\s\s+/g, ' ');
-                    if (viewChildRef.includes(grid)) {
-                        const gridDeclaration = viewChildRef.substring(viewChildRef.indexOf(')') + 1).replace(/\:/g, '').trim();
-                        const gridName = gridDeclaration.split(' ')[1];
-                        content = content.split(gridName + '.columns').join(gridName + '.columnsCollection');
-                        host.overwrite(path, content);
-                    }
-                });
-            }
-        });
-    }
     update.applyChanges();
 };

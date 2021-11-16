@@ -57,7 +57,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(startCell.active).toBe(true);
 
             for (let i = 3; i < 5; i++) {
-                const cell = grid.gridAPI.get_cell_by_index(i, grid.columns[i - 1].field);
+                const cell = grid.gridAPI.get_cell_by_index(i, grid.columnList.get(i - 1).field);
                 UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
                 detect();
                 GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, i, 1, i - 1);
@@ -71,7 +71,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             }
 
             for (let i = 2; i >= 0; i--) {
-                const cell = grid.gridAPI.get_cell_by_index(0, grid.columns[i].field);
+                const cell = grid.gridAPI.get_cell_by_index(0, grid.columnList.get(i).field);
                 UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
                 detect();
                 GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 0, 1, i);
@@ -984,7 +984,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             GridSelectionFunctions.verifyCellSelected(cell);
             for (let i = 3; i < 6; i++) {
-                cell = grid.gridAPI.get_cell_by_index(1, grid.columns[i - 1].field);
+                cell = grid.gridAPI.get_cell_by_index(1, grid.columnList.get(i - 1).field);
                 UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent, false, true);
                 await wait(100);
                 fix.detectChanges();
@@ -1011,7 +1011,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(14);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 1, 2, 5);
             for (let i = 5; i > 0; i--) {
-                cell = grid.gridAPI.get_cell_by_index(0, grid.columns[i - 1].field);
+                cell = grid.gridAPI.get_cell_by_index(0, grid.columnList.get(i - 1).field);
                 UIInteractions.triggerEventHandlerKeyDown('arrowleft', gridContent, false, true);
                 await wait(100);
                 fix.detectChanges();

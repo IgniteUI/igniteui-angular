@@ -1,13 +1,16 @@
 import {
+    ApplicationRef,
     ChangeDetectorRef,
     ComponentFactoryResolver,
     Directive,
     ElementRef,
     EventEmitter,
     Inject,
+    Injector,
     Input,
     IterableDiffers,
     LOCALE_ID,
+    NgModuleRef,
     NgZone,
     Optional,
     Output,
@@ -145,7 +148,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * @hidden
      */
     public parentIsland: IgxRowIslandComponent;
-    public abstract rootGrid;
+    public abstract rootGrid: GridType;
 
     public abstract expandChildren: boolean;
 
@@ -161,6 +164,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
+        appRef: ApplicationRef,
+        moduleRef: NgModuleRef<any>,
+        factoryResolver: ComponentFactoryResolver,
+        injector: Injector,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -181,6 +188,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             resolver,
             differs,
             viewRef,
+            appRef,
+            moduleRef,
+            factoryResolver,
+            injector,
             navigation,
             filteringService,
             overlayService,

@@ -74,6 +74,33 @@ export class IgxExcelStyleHeaderIconDirective {
 /**
  * @hidden
  */
+ @Directive({
+    selector: '[igxSortHeaderIcon]'
+})
+export class IgxSortHeaderIconDirective {
+}
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxSortAscendingHeaderIcon]'
+})
+export class IgxSortAscendingHeaderIconDirective {
+}
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxSortDescendingHeaderIcon]'
+})
+export class IgxSortDescendingHeaderIconDirective {
+}
+
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxGroupAreaDrop]'
 })

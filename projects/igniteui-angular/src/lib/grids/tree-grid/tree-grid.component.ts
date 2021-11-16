@@ -3,7 +3,6 @@ import {
     Component,
     HostBinding,
     Input,
-    forwardRef,
     OnInit,
     TemplateRef,
     QueryList,
@@ -20,7 +19,10 @@ import {
     IterableDiffers,
     ViewContainerRef,
     Optional,
-    LOCALE_ID
+    LOCALE_ID,
+    ApplicationRef,
+    NgModuleRef,
+    Injector
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -49,7 +51,6 @@ import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DOCUMENT } from '@angular/common';
@@ -85,9 +86,8 @@ let NEXT_ID = 0;
         IgxGridSummaryService,
         IgxGridNavigationService,
         { provide: IgxGridSelectionService, useClass: IgxTreeGridSelectionService },
-        // { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxTreeGridAPIService },
-        { provide: IGX_GRID_BASE, useExisting: forwardRef(() => IgxTreeGridComponent) },
+        { provide: IGX_GRID_BASE, useExisting: IgxTreeGridComponent },
         IgxFilteringService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
@@ -400,6 +400,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
+        appRef: ApplicationRef,
+        moduleRef: NgModuleRef<any>,
+        factoryResolver: ComponentFactoryResolver,
+        injector: Injector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -411,12 +415,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(selectionService, colResizingService, gridAPI, transactionFactory,
-            _elementRef, _zone, document, cdr, resolver, differs, viewRef, navigation,
+            _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef,factoryResolver, injector, navigation,
             filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
     }
 
     /**
-     * @deprecated
+     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
+     *
      * Returns a `CellType` object that matches the conditions.
      *
      * @example
@@ -426,7 +431,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param rowIndex
      * @param index
      */
-    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
@@ -478,7 +482,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                     // if a row has been added and before commiting the transaction deleted
                     const leafRowsDirectParents = new Set<any>();
                     this.records.forEach(record => {
-                        if (record && !record.children && record.parent) {
+                        if (record && (!record.children || record.children.length === 0) && record.parent) {
                             leafRowsDirectParents.add(record.parent);
                         }
                     });
@@ -495,7 +499,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 const leafRowsDirectParents = new Set<any>();
                 this.records.forEach(record => {
-                    if (record && !record.children && record.parent) {
+                    if (record && (!record.children || record.children.length === 0) && record.parent) {
                         leafRowsDirectParents.add(record.parent);
                     }
                 });

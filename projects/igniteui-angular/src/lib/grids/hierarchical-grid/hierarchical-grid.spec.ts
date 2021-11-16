@@ -1110,16 +1110,16 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
         tick();
         fixture.detectChanges();
         // check parent cols
-        expect(hierarchicalGrid.columns.length).toBe(4);
-        expect(hierarchicalGrid.columns[0].field).toBe('ID');
-        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
-        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
-        expect(hierarchicalGrid.columns[3].field).toBe('Col2');
+        expect(hierarchicalGrid.columnList.length).toBe(4);
+        expect(hierarchicalGrid.columnList.get(0).field).toBe('ID');
+        expect(hierarchicalGrid.columnList.get(1).field).toBe('ProductName');
+        expect(hierarchicalGrid.columnList.get(2).field).toBe('Col1');
+        expect(hierarchicalGrid.columnList.get(3).field).toBe('Col2');
         // check child cols
-        expect(child1Grid.columns.length).toBe(3);
-        expect(hierarchicalGrid.columns[0].field).toBe('ID');
-        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
-        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
+        expect(child1Grid.columnList.length).toBe(3);
+        expect(hierarchicalGrid.columnList.get(0).field).toBe('ID');
+        expect(hierarchicalGrid.columnList.get(1).field).toBe('ProductName');
+        expect(hierarchicalGrid.columnList.get(2).field).toBe('Col1');
     }));
 
     it('should update columns for expanded child when adding column to row island', fakeAsync(() => {
@@ -1433,6 +1433,8 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
         const secondLevelGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
         expect(secondLevelGrid).not.toBeNull();
+
+        secondLevelGrid.primaryKey = 'ID';
         customFixture.detectChanges();
 
         expect(GridFunctions.getRowEditingOverlay(customFixture)).toBeNull();

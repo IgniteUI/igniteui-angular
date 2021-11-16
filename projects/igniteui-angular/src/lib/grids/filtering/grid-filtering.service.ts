@@ -19,7 +19,7 @@ import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
-import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
+import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 
 /**
  * @hidden
@@ -43,9 +43,9 @@ export class IgxFilteringService implements OnDestroy {
         closeOnEscape: true,
         closeOnOutsideClick: true,
         modal: false,
-        positionStrategy: new ConnectedPositioningStrategy({
-            verticalStartPoint: VerticalAlignment.Top,
-            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' } }),
+        positionStrategy: new ExcelStylePositionStrategy({
+            verticalStartPoint: VerticalAlignment.Bottom,
+            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' }}),
             closeAnimation: null
         }),
         scrollStrategy: new AbsoluteScrollStrategy()
@@ -74,15 +74,15 @@ export class IgxFilteringService implements OnDestroy {
 
         this._overlayService.opening
             .pipe(
-                takeUntil(this.destroy$),
-                first(overlay => overlay.id === id)
+                first(overlay => overlay.id === id),
+                takeUntil(this.destroy$)
             )
             .subscribe(() => this.lastActiveNode = this.grid.navigation.activeNode);
 
         this._overlayService.closed
             .pipe(
-                takeUntil(this.destroy$),
-                first(overlay => overlay.id === id)
+                first(overlay => overlay.id === id),
+                takeUntil(this.destroy$)
             )
             .subscribe(() => {
                 this._overlayService.detach(id);
@@ -219,7 +219,7 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         filteringTree.filteringOperands = [];
-        for (const column of grid.columns) {
+        for (const column of grid.columnList) {
             this.prepare_filtering_expression(filteringTree, column.field, term,
                 condition, ignoreCase || column.filteringIgnoreCase);
         }
@@ -261,7 +261,7 @@ export class IgxFilteringService implements OnDestroy {
             const expressions = this.getExpressions(field);
             expressions.length = 0;
         } else {
-            this.grid.columns.forEach(c => {
+            this.grid.columnList.forEach(c => {
                 const expressions = this.getExpressions(c.field);
                 expressions.length = 0;
             });
@@ -297,7 +297,7 @@ export class IgxFilteringService implements OnDestroy {
         const filteringTree = grid.filteringExpressionsTree;
         const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
 
-        for (const column of grid.columns) {
+        for (const column of grid.columnList) {
             this.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
                 ignoreCase || column.filteringIgnoreCase);
         }
@@ -333,7 +333,7 @@ export class IgxFilteringService implements OnDestroy {
      */
     public getExpressions(columnId: string): ExpressionUI[] {
         if (!this.columnToExpressionsMap.has(columnId)) {
-            const column = this.grid.columns.find((col) => col.field === columnId);
+            const column = this.grid.columnList.find((col) => col.field === columnId);
             const expressionUIs = new Array<ExpressionUI>();
             if (column) {
                 this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, expressionUIs);
@@ -353,7 +353,7 @@ export class IgxFilteringService implements OnDestroy {
             this.columnsWithComplexFilter.clear();
 
             this.columnToExpressionsMap.forEach((value: ExpressionUI[], key: string) => {
-                const column = this.grid.columns.find((col) => col.field === key);
+                const column = this.grid.columnList.find((col) => col.field === key);
                 if (column) {
                     value.length = 0;
 
@@ -435,7 +435,7 @@ export class IgxFilteringService implements OnDestroy {
             return true;
         }
 
-        const column = this.grid.columns.find((col) => col.field === columnId);
+        const column = this.grid.columnList.find((col) => col.field === columnId);
         const isComplex = column && this.isFilteringTreeComplex(column.filteringExpressionsTree);
         if (isComplex) {
             this.columnsWithComplexFilter.add(columnId);

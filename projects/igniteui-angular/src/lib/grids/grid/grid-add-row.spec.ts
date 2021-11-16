@@ -286,7 +286,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should generate correct row ID based on the primary column type', () => {
-            const column = grid.columns.find(col => col.field === grid.primaryKey);
+            const column = grid.columnList.find(col => col.field === grid.primaryKey);
             const type = column.dataType;
 
             const row = grid.gridAPI.get_row_by_index(0);
@@ -844,15 +844,14 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.rowEditable = true;
             fixture.detectChanges();
             const gridFirstRow = grid.rowList.first;
-            const headerCells = grid.headerGroupsList[0].children;
             // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridFirstRow.cells);
+            GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
 
             gridFirstRow.beginAddRow();
             fixture.detectChanges();
             const newRow = grid.gridAPI.get_row_by_index(1);
             expect(newRow.addRowUI).toBeTrue();
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, newRow.cells);
+            GridFunctions.verifyLayoutHeadersAreAligned(grid, newRow);
         });
     });
 
@@ -949,7 +948,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
 
-            grid.moveColumn(grid.columns[1], grid.columns[2]);
+            grid.moveColumn(grid.columnList.get(1), grid.columnList.get(2));
             fixture.detectChanges();
 
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();

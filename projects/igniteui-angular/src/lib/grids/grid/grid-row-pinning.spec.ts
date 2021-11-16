@@ -575,7 +575,7 @@ describe('Row Pinning #grid', () => {
 
         it('should calculate global summaries with both pinned and unpinned collections', () => {
             // enable summaries for each column
-            grid.columns.forEach(c => {
+            grid.columnList.forEach(c => {
                 c.hasSummary = true;
             });
             fix.detectChanges();
@@ -601,7 +601,7 @@ describe('Row Pinning #grid', () => {
 
         it('should calculate groupby row summaries only within unpinned collection', () => {
             // enable summaries for each column
-            grid.columns.forEach(c => {
+            grid.columnList.forEach(c => {
                 c.hasSummary = true;
             });
             fix.detectChanges();
@@ -787,11 +787,10 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.gridAPI.get_row_by_index(0).pinned).toBeTruthy();
             const gridPinnedRow = grid.pinnedRows[0];
-            const headerCells = grid.headerGroupsList[0].children;
 
             // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridPinnedRow.cells);
-            GridFunctions.verifyDOMMatchesLayoutSettings(gridPinnedRow, fix.componentInstance.colGroups);
+            GridFunctions.verifyLayoutHeadersAreAligned(grid, gridPinnedRow, true);
+            GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridPinnedRow, fix.componentInstance.colGroups);
 
             // unpin
             const row = grid.pinnedRows[0];
@@ -803,8 +802,8 @@ describe('Row Pinning #grid', () => {
 
             const gridUnpinnedRow = grid.gridAPI.get_row_by_index(1);
 
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridUnpinnedRow.cells);
-            GridFunctions.verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
+            GridFunctions.verifyLayoutHeadersAreAligned(grid, gridUnpinnedRow);
+            GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridUnpinnedRow, fix.componentInstance.colGroups);
         });
 
         it('should pin/unpin correctly to bottom', () => {
@@ -826,11 +825,10 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.gridAPI.get_row_by_index(fix.componentInstance.data.length).pinned).toBeTruthy();
             const gridPinnedRow = grid.pinnedRows[0];
-            const headerCells = grid.headerGroupsList[0].children;
 
             // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridPinnedRow.cells);
-            GridFunctions.verifyDOMMatchesLayoutSettings(gridPinnedRow, fix.componentInstance.colGroups);
+            GridFunctions.verifyLayoutHeadersAreAligned(grid, gridPinnedRow, true);
+            GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridPinnedRow, fix.componentInstance.colGroups);
 
             // unpin
             const row = grid.pinnedRows[0];
@@ -842,8 +840,8 @@ describe('Row Pinning #grid', () => {
 
             const gridUnpinnedRow = grid.gridAPI.get_row_by_index(1);
 
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, gridUnpinnedRow.cells);
-            GridFunctions.verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
+            GridFunctions.verifyLayoutHeadersAreAligned(grid, gridUnpinnedRow);
+            GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridUnpinnedRow, fix.componentInstance.colGroups);
         });
 
         it('should test getRowByIndex API members.', () => {
@@ -922,7 +920,7 @@ describe('Row Pinning #grid', () => {
         it('should hide columns in pinned and unpinned area', () => {
             // pin 2nd data row
             grid.pinRow(fix.componentInstance.data[1]);
-            const hiddenCol = grid.columns[1];
+            const hiddenCol = grid.columnList.get(1);
             hiddenCol.hidden = true;
             fix.detectChanges();
 

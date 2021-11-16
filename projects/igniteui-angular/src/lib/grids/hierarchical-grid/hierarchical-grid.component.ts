@@ -9,7 +9,6 @@ import {
     ContentChildren,
     DoCheck,
     ElementRef,
-    forwardRef,
     HostBinding,
     Inject,
     Input,
@@ -40,7 +39,6 @@ import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 
@@ -238,7 +236,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxGridCRUDService,
         IgxGridSelectionService,
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxHierarchicalGridAPIService },
-        { provide: IGX_GRID_BASE, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
+        { provide: IGX_GRID_BASE, useExisting: IgxHierarchicalGridComponent },
         IgxGridSummaryService,
         IgxFilteringService,
         IgxHierarchicalGridNavigationService,
@@ -467,7 +465,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * @deprecated
+     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
+     *
      * Returns a `CellType` object that matches the conditions.
      *
      * @example
@@ -477,7 +476,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @param rowIndex
      * @param index
      */
-    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
@@ -597,9 +595,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
 
         if (this.parent) {
-            this._displayDensity = this.rootGrid._displayDensity;
+            this._displayDensity = this.rootGrid.displayDensity;
             this.rootGrid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this._displayDensity = this.rootGrid._displayDensity;
+                this._displayDensity = this.rootGrid.displayDensity;
                 this.notifyChanges(true);
                 this.cdr.markForCheck();
             });
@@ -623,6 +621,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
         this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
         this.excelStyleHeaderIconTemplate = this.rootGrid.excelStyleHeaderIconTemplate;
+        this.sortAscendingHeaderIconTemplate = this.rootGrid.sortAscendingHeaderIconTemplate;
+        this.sortDescendingHeaderIconTemplate = this.rootGrid.sortDescendingHeaderIconTemplate;
+        this.sortHeaderIconTemplate = this.rootGrid.sortHeaderIconTemplate;
         this.hasChildrenKey = this.parentIsland ?
             this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
             this.rootGrid.hasChildrenKey;
@@ -631,7 +632,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     public get outletDirective(): IgxOverlayOutletDirective {
-        return this.rootGrid._outletDirective;
+        return this.rootGrid.outlet;
     }
 
     /**
@@ -883,7 +884,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public get rootGrid() {
+    public get rootGrid(): GridType {
         let currGrid = this;
         while (currGrid.parent) {
             currGrid = currGrid.parent;
@@ -1045,7 +1046,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return row;
     }
 
-    protected getChildGrids(inDeph?: boolean) {
+    /** @hidden @internal */
+    public getChildGrids(inDeph?: boolean) {
         return this.hgridAPI.getChildGrids(inDeph);
     }
 

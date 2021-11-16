@@ -364,6 +364,7 @@ export class IgxOverlayService implements OnDestroy {
             console.warn('igxOverlay.detach was called with wrong id: ', id);
             return;
         }
+        info.detached = true;
         this.finishAnimations(info);
         info.settings.scrollStrategy.detach();
         this.removeOutsideClickListener(info);
@@ -456,6 +457,9 @@ export class IgxOverlayService implements OnDestroy {
         const overlayInfo = this.getOverlayById(id);
         if (!overlayInfo || !overlayInfo.settings) {
             console.error('Wrong id provided in overlay.reposition method. Id: ' + id);
+            return;
+        }
+        if (!overlayInfo.visible) {
             return;
         }
         const contentElement = overlayInfo.elementRef.nativeElement.parentElement;
@@ -555,6 +559,13 @@ export class IgxOverlayService implements OnDestroy {
 
             const injector = moduleRef ? moduleRef.injector : this._injector;
             const dynamicComponent: ComponentRef<any> = dynamicFactory.create(injector);
+            if (dynamicComponent.onDestroy) {
+                dynamicComponent.onDestroy(() => {
+                    if (!info.detached && this._overlayInfos.indexOf(info) !== -1) {
+                        this.detach(info.id);
+                    }
+                })
+            }
             this._appRef.attachView(dynamicComponent.hostView);
 
             // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
@@ -653,11 +664,11 @@ export class IgxOverlayService implements OnDestroy {
     private cleanUp(info: OverlayInfo) {
         const child: HTMLElement = info.elementRef.nativeElement;
         const outlet = this.getOverlayElement(info);
-        if (!outlet.contains(child)) {
-            console.warn(`Component with id: ${info.id} is already detached!`);
-            return;
+        // if same element is shown in other overlay outlet will not contain
+        // the element and we should not remove it form outlet
+        if (outlet.contains(child)) {
+            outlet.removeChild(child.parentNode.parentNode);
         }
-        outlet.removeChild(child.parentNode.parentNode);
         if (info.componentRef) {
             this._appRef.detachView(info.componentRef.hostView);
             info.componentRef.destroy();
