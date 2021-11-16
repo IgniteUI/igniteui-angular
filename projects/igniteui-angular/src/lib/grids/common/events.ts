@@ -85,11 +85,11 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
 }
 
 export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    oldSelection: string[];
+    readonly oldSelection: string[];
     newSelection: string[];
-    added: string[];
-    removed: string[];
-    event?: Event;
+    readonly added: string[];
+    readonly removed: string[];
+    readonly event?: Event;
 }
 
 export interface ISearchInfo {

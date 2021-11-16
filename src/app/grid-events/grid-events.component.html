@@ -3,7 +3,7 @@
     <igx-switch (change)='this.$filtering = !this.$filtering' style="padding-left: 20px">cancel filtering</igx-switch>
     <igx-switch (change)='this.$pinning = !this.$pinning' style="padding-left: 20px">cancel pinning</igx-switch>
     <igx-switch (change)='this.$resizing = !this.$resizing' style="padding-left: 20px">cancel resizing</igx-switch>
-    <igx-switch (change)='this.$columnSelected = !this.$columnSelected' style="padding-left: 20px">cancel columnSelected</igx-switch>
+    <igx-switch (change)='this.$columnSelectionChanging = !this.$columnSelectionChanging' style="padding-left: 20px">cancel columnSelectionChanging</igx-switch>
     <igx-switch (change)='this.$hiding = !this.$hiding' style="padding-left: 20px">cancel hiding</igx-switch>
 </div>
 <igx-input-group>
@@ -38,7 +38,7 @@
                 (columnVisibilityChanging)="columnVisibilityChanging($event)"
                 (columnVisibilityChanged)="columnVisibilityChanged($event)"
                 (columnResized)="columnResized($event)"
-                (columnSelected)="columnSelected($event)">
+                (columnSelectionChanging)="columnSelectionChanging($event)">
 
                 <igx-grid-toolbar>
                     <igx-grid-toolbar-actions>

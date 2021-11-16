@@ -31,6 +31,16 @@
                 "IgxHierarchicalGridComponent",
                 "IgxRowIslandComponent"
             ]
+        },
+        {
+            "member": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
         }
     ]
 }

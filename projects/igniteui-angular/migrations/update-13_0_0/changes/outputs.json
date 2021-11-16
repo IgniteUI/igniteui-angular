@@ -32,6 +32,38 @@
                 "selector": "igx-row-island",
                 "type": "component"
             }
+        },
+        {
+            "name": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
         }
     ]
 }

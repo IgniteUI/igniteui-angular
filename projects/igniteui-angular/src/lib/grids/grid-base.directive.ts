@@ -477,11 +477,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```html
-     * <igx-grid #grid (columnSelected)="columnSelected($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid (columnSelectionChanging)="columnSelectionChanging($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public columnSelected = new EventEmitter<IColumnSelectionEventArgs>();
+    public columnSelectionChanging = new EventEmitter<IColumnSelectionEventArgs>();
 
     /**
      * Emitted before `IgxColumnComponent` is pinned.
