@@ -81,6 +81,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      */
     @Input()
     public data: any = [];
+
     /**
      * The index of the row.
      *
