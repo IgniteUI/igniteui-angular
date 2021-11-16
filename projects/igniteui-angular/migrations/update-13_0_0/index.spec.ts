@@ -121,4 +121,73 @@ describe(`Update to ${version}`, () => {
 </div>
 `.replace(lineBreaksAndSpaceRegex, ''));
     });
+
+    it('should insert a comment when exporter services are present in module.ts files', async () => {
+        appTree.create('/testSrc/appPrefix/component/app.module.ts',
+`import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AppComponent } from "./app.component";
+import { IgxCsvExporterService, IgxExcelExporterService } from "igniteui-angular";
+import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
+
+@NgModule({
+bootstrap: [AppComponent],
+declarations: [
+    AppComponent,
+    ExcelExportComponent
+],
+imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule
+],
+providers: [
+    IgxCsvExporterService,
+    IgxExcelExporterService
+],
+entryComponents: [],
+schemas: []
+})
+export class AppModule {}
+`);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/app.module.ts')
+        ).toEqual(
+`// IgxCsvExporterService and IgxExcelExporterService no longer need to be manually provided and can be safely removed.
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AppComponent } from "./app.component";
+import { IgxCsvExporterService, IgxExcelExporterService } from "igniteui-angular";
+import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
+
+@NgModule({
+bootstrap: [AppComponent],
+declarations: [
+    AppComponent,
+    ExcelExportComponent
+],
+imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule
+],
+providers: [
+    IgxCsvExporterService,
+    IgxExcelExporterService
+],
+entryComponents: [],
+schemas: []
+})
+export class AppModule {}
+`);
+    });
 });
