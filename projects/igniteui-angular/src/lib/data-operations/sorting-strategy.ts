@@ -150,8 +150,20 @@ export class IgxSorting implements IGridSortingStrategy {
                     fullResult.data.push(groupItem);
                 }
                 if (expanded) {
-                    metadata.push(...fullResult.metadata.slice(fullResult.metadata.length - group.length));
-                    result.push(...fullResult.data.slice(fullResult.data.length - group.length));
+                    // Replaced object destructing as in a single big group scenario
+                    // it hits the max number of arguments for a function the underlying JS engine
+                    // supports.
+                    let j = fullResult.metadata.length - group.length;
+
+                    for (; j < fullResult.metadata.length; j++) {
+                        metadata.push(fullResult.metadata[j]);
+                    }
+
+                    j = fullResult.data.length - group.length;
+
+                    for (; j < fullResult.data.length; j++) {
+                        result.push(fullResult.data[j]);
+                    }
                 }
             }
             i += group.length;
