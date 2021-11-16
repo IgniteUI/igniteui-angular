@@ -81,13 +81,7 @@ export interface RowType {
     isSummaryRow?: boolean;
     summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
-    /** @deprecated in version 12.0.0
-     *  Deprecated, will be removed. key is the new property */
-    rowID?: any;
     key?: any;
-    /** @deprecated in version 12.0.0
-     * Deprecated, will be removed. data is the new property */
-    rowData?: any;
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
@@ -104,13 +98,14 @@ export interface RowType {
     addRowUI?: any;
     focused?: boolean;
     grid: GridType;
-    onRowSelectorClick?: (event) => void;
+    onRowSelectorClick?: (event: MouseEvent) => void;
     onClick?: (event: MouseEvent) => void;
     beginAddRow?: () => void;
     update?: (value: any) => void;
     delete?: () => any;
     pin?: () => void;
     unpin?: () => void;
+    toggle?: () => void;
 }
 
 export interface ColumnType {

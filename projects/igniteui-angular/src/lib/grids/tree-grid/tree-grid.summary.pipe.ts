@@ -33,8 +33,8 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
             const isCollapsed = !record.expanded && record.children && record.children.length > 0 && showSummaryOnCollapse;
             if (isCollapsed) {
                 let childData = record.children.filter(r => !r.isFilteredOutParent).map(r => r.data);
-                childData = this.removeDeletedRecord(grid, record.rowID, childData);
-                const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
+                childData = this.removeDeletedRecord(grid, record.key, childData);
+                const summaries = grid.summaryService.calculateSummaries(record.key, childData);
                 const summaryRecord: ISummaryRecord = {
                     summaries,
                     max: maxSummaryHeight,
@@ -52,8 +52,8 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
 
                     if (children[children.length - 1] === childRecord ) {
                         let childData = children.filter(r => !r.isFilteredOutParent).map(r => r.data);
-                        childData = this.removeDeletedRecord(grid, parent.rowID, childData);
-                        const summaries = grid.summaryService.calculateSummaries(parent.rowID, childData);
+                        childData = this.removeDeletedRecord(grid, parent.key, childData);
+                        const summaries = grid.summaryService.calculateSummaries(parent.key, childData);
                         const summaryRecord: ISummaryRecord = {
                             summaries,
                             max: maxSummaryHeight,
@@ -69,8 +69,8 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                 }
             } else if (summaryPosition === GridSummaryPosition.top && isExpanded) {
                 let childData = record.children.filter(r => !r.isFilteredOutParent).map(r => r.data);
-                childData = this.removeDeletedRecord(grid, record.rowID, childData);
-                const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
+                childData = this.removeDeletedRecord(grid, record.key, childData);
+                const summaries = grid.summaryService.calculateSummaries(record.key, childData);
                 const summaryRecord: ISummaryRecord = {
                     summaries,
                     max: maxSummaryHeight,
@@ -93,7 +93,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         }
         row = row.children ? row : row.parent;
         while (row) {
-            rowId = row.rowID;
+            rowId = row.key;
             if (deletedRows.indexOf(rowId) !== -1) {
                 return [];
             }

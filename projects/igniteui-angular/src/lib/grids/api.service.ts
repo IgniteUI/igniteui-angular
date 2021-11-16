@@ -83,9 +83,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
         const primaryKey = this.grid.primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
-            return this.grid.dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
+            return this.grid.dataRowList.find((row) => row.data[primaryKey] === rowSelector);
         } else {
-            return this.grid.dataRowList.find((row) => row.rowData === rowSelector);
+            return this.grid.dataRowList.find((row) => row.data === rowSelector);
         }
     }
 

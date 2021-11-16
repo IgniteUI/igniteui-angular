@@ -68,7 +68,7 @@ export class DataUtil {
 
     public static cloneTreeGridRecord(hierarchicalRecord: ITreeGridRecord) {
         const rec: ITreeGridRecord = {
-            rowID: hierarchicalRecord.rowID,
+            key: hierarchicalRecord.key,
             data: hierarchicalRecord.data,
             children: hierarchicalRecord.children,
             isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,

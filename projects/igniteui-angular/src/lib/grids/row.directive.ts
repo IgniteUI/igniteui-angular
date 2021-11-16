@@ -46,24 +46,24 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      *
      * ```typescript
      * // get the row data for the first selected row
-     * let selectedRowData = this.grid.selectedRows[0].rowData;
+     * let selectedRowData = this.grid.selectedRows[0].data;
      * ```
      */
     @Input()
-    public get rowData(): any {
+    public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(cloneValue(this._rowData), this.grid.transactions.getAggregatedValue(this.rowID, false),
+            return mergeWith(cloneValue(this._data), this.grid.transactions.getAggregatedValue(this.key, false),
                 (objValue, srcValue) => {
                     if (Array.isArray(srcValue)) {
                         return objValue = srcValue;
                     }
                 });
         }
-        return this._rowData;
+        return this._data;
     }
 
-    public set rowData(v: any) {
-        this._rowData = v;
+    public set data(v: any) {
+        this._data = v;
     }
     /**
      * The index of the row.
@@ -97,9 +97,9 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public set pinned(value: boolean) {
         if (value) {
-            this.grid.pinRow(this.rowID);
+            this.grid.pinRow(this.key);
         } else {
-            this.grid.unpinRow(this.rowID);
+            this.grid.unpinRow(this.key);
         }
     }
 
@@ -110,7 +110,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * ```
      */
     public get pinned(): boolean {
-        return this.grid.isRecordPinned(this.rowData);
+        return this.grid.isRecordPinned(this.data);
     }
 
     /**
@@ -120,7 +120,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * ```
      */
     public get expanded(): boolean {
-        return this.grid.gridAPI.get_row_expansion_state(this.rowData);
+        return this.grid.gridAPI.get_row_expansion_state(this.data);
     }
 
     /**
@@ -131,13 +131,13 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * ```
      */
     public set expanded(val: boolean) {
-        this.grid.gridAPI.set_row_expansion_state(this.rowID, val);
+        this.grid.gridAPI.set_row_expansion_state(this.key, val);
     }
 
     public get addRowUI(): any {
         return !!this.grid.crudService.row &&
             this.grid.crudService.row.getClassName() === IgxAddRow.name &&
-            this.grid.crudService.row.id === this.rowID;
+            this.grid.crudService.row.id === this.key;
     }
 
     @HostBinding('style.min-height.px')
@@ -209,14 +209,14 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     @Input()
     @HostBinding('attr.aria-selected')
     public get selected(): boolean {
-        return this.selectionService.isRowSelected(this.rowID);
+        return this.selectionService.isRowSelected(this.key);
     }
 
     public set selected(value: boolean) {
         if (value) {
-            this.selectionService.selectRowsWithNoEvent([this.rowID]);
+            this.selectionService.selectRowsWithNoEvent([this.key]);
         } else {
-            this.selectionService.deselectRowsWithNoEvent([this.rowID]);
+            this.selectionService.deselectRowsWithNoEvent([this.key]);
         }
         this.grid.cdr.markForCheck();
     }
@@ -234,7 +234,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public get viewIndex(): number {
         if ((this.grid as any).groupingExpressions.length) {
-            return this.grid.filteredSortedData.indexOf(this.rowData);
+            return this.grid.filteredSortedData.indexOf(this.data);
         }
         return this.index + this.grid.page * this.grid.perPage;
     }
@@ -276,7 +276,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /** @hidden */
     public get dirty(): boolean {
-        const row = this.grid.transactions.getState(this.rowID);
+        const row = this.grid.transactions.getState(this.key);
         if (row) {
             return row.type === TransactionType.ADD || row.type === TransactionType.UPDATE;
         }
@@ -293,7 +293,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /** @hidden */
     public get added(): boolean {
-        const row = this.grid.transactions.getState(this.rowID);
+        const row = this.grid.transactions.getState(this.key);
         if (row) {
             return row.type === TransactionType.ADD;
         }
@@ -303,21 +303,21 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /** @hidden */
     public get deleted(): boolean {
-        return this.grid.gridAPI.row_deleted_transaction(this.rowID);
+        return this.grid.gridAPI.row_deleted_transaction(this.key);
     }
 
     /**
      * @hidden
      */
     public get dragging() {
-        return this.grid.dragRowID === this.rowID;
+        return this.grid.dragRowID === this.key;
     }
 
     // TODO: Refactor
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
             const editRowState = this.grid.crudService.row;
-            return (editRowState && editRowState.id === this.rowID) || false;
+            return (editRowState && editRowState.id === this.key) || false;
         } else {
             return false;
         }
@@ -327,15 +327,15 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * Gets the ID of the row.
      * A row in the grid is identified either by:
      * - primaryKey data value,
-     * - the whole rowData, if the primaryKey is omitted.
+     * - the whole data, if the primaryKey is omitted.
      *
      * ```typescript
-     * let rowID = this.grid.selectedRows[2].rowID;
+     * let rowID = this.grid.selectedRows[2].key;
      * ```
      */
-    public get rowID() {
+    public get key() {
         const primaryKey = this.grid.primaryKey;
-        return primaryKey ? this._rowData[primaryKey] : this._rowData;
+        return primaryKey ? this._data[primaryKey] : this._data;
     }
 
     /**
@@ -367,7 +367,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public triggerAddAnimationClass = false;
 
     protected destroy$ = new Subject<any>();
-    protected _rowData: any;
+    protected _data: any;
     protected _addRow: boolean;
 
     constructor(
@@ -386,13 +386,13 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
             return;
         }
         if (event.shiftKey && this.grid.isMultiRowSelectionEnabled) {
-            this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
+            this.selectionService.selectMultipleRows(this.key, this.data, event);
             return;
         }
 
         // eslint-disable-next-line no-bitwise
         const clearSelection = !(+event.ctrlKey ^ +event.metaKey);
-        this.selectionService.selectRowById(this.rowID, clearSelection, event);
+        this.selectionService.selectRowById(this.key, clearSelection, event);
     }
 
     /**
@@ -422,13 +422,13 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public onRowSelectorClick(event) {
         event.stopPropagation();
         if (event.shiftKey && this.grid.isMultiRowSelectionEnabled) {
-            this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
+            this.selectionService.selectMultipleRows(this.key, this.data, event);
             return;
         }
         if (this.selected) {
-            this.selectionService.deselectRow(this.rowID, event);
+            this.selectionService.deselectRow(this.key, event);
         } else {
-            this.selectionService.selectRowById(this.rowID, false, event);
+            this.selectionService.selectRowById(this.key, false, event);
         }
     }
 
@@ -443,10 +443,10 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public update(value: any) {
         const crudService = this.grid.crudService;
-        if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
+        if (crudService.cellInEditMode && crudService.cell.id.key === this.key) {
             this.grid.transactions.endPending(false);
         }
-        const row = new IgxEditRow(this.rowID, this.index, this.rowData, this.grid);
+        const row = new IgxEditRow(this.key, this.index, this.data, this.grid);
         this.grid.gridAPI.update_row(row, value);
         this.cdr.markForCheck();
     }
@@ -461,7 +461,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * ```
      */
     public delete() {
-        this.grid.deleteRowById(this.rowID);
+        this.grid.deleteRowById(this.key);
     }
 
     public isCellActive(visibleColumnIndex) {
@@ -479,7 +479,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * ```
      */
     public pin() {
-        return this.grid.pinRow(this.rowID);
+        return this.grid.pinRow(this.key);
     }
 
     /**
@@ -492,7 +492,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * ```
      */
     public unpin() {
-        return this.grid.unpinRow(this.rowID);
+        return this.grid.unpinRow(this.key);
     }
 
     /**
@@ -500,7 +500,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public get rowCheckboxAriaLabel() {
         return this.grid.primaryKey ?
-            this.selected ? 'Deselect row with key ' + this.rowID : 'Select row with key ' + this.rowID :
+            this.selected ? 'Deselect row with key ' + this.key : 'Select row with key ' + this.key :
             this.selected ? 'Deselect row' : 'Select row';
     }
 

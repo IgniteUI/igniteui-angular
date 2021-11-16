@@ -420,9 +420,9 @@ export class IgxGridNavigationService {
                 if (this.grid.isRowSelectable && rowObj) {
                     if (this.isDataRow(rowIndex)) {
                         if (rowObj.selected) {
-                            this.grid.selectionService.deselectRow(rowObj.rowID, event);
+                            this.grid.selectionService.deselectRow(rowObj.key, event);
                         } else {
-                            this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
+                            this.grid.selectionService.selectRowById(rowObj.key, false, event);
                         }
                     }
                     if (this.isGroupRow(rowIndex)) {
@@ -502,7 +502,7 @@ export class IgxGridNavigationService {
     protected handleAlt(key: string, event: KeyboardEvent) {
         event.preventDefault();
         // todo TODO ROW
-        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row) as any;
+        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
 
         if (!(this.isToggleKey(key) || this.isAddKey(key)) || !row) {
             return;
@@ -519,16 +519,16 @@ export class IgxGridNavigationService {
                 this.grid.crudService.enterAddRowMode(row, false, event);
             }
         } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
-            if (row.rowID === undefined) {
+            if (row.key === undefined) {
                 row.toggle();
             } else {
-                this.grid.gridAPI.set_row_expansion_state(row.rowID, true, event);
+                this.grid.gridAPI.set_row_expansion_state(row.key, true, event);
             }
         } else if (row.expanded && ROW_COLLAPSE_KEYS.has(key)) {
-            if (row.rowID === undefined) {
+            if (row.key === undefined) {
                 row.toggle();
             } else {
-                this.grid.gridAPI.set_row_expansion_state(row.rowID, false, event);
+                this.grid.gridAPI.set_row_expansion_state(row.key, false, event);
             }
         }
         this.grid.notifyChanges();
