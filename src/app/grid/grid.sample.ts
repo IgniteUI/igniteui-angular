@@ -172,10 +172,13 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     public deleteRow() {
-        this.selectedRow = Object.assign({}, this.selectedCell.Row);
-        this.grid1.deleteRow(this.selectedCell.rowIndex);
-        this.selectedCell = {};
-        this.snax.open(`Row with ID ${this.selectedRow.record.ID} was deleted`);
+        if (this.selectedCell.cell) {
+            const rowIndex = this.selectedCell.cell._rowIndex;
+            const row = this.grid1.getRowByIndex(rowIndex);
+            row.delete();
+            this.snax.open(`Row with ID ${rowIndex} was deleted`);
+            this.selectedCell = {};
+        }
     }
 
     public restore() {
