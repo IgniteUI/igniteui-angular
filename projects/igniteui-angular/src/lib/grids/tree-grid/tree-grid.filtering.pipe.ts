@@ -45,7 +45,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
             filteredData.push(rec.data);
 
             if (rec.children && rec.children.length > 0) {
-                expandedStates.set(rec.rowID, true);
+                expandedStates.set(rec.key, true);
                 this.expandAllRecursive(grid, rec.children, expandedStates, filteredData);
             }
         }
