@@ -1,0 +1,18 @@
+<div fxLayout="row" fxLayoutGap="6px">
+    <div fxLayout="column" fxFlex="grow">
+      <div>
+        <igx-grid #headerGrid [cellSelection]="'single'" [(data)]="headers" id="columnId" primaryKey="columnId"
+          displayDensity="cosy" (onSelection)="onSelection($event)">
+          <igx-column field="headerText" header="Header"></igx-column>
+        </igx-grid>
+      </div>
+    </div>
+    <div fxLayout="column">
+      <button (click)="onMoveUp()" [disabled]="isMoveUpButtonDisabled">
+        Move Up
+      </button>
+      <button (click)="onMoveDown()" [disabled]="isMoveDownButtonDisabled">
+        Move Down
+      </button>
+    </div>
+  </div>
