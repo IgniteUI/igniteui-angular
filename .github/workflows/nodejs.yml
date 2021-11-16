@@ -58,5 +58,6 @@ jobs:
         if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
         uses: coverallsapp/github-action@v1.1.2
         with:
+            parallel: true
             github-token: ${{ github.token }}
 
