@@ -301,8 +301,8 @@ export class GridRowAPISampleComponent implements OnInit {
             this.grid.deleteRow(rowData.ID);
         });
         if (selected === false) {
-            this.targetGrid.addRow(args.dragData.rowData);
-            // this.grid.deleteRow(args.dragData.rowID);
+            this.targetGrid.addRow(args.dragData.data);
+            // this.grid.deleteRow(args.dragData.key);
         }
     }
 
