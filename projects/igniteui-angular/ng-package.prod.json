@@ -5,12 +5,12 @@
     "entryFile": "src/public_api.ts"
   },
   "allowedNonPeerDependencies": [
-      "@types/hammerjs",
-      "hammerjs",
-      "jszip",
-      "igniteui-trial-watermark",
-      "lodash.mergewith",
-      "uuid",
-      "@igniteui/material-icons-extended"
-    ]
+    "@types/hammerjs",
+    "hammerjs",
+    "jszip",
+    "igniteui-trial-watermark",
+    "lodash.mergewith",
+    "uuid",
+    "@igniteui/material-icons-extended"
+  ]
 }
