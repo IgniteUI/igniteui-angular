@@ -77,6 +77,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
 
     /**
      * Creates additional pivot date dimensions based on a provided dimension describing date data:
+     *
      * @param inDateDimension Base dimension that is used by this class to determine the other dimensions and their values.
      * @param inOptions Options for the predefined date dimensions whether to show quarter, years and etc.
      * @example
@@ -136,7 +137,5 @@ export class IgxPivotDateDimension implements IPivotDimension {
     }
 
     /** @hidden @internal */
-    public memberFunction = (data) => {
-        return this.resourceStrings.igx_grid_pivot_date_dimension_total;
-    }
+    public memberFunction = (data) => this.resourceStrings.igx_grid_pivot_date_dimension_total;
 }
