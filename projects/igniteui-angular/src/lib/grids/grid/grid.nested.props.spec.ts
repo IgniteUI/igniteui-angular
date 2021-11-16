@@ -662,9 +662,9 @@ describe('Edit cell with data of type Array #grid', () => {
 
         // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
-            rowID: row.rowID,
+            rowID: row.key,
             rowData: initialRowData,
-            oldValue: row.rowData,
+            oldValue: row.data,
             owner: grid,
             isAddRow: row.addRowUI,
             cancel: false,
@@ -725,9 +725,9 @@ describe('Edit cell with data of type Array #grid', () => {
 
         // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
-            rowID: row.rowID,
+            rowID: row.key,
             rowData: initialRowData,
-            oldValue: row.rowData,
+            oldValue: row.data,
             owner: grid,
             isAddRow: row.addRowUI,
             cancel: false,

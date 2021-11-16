@@ -128,21 +128,21 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('should be able to select row of any level', () => {
-            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).rowID], true);
+            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).key], true);
             fix.detectChanges();
 
             // Verify selection.
             TreeGridFunctions.verifyDataRowsSelection(fix, [0], true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
 
-            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(2).rowID], false);
+            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(2).key], false);
             fix.detectChanges();
 
             // Verify new selection by keeping the old one.
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 2], true);
 
-            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(1).rowID, treeGrid.gridAPI.get_row_by_index(3).rowID,
-            treeGrid.gridAPI.get_row_by_index(6).rowID, treeGrid.gridAPI.get_row_by_index(8).rowID], true);
+            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(1).key, treeGrid.gridAPI.get_row_by_index(3).key,
+            treeGrid.gridAPI.get_row_by_index(6).key, treeGrid.gridAPI.get_row_by_index(8).key], true);
             fix.detectChanges();
 
             // Verify new selection by NOT keeping the old one.
@@ -152,12 +152,12 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('should be able to deselect row of any level', () => {
-            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(1).rowID, treeGrid.gridAPI.get_row_by_index(3).rowID,
-            treeGrid.gridAPI.get_row_by_index(6).rowID, treeGrid.gridAPI.get_row_by_index(8).rowID,
-            treeGrid.gridAPI.get_row_by_index(9).rowID], true);
+            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(1).key, treeGrid.gridAPI.get_row_by_index(3).key,
+            treeGrid.gridAPI.get_row_by_index(6).key, treeGrid.gridAPI.get_row_by_index(8).key,
+            treeGrid.gridAPI.get_row_by_index(9).key], true);
             fix.detectChanges();
 
-            treeGrid.deselectRows([treeGrid.gridAPI.get_row_by_index(1).rowID, treeGrid.gridAPI.get_row_by_index(3).rowID]);
+            treeGrid.deselectRows([treeGrid.gridAPI.get_row_by_index(1).key, treeGrid.gridAPI.get_row_by_index(3).key]);
             fix.detectChanges();
 
             // Verify modified selection
@@ -166,7 +166,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('should persist the selection after sorting', () => {
-            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).rowID, treeGrid.gridAPI.get_row_by_index(4).rowID], true);
+            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).key, treeGrid.gridAPI.get_row_by_index(4).key], true);
             fix.detectChanges();
 
             treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false });
@@ -183,8 +183,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('should persist the selection after filtering', fakeAsync(() => {
-            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).rowID, treeGrid.gridAPI.get_row_by_index(5).rowID,
-            treeGrid.gridAPI.get_row_by_index(8).rowID], true);
+            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).key, treeGrid.gridAPI.get_row_by_index(5).key,
+            treeGrid.gridAPI.get_row_by_index(8).key], true);
             fix.detectChanges();
 
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
@@ -233,19 +233,19 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('should persist the selection after expand/collapse', () => {
-            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).rowID, treeGrid.gridAPI.get_row_by_index(3).rowID,
-            treeGrid.gridAPI.get_row_by_index(5).rowID], true);
+            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).key, treeGrid.gridAPI.get_row_by_index(3).key,
+            treeGrid.gridAPI.get_row_by_index(5).key], true);
             fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(3);
 
             // Collapse row and verify visible selected rows
-            treeGrid.toggleRow(treeGrid.gridAPI.get_row_by_index(0).rowID);
+            treeGrid.toggleRow(treeGrid.gridAPI.get_row_by_index(0).key);
             fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(1);
 
             // Expand same row and verify visible selected rows
-            treeGrid.toggleRow(treeGrid.gridAPI.get_row_by_index(0).rowID);
+            treeGrid.toggleRow(treeGrid.gridAPI.get_row_by_index(0).key);
             fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(3);
 
@@ -254,8 +254,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('should persist selection after paging', fakeAsync(() => {
-            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).rowID, treeGrid.gridAPI.get_row_by_index(3).rowID,
-            treeGrid.gridAPI.get_row_by_index(5).rowID], true);
+            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).key, treeGrid.gridAPI.get_row_by_index(3).key,
+            treeGrid.gridAPI.get_row_by_index(5).key], true);
             fix.detectChanges();
             tick(16);
 
@@ -564,7 +564,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         }));
 
         it('should deselect row when delete its parent', () => {
-            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(3).rowID, treeGrid.gridAPI.get_row_by_index(5).rowID], true);
+            treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(3).key, treeGrid.gridAPI.get_row_by_index(5).key], true);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
@@ -1215,7 +1215,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             await wait(100);
             fix.detectChanges();
             const addedRow = treeGrid.gridAPI.get_row_by_index(10);
-            expect(addedRow.rowData.Name).toBe(undefined);
+            expect(addedRow.data.Name).toBe(undefined);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [9], true);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 8, false, null);
@@ -1239,7 +1239,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             await wait(100);
             fix.detectChanges();
             const addedRow = treeGrid.gridAPI.get_row_by_index(3);
-            expect(addedRow.rowData.Name).toBe(undefined);
+            expect(addedRow.data.Name).toBe(undefined);
 
             expect(getVisibleSelectedRows(fix).length).toBe(0);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
@@ -1858,7 +1858,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             await wait(100);
             fix.detectChanges();
             const addedRow = treeGrid.gridAPI.get_row_by_index(10);
-            expect(addedRow.rowData.Name).toBe(undefined);
+            expect(addedRow.data.Name).toBe(undefined);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [9], true);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 8, false, null);

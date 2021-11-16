@@ -72,13 +72,13 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(4);
 
-            treeGrid.toggleRow(treeGrid.gridAPI.get_row_by_index(0).rowID);
+            treeGrid.toggleRow(treeGrid.gridAPI.get_row_by_index(0).key);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(7);
 
-            treeGrid.toggleRow(treeGrid.gridAPI.get_row_by_index(0).rowID);
+            treeGrid.toggleRow(treeGrid.gridAPI.get_row_by_index(0).key);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);

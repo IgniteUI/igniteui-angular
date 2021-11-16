@@ -2650,7 +2650,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
             const row = grid.getRowByIndex(3);
-            grid.selectRows([row.rowID]);
+            grid.selectRows([row.key]);
             fix.detectChanges();
 
             expect(row.selected).toBeTruthy();
