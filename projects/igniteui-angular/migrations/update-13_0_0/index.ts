@@ -16,6 +16,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     const GRIDS = ['IgxGridComponent', 'IgxTreeGridComponent', 'IgxHierarchicalGridComponent'];
     const TAGS = ['igx-grid', 'igx-tree-grid', 'igx-hierarchical-grid'];
     const tsFiles = update.tsFiles;
+    const SERVICES = ['IgxCsvExporterService', 'IgxExcelExporterService'];
 
     for (const path of update.templateFiles) {
         findElementNodes(parseFile(host, path), TAGS)
@@ -61,5 +62,29 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             }
         });
     }
+
+    const moduleTsFiles = tsFiles.filter(x => x.endsWith('.module.ts'));
+    for (const path of moduleTsFiles) {
+        let content = host.read(path)?.toString();
+        const servicesInFile = [];
+        SERVICES.forEach(service => {
+            if (content.indexOf(service) > -1) {
+                servicesInFile.push(service);
+            }
+        });
+
+        if (servicesInFile.length > 0) {
+            let newLine = '\n';
+            if (content.indexOf('\r\n') > -1) {
+                newLine = '\r\n';
+            }
+
+            const comment =
+                '// ' + servicesInFile.join(' and ') + ' no longer need to be manually provided and can be safely removed.' + newLine;
+            content = comment + content;
+            host.overwrite(path, content);
+        }
+    }
+
     update.applyChanges();
 };

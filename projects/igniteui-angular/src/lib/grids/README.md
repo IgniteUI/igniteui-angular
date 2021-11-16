@@ -229,7 +229,7 @@ A list of the events emitted by the **igx-grid**:
 |`columnMovingStart`|Emitted when a column moving starts. Returns the moved column object.|
 |`selected`|Emitted when a cell is selected. Returns the cell object.|
 |`rowSelectionChanging`|Emitted when row selection is changing. Returns array with old and new selected rows' IDs and the target row, if available.|
-|`columnSelected`|Emitted when a column selection has changed. Returns array with old and new selected column' fields|
+|`columnSelectionChanging`|Emitted when a column selection is changing. Returns array with old and new selected column' fields|
 |`columnInit`|Emitted when the grid columns are initialized. Returns the column object.|
 |`sortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
 |`filteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expressions tree of the column for which the filtering was performed.|
