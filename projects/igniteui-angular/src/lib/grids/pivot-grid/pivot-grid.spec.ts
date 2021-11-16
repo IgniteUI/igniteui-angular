@@ -4,7 +4,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPivotGridModule } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxPivotGridTestBaseComponent } from '../../test-utils/pivot-grid-samples.spec';
 import { IgxPivotGridTestBaseComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
