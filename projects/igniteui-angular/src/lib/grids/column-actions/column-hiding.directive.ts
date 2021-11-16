@@ -1,11 +1,9 @@
 import { Directive, Inject } from '@angular/core';
+import { ColumnType } from '../common/grid.interface';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
-import { IgxColumnComponent } from '../columns/column.component';
 import { IgxColumnActionsComponent } from './column-actions.component';
 
-@Directive({
-    selector: '[igxColumnHiding]'
-})
+@Directive({ selector: '[igxColumnHiding]' })
 export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
 
     constructor(
@@ -51,14 +49,14 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public columnChecked(column: IgxColumnComponent): boolean {
+    public columnChecked(column: ColumnType): boolean {
         return !column.hidden;
     }
 
     /**
      * @hidden @internal
      */
-    public toggleColumn(column: IgxColumnComponent) {
+    public toggleColumn(column: ColumnType) {
         column.toggleVisibility();
     }
 

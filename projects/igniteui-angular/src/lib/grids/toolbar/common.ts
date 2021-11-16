@@ -1,5 +1,5 @@
 import { Directive, HostBinding, TemplateRef } from '@angular/core';
-import { IgxHierarchicalGridComponent } from '../hierarchical-grid/hierarchical-grid.component';
+import { GridType } from '../common/grid.interface';
 
 
 // eslint-disable-next-line @angular-eslint/directive-selector
@@ -60,7 +60,7 @@ export class IgxGridToolbarActionsDirective {
  }
 
 export interface IgxGridToolbarTemplateContext {
-    $implicit: IgxHierarchicalGridComponent;
+    $implicit: GridType;
 }
 
 @Directive({ selector: '[igxGridToolbar]'})

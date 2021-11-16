@@ -11,7 +11,6 @@ import {
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxIconModule } from '../icon/public_api';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { PlatformUtil } from '../core/utils';
 import { DatePart, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
@@ -466,7 +465,6 @@ describe('IgxTimePicker', () => {
         let minutesColumn: DebugElement;
         let secondsColumn: DebugElement;
         let ampmColumn: DebugElement;
-        let toggleDirectiveElement: DebugElement;
 
         describe('Dropdown/dialog mode', () => {
             let fixture: ComponentFixture<IgxTimePickerTestComponent>;
@@ -495,7 +493,6 @@ describe('IgxTimePicker', () => {
                 minutesColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_MINUTELIST}`));
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
                 ampmColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_AMPMLIST}`));
-                toggleDirectiveElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
             }));
             it('should open/close the dropdown and keep the current selection on toggle icon click', fakeAsync(() => {
                 const toggleIcon = fixture.debugElement.query(By.css('igx-prefix'));
@@ -1099,7 +1096,6 @@ describe('IgxTimePicker', () => {
                 hourColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_HOURLIST}`));
                 minutesColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_MINUTELIST}`));
                 ampmColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_AMPMLIST}`));
-                toggleDirectiveElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
             }));
 
             it('Should render default toggle and clear icons', () => {

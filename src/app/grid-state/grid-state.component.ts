@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, ViewChild, QueryList, ViewChildren } from '@angular/core';
 import { FilteringExpressionsTree, FilteringLogic,
   IgxNumberSummaryOperand, IgxSummaryResult, IGridState, IgxGridStateDirective,
   IgxExpansionPanelComponent, IgxGridBaseDirective,
@@ -48,7 +48,7 @@ interface GridState {
   templateUrl: './grid-state.component.html'
 })
 
-export class GridSaveStateComponent implements OnInit, AfterViewInit {
+export class GridSaveStateComponent implements OnInit {
     @ViewChild(IgxExpansionPanelComponent, { static: true })
     private igxExpansionPanel: IgxExpansionPanelComponent;
     @ViewChildren(IgxGridStateDirective)
@@ -125,22 +125,6 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
         this.router.events.pipe(take(1)).subscribe(() => {
             this.saveGridState(null);
         });
-    }
-
-    public ngAfterViewInit() {
-        // const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
-        // const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
-        // const productExpression = {
-        //     condition: IgxStringFilteringOperand.instance().condition('contains'),
-        //     fieldName: 'FirstName',
-        //     ignoreCase: true,
-        //     searchVal: 'c'
-        // };
-        // productFilteringExpressionsTree.filteringOperands.push(productExpression);
-        // gridFilteringExpressionsTree.filteringOperands.push(productFilteringExpressionsTree);
-
-        // this.grid.filteringExpressionsTree = gridFilteringExpressionsTree;
-        // this.restoreGridState();
     }
 
     public getContext(grid: IgxGridBaseDirective) {

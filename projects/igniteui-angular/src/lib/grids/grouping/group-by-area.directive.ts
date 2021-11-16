@@ -15,8 +15,7 @@ import { IChipsAreaReorderEventArgs, IgxChipComponent } from '../../chips/public
 import { DisplayDensity } from '../../core/displayDensity';
 import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxColumnComponent } from '../columns/column.component';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 
@@ -122,8 +121,8 @@ export abstract class IgxGroupByAreaDirective {
      public onDragDrop(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         if (drag instanceof IgxColumnMovingDragDirective) {
-            const column: IgxColumnComponent = drag.column;
-            if (this.grid.columns.indexOf(column) < 0) {
+            const column = drag.column;
+            if (!this.grid.columnList.find(c => c === column)) {
                 return;
             }
 

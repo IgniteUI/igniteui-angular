@@ -9,9 +9,9 @@ import {
     ViewChild,
     TemplateRef
 } from '@angular/core';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowDirective } from '../row.directive';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
+import { GridType } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,7 +19,7 @@ import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component'
     templateUrl: './hierarchical-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]
 })
-export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchicalGridComponent> {
+export class IgxHierarchicalRowComponent extends IgxRowDirective {
     @ViewChild('expander', { read: ElementRef })
     public expander: ElementRef<HTMLElement>;
 
@@ -68,7 +68,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
      * ```
      */
     public get expanded() {
-        return this.gridAPI.get_row_expansion_state(this.rowData);
+        return this.grid.gridAPI.get_row_expansion_state(this.rowData);
     }
 
     /**
@@ -109,10 +109,9 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         if (this.added) {
             return;
         }
-        const grid = this.gridAPI.grid;
-        this.endEdit(grid.rootGrid);
-        this.gridAPI.set_row_expansion_state(this.rowID, !this.expanded);
-        grid.cdr.detectChanges();
+        this.endEdit(this.grid.rootGrid);
+        this.grid.gridAPI.set_row_expansion_state(this.rowID, !this.expanded);
+        this.grid.cdr.detectChanges();
     }
 
     /**
@@ -150,14 +149,14 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
     }
 
     // TODO: consider moving into CRUD
-    protected endEdit(grid: IgxHierarchicalGridComponent) {
+    protected endEdit(grid: GridType) {
         if (grid.gridAPI.crudService.cellInEditMode) {
             grid.gridAPI.crudService.endEdit();
         }
         grid.hgridAPI.getChildGrids(true).forEach(g => {
             if (g.gridAPI.crudService.cellInEditMode) {
-            g.gridAPI.crudService.endEdit();
-        }
-});
+                g.gridAPI.crudService.endEdit();
+            }
+        });
     }
 }

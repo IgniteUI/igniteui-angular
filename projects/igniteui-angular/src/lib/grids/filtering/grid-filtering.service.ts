@@ -1,42 +1,25 @@
 import {
     Injectable,
     OnDestroy,
-    NgModuleRef,
-    ComponentFactoryResolver,
-    ApplicationRef,
-    Injector,
-    ComponentRef,
-    ComponentFactory
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
-import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
+import { OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
 import { fadeIn } from '../../animations/main';
-import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
-import { IgxGridExcelStyleFilteringComponent } from './excel-style/grid.excel-style-filtering.component';
 import { IgxIconService } from '../../icon/icon.service';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
-
-/**
- * @hidden
- */
-export class ExpressionUI {
-    public expression: IFilteringExpression;
-    public beforeOperator: FilteringLogic;
-    public afterOperator: FilteringLogic;
-    public isSelected = false;
-    public isVisible = true;
-}
+import { ExpressionUI, generateExpressionsList } from './excel-style/common';
+import { ColumnType, GridType } from '../common/grid.interface';
+import { formatDate } from '../../core/utils';
+import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 
 /**
  * @hidden
@@ -44,11 +27,11 @@ export class ExpressionUI {
 @Injectable()
 export class IgxFilteringService implements OnDestroy {
     public isFilterRowVisible = false;
-    public filteredColumn: IgxColumnComponent = null;
+    public filteredColumn: ColumnType = null;
     public selectedExpression: IFilteringExpression = null;
     public columnToMoreIconHidden = new Map<string, boolean>();
     public activeFilterCell = 0;
-    public grid: IgxGridBaseDirective;
+    public grid: GridType;
 
     private columnsWithComplexFilter = new Set<string>();
     private areEventsSubscribed = false;
@@ -56,84 +39,60 @@ export class IgxFilteringService implements OnDestroy {
     private isFiltering = false;
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private columnStartIndex = -1;
-    private _componentOverlayId: string;
-    private _filterMenuPositionSettings: PositionSettings;
-    private _filterMenuOverlaySettings: OverlaySettings;
-    private componentInstance: IgxGridExcelStyleFilteringComponent;
-    private column;
+    private _filterMenuOverlaySettings: OverlaySettings = {
+        closeOnEscape: true,
+        closeOnOutsideClick: true,
+        modal: false,
+        positionStrategy: new ExcelStylePositionStrategy({
+            verticalStartPoint: VerticalAlignment.Bottom,
+            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' }}),
+            closeAnimation: null
+        }),
+        scrollStrategy: new AbsoluteScrollStrategy()
+    };
     private lastActiveNode;
 
     constructor(
-        private _moduleRef: NgModuleRef<any>,
         private iconService: IgxIconService,
         private _overlayService: IgxOverlayService,
-        private _factoryResolver: ComponentFactoryResolver,
-        private _appRef: ApplicationRef,
-        private _injector: Injector) {}
+    ) { }
 
     public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
 
-    public toggleFilterDropdown(element: HTMLElement, column: IgxColumnComponent) {
-        if (!this._componentOverlayId || (this.column && this.column.field !== column.field)) {
-            this.initFilteringSettings();
-            this.column = column;
-            const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
-            const filterIconTarget = element.querySelector(`.${filterIcon}`) as HTMLElement;
+    public toggleFilterDropdown(element: HTMLElement, column: ColumnType) {
 
-            this._filterMenuOverlaySettings.target = filterIconTarget;
-            this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
+        const filterIcon = column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
+        const filterIconTarget = element.querySelector(`.${filterIcon}`) as HTMLElement;
 
-            this.componentInstance =
-                this.grid.excelStyleFilteringComponent ??
-                this.createComponentInstance(IgxGridExcelStyleFilteringComponent);
-            this.componentInstance.initialize(this.column, this._overlayService);
+        const { id, ref } = this.grid.createFilterDropdown(column, {
+            ...this._filterMenuOverlaySettings,
+            ...{ target: filterIconTarget }
+        });
 
-            this._componentOverlayId = this._overlayService.attach(this.componentInstance.element, this._filterMenuOverlaySettings);
-            this.componentInstance.overlayComponentId = this._componentOverlayId;
+        this._overlayService.opening
+            .pipe(
+                first(overlay => overlay.id === id),
+                takeUntil(this.destroy$)
+            )
+            .subscribe(() => this.lastActiveNode = this.grid.navigation.activeNode);
 
-            this._overlayService.show(this._componentOverlayId);
-        }
-    }
-
-    public initFilteringSettings() {
-        this._filterMenuPositionSettings = {
-            verticalStartPoint: VerticalAlignment.Bottom,
-            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' }}),
-            closeAnimation: null
-        };
-        this._filterMenuOverlaySettings = {
-            closeOnOutsideClick: true,
-            modal: false,
-            positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
-            scrollStrategy: new AbsoluteScrollStrategy()
-        };
-
-        this._overlayService.opening.pipe(
-            first((overlay) => overlay.id === this._componentOverlayId),
-            takeUntil(this.destroy$)).subscribe(() => {
-                this.lastActiveNode = this.grid.navigation.activeNode;
-            });
-
-        this._overlayService.closed.pipe(
-            first((overlay) => overlay.id === this._componentOverlayId),
-            takeUntil(this.destroy$)).subscribe((   ) => {
-                if (this.componentInstance) {
-                    this.componentInstance.column = null;
-                }
-                this._overlayService.detach(this._componentOverlayId);
-                this._componentOverlayId = null;
+        this._overlayService.closed
+            .pipe(
+                first(overlay => overlay.id === id),
+                takeUntil(this.destroy$)
+            )
+            .subscribe(() => {
+                this._overlayService.detach(id);
+                ref?.destroy();
                 this.grid.navigation.activeNode = this.lastActiveNode;
                 this.grid.theadRow.nativeElement.focus();
             });
-    }
 
-    public hideExcelFiltering() {
-        if (this._componentOverlayId) {
-            this._overlayService.hide(this._componentOverlayId);
-        }
+        this.grid.columnPinned.pipe(first()).subscribe(() => ref?.destroy());
+        this._overlayService.show(id);
     }
 
     /**
@@ -167,7 +126,7 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Close filtering row if a column is hidden.
      */
-    public hideFilteringRowOnColumnVisibilityChange(col: IgxColumnComponent) {
+    public hideFilteringRowOnColumnVisibilityChange(col: ColumnType) {
         const filteringRow = this.grid.filteringRow;
 
         if (filteringRow && filteringRow.column && filteringRow.column === col) {
@@ -217,10 +176,12 @@ export class IgxFilteringService implements OnDestroy {
         }
         const newFilteringTree: FilteringExpressionsTree =
             this.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree,
-            filteringIgnoreCase, fieldFilterIndex, true);
+                filteringIgnoreCase, fieldFilterIndex, true);
 
-        const eventArgs: IFilteringEventArgs = { owner: grid,
-            filteringExpressions: newFilteringTree.find(field) as FilteringExpressionsTree, cancel: false };
+        const eventArgs: IFilteringEventArgs = {
+            owner: grid,
+            filteringExpressions: newFilteringTree.find(field) as FilteringExpressionsTree, cancel: false
+        };
         this.grid.filtering.emit(eventArgs);
 
         if (eventArgs.cancel) {
@@ -234,10 +195,10 @@ export class IgxFilteringService implements OnDestroy {
             if (!expressionsTreeForColumn) {
                 throw new Error('Invalid condition or Expression Tree!');
             } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
-                this.filter_internal(field, value, expressionsTreeForColumn, filteringIgnoreCase );
+                this.filter_internal(field, value, expressionsTreeForColumn, filteringIgnoreCase);
             } else {
                 const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
-                this.filter_internal(field, value, expressionForColumn.condition, filteringIgnoreCase );
+                this.filter_internal(field, value, expressionForColumn.condition, filteringIgnoreCase);
             }
         }
         const doneEventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
@@ -258,7 +219,7 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         filteringTree.filteringOperands = [];
-        for (const column of grid.columns) {
+        for (const column of grid.columnList) {
             this.prepare_filtering_expression(filteringTree, column.field, term,
                 condition, ignoreCase || column.filteringIgnoreCase);
         }
@@ -281,7 +242,8 @@ export class IgxFilteringService implements OnDestroy {
         const onFilteringEventArgs: IFilteringEventArgs = {
             owner: this.grid,
             filteringExpressions: emptyFilter,
-            cancel: false };
+            cancel: false
+        };
 
         this.grid.filtering.emit(onFilteringEventArgs);
 
@@ -299,7 +261,7 @@ export class IgxFilteringService implements OnDestroy {
             const expressions = this.getExpressions(field);
             expressions.length = 0;
         } else {
-            this.grid.columns.forEach(c => {
+            this.grid.columnList.forEach(c => {
                 const expressions = this.getExpressions(c.field);
                 expressions.length = 0;
             });
@@ -335,7 +297,7 @@ export class IgxFilteringService implements OnDestroy {
         const filteringTree = grid.filteringExpressionsTree;
         const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
 
-        for (const column of grid.columns) {
+        for (const column of grid.columnList) {
             this.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
                 ignoreCase || column.filteringIgnoreCase);
         }
@@ -371,7 +333,7 @@ export class IgxFilteringService implements OnDestroy {
      */
     public getExpressions(columnId: string): ExpressionUI[] {
         if (!this.columnToExpressionsMap.has(columnId)) {
-            const column = this.grid.columns.find((col) => col.field === columnId);
+            const column = this.grid.columnList.find((col) => col.field === columnId);
             const expressionUIs = new Array<ExpressionUI>();
             if (column) {
                 this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, expressionUIs);
@@ -391,7 +353,7 @@ export class IgxFilteringService implements OnDestroy {
             this.columnsWithComplexFilter.clear();
 
             this.columnToExpressionsMap.forEach((value: ExpressionUI[], key: string) => {
-                const column = this.grid.columns.find((col) => col.field === key);
+                const column = this.grid.columnList.find((col) => col.field === key);
                 if (column) {
                     value.length = 0;
 
@@ -473,7 +435,7 @@ export class IgxFilteringService implements OnDestroy {
             return true;
         }
 
-        const column = this.grid.columns.find((col) => col.field === columnId);
+        const column = this.grid.columnList.find((col) => col.field === columnId);
         const isComplex = column && this.isFilteringTreeComplex(column.filteringExpressionsTree);
         if (isComplex) {
             this.columnsWithComplexFilter.add(columnId);
@@ -506,7 +468,7 @@ export class IgxFilteringService implements OnDestroy {
                 return formatter(expression.searchVal, undefined);
             }
             const pipeArgs = column.pipeArgs;
-            return this.grid.datePipe.transform(expression.searchVal, pipeArgs.format, undefined, this.grid.locale);
+            return formatDate(expression.searchVal, pipeArgs.format, this.grid.locale);
         } else {
             return expression.searchVal;
         }
@@ -515,26 +477,17 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Updates the content of a filterCell.
      */
-    public updateFilteringCell(column: IgxColumnComponent) {
+    public updateFilteringCell(column: ColumnType) {
         const filterCell = column.filterCell;
         if (filterCell) {
             filterCell.updateFilterCellArea();
         }
     }
 
-    public get filteredData() {
-        return this.grid.filteredData;
-    }
-
     public generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
         operator: FilteringLogic,
         expressionsUIs: ExpressionUI[]): void {
-        this.generateExpressionsListRecursive(expressions, operator, expressionsUIs);
-
-        // The beforeOperator of the first expression and the afterOperator of the last expression should be null
-        if (expressionsUIs.length) {
-            expressionsUIs[expressionsUIs.length - 1].afterOperator = null;
-        }
+        generateExpressionsList(expressions, operator, expressionsUIs);
     }
 
     public isFilteringExpressionsTreeEmpty(expressionTree: IFilteringExpressionsTree): boolean {
@@ -657,57 +610,5 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         return count;
-    }
-
-    private generateExpressionsListRecursive(expressions: IFilteringExpressionsTree | IFilteringExpression,
-        operator: FilteringLogic,
-        expressionsUIs: ExpressionUI[]): void {
-        if (!expressions) {
-            return;
-        }
-
-        if (expressions instanceof FilteringExpressionsTree) {
-            const expressionsTree = expressions as FilteringExpressionsTree;
-            for (const operand of expressionsTree.filteringOperands) {
-                this.generateExpressionsListRecursive(operand, expressionsTree.operator, expressionsUIs);
-            }
-            if (expressionsUIs.length) {
-                expressionsUIs[expressionsUIs.length - 1].afterOperator = operator;
-            }
-        } else {
-            const exprUI = new ExpressionUI();
-            exprUI.expression = expressions as IFilteringExpression;
-            exprUI.afterOperator = operator;
-
-            const prevExprUI = expressionsUIs[expressionsUIs.length - 1];
-            if (prevExprUI) {
-                exprUI.beforeOperator = prevExprUI.afterOperator;
-            }
-
-            expressionsUIs.push(exprUI);
-        }
-    }
-
-    private createComponentInstance(component: any) {
-        let dynamicFactory: ComponentFactory<any>;
-        const factoryResolver = this._moduleRef
-            ? this._moduleRef.componentFactoryResolver
-            : this._factoryResolver;
-        try {
-            dynamicFactory = factoryResolver.resolveComponentFactory(component);
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
-
-        const injector = this._moduleRef
-            ? this._moduleRef.injector
-            : this._injector;
-        const dynamicComponent: ComponentRef<any> = dynamicFactory.create(
-            injector
-        );
-        this._appRef.attachView(dynamicComponent.hostView);
-
-        return dynamicComponent.instance;
     }
 }

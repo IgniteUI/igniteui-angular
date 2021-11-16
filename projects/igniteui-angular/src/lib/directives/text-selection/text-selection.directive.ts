@@ -22,7 +22,7 @@ export class IgxTextSelectionDirective {
      * ```
      */
     @Input('igxTextSelection')
-    get selected(): boolean {
+    public get selected(): boolean {
         return this.selectionState;
     }
 
@@ -45,7 +45,7 @@ export class IgxTextSelectionDirective {
      * </input>
      * ```
      */
-    set selected(val: boolean) {
+    public set selected(val: boolean) {
         this.selectionState = val;
     }
 
@@ -70,7 +70,7 @@ export class IgxTextSelectionDirective {
      * }
      * ```
      */
-    get nativeElement() {
+    public get nativeElement() {
         return this.element.nativeElement;
     }
 
@@ -80,7 +80,7 @@ export class IgxTextSelectionDirective {
      * @hidden
      */
     @HostListener('focus')
-    onFocus() {
+    public onFocus() {
         this.trigger();
     }
 
@@ -105,7 +105,7 @@ export class IgxTextSelectionDirective {
      * }
      * ```
      */
-    trigger() {
+    public trigger() {
         if (this.selected && this.nativeElement.value.length) {
             requestAnimationFrame(() => this.nativeElement.setSelectionRange(0, this.nativeElement.value.length));
         }

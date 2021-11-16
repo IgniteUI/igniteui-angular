@@ -1,22 +1,17 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { GridType } from '../common/grid.interface';
+import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
-@Pipe({
-    name: 'igxGridSummaryDataPipe',
-    pure: true
-})
+@Pipe({name: 'igxGridSummaryDataPipe'})
 export class IgxSummaryDataPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public transform(id: string, trigger: number = 0) {
-        const summaryService = this.gridAPI.grid.summaryService;
+        const summaryService = this.grid.summaryService;
         return summaryService.calculateSummaries(
             summaryService.rootSummaryID,
-            this.gridAPI.get_summary_data()
+            this.grid.gridAPI.get_summary_data()
         );
     }
 }

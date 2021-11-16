@@ -382,7 +382,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * }
      * ```
      */
-     public get state(): string {
+    public get state(): string {
         return this.isOpen ? 'open' : 'close';
     }
 
@@ -633,3 +633,5 @@ export interface IDialogCancellableEventArgs extends IDialogEventArgs, Cancelabl
     imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule, IgxFocusModule, IgxFocusTrapModule]
 })
 export class IgxDialogModule { }
+
+export * from './dialog.directives';

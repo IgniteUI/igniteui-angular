@@ -8,24 +8,22 @@ import {
     Input,
     ViewChild,
     TemplateRef,
-    OnDestroy
+    OnDestroy,
+    Inject
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
-import { GridType } from '../common/grid.interface';
+import { IgxGridSelectionService } from '../selection/selection.service';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { IgxGridRowComponent } from './grid-row.component';
-import { IgxGridComponent } from './grid.component';
 import { GridSelectionMode } from '../common/enums';
+import { ISelectionNode } from '../common/types';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-groupby-row',
     templateUrl: './groupby-row.component.html'
 })
@@ -121,7 +119,8 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
         return this.isActive();
     }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+    constructor(
+        @Inject(IGX_GRID_BASE) public grid: GridType,
         public gridSelection: IgxGridSelectionService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef,
@@ -247,16 +246,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
             row: this.index,
             column: this.gridSelection.activeElement ? this.gridSelection.activeElement.column : 0
         };
-    }
-
-    /**
-     * Returns a reference to the `IgxGridComponent` the `IgxGridGroupByRowComponent` belongs to.
-     * ```typescript
-     * this.grid1.rowList.first.grid;
-     * ```
-     */
-    public get grid(): IgxGridComponent {
-        return this.gridAPI.grid as IgxGridComponent;
     }
 
     /**

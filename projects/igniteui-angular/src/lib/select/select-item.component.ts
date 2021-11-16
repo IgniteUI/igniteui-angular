@@ -1,11 +1,11 @@
 import { IgxDropDownItemComponent } from './../drop-down/drop-down-item.component';
-import { Component, DoCheck, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'igx-select-item',
     template: '<span class="igx-drop-down__inner"><ng-content></ng-content></span>'
 })
-export class IgxSelectItemComponent extends IgxDropDownItemComponent implements DoCheck {
+export class IgxSelectItemComponent extends IgxDropDownItemComponent {
     /** @hidden @internal */
     public isHeader: boolean;
 
@@ -59,9 +59,5 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
         if (value && !this.isHeader && !this.disabled) {
             this.dropDown.selectItem(this);
         }
-    }
-
-    /** @hidden @internal */
-    public ngDoCheck(): void {
     }
 }

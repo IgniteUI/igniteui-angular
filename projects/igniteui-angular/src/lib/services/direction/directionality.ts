@@ -9,7 +9,6 @@ export type Direction = 'ltr' | 'rtl';
 /**
  * @hidden
  */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function DIR_DOCUMENT_FACTORY(): Document {
     return inject(DOCUMENT);
 }

@@ -296,7 +296,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             // deselect all columns
             grid.deselectAllColumns();
             fix.detectChanges();
-            GridSelectionFunctions.verifyColumnsSelected(grid.columns, false);
+            GridSelectionFunctions.verifyColumnsSelected(grid.columnList.toArray(), false);
             expect(grid.selectedColumns()).toEqual([]);
 
             // Set selectable false to a column

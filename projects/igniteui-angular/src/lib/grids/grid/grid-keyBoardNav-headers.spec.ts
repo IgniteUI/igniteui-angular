@@ -4,7 +4,6 @@ import {
     IgxGridModule
 } from './public_api';
 import { IgxGridComponent } from './grid.component';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -18,6 +17,7 @@ import { GridSelectionMode, FilterMode } from '../common/enums';
 import { IActiveNodeChangeEventArgs } from '../common/events';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const DEBOUNCETIME = 30;
 
@@ -42,6 +42,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
             gridHeader = GridFunctions.getGridHeader(grid);
+            tick();
         }));
 
         it('when click on a header it should stay in the view', async () => {
@@ -61,7 +62,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should focus first header when the grid is scrolled', async () => {
             grid.navigateTo(7, 5);
-            await wait(150);
+            await wait(250);
             fix.detectChanges();
 
             gridHeader.nativeElement.focus(); //('focus', {});

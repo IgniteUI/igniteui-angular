@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule, IRowSelectionEventArgs } from './public_api';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -21,6 +20,7 @@ import { GridSelectionMode } from '../common/enums';
 import { IgxGridSelectionModule } from '../selection/selection.module';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const DEBOUNCETIME = 30;
 const SCROLL_DEBOUNCETIME = 100;

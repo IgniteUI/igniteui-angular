@@ -1,6 +1,23 @@
 import {
-    AfterViewInit, ChangeDetectorRef, ContentChild, Directive, DoCheck, ElementRef, EventEmitter,
-    HostBinding, HostListener, Inject, InjectionToken, Injector, Input, OnDestroy, OnInit, Optional, Output, TemplateRef, ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    ContentChild,
+    Directive,
+    DoCheck,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Inject,
+    InjectionToken,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Output,
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
 import { caseSensitive } from '@igniteui/material-icons-extended';
@@ -9,7 +26,7 @@ import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/public_api';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/inputGroupType';

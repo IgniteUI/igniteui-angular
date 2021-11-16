@@ -1,6 +1,5 @@
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DefaultSortingStrategy } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupByAreaTestComponent, IgxTreeGridGroupingComponent } from '../../test-utils/tree-grid-components.spec';
@@ -8,6 +7,7 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridComponent } from './tree-grid.component';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxTreeGrid', () => {
     configureTestSuite();
@@ -106,7 +106,7 @@ describe('IgxTreeGrid', () => {
             expect(groupByArea.dropAreaVisible).toBeFalse();
         }));
 
-        it('is loaded grouped by two fields.', () => {
+        it('is loaded grouped by two fields.', fakeAsync(() => {
             const groupArea = fix.debugElement.nativeElement.querySelector('igx-tree-grid-group-by-area');
             expect(groupArea).toBeDefined();
             const chips = fix.debugElement.nativeElement.querySelectorAll('igx-chip');
@@ -117,10 +117,11 @@ describe('IgxTreeGrid', () => {
 
             treeGrid.expandAll();
             fix.detectChanges();
+            tick();
 
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(19);
-        });
+            expect(rows.length).toBe(20);
+        }));
 
         it('shows a new group chip when adding a grouping expression', fakeAsync(() => {
             expect(groupByArea.expressions).toEqual(groupingExpressions);

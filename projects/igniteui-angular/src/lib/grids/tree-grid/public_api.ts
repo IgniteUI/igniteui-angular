@@ -5,3 +5,7 @@ export * from './tree-grid-api.service';
 export * from './tree-grid.interfaces';
 export * from './tree-grid.filtering.strategy';
 export * from './tree-grid.grouping.pipe';
+export * from './tree-grid.directives';
+export { IgxTreeGridRowComponent as θIgxTreeGridRowComponent } from './tree-grid-row.component';
+export { IgxTreeGridAddRowPipe } from './tree-grid.pipes';
+export { IgxTreeGridCellComponent as θIgxTreeGridCellComponent } from './tree-cell.component';

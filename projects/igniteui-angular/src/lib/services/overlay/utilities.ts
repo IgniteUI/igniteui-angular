@@ -166,9 +166,9 @@ export interface OverlayInfo {
 
 /** @hidden */
 export interface ConnectedFit {
-    contentElementRect?: ClientRect;
-    targetRect?: ClientRect;
-    viewPortRect?: ClientRect;
+    contentElementRect?: Partial<DOMRect>;
+    targetRect?: Partial<DOMRect>;
+    viewPortRect?: Partial<DOMRect>;
     fitHorizontal?: OutOfViewPort;
     fitVertical?: OutOfViewPort;
     left?: number;
@@ -187,8 +187,8 @@ export class Util {
      *
      * @param settings Overlay settings for which to calculate target rectangle
      */
-    public static getTargetRect(target?: Point | HTMLElement): ClientRect {
-        let targetRect: ClientRect = {
+    public static getTargetRect(target?: Point | HTMLElement): Partial<DOMRect> {
+        let targetRect: Partial<DOMRect> = {
             bottom: 0,
             height: 0,
             left: 0,
@@ -214,7 +214,7 @@ export class Util {
         return targetRect;
     }
 
-    public static getViewportRect(document: Document): ClientRect {
+    public static getViewportRect(document: Document): Partial<DOMRect> {
         const width = document.documentElement.clientWidth;
         const height = document.documentElement.clientHeight;
         const scrollPosition = Util.getViewportScrollPosition(document);

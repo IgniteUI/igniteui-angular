@@ -55,6 +55,11 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 
+- `IE discontinued support` **Breaking Change** [details](https://angular.io/guide/browser-support)
+    - `web-animations-js` is removed as Peer Dependency.
+    - Removed IE from `.browserslistrc`
+    - Removed IE related `polyfills`, like Importing ES7 polyfill for Object (`'core-js/es7/object'`) for IE is no longer used.
+
 - `IgxDialog`
     - **Breaking Change** - The default positionSettings open/close animation has been changed to `fadeIn`/`fadeOut`. The open/close animation can be set through the position settings, e.g. change the animation to the previously default open/close animation:
 

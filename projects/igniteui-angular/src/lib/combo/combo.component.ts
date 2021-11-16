@@ -440,29 +440,51 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
  * @hidden
  */
 @NgModule({
-    declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboGroupingPipe,
-        IgxComboFilteringPipe, IgxComboDropDownComponent, IgxComboAddItemComponent,
-        IgxComboItemDirective,
-        IgxComboEmptyDirective,
-        IgxComboHeaderItemDirective,
-        IgxComboHeaderDirective,
-        IgxComboFooterDirective,
+    declarations: [
+        IgxComboAddItemComponent,
         IgxComboAddItemDirective,
-        IgxComboToggleIconDirective,
-        IgxComboClearIconDirective],
-    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboAddItemComponent,
-        IgxComboGroupingPipe, // TODO: create common ng module
-        IgxComboFilteringPipe,
-        IgxComboItemDirective,
-        IgxComboEmptyDirective,
-        IgxComboHeaderItemDirective,
-        IgxComboHeaderDirective,
-        IgxComboFooterDirective,
-        IgxComboAddItemDirective,
-        IgxComboToggleIconDirective,
         IgxComboClearIconDirective,
-        IgxInputGroupModule],
-    imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule]
+        IgxComboComponent,
+        IgxComboDropDownComponent,
+        IgxComboEmptyDirective,
+        IgxComboFilteringPipe,
+        IgxComboFooterDirective,
+        IgxComboGroupingPipe,
+        IgxComboHeaderDirective,
+        IgxComboHeaderItemDirective,
+        IgxComboItemComponent,
+        IgxComboItemDirective,
+        IgxComboToggleIconDirective
+    ],
+    exports: [
+        IgxComboAddItemComponent,
+        IgxComboAddItemDirective,
+        IgxComboClearIconDirective,
+        IgxComboComponent,
+        IgxComboDropDownComponent,
+        IgxComboEmptyDirective,
+        IgxComboFilteringPipe,
+        IgxComboFooterDirective,
+        IgxComboGroupingPipe,
+        IgxComboHeaderDirective,
+        IgxComboHeaderItemDirective,
+        IgxComboItemComponent,
+        IgxComboItemDirective,
+        IgxComboToggleIconDirective,
+        IgxInputGroupModule
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IgxButtonModule,
+        IgxCheckboxModule,
+        IgxDropDownModule,
+        IgxForOfModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxRippleModule,
+        IgxToggleModule,
+        ReactiveFormsModule
+    ]
 })
 export class IgxComboModule { }

@@ -1,17 +1,12 @@
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
 import { SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { Injectable } from '@angular/core';
-import { IgxChildGridRowComponent } from './child-grid-row.component';
-import { IgxGridBaseDirective } from '../grid/public_api';
-import { GridType } from '../common/grid.interface';
-import { IPathSegment } from './hierarchical-grid-base.directive';
-import { IgxRowDirective } from '../row.directive';
+import { GridType, IPathSegment, RowType } from '../common/grid.interface';
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
-    public grid: IgxHierarchicalGridComponent;
+    public grid: GridType;
 
     protected _pendingNavigation = false;
 
@@ -262,9 +257,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param rowObj
      * @param isNext
      */
-    protected getPositionInfo(rowObj: IgxRowDirective<IgxGridBaseDirective & GridType>, isNext: boolean) {
-        let rowElem = rowObj.nativeElement;
-        if (rowObj instanceof IgxChildGridRowComponent) {
+    protected getPositionInfo(rowObj: RowType, isNext: boolean) {
+        // XXX: Fix type
+        let rowElem = (rowObj as any).nativeElement;
+        if ((rowObj as any).layout) {
             const childLayoutKeys = this.grid.childLayoutKeys;
             const riKey = isNext ? childLayoutKeys[0] : childLayoutKeys[childLayoutKeys.length - 1];
             const pathSegment: IPathSegment = {

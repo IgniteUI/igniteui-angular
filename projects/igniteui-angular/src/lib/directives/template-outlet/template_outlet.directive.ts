@@ -218,10 +218,8 @@ export interface ICachedViewLoadedEventArgs extends IViewChangeEventArgs {
  */
 @NgModule({
     declarations: [IgxTemplateOutletDirective],
-    entryComponents: [],
     exports: [IgxTemplateOutletDirective],
     imports: [CommonModule]
 })
-
 export class IgxTemplateOutletModule {
 }
