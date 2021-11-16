@@ -1,11 +1,17 @@
-<!-- Row Dimension -->
-<div #rowDimensionContainer>
-    <igx-pivot-header-row class="igx-grid-thead" tabindex="0" [grid]="grid" [hasMRL]="grid.hasColumnLayouts"
-        [density]="grid.displayDensity" [activeDescendant]="grid.activeDescendant" [width]="grid.pivotRowWidths"
-        [unpinnedColumnCollection]="rowDimension" (scroll)="grid.preventHeaderScroll($event)" [row]="this">
-    </igx-pivot-header-row>
-</div>
-
+    <!-- Row Dimension -->
+    <div #rowDimensionContainer>
+            <igx-pivot-row-dimension-content class="igx-grid-thead" tabindex="0"
+            [grid]="grid"
+            [hasMRL]="grid.hasColumnLayouts"
+            [density]="grid.displayDensity"
+            [activeDescendant]="grid.activeDescendant"
+            [width]="grid.pivotRowWidths"
+            [unpinnedColumnCollection]="rowDimension"
+            (scroll)="grid.preventHeaderScroll($event)"
+            [row]="this"
+        >
+        </igx-pivot-row-dimension-content>
+    </div>
 
 <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
     <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-template>
