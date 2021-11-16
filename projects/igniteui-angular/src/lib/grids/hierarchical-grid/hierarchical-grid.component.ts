@@ -528,6 +528,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.allRows().filter(row => row instanceof IgxHierarchicalGridRow);
     }
 
+    public isRowSelected(rowData: any): boolean {
+        const primaryKey = this.primaryKey;
+        const rowId = primaryKey ? rowData[primaryKey] : rowData;
+
+        return this.selectionService.isRowSelected(rowId);
+    }
+
     /**
      * Returns an array of the selected `IgxGridCell`s.
      *

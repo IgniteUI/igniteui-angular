@@ -876,6 +876,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return row;
     }
 
+    public isRowSelected(rowData: any): boolean {
+        const primaryKey = this.primaryKey;
+        const rowId = primaryKey ? rowData[primaryKey] : rowData;
+
+        return this.selectionService.isRowSelected(rowId);
+    }
+
     /**
      * Returns if the `IgxTreeGridComponent` has groupable columns.
      *
