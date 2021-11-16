@@ -1,4 +1,4 @@
-<div class="igx-grid-thead__wrapper" role="row" [style.width.px]="width" *ngIf="!row">
+<div class="igx-grid-thead__wrapper" role="row" [style.width.px]="width">
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
         <div #pivotFilterContainer class="igx-grid__tr-action" [style.min-width.px]="grid.pivotRowWidths"
             (igxDragEnter)="onAreaDragEnter($event, filterArea, 2)" (igxDragLeave)="onAreaDragLeave($event, filterArea)"
@@ -15,7 +15,7 @@
                     (dragLeave)="onDimDragLeave($event)"
                     (dragDrop)="onDimDrop($event, filterArea, 2)"
                      >
-                    <igx-icon igxPrefix>filter_list</igx-icon>
+                    <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, filter)'>filter_list</igx-icon>
                     {{filter.memberName}}
                 </igx-chip>
             </igx-chips-area>
@@ -35,7 +35,7 @@
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, colArea, 1)">
                         <igx-icon igxPrefix>view_column</igx-icon>
-                        <igx-icon igxPrefix>filter_list</igx-icon>
+                        <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, col)'>filter_list</igx-icon>
                         {{col.memberName}}
                     </igx-chip>
                 </igx-chips-area>
@@ -68,7 +68,7 @@
     <!-- Column headers area -->
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
 
-        <ng-container *ngIf="!row">
+        <ng-container>
             <div #pivotContainer class="igx-grid__tr-action" [style.min-width.px]="grid.pivotRowWidths"
                 (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)" (igxDragLeave)="onAreaDragLeave($event, rowArea)"
                 igxDrop (dropped)="onDimDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()"
@@ -85,7 +85,7 @@
                         (dragDrop)="onDimDrop($event, rowArea, 0)"
                         (dragOver)="onDimDragOver($event, 0)">
                         <igx-icon igxPrefix>table_rows</igx-icon>
-                        <igx-icon igxPrefix>filter_list</igx-icon>
+                        <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
                         {{ row.memberName}}
                     </igx-chip>
                 </igx-chips-area>
@@ -106,7 +106,7 @@
         <!-- Unpinned columns collection -->
         <ng-template igxGridFor #headerVirtualContainer let-column
             [igxGridForOf]="unpinnedColumnCollection | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir"
-            [igxForContainerSize]=" row ? grid.pivotRowWidths : grid.unpinnedWidth"
+            [igxForContainerSize]="grid.unpinnedWidth"
             [igxForTrackBy]="grid.trackColumnChanges" [igxForSizePropName]="'calcPixelWidth'"
             [igxForScrollOrientation]="'horizontal'">
             <igx-grid-header-group [ngClass]="column.headerGroupClasses"
@@ -130,5 +130,5 @@
     </div>
 </div>
 <!-- Header thumb area -->
-<div *ngIf="!row" class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize">
+<div class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize">
 </div>
