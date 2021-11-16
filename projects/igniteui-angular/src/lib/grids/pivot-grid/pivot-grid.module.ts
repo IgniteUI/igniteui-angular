@@ -6,6 +6,7 @@ import { IgxPivotRowPipe, IgxPivotColumnPipe, IgxPivotGridFilterPipe,
    IgxPivotRowExpansionPipe, IgxPivotGridSortingPipe } from './pivot-grid.pipes';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
+import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 
 /**
  * @hidden
@@ -15,6 +16,7 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
     IgxPivotGridComponent,
     IgxPivotRowComponent,
     IgxPivotHeaderRowComponent,
+    IgxPivotRowDimensionContentComponent,
     IgxPivotRowPipe,
     IgxPivotRowExpansionPipe,
     IgxPivotColumnPipe,
@@ -26,6 +28,7 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
     IgxPivotGridComponent,
     IgxPivotRowComponent,
     IgxPivotHeaderRowComponent,
+    IgxPivotRowDimensionContentComponent,
     IgxPivotRowExpansionPipe,
     IgxPivotRowPipe,
     IgxPivotColumnPipe,

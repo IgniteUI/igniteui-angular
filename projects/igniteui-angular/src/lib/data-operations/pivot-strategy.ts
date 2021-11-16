@@ -1,11 +1,13 @@
 
-import { parseDate } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
+import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
 import { IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
+import { FilteringStrategy } from './filtering-strategy';
 import { GridColumnDataType } from './data-util';
 import { SortingDirection } from './sorting-expression.interface';
 import { DefaultSortingStrategy, ISortingStrategy } from './sorting-strategy';
+import { parseDate } from '../core/utils';
 
 export interface IPivotDimensionStrategy {
     process(collection: any,
@@ -152,6 +154,27 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
 
     private isLeaf(record, pivotKeys) {
         return !(record[pivotKeys.records] && record[pivotKeys.records].some(r => r[pivotKeys.records]));
+    }
+}
+
+export class DimensionValuesFilteringStrategy extends FilteringStrategy {
+    /**
+     * Creates a new instance of FormattedValuesFilteringStrategy.
+     *
+     * @param fields An array of column field names that should be formatted.
+     * If omitted the values of all columns which has formatter will be formatted.
+     */
+    constructor(private fields?: string[]) {
+        super();
+    }
+
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false,
+         grid?: IgxPivotGridComponent): any {
+        const config = grid.pivotConfiguration;
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
+        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+        const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
+        return PivotUtil.extractValueFromDimension(dim, rec);
     }
 }
 

@@ -15,12 +15,11 @@
     (copy)="copyHandler($event)"
     (keydown)="navigation.headerNavigation($event)"
     (scroll)="preventHeaderScroll($event)"
-    (focus)="navigation.focusFirstCell()"
 >
 </igx-pivot-header-row>
 
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
-    <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
+    <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]='totalHeight' [style.width.px]='calcWidth || null' #tbody [attr.aria-activedescendant]="activeDescendant">
@@ -31,7 +30,7 @@
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
-        | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree
+        | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree:filteringPipeTrigger:pipeTrigger
         | pivotGridSort:pivotConfiguration:sortStrategy:id:pipeTrigger
         | pivotGridRow:pivotConfiguration:expansionStates:pipeTrigger
         | pivotGridRowExpansion:pivotConfiguration:expansionStates:pipeTrigger
@@ -123,3 +122,14 @@
         {{column.header}}
     </div>
 </ng-template>
+
+
+<div [hidden]='true'>
+<igx-grid-excel-style-filtering>
+    <div igxExcelStyleColumnOperations [hidden]='true'>
+    </div>
+    <igx-excel-style-filter-operations>
+        <igx-excel-style-search></igx-excel-style-search>
+    </igx-excel-style-filter-operations>
+</igx-grid-excel-style-filtering>
+</div>

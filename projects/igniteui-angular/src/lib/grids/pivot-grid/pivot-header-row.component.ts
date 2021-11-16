@@ -36,8 +36,6 @@ export interface IgxGridRowSelectorsTemplateContext {
     templateUrl: './pivot-header-row.component.html'
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
-    @Input()
-    public row: IgxPivotRowComponent;
 
     private _dropPos = DropPosition.AfterDropTarget;
     private _dropLeftIndicatorClass = 'igx-pivot-grid__drop-indicator--left';
@@ -54,6 +52,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     public rowRemoved(event: IBaseChipEventArgs) {
         const row = this.grid.pivotConfiguration.rows.find(x => x.memberName === event.owner.id);
         row.enabled = false;
+        this.grid.filteringService.clearFilter(row.memberName);
         this.grid.pipeTrigger++;
     }
 
@@ -61,6 +60,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         const col = this.grid.pivotConfiguration.columns.find(x => x.memberName === event.owner.id);
         col.enabled = false;
         this.grid.setupColumns();
+        this.grid.filteringService.clearFilter(col.memberName);
         this.grid.pipeTrigger++;
     }
 
@@ -74,6 +74,29 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     public filterRemoved(event: IBaseChipEventArgs) {
         const filter = this.grid.pivotConfiguration.filters.find(x => x.memberName === event.owner.id);
         filter.enabled = false;
+        this.grid.filteringService.clearFilter(filter.memberName);
+        this.grid.pipeTrigger++;
+    }
+
+    public onFilteringIconPointerDown(event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    public onFilteringIconClick(event, dimension) {
+        event.stopPropagation();
+        event.preventDefault();
+        let dim = dimension;
+        let col;
+        while(dim) {
+            col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
+            if (col) {
+                break;
+            } else {
+                dim = dim.childLevel;
+            }
+        }
+        this.grid.filteringService.toggleFilterDropdown(event.target, col);
     }
 
     public onChipSort(event, dimension: IPivotDimension, dimensionType: PivotDimensionType) {
