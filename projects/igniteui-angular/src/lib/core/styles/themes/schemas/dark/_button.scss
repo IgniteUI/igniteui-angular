@@ -8,16 +8,15 @@
 ////
 
 /// @type {Map}
-/// @prop {Map} disabled-background [igx-color: ('grays', 200)] - The disabled background color of the button.
+/// @prop {Map} disabled-background [igx-color: ('grays', 100, .3)] - The disabled background color of the button.
+/// @prop {Color} disabled-foreground [igx-color: ('grays', 200)] - The disabled foreground color of the button.
 /// @requires {Map} $material-base-button
 /// @requires {function} extend
 $material-base-button-dark: extend(
-    $material-base-button,
     (
         disabled-background: (
-            igx-color: ('grays', 100, .1)
+            igx-color: ('grays', 100, .3)
         ),
-
 
         disabled-foreground: (
             igx-color: ('grays', 200)
@@ -77,8 +76,17 @@ $material-fab-button-dark: extend($material-fab-button, $material-base-button-da
 
 /// @requires {Map} $material-outlined-button
 /// @requires {Map} $material-base-button-dark
+/// @prop {Map} disabled-border-color [igx-color: ('grays', 100, .3)] - The disabled focused border color of the button.
 /// @requires {function} extend
-$material-outlined-button-dark: extend($material-outlined-button, $material-base-button-dark);
+$material-outlined-button-dark: extend(
+    $material-outlined-button,
+    $material-base-button-dark,
+    (
+        disabled-border-color: (
+            igx-color: ('grays', 100, .3)
+        ),
+    )
+);
 
 /// Generates a dark material button schema.
 /// @type {Map}
@@ -97,21 +105,11 @@ $dark-button: (
 );
 
 /// @type {Map}
-/// @prop {Map} disabled-background [igx-color: ('grays', 100, .1)] - The disabled background color of the button.
-/// @prop {Color} disabled-foreground [igx-color: ('grays', 200)] - The disabled foreground color of the button.
 /// @requires {Map} $material-base-button
 /// @requires {function} extend
 $fluent-base-button-dark: extend(
     $fluent-base-button,
-    (
-        disabled-background: (
-            igx-color: ('grays', 100, .1)
-        ),
-
-        disabled-foreground: (
-            igx-color: ('grays', 200)
-        )
-    )
+    $material-base-button-dark,
 );
 
 /// @prop {Map} hover-foreground [igx-color: ('primary', 200)] - The text color of a flat button on hover.
@@ -159,7 +157,7 @@ $fluent-icon-button-dark: extend(
 
 /// @prop {Map} hover-foreground [igx-color: ('grays', 100, .3)] - The text color of a outlined button on hover.
 /// @prop {Map} focus-background [igx-color: ('grays', 100, .3)] - The focus background color of a outlined button.
-/// @prop {Map} border-color [igx-color: ('grays', 500)] - The border color of an outlined button.
+/// @prop {Map} border-color [igx-color: ('grays', 100)] - The border color of an outlined button.
 /// @requires {Map} $fluent-outlined-button
 /// @requires {Map} $fluent-base-button-dark
 /// @requires {function} extend
@@ -176,7 +174,7 @@ $fluent-outlined-button-dark: extend(
         ),
 
         border-color: (
-            igx-color: ('grays', 500)
+            igx-color: ('grays', 100)
         ),
     )
 );

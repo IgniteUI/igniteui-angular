@@ -81,10 +81,12 @@ export interface RowType {
     isSummaryRow?: boolean;
     summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
-    /** Deprecated, will be removed. key is the new property */
+    /** @deprecated in version 12.0.0
+     *  Deprecated, will be removed. key is the new property */
     rowID?: any;
     key?: any;
-    /** Deprecated, will be removed. data is the new property */
+    /** @deprecated in version 12.0.0
+     * Deprecated, will be removed. data is the new property */
     rowData?: any;
     data?: any;
     cells?: QueryList<CellType> | CellType[];
@@ -447,14 +449,14 @@ export interface GridType extends IGridDataBindable {
     contextMenu: EventEmitter<IGridCellEventArgs>;
     selected: EventEmitter<IGridCellEventArgs>;
     rangeSelected: EventEmitter<GridSelectionRange>;
-    rowSelected: EventEmitter<IRowSelectionEventArgs>;
+    rowSelectionChanging: EventEmitter<IRowSelectionEventArgs>;
     localeChange: EventEmitter<boolean>;
     filtering: EventEmitter<IFilteringEventArgs>;
     filteringDone: EventEmitter<IFilteringExpressionsTree>;
     columnPinned: EventEmitter<IPinColumnEventArgs>;
     columnResized: EventEmitter<IColumnResizeEventArgs>;
     columnMovingEnd: EventEmitter<IColumnMovingEndEventArgs>;
-    columnSelected: EventEmitter<IColumnSelectionEventArgs>;
+    columnSelectionChanging: EventEmitter<IColumnSelectionEventArgs>;
     columnMoving: EventEmitter<IColumnMovingEventArgs>;
     columnMovingStart: EventEmitter<IColumnMovingStartEventArgs>;
     columnPin: EventEmitter<IPinColumnCancellableEventArgs>;

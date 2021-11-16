@@ -77,19 +77,19 @@ export interface IColumnResizingEventArgs extends IColumnResizeEventArgs, Cancel
 }
 
 export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    oldSelection: any[];
+    readonly oldSelection: any[];
     newSelection: any[];
-    added: any[];
-    removed: any[];
-    event?: Event;
+    readonly added: any[];
+    readonly removed: any[];
+    readonly event?: Event;
 }
 
 export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    oldSelection: string[];
+    readonly oldSelection: string[];
     newSelection: string[];
-    added: string[];
-    removed: string[];
-    event?: Event;
+    readonly added: string[];
+    readonly removed: string[];
+    readonly event?: Event;
 }
 
 export interface ISearchInfo {

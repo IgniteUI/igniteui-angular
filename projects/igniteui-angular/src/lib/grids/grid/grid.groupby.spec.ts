@@ -1171,8 +1171,14 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
+            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
+
+            expect(selectionSpy).toHaveBeenCalledTimes(1);
+            const args = selectionSpy.calls.mostRecent().args[0];
+            expect(args.added.length).toBe(2);
+            expect(grid.selectedRows.length).toEqual(2);
 
             for (const key of grRow.groupRow.records) {
                 expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
@@ -1255,8 +1261,14 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
+            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
+
+            expect(selectionSpy).toHaveBeenCalledTimes(1);
+            const args = selectionSpy.calls.mostRecent().args[0];
+            expect(args.removed.length).toBe(2);
+            expect(grid.selectedRows.length).toEqual(0);
 
             for (const key of grRow.groupRow.records) {
                 expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false));

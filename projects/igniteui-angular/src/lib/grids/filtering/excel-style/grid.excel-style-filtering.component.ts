@@ -292,6 +292,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      */
     public ngOnDestroy(): void {
         this.subscriptions?.unsubscribe();
+        delete this.overlayComponentId;
     }
 
     /**
@@ -313,8 +314,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      * @hidden @internal
      */
     public onPin() {
-        this.column.pinned = !this.column.pinned;
         this.closeDropdown();
+        this.column.pinned = !this.column.pinned;
     }
 
     /**
