@@ -35,7 +35,8 @@ export class IgxPivotRowPipe implements PipeTransform {
     ): any[] {
         const enabledRows = config.rows.filter(x => x.enabled);
         const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
-        return rowStrategy.process(collection.slice(0), enabledRows, config.values, pivotKeys);
+        const data = cloneArray(collection, true);
+        return rowStrategy.process(data, enabledRows, config.values, pivotKeys);
     }
 }
 
@@ -59,7 +60,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
     ): any[] {
         const enabledRows = config.rows.filter(x => x.enabled);
-        const data = collection ? collection.slice(0) : [];
+        const data = collection ? cloneArray(collection, true) : [];
         let totalLlv = 0;
         const prevDims = [];
         for (const row of enabledRows) {
@@ -107,7 +108,8 @@ export class IgxPivotColumnPipe implements PipeTransform {
         const enabledValues = config.values.filter(x => x.enabled);
 
         const colStrategy = config.columnStrategy || PivotColumnDimensionsStrategy.instance();
-        return colStrategy.process(collection, enabledColumns, enabledValues, pivotKeys);
+        const data = cloneArray(collection, true);
+        return colStrategy.process(data, enabledColumns, enabledValues, pivotKeys);
     }
 }
 
@@ -146,7 +148,7 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
             return collection;
         }
 
-        const result = DataUtil.filter(cloneArray(collection), state, this.gridAPI.grid);
+        const result = DataUtil.filter(cloneArray(collection, true), state, this.gridAPI.grid);
 
         return result;
     }
