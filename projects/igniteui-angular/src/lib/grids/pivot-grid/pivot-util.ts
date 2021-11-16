@@ -1,4 +1,7 @@
 import { cloneValue } from '../../core/utils';
+import { DataUtil } from '../../data-operations/data-util';
+import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { IGridSortingStrategy, IgxSorting } from '../../data-operations/sorting-strategy';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 
 export class PivotUtil {
@@ -19,6 +22,19 @@ export class PivotUtil {
             }
         }
         return hierarchy;
+    }
+
+    public static sort(data: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting(), pivotKeys): any[] {
+        data.forEach(rec => {
+            const keys = Object.keys(rec);
+            keys.forEach(k => {
+                if (k.indexOf(pivotKeys.records) !== -1) {
+                    // sort all child record collections based on expression recursively.
+                    rec[k] = this.sort(rec[k], expressions, sorting, pivotKeys);
+                }
+            });
+        });
+        return DataUtil.sort(data, expressions, sorting);
     }
 
     public static extractValueFromDimension(dim: IPivotDimension, recData: any) {

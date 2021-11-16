@@ -4,8 +4,10 @@ import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys } from './pivot-grid.interface';
-import { DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
-     PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import {
+    DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
+    PivotRowDimensionsStrategy
+} from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { GridBaseAPIService, IgxGridBaseDirective } from '../hierarchical-grid/public_api';
@@ -29,10 +31,10 @@ export class IgxPivotRowPipe implements PipeTransform {
         _: Map<any, boolean>,
         _pipeTrigger?: number,
         __?,
-        pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
     ): any[] {
         const enabledRows = config.rows.filter(x => x.enabled);
-        const rowStrategy = config.rowStrategy ||  PivotRowDimensionsStrategy.instance();
+        const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
         return rowStrategy.process(collection.slice(0), enabledRows, config.values, pivotKeys);
     }
 }
@@ -40,7 +42,7 @@ export class IgxPivotRowPipe implements PipeTransform {
 /**
  * @hidden
  */
- @Pipe({
+@Pipe({
     name: 'pivotGridRowExpansion',
     pure: true
 })
@@ -54,7 +56,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         expansionStates: Map<any, boolean>,
         _pipeTrigger?: number,
         __?,
-        pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
     ): any[] {
         const enabledRows = config.rows.filter(x => x.enabled);
         const data = collection ? collection.slice(0) : [];
@@ -99,7 +101,7 @@ export class IgxPivotColumnPipe implements PipeTransform {
         _: Map<any, boolean>,
         _pipeTrigger?: number,
         __?,
-        pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
     ): any[] {
         const enabledColumns = config.columns.filter(x => x.enabled);
         const enabledValues = config.values.filter(x => x.enabled);
@@ -112,7 +114,7 @@ export class IgxPivotColumnPipe implements PipeTransform {
 /**
  * @hidden
  */
- @Pipe({
+@Pipe({
     name: 'pivotGridFilter',
     pure: true
 })
@@ -154,20 +156,25 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
 /**
  * @hidden
  */
- @Pipe({
+@Pipe({
     name: 'pivotGridColumnSort',
     pure: true
 })
 export class IgxPivotGridSortingPipe implements PipeTransform {
 
-    public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy, pipeTrigger: number): any[] {
+    public transform(
+        collection: any[],
+        expressions: ISortingExpression[],
+        sorting: IGridSortingStrategy,
+        pipeTrigger: number,
+        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+    ): any[] {
         let result: any[];
 
         if (!expressions.length) {
             result = collection;
         } else {
-            // TODO - sort recursively in all records collections.
-            result = DataUtil.sort(cloneArray(collection), expressions, sorting);
+            result = PivotUtil.sort(cloneArray(collection, true), expressions, sorting, pivotKeys);
         }
         return result;
     }
