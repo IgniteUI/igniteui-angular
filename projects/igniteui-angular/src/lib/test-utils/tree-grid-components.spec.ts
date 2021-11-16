@@ -818,13 +818,14 @@ export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
     }
 
     public onRowCheckboxClick(event, rowContext) {
+        // TODO rowData
         this.rowCheckboxClick = event;
         event.stopPropagation();
         event.preventDefault();
         if (rowContext.selected) {
-            this.treeGrid.deselectRows([rowContext.rowID]);
+            this.treeGrid.deselectRows([rowContext.key]);
         } else {
-            this.treeGrid.selectRows([rowContext.rowID]);
+            this.treeGrid.selectRows([rowContext.key]);
         }
     }
 

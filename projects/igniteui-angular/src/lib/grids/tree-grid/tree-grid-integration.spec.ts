@@ -565,11 +565,11 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             grid.clearFilter();
             fix.detectChanges();
 
-            const childRow = grid.rowList.filter(r => r.rowID === childRowID)[0] as IgxTreeGridRowComponent;
+            const childRow = grid.rowList.filter(r => r.key === childRowID)[0] as IgxTreeGridRowComponent;
             const editedChildCell = childRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedChildCell.value).toEqual(18);
 
-            const parentRow = grid.rowList.filter(r => r.rowID === parentRowID)[0] as IgxTreeGridRowComponent;
+            const parentRow = grid.rowList.filter(r => r.key === parentRowID)[0] as IgxTreeGridRowComponent;
             const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedParentCell.value).toEqual(33);
 
@@ -591,11 +591,11 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             grid.clearSort();
             fix.detectChanges();
 
-            const childRow = grid.rowList.filter(r => r.rowID === childRowID)[0] as IgxTreeGridRowComponent;
+            const childRow = grid.rowList.filter(r => r.key === childRowID)[0] as IgxTreeGridRowComponent;
             const editedChildCell = childRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedChildCell.value).toEqual(14);
 
-            const parentRow = grid.rowList.filter(r => r.rowID === parentRowID)[0] as IgxTreeGridRowComponent;
+            const parentRow = grid.rowList.filter(r => r.key === parentRowID)[0] as IgxTreeGridRowComponent;
             const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedParentCell.value).toEqual(80);
         });
@@ -970,7 +970,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.addRow(newRow);
             fix.detectChanges();
 
-            const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
+            const addedRow = treeGrid.rowList.filter(r => r.key === addedRowId)[0] as IgxTreeGridRowComponent;
             treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).key], true);
             fix.detectChanges();
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
@@ -985,7 +985,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             treeGrid.deleteRowById(treeGrid.selectedRows[0]);
             fix.detectChanges();
-            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
+            expect(treeGrid.rowList.filter(r => r.key === addedRowId).length).toEqual(0);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
             expect(treeGrid.transactions.getTransactionLog()[1].id).toEqual(addedRowId);
             expect(treeGrid.transactions.getTransactionLog()[1].type).toEqual('delete');
@@ -995,7 +995,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
             tick();
             fix.detectChanges();
-            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
+            expect(treeGrid.rowList.filter(r => r.key === addedRowId).length).toEqual(1);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(2);
@@ -1023,7 +1023,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.addRow(newRow, parentRow.key);
             fix.detectChanges();
 
-            const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
+            const addedRow = treeGrid.rowList.filter(r => r.key === addedRowId)[0] as IgxTreeGridRowComponent;
             treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).key], true);
             tick(20);
             fix.detectChanges();
@@ -1041,7 +1041,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.deleteRowById(treeGrid.selectedRows[0]);
             tick(16);
             fix.detectChanges();
-            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
+            expect(treeGrid.rowList.filter(r => r.key === addedRowId).length).toEqual(0);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
             expect(treeGrid.transactions.getTransactionLog()[1].id).toEqual(addedRowId);
             expect(treeGrid.transactions.getTransactionLog()[1].type).toEqual('delete');
@@ -1049,7 +1049,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             treeGrid.transactions.undo();
             fix.detectChanges();
-            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
+            expect(treeGrid.rowList.filter(r => r.key === addedRowId).length).toEqual(1);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(2);
@@ -1077,7 +1077,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.addRow(newRow, 1);
             fix.detectChanges();
 
-            const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
+            const addedRow = treeGrid.rowList.filter(r => r.key === addedRowId)[0] as IgxTreeGridRowComponent;
             treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).key], true);
             fix.detectChanges();
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
@@ -1088,7 +1088,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             treeGrid.deleteRowById(treeGrid.selectedRows[0]);
             fix.detectChanges();
-            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
+            expect(treeGrid.rowList.filter(r => r.key === addedRowId).length).toEqual(0);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
             expect(treeGrid.transactions.getTransactionLog()[1].id).toEqual(addedRowId);
             expect(treeGrid.transactions.getTransactionLog()[1].type).toEqual('delete');
@@ -1098,7 +1098,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
             tick();
             fix.detectChanges();
-            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
+            expect(treeGrid.rowList.filter(r => r.key === addedRowId).length).toEqual(1);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(2);
@@ -1126,7 +1126,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.addRow(newRow, parentRow.key);
             fix.detectChanges();
 
-            const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
+            const addedRow = treeGrid.rowList.filter(r => r.key === addedRowId)[0] as IgxTreeGridRowComponent;
             treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).key], true);
             tick(20);
             fix.detectChanges();
@@ -1144,7 +1144,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.deleteRowById(treeGrid.selectedRows[0]);
             tick(16);
             fix.detectChanges();
-            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
+            expect(treeGrid.rowList.filter(r => r.key === addedRowId).length).toEqual(0);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
             expect(treeGrid.transactions.getTransactionLog()[1].id).toEqual(addedRowId);
             expect(treeGrid.transactions.getTransactionLog()[1].type).toEqual('delete');
@@ -1152,7 +1152,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             treeGrid.transactions.undo();
             fix.detectChanges();
-            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
+            expect(treeGrid.rowList.filter(r => r.key === addedRowId).length).toEqual(1);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(2);
@@ -1722,7 +1722,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(firstRow.expanded).toBe(true);
             // children.length equals the filtered our chidlren!
             expect(firstRow.children.length).toEqual(1);
-            expect(treeGrid.getRowByIndex(1).parent.rowID).toEqual(147);
+            expect(treeGrid.getRowByIndex(1).parent.key).toEqual(147);
 
             const firstColumnField = treeGrid.columnList.get(0).field;
             const pinnedChipExpectedPosition = treeGrid.gridAPI.get_cell_by_index(1, firstColumnField);
@@ -1745,7 +1745,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(firstRow.children[0] instanceof IgxTreeGridRow).toBeTrue();
             expect(firstRow.children[0].parent instanceof IgxTreeGridRow).toBeTrue();
             expect(firstRow.children[0].parent.key).toBe(firstRow.key);
-            expect(treeGrid.getRowByIndex(1).parent.rowID).toEqual(147);
+            expect(treeGrid.getRowByIndex(1).parent.key).toEqual(147);
 
             firstRow.expanded = false;
             expect(firstRow.expanded).toBe(false);
