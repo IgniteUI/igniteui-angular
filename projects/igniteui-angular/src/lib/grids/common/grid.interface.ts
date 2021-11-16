@@ -456,7 +456,7 @@ export interface GridType extends IGridDataBindable {
     columnPinned: EventEmitter<IPinColumnEventArgs>;
     columnResized: EventEmitter<IColumnResizeEventArgs>;
     columnMovingEnd: EventEmitter<IColumnMovingEndEventArgs>;
-    columnSelected: EventEmitter<IColumnSelectionEventArgs>;
+    columnSelectionChanging: EventEmitter<IColumnSelectionEventArgs>;
     columnMoving: EventEmitter<IColumnMovingEventArgs>;
     columnMovingStart: EventEmitter<IColumnMovingStartEventArgs>;
     columnPin: EventEmitter<IPinColumnCancellableEventArgs>;
