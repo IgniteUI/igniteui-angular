@@ -93,6 +93,21 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return this.grid.rowList.find((row) => row.index === rowIndex);
     }
 
+    /**
+     * Gets the rowID of the record at the specified data view index
+     *
+     * @param index
+     * @param dataCollection
+     */
+    public get_rec_id_by_index(index: number, dataCollection?: any[]): any {
+        dataCollection = dataCollection || this.grid.data;
+        if (index >= 0 && index < dataCollection.length) {
+            const rec = dataCollection[index];
+            return this.grid.primaryKey ? rec[this.grid.primaryKey] : rec;
+        }
+        return null;
+    }
+
     public get_cell_by_key(rowSelector: any, field: string): CellType {
         const row = this.get_row_by_key(rowSelector);
         if (row && row.cells) {
