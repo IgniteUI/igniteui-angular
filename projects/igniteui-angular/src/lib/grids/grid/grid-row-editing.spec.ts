@@ -127,7 +127,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const row = grid.gridAPI.get_row_by_index(2);
             const initialRowData = {...cell.row.data};
             const newCellValue = 'Aaaaa';
-            const updatedRowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
+            const updatedRowData = Object.assign({}, row.data, { ProductName: newCellValue });
 
             spyOn(grid.cellEditEnter, 'emit').and.callThrough();
             spyOn(grid.cellEdit, 'emit').and.callThrough();
@@ -155,9 +155,9 @@ describe('IgxGrid - Row Editing #grid', () => {
                 event: jasmine.anything() as any
             };
             let rowEditArgs: IGridEditEventArgs = {
-                rowID: row.rowID,
+                rowID: row.key,
                 rowData: initialRowData,
-                oldValue: row.rowData,
+                oldValue: row.data,
                 cancel: false,
                 owner: grid,
                 isAddRow: row.addRowUI,
@@ -173,7 +173,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(row.inEditMode).toBe(false);
             let cellEditExitArgs: IGridEditDoneEventArgs = {
                 cellID: cell.id,
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: cell.value,
                 newValue: cell.value,
@@ -183,10 +183,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
 
             const rowEditExitArgs: IGridEditDoneEventArgs = {
-                rowID: row.rowID,
+                rowID: row.key,
                 rowData: initialRowData,
                 newValue: initialRowData,
-                oldValue: row.rowData,
+                oldValue: row.data,
                 owner: grid,
                 isAddRow: row.addRowUI,
                 event: jasmine.anything() as any
@@ -206,7 +206,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cellEditExitArgs = {
                 cellID: cell.id,
                 rowID: cell.row.key,
-                rowData: Object.assign({}, row.rowData, { ProductName: newCellValue }),
+                rowData: Object.assign({}, row.data, { ProductName: newCellValue }),
                 oldValue: cell.value,
                 newValue: newCellValue,
                 column: cell.column,
@@ -215,13 +215,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
 
             cellEditArgs.newValue = newCellValue;
-            cellEditArgs.rowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
+            cellEditArgs.rowData = Object.assign({}, row.data, { ProductName: newCellValue });
 
             rowEditArgs = {
-                rowID: row.rowID,
+                rowID: row.key,
                 rowData: initialRowData,
-                newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
-                oldValue: row.rowData,
+                newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
+                oldValue: row.data,
                 cancel: false,
                 owner: grid,
                 isAddRow: row.addRowUI,
@@ -240,10 +240,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
 
             const rowDoneArgs: IGridEditDoneEventArgs = {
-                rowID: row.rowID,
+                rowID: row.key,
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
-                oldValue: row.rowData,
-                newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
+                oldValue: row.data,
+                newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
                 owner: grid,
                 isAddRow: row.addRowUI,
                 event: jasmine.anything() as any
@@ -940,7 +940,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // put cell in edit mode
             cell.editMode = true;
             fix.detectChanges();
-            grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(2).key);
             fix.detectChanges();
 
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
@@ -2138,7 +2138,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const gridContent = GridFunctions.getGridContent(fix);
             const row = grid.gridAPI.get_row_by_index(0);
             const newCellValue = 'Aaaaa';
-            const updatedRowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
+            const updatedRowData = Object.assign({}, row.data, { ProductName: newCellValue });
 
             spyOn(grid.cellEditDone, 'emit').and.callThrough();
             const rowDoneSpy = spyOn(grid.rowEditDone, 'emit').and.callThrough();
@@ -2161,10 +2161,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
 
             const rowDoneArgs: IGridEditDoneEventArgs = {
-                rowID: row.rowID,
+                rowID: row.key,
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
-                oldValue: row.rowData,
-                newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
+                oldValue: row.data,
+                newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
                 owner: grid,
                 isAddRow: row.addRowUI,
                 event: jasmine.anything() as any
@@ -2216,7 +2216,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should not allow editing a deleted row`, () => {
-            grid.deleteRow(grid.gridAPI.get_row_by_index(0).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(0).key);
             fix.detectChanges();
 
             cell.editMode = true;
@@ -2357,7 +2357,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(state[0].newValue['ProductName']).toEqual('Chaiiii');
             expect(state[1].type).toEqual(TransactionType.UPDATE);
             expect(state[1].newValue['ProductName']).toEqual(updateValue);
-            grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(2).key);
             fix.detectChanges();
 
             expect(trans.onStateUpdate.emit).toHaveBeenCalled();

@@ -25,7 +25,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     public get data(): any {
-        return this._data.grid.createRow(this._data.index, this._data.rowData);
+        return this._data.grid.createRow(this._data.index, this._data.data);
     }
 
     private subscription$: Subscription;
@@ -62,7 +62,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 this._clicked = false;
                 return;
             }
-            this.row.grid.dragRowID = this.row.rowID;
+            this.row.grid.dragRowID = this.row.key;
             this.row.grid.rowDragging = true;
             this.row.grid.cdr.detectChanges();
 
@@ -105,8 +105,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this.row.grid.gridAPI.crudService.endEdit(false);
         this.row.grid.cdr.detectChanges();
         this.ghostContext = {
-            $implicit: this.row.rowData,
-            data: this.row.rowData,
+            $implicit: this.row.data,
+            data: this.row.data,
             grid: this.row.grid
         };
         super.createGhost(pageX, pageY, this.row.nativeElement);

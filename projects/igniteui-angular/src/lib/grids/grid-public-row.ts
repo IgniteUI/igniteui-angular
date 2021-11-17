@@ -60,22 +60,6 @@ abstract class BaseRow implements RowType {
     }
 
     /**
-     * @deprecated Use 'data' instead
-     *
-     * The data record that populates the row
-     */
-    public get rowData(): any {
-        return this.data;
-    }
-
-    /**
-     * @deprecated Use 'key' instead
-     */
-    public get rowID(): any {
-        return this.key;
-    }
-
-    /**
      * Returns if the row is currently in edit mode.
      */
     public get inEditMode(): boolean {
@@ -363,7 +347,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      *  The data passed to the row component.
      *
      * ```typescript
-     * let selectedRowData = this.grid.selectedRows[0].rowData;
+     * let selectedRowData = this.grid.selectedRows[0].data;
      * ```
      */
     public get data(): any {
@@ -398,7 +382,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      * Returns the parent row.
      */
     public get parent(): RowType {
-        const row = this.grid.getRowByKey(this.treeRow.parent?.rowID);
+        const row = this.grid.getRowByKey(this.treeRow.parent?.key);
         return row;
     }
 

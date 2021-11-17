@@ -35,7 +35,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
 
         it('Should collapse an expanded record when beginAddRow is called for it', () => {
             const row = hierarchicalGrid.rowList.first;
-            hierarchicalGrid.expandRow(row.rowID);
+            hierarchicalGrid.expandRow(row.key);
             fixture.detectChanges();
             expect(row.expanded).toBeTrue();
 
@@ -47,7 +47,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
 
         it('Should allow the expansion of a newly added (commited) record', async () => {
             const row = hierarchicalGrid.rowList.first;
-            hierarchicalGrid.expandRow(row.rowID);
+            hierarchicalGrid.expandRow(row.key);
             fixture.detectChanges();
             expect(row.expanded).toBeTrue();
 
@@ -66,9 +66,9 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
             fixture.detectChanges();
 
             const newRowData = hierarchicalGrid.data[hierarchicalGrid.data.length - 1];
-            const newRow = hierarchicalGrid.rowList.find(r => r.rowID === newRowData[hierarchicalGrid.primaryKey]);
+            const newRow = hierarchicalGrid.rowList.find(r => r.key === newRowData[hierarchicalGrid.primaryKey]);
             expect(newRow.expanded).toBeFalse();
-            hierarchicalGrid.expandRow(newRow.rowID);
+            hierarchicalGrid.expandRow(newRow.key);
             fixture.detectChanges();
             expect(newRow.expanded).toBeTrue();
         });
