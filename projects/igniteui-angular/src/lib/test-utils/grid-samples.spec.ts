@@ -1594,14 +1594,13 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     }
 
     public onRowCheckboxClick(event, rowContext) {
-        // TODO rowData
         this.rowCheckboxClick = event;
         event.stopPropagation();
         event.preventDefault();
         if (rowContext.selected) {
-            this.grid.deselectRows([rowContext.key]);
+            this.grid.deselectRows([rowContext.rowID]);
         } else {
-            this.grid.selectRows([rowContext.key]);
+            this.grid.selectRows([rowContext.rowID]);
         }
     }
 
