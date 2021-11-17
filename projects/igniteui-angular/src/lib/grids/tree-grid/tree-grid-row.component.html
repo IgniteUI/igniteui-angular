@@ -15,7 +15,7 @@
     <div class="igx-grid__cbx-selection igx-grid__tr-action" (click)="onRowSelectorClick($event)" (pointerdown)="$event.preventDefault()">
         <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
-            context: { $implicit: { index: viewIndex, rowID: key, selected: selected }}">
+            context: { $implicit: { index: viewIndex, rowID: key, key, selected: selected }}">
         </ng-template>
     </div>
 </ng-container>

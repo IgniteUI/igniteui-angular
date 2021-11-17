@@ -52,7 +52,8 @@
                 "IgxChildGridRowComponent",
                 "IgxGridRow",
                 "IgxTreeGridRow",
-                "IgxHierarchicalGridRow"
+                "IgxHierarchicalGridRow",
+                "IgxRowDirective"
             ]
         },
         {
@@ -66,7 +67,8 @@
                 "IgxGridRow",
                 "IgxTreeGridRow",
                 "IgxHierarchicalGridRow",
-                "IgxRowDirective"
+                "IgxRowDirective",
+                "ITreeGridRecord"
             ]
         },
         {

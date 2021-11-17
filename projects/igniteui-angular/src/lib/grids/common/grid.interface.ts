@@ -212,6 +212,7 @@ export interface GridServiceType {
     get_row_by_index(rowSelector: any): RowType;
     get_row_by_key(rowSelector: any): RowType;
     get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number;
+    get_rec_id_by_index(index: number, dataCollection?: any[]): any;
     get_row_index_in_data(rowID: any, dataCollection?: any[]): number;
     get_cell_by_key(rowSelector: any, field: string): CellType;
     get_cell_by_index(rowIndex: number, columnID: number | string): CellType;
@@ -236,7 +237,6 @@ export interface GridServiceType {
 
     expand_path_to_record?(record: ITreeGridRecord): void;
     get_selected_children?(record: ITreeGridRecord, selectedRowIDs: any[]): void;
-    get_rec_id_by_index?(index: number, dataCollection?: any[]): any;
     get_groupBy_record_id?(gRow: IGroupByRecord): string;
     remove_grouping_expression?(fieldName: string): void;
     clear_groupby?(field: string | any): void;

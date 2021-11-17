@@ -216,6 +216,7 @@ export class AppModule {}
                 const rowID4 = this.grid.rowList.first.rowID;
                 const rowID5 = this.tgrid.rowList.first.rowID;
                 const rowID6 = this.hgrid.rowList.first.rowID;
+                const treeRowID = this.tgrid.getRowByIndex(0).treeRow.rowID;
             }
         }
         `);
@@ -249,6 +250,7 @@ export class AppModule {}
                 const rowID4 = this.grid.rowList.first.key;
                 const rowID5 = this.tgrid.rowList.first.key;
                 const rowID6 = this.hgrid.rowList.first.key;
+                const treeRowID = this.tgrid.getRowByIndex(0).treeRow.key;
             }
         }
         `

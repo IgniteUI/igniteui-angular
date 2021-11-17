@@ -80,11 +80,23 @@ All notable changes for each version of this project will be documented in this 
         Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
     - **Breaking Change** - The `rowSelected` event is renamed to `rowSelectionChanging` to better reflect its function.
     - **Breaking Change** - The `columnSelected` event is renamed to `columnSelectionChanging` to better reflect its function.
-    - **Breaking Change** - `rowData` and `rowID` properties are removed. Use `data` and `key` instead. Use `ng update` for automatic migration.
     - **Breaking Change** - `columnsCollection` is removed. Use `columns` instead.
-    - **Behavioral change** - `columns` getter may now return an empty array [] in certain occasions, when grid is not yet renderd, but code is calling `grid.columns`. If this introduces behavioral changes or bugs, use `grid,columnList`. To get a column at specific index, use `grid.columnList.get(0)`
-- `igxGrid`
     - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
+- `RowType`, `IgxRowDirective`
+    - **Breaking Change** - `rowData` and `rowID` deprecated properties are now removed. Use `data` and `key` instead. Use `ng update` for automatic migration.
+- `RowSelectorTemplate`
+    - `rowID` in the context object of the `RowSelectorTemplate` is now deprecated and will be removed in future version. Use `key` property instead:
+    ```html
+    <igx-grid [data]="data", [rowSelection]="'multiple'" primaryKey="ID">
+        <igx-column field="Name"></igx-column>
+        <igx-column field="Age"></igx-column>
+
+        <ng-template igxRowSelector let-rowContext>
+            <span>{{ rowContext.key }}</span>
+        </ng-template>
+    </igx-grid>
+    ```
+`IgxColumnActionsComponent`
 - `IgxColumnActionsComponent`
     - **Breaking Change** - The following input has been removed
         - Input `columns`. Use `igxGrid` `columns` input instead.
