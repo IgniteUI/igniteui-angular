@@ -26,6 +26,8 @@ export interface IPivotDimension {
     enabled: boolean;
     // A predefined or defined via the `igxPivotSelector` filter expression tree for the current dimension to be applied in the filter pipe.
     filter?: FilteringExpressionsTree | null;
+    // The width of the dimension cells to be rendered.Can be pixel or %.
+    width? : string;
 }
 
 export interface IPivotValue {

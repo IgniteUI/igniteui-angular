@@ -26,7 +26,8 @@ export class PivotGridSampleComponent {
 
             {
                 memberName: 'Country',
-                enabled: true
+                enabled: true,
+                width: '20%'
             }
         ]
         ,
@@ -35,6 +36,7 @@ export class PivotGridSampleComponent {
             {
                 memberFunction: () => 'All',
                 memberName: 'AllProducts',
+                width: '20%',
                 enabled: true,
                 childLevel:
                 {
@@ -46,6 +48,11 @@ export class PivotGridSampleComponent {
                         enabled: true
                     },
                 }
+            },
+            {
+                enabled: true,
+                memberName: 'SellerName',
+                width: '200px'
             }
 
         ],
