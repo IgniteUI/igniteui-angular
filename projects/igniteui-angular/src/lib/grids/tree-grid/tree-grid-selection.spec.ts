@@ -2112,8 +2112,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         it('Should have the correct properties in the custom row selector template', () => {
             const firstRow = treeGrid.gridAPI.get_row_by_index(0);
             const firstCheckbox = firstRow.nativeElement.querySelector('.igx-checkbox__composite');
-            const context = { index: 0, rowID: 1, selected: false };
-            const contextUnselect = { index: 0, rowID: 1, selected: true };
+            const context = { index: 0, rowID: 1, key: 1, selected: false };
+            const contextUnselect = { index: 0, rowID: 1, key: 1, selected: true };
             spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
             (firstCheckbox as HTMLElement).click();
             fix.detectChanges();
