@@ -254,4 +254,78 @@ export class AppModule {}
         `
         );
     });
+
+    it('Should properly rename columnsCollection property to columns',  async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `
+        import { IgxGridComponent } from 'igniteui-angular';
+        export class MyClass {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public grid1: IgxGridComponent;
+            public ngAfterViewInit() {
+                const columns = grid1.columnsCollection;
+            }
+        }
+        `);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+        `
+        import { IgxGridComponent } from 'igniteui-angular';
+        export class MyClass {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public grid1: IgxGridComponent;
+            public ngAfterViewInit() {
+                const columns = grid1.columns;
+            }
+        }
+        `
+        );
+    });
+
+    it('Should properly rename columnsCollection property to columns - treeGrid',  async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `
+        import { IgxTreeGridComponent } from 'igniteui-angular';
+        export class MyClass {
+            @ViewChild(IgxTreeGridComponent, { read: IgxTreeGridComponent })
+            public tGrid1: IgxTreeGridComponent;
+            public ngAfterViewInit() {
+                const columns = this.tGrid1.columns;
+            }
+            public soSth() {
+                const editableColumns = this.tGrid1.columnsCollection.filter(c => e.editable);
+            }
+        }
+        `);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+        `
+        import { IgxTreeGridComponent } from 'igniteui-angular';
+        export class MyClass {
+            @ViewChild(IgxTreeGridComponent, { read: IgxTreeGridComponent })
+            public tGrid1: IgxTreeGridComponent;
+            public ngAfterViewInit() {
+                const columns = this.tGrid1.columnsCollection;
+            }
+            public soSth() {
+                const editableColumns = this.tGrid1.columns.filter(c => e.editable);
+            }
+        }
+        `
+        );
+    });
 });

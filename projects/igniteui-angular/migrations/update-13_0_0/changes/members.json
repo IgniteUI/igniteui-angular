@@ -68,6 +68,16 @@
                 "IgxHierarchicalGridRow",
                 "IgxRowDirective"
             ]
-        }
+        },
+        {
+            "member": "columnsCollection",
+            "replaceWith": "columns",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxTreeGridComponent"
+
+            ]
+        },
     ]
 }
