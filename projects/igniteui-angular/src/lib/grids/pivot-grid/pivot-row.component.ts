@@ -65,11 +65,6 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
             const key = this.getRowDimensionKey(x.column);
             if (this.selectionService.isPivotRowSelected(key)) {
                 isSelected = true;
-                if (!this.grid.selectedPivotKeys.get(key)) {
-                    this.grid.selectedPivotKeys.set(key, this.rowData);
-                }
-            } else {
-                this.grid.selectedPivotKeys.delete(key);
             }
         });
         return isSelected;

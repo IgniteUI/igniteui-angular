@@ -29,7 +29,6 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
-import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
@@ -263,13 +262,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public columnGroupStates = new Map<string, boolean>();
     public dimensionDataColumns;
-    public pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'};
+    public pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
     public isPivot = true;
-
-    /**
-     * @hidden @internal
-     */
-    public selectedPivotKeys = new Map<string, any[]>();
 
     /**
      * @hidden @internal
@@ -407,13 +401,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get selectedRows(): any[] {
-        const selectedRowKeys = this.selectionService.getSelectedRows();
+        if (!this.selectionService.getSelectedRows()) {
+            return [];
+        }
         const selectedRowIds = [];
-        this.selectedPivotKeys.forEach((value, key) => {
-            if (selectedRowKeys.find(x => key.includes(x)) && !selectedRowIds.find(x => x === value)) {
-                selectedRowIds.push(value);
+        this.dataView.forEach(record => {
+            const prev = [];
+            for (const dim of this.rowDimensions) {
+                const key = PivotUtil.getRecordKey(record, dim, prev);
+                prev.push(dim);
+                if (this.selectionService.isPivotRowSelected(key) && !selectedRowIds.find(x => x === record)) {
+                    selectedRowIds.push(record);
+                    break;
+                }
             }
+
         });
+
         return selectedRowIds;
     }
 
@@ -497,24 +501,24 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public getDimensionData(dim: IPivotDimension,
         dimExprTree: IFilteringExpressionsTree,
         done: (colVals: any[]) => void) {
-            let columnValues = [];
-            const data = this.gridAPI.get_data();
-            const state = {
-                expressionsTree: dimExprTree,
-                strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
-                advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
-            };
-            const filtered = DataUtil.filter(data, state, this);
-            const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
-                filtered,
-                [dim],
-                PivotDimensionType.Column,
-                {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
-                );
-            const flatData = Array.from(allValuesHierarchy.values());
-            columnValues = flatData.map(record => this.extractValue(record['value']));
-            done(columnValues);
-            return;
+        let columnValues = [];
+        const data = this.gridAPI.get_data();
+        const state = {
+            expressionsTree: dimExprTree,
+            strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
+            advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
+        };
+        const filtered = DataUtil.filter(data, state, this);
+        const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
+            filtered,
+            [dim],
+            PivotDimensionType.Column,
+            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+        );
+        const flatData = Array.from(allValuesHierarchy.values());
+        columnValues = flatData.map(record => this.extractValue(record['value']));
+        done(columnValues);
+        return;
     }
 
     /** @hidden */
@@ -906,12 +910,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden
      */
-     protected autogenerateColumns() {
-         let columns = [];
-         const data = this.gridAPI.get_data();
-         this.dimensionDataColumns = this.generateDimensionColumns();
-         let fieldsMap;
-         if (this.pivotConfiguration.columnStrategy && this.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy) {
+    protected autogenerateColumns() {
+        let columns = [];
+        const data = this.gridAPI.get_data();
+        this.dimensionDataColumns = this.generateDimensionColumns();
+        let fieldsMap;
+        if (this.pivotConfiguration.columnStrategy && this.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy) {
             const fields = this.generateDataFields(data);
             const rowFields = PivotUtil.flatten(this.pivotConfiguration.rows).map(x => x.memberName);
             const keyFields = Object.values(this.pivotKeys);
@@ -1003,7 +1007,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     columns = columns.concat(measureChildren);
                 }
 
-            } else if(shouldGenerate) {
+            } else if (shouldGenerate) {
                 const ref = factoryColumnGroup.create(this.viewRef.injector);
                 ref.instance.parent = parent;
                 ref.instance.field = key;
