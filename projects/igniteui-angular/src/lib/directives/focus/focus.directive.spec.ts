@@ -112,7 +112,7 @@ class NoFocusComponent { }
 class TriggerFocusOnClickComponent {
     @ViewChild(IgxFocusDirective, { static: true }) public focusRef: IgxFocusDirective;
 
-    focus() {
+    public focus() {
         this.focusRef.trigger();
     }
 

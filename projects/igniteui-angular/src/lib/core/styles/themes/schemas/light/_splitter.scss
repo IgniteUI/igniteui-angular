@@ -1,4 +1,5 @@
-@import '../shape/splitter';
+@use '../../../base' as *;
+@use '../shape/splitter' as *;
 
 ////
 /// @group schemas
@@ -10,21 +11,20 @@
 /// Generates a light splitter schema.
 /// @type {Map}
 /// @property {Map} icon-background [igx-color: ('grays', 400)]- The background color used for splitters of type icon.
-/// @property {Map} bar-color [igx-color: 'surface', darken: 5%] - The background color of the bar.
-/// @property {Map} handle-color [igx-color: 'surface', darken: 20%] - The color for the bar drag handle.
-/// @property {Map} expander-color [igx-color: 'surface', darken: 20%] - The color for the arrow expander's.
+/// @property {Map} bar-color [igx-color: ('grays', 200)] - The background color of the bar.
+/// @property {Map} handle-color [igx-color: ('grays', 400)] - The color for the bar drag handle.
+/// @property {Map} expander-color [igx-color: ('grays', 400)] - The color for the arrow expander's.
 /// @property {Number} border-radius [1] - The border radius used for splitter. Can be a fraction between 0 and 1, pixels, or percent.
 /// @property {Map} focus-color [igx-color: ('secondary', 500)] - The color used for focused splitter bar.
 /// @property {Number} size [4px] - The size of the splitter, it's width for vertical and height for horizontal splitter.
 /// @requires {function} extend
-/// @requires {Map} $_round-shape-splitter
+/// @requires {Map} $round-shape-splitter
 /// @see $default-palette
-$_light-splitter: extend(
-    $_round-shape-splitter,
+$light-splitter: extend(
+    $round-shape-splitter,
     (
         bar-color: (
-            igx-color: 'surface',
-            darken: 5%
+            igx-color: ('grays', 200)
         ),
 
         focus-color: (
@@ -32,13 +32,11 @@ $_light-splitter: extend(
         ),
 
         handle-color: (
-            igx-color: 'surface',
-            darken: 20%
+            igx-color: ('grays', 400)
         ),
 
         expander-color: (
-            igx-color: 'surface',
-            darken: 20%
+            igx-color: ('grays', 400)
         ),
 
         size: 4px
@@ -47,16 +45,15 @@ $_light-splitter: extend(
 
 /// Generates a fluent splitter schema.
 /// @type {Map}
-/// @requires {function} extend
-/// @requires {Map} $_light-splitter
-$_fluent-splitter: extend($_light-splitter);
+/// @requires {Map} $light-splitter
+$fluent-splitter: $light-splitter;
 
 /// Generates a bootstrap splitter schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {Map} $_light-splitter
-$_bootstrap-splitter: extend(
-    $_light-splitter,
+/// @requires {Map} $light-splitter
+$bootstrap-splitter: extend(
+    $light-splitter,
     (
         variant: 'bootstrap',
     )
@@ -64,27 +61,31 @@ $_bootstrap-splitter: extend(
 
 /// Generates an indigo splitter schema.
 /// @type {Map}
-/// @property {Map} bar-color [igx-color: ('grays', 300)] - The background color of the bar.
-/// @property {Color} handle-color [#fff] - The color for the bar drag handle.
-/// @property {Color} expander-color [#fff] - The color for the bar drag handle.
+/// @property {Map} bar-color [igx-color: ('grays', 400)] - The background color of the bar.
+/// @property {Map} handle-color [igx-color: ('surface')] - The color for the bar drag handle.
+/// @property {Map} expander-color [igx-color: ('surface')] - The color for the bar drag handle.
 /// @property {Map} focus-color [igx-color: ('primary', 500)] - The color used for focused splitter bar.
 /// @requires {function} extend
-/// @requires {Map} $_light-splitter
-$_indigo-splitter: extend(
-    $_light-splitter,
+/// @requires {Map} $light-splitter
+$indigo-splitter: extend(
+    $light-splitter,
     (
         variant: 'indigo-design',
 
         bar-color: (
-            igx-color: ('grays', 300)
+            igx-color: ('grays', 400)
         ),
 
         focus-color: (
             igx-color: ('primary', 500)
         ),
 
-        handle-color: #fff,
+        handle-color: (
+            igx-color: ('surface')
+        ),
 
-        expander-color: #fff
+        expander-color: (
+            igx-color: ('surface')
+        )
     )
 );

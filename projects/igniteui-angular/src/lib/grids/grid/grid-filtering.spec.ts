@@ -18,8 +18,8 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../test-utils/grid-samples.spec';
-import { ExpressionUI } from '../filtering/grid-filtering.service';
 import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { ExpressionUI } from '../filtering/excel-style/common';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite((() => {
@@ -808,7 +808,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick(30);
         fix.detectChanges();
 
-        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(grid.columns.length);
+        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(grid.columnList.length);
         expect(grid.rowList.length).toEqual(1);
 
         const filteringExpressions = grid.filteringExpressionsTree;

@@ -1,5 +1,5 @@
-import { ISortingExpression } from './sorting-expression.interface';
-import { IgxColumnComponent } from '../grids/columns/column.component';
+import { ColumnType } from '../grids/common/grid.interface';
+import { ISortingExpression } from './sorting-strategy';
 
 /**
  * @hidden
@@ -14,5 +14,5 @@ export interface IGroupByRecord {
     groupParent: IGroupByRecord;
     groups?: IGroupByRecord[];
     height: number;
-    column?: IgxColumnComponent;
+    column?: ColumnType;
  }

@@ -3,16 +3,15 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
-import { IgxGridModule } from './public_api';
+import { IgxGridModule, IgxGrouping } from './public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
@@ -20,7 +19,6 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { IgxGrouping } from '../../data-operations/grouping-strategy';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
@@ -1004,7 +1002,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        grid.columns[0].width = '500px';
+        grid.columnList.get(0).width = '500px';
         fix.detectChanges();
         const groupRows = grid.groupsRowList.toArray();
         groupRows[0].toggle();
@@ -1173,8 +1171,14 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
+            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
+
+            expect(selectionSpy).toHaveBeenCalledTimes(1);
+            const args = selectionSpy.calls.mostRecent().args[0];
+            expect(args.added.length).toBe(2);
+            expect(grid.selectedRows.length).toEqual(2);
 
             for (const key of grRow.groupRow.records) {
                 expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
@@ -1257,8 +1261,14 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
+            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
+
+            expect(selectionSpy).toHaveBeenCalledTimes(1);
+            const args = selectionSpy.calls.mostRecent().args[0];
+            expect(args.removed.length).toBe(2);
+            expect(grid.selectedRows.length).toEqual(0);
 
             for (const key of grRow.groupRow.records) {
                 expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false));
@@ -1929,7 +1939,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
         fix.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('550px');
+        expect(grid.columnList.get(0).width).toEqual('550px');
 
         grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
@@ -2872,7 +2882,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
         tick();
-        const expr = grid.columns.map(val => ({ fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true }));
+        const expr = grid.columnList.map(val => ({ fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true }));
         grid.groupBy(expr);
         tick();
         expect(grid.groupsRowList.toArray().length).toBe(0);
@@ -2882,7 +2892,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        grid.columnList.toArray()[0].header = 'Custom Header Text';
+        grid.columnList.get(0).header = 'Custom Header Text';
         tick();
         fix.detectChanges();
 
@@ -3411,7 +3421,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait();
 
         grid.paging = false;
-        grid.columns[1].groupingComparer = (a, b) => {
+        grid.columnList.get(1).groupingComparer = (a, b) => {
             if (a instanceof Date && b instanceof Date &&
                 a.getFullYear() === b.getFullYear()) {
                 return 0;

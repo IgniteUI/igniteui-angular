@@ -67,8 +67,11 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * @param direction Direction in which to show the element
      */
     protected calculateLeft(
-        targetRect: ClientRect, elementRect: ClientRect, startPoint: HorizontalAlignment, direction: HorizontalAlignment, offset?: number):
-        number {
+        targetRect: Partial<DOMRect>,
+        elementRect: Partial<DOMRect>,
+        startPoint: HorizontalAlignment,
+        direction: HorizontalAlignment,
+        offset?: number): number {
         return targetRect.right + targetRect.width * startPoint + elementRect.width * direction + offset;
     }
 
@@ -82,8 +85,11 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * @param direction Direction in which to show the element
      */
     protected calculateTop(
-        targetRect: ClientRect, elementRect: ClientRect, startPoint: VerticalAlignment, direction: VerticalAlignment, offset?: number):
-        number {
+        targetRect: Partial<DOMRect>,
+        elementRect: Partial<DOMRect>,
+        startPoint: VerticalAlignment,
+        direction: VerticalAlignment,
+        offset?: number): number {
         return targetRect.bottom + targetRect.height * startPoint + elementRect.height * direction + offset;
     }
 

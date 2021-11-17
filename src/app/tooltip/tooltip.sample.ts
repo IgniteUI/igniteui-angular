@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     IgxTooltipTargetDirective, OverlaySettings
 } from 'igniteui-angular';
@@ -8,7 +8,7 @@ import {
     styleUrls: ['tooltip.sample.css'],
     templateUrl: 'tooltip.sample.html'
 })
-export class TooltipSampleComponent implements OnInit, AfterViewInit {
+export class TooltipSampleComponent implements OnInit {
 
     @ViewChild('target', { static: true })
     public tooltipTarget: IgxTooltipTargetDirective;
@@ -84,12 +84,6 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
                 }
             }
         ];
-    }
-
-    public ngAfterViewInit() {
-        // this.settings.positionStrategy.settings.target = this.tooltipTarget.nativeElement;
-        // this.settings.positionStrategy.settings.openAnimation = null;
-        // this.settings.positionStrategy.settings.closeAnimation = null;
     }
 
     public showTooltip() {

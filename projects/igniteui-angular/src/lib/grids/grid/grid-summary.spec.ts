@@ -10,7 +10,8 @@ import {
     IgxSummaryResult,
     IgxGroupByRow,
     IgxSummaryRow,
-    IgxGridRow
+    IgxGridRow,
+    IColumnPipeArgs
 } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -27,11 +28,10 @@ import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IColumnPipeArgs } from 'igniteui-angular';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Summaries #grid', () => {
 
@@ -216,7 +216,7 @@ describe('IgxGrid - Summaries #grid', () => {
             });
 
             it('Last column summary cell should be aligned according to its data cells', fakeAsync(/** height/width setter rAF */() => {
-                grid.columns.forEach(c => {
+                grid.columnList.forEach(c => {
                     c.width = '150px';
                 });
                 grid.getColumnByName('UnitsInStock').hasSummary = true;
@@ -987,8 +987,6 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(cell.selected).toBe(true);
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
 
-            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
             GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
             fix.detectChanges();
 
@@ -1469,7 +1467,6 @@ describe('IgxGrid - Summaries #grid', () => {
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
             fix.detectChanges();
-            const cell = grid.getCellByColumn(1, 'Age');
 
             let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '50']);
@@ -1490,7 +1487,6 @@ describe('IgxGrid - Summaries #grid', () => {
             summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '50']);
 
-            const hireDateCell = grid.getCellByColumn(1, 'HireDate');
             UIInteractions.triggerKeyDownEvtUponElem('enter', grid.gridAPI.get_cell_by_index(1, 'HireDate').nativeElement, true);
             flush();
             fix.detectChanges();
@@ -2508,7 +2504,7 @@ class AllDataAvgSummary extends IgxSummaryOperand {
         super();
     }
 
-    public operate(data: any[], allData = [], fieldName = ''): IgxSummaryResult[] {
+    public operate(data: any[], _allData = [], fieldName = ''): IgxSummaryResult[] {
         const result = super.operate(data);
         if (fieldName === 'UnitsInStock') {
             result.push({

@@ -1,0 +1,46 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "selectItems",
+            "replaceWith": "select",
+            "definedIn": [
+                "IgxComboComponent"
+            ]
+        },
+        {
+            "member": "deselectItems",
+            "replaceWith": "deselect",
+            "definedIn": [
+                "IgxComboComponent"
+            ]
+        },
+        {
+            "member": "selectedItems()",
+            "replaceWith": "selection",
+            "definedIn": [
+                "IgxComboBaseDirective"
+            ]
+        },
+        {
+            "member": "rowSelected",
+            "replaceWith": "rowSelectionChanging",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        }
+    ]
+}

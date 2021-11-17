@@ -20,14 +20,45 @@ All notable changes for each version of this project will be documented in this 
 
     - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/stepper/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Stepper-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper).
 
+- Added `IgxFocusTrap` directive, which traps the Tab key focus within an element.
+
+    ```html
+   <div #wrapper [igxFocusTrap]="true" tabindex="0">
+        <input type="text" placeholder="Enter Username" name="uname">
+        <input type="password" placeholder="Enter Password" name="psw">
+        <button>SIGN IN</button>
+    </div>
+    ```
+
+- Added `IgxSimpleComboComponent`
+    - The `igx-simple-combo` which is a modification of the `igx-combo` component that allows single selection and has the appropriate UI and behavior for that. It inherits most of the `igx-combo`'s API.
+    - Allows the selection of single items in a filterable list.
+    - Supports custom values, keyboard navigation, validation, customized positioning of the item list via overlay settings.
+    - Example:
+    ```html
+    <igx-simple-combo [(ngModel)]="item" [allowCustomValues]="true" [placeholder]="'Search'" [data]="items">
+        <label igxLabel>Items</label>
+        <igx-hint>Please select an item from the dropdown list.</igx-hint>
+    </igx-simple-combo>
+    ```
+
 - `IgxCsvExporterService`, `IgxExcelExporterService`
     - Exporter services are no longer required to be provided in the application since they are now injected on a root level.
 - `IgxGridToolbarPinningComponent`, `IgxGridToolbarHidingComponent`
     - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
 - `IgxCombo`
     - Added `groupSortingDirection` input, which allows you to set groups sorting order.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added new directives for re-templating header sorting indicators - `IgxSortHeaderIconDirective`, `IgxSortAscendingHeaderIconDirective` and `IgxSortDescendingHeaderIconDirective`.
+- `IgxDialog`
+    - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
 
 ### General
+
+- `IE discontinued support` **Breaking Change** [details](https://angular.io/guide/browser-support)
+    - `web-animations-js` is removed as Peer Dependency.
+    - Removed IE from `.browserslistrc`
+    - Removed IE related `polyfills`, like Importing ES7 polyfill for Object (`'core-js/es7/object'`) for IE is no longer used.
 
 - `IgxDialog`
     - **Breaking Change** - The default positionSettings open/close animation has been changed to `fadeIn`/`fadeOut`. The open/close animation can be set through the position settings, e.g. change the animation to the previously default open/close animation:
@@ -47,19 +78,22 @@ All notable changes for each version of this project will be documented in this 
         - Inputs  `showToolbar`, `toolbarTitle`, `columnHiding`, `columnHidingTitle`, `hiddenColumnsText`,
         `columnPinning`, `columnPinningTitle`, `pinnedColumnsText`.
         Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
+    - **Breaking Change** - The `rowSelected` event is renamed to `rowSelectionChanging` to better reflect its function.
+    - **Breaking Change** - The `columnSelected` event is renamed to `columnSelectionChanging` to better reflect its function.
 - `igxGrid`
     - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
 - `IgxColumnActionsComponent`
     - **Breaking Change** - The following input has been removed
         - Input `columns`. Use `igxGrid` `columns` input instead.
 - `IgxCarousel`
-    - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.      
+    - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
 
 ## 12.2.3
 
 ### General
 - **Breaking Change** - `IgxPercentSummaryOperand` and `IgxCurrencySummaryOperand` have been removed and `IgxNumberSummaryOperand` should be used instead. If you have used the percent or currency summary operands to extend a custom summary operand from them, then change the custom operand to extend from the number summary operand.
-
+- `IgxToastComponent`
+    - **Deprecated** - The `position` input property has been deprecated. Use `positionSettings` input instead.
 ## 12.2.1
 
 ### New Features
@@ -3684,4 +3718,4 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
-    
+

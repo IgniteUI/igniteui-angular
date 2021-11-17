@@ -1,26 +1,25 @@
 import { Directive, Input, OnDestroy, ElementRef, Renderer2, NgZone } from '@angular/core';
-import { IgxColumnComponent } from '../columns/column.component';
 import { DropPosition, IgxColumnMovingService } from './moving.service';
 import { Subject, interval, animationFrameScheduler } from 'rxjs';
 import { IgxColumnMovingDragDirective } from './moving.drag.directive';
 import { takeUntil } from 'rxjs/operators';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IgxForOfDirective, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
-import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
+import { ColumnType } from '../common/grid.interface';
+// import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 
 
 @Directive({ selector: '[igxColumnMovingDrop]' })
 export class IgxColumnMovingDropDirective extends IgxDropDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrop')
-    public set data(val: IgxColumnComponent | IgxForOfDirective<IgxGridHeaderGroupComponent>) {
-        if (val instanceof IgxColumnComponent) {
-            this._column = val;
-        }
-
+    public set data(val: ColumnType | IgxForOfDirective<any>) {
         if (val instanceof IgxGridForOfDirective) {
             this._displayContainer = val;
+        } else {
+            this._column = val as ColumnType;
         }
+
     }
 
     public get column() {
@@ -45,8 +44,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     private _dropPos: DropPosition;
     private _dropIndicator = null;
     private _lastDropIndicator = null;
-    private _column: IgxColumnComponent;
-    private _displayContainer: IgxGridForOfDirective<IgxGridHeaderGroupComponent>;
+    private _column: ColumnType;
+    private _displayContainer: IgxGridForOfDirective<any>;
     private _dragLeave = new Subject<boolean>();
     private _dropIndicatorClass = 'igx-grid-th__drop-indicator--active';
 

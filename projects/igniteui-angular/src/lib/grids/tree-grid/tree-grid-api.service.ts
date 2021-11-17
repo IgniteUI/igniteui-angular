@@ -1,16 +1,15 @@
 import { GridBaseAPIService } from '../api.service';
-import { IgxTreeGridComponent } from './tree-grid.component';
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { HierarchicalTransaction, TransactionType, State } from '../../services/public_api';
 import { Injectable } from '@angular/core';
-import { ColumnType } from '../common/column.interface';
 import { cloneArray, mergeObjects } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
+import { ColumnType, GridType } from '../common/grid.interface';
 
 @Injectable()
-export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
+export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
 
     public get_all_data(transactions?: boolean): any[] {
         const grid = this.grid;
@@ -139,7 +138,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                     type: TransactionType.DELETE,
                     newValue: null,
                     path
-                },
+                } as HierarchicalTransaction,
                     collection[index]
                 );
             } else {
@@ -280,7 +279,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
      * @param rowNewValue New value of the row
      */
     protected updateData(
-        grid: IgxTreeGridComponent,
+        grid: GridType,
         rowID: any,
         rowValueInDataSource: any,
         rowCurrentValue: any,

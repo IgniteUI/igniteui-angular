@@ -22,12 +22,13 @@ describe(`Update to ${version}`, () => {
         }
     };
 
-    const migrationName = 'migration-22';
-
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
+
+    const migrationName = 'migration-22';
+    const lineBreaksAndSpaceRegex = /\s/g;
 
     it('should rename CarouselAnimationType to HorizontalAnimationType', async () => {
         appTree.create(
@@ -66,5 +67,127 @@ describe(`Update to ${version}`, () => {
                 '/testSrc/appPrefix/component/test.component.ts'
             )
         ).toEqual(expectedContent);
+    });
+
+    it('should rename IgxComboComponent selectItems to select', () => {
+        pending('LS must be setup for tests.');
+    });
+
+    it('should rename IgxComboComponent deselectItems to deselect', () => {
+        pending('LS must be setup for tests.');
+    });
+
+    it('should rename IgxComboComponent selectedItems() to selected', () => {
+        pending('LS must be setup for tests.');
+    });
+
+    it('should remove paging and paginationTemplate property and define a igx-paginator component with custom content', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<div class="columnHidingContainer">
+    <div *ngFor="let col of grid.columns">
+        {{col.field}}
+    </div>
+</div>
+<div class="gridContainer">
+    <igx-grid igxPreventDocumentScroll #grid [data]="data" [autoGenerate]="false" width="100%" height="560px" columnWidth="200px"
+        [allowFiltering]="true">
+        <igx-column [field]="'ID'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'ContactName'" dataType="string" [sortable]="true" [disableHiding]="true"></igx-column>
+        <igx-column [field]="'ContactTitle'" dataType="string" [sortable]="true" [disableHiding]="true"></igx-column>
+        <igx-column [field]="'City'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'CompanyName'" dataType="string" [sortable]="true"></igx-column>
+    </igx-grid>
+</div>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
+            .toEqual(`
+<div class="columnHidingContainer">
+    <div *ngFor="let col of grid.columns">
+        {{col.field}}
+    </div>
+</div>
+<div class="gridContainer">
+    <igx-grid igxPreventDocumentScroll #grid [data]="data" [autoGenerate]="false" width="100%" height="560px" columnWidth="200px"
+        [allowFiltering]="true">
+        <igx-column [field]="'ID'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'ContactName'" dataType="string" [sortable]="true" [disableHiding]="true"></igx-column>
+        <igx-column [field]="'ContactTitle'" dataType="string" [sortable]="true" [disableHiding]="true"></igx-column>
+        <igx-column [field]="'City'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'CompanyName'" dataType="string" [sortable]="true"></igx-column>
+    </igx-grid>
+</div>
+`.replace(lineBreaksAndSpaceRegex, ''));
+    });
+
+    it('should insert a comment when exporter services are present in module.ts files', async () => {
+        appTree.create('/testSrc/appPrefix/component/app.module.ts',
+`import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AppComponent } from "./app.component";
+import { IgxCsvExporterService, IgxExcelExporterService } from "igniteui-angular";
+import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
+
+@NgModule({
+bootstrap: [AppComponent],
+declarations: [
+    AppComponent,
+    ExcelExportComponent
+],
+imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule
+],
+providers: [
+    IgxCsvExporterService,
+    IgxExcelExporterService
+],
+entryComponents: [],
+schemas: []
+})
+export class AppModule {}
+`);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/app.module.ts')
+        ).toEqual(
+`// IgxCsvExporterService and IgxExcelExporterService no longer need to be manually provided and can be safely removed.
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AppComponent } from "./app.component";
+import { IgxCsvExporterService, IgxExcelExporterService } from "igniteui-angular";
+import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
+
+@NgModule({
+bootstrap: [AppComponent],
+declarations: [
+    AppComponent,
+    ExcelExportComponent
+],
+imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule
+],
+providers: [
+    IgxCsvExporterService,
+    IgxExcelExporterService
+],
+entryComponents: [],
+schemas: []
+})
+export class AppModule {}
+`);
     });
 });

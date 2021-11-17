@@ -46,10 +46,8 @@
         </ng-container>
         <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
             <div class="igx-grid__mrl-block" [ngStyle]="{
-                'grid-template-rows':col.getGridTemplate(true, false),
-                'grid-template-columns':col.getGridTemplate(false, false),
-                '-ms-grid-rows':col.getGridTemplate(true, true),
-                '-ms-grid-columns':col.getGridTemplate(false, true)
+                'grid-template-rows':col.getGridTemplate(true),
+                'grid-template-columns':col.getGridTemplate(false)
             }">
                 <ng-template ngFor let-col [ngForOf]="col.children">
                         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? mrlExpandableCellTemplate : mrlCellTemplate; context: getContext(col, this)"></ng-container>
@@ -69,11 +67,9 @@
     [class.igx-grid__td--pinned-first]="col.hasFirstPinnedChildColumn"
     [style.left]="mrlRightPinnedOffset"
     [ngStyle]="{
-        'grid-template-rows':col.getGridTemplate(true, false),
-        'grid-template-columns':col.getGridTemplate(false, false),
-        'z-index': col.pinned ? 1 : null,
-        '-ms-grid-rows':col.getGridTemplate(true, true),
-        '-ms-grid-columns':col.getGridTemplate(false, true)
+        'grid-template-rows':col.getGridTemplate(true),
+        'grid-template-columns':col.getGridTemplate(false),
+        'z-index': col.pinned ? 1 : null
     }">
         <ng-template ngFor let-col [ngForOf]="col.children">
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails? mrlExpandableCellTemplate : mrlCellTemplate; context: getContext(col, this)"></ng-container>
@@ -172,13 +168,9 @@
         [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
         [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
         [column]="col"
-        [style.-ms-grid-row-span]="col.gridRowSpan"
-        [style.-ms-grid-column-span]="col.gridColumnSpan"
         [style.grid-row-end]="col.rowEnd"
         [style.grid-column-end]="col.colEnd"
-        [style.-ms-grid-row]="col.rowStart"
         [style.grid-row-start]="col.rowStart"
-        [style.-ms-grid-column]="col.colStart"
         [style.grid-column-start]="col.colStart"
         [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
         [firstPinned]="col.columnLayoutChild ? null : col.isFirstPinned"
@@ -209,13 +201,9 @@
         [expanded]="expanded"
         [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
         [column]="col"
-        [style.-ms-grid-row-span]="col.gridRowSpan"
-        [style.-ms-grid-column-span]="col.gridColumnSpan"
         [style.grid-row-end]="col.rowEnd"
         [style.grid-column-end]="col.colEnd"
-        [style.-ms-grid-row]="col.rowStart"
         [style.grid-row-start]="col.rowStart"
-        [style.-ms-grid-column]="col.colStart"
         [style.grid-column-start]="col.colStart"
         [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
         [formatter]="col.formatter"
