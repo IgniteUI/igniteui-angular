@@ -22,18 +22,12 @@ export class PivotGridHierarchySampleComponent {
 
                 memberName: 'Product',
                 memberFunction: (data) => data.Product.Name,
-                enabled: true,
-                childLevel:
-                {
-                    memberName: 'City',
-                    memberFunction: (data) => data.Seller.City,
-                    enabled: true,
-                }
+                enabled: true
 
             }
         },
         ],
-        rows: [{
+        rows: [,{
             memberName: 'AllSeller',
             memberFunction: () => 'All',
             enabled: true,
@@ -42,6 +36,11 @@ export class PivotGridHierarchySampleComponent {
                 memberName: 'Seller',
                 memberFunction: (data) => data.Seller.Name,
                 enabled: true,
+                childLevel: {
+                    memberName: 'City',
+                    memberFunction: (data) => data.Seller.City,
+                    enabled: true,
+                }
             }
         }],
         values: [
