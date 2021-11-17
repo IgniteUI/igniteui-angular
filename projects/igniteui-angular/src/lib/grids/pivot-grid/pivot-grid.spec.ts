@@ -4,7 +4,7 @@ import { IgxPivotGridModule } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxPivotGridTestBaseComponent } from '../../test-utils/pivot-grid-samples.spec';
 
-describe('Basic IgxPivotGrid #pivotGrid', () => {
+describe('Basic IgxPivotGrid #pGrid', () => {
     let fixture;
     configureTestSuite((() => {
         TestBed.configureTestingModule({

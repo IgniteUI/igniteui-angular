@@ -90,3 +90,55 @@ export class IgxPivotGridTestBaseComponent {
     public callback = (rowData: any, columnKey: any) => rowData[columnKey] >= 5;
     public callback1 = (rowData: any, columnKey: any) => rowData[columnKey] < 5;
 }
+
+@Component({
+    template: `
+    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy">
+    </igx-pivot-grid>`
+})
+export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseComponent {
+
+
+    constructor() {
+        super();
+        this.pivotConfigHierarchy = {
+            columns: [{
+                memberName: 'SellerName',
+                enabled: true
+            },
+            ],
+            rows: [{
+                memberName: 'All',
+                memberFunction: () => 'All',
+                enabled: true,
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    memberFunction: (data) => data.ProductCategory,
+                    enabled: true
+                }
+            }, {
+                memberName: 'Country',
+                enabled: true
+            }, {
+                memberName: 'Date',
+                enabled: true
+            }],
+            values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: IgxPivotNumericAggregate.sum,
+                    enabled: true,
+                    // dataType: 'currency',
+                    formatter: (value) => value ? value + '$' : undefined
+                },
+                {
+                    member: 'UnitPrice',
+                    aggregate: IgxPivotNumericAggregate.sum,
+                    enabled: true,
+                    dataType: 'currency'
+                }
+            ],
+            filters: null
+        };
+    }
+}
