@@ -1248,35 +1248,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
-        it('If parent and its children are selected and we delete a child, parent SHOULD be still selected.', async () => {
-            treeGrid.selectRows([147], true);
-            fix.detectChanges();
-            expect(getVisibleSelectedRows(fix).length).toBe(7);
-            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, true, true);
-            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
-
-            expect(treeGrid.dataRowList.length).toBe(10);
-
-            const childRow = treeGrid.gridAPI.get_row_by_index(5);
-            actionStrip.show(childRow);
-            fix.detectChanges();
-
-            // delete the child through the UI
-            const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
-            const deleteBtn = editActions[2].componentInstance;
-            deleteBtn.actionClick.emit();
-            fix.detectChanges();
-
-            await wait(100);
-            fix.detectChanges();
-
-            expect(treeGrid.dataRowList.length).toBe(9);
-            expect(getVisibleSelectedRows(fix).length).toBe(6);
-            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
-            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, true, true);
-            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
-        });
-
         it('If parent has one non-selected child and we delete it, the parent checkbox state SHOULD be selected.', async () => {
             treeGrid.selectRows([711, 299], true);
             fix.detectChanges();

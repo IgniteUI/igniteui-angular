@@ -96,8 +96,7 @@ All notable changes for each version of this project will be documented in this 
             </ng-template>
         </igx-grid>
         ```
-`IgxColumnActionsComponent`
-- `IgxColumnActionsComponent`
+    - `IgxColumnActionsComponent`
     - **Breaking Change** - The following input has been removed
         - Input `columns`. Use `igxGrid` `columns` input instead.
 - `IgxCarousel`
