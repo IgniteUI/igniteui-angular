@@ -41,6 +41,33 @@
                 "IgxHierarchicalGridComponent",
                 "IgxRowIslandComponent"
             ]
+        },
+        {
+            "member": "rowData",
+            "replaceWith": "data",
+            "definedIn": [
+                "IgxGridRowComponent",
+                "IgxTreeGridRowComponent",
+                "IgxHierarchicalGridRowComponent",
+                "IgxChildGridRowComponent",
+                "IgxGridRow",
+                "IgxTreeGridRow",
+                "IgxHierarchicalGridRow"
+            ]
+        },
+        {
+            "member": "rowID",
+            "replaceWith": "key",
+            "definedIn": [
+                "IgxGridRowComponent",
+                "IgxTreeGridRowComponent",
+                "IgxHierarchicalGridRowComponent",
+                "IgxChildGridRowComponent",
+                "IgxGridRow",
+                "IgxTreeGridRow",
+                "IgxHierarchicalGridRow",
+                "IgxRowDirective"
+            ]
         }
     ]
 }
