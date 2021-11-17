@@ -114,7 +114,7 @@ export class PivotUtil {
                     data.splice(i, 1, ...dimData);
                     i += dimData.length - 1;
                 }
-            } else {
+            } else if (isExpanded) {
                 // this is leaf
                 let leafDim = dim;
                 let currLvl = currDimLvl;
@@ -123,7 +123,7 @@ export class PivotUtil {
                     currLvl++;
                 }
                 rec[leafDim.memberName + '_' + pivotKeys.level] = currLvl;
-                rec[field + '_' + pivotKeys.level] = undefined;
+                delete rec[field + '_' + pivotKeys.level];
             }
         }
         return data;

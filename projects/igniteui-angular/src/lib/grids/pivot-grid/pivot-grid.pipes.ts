@@ -30,7 +30,7 @@ export class IgxPivotRowPipe implements PipeTransform {
     ): any[] {
         const enabledRows = config.rows.filter(x => x.enabled);
         const rowStrategy = config.rowStrategy ||  PivotRowDimensionsStrategy.instance();
-        return rowStrategy.process(collection.slice(0), enabledRows, config.values, pivotKeys);
+        return rowStrategy.process(cloneArray(collection, true), enabledRows, config.values, pivotKeys);
     }
 }
 
