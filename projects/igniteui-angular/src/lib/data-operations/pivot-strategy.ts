@@ -4,6 +4,10 @@ import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component'
 import { IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 import { FilteringStrategy } from './filtering-strategy';
+import { GridColumnDataType } from './data-util';
+import { SortingDirection } from './sorting-expression.interface';
+import { DefaultSortingStrategy, ISortingStrategy } from './sorting-strategy';
+import { parseDate } from '../core/utils';
 
 export interface IPivotDimensionStrategy {
     process(collection: any,
@@ -171,5 +175,42 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
         const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
         return PivotUtil.extractValueFromDimension(dim, rec);
+    }
+}
+
+export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
+    protected static _instance: DefaultPivotSortingStrategy = null;
+    protected dimension;
+    public static instance(): DefaultPivotSortingStrategy {
+        return this._instance || (this._instance = new this());
+    }
+    public sort(data: any[],
+                fieldName: string,
+                dir: SortingDirection,
+                ignoreCase: boolean,
+                valueResolver: (obj: any, key: string, isDate?: boolean) => any,
+                isDate?: boolean,
+                isTime?: boolean,
+                grid?: GridType) {
+        const key = fieldName;
+        const config = (grid as any).pivotConfiguration;
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
+        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+        this.dimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === key);
+        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
+        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, this.getFieldValue, isDate, isTime);
+        return this.arraySort(data, cmpFunc);
+    }
+
+    protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
+        let resolvedValue = PivotUtil.extractValueFromDimension(this.dimension, obj);
+        const formatAsDate = this.dimension.dataType === GridColumnDataType.Date || this.dimension.dataType === GridColumnDataType.DateTime;
+        if (formatAsDate) {
+            const date = parseDate(resolvedValue);
+            resolvedValue = isTime && date ?
+                new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()) : date;
+
+        }
+        return resolvedValue;
     }
 }
