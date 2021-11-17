@@ -60,6 +60,7 @@ import { IgxGridTransaction } from '../hierarchical-grid/public_api';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -958,7 +959,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         let columns = [];
-        fields.forEach((value, key) => {
+        if (fields.size === 0) {
+            return columns;
+        }
+        const first = fields.keys().next().value;
+        const dim: IPivotDimension = fields.get(first).dimension;
+        let currentFields = fields;
+        if (dim && dim.sortDirection) {
+            const reverse = (dim.sortDirection === SortingDirection.Desc ? -1 : 1);
+            currentFields = new Map([...fields.entries()].sort((a, b) => reverse * (a > b ? 1 : a < b ? -1 : 0)));
+        }
+        currentFields.forEach((value, key) => {
             let shouldGenerate = true;
             if (value.dimension && value.dimension.filters) {
                 const state = {
