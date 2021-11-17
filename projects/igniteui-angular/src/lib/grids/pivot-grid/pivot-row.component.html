@@ -1,6 +1,6 @@
     <!-- Row Dimension -->
     <div #rowDimensionContainer>
-            <igx-pivot-header-row class="igx-grid-thead" tabindex="0"
+            <igx-pivot-row-dimension-content class="igx-grid-thead" tabindex="0"
             [grid]="grid"
             [hasMRL]="grid.hasColumnLayouts"
             [density]="grid.displayDensity"
@@ -10,7 +10,7 @@
             (scroll)="grid.preventHeaderScroll($event)"
             [row]="this"
         >
-        </igx-pivot-header-row>
+        </igx-pivot-row-dimension-content>
     </div>
 
 
