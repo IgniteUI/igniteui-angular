@@ -335,7 +335,11 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public get key() {
         const primaryKey = this.grid.primaryKey;
-        return primaryKey ? this._data[primaryKey] : this._data;
+        if (this._data) {
+            return primaryKey ? this._data[primaryKey] : this._data;
+        } else {
+            return undefined;
+        }
     }
 
     /**
