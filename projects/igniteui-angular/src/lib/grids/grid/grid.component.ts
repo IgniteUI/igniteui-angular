@@ -582,8 +582,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public getRowTemplate(rowData, data, index) {
-        if (this.isGroupByRecord(data[index])) {
+    public getRowTemplate(rowData) {
+        if (this.isGroupByRecord(rowData)) {
             return this.defaultGroupTemplate;
         } else if (this.isSummaryRow(rowData)) {
             return this.summaryTemplate;
