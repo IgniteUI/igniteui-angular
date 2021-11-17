@@ -81,7 +81,6 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - The `rowSelected` event is renamed to `rowSelectionChanging` to better reflect its function.
     - **Breaking Change** - The `columnSelected` event is renamed to `columnSelectionChanging` to better reflect its function.
     - **Breaking Change** - `columnsCollection` is removed. Use `columns` instead.
-    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
     - `RowType`, `IgxRowDirective`
         - **Breaking Change** - `rowData` and `rowID` deprecated properties are now removed. Use `data` and `key` instead. Use `ng update` for automatic migration.
     - `igxRowSelector`
@@ -97,8 +96,9 @@ All notable changes for each version of this project will be documented in this 
         </igx-grid>
         ```
     - `IgxColumnActionsComponent`
-    - **Breaking Change** - The following input has been removed
-        - Input `columns`. Use `igxGrid` `columns` input instead.
+        - **Breaking Change** -  Input `columns` has been removed. Use `igxGrid` `columns` input instead.
+    - `igxGrid`
+    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
 - `IgxCarousel`
     - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
 
