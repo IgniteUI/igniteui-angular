@@ -559,7 +559,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public trackChanges(index, rec) {
-        if (rec.detailsData !== undefined) {
+        if (rec && rec.detailsData !== undefined) {
             return rec.detailsData;
         }
         return rec;
@@ -582,8 +582,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public getRowTemplate(rowData) {
-        if (this.isGroupByRecord(rowData)) {
+    public getRowTemplate(rowData, data, index) {
+        if (this.isGroupByRecord(data[index])) {
             return this.defaultGroupTemplate;
         } else if (this.isSummaryRow(rowData)) {
             return this.summaryTemplate;
