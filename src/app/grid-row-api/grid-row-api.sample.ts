@@ -213,6 +213,9 @@ export class GridRowAPISampleComponent implements OnInit {
         const row = grid.getRowByIndex(index);
         const parent = row.parent;
         parent.selected = !parent.selected;
+        if (parent) {
+            parent.selected = !parent.selected;
+        }
     }
 
     public generateDataUneven(count: number, level: number, parendID: string = null) {
