@@ -105,7 +105,6 @@ export interface RowType {
     delete?: () => any;
     pin?: () => void;
     unpin?: () => void;
-    toggle?: () => void;
 }
 
 export interface ColumnType {

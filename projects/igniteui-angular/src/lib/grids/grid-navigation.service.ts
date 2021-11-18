@@ -520,13 +520,15 @@ export class IgxGridNavigationService {
             }
         } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
             if (row.key === undefined) {
-                row.toggle();
+                // TODO use expanded row.expanded = !row.expanded;
+                (row as any).toggle();
             } else {
                 this.grid.gridAPI.set_row_expansion_state(row.key, true, event);
             }
         } else if (row.expanded && ROW_COLLAPSE_KEYS.has(key)) {
             if (row.key === undefined) {
-                row.toggle();
+                // TODO use expanded row.expanded = !row.expanded;
+                (row as any).toggle();
             } else {
                 this.grid.gridAPI.set_row_expansion_state(row.key, false, event);
             }
