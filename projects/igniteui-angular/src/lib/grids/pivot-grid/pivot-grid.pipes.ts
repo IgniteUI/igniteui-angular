@@ -8,10 +8,11 @@ import { DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotCol
      PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
-import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { GridBaseAPIService, IgxGridBaseDirective } from '../hierarchical-grid/public_api';
+import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridType } from '../common/grid.interface';
+import { GridBaseAPIService } from '../api.service';
+import { IgxGridBaseDirective } from '../grid-base.directive';
+import { IGridSortingStrategy } from '../common/strategy';
 /**
  * @hidden
  */

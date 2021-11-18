@@ -25,7 +25,7 @@ export class GridEventsComponent {
     public $paging = false;
     public $pinning = false;
     public $resizing = false;
-    public $columnSelected = false;
+    public $columnSelectionChanging = false;
     public $hiding = false;
     public $moving = false;
     public localData: any[];
@@ -100,9 +100,9 @@ export class GridEventsComponent {
         this.logAnEvent(`=> columnResized`);
     }
 
-    public columnSelected(event: IColumnSelectionEventArgs) {
-        event.cancel = this.$columnSelected;
-        this.logAnEvent('=> columnSelected', event.cancel);
+    public columnSelectionChanging(event: IColumnSelectionEventArgs) {
+        event.cancel = this.$columnSelectionChanging;
+        this.logAnEvent('=> columnSelectionChanging', event.cancel);
     }
 
     public clearLog() {

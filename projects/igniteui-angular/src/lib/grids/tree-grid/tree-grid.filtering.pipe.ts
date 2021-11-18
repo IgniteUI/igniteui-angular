@@ -1,32 +1,21 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { GridBaseAPIService } from '../api.service';
-import { IgxTreeGridComponent } from './tree-grid.component';
+import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseDirective } from '../grid/public_api';
-import { GridType } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 
 /** @hidden */
-@Pipe({
-    name: 'treeGridFiltering',
-    pure: true
-})
+@Pipe({name: 'treeGridFiltering'})
 export class IgxTreeGridFilteringPipe implements PipeTransform {
-    private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = gridAPI as IgxTreeGridAPIService;
-     }
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) {}
 
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,
         advancedFilteringExpressionsTree: IFilteringExpressionsTree,
         _: number, __: number, pinned?): ITreeGridRecord[] {
-        const grid: IgxTreeGridComponent = this.gridAPI.grid;
         const state: IFilteringState = {
             expressionsTree,
             advancedExpressionsTree: advancedFilteringExpressionsTree,
@@ -38,25 +27,25 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
         }
 
         if (FilteringExpressionsTree.empty(state.expressionsTree) && FilteringExpressionsTree.empty(state.advancedExpressionsTree)) {
-            grid.setFilteredData(null, pinned);
+            this.grid.setFilteredData(null, pinned);
             return hierarchyData;
         }
 
-        const result = this.filter(hierarchyData, state, grid);
+        const result = this.filter(hierarchyData, state, this.grid);
         const filteredData: any[] = [];
-        this.expandAllRecursive(grid, result, grid.expansionStates, filteredData);
-        grid.setFilteredData(filteredData, pinned);
+        this.expandAllRecursive(this.grid, result, this.grid.expansionStates, filteredData);
+        this.grid.setFilteredData(filteredData, pinned);
 
         return result;
     }
 
-    private expandAllRecursive(grid: IgxTreeGridComponent, data: ITreeGridRecord[],
+    private expandAllRecursive(grid: GridType, data: ITreeGridRecord[],
         expandedStates: Map<any, boolean>, filteredData: any[]) {
         for (const rec of data) {
             filteredData.push(rec.data);
 
             if (rec.children && rec.children.length > 0) {
-                expandedStates.set(rec.rowID, true);
+                expandedStates.set(rec.key, true);
                 this.expandAllRecursive(grid, rec.children, expandedStates, filteredData);
             }
         }

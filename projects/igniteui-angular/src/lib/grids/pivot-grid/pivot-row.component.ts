@@ -7,18 +7,19 @@ import {
     forwardRef,
     HostBinding,
     Input,
+    Inject,
     OnChanges,
     SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
-import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxRowDirective } from '../row.directive';
-import { GridBaseAPIService, IgxColumnComponent } from '../hierarchical-grid/public_api';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IPivotDimension, IPivotDimensionData } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
+import { IgxColumnComponent } from '../columns/column.component';
+import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 
 
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -28,7 +29,7 @@ const MINIMUM_COLUMN_WIDTH = 200;
     templateUrl: './pivot-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }]
 })
-export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent> implements OnChanges {
+export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
 
     /**
      * @hidden @internal
@@ -71,14 +72,14 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
     }
 
     constructor(
-        public gridAPI: GridBaseAPIService<IgxPivotGridComponent>,
+        @Inject(IGX_GRID_BASE) public grid: PivotGridType,
         public selectionService: IgxGridSelectionService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
         protected viewRef: ViewContainerRef
-    ) {
-        super(gridAPI, selectionService, element, cdr);
+    ){
+        super(grid, selectionService, element, cdr);
     }
     /**
      * @hidden
@@ -93,9 +94,9 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
      * @internal
      */
     public getRowDimensionKey(col: IgxColumnComponent) {
-        const dimData = this.rowDimensionData.find(x => x.column.field === col.field);
-        const key = PivotUtil.getRecordKey(this.rowData, dimData.dimension, dimData.prevDimensions);
-        return key;
+            const dimData = this.rowDimensionData.find(x => x.column.field === col.field);
+            const key =  PivotUtil.getRecordKey(this.data, dimData.dimension, dimData.prevDimensions);
+            return key;
     }
 
     public getExpandState(col: IgxColumnComponent) {
@@ -149,8 +150,8 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         currentLvl += level;
         const prev = [];
         for (const dim of rowDimConfig) {
-            const dimData = PivotUtil.getDimensionLevel(dim, this.rowData,
-                { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' });
+            const dimData = PivotUtil.getDimensionLevel(dim, this.data,
+                  { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'});
             dimIndex += dimData.level;
             currentLvl += dimData.level;
             const column = this.extractFromDimension(dimData.dimension, dimIndex, currentLvl);
@@ -165,7 +166,7 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
 
     protected extractFromDimension(dim: IPivotDimension, index: number = 0, lvl = 0) {
         const field = dim.memberName;
-        const header = this.rowData[field];
+        const header = this.data[field];
         const col = this._createColComponent(field, header, index, dim, lvl);
         return col;
     }
@@ -177,9 +178,9 @@ export class IgxPivotRowComponent extends IgxRowDirective<IgxPivotGridComponent>
         ref.instance.header = header;
         ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
         (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
-        if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.rowData)) {
+        if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.data)) {
             ref.instance.headerTemplate = this.headerTemplate;
-        } else if (lvl < PivotUtil.getTotalLvl(this.rowData)) {
+        } else if (lvl < PivotUtil.getTotalLvl(this.data)) {
             ref.instance.headerTemplate = this.headerTemplateGray;
         } else {
             ref.instance.headerTemplate = this.headerDefaultTemplate;

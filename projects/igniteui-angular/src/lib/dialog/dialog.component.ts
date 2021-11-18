@@ -23,6 +23,7 @@ import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services/public_api';
 import {fadeIn, fadeOut} from '../animations/fade/index';
 import { IgxFocusModule } from '../directives/focus/focus.directive';
+import { IgxFocusTrapModule } from '../directives/focus-trap/focus-trap.directive';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 
 let DIALOG_ID = 0;
@@ -109,6 +110,16 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         this._overlayDefaultSettings.closeOnEscape = val;
         this._closeOnEscape = val;
     }
+
+    /**
+     * An @Input property to set whether the Tab key focus is trapped within the dialog when opened.
+     * Defaults to `true`.
+     * ```html
+     * <igx-dialog focusTrap="false""></igx-dialog>
+     * ```
+     */
+    @Input()
+    public focusTrap = true;
 
     /**
      * An @Input property controlling the `title` of the dialog.
@@ -371,7 +382,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * }
      * ```
      */
-     public get state(): string {
+    public get state(): string {
         return this.isOpen ? 'open' : 'close';
     }
 
@@ -619,6 +630,8 @@ export interface IDialogCancellableEventArgs extends IDialogEventArgs, Cancelabl
 @NgModule({
     declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
     exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
-    imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule, IgxFocusModule]
+    imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule, IgxFocusModule, IgxFocusTrapModule]
 })
 export class IgxDialogModule { }
+
+export * from './dialog.directives';

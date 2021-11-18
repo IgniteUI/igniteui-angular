@@ -70,7 +70,6 @@
     </igx-grid-cell>
 </ng-template>
 
-
 <ng-template #headerTemplate let-column>
     <div class="igx-grid__tr--header" (click)="this.selectPivotRow(column, $event)">
         <igx-icon [attr.draggable]="false" (click)="grid.toggleRow(getRowDimensionKey(column))"

@@ -13,7 +13,7 @@ import {
 
 import { IgxColumnComponent } from './column.component';
 import { flatten } from '../../core/utils';
-import { CellType } from '../common/cell.interface';
+import { CellType } from '../common/grid.interface';
 
 
 @Component({

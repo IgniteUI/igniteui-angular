@@ -300,83 +300,6 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         expect (() => scrollInertiaDir.onTouchMove(evt)).not.toThrow();
         expect (() => scrollInertiaDir.onTouchEnd(evt)).not.toThrow();
     });
-
-    // Unit tests for touch events on IE/Edge
-    it('should change scroll top related scrollbar via gesture events. ', () => {
-        let evt = {
-            screenX: 0,
-            screenY: 0
-        };
-        scrollInertiaDir.onMSGestureStart(evt);
-
-
-        evt = {
-            screenX: 0,
-            screenY: -100
-        };
-
-        scrollInertiaDir.onMSGestureChange(evt);
-        expect(scrollContainerMock.scrollTop).toEqual(100);
-    });
-
-    it('should change scroll left related scrollbar via gesture events. ', () => {
-        let evt = {
-            screenX: 0,
-            screenY: 0
-        };
-        scrollInertiaDir.onMSGestureStart(evt);
-
-
-        evt = {
-            screenX: -100,
-            screenY: 0
-        };
-
-        scrollInertiaDir.onMSGestureChange(evt);
-        expect(scrollContainerMock.scrollLeft).toEqual(80);
-    });
-
-    // Unit tests for Pointer Down/Pointer Up - IE/Edge specific
-    it('should prepare MSGesture on PointerDown to handle touch interactions on IE/Edge and should release them on PointerUp.', () => {
-        const targetElem = {
-            setPointerCapture: (_args) => {},
-            releasePointerCapture: (_args) => {}
-        };
-        const pointerId = 100;
-        spyOn(targetElem, 'setPointerCapture');
-        spyOn(targetElem, 'releasePointerCapture');
-        const msGesture = window['MSGesture'];
-        if (!msGesture) {
-            // if MSGesture does not exist create a dummy obj to use instead.
-            window['MSGesture'] = (() => ({ addPointer: () => {} })) as any;
-        }
-
-        const evt = {
-            pointerType: 2,
-            target: targetElem,
-            pointerId
-        };
-        scrollInertiaDir.onPointerDown(evt);
-
-        expect(targetElem.setPointerCapture).toHaveBeenCalledWith(pointerId);
-
-        scrollInertiaDir.onPointerUp(evt);
-        expect(targetElem.releasePointerCapture).toHaveBeenCalledWith(pointerId);
-
-        // restore original MSGesture state
-        window['MSGesture'] = msGesture;
-    });
-
-    it('should not throw error when calling pointerDown/pointerUp if there is no associated scrollbar.', () => {
-        scrollInertiaDir.IgxScrollInertiaScrollContainer = null;
-        const evt = {
-            pointerType: 2,
-            target: {},
-            pointerId: 0
-        };
-        expect (() => scrollInertiaDir.onPointerDown(evt)).not.toThrow();
-        expect (() => scrollInertiaDir.onPointerUp(evt)).not.toThrow();
-    });
 });
 
     /** igxScroll inertia for testing */
@@ -384,7 +307,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
 export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
 
     constructor(element: ElementRef, _zone: NgZone) {
-        super(element, _zone, { isIE: false } as any);
+        super(element, _zone);
     }
     public onWheel(evt) {
         super.onWheel(evt);
@@ -398,23 +321,6 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
     }
     public onTouchMove(evt) {
        return super.onTouchMove(evt);
-    }
-
-    // IE/Edge specific events
-    public onPointerDown(evt) {
-        return super.onPointerDown(evt);
-    }
-
-    public onPointerUp(evt) {
-        return super.onPointerUp(evt);
-    }
-
-    public onMSGestureStart(evt) {
-        return super.onMSGestureStart(evt);
-    }
-
-    public onMSGestureChange(evt) {
-        return super.onMSGestureChange(evt);
     }
 
     public _inertiaInit(speedX, speedY) {

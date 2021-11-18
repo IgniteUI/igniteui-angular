@@ -1,5 +1,5 @@
 
-import { DebugElement } from '@angular/core';
+import { DebugElement, QueryList } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture, tick } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group/public_api';
@@ -8,7 +8,6 @@ import { IgxChipComponent } from '../chips/public_api';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import {
     CellType,
@@ -24,6 +23,10 @@ import { IgxGridHeaderRowComponent } from '../grids/headers/grid-header-row.comp
 import { IgxGridRowComponent } from '../grids/grid/grid-row.component';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxPivotRowComponent } from '../grids/pivot-grid/pivot-row.component';
+import { SortingDirection } from '../data-operations/sorting-strategy';
+import { IgxRowDirective } from '../grids/row.directive';
+import { GridType, RowType } from '../grids/common/grid.interface';
+
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -182,7 +185,7 @@ export class GridFunctions {
     /**
      * Focus the cell in the grid
      */
-    public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent) {
+    public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent | CellType) {
         this.getGridContent(fix).triggerEventHandler('focus', null);
         fix.detectChanges();
         cell.activate(null);
@@ -236,15 +239,15 @@ export class GridFunctions {
         resolve();
     });
 
-    public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
-        const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
+    public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxRowDirective) {
+        const rowDE = fix.debugElement.queryAll(By.directive(IgxRowDirective)).find(el => el.componentInstance === row);
         const expandCellDE = rowDE.query(By.directive(IgxGridExpandableCellComponent));
         expandCellDE.componentInstance.toggle(new MouseEvent('click'));
         fix.detectChanges();
     }
 
-    public static getMasterRowDetailDebug(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
-        const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
+    public static getMasterRowDetailDebug(fix: ComponentFixture<any>, row: IgxRowDirective) {
+        const rowDE = fix.debugElement.queryAll(By.directive(IgxRowDirective)).find(el => el.componentInstance === row);
         const detailDE = rowDE.parent.children
             .find(el => el.attributes['detail'] === 'true' && el.attributes['data-rowindex'] === row.index + 1 + '');
         return detailDE;
@@ -254,7 +257,7 @@ export class GridFunctions {
         return fix.debugElement.queryAll(By.css('div[detail="true"]')).sort((a, b) => a.context.index - b.context.index);
     }
 
-    public static getRowExpandIconName(row: IgxGridRowComponent) {
+    public static getRowExpandIconName(row: IgxRowDirective) {
         return row.element.nativeElement.querySelector('igx-icon').textContent;
     }
 
@@ -939,7 +942,7 @@ export class GridFunctions {
         const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerGroup = headerGroups.find((hg) => {
             const col: IgxColumnComponent = hg.componentInstance.column;
-            return col.field === columnField && (forGrid ? forGrid === col.grid : true);
+            return col.field === columnField && (forGrid ? forGrid.gridAPI.grid === col.grid : true);
         });
         const filterCell = headerGroup.query(By.css(FILTER_UI_CELL));
         const chip = filterCell.query(By.css('igx-chip'));
@@ -1825,7 +1828,7 @@ export class GridFunctions {
 
     public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
         const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS))
-                                            .find(header => header.nativeElement.title === columnField);
+            .find(header => header.nativeElement.title === columnField);
         return headerTitle.parent;
     }
 
@@ -1873,7 +1876,7 @@ export class GridFunctions {
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
-        return header.query(By.css(SORT_ICON_CLASS));
+        return header.query(By.css(SORT_ICON_CLASS))?.query(By.css('igx-icon'));
     }
 
     public static getHeaderFilterIcon(header: DebugElement): DebugElement {
@@ -1901,7 +1904,7 @@ export class GridFunctions {
         return fix.nativeElement.querySelectorAll(DRAG_INDICATOR_CLASS);
     }
 
-    public static isCellPinned(cell: IgxGridCellComponent): boolean {
+    public static isCellPinned(cell: CellType): boolean {
         return cell.nativeElement.classList.contains(CELL_PINNED_CLASS);
     }
 
@@ -1970,27 +1973,37 @@ export class GridFunctions {
         return null;
     }
 
-    public static verifyLayoutHeadersAreAligned(headerGroups: IgxGridHeaderGroupComponent[], rowCells: IgxGridCellComponent[]) {
-        for (let i = 0; i < headerGroups.length; i++) {
-            const widthDiff = headerGroups[i].header.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
-            const heightDiff = headerGroups[i].header.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
+    public static verifyLayoutHeadersAreAligned(grid: GridType, row: RowType, verifyPinnedCells?: boolean) {
+        let firstRowCells = (row.cells as QueryList<CellType>).toArray();
+        const headerCells = grid.headerCellList;
+
+        if (verifyPinnedCells) {
+            firstRowCells = firstRowCells
+                .filter(c => c.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
+        }
+
+        for (let i = 0; i < firstRowCells.length; i++) {
+            const dataCell = firstRowCells[i];
+            const headerCell = headerCells.find(h => h.column.index === dataCell.column.index);
+            const widthDiff = headerCell?.nativeElement.clientWidth - dataCell?.nativeElement.clientWidth;
+            const heightDiff = headerCell?.nativeElement.clientHeight - dataCell?.nativeElement.clientHeight;
             expect(widthDiff).toBeLessThanOrEqual(1);
             expect(heightDiff).toBeLessThanOrEqual(3);
         }
     }
 
-    public static verifyDOMMatchesLayoutSettings(row, colSettings) {
-        const firstRowCells = row.cells.toArray();
+    public static verifyDOMMatchesLayoutSettings(grid: GridType, row: RowType, colSettings) {
+        const firstRowCells = (row.cells as QueryList<CellType>).toArray();
         const rowElem = row.nativeElement;
         const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl-block');
 
         colSettings.forEach((groupSetting, index) => {
             // check group has rendered block
-            const groupBlock = mrlBlocks[index];
+            const groupBlock = mrlBlocks[index] as any;
             const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
             expect(groupBlock).not.toBeNull();
             groupSetting.columns.forEach((col, colIndex) => {
-                const cell = cellsFromBlock[colIndex];
+                const cell = cellsFromBlock[colIndex] as any;
                 const cellElem = cell.nativeElement;
                 // check correct attributes are applied
                 expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
@@ -2222,7 +2235,7 @@ export class GridSelectionFunctions {
         expect(range[rangeIndex].rowEnd).toBe(rowEnd);
     }
 
-    public static verifyCellSelected(cell: IgxGridCellComponent, selected = true) {
+    public static verifyCellSelected(cell: IgxGridCellComponent | CellType, selected = true) {
         expect(cell.selected).toBe(selected);
         expect(cell.nativeElement.classList.contains(CELL_SELECTED_CSS_CLASS)).toBe(selected);
     }
