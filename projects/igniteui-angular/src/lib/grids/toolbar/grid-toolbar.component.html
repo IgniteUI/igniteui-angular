@@ -1,4 +1,9 @@
-<ng-content select="[igxGridToolbarTitle],igx-grid-toolbar-title"></ng-content>
+<igx-grid-toolbar-title *ngIf="!hasTitle"></igx-grid-toolbar-title>
+<ng-container *ngTemplateOutlet="title"></ng-container>
+
+<ng-template #title>
+    <ng-content select="[igxGridToolbarTitle],igx-grid-toolbar-title"></ng-content>
+</ng-template>
 
 <div class="igx-grid-toolbar__custom-content">
     <ng-content></ng-content>
