@@ -895,12 +895,10 @@ export class FinancialData {
 
     /** Updates values in random records */
     public static updateRandomPrices(data: any[]): any[] {
-      const newData = data.slice();
-      // fixing a strange bug where newData has more elements than data, but all of those "explicit" items are undefined
       for (let i = Math.round(Math.random() * 10); i < data.length; i += Math.round(Math.random() * 10)) {
-          newData.push(this.randomizeObjectData(newData[i]));
+          this.randomizeObjectData(data[i]);
       }
-      return newData;
+      return return Array.from(data);
     }
 
     /*** Genrates additional financial data fields */
