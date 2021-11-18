@@ -264,6 +264,30 @@ export const getTypeDefinitionAtPosition =
         if (definition.kind.toString() === 'method') {
             return getMethodTypeDefinition(langServ, definition);
         }
+        if (entryPath.endsWith('.ts')) {
+            // for ts files we can use the type checker to look up a specific node
+            // and attempt to resolve its actual type
+            const sourceFile = langServ.getProgram().getSourceFile(entryPath);
+            const typeChecker = langServ.getProgram().getTypeChecker();
+            // const node = (tss as any).getTouchingPropertyName(sourceFile, position); -> tss internal that looks up a node
+            const node = findNodeAtPosition(sourceFile, position);
+            const symbolFromNode = typeChecker.getSymbolAtLocation(node)
+            const nodeType = typeChecker.getTypeOfSymbolAtLocation(symbolFromNode, node)
+            if (nodeType) {
+                const typeArguments = typeChecker.getTypeArguments(nodeType as tss.TypeReference);
+                if (typeArguments && typeArguments.length < 1) {
+                    // it's not a generic type so try to look up its name and fileName
+                    // atm we do not support migrating union/intersection generic types
+                    // a type symbol (type) should have only one declaration
+                    // if the type is 'any' or 'some', there will be no type symbol
+                    const name = nodeType.getSymbol()?.getName();
+                    const fileName = nodeType.getSymbol()?.getDeclarations()[0].getSourceFile().fileName;
+                    if (name && fileName) {
+                        return { name, fileName };
+                    }
+                }
+            }
+        }
 
         let typeDefs = getTypeDefinitions(langServ, definition.fileName || entryPath, definition.textSpan.start);
         // if there are no type definitions found, the identifier is a ts property, referred in an internal/external template
@@ -311,7 +335,6 @@ export const getTypeDefinitionAtPosition =
         return null;
     };
 
-
 /**
  * Determines if a member belongs to a type in the `igniteui-angular` toolkit.
  *
@@ -340,6 +363,24 @@ export const isMemberIgniteUI =
     };
 
 /**
+ * Looks up a node which end property matches the specified position.
+ */
+const findNodeAtPosition = (sourceFile: tss.SourceFile, position: number): tss.Node | null => {
+    if (!sourceFile) {
+        return null;
+    }
+
+    return findInnerNode(sourceFile, position);
+}
+const findInnerNode = (node: tss.Node, position: number): tss.Node | null => {
+    if (position <= node.getEnd()) {
+        return node.forEachChild(cn => findInnerNode(cn, position)) || node;
+    }
+
+    return null;
+}
+
+/**
  * Shifts the match position of the identifier to the left
  * until any character other than an empty string or a '.' is reached. #9347
  */
@@ -347,7 +388,7 @@ const shiftMatchPosition = (matchPosition: number, content: string): number => {
     do {
         matchPosition--;
     } while (matchPosition > 0 && !content[matchPosition - 1].trim()
-        || content[matchPosition - 1] === SynaxTokens.MemberAccess
+    || content[matchPosition - 1] === SynaxTokens.MemberAccess
         || content[matchPosition - 1] === SynaxTokens.Question);
     return matchPosition;
 };
@@ -390,7 +431,7 @@ const getMethodTypeDefinition = (langServ: tss.LanguageService, definition: tss.
         // there should never be a case where a type is declared in more than one file
         /**
          * For union return types like T | null | undefined
-         * and interesection return types like T & null & undefined
+         * and intersection return types like T & null & undefined
          * the TypeChecker ignores null and undefined and returns only T which is not
          * marked as a union or intersection type.
          *
