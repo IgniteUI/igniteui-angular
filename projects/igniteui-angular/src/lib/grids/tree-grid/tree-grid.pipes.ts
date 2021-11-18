@@ -50,7 +50,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         const missingParentRecords: ITreeGridRecord[] = [];
         collection.forEach(row => {
             const record: ITreeGridRecord = {
-                rowID: this.getRowID(primaryKey, row),
+                key: this.getRowID(primaryKey, row),
                 data: row,
                 children: []
             };
@@ -98,14 +98,14 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
 
         for (const item of collection) {
             const record: ITreeGridRecord = {
-                rowID: this.getRowID(primaryKey, item),
+                key: this.getRowID(primaryKey, item),
                 data: item,
                 parent,
                 level: indentationLevel
             };
             record.expanded = this.grid.gridAPI.get_row_expansion_state(record);
             flatData.push(item);
-            map.set(record.rowID, record);
+            map.set(record.key, record);
             record.children = item[childDataKey] ?
                 this.hierarchizeRecursive(item[childDataKey], primaryKey, childDataKey, record, flatData, indentationLevel + 1, map) :
                 undefined;
@@ -154,7 +154,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 
             this.updateNonProcessedRecordExpansion(this.grid, hierarchicalRecord);
 
-            this.grid.processedRecords.set(hierarchicalRecord.rowID, hierarchicalRecord);
+            this.grid.processedRecords.set(hierarchicalRecord.key, hierarchicalRecord);
 
             this.getFlatDataRecursive(hierarchicalRecord.children, data, expandedLevels,
                 expandedStates, parentExpanded && hierarchicalRecord.expanded);
@@ -162,7 +162,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     }
 
     private updateNonProcessedRecordExpansion(grid: GridType, record: ITreeGridRecord) {
-        const rec = grid.records.get(record.rowID);
+        const rec = grid.records.get(record.key);
         rec.expanded = record.expanded;
     }
 }
@@ -306,7 +306,7 @@ export class IgxTreeGridAddRowPipe implements PipeTransform {
         const copy = collection.slice(0);
         const rec = (this.grid.crudService.row as IgxAddRow).recordRef;
         copy.splice(this.grid.crudService.row.index, 0, rec);
-        this.grid.records.set(rec.rowID, rec);
+        this.grid.records.set(rec.key, rec);
         return copy;
     }
 }

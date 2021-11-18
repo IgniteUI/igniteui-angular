@@ -5676,7 +5676,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const rowStyle = this.rowEditingOverlay.element.parentElement.style;
             if (row) {
                 rowStyle.display = '';
-                this.configureRowEditingOverlay(row.rowID);
+                this.configureRowEditingOverlay(row.key);
                 this.rowEditingOverlay.reposition();
             } else {
                 rowStyle.display = 'none';
@@ -7210,7 +7210,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
         const targetRow = !pinned ?
             this.gridAPI.get_row_by_key(rowID) as IgxRowDirective
-            : this.pinnedRows.find(x => x.rowID === rowID) as IgxRowDirective;
+            : this.pinnedRows.find(x => x.key === rowID) as IgxRowDirective;
         if (!targetRow) {
             return;
         }
