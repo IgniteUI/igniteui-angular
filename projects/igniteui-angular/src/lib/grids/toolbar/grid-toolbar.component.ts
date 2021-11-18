@@ -29,7 +29,7 @@ import { IgxToolbarToken } from './token';
     providers: [{ provide: IgxToolbarToken, useExisting: IgxGridToolbarComponent }]
 })
 export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDestroy {
-    
+
     /**
      * When enabled, shows the indeterminate progress bar.
      *
