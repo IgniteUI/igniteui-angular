@@ -132,7 +132,8 @@ const GridResourceStringsPL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: 'Przypnij',
     igx_grid_actions_unpin_label: 'Odepnij',
     igx_grid_actions_jumpUp_label: 'Skok w górę',
-    igx_grid_actions_jumpDown_label: 'Skok w dół'
+    igx_grid_actions_jumpDown_label: 'Skok w dół',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 /**
