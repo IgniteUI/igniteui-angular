@@ -2,6 +2,18 @@ import { cloneValue } from '../../core/utils';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 
 export class PivotUtil {
+    public static assignLevels(dims) {
+        for (const dim of dims) {
+            let currDim = dim;
+            let lvl = 0;
+            while (currDim.childLevel) {
+                currDim.level = lvl;
+                currDim = currDim.childLevel;
+                lvl++;
+            }
+
+        }
+    }
     public static getFieldsHierarchy(data: any[], dimensions: IPivotDimension[],
         dimensionType: PivotDimensionType, pivotKeys: IPivotKeys): Map<string, any> {
         const hierarchy = new Map<string, any>();
@@ -218,7 +230,7 @@ export class PivotUtil {
         }
     }
 
-    public static processSubGroups(row, prevRowDims, siblingData, pivotKeys) {
+    public static processSubGroups(row, prevRowDims, siblingData, pivotKeys, lvl = 0) {
         const prevRowDimsIter = prevRowDims.slice(0);
         // process combined groups
         while (prevRowDimsIter.length > 0) {
@@ -254,11 +266,12 @@ export class PivotUtil {
                     }
                     PivotUtil.processSiblingProperties(child, siblingData2, keys);
                 }
-                if (prevRowDim.childLevel) {
+                const prevRowDimsFromLvl = prevRowDims.filter(x => x.level === lvl);
+                if (prevRowDimsFromLvl.some(x => x.childLevel)) {
                     // Get child dimensions now as well since we go a level deeper into the hierarchy.
                     // Keep above level dims as well since lower level dims correspond to upper sibling dims as well.
-                    const childDimensions = prevRowDims.filter(dim => !!dim.childLevel).map(dim => dim.childLevel);
-                    this.processSubGroups(row, [...prevRowDims, ...childDimensions], childCollection, pivotKeys);
+                    const childDimensions = prevRowDimsFromLvl.filter(dim => !!dim.childLevel).map(dim => dim.childLevel);
+                    this.processSubGroups(row, [...prevRowDimsFromLvl, ...childDimensions], childCollection, pivotKeys, lvl + 1);
                 }
             }
         }

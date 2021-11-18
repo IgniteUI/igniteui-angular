@@ -44,14 +44,11 @@ export class PivotGridSampleComponent {
                 enabled: true
             },
             {
-                memberFunction: () => 'All',
-                memberName: 'AllProducts',
-                enabled: true,
-                childLevel: {
+
                     memberFunction: (data) => data.ProductCategory,
                     memberName: 'ProductCategory',
                     enabled: true
-                }
+
             },
             {
                     memberFunction: () => 'AllSel',

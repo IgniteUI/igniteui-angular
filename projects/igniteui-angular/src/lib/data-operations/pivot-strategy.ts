@@ -1,4 +1,5 @@
 
+import { cloneArray } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
 import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
 import { IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
@@ -43,7 +44,9 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
             let data;
             const prevRowDims = [];
             let prevDim;
-            for (const row of rows) {
+            const currRows = cloneArray(rows, true);
+            PivotUtil.assignLevels(currRows);
+            for (const row of currRows) {
                 if (!data) {
                     // build hierarchies - groups and subgroups
                     hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
