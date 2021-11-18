@@ -506,14 +506,16 @@ describe('Pivot pipes', () => {
     });
 
     it('transforms flat data to pivot data multiple row dimensions', () => {
-        pivotConfig.rows = [{
-            memberName: 'ProductCategory',
-            enabled: true
-        },
-        {
-            memberName: 'Date',
-            enabled: true
-        }];
+        pivotConfig.rows = [
+            {
+                memberName: 'ProductCategory',
+                enabled: true
+            },
+            {
+                memberName: 'Date',
+                enabled: true
+            }
+        ];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expansionStates);
 
