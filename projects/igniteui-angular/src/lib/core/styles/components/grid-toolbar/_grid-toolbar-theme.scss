@@ -240,7 +240,7 @@
         display: flex;
         align-items: center;
         flex-flow: row wrap;
-        margin-#{$left}: map.get($grid-toolbar-spacer, 'comfortable');
+        margin-#{$left}: auto;
 
         > * {
             display: flex;

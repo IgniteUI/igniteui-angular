@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import { IgxIconService } from '../../icon/public_api';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
-import { IgxGridToolbarActionsDirective, IgxGridToolbarTitleDirective } from './common';
+import { IgxGridToolbarActionsDirective } from './common';
 import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxToolbarToken } from './token';
 
@@ -38,13 +38,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
      */
     @Input()
     public showProgress = false;
-
-    /**
-     * @hidden
-     * @internal
-     */
-     @ContentChild(IgxGridToolbarTitleDirective)
-     public hasTitle: IgxGridToolbarTitleDirective;
 
     /**
      * Gets/sets the grid component for the toolbar component.
