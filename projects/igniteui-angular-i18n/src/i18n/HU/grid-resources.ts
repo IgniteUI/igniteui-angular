@@ -133,7 +133,8 @@ const GridResourceStringsHU_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: 'Rögzítés',
     igx_grid_actions_unpin_label: 'Rögzítés feloldása',
     igx_grid_actions_jumpUp_label: 'Ugrás felfelé',
-    igx_grid_actions_jumpDown_label: 'Ugrás lefelé'
+    igx_grid_actions_jumpDown_label: 'Ugrás lefelé',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 /**

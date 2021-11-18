@@ -2,6 +2,7 @@ import { GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IPivotDimensionStrategy } from '../../data-operations/pivot-strategy';
 import { IgxColumnComponent } from '../columns/column.component';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 
 export type PivotAggregation = (members: any[], data: any[]) => any;
 
@@ -26,6 +27,8 @@ export interface IPivotDimension {
     enabled: boolean;
     // A predefined or defined via the `igxPivotSelector` filter expression tree for the current dimension to be applied in the filter pipe.
     filter?: FilteringExpressionsTree | null;
+    sortDirection?: SortingDirection;
+    dataType?: GridColumnDataType;
     // The width of the dimension cells to be rendered.Can be pixel or %.
     width? : string;
 }

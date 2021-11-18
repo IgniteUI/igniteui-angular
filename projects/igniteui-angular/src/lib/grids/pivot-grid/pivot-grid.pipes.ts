@@ -4,9 +4,14 @@ import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys } from './pivot-grid.interface';
-import { PivotColumnDimensionsStrategy, PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
+     PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
+import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { GridBaseAPIService, IgxGridBaseDirective } from '../hierarchical-grid/public_api';
+import { GridType } from '../common/grid.interface';
 /**
  * @hidden
  */
@@ -91,30 +96,31 @@ export class IgxPivotColumnPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({
+ @Pipe({
     name: 'pivotGridFilter',
     pure: true
 })
 export class IgxPivotGridFilterPipe implements PipeTransform {
-
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
     public transform(collection: any[],
         config: IPivotConfiguration,
         filterStrategy: IFilteringStrategy,
-        advancedExpressionsTree: IFilteringExpressionsTree): any[] {
-
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters);
+        advancedExpressionsTree: IFilteringExpressionsTree,
+        _filterPipeTrigger: number,
+        _pipeTrigger: number): any[] {
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
 
         const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
         // add expression trees from all filters
-        enabledDimensions.forEach(x => {
-            if (x.filter) {
-                expressionsTree.filteringOperands.push(x.filter);
+        PivotUtil.flatten(enabledDimensions).forEach(x => {
+            if (x.filters) {
+                expressionsTree.filteringOperands.push(x.filters);
             }
         });
         const state = {
             expressionsTree,
-            strategy: filterStrategy,
+            strategy: filterStrategy || new DimensionValuesFilteringStrategy(),
             advancedExpressionsTree
         };
 
@@ -122,7 +128,47 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
             return collection;
         }
 
-        const result = DataUtil.filter(cloneArray(collection), state);
+        const result = DataUtil.filter(cloneArray(collection), state, this.gridAPI.grid);
+
+        return result;
+    }
+}
+
+/**
+ * @hidden
+ */
+ @Pipe({
+    name: 'pivotGridSort',
+    pure: true
+})
+export class IgxPivotGridSortingPipe implements PipeTransform {
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+    public transform(collection: any[], config: IPivotConfiguration, sorting: IGridSortingStrategy,
+        id: string, pipeTrigger: number, pinned?): any[] {
+        let result: any[];
+        const allDimensions = config.rows;
+        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+        const expressions: ISortingExpression[] = [];
+        PivotUtil.flatten(enabledDimensions).forEach(x => {
+            if (x.sortDirection) {
+                expressions.push({
+                    dir: x.sortDirection,
+                    fieldName: x.memberName,
+                    strategy: DefaultPivotSortingStrategy.instance()
+                });
+            } else {
+                expressions.push({
+                    dir: SortingDirection.None,
+                    fieldName: x.memberName,
+                    strategy: DefaultPivotSortingStrategy.instance()
+                });
+            }
+        });
+        if (!expressions.length) {
+            result = collection;
+        } else {
+            result = DataUtil.sort(cloneArray(collection, true), expressions, sorting, this.gridAPI.grid);
+        }
 
         return result;
     }
