@@ -1661,8 +1661,23 @@
         background: var-get($theme, 'header-selected-background');
         opacity: if($variant != 'indigo-design', .7, 1);
 
-        .sort-icon::after {
-            background: var-get($theme, 'header-selected-background');
+        .sort-icon {
+            color: var-get($theme, 'header-selected-text-color');
+
+            ::after {
+                background: var-get($theme, 'header-selected-background');
+            }
+        }
+
+        &%igx-grid-th--sorted {
+            .sort-icon {
+                color: var-get($theme, 'header-selected-text-color');
+
+                &:focus,
+                &:hover {
+                    color: var-get($theme, 'header-selected-text-color');
+                }
+            }
         }
     }
 
@@ -1672,6 +1687,17 @@
 
         .sort-icon::after {
             background: var-get($theme, 'header-selected-background');
+        }
+
+        &%igx-grid-th--sorted {
+            .sort-icon {
+                color: var-get($theme, 'header-selected-text-color');
+
+                &:focus,
+                &:hover {
+                    color: var-get($theme, 'header-selected-text-color');
+                }
+            }
         }
     }
 

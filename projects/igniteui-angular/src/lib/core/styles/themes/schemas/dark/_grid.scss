@@ -36,14 +36,6 @@
 /// @prop {Map} root-summaries-background [igx-color: ('grays', 200)] - The background color of the summary groups located the footer.
 /// @prop {Map} root-summaries-text-color [igx-contrast-color: ('grays', 200)] - The text color of the summary groups located the footer.
 $base-dark-grid: (
-    sortable-header-icon-hover-color: (
-        igx-color: ('secondary', 100)
-    ),
-
-    sorted-header-icon-color: (
-        igx-contrast-color: ('secondary', 600)
-    ),
-
     content-background: (
         igx-color: 'surface',
     ),
