@@ -21,6 +21,59 @@
             "definedIn": [
                 "IgxComboBaseDirective"
             ]
+        },
+        {
+            "member": "rowSelected",
+            "replaceWith": "rowSelectionChanging",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "rowData",
+            "replaceWith": "data",
+            "definedIn": [
+                "RowType",
+                "IgxGridRow",
+                "IgxTreeGridRow",
+                "IgxHierarchicalGridRow",
+                "IgxRowDirective"
+            ]
+        },
+        {
+            "member": "rowID",
+            "replaceWith": "key",
+            "definedIn": [
+                "RowType",
+                "IgxGridRow",
+                "IgxTreeGridRow",
+                "IgxHierarchicalGridRow",
+                "IgxRowDirective",
+                "ITreeGridRecord"
+            ]
+        },
+        {
+            "member": "columnsCollection",
+            "replaceWith": "columns",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxTreeGridComponent"
+
+            ]
         }
     ]
 }

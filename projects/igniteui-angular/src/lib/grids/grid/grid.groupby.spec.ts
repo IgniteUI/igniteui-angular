@@ -642,7 +642,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         // verify data records order
         const expectedDataRecsOrder = [false, true, false, true, null, false, true, true];
         dataRows.forEach((row, index) => {
-            expect(row.rowData.Released).toEqual(expectedDataRecsOrder[index]);
+            expect(row.data.Released).toEqual(expectedDataRecsOrder[index]);
         });
 
     }));
@@ -1171,8 +1171,14 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
+            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
+
+            expect(selectionSpy).toHaveBeenCalledTimes(1);
+            const args = selectionSpy.calls.mostRecent().args[0];
+            expect(args.added.length).toBe(2);
+            expect(grid.selectedRows.length).toEqual(2);
 
             for (const key of grRow.groupRow.records) {
                 expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
@@ -1255,8 +1261,14 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
+            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
+
+            expect(selectionSpy).toHaveBeenCalledTimes(1);
+            const args = selectionSpy.calls.mostRecent().args[0];
+            expect(args.removed.length).toBe(2);
+            expect(grid.selectedRows.length).toEqual(0);
 
             for (const key of grRow.groupRow.records) {
                 expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false));
@@ -2175,7 +2187,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(2);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
         expect(groupRows[1].groupRow.records.length).toEqual(2);
-        expect(dataRows[1].rowData.ProductName).toEqual('NetAdvantage');
+        expect(dataRows[1].data.ProductName).toEqual('NetAdvantage');
 
         fix.componentInstance.instance.paginate(1);
         tick();
@@ -2187,7 +2199,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(2);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
         expect(groupRows[1].groupRow.records.length).toEqual(1);
-        expect(dataRows[0].rowData.ProductName).toEqual('Ignite UI for Angular');
+        expect(dataRows[0].data.ProductName).toEqual('Ignite UI for Angular');
 
         fix.componentInstance.instance.paginate(0);
         tick();
@@ -2199,7 +2211,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(2);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
         expect(groupRows[1].groupRow.records.length).toEqual(2);
-        expect(dataRows[1].rowData.ProductName).toEqual('NetAdvantage');
+        expect(dataRows[1].data.ProductName).toEqual('NetAdvantage');
     }));
 
     // GroupBy Area
@@ -3377,7 +3389,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             // verify data records order
             const expectedDataRecsOrder = [true, true, true, true, false, false, false, null];
             dataRows.forEach((row, index) => {
-                expect(row.rowData.Released).toEqual(expectedDataRecsOrder[index]);
+                expect(row.data.Released).toEqual(expectedDataRecsOrder[index]);
             });
 
             const grExprs: ISortingExpression[] = [
@@ -3396,8 +3408,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             const expectedProductNameOrder = ['NetAdvantage', 'NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for JavaScript',
                 'Ignite UI for Angular', 'Ignite UI for Angular', '', null];
             dataRows.forEach((row, index) => {
-                expect(row.rowData.Released).toEqual(expectedReleaseRecsOrder[index]);
-                expect(row.rowData.ProductName).toEqual(expectedProductNameOrder[index]);
+                expect(row.data.Released).toEqual(expectedReleaseRecsOrder[index]);
+                expect(row.data.ProductName).toEqual(expectedProductNameOrder[index]);
             });
         }));
 

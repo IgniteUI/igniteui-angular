@@ -19,7 +19,10 @@ import {
     IterableDiffers,
     ViewContainerRef,
     Optional,
-    LOCALE_ID
+    LOCALE_ID,
+    ApplicationRef,
+    NgModuleRef,
+    Injector
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -397,6 +400,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
+        appRef: ApplicationRef,
+        moduleRef: NgModuleRef<any>,
+        factoryResolver: ComponentFactoryResolver,
+        injector: Injector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -408,7 +415,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(selectionService, colResizingService, gridAPI, transactionFactory,
-            _elementRef, _zone, document, cdr, resolver, differs, viewRef, navigation,
+            _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef,factoryResolver, injector, navigation,
             filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
     }
 
@@ -448,7 +455,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 let rec = this.gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec && rec.parent) {
                     this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(
-                        new Set([rec.parent]), rec.parent.rowID);
+                        new Set([rec.parent]), rec.parent.key);
                 } else {
                     // The record is still not available
                     // Wait for the change detection to update records through pipes
@@ -457,7 +464,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                             args.data[this.primaryKey] : args.data);
                         if (rec && rec.parent) {
                             this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(
-                                new Set([rec.parent]), rec.parent.rowID);
+                                new Set([rec.parent]), rec.parent.key);
                         }
                         this.notifyChanges();
                     });
@@ -475,7 +482,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                     // if a row has been added and before commiting the transaction deleted
                     const leafRowsDirectParents = new Set<any>();
                     this.records.forEach(record => {
-                        if (record && !record.children && record.parent) {
+                        if (record && (!record.children || record.children.length === 0) && record.parent) {
                             leafRowsDirectParents.add(record.parent);
                         }
                     });
@@ -492,7 +499,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 const leafRowsDirectParents = new Set<any>();
                 this.records.forEach(record => {
-                    if (record && !record.children && record.parent) {
+                    if (record && (!record.children || record.children.length === 0) && record.parent) {
                         leafRowsDirectParents.add(record.parent);
                     }
                 });
@@ -682,7 +689,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden @internal
      */
-    public getEmptyRecordObjectFor(inTreeRow) {
+    public getEmptyRecordObjectFor(inTreeRow: RowType) {
         const treeRowRec = inTreeRow?.treeRow || null;
         const row = { ...treeRowRec };
         const data = treeRowRec?.data || {};
@@ -702,7 +709,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             // safeguard in case generated id matches the root foreign key.
             id = this.generateRowID();
         }
-        row.rowID = id;
+        row.key = id;
         row.data[this.primaryKey] = id;
         return { rowID: id, data: row.data, recordRef: row };
     }
@@ -836,7 +843,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         let record = this.records.get(rowId);
 
         while (record.parent) {
-            path.push(record.parent.rowID);
+            path.push(record.parent.key);
             record = record.parent;
         }
 
@@ -845,7 +852,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     /** @hidden */
     public isTreeRow(record: any): boolean {
-        return record.rowID !== undefined && record.data;
+        return record.key !== undefined && record.data;
     }
 
     /** @hidden */
@@ -1017,7 +1024,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             if (this.transactions.enabled && this.transactions.getAggregatedChanges(true).length) {
                 const path = [];
                 while (parent) {
-                    path.push(parent.rowID);
+                    path.push(parent.key);
                     parent = parent.parent;
                 }
 
@@ -1075,7 +1082,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
             if (rec && rec.parent) {
                 this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(
-                    new Set([rec.parent]), rec.parent.rowID
+                    new Set([rec.parent]), rec.parent.key
                 );
                 this.notifyChanges();
             }

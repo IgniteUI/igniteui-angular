@@ -106,7 +106,7 @@ describe('IgxTreeGrid', () => {
             expect(groupByArea.dropAreaVisible).toBeFalse();
         }));
 
-        it('is loaded grouped by two fields.', () => {
+        it('is loaded grouped by two fields.', fakeAsync(() => {
             const groupArea = fix.debugElement.nativeElement.querySelector('igx-tree-grid-group-by-area');
             expect(groupArea).toBeDefined();
             const chips = fix.debugElement.nativeElement.querySelectorAll('igx-chip');
@@ -117,10 +117,11 @@ describe('IgxTreeGrid', () => {
 
             treeGrid.expandAll();
             fix.detectChanges();
+            tick();
 
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(19);
-        });
+            expect(rows.length).toBe(20);
+        }));
 
         it('shows a new group chip when adding a grouping expression', fakeAsync(() => {
             expect(groupByArea.expressions).toEqual(groupingExpressions);

@@ -1326,7 +1326,7 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(summaryRow4.isSummaryRow).toBe(true);
             // Check rowID, rowData, data, disabled
             expect(summaryRow4.key).toBeUndefined();
-            expect(summaryRow4.rowData).toBeUndefined();
+            expect(summaryRow4.data).toBeUndefined();
             expect(summaryRow4.data).toBeUndefined();
             expect(summaryRow4.pinned).toBeUndefined();
             expect(summaryRow4.selected).toBeUndefined();

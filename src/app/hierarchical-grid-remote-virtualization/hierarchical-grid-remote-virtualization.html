@@ -2,7 +2,7 @@
     <div class="remote-data-loading-template-medium"></div>
 </ng-template>
 
-<ng-template #cellTemplate igxCell let-val let-rowData="cell.row.rowData">
+<ng-template #cellTemplate igxCell let-val let-rowData="cell.row.data">
     <div *ngIf="!rowData.emptyRec; else remoteDataLoading">
        {{ val }}
     </div>

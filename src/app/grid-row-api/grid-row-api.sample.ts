@@ -213,6 +213,9 @@ export class GridRowAPISampleComponent implements OnInit {
         const row = grid.getRowByIndex(index);
         const parent = row.parent;
         parent.selected = !parent.selected;
+        if (parent) {
+            parent.selected = !parent.selected;
+        }
     }
 
     public generateDataUneven(count: number, level: number, parendID: string = null) {
@@ -301,8 +304,8 @@ export class GridRowAPISampleComponent implements OnInit {
             this.grid.deleteRow(rowData.ID);
         });
         if (selected === false) {
-            this.targetGrid.addRow(args.dragData.rowData);
-            // this.grid.deleteRow(args.dragData.rowID);
+            this.targetGrid.addRow(args.dragData.data);
+            // this.grid.deleteRow(args.dragData.key);
         }
     }
 

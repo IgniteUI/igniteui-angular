@@ -324,9 +324,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         // explicitly update selection and trigger text selection so that we don't have to force CD
         this.textSelection.selected = true;
         this.textSelection.trigger();
-        const selection = this.selectionService.first_item(this.id);
-        this._value = selection !== undefined && selection !== null ? selection : '';
-        this._onChangeCallback(selection);
     }
 
     /** @hidden @internal */
@@ -373,7 +370,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             if (this._updateInput) {
                 this.comboInput.value = this._value = displayText !== args.displayText
                     ? args.displayText
-                    : this.createDisplayText([args.newSelection], [args.oldSelection]);
+                    : this.createDisplayText(argsSelection, [args.oldSelection]);
             }
             this._onChangeCallback(args.newSelection);
             this._updateInput = true;
@@ -385,9 +382,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return this.getRemoteSelection(newSelection, oldSelection);
         }
 
-        return this.displayKey !== null && this.displayKey !== undefined
-            ? this.convertKeysToItems(newSelection).map(e => e[this.displayKey])[0]
-            : newSelection[0];
+        if (this.displayKey !== null && this.displayKey !== undefined
+            && newSelection.length > 0) {
+            return this.convertKeysToItems(newSelection).map(e => e[this.displayKey])[0];
+        }
+
+        return newSelection[0] || '';
     }
 
     private clearSelection(ignoreFilter?: boolean): void {

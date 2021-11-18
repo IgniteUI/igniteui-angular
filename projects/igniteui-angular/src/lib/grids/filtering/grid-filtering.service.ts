@@ -19,7 +19,7 @@ import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
-import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
+import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 
 /**
  * @hidden
@@ -43,9 +43,9 @@ export class IgxFilteringService implements OnDestroy {
         closeOnEscape: true,
         closeOnOutsideClick: true,
         modal: false,
-        positionStrategy: new ConnectedPositioningStrategy({
-            verticalStartPoint: VerticalAlignment.Top,
-            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' } }),
+        positionStrategy: new ExcelStylePositionStrategy({
+            verticalStartPoint: VerticalAlignment.Bottom,
+            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' }}),
             closeAnimation: null
         }),
         scrollStrategy: new AbsoluteScrollStrategy()

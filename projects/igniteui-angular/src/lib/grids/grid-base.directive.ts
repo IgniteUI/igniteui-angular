@@ -2,8 +2,11 @@ import { DOCUMENT, formatNumber, getLocaleNumberFormat, NumberFormatStyle } from
 import {
     AfterContentInit,
     AfterViewInit,
+    ApplicationRef,
     ChangeDetectorRef,
+    ComponentFactory,
     ComponentFactoryResolver,
+    ComponentRef,
     ContentChild,
     ContentChildren,
     Directive,
@@ -13,10 +16,12 @@ import {
     HostBinding,
     HostListener,
     Inject,
+    Injector,
     Input,
     IterableChangeRecord,
     IterableDiffers,
     LOCALE_ID,
+    NgModuleRef,
     NgZone,
     OnDestroy,
     OnInit,
@@ -284,8 +289,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Emitted after the current page is changed.
      *
-     * @deprecated in version 12.1.0
-     * Use the corresponding output exposed by the `igx-paginator` component instead.
      *
      * @example
      * ```html
@@ -305,8 +308,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Emitted when `perPage` property value of the grid is changed.
      *
-     * @deprecated in version 12.1.0
-     * Use the corresponding output exposed by the `igx-paginator` component instead.
      *
      * @example
      * ```html
@@ -333,8 +334,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets/Sets the styling classes applied to all even `IgxGridRowComponent`s in the grid.
      *
-     * @deprecated
-     * `evenRowCSS` is deprecated. We suggest using `rowClasses` property instead.
      *
      * @example
      * ```html
@@ -349,8 +348,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets/Sets the styling classes applied to all odd `IgxGridRowComponent`s in the grid.
      *
-     * @deprecated
-     * `oddRowCSS` is deprecated. We suggest using `rowClasses` property instead.
      *
      * @example
      * ```html
@@ -469,22 +466,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```html
-     * <igx-grid #grid (rowSelected)="onCellClickChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid (rowSelectionChanging)="rowSelectionChanging($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public rowSelected = new EventEmitter<IRowSelectionEventArgs>();
+    public rowSelectionChanging = new EventEmitter<IRowSelectionEventArgs>();
 
     /**
      *  Emitted when `IgxColumnComponent` is selected.
      *
      * @example
      * ```html
-     * <igx-grid #grid (columnSelected)="columnSelected($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid (columnSelectionChanging)="columnSelectionChanging($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public columnSelected = new EventEmitter<IColumnSelectionEventArgs>();
+    public columnSelectionChanging = new EventEmitter<IColumnSelectionEventArgs>();
 
     /**
      * Emitted before `IgxColumnComponent` is pinned.
@@ -709,8 +706,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Emitted after paging is performed.
      *
-     * @deprecated in version 12.1.x
-     * `pagingDone` is deprecated. Use the corresponding output exposed by the `igx-paginator` component instead.
      *
      * @remarks
      * Returns an object consisting of the previous and next pages.
@@ -1523,8 +1518,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets/Sets whether the paging feature is enabled.
      *
-     * @deprecated in version 12.1.x
-     * `paging` is deprecated
      *
      * @remarks
      * The default state is disabled (false).
@@ -1550,8 +1543,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets/Sets the current page index.
      *
-     * @deprecated in version 12.1.x
-     * `page` is deprecated. Use the `page` property from the `igx-paginator` component instead.
      *
      * @example
      * ```html
@@ -1578,8 +1569,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets/Sets the number of visible items per page.
      *
-     * @deprecated in version 12.1.x
-     * `perPage` is deprecated. Use the `perPage` property from the `igx-paginator` component instead.
      *
      * @remarks
      * The default is 15.
@@ -2929,6 +2918,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
+        private appRef: ApplicationRef,
+        private moduleRef: NgModuleRef<any>,
+        private factoryResolver: ComponentFactoryResolver,
+        private injector: Injector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -3354,11 +3347,34 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.excelStyleFilteringComponent.overlayComponentId = id;
             return { id, ref: undefined };
         }
-        const ref = this.viewRef.createComponent(IgxGridExcelStyleFilteringComponent);
+        const ref = this.createComponentInstance(IgxGridExcelStyleFilteringComponent);
         ref.instance.initialize(column, this.overlayService);
         const id = this.overlayService.attach(ref.instance.element, options);
         ref.instance.overlayComponentId = id;
         return { ref, id };
+    }
+
+    private createComponentInstance(component: any) {
+        let dynamicFactory: ComponentFactory<any>;
+        const factoryResolver = this.moduleRef
+            ? this.moduleRef.componentFactoryResolver
+            : this.factoryResolver;
+        try {
+            dynamicFactory = factoryResolver.resolveComponentFactory(component);
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+
+        const injector = this.moduleRef
+            ? this.moduleRef.injector
+            : this.injector;
+        const dynamicComponent: ComponentRef<any> = dynamicFactory.create(
+            injector
+        );
+        this.appRef.attachView(dynamicComponent.hostView);
+
+        return dynamicComponent;
     }
 
     /** @hidden @internal */
@@ -3480,7 +3496,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.paginator) {
                 this.paginator.perPage = this._perPage !== DEFAULT_ITEMS_PER_PAGE ? this._perPage : this.paginator.perPage;
-                this.paginator.totalRecords = this.totalRecords;
+                this.paginator.totalRecords = this.totalRecords ? this.totalRecords : this.paginator.totalRecords;
                 this.paginator.overlaySettings = { outlet: this.outlet };
             }
             this._rendered = true;
@@ -3547,6 +3563,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (this._advancedFilteringOverlayId) {
             this.overlayService.detach(this._advancedFilteringOverlayId);
+            delete this._advancedFilteringOverlayId;
         }
 
         this.overlayIDs.forEach(overlayID => {
@@ -3944,8 +3961,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets the total number of pages.
      *
-     * @deprecated in version 12.1.0
-     * `totalPages` is deprecated. Use the corresponding property exposed by the `igx-paginator`.
      *
      * @example
      * ```typescript
@@ -3961,8 +3976,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Gets if the current page is the first page.
      *
-     * @deprecated in version 12.1.0
-     * `isFirstPage` is deprecated. Use the corresponding property exposed by the `igx-paginator`.'
      *
      * @example
      * ```typescript
@@ -3978,8 +3991,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Goes to the next page, if the grid is not already at the last page.
      *
-     * @deprecated in version 12.1.0
-     * 'Use the corresponding method exposed by the `igx-paginator`.'
      *
      * @example
      * ```typescript
@@ -4037,8 +4048,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Returns if the current page is the last page.
      *
-     * @deprecated in version 12.1.0
-     * `isLastPage` is deprecated. Use the corresponding property exposed by the `igx-paginator`.'
      *
      * @example
      * ```typescript
@@ -4155,8 +4164,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * Goes to the desired page index.
      *
-     * @deprecated in version 12.1.x
-     * 'Use the corresponding method exposed by the `igx-paginator`.'
      *
      * @example
      * ```typescript
@@ -5671,7 +5678,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const rowStyle = this.rowEditingOverlay.element.parentElement.style;
             if (row) {
                 rowStyle.display = '';
-                this.configureRowEditingOverlay(row.rowID);
+                this.configureRowEditingOverlay(row.key);
                 this.rowEditingOverlay.reposition();
             } else {
                 rowStyle.display = 'none';
@@ -7203,7 +7210,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         settings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
-        const targetRow = !pinned ? this.gridAPI.get_row_by_key(rowID) : this.pinnedRows.find(x => x.rowID === rowID);
+        const targetRow = !pinned ?
+            this.gridAPI.get_row_by_key(rowID) as IgxRowDirective
+            : this.pinnedRows.find(x => x.key === rowID) as IgxRowDirective;
         if (!targetRow) {
             return;
         }

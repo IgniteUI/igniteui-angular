@@ -27,7 +27,7 @@ import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
 import { DisplayDensity } from '../../../core/displayDensity';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
-import { PlatformUtil } from '../../../core/utils';
+import { isEqual, PlatformUtil } from '../../../core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ExpressionUI } from '../excel-style/common';
@@ -70,14 +70,23 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     public set value(val) {
         if (!val && val !== 0) {
             this.expression.searchVal = null;
-            this.showHideArrowButtons();
+            const index = this.expressionsList.findIndex(item => item.expression === this.expression);
+            if (index === 0 && this.expressionsList.length === 1) {
+                this.clearFiltering();
+                return;
+            }
         } else {
+            const oldValue = this.expression.searchVal;
+            if (isEqual(oldValue, val)) {
+                return;
+            }
+
             this.expression.searchVal = DataUtil.parseValue(this.column.dataType, val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
                 this.addExpression(true);
             }
+            this.filter();
         }
-        this.filter();
     }
 
     public get displayDensity() {
