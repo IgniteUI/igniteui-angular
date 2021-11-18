@@ -1262,36 +1262,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public set filterCellTemplate(template: TemplateRef<any>) {
         this._filterCellTemplate = template;
     }
-    /**
-     * Returns a reference to the `customSummaryCellTemplate`.
-     * ```typescript
-     * let customSummaryCellTemplate = this.column.customSummaryCellTemplate;
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-     @notifyChanges()
-     @WatchColumnChanges()
-     @Input()
-     public get customSummaryCellTemplate(): TemplateRef<any> {
-         return this._customSummaryCellTemplate;
-     }
-    /**
-     * Sets the custom summary cell template.
-     * ```html
-     * <ng-template igxCustomSummaryCell  let-summaryResults>
-     *    {{ summaryResults[0].label }}
-     * </ng-template>
-     * ```
-     * ```typescript
-     *
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-     public set customSummaryCellTemplate(template: TemplateRef<any>) {
-         this._customSummaryCellTemplate = template;
-     }
+
     /**
      * Gets the cells of the column.
      * ```typescript
@@ -1625,10 +1596,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    protected _customSummaryCellTemplate: TemplateRef<any>;
-    /**
-     * @hidden
-     */
     protected _summaries = null;
     /**
      * @hidden
@@ -1736,9 +1703,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
         if (this.filterCellTemplateDirective) {
             this._filterCellTemplate = this.filterCellTemplateDirective.template;
-        }
-        if (this.customSummaryCellTemplateDirective) {
-            this._customSummaryCellTemplate = this.customSummaryCellTemplateDirective.template;
         }
         if (!this._columnPipeArgs.format) {
             this._columnPipeArgs.format = this.dataType === GridColumnDataType.Time ?

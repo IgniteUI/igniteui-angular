@@ -68,6 +68,7 @@ export interface GridType extends IGridDataBindable {
     dataView: any[];
     transactions: TransactionService<Transaction, State>;
     defaultSummaryHeight: number;
+    summaryRowHeight: number;
 
     rowEditTabs: any;
 
