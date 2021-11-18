@@ -132,7 +132,8 @@ const GridResourceStringsNB_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: 'Fest',
     igx_grid_actions_unpin_label: 'Løsne',
     igx_grid_actions_jumpUp_label: 'Hoppe opp',
-    igx_grid_actions_jumpDown_label: 'Hopp ned'
+    igx_grid_actions_jumpDown_label: 'Hopp ned',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 /**
