@@ -80,7 +80,11 @@ All notable changes for each version of this project will be documented in this 
         Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
     - **Breaking Change** - The `rowSelected` event is renamed to `rowSelectionChanging` to better reflect its function.
     - **Breaking Change** - The `columnSelected` event is renamed to `columnSelectionChanging` to better reflect its function.
-    - **Breaking Change** - `columnsCollection` is removed. Use `columns` instead.
+    - **Breaking Change** - `columnsCollection` is removed. Use `columns` instead. If at certain ocasions `columns` return empty array, query the columns using `ViewChildren` and access those in `ngAfterViewInit`:
+    ```ts
+    @ViewChildren(IgxColumnComponent, { read: IgxColumnComponent })
+    public columns: QueryList<IgxColumnComponent>;
+    ```
     - `RowType`, `IgxRowDirective`
         - **Breaking Change** - `rowData` and `rowID` deprecated properties are now removed. Use `data` and `key` instead. Use `ng update` for automatic migration.
     - `igxRowSelector`

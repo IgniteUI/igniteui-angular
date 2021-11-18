@@ -80,6 +80,7 @@ export class IgxExcelStyleMovingComponent {
                     return columns[index];
                 }
             }
+            return columns[0];
         } else {
             while (index < columns.length - 1) {
                 index++;
