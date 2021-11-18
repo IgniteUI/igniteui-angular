@@ -119,6 +119,48 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
              expect(colHeaders).toEqual(expected);
         });
 
+        it('should apply sorting for dimension via row chip', () => {
+            fixture.detectChanges();
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const rowChip = headerRow.querySelector('igx-chip[id="All"]');
+            rowChip.click();
+            fixture.detectChanges();
+            let rows = pivotGrid.rowList.toArray();
+            let expectedOrder = ['All', 'Accessories', 'Bikes', 'Clothing', 'Components'];
+            let rowDimensionHeaders = rows.map(x => x.rowDimension).flat().map(x => x.header);
+            expect(rowDimensionHeaders).toEqual(expectedOrder);
+
+            rowChip.click();
+            fixture.detectChanges();
+            rows = pivotGrid.rowList.toArray();
+            expectedOrder = ['All', 'Components', 'Clothing', 'Bikes', 'Accessories'];
+            rowDimensionHeaders = rows.map(x => x.rowDimension).flat().map(x => x.header);
+            expect(rowDimensionHeaders).toEqual(expectedOrder);
+        });
+
+        it('should apply sorting for dimension via column chip', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const colChip = headerRow.querySelector('igx-chip[id="Country"]');
+
+            // sort
+            colChip.click();
+            fixture.detectChanges();
+
+            let colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+            let expected = ['Bulgaria', 'USA', 'Uruguay'];
+            expect(colHeaders).toEqual(expected);
+
+            // sort
+            colChip.click();
+            fixture.detectChanges();
+
+            colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+            expected = ['Uruguay', 'USA', 'Bulgaria'];
+            expect(colHeaders).toEqual(expected);
+        });
+
         it('should sort on column for single row dimension.', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const headerCell = GridFunctions.getColumnHeader('USA-UnitsSold', fixture);
@@ -221,3 +263,4 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         });
     });
 });
+

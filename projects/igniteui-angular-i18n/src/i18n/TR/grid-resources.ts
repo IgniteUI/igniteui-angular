@@ -132,7 +132,8 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: 'Sabitle',
     igx_grid_actions_unpin_label: 'Sabitlemeyi Kaldır',
     igx_grid_actions_jumpUp_label: 'Yukarı atla',
-    igx_grid_actions_jumpDown_label: 'Aşağı atla'
+    igx_grid_actions_jumpDown_label: 'Aşağı atla',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 /**

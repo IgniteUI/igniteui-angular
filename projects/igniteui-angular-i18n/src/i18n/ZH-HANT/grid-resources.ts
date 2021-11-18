@@ -132,7 +132,8 @@ const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: '釘選',
     igx_grid_actions_unpin_label: '取消釘選',
     igx_grid_actions_jumpUp_label: '跳上',
-    igx_grid_actions_jumpDown_label: '跳下'
+    igx_grid_actions_jumpDown_label: '跳下',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 /**

@@ -7,9 +7,10 @@ import {
     Renderer2
 } from '@angular/core';
 import { IBaseChipEventArgs } from '../../chips/chip.component';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
-import { PivotDimensionType } from './pivot-grid.interface';
+import { IPivotDimension, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotRowComponent } from './pivot-row.component';
 
 export interface IgxGridRowSelectorsTemplateContext {
@@ -96,6 +97,24 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             }
         }
         this.grid.filteringService.toggleFilterDropdown(event.target, col);
+    }
+
+    public onChipSort(event, dimension: IPivotDimension, dimensionType: PivotDimensionType) {
+        if (!dimension.sortDirection) {
+            dimension.sortDirection = SortingDirection.None;
+        }
+        dimension.sortDirection = dimension.sortDirection + 1 > SortingDirection.Desc ?
+             SortingDirection.None : dimension.sortDirection + 1;
+        // apply same sort direction to children.
+        let dim = dimension;
+        while(dim.childLevel) {
+            dim.childLevel.sortDirection = dimension.sortDirection;
+            dim = dim.childLevel;
+        }
+        this.grid.pipeTrigger++;
+        if (dimensionType === PivotDimensionType.Column) {
+            this.grid.setupColumns();
+        }
     }
 
     public onDimDragOver(event, dimension?: PivotDimensionType) {

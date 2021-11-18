@@ -130,6 +130,7 @@ export interface IGridResourceStrings {
     igx_grid_actions_unpin_label?: string;
     igx_grid_actions_jumpUp_label?: string;
     igx_grid_actions_jumpDown_label?: string;
+    igx_grid_pivot_date_dimension_total?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -263,5 +264,6 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_actions_pin_label: 'Pin',
     igx_grid_actions_unpin_label: 'Unpin',
     igx_grid_actions_jumpUp_label: 'Jump up',
-    igx_grid_actions_jumpDown_label: 'Jump down'
+    igx_grid_actions_jumpDown_label: 'Jump down',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
