@@ -898,7 +898,7 @@ export class FinancialData {
       for (let i = Math.round(Math.random() * 10); i < data.length; i += Math.round(Math.random() * 10)) {
           this.randomizeObjectData(data[i]);
       }
-      return return Array.from(data);
+      return Array.from(data);
     }
 
     /*** Genrates additional financial data fields */
