@@ -55,7 +55,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
             const expanded = this.get_row_expansion_state(record);
 
             if (!expanded) {
-                expandedStates.set(record.rowID, true);
+                expandedStates.set(record.key, true);
             }
         }
         grid.expansionStates = expandedStates;
@@ -68,7 +68,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
     public get_row_expansion_state(record: ITreeGridRecord): boolean {
         const grid = this.grid;
         const states = grid.expansionStates;
-        const expanded = states.get(record.rowID);
+        const expanded = states.get(record.key);
 
         if (expanded !== undefined) {
             return expanded;
@@ -115,7 +115,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
             if (treeGrid.cascadeOnDelete) {
                 if (record && record.children) {
                     for (const child of record.children) {
-                        super.deleteRowById(child.rowID);
+                        super.deleteRowById(child.key);
                     }
                 }
             }
@@ -153,8 +153,8 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
             return;
         }
         for (const child of record.children) {
-            if (grid.selectionService.isRowSelected(child.rowID)) {
-                selectedRowIDs.push(child.rowID);
+            if (grid.selectionService.isRowSelected(child.key)) {
+                selectedRowIDs.push(child.key);
             }
             this.get_selected_children(child, selectedRowIDs);
         }
@@ -166,21 +166,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
 
     public get_rec_by_id(rowID) {
         return this.grid.records.get(rowID);
-    }
-
-    /**
-     * Gets the rowID of the record at the specified data view index
-     *
-     * @param index
-     * @param dataCollection
-     */
-     public get_rec_id_by_index(index: number, dataCollection?: any[]): any {
-        dataCollection = dataCollection || this.grid.data;
-        if (index >= 0 && index < dataCollection.length) {
-            const rec = dataCollection[index];
-            return this.grid.primaryKey ? rec.data[this.grid.primaryKey] : rec.data;
-        }
-        return null;
     }
 
     /**
@@ -208,7 +193,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
             if (!parentRecord) {
                 throw Error('Invalid parent row ID!');
             }
-            this.grid.summaryService.clearSummaryCache({ rowID: parentRecord.rowID });
+            this.grid.summaryService.clearSummaryCache({ rowID: parentRecord.key });
             if (this.grid.primaryKey && this.grid.foreignKey) {
                 data[this.grid.foreignKey] = parentRowID;
                 super.addRowToData(data);
@@ -306,7 +291,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         if ((grid.cascadeOnDelete && grid.foreignKey) || grid.childDataKey) {
             let node = grid.records.get(rowID);
             while (node) {
-                const state: State = grid.transactions.getState(node.rowID);
+                const state: State = grid.transactions.getState(node.key);
                 if (state && state.type === TransactionType.DELETE) {
                     return true;
                 }

@@ -147,13 +147,8 @@ export class IgxCellCrudState {
     public isInCompositionMode = false;
 
     public createCell(cell): IgxCell {
-        // cell.rowData ?? cell.row.data covers the cases, where
-        // 1. cell is an instance og IgxGridCellComponent
-        // 2. cell is an instance of IgxGridCell
-        // Note: if at some point we are going to get rid of using 1), then see test 'should allow adding row to empty grid':
-        // cell.row.data will return a { data; rowID } object here, and test will fail
         return this.cell = new IgxCell(cell.cellID || cell.id, cell.row.index, cell.column, cell.value, cell.value,
-            cell.rowData ?? cell.row.data, cell.grid);
+            cell.row.data, cell.grid);
     }
 
     public createRow(cell: IgxCell): IgxEditRow {
@@ -267,7 +262,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
 
     public get rowInEditMode(): RowType {
         const editRowState = this.row;
-        return editRowState !== null ? this.grid.rowList.find(e => e.rowID === editRowState.id) : null;
+        return editRowState !== null ? this.grid.rowList.find(e => e.key === editRowState.id) : null;
     }
 
     public get rowEditing(): boolean {
@@ -442,7 +437,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
      */
     public createAddRowParent(row: RowType, newRowAsChild?: boolean) {
         const rowIndex = row ? row.index : -1;
-        const rowId = row ? row.rowID : (rowIndex >= 0 ? this.grid.rowList.last.rowID : null);
+        const rowId = row ? row.key : (rowIndex >= 0 ? this.grid.rowList.last.key : null);
 
         const isInPinnedArea = this.grid.isRecordPinnedByViewIndex(rowIndex);
         const pinIndex = this.grid.pinnedRecords.findIndex(x => x[this.primaryKey] === rowId);
@@ -505,7 +500,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
 
     protected getParentRowId() {
         if (this.addRowParent.asChild) {
-            return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;;
+            return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;
         } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
             const spawnedForRecord = this.grid.gridAPI.get_rec_by_id(this.addRowParent.rowID);
             return spawnedForRecord?.parent?.rowID;
@@ -532,6 +527,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
             this.createCell(cell);
             if (this.rowEditing) {
+                // TODO rowData
                 if (this.row && !this.sameRow(this.cell?.id?.rowID)) {
                     this.rowEditingBlocked = this.endEdit(true, event);
                     if (this.rowEditingBlocked) {
@@ -570,8 +566,8 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         }
         this.endEdit(true, event);
 
-        if (parentRow != null && this.grid.expansionStates.get(parentRow.rowID)) {
-            this.grid.collapseRow(parentRow.rowID);
+        if (parentRow != null && this.grid.expansionStates.get(parentRow.key)) {
+            this.grid.collapseRow(parentRow.key);
         }
 
         this.createAddRow(parentRow, asChild);

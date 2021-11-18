@@ -133,7 +133,7 @@ describe('IgxGrid Component Tests #grid', () => {
             rows = fix.componentInstance.instance.rowList.toArray();
             const data = fix.componentInstance.data.source.getValue();
             for (let i = fix.componentInstance.instance.virtualizationState.startIndex; i < rows.length; i++) {
-                expect(rows[i].rowData['Col1'])
+                expect(rows[i].data['Col1'])
                     .toBe(data[i]['Col1']);
             }
         });
