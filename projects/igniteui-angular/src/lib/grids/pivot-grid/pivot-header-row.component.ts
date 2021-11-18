@@ -9,6 +9,7 @@ import {
 import { first } from 'rxjs/operators';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import {
@@ -18,8 +19,7 @@ import {
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
-import { IPivotAggregator, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
-import { IgxPivotRowComponent } from './pivot-row.component';
+import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 
 export interface IgxGridRowSelectorsTemplateContext {
     $implicit: {
@@ -161,6 +161,24 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
     public isSelected(val: IPivotAggregator) {
         return this.value.aggregate.key === val.key;
+    }
+
+    public onChipSort(event, dimension: IPivotDimension, dimensionType: PivotDimensionType) {
+        if (!dimension.sortDirection) {
+            dimension.sortDirection = SortingDirection.None;
+        }
+        dimension.sortDirection = dimension.sortDirection + 1 > SortingDirection.Desc ?
+             SortingDirection.None : dimension.sortDirection + 1;
+        // apply same sort direction to children.
+        let dim = dimension;
+        while(dim.childLevel) {
+            dim.childLevel.sortDirection = dimension.sortDirection;
+            dim = dim.childLevel;
+        }
+        this.grid.pipeTrigger++;
+        if (dimensionType === PivotDimensionType.Column) {
+            this.grid.setupColumns();
+        }
     }
 
     public onDimDragOver(event, dimension?: PivotDimensionType) {

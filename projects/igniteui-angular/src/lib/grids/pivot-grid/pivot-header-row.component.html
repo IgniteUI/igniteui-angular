@@ -30,13 +30,17 @@
                 <!-- Columns area -->
                 <igx-chips-area #colArea droppable='true' style="width:fit-content; height: 100%;">
                     <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.memberName"
-                        [removable]="true" (remove)="columnRemoved($event)"
+                        [removable]="true" (remove)="columnRemoved($event)" 
                         (dragOver)="onDimDragOver($event, 1)"
                         (dragLeave)="onDimDragLeave($event)"
-                        (dragDrop)="onDimDrop($event, colArea, 1)">
+                        (dragDrop)="onDimDrop($event, colArea, 1)"
+                        (click)="onChipSort($event, col, 1)"
+                        >
                         <igx-icon igxPrefix>view_column</igx-icon>
                         <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, col)'>filter_list</igx-icon>
                         {{col.memberName}}
+
+                        <igx-icon *ngIf="col.sortDirection"  igxSuffix> {{ col.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
                     </igx-chip>
                 </igx-chips-area>
             </div>
@@ -87,10 +91,12 @@
                         [removable]="true" (remove)="rowRemoved($event)"
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, rowArea, 0)"
-                        (dragOver)="onDimDragOver($event, 0)">
+                        (dragOver)="onDimDragOver($event, 0)"
+                        (click)="onChipSort($event, row, 0)">
                         <igx-icon igxPrefix>table_rows</igx-icon>
                         <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
                         {{ row.memberName}}
+                        <igx-icon *ngIf="row.sortDirection" igxSuffix> {{ row.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
                     </igx-chip>
                 </igx-chips-area>
             </div>
