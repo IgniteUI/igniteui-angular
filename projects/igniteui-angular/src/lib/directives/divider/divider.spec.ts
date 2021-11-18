@@ -129,9 +129,9 @@ describe('Divider', () => {
     </igx-divider>`
 })
 class TestDividerComponent {
-    type: string;
-    vertical: boolean;
-    middle: boolean;
-    inset: string;
-    role: string;
+    public type: string;
+    public vertical: boolean;
+    public middle: boolean;
+    public inset: string;
+    public role: string;
 }

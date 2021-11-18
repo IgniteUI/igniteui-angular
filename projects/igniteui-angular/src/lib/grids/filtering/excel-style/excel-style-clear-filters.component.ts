@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PlatformUtil } from '../../../core/utils';
-import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
+import { BaseFilteringComponent } from './base-filtering.component';
 
 /**
  * A component used for presenting Excel style clear filters UI.
@@ -10,7 +10,7 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
     templateUrl: './excel-style-clear-filters.component.html'
 })
 export class IgxExcelStyleClearFiltersComponent {
-    constructor(public esf: IgxGridExcelStyleFilteringComponent, protected platform: PlatformUtil) { }
+    constructor(public esf: BaseFilteringComponent, protected platform: PlatformUtil) { }
 
     /**
      * @hidden @internal

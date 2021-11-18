@@ -38,6 +38,7 @@ module.exports = function (config) {
     },
     coverageReporter: {
       dir: require('path').join(__dirname, '../../coverage'),
+      subdir: '.',
       reporters: [
         // reporters not supporting the `file` property
         { type: 'html' },

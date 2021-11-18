@@ -3,8 +3,7 @@ import {
     ElementRef,
     HostBinding,
     Inject,
-    Input,
-    DoCheck
+    Input
 } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IGX_DROPDOWN_BASE, IDropDownBase, Navigate } from '../drop-down/drop-down.common';
@@ -16,7 +15,7 @@ import { IgxSelectionAPIService } from '../core/selection';
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html'
 })
-export class IgxComboItemComponent extends IgxDropDownItemComponent implements DoCheck {
+export class IgxComboItemComponent extends IgxDropDownItemComponent {
 
     /**
      * Gets the height of a list item
@@ -26,6 +25,10 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     @Input()
     @HostBinding('style.height.px')
     public itemHeight: string | number = '';
+
+    /** @hidden @internal */
+    @Input()
+    public singleMode: boolean;
 
     /**
      * @hidden
@@ -108,8 +111,5 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      */
     public disableCheck(event: MouseEvent) {
         event.preventDefault();
-    }
-
-    public ngDoCheck() {
     }
 }

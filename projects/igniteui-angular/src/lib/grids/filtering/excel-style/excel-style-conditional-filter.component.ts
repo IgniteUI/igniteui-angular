@@ -1,27 +1,22 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down/public_api';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
-import {
-    HorizontalAlignment,
-    VerticalAlignment,
-    OverlaySettings,
-    AutoPositionStrategy,
-    AbsoluteScrollStrategy
-} from '../../../services/public_api';
-import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
-import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../../core/utils';
+import { BaseFilteringComponent } from './base-filtering.component';
+import { AutoPositionStrategy } from '../../../services/overlay/position/auto-position-strategy';
+import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
+import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../../services/overlay/utilities';
 
 
 /**
  * A component used for presenting Excel style conditional filter UI.
  */
 @Component({
-    preserveWhitespaces: false,
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html'
 })
@@ -52,7 +47,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
-    constructor(public esf: IgxGridExcelStyleFilteringComponent, protected platform: PlatformUtil) {
+    constructor(public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
                 this.shouldOpenSubMenu = true;

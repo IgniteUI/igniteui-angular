@@ -1,14 +1,14 @@
 import { Directive } from '@angular/core';
-import { IgxColumnComponent } from '../columns/column.component';
+import { ColumnType } from '../common/grid.interface';
 
 @Directive()
 export abstract class IgxColumnActionsBaseDirective {
 
     /** @hidden @internal */
     public actionEnabledColumnsFilter: (
-        value: IgxColumnComponent,
+        value: ColumnType,
         index: number,
-        array: IgxColumnComponent[]
+        array: ColumnType[]
     ) => boolean;
 
     /**
@@ -22,10 +22,10 @@ export abstract class IgxColumnActionsBaseDirective {
     public abstract get uncheckAllLabel(): string;
 
     /** @hidden @internal */
-    public abstract columnChecked(column: IgxColumnComponent): boolean;
+    public abstract columnChecked(column: ColumnType): boolean;
 
     /** @hidden @internal */
-    public abstract toggleColumn(column: IgxColumnComponent): void;
+    public abstract toggleColumn(column: ColumnType): void;
 
     /** @hidden @internal */
     public abstract uncheckAll(): void;

@@ -385,12 +385,8 @@ export class WorksheetFile implements IExcelFile {
  * @hidden
  */
 export class StyleFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        const hasNumberValues = worksheetData.dataDictionary && worksheetData.dataDictionary.hasNumberValues;
-        const hasDateValues = worksheetData.dataDictionary && worksheetData.dataDictionary.hasDateValues;
-        const isHierarchicalGrid = worksheetData.data[0]?.type === ExportRecordType.HierarchicalGridRecord;
-
-        folder.file('styles.xml', ExcelStrings.getStyles(hasNumberValues, hasDateValues, isHierarchicalGrid));
+    public writeElement(folder: JSZip) {
+        folder.file('styles.xml', ExcelStrings.getStyles());
     }
 }
 

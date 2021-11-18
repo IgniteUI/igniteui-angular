@@ -1,20 +1,13 @@
-import { PipeTransform, Pipe } from '@angular/core';
-import { GridType } from '../common/grid.interface';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridAPIService } from './grid-api.service';
+import { PipeTransform, Pipe, Inject } from '@angular/core';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 /** @hidden */
-@Pipe({
-    name: 'gridDetails',
-    pure: true
-})
+@Pipe({ name: 'gridDetails' })
 export class IgxGridDetailsPipe implements PipeTransform {
-    private gridAPI: IgxGridAPIService;
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = gridAPI as IgxGridAPIService;
-    }
-    public transform(collection: any[], hasDetails: boolean, expansionStates:  Map<any, boolean>, _pipeTrigger: number) {
+
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
+
+    public transform(collection: any[], hasDetails: boolean, expansionStates: Map<any, boolean>, _pipeTrigger: number) {
         if (!hasDetails) {
             return collection;
         }
@@ -26,8 +19,8 @@ export class IgxGridDetailsPipe implements PipeTransform {
         const result = [];
         collection.forEach((v) => {
             result.push(v);
-            if (!this.gridAPI.grid.isGroupByRecord(v) && !this.gridAPI.grid.isSummaryRow(v) &&
-                this.gridAPI.get_row_expansion_state(v)) {
+            if (!this.grid.isGroupByRecord(v) && !this.grid.isSummaryRow(v) &&
+                this.grid.gridAPI.get_row_expansion_state(v)) {
                 const detailsObj = { detailsData: v };
                 result.push(detailsObj);
             }

@@ -12,7 +12,7 @@ import { VirtualGridComponent, NoScrollsComponent,
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { IgxGridCellComponent } from '../cell.component';
-import { CellType } from '../common/cell.interface';
+import { CellType } from '../common/grid.interface';
 
 describe('IgxGrid - Cell component #grid', () => {
 
@@ -21,7 +21,7 @@ describe('IgxGrid - Cell component #grid', () => {
         let grid: IgxGridComponent;
         let cellElem: DebugElement;
         let firstCell: CellType;
-        let firstCellElem: IgxGridCellComponent;
+        let firstCellElem: CellType;
 
         configureTestSuite((() => {
             TestBed.configureTestingModule({
@@ -111,7 +111,7 @@ describe('IgxGrid - Cell component #grid', () => {
         });
 
         it('Should trigger doubleClick event', () => {
-            grid.columns[0].editable = true;
+            grid.columnList.get(0).editable = true;
             fix.detectChanges();
             spyOn(grid.doubleClick, 'emit').and.callThrough();
 
@@ -234,7 +234,7 @@ describe('IgxGrid - Cell component #grid', () => {
                 fix.componentInstance.data = fix.componentInstance.generateData(10);
                 fix.detectChanges();
 
-                const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
+                const lastColumnCells = grid.columnList.get(grid.columnList.length - 1).cells;
                 lastColumnCells.forEach((item) => {
                     expect(item.width).toEqual('30px');
                 });
@@ -249,7 +249,7 @@ describe('IgxGrid - Cell component #grid', () => {
             scrollbar.scrollLeft = 10000;
             fix.detectChanges();
             await wait();
-            const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
+            const lastColumnCells = grid.columnList.get(grid.columnList.length - 1).cells;
             fix.detectChanges();
             lastColumnCells.forEach((item) => {
                 expect(item.width).toEqual('500px');

@@ -1,7 +1,6 @@
 ﻿import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from './public_api';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -28,6 +27,7 @@ import {
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
 describe('IgxGrid - Column Pinning #grid', () => {
@@ -235,13 +235,13 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 const cellContactName = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 const range = {
-                    rowStart: cellContactName.rowIndex,
-                    rowEnd: cellContactName.rowIndex,
+                    rowStart: cellContactName.row.index,
+                    rowEnd: cellContactName.row.index,
                     columnStart: cellContactName.visibleColumnIndex,
                     columnEnd: cellContactName.visibleColumnIndex
                 };
                 grid.selectRange(range);
-                grid.navigation.activeNode = { row: cellContactName.rowIndex, column: cellContactName.visibleColumnIndex };
+                grid.navigation.activeNode = { row: cellContactName.row.index, column: cellContactName.visibleColumnIndex };
                 fix.detectChanges();
 
                 grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowRight'));
@@ -445,7 +445,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should not reject pinning a column if unpinned area width is less than 20% of the grid width', () => {
 
-                grid.columns.forEach((column) => {
+                grid.columnList.forEach((column) => {
                     switch (column.index) {
                         case 0:
                         case 1:
@@ -457,7 +457,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 fix.detectChanges();
 
-                grid.columns.forEach((column) => {
+                grid.columnList.forEach((column) => {
                     switch (column.index) {
                         case 0:
                         case 1:
@@ -601,7 +601,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should correctly pin columns with their summaries to end.', () => {
 
-                grid.columns.forEach(col => {
+                grid.columnList.forEach(col => {
                     if (col.field === 'CompanyName' || col.field === 'ContactName') {
                         col.hasSummary = true;
                     }

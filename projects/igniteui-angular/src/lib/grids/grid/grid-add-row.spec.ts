@@ -1,8 +1,8 @@
-import { IgxGridModule, IgxGridComponent } from './public_api';
+import { IgxGridModule, IgxGridComponent, CellType } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { DebugElement } from '@angular/core';
+import { DebugElement, QueryList } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxAddRowComponent, IgxGridRowEditingTransactionComponent
@@ -15,8 +15,7 @@ import { DefaultGridMasterDetailComponent } from './grid.master-detail.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { TransactionType } from '../../services/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
@@ -287,7 +286,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should generate correct row ID based on the primary column type', () => {
-            const column = grid.columns.find(col => col.field === grid.primaryKey);
+            const column = grid.columnList.find(col => col.field === grid.primaryKey);
             const type = column.dataType;
 
             const row = grid.gridAPI.get_row_by_index(0);
@@ -823,7 +822,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.rowEditable = true;
             fixture.detectChanges();
             const row = grid.rowList.first;
-            grid.expandRow(row.rowID);
+            grid.expandRow(row.key);
             fixture.detectChanges();
             expect(row.expanded).toBeTrue();
 
@@ -845,18 +844,14 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.rowEditable = true;
             fixture.detectChanges();
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            // const headerCells = grid.headerGroups.first.children.toArray();
-            const headerCells = grid.headerGroupsList[0].children.toArray();
             // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
 
             gridFirstRow.beginAddRow();
             fixture.detectChanges();
             const newRow = grid.gridAPI.get_row_by_index(1);
             expect(newRow.addRowUI).toBeTrue();
-            const newRowCells = newRow.cells.toArray();
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, newRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(grid, newRow);
         });
     });
 
@@ -953,7 +948,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
 
-            grid.moveColumn(grid.columns[1], grid.columns[2]);
+            grid.moveColumn(grid.columnList.get(1), grid.columnList.get(2));
             fixture.detectChanges();
 
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();

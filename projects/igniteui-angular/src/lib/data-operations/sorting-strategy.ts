@@ -1,50 +1,67 @@
-import { cloneArray, resolveNestedPath, parseDate } from '../core/utils';
-import { IGroupByRecord } from './groupby-record.interface';
-import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
-import { IGroupingExpression } from './grouping-expression.interface';
-import { IGroupingState } from './groupby-state.interface';
+import { cloneArray, IBaseEventArgs, parseDate, resolveNestedPath } from '../core/utils';
+import { GridType } from '../grids/common/grid.interface';
 import { IGroupByExpandState } from './groupby-expand-state.interface';
+import { IGroupByRecord } from './groupby-record.interface';
+import { IGroupingState } from './groupby-state.interface';
+import { IGroupingExpression } from './grouping-expression.interface';
 import { IGroupByResult } from './grouping-result.interface';
 import { getHierarchy, isHierarchyMatch } from './operations';
-import { GridType } from '../grids/common/grid.interface';
 
 const DATE_TYPE = 'date';
 const TIME_TYPE = 'time';
 const DATE_TIME_TYPE = 'dateTime';
+
+export enum SortingDirection {
+    None = 0,
+    Asc = 1,
+    Desc = 2
+}
+
+export interface ISortingExpression extends IBaseEventArgs {
+    fieldName: string;
+    dir: SortingDirection;
+    ignoreCase?: boolean;
+    strategy?: ISortingStrategy;
+}
+
 export interface ISortingStrategy {
-    sort: (data: any[],
+    sort: (
+        data: any[],
         fieldName: string,
         dir: SortingDirection,
         ignoreCase: boolean,
         valueResolver: (obj: any, key: string, isDate?: boolean) => any,
         isDate?: boolean,
         isTime?: boolean,
-        grid?: GridType) => any[];
+        grid?: GridType
+    ) => any[];
 }
 
 export class DefaultSortingStrategy implements ISortingStrategy {
     protected static _instance: DefaultSortingStrategy = null;
 
-    protected constructor() {}
+    protected constructor() { }
 
     public static instance(): DefaultSortingStrategy {
         return this._instance || (this._instance = new this());
     }
 
-    public sort(data: any[],
+    public sort(
+        data: any[],
         fieldName: string,
         dir: SortingDirection,
         ignoreCase: boolean,
         valueResolver: (obj: any, key: string, isDate?: boolean) => any,
         isDate?: boolean,
-        isTime?: boolean) {
+        isTime?: boolean
+    ) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate, isTime);
+        const cmpFunc = (obj1: any, obj2: any) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate, isTime);
         return this.arraySort(data, cmpFunc);
     }
 
-    public compareValues(a: any, b: any) {
+    public compareValues(a: any, b: any): number {
         const an = (a === null || a === undefined);
         const bn = (b === null || b === undefined);
         if (an) {
@@ -58,14 +75,16 @@ export class DefaultSortingStrategy implements ISortingStrategy {
         return a > b ? 1 : a < b ? -1 : 0;
     }
 
-    protected compareObjects(obj1: any,
-                             obj2: any,
-                             key: string,
-                             reverse: number,
-                             ignoreCase: boolean,
-                             valueResolver: (obj: any, key: string, isDate?: boolean, isTime?: boolean) => any,
-                             isDate: boolean,
-                             isTime: boolean) {
+    protected compareObjects(
+        obj1: any,
+        obj2: any,
+        key: string,
+        reverse: number,
+        ignoreCase: boolean,
+        valueResolver: (obj: any, key: string, isDate?: boolean, isTime?: boolean) => any,
+        isDate: boolean,
+        isTime: boolean
+    ) {
         let a = valueResolver.call(this, obj1, key, isDate, isTime);
         let b = valueResolver.call(this, obj2, key, isDate, isTime);
         if (ignoreCase) {
@@ -75,7 +94,7 @@ export class DefaultSortingStrategy implements ISortingStrategy {
         return reverse * this.compareValues(a, b);
     }
 
-    protected arraySort(data: any[], compareFn?): any[] {
+    protected arraySort(data: any[], compareFn?: (arg0: any, arg1: any) => number): any[] {
         return data.sort(compareFn);
     }
 }

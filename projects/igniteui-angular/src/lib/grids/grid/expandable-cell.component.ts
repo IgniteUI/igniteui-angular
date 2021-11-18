@@ -11,13 +11,11 @@ import {
     ViewChild
 } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
-import { GridBaseAPIService } from '../api.service';
 import { PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridBaseDirective } from './public_api';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
-import { GridType } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,14 +49,14 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     protected defaultCollapsedTemplate: TemplateRef<any>;
 
     constructor(selectionService: IgxGridSelectionService,
-                gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+                @Inject(IGX_GRID_BASE) grid: GridType,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
                 protected zone: NgZone,
                 touchManager: HammerGesturesManager,
                 @Inject(DOCUMENT) public document,
                 protected platformUtil: PlatformUtil) {
-        super(selectionService, gridAPI, cdr, element, zone, touchManager, platformUtil);
+        super(selectionService, grid, cdr, element, zone, touchManager, platformUtil);
     }
 
     /**
@@ -66,15 +64,15 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      */
     public toggle(event: Event) {
         event.stopPropagation();
-        const expansionState = this.gridAPI.get_row_expansion_state(this.intRow.rowData);
-        this.gridAPI.set_row_expansion_state(this.intRow.rowID, !expansionState, event);
+        const expansionState = this.grid.gridAPI.get_row_expansion_state(this.intRow.data);
+        this.grid.gridAPI.set_row_expansion_state(this.intRow.key, !expansionState, event);
     }
 
     /**
      * @hidden
      */
-    public onIndicatorFocus(event) {
-        this.gridAPI.update_cell(this.grid.crudService.cell);
+    public onIndicatorFocus() {
+        this.grid.gridAPI.update_cell(this.grid.crudService.cell);
     }
 
     /**
