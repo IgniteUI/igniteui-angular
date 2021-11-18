@@ -234,6 +234,7 @@
         flex-wrap: wrap;
         flex-grow: 1;
         justify-content: flex-end;
+        margin-#{$right}: map.get($grid-toolbar-spacer, 'comfortable');
     }
 
     %igx-grid-toolbar__actions {
