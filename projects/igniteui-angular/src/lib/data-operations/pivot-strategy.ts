@@ -114,10 +114,12 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                         and use when creating the columns in pivot grid instead of recreating it */
                 const keys = Object.keys(hierarchy);
                 //remove all record keys from final data since we don't need them anymore.
+                hierarchy.processed = true;
                 keys.forEach(k => {
                     if (k.indexOf(pivotKeys.records) !== -1) {
-                        if (hierarchy[k] && k !== pivotKeys.records) {
-                            this.processHierarchy(hierarchy[k], columns, values, pivotKeys);
+                        if (hierarchy[k] && hierarchy[k].length > 0 && k !== pivotKeys.records) {
+                            const unprocessed = hierarchy[k].filter(r => !r.processed);
+                            this.processHierarchy(unprocessed, columns, values, pivotKeys);
                         }
                         //delete hierarchy[k];
                     }
@@ -125,6 +127,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                         delete hierarchy[k];
                     }
                 });
+                delete hierarchy.processed;
                 if (this.isLeaf(hierarchy, pivotKeys)) {
                     delete hierarchy[pivotKeys.records]; /* remove the helper records of the actual records so that
                         expand indicators can be rendered properly */
