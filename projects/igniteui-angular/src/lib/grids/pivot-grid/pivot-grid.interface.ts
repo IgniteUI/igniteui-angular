@@ -6,26 +6,36 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 
 export type PivotAggregation = (members: any[], data: any[]) => any;
 
+/**
+ * Configuration of the pivot grid.
+ */
 export interface IPivotConfiguration {
+    /** A strategy to transform the rows. */
     rowStrategy?: IPivotDimensionStrategy | null;
+    /** A strategy to transform the columns. */
     columnStrategy?: IPivotDimensionStrategy | null;
+    /** A list of the rows. */
     rows: IPivotDimension[] | null;
+    /** A list of the columns. */
     columns: IPivotDimension[] | null;
+    /** A list of the values. */
     values: IPivotValue[] | null;
-    // dimensions to be displayed in the filter area.
+    /** Dimensions to be displayed in the filter area. */
     filters?: IPivotDimension[] | null;
 }
 
 export interface IPivotDimension {
-    // allow defining a hierarchy when multiple sub groups need to be extracted from single member.
+    /** Allows defining a hierarchy when multiple sub groups need to be extracted from single member. */
     childLevel?: IPivotDimension;
-    // field name which to use to extract value
+    /** Field name to use in order to extract value. */
     memberName: string;
-    // function that extract the value
+    /** Function that extracts the value */
     memberFunction?: (data: any) => any;
-    // Enables/Disables a particular dimension from pivot structure.
+    /** Enables/Disables a particular dimension from pivot structure. */
     enabled: boolean;
-    // A predefined or defined via the `igxPivotSelector` filter expression tree for the current dimension to be applied in the filter pipe.
+    /**
+     * A predefined or defined via the `igxPivotSelector` filter expression tree for the current dimension to be applied in the filter pipe.
+     * */
     filter?: FilteringExpressionsTree | null;
     sortDirection?: SortingDirection;
     dataType?: GridColumnDataType;
