@@ -501,7 +501,7 @@ export class IgxGridNavigationService {
 
     protected handleAlt(key: string, event: KeyboardEvent) {
         event.preventDefault();
-        // todo TODO ROW
+        // TODO ROW
         const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
 
         if (!(this.isToggleKey(key) || this.isAddKey(key)) || !row) {
@@ -520,13 +520,13 @@ export class IgxGridNavigationService {
             }
         } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
             if (row.key === undefined) {
-                row.toggle();
+                (row as any).toggle();
             } else {
                 this.grid.gridAPI.set_row_expansion_state(row.key, true, event);
             }
         } else if (row.expanded && ROW_COLLAPSE_KEYS.has(key)) {
             if (row.key === undefined) {
-                row.toggle();
+                (row as any).toggle();
             } else {
                 this.grid.gridAPI.set_row_expansion_state(row.key, false, event);
             }
