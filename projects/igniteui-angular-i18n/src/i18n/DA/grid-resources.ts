@@ -132,7 +132,8 @@ const GridResourceStringsDA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: 'Fastgør',
     igx_grid_actions_unpin_label: 'Frigør',
     igx_grid_actions_jumpUp_label: 'Spring op',
-    igx_grid_actions_jumpDown_label: 'Spring ned'
+    igx_grid_actions_jumpDown_label: 'Spring ned',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 /**

@@ -132,7 +132,8 @@ const GridResourceStringsNL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: 'Vastmaken',
     igx_grid_actions_unpin_label: 'Losmaken',
     igx_grid_actions_jumpUp_label: 'Omhoog springen',
-    igx_grid_actions_jumpDown_label: 'Omlaag springen'
+    igx_grid_actions_jumpDown_label: 'Omlaag springen',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 /**

@@ -9,7 +9,7 @@ export class PivotUtil {
             const vals = dimensionType === PivotDimensionType.Column ?
                 this.extractValuesForColumn(dimensions, rec) :
                 this.extractValuesForRow(dimensions, rec, pivotKeys);
-            for (const val of vals) { // this should go in depth also vals.children
+            for (const [key, val] of vals) { // this should go in depth also vals.children
                 if (hierarchy.get(val.value) != null) {
                     this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys.records);
                 } else {
@@ -120,48 +120,41 @@ export class PivotUtil {
     }
 
     public static extractValuesForRow(dims: IPivotDimension[], recData: any, pivotKeys: IPivotKeys) {
-        const values: any[] = [];
-        let i = 0;
+        const values = new Map<string, any>();
         for (const col of dims) {
+            if (recData[pivotKeys.level] && recData[pivotKeys.level] > 0) {
+                const childData = recData[pivotKeys.records];
+                return this.getFieldsHierarchy(childData, [col], PivotDimensionType.Row, pivotKeys);
+            }
+
             const value = this.extractValueFromDimension(col, recData);
             const objValue = {};
             objValue['value'] = value;
             objValue['dimension'] = col;
-            values.push(objValue);
             if (col.childLevel) {
                 const childValues = this.extractValuesForRow([col.childLevel], recData, pivotKeys);
-                values[i].children = childValues;
+                objValue[pivotKeys.children] = childValues;
             }
-            if (recData.level && recData.level > 0) {
-                const childData = recData.records;
-                const res = this.getFieldsHierarchy(childData, [col], PivotDimensionType.Row, pivotKeys);
-                const arrRes = Array.from(res.values());
-                arrRes.forEach(arr => {
-                    if (arr.children) {
-                        arr.children = Array.from(arr.children.values());
-                    }
-                });
-                return Array.from(arrRes);
-            }
-            i++;
+            values.set(value, objValue);
         }
+
         return values;
     }
 
     public static extractValuesForColumn(dims: IPivotDimension[], recData: any, path = []) {
-        const vals = [];
+        const vals = new Map<string, any>();
         let lvlCollection = vals;
         const flattenedDims = this.flatten(dims);
         for (const col of flattenedDims) {
             const value = this.extractValueFromDimension(col, recData);
             path.push(value);
             const newValue = path.join('-');
-            lvlCollection.push({ value: newValue, dimension: col });
-            lvlCollection[0].expandable = col.expandable;
-            if (!lvlCollection[0].children) {
-                lvlCollection[0].children = [];
+            const newObj = { value: newValue, expandable: col.expandable, children: null, dimension: col };
+            if (!newObj.children) {
+                newObj.children = new Map<string, any>();
             }
-            lvlCollection = lvlCollection[0].children;
+            lvlCollection.set(newValue, newObj);
+            lvlCollection = newObj.children;
         }
         return vals;
     }
@@ -216,17 +209,14 @@ export class PivotUtil {
     }
 
     public static processSubGroups(row, prevRowDims, siblingData, pivotKeys) {
+        const prevRowDimsIter = prevRowDims.slice(0);
         // process combined groups
-        while (prevRowDims.length > 0) {
-            const prevRowDim = prevRowDims.shift();
+        while (prevRowDimsIter.length > 0) {
+            const prevRowDim = prevRowDimsIter.pop();
             const prevRowField = prevRowDim.memberName;
-            const sameDimLvl = PivotUtil.getDimensionDepth(prevRowDim) === PivotUtil.getDimensionDepth(row);
             for (const sibling of siblingData) {
                 const childCollection = sibling[prevRowField + '_' + pivotKeys.records] || [];
                 for (const child of childCollection) {
-                    if (sameDimLvl) {
-                        child[row.memberName] = sibling[row.memberName];
-                    }
                     if (!child[pivotKeys.records]) {
                         continue;
                     }
@@ -237,23 +227,28 @@ export class PivotUtil {
                         .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                     const siblingData2 = PivotUtil
                         .processHierarchy(hierarchyFields2, child ?? [], keys, 0);
-                    if (sameDimLvl) {
-                        // add children to current level if dimensions have same depth
-                        for (const sib of siblingData2) {
-                            if (sib[row.memberName + '_' + pivotKeys.records]) {
-                                child[row.memberName + '_' + pivotKeys.records] =
-                                    child[row.memberName + '_' + pivotKeys.records].concat(sib[row.memberName + '_' + pivotKeys.records]);
-                                child[row.memberName] = sib[row.memberName];
+                        if (siblingData2.length === 1) {
+                            child[row.memberName] = sibling[row.memberName];
+                            // add children to current level if dimensions have same depth
+                            for (const sib of siblingData2) {
+                                if (sib[row.memberName + '_' + pivotKeys.records]) {
+                                    child[row.memberName + '_' + pivotKeys.records] =
+                                        child[row.memberName + '_' + pivotKeys.records]
+                                        .concat(sib[row.memberName + '_' + pivotKeys.records]);
+                                    child[row.memberName] = sib[row.memberName];
+                                }
                             }
+                        } else {
+                            // otherwise overwrite direct child collection
+                            child[row.memberName + '_' + pivotKeys.records] = siblingData2;
                         }
-                    } else {
-                        // otherwise overwrite direct child collection
-                        child[row.memberName + '_' + pivotKeys.records] = siblingData2;
-                    }
                     PivotUtil.processSiblingProperties(child, siblingData2, keys);
-                    if (prevRowDims.length > 0) {
-                        this.processSubGroups(row, prevRowDims.slice(0), siblingData2, pivotKeys);
-                    }
+                }
+                if (prevRowDim.childLevel) {
+                    // Get child dimensions now as well since we go a level deeper into the hierarchy.
+                    // Keep above level dims as well since lower level dims correspond to upper sibling dims as well.
+                    const childDimensions = prevRowDims.filter(dim => !!dim.childLevel).map(dim => dim.childLevel);
+                    this.processSubGroups(row, [...prevRowDims, ...childDimensions], childCollection, pivotKeys);
                 }
             }
         }
@@ -365,14 +360,18 @@ export class PivotUtil {
         if (Array.isArray(hierarchy.get(val.value).children)) {
             hierarchy.get(val.value).children = new Map<string, any>();
         }
-        if (!childCollection || childCollection.length === 0) {
-            if (hierarchy.get(val.value)[recordsKey]) {
-                hierarchy.get(val.value)[recordsKey].push(rec);
-            } else {
-                hierarchy.get(val.value)[recordsKey] = [rec];
+        if (!childCollection || childCollection.size === 0) {
+            const dim = hierarchy.get(val.value).dimension;
+            const isValid = this.extractValueFromDimension(dim, rec) === val.value;
+            if (isValid) {
+                if (hierarchy.get(val.value)[recordsKey]) {
+                    hierarchy.get(val.value)[recordsKey].push(rec);
+                } else {
+                    hierarchy.get(val.value)[recordsKey] = [rec];
+                }
             }
         } else {
-            for (const child of childCollection) {
+            for (const [key, child] of childCollection) {
                 if (!hierarchy.get(val.value).children.get(child.value)) {
                     hierarchy.get(val.value).children.set(child.value, child);
                 }
@@ -382,8 +381,8 @@ export class PivotUtil {
                     if (rec[recordsKey]) {
                         // not all nested children are valid
                         const nestedValue = hierarchy.get(val.value).children.get(child.value).value;
-                        const member = hierarchy.get(val.value).children.get(child.value).dimension.member;
-                        const validRecs = rec[recordsKey].filter(x => x[member] === nestedValue);
+                        const dimension = hierarchy.get(val.value).children.get(child.value).dimension;
+                        const validRecs = rec[recordsKey].filter(x => this.extractValueFromDimension(dimension, x) === nestedValue);
                         copy[recordsKey] = validRecs;
                     }
                     hierarchy.get(val.value).children.get(child.value)[recordsKey].push(copy);
@@ -391,7 +390,7 @@ export class PivotUtil {
                     hierarchy.get(val.value).children.get(child.value)[recordsKey] = [rec];
                 }
 
-                if (child.children && child.children.length > 0) {
+                if (child.children && child.children.size > 0) {
                     this.applyHierarchyChildren(hierarchy.get(val.value).children, child, rec, recordsKey);
                 }
             }

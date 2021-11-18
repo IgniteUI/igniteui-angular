@@ -132,7 +132,8 @@ const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: 'Kolík',
     igx_grid_actions_unpin_label: 'Odepnout',
     igx_grid_actions_jumpUp_label: 'Vyskočit',
-    igx_grid_actions_jumpDown_label: 'Skočit dolů'
+    igx_grid_actions_jumpDown_label: 'Skočit dolů',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 /**
