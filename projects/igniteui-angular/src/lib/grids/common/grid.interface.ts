@@ -34,6 +34,9 @@ import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
+import { IPivotConfiguration, IPivotDimension, IPivotValue } from '../pivot-grid/pivot-grid.interface';
+import { IgxColumnComponent } from '../columns/column.component';
+
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -264,6 +267,7 @@ export interface GridType extends IGridDataBindable {
     renderedRowHeight: number;
     pipeTrigger: number;
     summaryPipeTrigger: number;
+    filteringPipeTrigger: number;
     hasColumnLayouts: boolean;
     isLoading: boolean;
 
@@ -502,6 +506,8 @@ export interface GridType extends IGridDataBindable {
     groupingMetadata?: any[];
     selectedCells?: CellType[];
     selectedRows: any[];
+    activeDescendant?: string;
+    isPivot?: boolean;
 
     toggleGroup?(groupRow: IGroupByRecord): void;
     clearGrouping?(field: string): void;
@@ -580,6 +586,7 @@ export interface GridType extends IGridDataBindable {
     toggleAllGroupRows?(): void;
     toggleAll?(): void;
     generateRowPath?(rowId: any): any[];
+    preventHeaderScroll?(args: any): void;
 
 }
 
@@ -611,6 +618,17 @@ export interface HierarchicalGridType extends GridType {
     childLayoutKeys: any[];
 }
 
+export interface PivotGridType extends GridType {
+    pivotConfiguration: IPivotConfiguration;
+    columnDimensions: IPivotDimension[];
+    rowDimensions: IPivotDimension[];
+    values: IPivotValue[];
+    filterDimensions: IPivotDimension[];
+    dimensionDataColumns: IgxColumnComponent[];
+    pivotRowWidths: number;
+    setupColumns(): void;
+    toggleRow(rowID: any): void;
+}
 export interface GridSVGIcon {
     name: string;
     value: string;

@@ -1,25 +1,9 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
-    Input,
-    Renderer2
-} from '@angular/core';
-import { IBaseChipEventArgs } from '../../chips/chip.component';
+    Input} from '@angular/core';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { DropPosition } from '../moving/moving.service';
-import { PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotRowComponent } from './pivot-row.component';
-
-export interface IgxGridRowSelectorsTemplateContext {
-    $implicit: {
-        selectedCount: number;
-        totalCount: number;
-        selectAll?: () => void;
-        deselectAll?: () => void;
-    };
-}
 
 /**
  *

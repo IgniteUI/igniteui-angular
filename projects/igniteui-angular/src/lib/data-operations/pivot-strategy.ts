@@ -5,8 +5,7 @@ import { IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from '..
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 import { FilteringStrategy } from './filtering-strategy';
 import { GridColumnDataType } from './data-util';
-import { SortingDirection } from './sorting-expression.interface';
-import { DefaultSortingStrategy, ISortingStrategy } from './sorting-strategy';
+import { DefaultSortingStrategy, ISortingStrategy, SortingDirection } from './sorting-strategy';
 import { parseDate } from '../core/utils';
 
 export interface IPivotDimensionStrategy {

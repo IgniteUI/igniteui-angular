@@ -1,15 +1,4 @@
-import { cloneArray, IBaseEventArgs, parseDate, resolveNestedPath } from '../core/utils';
-import { GridType } from '../grids/common/grid.interface';
-import { IGroupByExpandState } from './groupby-expand-state.interface';
-import { IGroupByRecord } from './groupby-record.interface';
-import { IGroupingState } from './groupby-state.interface';
-import { IGroupingExpression } from './grouping-expression.interface';
-import { IGroupByResult } from './grouping-result.interface';
-import { getHierarchy, isHierarchyMatch } from './operations';
-
-const DATE_TYPE = 'date';
-const TIME_TYPE = 'time';
-const DATE_TIME_TYPE = 'dateTime';
+import { IBaseEventArgs } from '../core/utils';
 
 export enum SortingDirection {
     None = 0,
@@ -32,8 +21,7 @@ export interface ISortingStrategy {
         ignoreCase: boolean,
         valueResolver: (obj: any, key: string, isDate?: boolean) => any,
         isDate?: boolean,
-        isTime?: boolean,
-        grid?: GridType
+        isTime?: boolean
     ) => any[];
 }
 
@@ -85,8 +73,8 @@ export class DefaultSortingStrategy implements ISortingStrategy {
         isDate: boolean,
         isTime: boolean
     ) {
-        let a = valueResolver.call(this, obj1, key, isDate, isTime);
-        let b = valueResolver.call(this, obj2, key, isDate, isTime);
+        let a = valueResolver(obj1, key, isDate, isTime);
+        let b = valueResolver(obj2, key, isDate, isTime);
         if (ignoreCase) {
             a = a && a.toLowerCase ? a.toLowerCase() : a;
             b = b && b.toLowerCase ? b.toLowerCase() : b;
@@ -96,165 +84,5 @@ export class DefaultSortingStrategy implements ISortingStrategy {
 
     protected arraySort(data: any[], compareFn?: (arg0: any, arg1: any) => number): any[] {
         return data.sort(compareFn);
-    }
-}
-
-export interface IGridSortingStrategy {
-    sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[];
-}
-
-export class NoopSortingStrategy implements IGridSortingStrategy {
-    private static _instance: NoopSortingStrategy = null;
-
-    private constructor() {  }
-
-    public static instance() {
-        return this._instance || (this._instance = new NoopSortingStrategy());
-    }
-
-    public sort(data: any[]): any[] {
-        return data;
-    }
-}
-
-export class IgxSorting implements IGridSortingStrategy {
-    public sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[] {
-        return this.sortDataRecursive(data, expressions, 0, grid);
-    }
-
-    protected groupDataRecursive<T>(data: T[], state: IGroupingState, level: number,
-        parent: IGroupByRecord, metadata: IGroupByRecord[], grid: GridType = null,
-        groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): T[] {
-        const expressions = state.expressions;
-        const expansion = state.expansion;
-        let i = 0;
-        let result = [];
-        while (i < data.length) {
-            const column = grid ? grid.getColumnByName(expressions[level].fieldName) : null;
-            const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
-            const isTime = column?.dataType === TIME_TYPE;
-            const group = this.groupedRecordsByExpression(data, i, expressions[level], isDate);
-            const groupRow: IGroupByRecord = {
-                expression: expressions[level],
-                level,
-                records: cloneArray(group),
-                value: this.getFieldValue(group[0], expressions[level].fieldName, isDate, isTime),
-                groupParent: parent,
-                groups: [],
-                height: grid ? grid.renderedRowHeight : null,
-                column
-            };
-            if (parent) {
-                parent.groups.push(groupRow);
-            } else {
-                groupsRecords.push(groupRow);
-            }
-            const hierarchy = getHierarchy(groupRow);
-            const expandState: IGroupByExpandState = expansion.find((s) =>
-                isHierarchyMatch(s.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
-            const expanded = expandState ? expandState.expanded : state.defaultExpanded;
-            let recursiveResult;
-            result.push(groupRow);
-            metadata.push(null);
-            fullResult.data.push(groupRow);
-            fullResult.metadata.push(null);
-            if (level < expressions.length - 1) {
-                recursiveResult = this.groupDataRecursive(group, state, level + 1, groupRow,
-                    expanded ? metadata : [], grid, groupsRecords, fullResult);
-                if (expanded) {
-                    result = result.concat(recursiveResult);
-                }
-            } else {
-                for (const groupItem of group) {
-                    fullResult.metadata.push(groupRow);
-                    fullResult.data.push(groupItem);
-                }
-                if (expanded) {
-                    metadata.push(...fullResult.metadata.slice(fullResult.metadata.length - group.length));
-                    result.push(...fullResult.data.slice(fullResult.data.length - group.length));
-                }
-            }
-            i += group.length;
-        }
-        return result;
-    }
-
-    protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
-        let resolvedValue = resolveNestedPath(obj, key);
-        if (isDate || isTime) {
-            const date = parseDate(resolvedValue);
-            resolvedValue = isTime && date ?
-                new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()) : date;
-
-        }
-        return resolvedValue;
-    }
-
-    protected sortDataRecursive<T>(data: T[],
-        expressions: ISortingExpression[],
-        expressionIndex: number = 0,
-        grid: GridType): T[] {
-        let i;
-        let j;
-        let gbData;
-        let gbDataLen;
-        const exprsLen = expressions.length;
-        const dataLen = data.length;
-        expressionIndex = expressionIndex || 0;
-        if (expressionIndex >= exprsLen || dataLen <= 1) {
-            return data;
-        }
-        const expr: ISortingExpression = expressions[expressionIndex];
-        if (!expr.strategy) {
-            expr.strategy = DefaultSortingStrategy.instance();
-        }
-        const column = grid?.getColumnByName(expr.fieldName);
-        const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
-        const isTime = column?.dataType === TIME_TYPE;
-        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate, isTime, grid);
-        if (expressionIndex === exprsLen - 1) {
-            return data;
-        }
-        // in case of multiple sorting
-        for (i = 0; i < dataLen; i++) {
-            gbData = this.groupedRecordsByExpression(data, i, expr, isDate);
-            gbDataLen = gbData.length;
-            if (gbDataLen > 1) {
-                gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, grid);
-            }
-            for (j = 0; j < gbDataLen; j++) {
-                data[i + j] = gbData[j];
-            }
-            i += gbDataLen - 1;
-        }
-        return data;
-    }
-
-    private groupedRecordsByExpression(data: any[],
-        index: number,
-        expression: IGroupingExpression,
-        isDate: boolean = false): any[] {
-        const res = [];
-        const key = expression.fieldName;
-        const len = data.length;
-        const groupval = this.getFieldValue(data[index], key, isDate);
-        res.push(data[index]);
-        index++;
-        const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
-        for (let i = index; i < len; i++) {
-            if (comparer(this.getFieldValue(data[i], key, isDate), groupval) === 0) {
-                res.push(data[i]);
-            } else {
-                break;
-            }
-        }
-        return res;
-    }
-}
-
-export class IgxDataRecordSorting extends IgxSorting {
-
-    protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
-        return super.getFieldValue(obj.data, key, isDate, isTime);
     }
 }
