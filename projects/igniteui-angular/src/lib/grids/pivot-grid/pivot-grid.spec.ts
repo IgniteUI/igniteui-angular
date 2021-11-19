@@ -23,8 +23,10 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
     }));
 
     it('should apply formatter and dataType from measures', () => {
-        fixture.detectChanges();
         const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.width = '1500px';
+        fixture.detectChanges();
+
         const actualFormatterValue = pivotGrid.rowList.first.cells.first.title;
         expect(actualFormatterValue).toEqual('774$');
         const actualDataTypeValue = pivotGrid.rowList.first.cells.last.title;
