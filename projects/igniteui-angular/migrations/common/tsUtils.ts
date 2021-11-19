@@ -12,7 +12,7 @@ export const NG_CORE_PACKAGE_NAME = '@angular/core';
 export const CUSTOM_TS_PLUGIN_PATH = './tsPlugin';
 export const CUSTOM_TS_PLUGIN_NAME = 'igx-ts-plugin';
 
-enum SynaxTokens {
+enum SyntaxTokens {
     ClosingParenthesis = ')',
     MemberAccess = '.',
     Question = '?'
@@ -45,7 +45,9 @@ export const getIdentifierPositions = (source: string | ts.SourceFile, name: str
                 return false;
             }
         }
-        return node.text === name;
+        // for methods the node.text will not contain characters like ()
+        const cleanName = name.match(/\w+/g)[0] || name;
+        return node.text === cleanName;
     };
 
     const findIdentifiers = (node: ts.Node) => {
@@ -348,7 +350,7 @@ export const isMemberIgniteUI =
         const content = langServ.getProgram().getSourceFile(entryPath).getText();
         matchPosition = shiftMatchPosition(matchPosition, content);
         const prevChar = content.substr(matchPosition - 1, 1);
-        if (prevChar === SynaxTokens.ClosingParenthesis) {
+        if (prevChar === SyntaxTokens.ClosingParenthesis) {
             // methodCall().identifier
             matchPosition = langServ.getBraceMatchingAtPosition(entryPath, matchPosition - 1)[0]?.start ?? matchPosition;
         }
@@ -388,8 +390,8 @@ const shiftMatchPosition = (matchPosition: number, content: string): number => {
     do {
         matchPosition--;
     } while (matchPosition > 0 && !content[matchPosition - 1].trim()
-    || content[matchPosition - 1] === SynaxTokens.MemberAccess
-        || content[matchPosition - 1] === SynaxTokens.Question);
+    || content[matchPosition - 1] === SyntaxTokens.MemberAccess
+        || content[matchPosition - 1] === SyntaxTokens.Question);
     return matchPosition;
 };
 
