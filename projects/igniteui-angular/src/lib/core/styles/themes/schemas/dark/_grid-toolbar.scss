@@ -32,7 +32,7 @@ $dark-bootstrap-grid-toolbar: extend($bootstrap-grid-toolbar);
 /// @requires {function} extend
 /// @requires $indigo-grid-toolbar
 $dark-indigo-grid-toolbar: extend(
-    $indigo-grid-toolbar
+    $indigo-grid-toolbar,
     (
         background-color: (
             igx-color: 'surface',
