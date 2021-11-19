@@ -27,7 +27,7 @@ export class PivotGridSampleComponent {
             {
                 memberName: 'Country',
                 enabled: true,
-                width: '500px'
+                width: '300px'
             }
         ]
         ,
