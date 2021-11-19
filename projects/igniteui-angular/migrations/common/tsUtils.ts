@@ -369,7 +369,7 @@ const resolveMemberInfo = (langServ: tss.LanguageService, node: tss.Node): Membe
         // if the type is 'any' or 'some', there will be no type symbol
         const name = nodeType.getSymbol()?.getName();
         const declarations = nodeType.getSymbol()?.getDeclarations();
-        if (declarations) {
+        if (declarations && declarations.length > 0) {
             const fileName = declarations[0].getSourceFile().fileName;
             if (name && fileName) {
                 return { name, fileName };
@@ -382,6 +382,7 @@ const resolveMemberInfo = (langServ: tss.LanguageService, node: tss.Node): Membe
 
 /**
  * Looks up a node which end property matches the specified position.
+ * Can go to the next node if the currently found one is invalid (comment for example)
  */
 const findNodeAtPosition = (sourceFile: tss.SourceFile, position: number): tss.Node | null => {
     if (!sourceFile) {
