@@ -131,6 +131,15 @@ export interface IGridResourceStrings {
     igx_grid_actions_jumpUp_label?: string;
     igx_grid_actions_jumpDown_label?: string;
     igx_grid_pivot_date_dimension_total?: string;
+    igx_grid_pivot_aggregate_count?: string;
+    igx_grid_pivot_aggregate_min?: string;
+    igx_grid_pivot_aggregate_max?: string;
+    igx_grid_pivot_aggregate_sum?: string;
+    igx_grid_pivot_aggregate_avg?: string;
+    igx_grid_pivot_aggregate_date_latest?: string;
+    igx_grid_pivot_aggregate_date_earliest?: string;
+    igx_grid_pivot_aggregate_time_latest?: string;
+    igx_grid_pivot_aggregate_time_earliest?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -265,5 +274,14 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_actions_unpin_label: 'Unpin',
     igx_grid_actions_jumpUp_label: 'Jump up',
     igx_grid_actions_jumpDown_label: 'Jump down',
-    igx_grid_pivot_date_dimension_total: 'All Periods'
+    igx_grid_pivot_date_dimension_total: 'All Periods',
+    igx_grid_pivot_aggregate_count: 'Count',
+    igx_grid_pivot_aggregate_min: 'Minimum',
+    igx_grid_pivot_aggregate_max: 'Maximum',
+    igx_grid_pivot_aggregate_sum: 'Sum',
+    igx_grid_pivot_aggregate_avg: 'Average',
+    igx_grid_pivot_aggregate_date_latest: 'Latest Date',
+    igx_grid_pivot_aggregate_date_earliest: 'Earliest Date',
+    igx_grid_pivot_aggregate_time_latest: 'Latest Time',
+    igx_grid_pivot_aggregate_time_earliest: 'Earliest Time'
 };

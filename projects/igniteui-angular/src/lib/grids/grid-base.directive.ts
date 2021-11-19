@@ -6570,7 +6570,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected resolveDataTypes(rec) {
+    public resolveDataTypes(rec) {
         if (typeof rec === 'number') {
             return GridColumnDataType.Number;
         } else if (typeof rec === 'boolean') {

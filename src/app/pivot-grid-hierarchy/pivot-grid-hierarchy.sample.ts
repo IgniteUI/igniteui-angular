@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration } from 'igniteui-angular';
+import { IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration } from 'igniteui-angular';
 import { DATA } from '../shared/pivot-data';
 
 @Component({
@@ -47,12 +47,20 @@ export class PivotGridHierarchySampleComponent {
         values: [
             {
                 member: 'NumberOfUnits',
-                aggregate: IgxNumberSummaryOperand.sum,
+                aggregate: {
+                    aggregator:  IgxPivotNumericAggregate.sum,
+                    key: 'sum',
+                    label: 'Sum'
+                },
                 enabled: true
 
             }, {
                 member: 'Value',
-                aggregate: IgxNumberSummaryOperand.sum,
+                aggregate: {
+                    aggregator:  IgxPivotNumericAggregate.sum,
+                    key: 'sum',
+                    label: 'Sum'
+                },
                 enabled: true,
                 formatter: (val) => val ? parseFloat(val).toFixed(2) : undefined
             }
