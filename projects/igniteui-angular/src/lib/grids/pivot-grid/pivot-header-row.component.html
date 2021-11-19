@@ -54,13 +54,17 @@
                 </div>
                 <!-- Value area -->
                 <igx-chips-area #valueArea droppable='true' style="width:fit-content; height: 100%;">
-                    <igx-chip *ngFor="let value of grid.values" [draggable]="true" [id]="value.member"
+                    <igx-chip #currChip *ngFor="let value of grid.values" [draggable]="true" [id]="value.member"
                         [removable]="true" (remove)="valueRemoved($event)"
                          (dragLeave)="onDimDragLeave($event)"
                          (dragOver)="onDimDragOver($event)"
                          (dragDrop)="onValueDrop($event, valueArea)">
-                        <igx-icon igxPrefix>functions</igx-icon>
-                        {{value.member}}
+                         <div igxPrefix (click)='onSummaryClick($event, value, dropdown, currChip)' (pointerdown)='$event.stopPropagation()'
+                         [igxDropDownItemNavigation]="dropdown">
+                            <igx-icon>functions</igx-icon>
+                            <igx-icon>arrow_drop_down</igx-icon>
+                         </div>
+                        {{value.aggregate.key}}({{value.displayName || value.member}})
                     </igx-chip>
                 </igx-chips-area>
             </div>
@@ -138,3 +142,9 @@
 <!-- Header thumb area -->
 <div class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize">
 </div>
+
+<igx-drop-down #dropdown (selectionChanging)='onAggregationChange($event)'>
+    <igx-drop-down-item *ngFor="let item of aggregateList" [selected] ='isSelected(item)' [value]='item'>
+        {{ item.label }}
+    </igx-drop-down-item>
+</igx-drop-down>
