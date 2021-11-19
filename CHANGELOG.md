@@ -104,7 +104,15 @@ All notable changes for each version of this project will be documented in this 
     - `igxGrid`
     - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
 - `IgxCarousel`
-    - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
+    - **Breaking Changes** - The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
+
+- `Theming`
+    - **Breaking Change** - Changed CSS palette variables from HEX values to a list of H, S, L comma-separated values, which requires the use of the CSS `hsl` function when accessing these values directly.
+        ```scss
+        .bozo {
+            background: hsl(var(--igx-surface-500));
+        }
+        ```
 
 ## 12.2.3
 
