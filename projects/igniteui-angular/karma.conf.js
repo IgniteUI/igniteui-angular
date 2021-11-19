@@ -43,14 +43,6 @@ module.exports = function (config) {
       ]
     },
     reporters: ['progress', 'coverage'],
-    specReporter: {
-        suppressSkipped: true,
-        suppressErrorSummary: false,
-        suppressFailed: false,
-        suppressPassed: false,
-        showSpecTiming: false,
-        failFast: false
-    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
