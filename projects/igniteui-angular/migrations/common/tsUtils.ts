@@ -18,6 +18,11 @@ enum SyntaxTokens {
     Question = '?'
 }
 
+export class MemberInfo implements Pick<tss.DefinitionInfo, 'name' | 'fileName'> {
+    public name: string;
+    public fileName: string;
+}
+
 /** Returns a source file */
 // export function getFileSource(sourceText: string): ts.SourceFile {
 //     return ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
@@ -253,7 +258,7 @@ const getTypeDefinitions = (langServ: tss.LanguageService, entryPath: string, po
  * @param position Index of identifier
  */
 export const getTypeDefinitionAtPosition =
-    (langServ: tss.LanguageService, entryPath: string, position: number): Pick<tss.DefinitionInfo, 'name' | 'fileName'> | null => {
+    (langServ: tss.LanguageService, entryPath: string, position: number): MemberInfo | null => {
         const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
         if (!definition) {
             return null;
@@ -270,23 +275,12 @@ export const getTypeDefinitionAtPosition =
             // for ts files we can use the type checker to look up a specific node
             // and attempt to resolve its actual type
             const sourceFile = langServ.getProgram().getSourceFile(entryPath);
-            const typeChecker = langServ.getProgram().getTypeChecker();
             // const node = (tss as any).getTouchingPropertyName(sourceFile, position); -> tss internal that looks up a node
             const node = findNodeAtPosition(sourceFile, position);
-            const symbolFromNode = typeChecker.getSymbolAtLocation(node)
-            const nodeType = typeChecker.getTypeOfSymbolAtLocation(symbolFromNode, node)
-            if (nodeType) {
-                const typeArguments = typeChecker.getTypeArguments(nodeType as tss.TypeReference);
-                if (typeArguments && typeArguments.length < 1) {
-                    // it's not a generic type so try to look up its name and fileName
-                    // atm we do not support migrating union/intersection generic types
-                    // a type symbol (type) should have only one declaration
-                    // if the type is 'any' or 'some', there will be no type symbol
-                    const name = nodeType.getSymbol()?.getName();
-                    const fileName = nodeType.getSymbol()?.getDeclarations()[0].getSourceFile().fileName;
-                    if (name && fileName) {
-                        return { name, fileName };
-                    }
+            if (node) {
+                const memberInfo = resolveMemberInfo(langServ, node);
+                if (memberInfo) {
+                    return memberInfo;
                 }
             }
         }
@@ -364,6 +358,28 @@ export const isMemberIgniteUI =
             && change.definedIn.indexOf(typeDef.name) !== -1;
     };
 
+const resolveMemberInfo = (langServ: tss.LanguageService, node: tss.Node): MemberInfo | null => {
+    const typeChecker = langServ.getProgram().getTypeChecker();
+    const nodeType = typeChecker.getTypeAtLocation(node);
+    const typeArguments = typeChecker.getTypeArguments(nodeType as tss.TypeReference);
+    if (typeArguments && typeArguments.length < 1) {
+        // it's not a generic type so try to look up its name and fileName
+        // atm we do not support migrating union/intersection generic types
+        // a type symbol (type) should have only one declaration
+        // if the type is 'any' or 'some', there will be no type symbol
+        const name = nodeType.getSymbol()?.getName();
+        const declarations = nodeType.getSymbol()?.getDeclarations();
+        if (declarations) {
+            const fileName = declarations[0].getSourceFile().fileName;
+            if (name && fileName) {
+                return { name, fileName };
+            }
+        }
+    }
+
+    return null;
+}
+
 /**
  * Looks up a node which end property matches the specified position.
  */
@@ -376,6 +392,8 @@ const findNodeAtPosition = (sourceFile: tss.SourceFile, position: number): tss.N
 }
 const findInnerNode = (node: tss.Node, position: number): tss.Node | null => {
     if (position <= node.getEnd()) {
+        // see tss.forEachChild for documentation
+        // look for the innermost child that matches the position
         return node.forEachChild(cn => findInnerNode(cn, position)) || node;
     }
 
@@ -401,8 +419,7 @@ const shiftMatchPosition = (matchPosition: number, content: string): number => {
  * @param langServ The TypeScript LanguageService.
  * @param definition The method definition.
  */
-const getMethodTypeDefinition = (langServ: tss.LanguageService, definition: tss.DefinitionInfo):
-    Pick<tss.DefinitionInfo, 'name' | 'fileName'> | null => {
+const getMethodTypeDefinition = (langServ: tss.LanguageService, definition: tss.DefinitionInfo): MemberInfo | null => {
     // TODO: use typechecker for all the things?
     const sourceFile = langServ.getProgram().getSourceFile(definition.fileName);
 
