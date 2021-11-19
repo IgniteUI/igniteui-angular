@@ -1,41 +1,45 @@
 import {
-    ElementRef,
-    NgZone,
+    ApplicationRef,
     ChangeDetectorRef,
-    IterableDiffers,
-    ViewContainerRef,
-    Inject,
     ComponentFactoryResolver,
-    Optional,
-    Input,
-    ViewChild,
-    TemplateRef,
     Directive,
-    Output,
+    ElementRef,
     EventEmitter,
-    LOCALE_ID
+    Inject,
+    Injector,
+    Input,
+    IterableDiffers,
+    LOCALE_ID,
+    NgModuleRef,
+    NgZone,
+    Optional,
+    Output,
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
-import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
-import { GridBaseAPIService } from '../api.service';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
-import { IgxOverlayService, IgxTransactionService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridType } from '../common/grid.interface';
+import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE, IPathSegment } from '../common/grid.interface';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../core/utils';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
+import { IgxTransactionService } from '../../services/transaction/igx-transaction';
+import { IgxOverlayService } from '../../services/overlay/overlay';
+import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
+import { IgxGridTransaction } from '../common/types';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -44,13 +48,8 @@ export const IgxHierarchicalTransactionServiceFactory = {
     useFactory: hierarchicalTransactionServiceFactory
 };
 
-export interface IPathSegment {
-    rowID: any;
-    rowIslandKey: string;
-}
-
 @Directive()
-export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
+export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective implements GridType {
     /**
      * Gets/Sets the key indicating whether a row has children. If row has no children it does not render an expand indicator.
      *
@@ -149,28 +148,26 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * @hidden
      */
     public parentIsland: IgxRowIslandComponent;
-
-    /**
-     * @hidden
-     */
-    public childRow: IgxChildGridRowComponent;
-
-    public abstract rootGrid;
+    public abstract rootGrid: GridType;
 
     public abstract expandChildren: boolean;
 
     constructor(
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
         protected transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef,
+        elementRef: ElementRef<HTMLElement>,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
         cdr: ChangeDetectorRef,
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
+        appRef: ApplicationRef,
+        moduleRef: NgModuleRef<any>,
+        factoryResolver: ComponentFactoryResolver,
+        injector: Injector,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -191,6 +188,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             resolver,
             differs,
             viewRef,
+            appRef,
+            moduleRef,
+            factoryResolver,
+            injector,
             navigation,
             filteringService,
             overlayService,
@@ -243,7 +244,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     protected _createColGroupComponent(col: IgxColumnGroupComponent) {
         const factoryGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
-        const ref = this.viewRef.createComponent(factoryGroup, null, this.viewRef.injector);
+        const ref = this.viewRef.createComponent(IgxColumnGroupComponent, { injector: this.viewRef.injector });
         ref.changeDetectorRef.detectChanges();
         factoryGroup.inputs.forEach((input) => {
             const propName = input.propName;
@@ -264,7 +265,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     protected _createColComponent(col) {
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
+        const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector });
         factoryColumn.inputs.forEach((input) => {
             const propName = input.propName;
             if (!(col[propName] instanceof IgxSummaryOperand)) {

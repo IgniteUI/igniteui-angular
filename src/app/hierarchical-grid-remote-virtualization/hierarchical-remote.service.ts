@@ -17,7 +17,9 @@ export class HierarchicalRemoteService {
     public url = `https://services.odata.org/V4/Northwind/Northwind.svc/Products`;
     public urlBuilder;
 
-    constructor(private http: HttpClient, private hierarchyPipe: IgxGridHierarchicalPipe) {
+    private hierarchyPipe: IgxGridHierarchicalPipe = null;
+
+    constructor(private http: HttpClient) {
         this._remoteData = new BehaviorSubject([]);
         this.remoteData = this._remoteData.asObservable();
     }
@@ -43,6 +45,7 @@ export class HierarchicalRemoteService {
     }
 
     public getData(virtualizationState: any, grid: IgxHierarchicalGridComponent, cb?: (any) => void) {
+        this.hierarchyPipe = this.hierarchyPipe ?? new IgxGridHierarchicalPipe(grid);
         return this.http.get(this.buildUrl(virtualizationState, grid)).pipe(
             map(response => response),
         )

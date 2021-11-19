@@ -1,9 +1,8 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
-import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
 import { IComboFilteringOptions } from './combo.component';
 
 
@@ -37,9 +36,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({
-    name: 'comboGrouping'
-})
+@Pipe({ name: 'comboGrouping' })
 export class IgxComboGroupingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }

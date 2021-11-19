@@ -55,6 +55,11 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 
+- `IE discontinued support` **Breaking Change** [details](https://angular.io/guide/browser-support)
+    - `web-animations-js` is removed as Peer Dependency.
+    - Removed IE from `.browserslistrc`
+    - Removed IE related `polyfills`, like Importing ES7 polyfill for Object (`'core-js/es7/object'`) for IE is no longer used.
+
 - `IgxDialog`
     - **Breaking Change** - The default positionSettings open/close animation has been changed to `fadeIn`/`fadeOut`. The open/close animation can be set through the position settings, e.g. change the animation to the previously default open/close animation:
 
@@ -73,13 +78,41 @@ All notable changes for each version of this project will be documented in this 
         - Inputs  `showToolbar`, `toolbarTitle`, `columnHiding`, `columnHidingTitle`, `hiddenColumnsText`,
         `columnPinning`, `columnPinningTitle`, `pinnedColumnsText`.
         Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
-- `igxGrid`
+    - **Breaking Change** - The `rowSelected` event is renamed to `rowSelectionChanging` to better reflect its function.
+    - **Breaking Change** - The `columnSelected` event is renamed to `columnSelectionChanging` to better reflect its function.
+    - **Breaking Change** - `columnsCollection` is removed. Use `columns` instead. If at certain ocasions `columns` return empty array, query the columns using `ViewChildren` and access those in `ngAfterViewInit`:
+    ```ts
+    @ViewChildren(IgxColumnComponent, { read: IgxColumnComponent })
+    public columns: QueryList<IgxColumnComponent>;
+    ```
+    - `RowType`, `IgxRowDirective`
+        - **Breaking Change** - `rowData` and `rowID` deprecated properties are now removed. Use `data` and `key` instead. Use `ng update` for automatic migration.
+    - `igxRowSelector`
+        - `rowID` in the context object of the `igxRowSelector` is now deprecated and will be removed in future version. Use `key` property instead:
+        ```html
+        <igx-grid [data]="data", [rowSelection]="'multiple'" primaryKey="ID">
+            <igx-column field="Name"></igx-column>
+            <igx-column field="Age"></igx-column>
+
+            <ng-template igxRowSelector let-rowContext>
+                <span>{{ rowContext.key }}</span>
+            </ng-template>
+        </igx-grid>
+        ```
+    - `IgxColumnActionsComponent`
+        - **Breaking Change** -  Input `columns` has been removed. Use `igxGrid` `columns` input instead.
+    - `igxGrid`
     - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
-- `IgxColumnActionsComponent`
-    - **Breaking Change** - The following input has been removed
-        - Input `columns`. Use `igxGrid` `columns` input instead.
 - `IgxCarousel`
-    - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
+    - **Breaking Changes** - The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
+
+- `Theming`
+    - **Breaking Change** - Changed CSS palette variables from HEX values to a list of H, S, L comma-separated values, which requires the use of the CSS `hsl` function when accessing these values directly.
+        ```scss
+        .bozo {
+            background: hsl(var(--igx-surface-500));
+        }
+        ```
 
 ## 12.2.3
 
