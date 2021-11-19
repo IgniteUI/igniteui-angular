@@ -27,12 +27,15 @@ export class PivotUtil {
     public static sort(data: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting(), pivotKeys): any[] {
         data.forEach(rec => {
             const keys = Object.keys(rec);
+            rec.sorted = true;
             keys.forEach(k => {
-                if (k.indexOf(pivotKeys.records) !== -1) {
+                if (k.indexOf(pivotKeys.records) !== -1 && k !== pivotKeys.records) {
+                    const unsorted = rec[k].filter(x => !x.sorted);
                     // sort all child record collections based on expression recursively.
-                    rec[k] = this.sort(rec[k], expressions, sorting, pivotKeys);
+                    rec[k] = this.sort(unsorted, expressions, sorting, pivotKeys);
                 }
             });
+            delete rec.sorted;
         });
         return DataUtil.sort(data, expressions, sorting);
     }
