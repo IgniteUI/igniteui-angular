@@ -35,7 +35,6 @@ import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
 import { IPivotConfiguration, IPivotDimension, IPivotValue } from '../pivot-grid/pivot-grid.interface';
-import { IgxColumnComponent } from '../columns/column.component';
 
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
@@ -624,7 +623,7 @@ export interface PivotGridType extends GridType {
     rowDimensions: IPivotDimension[];
     values: IPivotValue[];
     filterDimensions: IPivotDimension[];
-    dimensionDataColumns: IgxColumnComponent[];
+    dimensionDataColumns: ColumnType[];
     pivotRowWidths: number;
     setupColumns(): void;
     toggleRow(rowID: any): void;
