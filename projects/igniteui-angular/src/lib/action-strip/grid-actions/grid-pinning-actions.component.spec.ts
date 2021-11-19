@@ -75,7 +75,7 @@ describe('igxGridPinningActions #grid ', () => {
             fixture.detectChanges();
 
             const secondToLastVisible = grid.rowList.toArray()[grid.rowList.length - 2];
-            expect(secondToLastVisible.rowID).toEqual('FAMIA');
+            expect(secondToLastVisible.key).toEqual('FAMIA');
         });
     });
 

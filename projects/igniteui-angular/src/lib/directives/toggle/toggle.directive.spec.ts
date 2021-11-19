@@ -262,7 +262,8 @@ describe('IgxToggle', () => {
         spyOn(toggle.closing, 'emit').and.callThrough();
         spyOn(toggle.closed, 'emit').and.callThrough();
 
-        toggle.closing.pipe(first()).subscribe((e: CancelableEventArgs) => e.cancel = true);
+        let cancelClosing = true;
+        toggle.closing.pipe(first()).subscribe((e: CancelableEventArgs) => e.cancel = cancelClosing);
 
         toggle.open();
         fixture.detectChanges();
@@ -278,9 +279,13 @@ describe('IgxToggle', () => {
         expect(toggle.closing.emit).toHaveBeenCalledTimes(1);
         expect(toggle.closed.emit).toHaveBeenCalledTimes(0);
 
+        cancelClosing = false;
         toggle.close();
         fixture.detectChanges();
         tick();
+
+        expect(toggle.closing.emit).toHaveBeenCalledTimes(2);
+        expect(toggle.closed.emit).toHaveBeenCalledTimes(1);
 
         toggle.opening.subscribe((e: CancelableEventArgs) => e.cancel = true);
         toggle.open();

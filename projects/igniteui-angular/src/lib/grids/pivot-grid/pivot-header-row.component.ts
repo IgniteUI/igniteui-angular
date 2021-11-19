@@ -3,24 +3,15 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    Input,
+    Inject,
     Renderer2
 } from '@angular/core';
 import { IBaseChipEventArgs } from '../../chips/chip.component';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { IPivotDimension, PivotDimensionType } from './pivot-grid.interface';
-import { IgxPivotRowComponent } from './pivot-row.component';
-
-export interface IgxGridRowSelectorsTemplateContext {
-    $implicit: {
-        selectedCount: number;
-        totalCount: number;
-        selectAll?: () => void;
-        deselectAll?: () => void;
-    };
-}
 
 /**
  *
@@ -42,6 +33,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     private _dropRightIndicatorClass = 'igx-pivot-grid__drop-indicator--right';
 
     constructor(
+        @Inject(IGX_GRID_BASE) public grid: PivotGridType,
         protected ref: ElementRef<HTMLElement>,
         protected cdr: ChangeDetectorRef,
         protected renderer: Renderer2,

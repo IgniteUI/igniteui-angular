@@ -49,14 +49,15 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   }
 
   /**
-   * Obtains the ClientRect objects for the required elements - target and element to position
+   * Obtains the DomRect objects for the required elements - target and element to position
    *
-   * @returns target and element ClientRect objects
+   * @returns target and element DomRect objects
    */
-  protected calculateElementRectangles(contentElement, target: Point | HTMLElement): { targetRect: ClientRect; elementRect: ClientRect } {
+  protected calculateElementRectangles(contentElement, target: Point | HTMLElement):
+    { targetRect: Partial<DOMRect>; elementRect: Partial<DOMRect> } {
       return {
           targetRect: Util.getTargetRect(target),
-          elementRect: contentElement.getBoundingClientRect() as ClientRect
+          elementRect: contentElement.getBoundingClientRect() as DOMRect
       };
   }
 
@@ -68,7 +69,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * @param targetRect Bounding rectangle of strategy target
    * @param elementRect Bounding rectangle of the element
    */
-  protected setStyle(element: HTMLElement, targetRect: ClientRect, elementRect: ClientRect, connectedFit: ConnectedFit) {
+  protected setStyle(element: HTMLElement, targetRect: Partial<DOMRect>, elementRect: Partial<DOMRect>, connectedFit: ConnectedFit) {
       const horizontalOffset = connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0;
       const verticalOffset = connectedFit.verticalOffset ? connectedFit.verticalOffset : 0;
     const startPoint: Point = {

@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IgxGridComponent, IgxColumnGroupComponent, GridSelectionMode, ColumnPinningPosition } from 'igniteui-angular';
 
 @Component({
@@ -6,7 +6,7 @@ import { IgxGridComponent, IgxColumnGroupComponent, GridSelectionMode, ColumnPin
     styleUrls: ['grid-column-groups.sample.css'],
     templateUrl: 'grid-column-groups.sample.html'
 })
-export class GridColumnGroupsSampleComponent implements AfterViewInit {
+export class GridColumnGroupsSampleComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
     public collapse = true;
@@ -80,10 +80,6 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
         // this.collapse = !this.collapse;
         (this.grid.columnList.filter(c => c.header === 'General Information')[0] as any).collapsible =
         !(this.grid.columnList.filter(c => c.header === 'General Information')[0] as any).collapsible;
-    }
-
-    public ngAfterViewInit() {
-        // this.grid.groupBy({ fieldName: 'Country', dir: 1, ignoreCase: false });
     }
 
     public toggleColumnGroup(columnGroup: IgxColumnGroupComponent) {

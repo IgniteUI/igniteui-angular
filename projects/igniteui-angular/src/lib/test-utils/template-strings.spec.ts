@@ -19,14 +19,15 @@ export class GridTemplateStrings {
     </igx-grid>`;
 
     public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``,
-            toolbarDefinition = '', paginatorDefinition = '') {
+        toolbarDefinition = '', paginatorDefinition = '', templateDefinitions: TemplateDefinitions = '') {
         return `<igx-grid [data]="data"
-        ${ attributes}
-        ${ events}
+        ${attributes}
+        ${events}
         >
-        ${ toolbarDefinition }
-        ${ columnDefinitions}
-        ${ paginatorDefinition }
+        ${toolbarDefinition}
+        ${columnDefinitions}
+        ${paginatorDefinition}
+        ${templateDefinitions}
     </igx-grid>`;
     }
 
@@ -489,6 +490,20 @@ export class ColumnDefinitions {
     `;
 }
 
+export class TemplateDefinitions {
+    public static sortIconTemplates = `
+        <ng-template igxSortHeaderIcon>
+            <igx-icon>unfold_more</igx-icon>
+        </ng-template>
+        <ng-template igxSortAscendingHeaderIcon>
+            <igx-icon>expand_less</igx-icon>
+        </ng-template>
+        <ng-template igxSortDescendingHeaderIcon>
+            <igx-icon>expand_more</igx-icon>
+        </ng-template>
+    `;
+}
+
 export class EventSubscriptions {
 
     public static columnInit = ` (columnInit)="columnInit($event)"`;
@@ -509,7 +524,7 @@ export class EventSubscriptions {
 
     public static onEditDone = ` (cellEdit)="editDone($event)"`;
 
-    public static rowSelected = ` (rowSelected)="rowSelected($event)"`;
+    public static rowSelectionChanging = ` (rowSelectionChanging)="rowSelectionChanging($event)"`;
 
     public static columnResized = ` (columnResized)="columnResized($event)"`;
 

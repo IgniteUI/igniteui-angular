@@ -1,0 +1,69 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "rowSelected",
+            "replaceWith": "rowSelectionChanging",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "rowSelected",
+            "replaceWith": "rowSelectionChanging",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "rowSelected",
+            "replaceWith": "rowSelectionChanging",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "rowSelected",
+            "replaceWith": "rowSelectionChanging",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "columnSelected",
+            "replaceWith": "columnSelectionChanging",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        }
+    ]
+}

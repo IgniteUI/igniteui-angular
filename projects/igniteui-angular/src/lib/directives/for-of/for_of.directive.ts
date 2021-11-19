@@ -2,8 +2,6 @@
 import { CommonModule, DOCUMENT, NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
-    ComponentFactory,
-    ComponentFactoryResolver,
     ComponentRef,
     Directive,
     DoCheck,
@@ -369,7 +367,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         private _viewContainer: ViewContainerRef,
         protected _template: TemplateRef<NgForOfContext<T>>,
         protected _differs: IterableDiffers,
-        private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef,
         protected _zone: NgZone,
         protected syncScrollService: IgxForOfScrollSyncService,
@@ -393,14 +390,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         let totalSize = 0;
         const vc = this.igxForScrollContainer ? this.igxForScrollContainer._viewContainer : this._viewContainer;
         this.igxForSizePropName = this.igxForSizePropName || 'width';
-
-        const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
-        this.dc = this._viewContainer.createComponent(dcFactory, 0);
+        this.dc = this._viewContainer.createComponent(DisplayContainerComponent, { index: 0 });
         this.dc.instance.scrollDirection = this.igxForScrollOrientation;
-        if (typeof MSGesture === 'function') {
-            // On Edge and IE when scrolling on touch the page scroll instead of the grid.
-            this.dc.instance._viewContainer.element.nativeElement.style.touchAction = 'none';
-        }
         if (this.igxForOf && this.igxForOf.length) {
             totalSize = this.initSizesCache(this.igxForOf);
             this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
@@ -423,8 +414,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         if (this.igxForScrollOrientation === 'vertical') {
             this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
-            const factory: ComponentFactory<VirtualHelperComponent> = this.resolver.resolveComponentFactory(VirtualHelperComponent);
-            this.scrollComponent = vc.createComponent(factory).instance;
+            this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance;
             this._maxHeight = this._calcMaxBrowserHeight();
             this.scrollComponent.size = this.igxForOf ? this._calcHeight() : 0;
             this.syncScrollService.setScrollMaster(this.igxForScrollOrientation, this.scrollComponent);
@@ -435,9 +425,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             });
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(
-                destructor,
                 filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
-                throttleTime(40, undefined, { leading: true, trailing: true })
+                throttleTime(40, undefined, { leading: true, trailing: true }),
+                destructor
             ).subscribe(() => this._zone.runTask(() => this.updateSizes()));
         }
 
@@ -445,9 +435,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.func = (evt) => this.onHScroll(evt);
             this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
             if (!this.scrollComponent) {
-                const hvFactory: ComponentFactory<HVirtualHelperComponent> =
-                    this.resolver.resolveComponentFactory(HVirtualHelperComponent);
-                this.scrollComponent = vc.createComponent(hvFactory).instance;
+                this.scrollComponent = vc.createComponent(HVirtualHelperComponent).instance;
                 this.scrollComponent.size = totalSize;
                 this.syncScrollService.setScrollMaster(this.igxForScrollOrientation, this.scrollComponent);
                 this._zone.runOutsideAngular(() => {
@@ -1476,14 +1464,13 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         _viewContainer: ViewContainerRef,
         _template: TemplateRef<NgForOfContext<T>>,
         _differs: IterableDiffers,
-        resolver: ComponentFactoryResolver,
         cdr: ChangeDetectorRef,
         _zone: NgZone,
         _platformUtil: PlatformUtil,
         @Inject(DOCUMENT) _document: any,
         protected syncScrollService: IgxForOfScrollSyncService,
         protected syncService: IgxForOfSyncService) {
-        super(_viewContainer, _template, _differs, resolver, cdr, _zone, syncScrollService, _platformUtil, _document);
+        super(_viewContainer, _template, _differs, cdr, _zone, syncScrollService, _platformUtil, _document);
     }
 
     public ngOnInit() {

@@ -53,10 +53,11 @@ export class UIInteractions {
 
     /**
      * Double click an element - native or debug, by dispatching pointerdown, pointerup and dblclick events.
+     * // TODO - typing of element - whe npassing cell/row, should be CellType/RowTpe
      *
      * @param element - Native or debug element.
      */
-    public static simulateDoubleClickAndSelectEvent(element) {
+    public static simulateDoubleClickAndSelectEvent(element: any) {
         const nativeElement = element.nativeElement ?? element;
         UIInteractions.simulatePointerOverElementEvent('pointerdown', nativeElement);
         UIInteractions.simulatePointerOverElementEvent('pointerup', nativeElement);

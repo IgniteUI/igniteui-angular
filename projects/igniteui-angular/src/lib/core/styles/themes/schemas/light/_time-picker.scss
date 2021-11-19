@@ -1,5 +1,6 @@
-@import '../shape/time-picker';
-@import '../elevation/time-picker';
+@use '../../../base' as *;
+@use '../shape/time-picker' as *;
+@use '../elevation/time-picker' as *;
 
 ////
 /// @group schemas
@@ -10,7 +11,7 @@
 /// Generates a light time-picker schema.
 /// @type {Map}
 ///
-/// @prop {Map} text-color [igx-color: 'surface', to-opaque: (), text-contrast: (), rgba: .38] - The text color of an open time picker.
+/// @prop {Map} text-color [igx-color: ('grays', 500)] - The text color of an open time picker.
 /// @prop {Map} hover-text-color [igx-color: ('secondary', 500)] - The hover text color of an open time picker.
 /// @prop {Map} selected-text-color [igx-color: ('secondary', 500)] -  The text color of a selected item in time picker.
 /// @prop {Map} active-item-background [igx-color: ('grays', 100)] - The background color for current item in focused column inside the time picker.
@@ -18,7 +19,7 @@
 /// @prop {Color} disabled-item-background [transparent] - The background color for disabled values .
 /// @prop {Map} header-background [igx-color: ('secondary', 500)] - The header background color of a time picker.
 /// @prop {Map} header-hour-text-color [igx-contrast-color: ('secondary', 500)] - The header hour text color of a time picker.
-/// @prop {Map} header-time-period-color [igx-contrast-color: ('secondary', 500), rgba: .8] - The header AM/PM text color of a time picker.
+/// @prop {Map} header-time-period-color [igx-contrast-color: ('secondary', 500, .8)] - The header AM/PM text color of a time picker.
 /// @prop {Map} background-color [igx-color: 'surface'] - The time-picker panel background color.
 /// @prop {Number} modal-elevation [24] - The elevation level, between 0-24, to be used for the time picker in modal mode.
 /// @prop {Number} dropdown-elevation [8] - The elevation level, between 0-24, to be used for the time picker in dropdown mode.
@@ -26,20 +27,17 @@
 /// @prop {Number} active-item-border-radius [.75] - The border radius used for the highlight of the active item in the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
-/// @requires {Map} $_default-shape-time-picker
-/// @requires {Map} $_default-elevation-time-picker
+/// @requires {Map} $default-shape-time-picker
+/// @requires {Map} $default-elevation-time-picker
 /// @see $default-palette
-$_light-time-picker: extend(
-    $_default-shape-time-picker,
-    $_default-elevation-time-picker,
+$light-time-picker: extend(
+    $default-shape-time-picker,
+    $default-elevation-time-picker,
     (
         variant: 'material',
 
         text-color: (
-            igx-color: 'surface',
-            to-opaque: (),
-            text-contrast: (),
-            rgba: .38
+            igx-color: ('grays', 500),
         ),
 
         hover-text-color: (
@@ -55,9 +53,7 @@ $_light-time-picker: extend(
         ),
 
         disabled-text-color: (
-            igx-color: ('grays', 500),
-            to-opaque: (),
-            rgba: .5
+            igx-color: ('grays', 400),
         ),
 
         disabled-item-background: transparent,
@@ -71,8 +67,7 @@ $_light-time-picker: extend(
         ),
 
         header-time-period-color: (
-            igx-contrast-color: ('secondary', 500),
-            rgba: .8
+            igx-contrast-color: ('secondary', 500, .8),
         ),
 
         background-color: (
@@ -86,11 +81,11 @@ $_light-time-picker: extend(
 /// @prop {Number} border-radius [2px] - The border radius used for the overall shape of the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} active-item-border-radius [2px] - The border radius used for the highlight of the active item in the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires $_light-time-picker
-/// @requires $_fluent-shape-time-picker
-$_fluent-time-picker: extend(
-    $_light-time-picker,
-    $_fluent-shape-time-picker,
+/// @requires $light-time-picker
+/// @requires $fluent-shape-time-picker
+$fluent-time-picker: extend(
+    $light-time-picker,
+    $fluent-shape-time-picker,
     (
         variant: 'fluent',
     )
@@ -104,11 +99,11 @@ $_fluent-time-picker: extend(
 /// @prop {Number} border-radius [4px] - The border radius used for the overall shape of the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} active-item-border-radius [4px] - The border radius used for the highlight of the active item in the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires $_light-time-picker
-/// @requires $_bootstrap-shape-time-picker
-$_bootstrap-time-picker: extend(
-    $_light-time-picker,
-    $_bootstrap-shape-time-picker,
+/// @requires $light-time-picker
+/// @requires $bootstrap-shape-time-picker
+$bootstrap-time-picker: extend(
+    $light-time-picker,
+    $bootstrap-shape-time-picker,
     (
         variant: 'bootstrap',
 
@@ -137,11 +132,11 @@ $_bootstrap-time-picker: extend(
 /// @prop {Number} border-radius [3px] - The border radius used for the overall shape of the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} active-item-border-radius [20px] - The border radius used for the highlight of the active item in the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires $_light-time-picker
-/// @requires $_indigo-shape-time-picker
-$_indigo-time-picker: extend(
-    $_light-time-picker,
-    $_indigo-shape-time-picker,
+/// @requires $light-time-picker
+/// @requires $indigo-shape-time-picker
+$indigo-time-picker: extend(
+    $light-time-picker,
+    $indigo-shape-time-picker,
     (
         variant: 'indigo-design',
 

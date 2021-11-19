@@ -1,21 +1,22 @@
-/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
 import {
     AfterContentInit,
     AfterViewInit,
+    ApplicationRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ComponentFactoryResolver,
     ContentChild,
     ContentChildren,
-    DoCheck,
     ElementRef,
     EventEmitter,
     Inject,
+    Injector,
     Input,
     IterableChangeRecord,
     IterableDiffers,
     LOCALE_ID,
+    NgModuleRef,
     NgZone,
     OnChanges,
     OnDestroy,
@@ -26,9 +27,6 @@ import {
     TemplateRef,
     ViewContainerRef
 } from '@angular/core';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -41,30 +39,27 @@ import { IgxOverlayService } from '../../services/public_api';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridType } from '../common/grid.interface';
+import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
-
-export interface IGridCreatedEventArgs extends IBaseEventArgs {
-    owner: IgxRowIslandComponent;
-    parentID: any;
-    grid: IgxHierarchicalGridComponent;
-}
+import { IGridCreatedEventArgs } from './events';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
     template: ``,
-    providers: [IgxRowIslandAPIService,
+    providers: [
+        IgxRowIslandAPIService,
         IgxFilteringService,
-        IgxGridSelectionService]
+        IgxGridSelectionService
+    ]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
-    implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
+    implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
      * ```html
@@ -224,15 +219,19 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     constructor(
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
         protected transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef,
+        elementRef: ElementRef<HTMLElement>,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
         cdr: ChangeDetectorRef,
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
+        moduleRef: NgModuleRef<any>,
+        factoryResolver: ComponentFactoryResolver,
+        injector: Injector,
+        appRef: ApplicationRef,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -253,6 +252,10 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             resolver,
             differs,
             viewRef,
+            appRef,
+            moduleRef,
+            factoryResolver,
+            injector,
             navigation,
             filteringService,
             overlayService,
@@ -268,7 +271,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public ngOnInit() {
-        this.filteringService.grid = this;
+        this.filteringService.grid = this as any;
         this.rootGrid = this.hgridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
         this.ri_columnListDiffer = this.differs.find([]).create(null);
@@ -308,9 +311,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                     record.item.columnChange.pipe(takeUntil(record.item.destroy$)).subscribe(() => this.updateColumnList());
                 });
             }
-         });
-         this.actionStrip = this.actionStrips.first;
-         if (this.actionStrip) {
+        });
+        this.actionStrip = this.actionStrips.first;
+        if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
     }
@@ -373,12 +376,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public ngDoCheck() {
-    }
-
-    /**
-     * @hidden
-     */
     public reflow() { }
 
     /**
@@ -406,7 +403,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             this.rootGrid.columnList.notifyOnChanges();
         }
 
-        this.rowIslandAPI.getChildGrids().forEach((grid: IgxHierarchicalGridComponent) => {
+        this.rowIslandAPI.getChildGrids().forEach((grid: GridType) => {
             grid.createColumnsList(this.childColumns.toArray());
             if (!document.body.contains(grid.nativeElement)) {
                 grid.updateOnRender = true;

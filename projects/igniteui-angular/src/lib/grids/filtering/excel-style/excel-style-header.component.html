@@ -5,7 +5,7 @@
         <button *ngIf="showSelecting"
             igxButton="icon"
             (click)="esf.onSelect()"
-            [ngClass]="esf.selectedClass()"
+            [ngClass]="esf.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select'"
             [attr.aria-label]="esf.column.selected ? esf.grid.resourceStrings.igx_grid_excel_deselect : esf.grid.resourceStrings.igx_grid_excel_select"
         >
             <igx-icon>done</igx-icon>

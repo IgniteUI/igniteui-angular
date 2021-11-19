@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
 import { Tree } from '@angular-devkit/schematics';
@@ -203,7 +202,8 @@ export const createProjectService = (serverHost: tss.server.ServerHost): tss.ser
         /* will load only global plug-ins */
         globalPlugins: [CUSTOM_TS_PLUGIN_NAME, NG_LANG_SERVICE_PACKAGE_NAME],
         allowLocalPluginLoads: false,
-        typingsInstaller: tss.server.nullTypingsInstaller
+        typingsInstaller: tss.server.nullTypingsInstaller,
+        session: undefined
     });
     projectService.setHostConfiguration({
         formatOptions: projectService.getHostFormatCodeOptions(),
@@ -385,8 +385,8 @@ const getMethodTypeDefinition = (langServ: tss.LanguageService, definition: tss.
     }
 
     const returnType = typeChecker.getReturnTypeOfSignature(signature);
-    const name = returnType.symbol.escapedName.toString();
-    if (returnType.symbol?.declarations?.length > 0) {
+    const name = returnType?.symbol?.escapedName?.toString();
+    if (name && returnType.symbol?.declarations?.length > 0) {
         // there should never be a case where a type is declared in more than one file
         /**
          * For union return types like T | null | undefined
