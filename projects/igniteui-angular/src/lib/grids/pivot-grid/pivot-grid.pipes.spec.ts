@@ -1,10 +1,11 @@
 import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxNumberSummaryOperand } from '../summaries/grid-summary';
+import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 
-describe('Pivot pipes #pGrid', () => {
+describe('Pivot pipes #pivotGrid', () => {
     let rowPipe: IgxPivotRowPipe;
     let rowStatePipe: IgxPivotRowExpansionPipe;
     let columnPipe: IgxPivotColumnPipe;
@@ -15,13 +16,28 @@ describe('Pivot pipes #pGrid', () => {
     configureTestSuite();
     beforeEach(() => {
         data = [
-        { ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley', Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282 },
-        { ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa', Country: 'USA', Date: '01/05/2019', UnitsSold: 296 },
-        { ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia', Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68 },
-        { ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David', Country: 'USA', Date: '04/07/2021', UnitsSold: 293 },
-        { ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John', Country: 'USA', Date: '12/08/2021', UnitsSold: 240 },
-        { ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry', Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456 },
-        { ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter', Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492 }];
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa', Country: 'USA', Date: '01/05/2019', UnitsSold: 296
+            },
+            {
+                ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia', Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68
+            },
+            {
+                ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David', Country: 'USA', Date: '04/07/2021', UnitsSold: 293
+            },
+            {
+                ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John', Country: 'USA', Date: '12/08/2021', UnitsSold: 240
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry', Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter', Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
+            }];
         pivotConfig = {
             columns: [{
                 memberName: 'All',
@@ -469,189 +485,259 @@ describe('Pivot pipes #pGrid', () => {
     });
 
     it('transforms flat data to pivot data multiple row dimensions', () => {
-        pivotConfig.rows = [{
-            memberName: 'ProductCategory',
-            enabled: true
-        },
-        {
-            memberName: 'Date',
-            enabled: true
-        }];
+        pivotConfig.rows = [
+            {
+                memberName: 'ProductCategory',
+                enabled: true
+            },
+            {
+                memberName: 'Date',
+                enabled: true
+            }
+        ];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expansionStates);
 
         expect(rowStatePipeResult).toEqual([
             {
-                Date: '01/01/2021', records: [
+                ProductCategory: 'Clothing',
+                records: [
                     {
                         ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 282
-                    }
-                ], Date_records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 282
-                    }
-                ], level: 0, ProductCategory: 'Clothing', ProductCategory_records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 282
+                        Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
                     },
                     {
                         ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
-                        Country: 'USA', Date: '02/19/2020', UnitsSold: 296
+                        Country: 'USA', Date: '01/05/2019', UnitsSold: 296
                     },
                     {
                         ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
-                        Country: 'Uruguay', Date: '02/19/2020', UnitsSold: 456
+                        Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
                     },
                     {
                         ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
                         Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
-                    }],
-                ProductCategory_level: 0, Date_level: 0
+                    }
+                ],
+                ProductCategory_records: [
+                    {
+                        ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                        Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+                    },
+                    {
+                        ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                        Country: 'USA', Date: '01/05/2019', UnitsSold: 296
+                    },
+                    {
+                        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                        Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
+                    },
+                    {
+                        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
+                    }
+                ],
+                level: 0,
+                Date_records: [
+                    {
+                        Date: '01/01/2021',
+                        records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+                            }
+                        ],
+                        Date_records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+                            }
+                        ],
+                        level: 0,
+                        ProductCategory: 'Clothing',
+                        ProductCategory_records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                                Country: 'USA', Date: '01/05/2019', UnitsSold: 296
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                                Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                                Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
+                            }
+                        ]
+                    },
+                    {
+                        Date: '01/05/2019',
+                        records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                                Country: 'USA', Date: '01/05/2019', UnitsSold: 296
+                            }
+                        ],
+                        Date_records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                                Country: 'USA', Date: '01/05/2019', UnitsSold: 296
+                            }
+                        ],
+                        level: 0,
+                        ProductCategory: 'Clothing',
+                        ProductCategory_records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                                Country: 'USA', Date: '01/05/2019', UnitsSold: 296
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                                Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                                Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
+                            }
+                        ]
+                    },
+                    {
+                        Date: '05/12/2020',
+                        records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                                Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
+                            }
+                        ],
+                        Date_records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                                Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
+                            }
+                        ],
+                        level: 0,
+                        ProductCategory: 'Clothing',
+                        ProductCategory_records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                                Country: 'USA', Date: '01/05/2019', UnitsSold: 296
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                                Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                                Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
+                            }
+                        ]
+                    },
+                    {
+                        Date: '02/19/2020',
+                        records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                                Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
+                            }
+                        ],
+                        Date_records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                                Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
+                            }
+                        ],
+                        level: 0,
+                        ProductCategory: 'Clothing',
+                        ProductCategory_records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                                Country: 'USA', Date: '01/05/2019', UnitsSold: 296
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                                Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                                Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
+                            }
+                        ]
+                    }
+                ],
+                ProductCategory_level: 0,
+                Date_level: 0
             },
             {
-                Date: '01/05/2019', records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
-                        Country: 'USA', Date: '02/19/2020', UnitsSold: 296
-                    }
-                ], Date_records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
-                        Country: 'USA', Date: '02/19/2020', UnitsSold: 296
-                    }
-                ], level: 0, ProductCategory: 'Clothing', ProductCategory_records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 282
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
-                        Country: 'USA', Date: '02/19/2020', UnitsSold: 296
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
-                        Country: 'Uruguay', Date: '02/19/2020', UnitsSold: 456
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
-                    }
-                ], ProductCategory_level: 0, Date_level: 0
-            },
-            {
-                Date: '05/12/2020', records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
-                        Country: 'Uruguay', Date: '02/19/2020', UnitsSold: 456
-                    }
-                ], Date_records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
-                        Country: 'Uruguay', Date: '02/19/2020', UnitsSold: 456
-                    }
-                ], level: 0, ProductCategory: 'Clothing', ProductCategory_records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 282
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
-                        Country: 'USA', Date: '02/19/2020', UnitsSold: 296
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
-                        Country: 'Uruguay', Date: '02/19/2020', UnitsSold: 456
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
-                    }
-                ], ProductCategory_level: 0, Date_level: 0
-            }, {
-                Date: '02/19/2020', records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
-                    }
-                ], Date_records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
-                    }
-                ], level: 0, ProductCategory: 'Clothing', ProductCategory_records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 282
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
-                        Country: 'USA', Date: '02/19/2020', UnitsSold: 296
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
-                        Country: 'Uruguay', Date: '02/19/2020', UnitsSold: 456
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
-                    }
-                ], ProductCategory_level: 0, Date_level: 0
-            },
-            {
-                Date: '01/06/2020', records: [
+                ProductCategory: 'Bikes',
+                records: [
                     {
                         ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
                         Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68
                     }
-                ], Date_records: [
+                ],
+                ProductCategory_records: [
                     {
                         ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
                         Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68
                     }
-                ], level: 0, ProductCategory: 'Bikes', ProductCategory_records: [
-                    {
-                        ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
-                        Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68
-                    }
-                ], ProductCategory_level: 0, Date_level: 0
-            }, {
-                Date: '04/07/2021', records: [
-                    {
-                        ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
-                        Country: 'USA', Date: '04/07/2021', UnitsSold: 293
-                    }
-                ], Date_records: [
+                ],
+                level: 0,
+                ProductCategory_level: 0,
+                Date_level: 0
+            },
+            {
+                ProductCategory: 'Accessories',
+                records: [
                     {
                         ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
                         Country: 'USA', Date: '04/07/2021', UnitsSold: 293
                     }
-                ], level: 0, ProductCategory: 'Accessories', ProductCategory_records: [
+                ],
+                ProductCategory_records: [
                     {
                         ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
                         Country: 'USA', Date: '04/07/2021', UnitsSold: 293
                     }
-                ], ProductCategory_level: 0, Date_level: 0
-            }, {
-                Date: '12/08/2021', records: [
+                ],
+                level: 0,
+                ProductCategory_level: 0,
+                Date_level: 0
+            },
+            {
+                ProductCategory: 'Components',
+                records: [
                     {
                         ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
                         Country: 'USA', Date: '12/08/2021', UnitsSold: 240
                     }
-                ], Date_records: [
+                ],
+                ProductCategory_records: [
                     {
                         ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
                         Country: 'USA', Date: '12/08/2021', UnitsSold: 240
                     }
-                ], level: 0, ProductCategory: 'Components', ProductCategory_records: [
-                    {
-                        ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
-                        Country: 'USA', Date: '12/08/2021', UnitsSold: 240
-                    }
-                ], ProductCategory_level: 0, Date_level: 0
-            }]);
+                ],
+                level: 0,
+                ProductCategory_level: 0,
+                Date_level: 0
+            }
+        ]);
     });
 
     it('transforms flat data to pivot data with multiple nested row dimensions', () => {
@@ -709,8 +795,8 @@ describe('Pivot pipes #pGrid', () => {
         pivotConfig.columns = [{
             memberName: 'Country',
             enabled: true
-            },
-            {
+        },
+        {
             memberName: 'Date',
             enabled: true
         }];
@@ -738,12 +824,12 @@ describe('Pivot pipes #pGrid', () => {
         pivotConfig.columns = [{
             memberName: 'Country',
             enabled: true
-            },
-            {
+        },
+        {
             memberName: 'SellerName',
             enabled: true
-            },
-            {
+        },
+        {
             memberName: 'Date',
             enabled: true
         }];
@@ -848,5 +934,438 @@ describe('Pivot pipes #pGrid', () => {
             { 'ProductCategory': 'Bikes', 'level': 1, 'All': 68, 'All-Uruguay': 68, 'ProductCategory_level': 1 },
             { 'ProductCategory': 'Accessories', 'level': 1, 'All': 293, 'All-USA': 293, 'ProductCategory_level': 1 },
             { 'ProductCategory': 'Components', 'level': 1, 'All': 240, 'All-USA': 240, 'ProductCategory_level': 1 }]);
+    });
+
+    it('should generate correct levels when using predefined date dimension', () => {
+        data = [
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Bulgaria', City: 'Sofia', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                Country: 'USA', City: 'New York', Date: '01/05/2019', UnitsSold: 296
+            },
+            {
+                ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
+                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2020', UnitsSold: 68
+            },
+            {
+                ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
+                Country: 'USA', City: 'New York', Date: '04/07/2021', UnitsSold: 293
+            },
+            {
+                ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
+                Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
+            }];
+
+        pivotConfig.rows = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            )
+        ];
+
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expansionStates);
+
+        expect(rowStatePipeResult[0]).toEqual(
+            {
+                AllPeriods: 'All Periods',
+                AllPeriods_records: [
+                    {
+                        Years: '2021',
+                        records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                                Country: 'Bulgaria', City: 'Sofia', Date: '01/01/2021', UnitsSold: 282
+                            },
+                            {
+                                ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
+                                Country: 'USA', City: 'New York', Date: '04/07/2021', UnitsSold: 293
+                            },
+                            {
+                                ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
+                                Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+                            }
+                        ],
+                        Years_records: [
+                            {
+                                Date: '01/01/2021',
+                                Date_records: [{
+                                    ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                                    Country: 'Bulgaria', City: 'Sofia', Date: '01/01/2021', UnitsSold: 282
+                                }
+                                ],
+                                Date_level: 2,
+                                records: [{
+                                    ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                                    Country: 'Bulgaria', City: 'Sofia', Date: '01/01/2021', UnitsSold: 282
+                                }],
+                                level: 2
+                            },
+                            {
+                                Date: '04/07/2021',
+                                Date_records: [{
+                                    ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
+                                    Country: 'USA', City: 'New York', Date: '04/07/2021', UnitsSold: 293
+                                }],
+                                Date_level: 2,
+                                records: [{
+                                    ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
+                                    Country: 'USA', City: 'New York', Date: '04/07/2021', UnitsSold: 293
+                                }],
+                                level: 2,
+                            },
+                            {
+                                Date: '12/08/2021',
+                                Date_records: [{
+                                    ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
+                                    Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+                                }],
+                                Date_level: 2,
+                                records: [{
+                                    ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
+                                    Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+                                }],
+                                level: 2,
+                            }],
+                        level: 1,
+                        Years_level: 1
+                    },
+                    {
+                        Date: '01/01/2021',
+                        Date_records: [{
+                            ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                            Country: 'Bulgaria', City: 'Sofia', Date: '01/01/2021', UnitsSold: 282
+                        }],
+                        Date_level: 2,
+                        records: [{
+                            ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                            Country: 'Bulgaria', City: 'Sofia', Date: '01/01/2021', UnitsSold: 282
+                        }],
+                        level: 2,
+                    },
+                    {
+                        Date: '04/07/2021',
+                        Date_records: [{
+                            ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
+                            Country: 'USA', City: 'New York', Date: '04/07/2021', UnitsSold: 293
+                        }],
+                        Date_level: 2,
+                        records: [{
+                            ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
+                            Country: 'USA', City: 'New York', Date: '04/07/2021', UnitsSold: 293
+                        }],
+                        level: 2,
+                    },
+                    {
+                        Date: '12/08/2021',
+                        Date_records: [{
+                            ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
+                            Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+                        }],
+                        Date_level: 2,
+                        records: [{
+                            ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
+                            Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+                        }],
+                        level: 2,
+                    },
+                    {
+                        Years: '2019',
+                        records: [{
+                            ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                            Country: 'USA', City: 'New York', Date: '01/05/2019', UnitsSold: 296
+                        }],
+                        Years_records: [{
+                            Date: '01/05/2019', records: [{
+                                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                                Country: 'USA', City: 'New York', Date: '01/05/2019', UnitsSold: 296
+                            }],
+                            Date_records: [{
+                                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                                Country: 'USA', City: 'New York', Date: '01/05/2019', UnitsSold: 296
+                            }], level: 2, Date_level: 2
+                        }],
+                        level: 1,
+                        Years_level: 1
+                    },
+                    {
+                        Date: '01/05/2019',
+                        records: [{
+                            ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                            Country: 'USA', City: 'New York', Date: '01/05/2019', UnitsSold: 296
+                        }],
+                        Date_records: [{
+                            ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                            Country: 'USA', City: 'New York', Date: '01/05/2019', UnitsSold: 296
+                        }],
+                        level: 2,
+                        Date_level: 2
+                    },
+                    {
+                        Years: '2020',
+                        records: [
+                            {
+                                ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
+                                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2020', UnitsSold: 68
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
+                            },
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                                Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
+                            }],
+                        Years_records: [
+                            {
+                                Date: '01/06/2020',
+                                records: [{
+                                    ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
+                                    Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2020', UnitsSold: 68
+                                }],
+                                Date_records: [{
+                                    ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
+                                    Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2020', UnitsSold: 68
+                                }],
+                                level: 2,
+                                Date_level: 2
+                            },
+                            {
+                                Date: '05/12/2020', records: [{
+                                    ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                                    Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
+                                }],
+                                Date_records: [{
+                                    ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                                    Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
+                                }],
+                                level: 2, Date_level: 2
+                            },
+                            {
+                                Date: '02/19/2020',
+                                records: [{
+                                    ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                                    Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
+                                }],
+                                Date_records: [{
+                                    ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                                    Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
+                                }], level: 2, Date_level: 2
+                            }
+                        ],
+                        level: 1,
+                        Years_level: 1
+                    },
+                    {
+                        Date: '01/06/2020',
+                        records: [{
+                            ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
+                            Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2020', UnitsSold: 68
+                        }],
+                        Date_records: [{
+                            ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
+                            Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2020', UnitsSold: 68
+                        }],
+                        level: 2,
+                        Date_level: 2
+                    },
+                    {
+                        Date: '05/12/2020',
+                        records: [{
+                            ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                            Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
+                        }],
+                        Date_records: [
+                            {
+                                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
+                            }], level: 2, Date_level: 2
+                    },
+                    {
+                        Date: '02/19/2020',
+                        records: [{
+                            ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                            Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
+                        }],
+                        Date_records: [{
+                            ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                            Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
+                        }],
+                        level: 2,
+                        Date_level: 2
+                    }],
+                level: 0,
+                records: [
+                    {
+                        ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                        Country: 'Bulgaria', City: 'Sofia', Date: '01/01/2021', UnitsSold: 282
+                    },
+                    {
+                        ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
+                        Country: 'USA', City: 'New York', Date: '04/07/2021', UnitsSold: 293
+                    },
+                    {
+                        ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
+                        Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+                    },
+                    {
+                        ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                        Country: 'USA', City: 'New York', Date: '01/05/2019', UnitsSold: 296
+                    },
+                    {
+                        ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
+                        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2020', UnitsSold: 68
+                    },
+                    {
+                        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
+                    },
+                    {
+                        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                        Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
+                    }],
+                AllPeriods_level: 0
+            });
+    });
+
+    it('should generate correct levels when using predefined date dimension with other row dimensions', () => {
+        data = [
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Bulgaria', City: 'Sofia', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                Country: 'USA', City: 'New York', Date: '01/05/2019', UnitsSold: 296
+            },
+            {
+                ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
+                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2020', UnitsSold: 68
+            },
+            {
+                ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
+                Country: 'USA', City: 'New York', Date: '04/07/2021', UnitsSold: 293
+            },
+            {
+                ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
+                Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
+            }];
+        pivotConfig.rows = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            ),
+            {
+                memberName: 'City',
+                enabled: true
+            },
+            {
+                memberFunction: () => 'All',
+                memberName: 'AllProducts',
+                enabled: true,
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+            }
+        ];
+
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(rowPipeResult, pivotConfig, expansionStates);
+        expect(rowStatePipeResult.length).toEqual(44);
+        expect(rowStatePipeResult[0]['AllPeriods']).toEqual('All Periods');
+        expect(rowStatePipeResult[0]['AllPeriods_records'].length).toEqual(10);
+        expect(rowStatePipeResult[0]['AllProducts']).toEqual('All');
+        expect(rowStatePipeResult[0]['ProductCategory']).not.toBeDefined();
+        expect(rowStatePipeResult[0]['AllProducts_records'].length).toEqual(1);
+        expect(rowStatePipeResult[0]['AllProducts_records'][0]['ProductCategory']).toEqual('Clothing');
+        expect(rowStatePipeResult[0]['City']).toEqual('Sofia');
+        expect(rowStatePipeResult[0]['City_records'].length).toEqual(1);
+        expect(rowStatePipeResult[0]['level']).toEqual(0);
+
+        expect(rowStatePipeResult[1]['AllPeriods']).toEqual('All Periods');
+        expect(rowStatePipeResult[1]['AllPeriods_records'].length).toEqual(10);
+        expect(rowStatePipeResult[1]['AllProducts']).not.toBeDefined();
+        expect(rowStatePipeResult[1]['AllProducts_records'].length).toEqual(0);
+        expect(rowStatePipeResult[1]['ProductCategory']).toEqual('Clothing');
+        expect(rowStatePipeResult[1]['City']).toEqual('Sofia');
+        expect(rowStatePipeResult[1]['City_records'].length).toEqual(1);
+        expect(rowStatePipeResult[1]['level']).toEqual(1);
+
+        expect(rowStatePipeResult[2]['level']).toEqual(0);
+
+        expect(rowStatePipeResult[10]['AllPeriods']).not.toBeDefined();
+        expect(rowStatePipeResult[10]['AllPeriods_records']).not.toBeDefined();
+        expect(rowStatePipeResult[10]['ProductCategory']).not.toBeDefined();
+        expect(rowStatePipeResult[10]['AllProducts']).toEqual('All');
+        expect(rowStatePipeResult[10]['AllProducts_records'].length).toEqual(1);
+        expect(rowStatePipeResult[10]['AllProducts_records'][0]['ProductCategory']).toEqual('Clothing');
+        expect(rowStatePipeResult[10]['City']).toEqual('Sofia');
+        expect(rowStatePipeResult[10]['City_records'].length).toEqual(2);
+        expect(rowStatePipeResult[10]['Years']).toEqual('2021');
+        expect(rowStatePipeResult[10]['Years_records'].length).toEqual(3);
+        expect(rowStatePipeResult[10]['Years_level']).toEqual(1);
+        expect(rowStatePipeResult[10]['level']).toEqual(0);
+
+        expect(rowStatePipeResult[11]['AllPeriods']).not.toBeDefined();
+        expect(rowStatePipeResult[11]['AllPeriods_records']).not.toBeDefined();
+        expect(rowStatePipeResult[11]['ProductCategory']).toEqual('Clothing');
+        expect(rowStatePipeResult[11]['ProductCategory_records'].length).toEqual(1);
+        expect(rowStatePipeResult[11]['AllProducts']).not.toBeDefined();
+        expect(rowStatePipeResult[11]['AllProducts_records'].length).toEqual(0);
+        expect(rowStatePipeResult[11]['City']).toEqual('Sofia');
+        expect(rowStatePipeResult[11]['City_records'].length).toEqual(2);
+        expect(rowStatePipeResult[11]['Years']).toEqual('2021');
+        expect(rowStatePipeResult[11]['Years_records'].length).toEqual(3);
+        expect(rowStatePipeResult[11]['Years_level']).toEqual(1);
+        expect(rowStatePipeResult[11]['level']).toEqual(1);
+
+        expect(rowStatePipeResult[15]['AllPeriods']).not.toBeDefined();
+        expect(rowStatePipeResult[15]['AllPeriods_records']).not.toBeDefined();
+        expect(rowStatePipeResult[15]['ProductCategory']).not.toBeDefined();
+        expect(rowStatePipeResult[15]['ProductCategory_records']).not.toBeDefined();
+        expect(rowStatePipeResult[15]['AllProducts']).toEqual('All');
+        expect(rowStatePipeResult[15]['AllProducts_records'].length).toEqual(1);
+        expect(rowStatePipeResult[15]['City']).toEqual('Sofia');
+        expect(rowStatePipeResult[15]['City_records'].length).toEqual(1);
+        expect(rowStatePipeResult[15]['Years']).not.toBeDefined();
+        expect(rowStatePipeResult[15]['Years_records']).not.toBeDefined();
+        expect(rowStatePipeResult[15]['Date']).toEqual('01/01/2021');
+        expect(rowStatePipeResult[15]['Date_records'][0]).toEqual(
+            {
+                'ProductCategory': 'Clothing', 'UnitPrice': 12.81, 'SellerName': 'Stanley',
+                'Country': 'Bulgaria', 'City': 'Sofia', 'Date': '01/01/2021', 'UnitsSold': 282, 'Date_level': 2, 'AllProducts_level': 0
+            }
+        );
+        expect(rowStatePipeResult[15]['level']).toEqual(2);
     });
 });

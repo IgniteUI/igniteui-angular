@@ -13,7 +13,7 @@ const COLUMNS_HEADER_CSS_CLASS = '.igx-grid-thead__wrapper';
 const HEADER_CELL_CSS_CLASS = '.igx-grid-th';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
-describe('IgxPivotGrid - Keyboard navigation #pGrid', () => {
+describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
     let fixture: ComponentFixture<IgxPivotGridMultipleRowComponent>;
     let pivotGrid: IgxPivotGridComponent;

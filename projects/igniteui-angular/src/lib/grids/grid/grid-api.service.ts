@@ -1,14 +1,14 @@
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridComponent } from './grid.component';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { Injectable } from '@angular/core';
+import { GridServiceType, GridType } from '../common/grid.interface';
 
 @Injectable()
-export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
+export class IgxGridAPIService extends GridBaseAPIService<GridType> implements GridServiceType {
 
     public groupBy(expression: IGroupingExpression): void {
         const groupingState = cloneArray(this.grid.groupingExpressions);
@@ -166,7 +166,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         return recordId;
     }
 
-    public remove_grouping_expression(fieldName) {
+    public remove_grouping_expression(fieldName: string) {
         const groupingExpressions = this.grid.groupingExpressions;
         const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
         if (index !== -1) {

@@ -1,11 +1,8 @@
 import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
-import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { fromEvent, Subscription } from 'rxjs';
-import { IgxGridBaseDirective } from './grid/public_api';
+import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
-import { GridType } from './common/grid.interface';
-import { IgxHierarchicalRowComponent } from './hierarchical-grid/hierarchical-row.component';
-import { IgxRowDirective } from './row.directive';
+import { RowType } from './common/grid.interface';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
@@ -21,18 +18,20 @@ const cellActiveClass = 'igx-grid__td--active';
     selector: '[igxRowDrag]'
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
+
     @Input('igxRowDrag')
     public set data(value: any) {
         this._data = value;
     }
 
     public get data(): any {
-        return this._data.grid.createRow(this._data.index, this._data.rowData);
+        return this._data.grid.createRow(this._data.index, this._data.data);
     }
 
     private subscription$: Subscription;
     private _rowDragStarted = false;
-    private get row(): IgxRowDirective<IgxGridBaseDirective & GridType> {
+
+    private get row(): RowType {
         return this._data;
     }
 
@@ -63,7 +62,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 this._clicked = false;
                 return;
             }
-            this.row.grid.dragRowID = this.row.rowID;
+            this.row.grid.dragRowID = this.row.key;
             this.row.grid.rowDragging = true;
             this.row.grid.cdr.detectChanges();
 
@@ -97,7 +96,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         super.onPointerUp(event);
         if (!dropArea && this.ghostElement) {
             this.ghostElement.addEventListener('transitionend', this.transitionEndEvent, false);
-        }   else {
+        } else {
             this.endDragging();
         }
     }
@@ -106,15 +105,15 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this.row.grid.gridAPI.crudService.endEdit(false);
         this.row.grid.cdr.detectChanges();
         this.ghostContext = {
-            $implicit: this.row.rowData,
-            data: this.row.rowData,
+            $implicit: this.row.data,
+            data: this.row.data,
             grid: this.row.grid
         };
         super.createGhost(pageX, pageY, this.row.nativeElement);
 
         // check if there is an expander icon and create the ghost at the corresponding position
         if (this.isHierarchicalGrid) {
-            const row = this.row as IgxHierarchicalRowComponent;
+            const row = this.row as any;
             if (row.expander) {
                 const expanderWidth = row.expander.nativeElement.getBoundingClientRect().width;
                 this._ghostHostX += expanderWidth;
@@ -182,16 +181,12 @@ export class IgxDragIndicatorIconDirective {
     selector: '[igxRowDragGhost]'
 })
 
-export class IgxRowDragGhostDirective  {
+export class IgxRowDragGhostDirective {
     constructor(public templateRef: TemplateRef<any>) { }
 }
 
 @NgModule({
     declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
-    entryComponents: [],
     exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
-    imports: []
 })
-
-export class IgxRowDragModule {
-}
+export class IgxRowDragModule { }

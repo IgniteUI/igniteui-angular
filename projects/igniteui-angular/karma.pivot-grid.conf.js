@@ -31,13 +31,13 @@ module.exports = function (config) {
         random: false
       },
       tagPrefix: '#',
-      tags: 'pGrid'
+      tags: 'pivotGrid'
     },
     preprocessors: {
       'projects/igniteui-angular/**/*.js': ['coverage']
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../coverage/tree-grid'),
+      dir: require('path').join(__dirname, '../../coverage/grid'),
       reporters: [
         // reporters not supporting the `file` property
         { type: 'html' },
@@ -47,12 +47,12 @@ module.exports = function (config) {
     },
     reporters: ['progress', 'coverage'],
     specReporter: {
-      suppressSkipped: true,
-      suppressErrorSummary: false,
-      suppressFailed: false,
-      suppressPassed: false,
-      showSpecTiming: false,
-      failFast: false
+        suppressSkipped: true,
+        suppressErrorSummary: false,
+        suppressFailed: false,
+        suppressPassed: false,
+        showSpecTiming: false,
+        failFast: false
     },
     port: 9876,
     colors: true,

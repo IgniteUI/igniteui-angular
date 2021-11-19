@@ -5,7 +5,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridTestBaseComponent } from '../../test-utils/pivot-grid-samples.spec';
 
-describe('Basic IgxPivotGrid #pGrid', () => {
+describe('Basic IgxPivotGrid #pivotGrid', () => {
     let fixture;
     configureTestSuite((() => {
         TestBed.configureTestingModule({

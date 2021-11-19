@@ -132,7 +132,8 @@ const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_actions_pin_label: 'Закачи',
     igx_grid_actions_unpin_label: 'Откачи',
     igx_grid_actions_jumpUp_label: 'Придвижи се нагоре',
-    igx_grid_actions_jumpDown_label: 'Придвижи се надолу'
+    igx_grid_actions_jumpDown_label: 'Придвижи се надолу',
+    igx_grid_pivot_date_dimension_total: 'All Periods'
 };
 
 /**
