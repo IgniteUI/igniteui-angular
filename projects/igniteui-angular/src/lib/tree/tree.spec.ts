@@ -95,8 +95,7 @@ describe('IgxTree #treeView', () => {
                 mockNodesArray.push(
                     mockNode
                 );
-                console.log(mockNodesArray);
-                console.log(mockNodesArray[0]);
+
                 spyOnProperty(mockNodes, 'first', 'get').and.returnValue(mockNode);
                 tree.ngAfterViewInit();
                 tick();
