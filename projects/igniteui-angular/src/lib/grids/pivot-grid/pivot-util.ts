@@ -1,7 +1,7 @@
 import { cloneValue } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
-import { IGridSortingStrategy, IgxSorting } from '../../data-operations/sorting-strategy';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 
 export class PivotUtil {
