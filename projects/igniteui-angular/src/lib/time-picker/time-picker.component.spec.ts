@@ -537,7 +537,8 @@ describe('IgxTimePicker', () => {
                 fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
 
-                inputGroup.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                const input = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
+                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
