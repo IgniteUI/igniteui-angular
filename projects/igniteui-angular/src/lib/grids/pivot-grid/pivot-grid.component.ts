@@ -1053,12 +1053,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected getMeasureChildren(colFactory, data, parent, hidden, parentWidth) {
         const cols = [];
+        const count = this.values.length;
+        const width = parentWidth ? parseInt(parentWidth, 10) / count : MINIMUM_COLUMN_WIDTH;
+        const isPercent = parentWidth && parentWidth.indexOf('%') !== -1;
         this.values.forEach(val => {
             const ref = colFactory.create(this.viewRef.injector);
             ref.instance.header = val.displayName || val.member;
             ref.instance.field = parent.field + '-' + val.member;
             ref.instance.parent = parent;
-            ref.instance.width = parentWidth || MINIMUM_COLUMN_WIDTH + 'px';
+            ref.instance.width = isPercent ? width + '%' : width + 'px';
             ref.instance.hidden = hidden;
             ref.instance.dataType = val.dataType || this.resolveDataTypes(data[0][val.member]);
             ref.instance.formatter = val.formatter;
