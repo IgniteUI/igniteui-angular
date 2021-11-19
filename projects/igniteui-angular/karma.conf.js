@@ -41,9 +41,7 @@ module.exports = function (config) {
       subdir: '.',
       reporters: [
         // reporters not supporting the `file` property
-        { type: 'html' },
-        { type: 'json' },
-        { type: 'lcovonly' },
+        { type: 'lcov' },
       ]
     },
     reporters: ['progress', 'coverage'],
