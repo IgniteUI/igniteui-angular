@@ -27,11 +27,10 @@ import {
     ApplicationRef
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import { GridBaseAPIService } from '../api.service';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { GridType, RowType } from '../common/grid.interface';
+import { GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
@@ -62,6 +61,8 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridTransaction } from '../common/types';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxGridAPIService } from '../grid/grid-api.service';
+import { GridBaseAPIService } from '../api.service';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -75,7 +76,7 @@ const MINIMUM_COLUMN_WIDTH = 200;
         IgxGridSummaryService,
         IgxGridSelectionService,
         GridBaseAPIService,
-        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxPivotGridComponent) },
+        { provide: IGX_GRID_BASE, useExisting: IgxPivotGridComponent },
         { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
         IgxPivotGridNavigationService,
         IgxForOfSyncService,
@@ -429,17 +430,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         protected transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef,
+        elementRef: ElementRef<HTMLElement>,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
         cdr: ChangeDetectorRef,
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        private _appRef: ApplicationRef,
-        private _moduleRef: NgModuleRef<any>,
-        private _factoryResolver: ComponentFactoryResolver,
-        private _injector: Injector,
+        appRef: ApplicationRef,
+        moduleRef: NgModuleRef<any>,
+        factoryResolver: ComponentFactoryResolver,
+        injector: Injector,
         navigation: IgxPivotGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -448,29 +449,29 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         @Inject(LOCALE_ID) localeId: string,
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
-        super(
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            resolver,
-            differs,
-            viewRef,
-            _appRef,
-            _moduleRef,
-            _factoryResolver,
-            _injector,
-            navigation,
-            filteringService,
-            overlayService,
-            summaryService,
-            _displayDensityOptions,
-            localeId,
-            platform);
+            super(
+                selectionService,
+                colResizingService,
+                gridAPI,
+                transactionFactory,
+                elementRef,
+                zone,
+                document,
+                cdr,
+                resolver,
+                differs,
+                viewRef,
+                appRef,
+                moduleRef,
+                factoryResolver,
+                injector,
+                navigation,
+                filteringService,
+                overlayService,
+                summaryService,
+                _displayDensityOptions,
+                localeId,
+                platform);
     }
 
     /**

@@ -1,19 +1,11 @@
 
-import { GridType } from '../grids/common/grid.interface';
-import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
-import { IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
+import { GridType, PivotGridType } from '../grids/common/grid.interface';
+import { IPivotDimension, IPivotDimensionStrategy, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 import { FilteringStrategy } from './filtering-strategy';
 import { GridColumnDataType } from './data-util';
-import { DefaultSortingStrategy, ISortingStrategy, SortingDirection } from './sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
 import { parseDate } from '../core/utils';
-
-export interface IPivotDimensionStrategy {
-    process(collection: any,
-        dimensions: IPivotDimension[],
-        values: IPivotValue[],
-        pivotKeys?: IPivotKeys): any[];
-}
 
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: NoopPivotDimensionsStrategy = null;
@@ -168,7 +160,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
     }
 
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false,
-         grid?: IgxPivotGridComponent): any {
+         grid?: PivotGridType): any {
         const config = grid.pivotConfiguration;
         const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
@@ -190,9 +182,9 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
                 valueResolver: (obj: any, key: string, isDate?: boolean) => any,
                 isDate?: boolean,
                 isTime?: boolean,
-                grid?: GridType) {
+                grid?: PivotGridType) {
         const key = fieldName;
-        const config = (grid as any).pivotConfiguration;
+        const config = grid.pivotConfiguration;
         const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
         this.dimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === key);

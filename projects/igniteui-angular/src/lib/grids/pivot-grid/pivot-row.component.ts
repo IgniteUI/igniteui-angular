@@ -109,7 +109,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
      * @internal
      */
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.rowData) {
+        if (changes.data) {
             // generate new rowDimension on row data change
             this.rowDimensionData = [];
             const rowDimConfig = this.grid.rowDimensions;
@@ -172,8 +172,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
     }
 
     protected _createColComponent(field: string, header: string, index: number = 0, dim: IPivotDimension, lvl = 0) {
-        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
+        const ref = this.viewRef.createComponent(IgxColumnComponent);
         ref.instance.field = field;
         ref.instance.header = header;
         ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
