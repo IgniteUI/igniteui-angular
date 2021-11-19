@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
@@ -10,6 +9,7 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 
@@ -174,8 +174,8 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
 
             // Moving 'ID' column
-            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
-            let targetColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            let targetColumn = treeGrid.columnList.filter(c => c.field === 'Age')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
             fix.detectChanges();
 
@@ -183,7 +183,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             verifyCellsContentAlignment(fix, 'ID', false); // Verify cells of 'ID' are right-aligned.
 
             // Moving 'ID' column
-            targetColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            targetColumn = treeGrid.columnList.filter(c => c.field === 'Name')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
             fix.detectChanges();
 
@@ -331,8 +331,8 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
 
             // Moving 'ID' column
-            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
-            let targetColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            let targetColumn = treeGrid.columnList.filter(c => c.field === 'Age')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
             fix.detectChanges();
             tick(16);
@@ -340,7 +340,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             verifyCellsContentAlignment(fix, 'ID', false); // Verify cells of 'ID' are right-aligned.
 
             // Moving 'ID' column
-            targetColumn = treeGrid.columns.filter(c => c.field === 'ParentID')[0];
+            targetColumn = treeGrid.columnList.filter(c => c.field === 'ParentID')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
             fix.detectChanges();
             tick(16);

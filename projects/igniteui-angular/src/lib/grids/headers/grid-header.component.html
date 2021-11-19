@@ -6,22 +6,26 @@
     <igx-icon>more_vert</igx-icon>
 </ng-template>
 
+<ng-template #defaultSortHeaderIconTemplate>
+    <igx-icon>{{ sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+</ng-template>
+
 <span class="igx-grid-th__title">
-    <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
+    <ng-container
+        *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
     </ng-container>
 </span>
 <ng-container *ngIf="!column.columnGroup">
     <div class="igx-grid-th__icons">
         <ng-container *ngIf="column.sortable">
-            <igx-icon class="sort-icon"
-                [attr.draggable]="false"
-                [attr.data-sortIndex]="column.field | sortingIndex:grid.sortingExpressions"
-                (click)="onSortingIconClick($event)">
-                {{ sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}
-            </igx-icon>
+            <div class="sort-icon" [attr.data-sortIndex]="column.field | sortingIndex:grid.sortingExpressions"
+                [attr.draggable]="false" (click)="onSortingIconClick($event)" (pointerdown)="$event.stopPropagation()">
+                <ng-container *ngTemplateOutlet="sortIconTemplate; context: { $implicit:  this }"></ng-container>
+            </div>
         </ng-container>
         <ng-container *ngIf="grid.allowFiltering && column.filterable && grid.filterMode === 'excelStyleFilter'">
-            <div [ngClass]="filterIconClassName" (click)="onFilteringIconClick($event)" (pointerdown)="$event.stopPropagation()">
+            <div [ngClass]="filterIconClassName" (click)="onFilteringIconClick($event)"
+                (pointerdown)="$event.stopPropagation()">
                 <ng-container *ngTemplateOutlet="esfIconTemplate; context: { $implicit:  this }"></ng-container>
             </div>
         </ng-container>

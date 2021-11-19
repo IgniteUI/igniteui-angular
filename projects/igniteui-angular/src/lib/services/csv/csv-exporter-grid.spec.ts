@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
@@ -16,7 +15,7 @@ import { ReorderedColumnsComponent,
         ColumnsAddedOnInitComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -108,7 +107,7 @@ describe('CSV Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.columns[0].hidden = true;
+        grid.columnList.get(0).hidden = true;
         options.ignoreColumnsVisibility = false;
 
         fix.detectChanges();
@@ -134,19 +133,19 @@ describe('CSV Grid Exporter', () => {
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'All columns data should have been exported!');
 
-        grid.columns[0].hidden = true;
+        grid.columnList.get(0).hidden = true;
         fix.detectChanges();
         expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.gridNameJobTitle, 'Two columns data should have been exported!');
 
-        grid.columns[0].hidden = false;
+        grid.columnList.get(0).hidden = false;
         fix.detectChanges();
         expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'All columns data should have been exported!');
 
-        grid.columns[0].hidden = undefined;
+        grid.columnList.get(0).hidden = undefined;
         fix.detectChanges();
         expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
         wrapper = await getExportedData(grid, options);
@@ -249,7 +248,7 @@ describe('CSV Grid Exporter', () => {
             cols.push({ header: value.header, index: value.columnIndex });
         });
 
-        grid.columns[0].hidden = true;
+        grid.columnList.get(0).hidden = true;
         options.ignoreColumnsVisibility = false;
         fix.detectChanges();
 
@@ -315,8 +314,8 @@ describe('CSV Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.columns[1].formatter = ((val: string) => val.toUpperCase());
-        grid.columns[2].formatter = ((val: string) => val.toLowerCase());
+        grid.columnList.get(1).formatter = ((val: string) => val.toUpperCase());
+        grid.columnList.get(2).formatter = ((val: string) => val.toLowerCase());
         grid.cdr.detectChanges();
 
         let wrapper = await getExportedData(grid, options);
@@ -461,8 +460,8 @@ describe('CSV Grid Exporter', () => {
         });
 
         it('should skip the column formatter when columnExportinging skipFormatter is true.', async () => {
-            treeGrid.columns[3].formatter = ((val: string) => val.toLowerCase());
-            treeGrid.columns[4].formatter = ((val: number) =>
+            treeGrid.columnList.get(3).formatter = ((val: string) => val.toLowerCase());
+            treeGrid.columnList.get(4).formatter = ((val: number) =>
                  val * 12 // months
             );
             treeGrid.cdr.detectChanges();

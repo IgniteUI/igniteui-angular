@@ -21,7 +21,7 @@
 </igx-input-group>
 
 <igx-list #list [displayDensity]="esf.displayDensity" [isLoading]="isLoading">
-    <div [style.overflow]="'hidden'" [style.position]="'relative'">
+    <div style="overflow: hidden; position: relative;">
         <igx-list-item
         *igxFor="let item of displayedListData scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
             <igx-checkbox

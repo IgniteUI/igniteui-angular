@@ -8,24 +8,22 @@ import {
     Input,
     ViewChild,
     TemplateRef,
-    OnDestroy
+    OnDestroy,
+    Inject
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
-import { GridType } from '../common/grid.interface';
+import { IgxGridSelectionService } from '../selection/selection.service';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { IgxGridRowComponent } from './grid-row.component';
-import { IgxGridComponent } from './grid.component';
 import { GridSelectionMode } from '../common/enums';
+import { ISelectionNode } from '../common/types';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-groupby-row',
     templateUrl: './groupby-row.component.html'
 })
@@ -121,7 +119,8 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
         return this.isActive();
     }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+    constructor(
+        @Inject(IGX_GRID_BASE) public grid: GridType,
         public gridSelection: IgxGridSelectionService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef,
@@ -218,13 +217,9 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
         }
         event.stopPropagation();
         if (this.areAllRowsInTheGroupSelected) {
-            this.groupRow.records.forEach(row => {
-                this.gridSelection.deselectRow(this.getRowID(row), event);
-            });
+            this.gridSelection.deselectRows(this.groupRow.records.map(x => this.getRowID(x)));
         } else {
-            this.groupRow.records.forEach(row => {
-                this.gridSelection.selectRowById(this.getRowID(row), false, event);
-            });
+            this.gridSelection.selectRows(this.groupRow.records.map(x => this.getRowID(x)));
         }
     }
 
@@ -254,16 +249,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     }
 
     /**
-     * Returns a reference to the `IgxGridComponent` the `IgxGridGroupByRowComponent` belongs to.
-     * ```typescript
-     * this.grid1.rowList.first.grid;
-     * ```
-     */
-    public get grid(): IgxGridComponent {
-        return this.gridAPI.grid as IgxGridComponent;
-    }
-
-    /**
      * @hidden
      */
     public get dataType(): any {
@@ -282,8 +267,8 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public get selectedRowsInTheGroup(): any[] {
-        const selectedIds = this.gridSelection.filteredSelectedRowIds;
-        return this.groupRow.records.filter(rowID => selectedIds.indexOf(this.getRowID(rowID)) > -1);
+        const selectedIds = new Set(this.gridSelection.filteredSelectedRowIds);
+        return this.groupRow.records.filter(rowID => selectedIds.has(this.getRowID(rowID)));
     }
 
     /**

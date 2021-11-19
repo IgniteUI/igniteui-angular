@@ -160,7 +160,7 @@ class DeclarativeListTestComponent {
     public filteringArgs: FilteringArgs;
     public filteredArgs: FilteringArgs;
 
-    get fo() {
+    public get fo() {
         const options = new IgxFilterOptions();
         options.items = this.list.items;
         options.inputValue = this.filterValue;
@@ -200,7 +200,7 @@ class DynamicListTestComponent {
         { key: '4', text: 'Nav4' }
     ];
 
-    get fo() {
+    public get fo() {
         const options = new IgxFilterOptions();
         options.inputValue = this.filterValue;
         options.key = 'text';

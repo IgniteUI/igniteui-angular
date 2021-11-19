@@ -895,11 +895,10 @@ export class FinancialData {
 
     /** Updates values in random records */
     public static updateRandomPrices(data: any[]): any[] {
-      const newData = data.slice();
-      for (let i = Math.round(Math.random() * 10); i < newData.length; i += Math.round(Math.random() * 10)) {
-          newData.push(this.randomizeObjectData(newData[i]));
+      for (let i = Math.round(Math.random() * 10); i < data.length; i += Math.round(Math.random() * 10)) {
+          this.randomizeObjectData(data[i]);
       }
-      return newData;
+      return Array.from(data);
     }
 
     /*** Genrates additional financial data fields */

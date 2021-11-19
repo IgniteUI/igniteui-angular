@@ -3,13 +3,18 @@
 
 export interface ThemePropertyChanges {
     /** An array of changes to theme function properties */
-    changes: ThemePropertyChange[];
+    changes: (ThemePropertyChange | ThemeVariableChange)[];
 }
 export interface ThemePropertyChange extends ChangeAction {
     /** Name of the theme property */
     name: string;
     /** Theming function this parameter belongs to */
     owner: string;
+}
+
+export interface ThemeVariableChange extends ChangeAction {
+    /** Name of the theme variable */
+    name: string;
 }
 
 export interface SelectorChanges {
