@@ -29,7 +29,7 @@
                 </div>
                 <!-- Columns area -->
                 <igx-chips-area #colArea droppable='true' style="width:fit-content; height: 100%;">
-                    <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="'true'" [id]="col.memberName"
+                    <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="true" [id]="col.memberName"
                         [removable]="true" (remove)="columnRemoved($event)" 
                         (dragOver)="onDimDragOver($event, 1)"
                         (dragLeave)="onDimDragLeave($event)"
@@ -54,7 +54,7 @@
                 </div>
                 <!-- Value area -->
                 <igx-chips-area #valueArea droppable='true' style="width:fit-content; height: 100%;">
-                    <igx-chip #currChip *ngFor="let value of grid.values" [draggable]="'true'" [id]="value.member"
+                    <igx-chip #currChip *ngFor="let value of grid.values" [draggable]="true" [id]="value.member"
                         [removable]="true" (remove)="valueRemoved($event)"
                          (dragLeave)="onDimDragLeave($event)"
                          (dragOver)="onDimDragOver($event)"
@@ -87,7 +87,7 @@
                 </div>
                 <!-- Row area -->
                 <igx-chips-area #rowArea droppable='true' style="width:fit-content; height: 100%;">
-                    <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="'true'" [id]="row.memberName"
+                    <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="true" [id]="row.memberName"
                         [removable]="true" (remove)="rowRemoved($event)"
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, rowArea, 0)"

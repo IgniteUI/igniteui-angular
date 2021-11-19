@@ -8,13 +8,15 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group/public_api';
 
-import { IgxPageSizeSelectorComponent } from './page-size-selector.component';
-import { IgxPageNavigationComponent } from './pager.component';
-import { IgxPaginatorComponent, IgxPaginatorTemplateDirective } from './paginator.component';
+
+import {
+    IgxPageNavigationComponent,
+    IgxPageSizeSelectorComponent,
+    IgxPaginatorComponent,
+    IgxPaginatorTemplateDirective
+} from './paginator.component';
 import { IgxPaginatorDirective } from './paginator-interfaces';
 
-export * from './page-size-selector.component';
-export * from './pager.component';
 export * from './paginator.component';
 
 @NgModule({

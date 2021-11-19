@@ -3,11 +3,14 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile,
         serializeNodes, makeNgIf, stringifyAttriutes } from '../common/util';
+import { nativeImport } from '../common/import-helper.js';
 
 const version = '12.1.0';
 
-export default (): Rule => (host: Tree, context: SchematicContext) => {
+export default (): Rule => async (host: Tree, context: SchematicContext) => {
   context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
+
+  const { HtmlParser, getHtmlTagDefinition } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
 
   const update = new UpdateChanges(__dirname, host, context);
   const TAGS = ['igx-grid', 'igx-tree-grid', 'igx-hierarchical-grid'];
@@ -40,7 +43,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
   };
 
   const checkForPaginatorInTemplate = (path, name) => {
-    const ngTemplates = findElementNodes(parseFile(host, path), 'ng-template');
+    const ngTemplates = findElementNodes(parseFile(new HtmlParser(), host, path), 'ng-template');
     const paginatorTemplate = ngTemplates.filter(template => hasAttribute(template as Element, `#${name}`))[0];
     return paginatorTemplate ? !!findElementNodes((paginatorTemplate as Element).children, 'igx-paginator').length : false;
   };
@@ -48,7 +51,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
   const moveTemplate = (paginatorTemplate) => {
     if (paginatorTemplate) {
       return `${warnMsg}\n<igx-paginator-content>
-      ${serializeNodes((paginatorTemplate as Element).children).join('')}
+      ${serializeNodes((paginatorTemplate as Element).children, getHtmlTagDefinition).join('')}
       </igx-paginator-content>\n`;
     }
     return '';
@@ -56,7 +59,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   const buildPaginator = (node, path, propName, value, isChildGrid = false) => {
     const paginationTemplateName = getAttribute(node, '[paginationTemplate]')[0];
-    const ngTemplates = findElementNodes(parseFile(host, path), 'ng-template');
+    const ngTemplates = findElementNodes(parseFile(new HtmlParser(), host, path), 'ng-template');
     templateNames.push('#' + paginationTemplateName?.value);
     const paginatorTemplate = ngTemplates.filter(template => hasAttribute(template as Element, `#${paginationTemplateName?.value}`))[0];
     if (paginatorTemplate && checkForPaginatorInTemplate(path, paginationTemplateName?.value)) {
@@ -70,7 +73,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   // migrate paging and pagination template for grid, tree grid and hierarchical grid
   for (const path of update.templateFiles) {
-    findElementNodes(parseFile(host, path), TAGS)
+    findElementNodes(parseFile(new HtmlParser(), host, path), TAGS)
       .filter(grid => hasAttribute(grid as Element, prop))
       .map(node => getSourceOffset(node as Element))
       .forEach(offset => {
@@ -86,7 +89,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   // apply the migrations to the rowIsland
   for (const path of update.templateFiles) {
-    findElementNodes(parseFile(host, path), 'igx-row-island')
+    findElementNodes(parseFile(new HtmlParser(), host, path), 'igx-row-island')
       .filter(island => hasAttribute(island as Element, prop))
       .map(island => getSourceOffset(island as Element))
       .forEach(offset => {
@@ -102,7 +105,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   // clear paginationTemplate definitions
   for (const path of update.templateFiles) {
-    findElementNodes(parseFile(host, path), 'ng-template')
+    findElementNodes(parseFile(new HtmlParser(), host, path), 'ng-template')
       .filter(template => hasAttribute(template as Element, templateNames))
       .forEach(node => {
         const { startTag, endTag, file } = getSourceOffset(node as Element);

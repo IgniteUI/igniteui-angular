@@ -42,7 +42,7 @@ export class GridSelectionComponent implements AfterViewInit {
         console.log('ONSELECTIONEVENTFIRED');
 /*         const targetCell = args.cell as IgxGridCellComponent;
         if  (!this.selection) {
-            this.grid1.selectRows([targetCell.row.rowID], true);
+            this.grid1.selectRows([targetCell.row.key], true);
         } */
     }
 

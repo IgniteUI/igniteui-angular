@@ -1,8 +1,15 @@
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IPivotDimensionStrategy } from '../../data-operations/pivot-strategy';
-import { IgxColumnComponent } from '../columns/column.component';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { ColumnType } from '../common/grid.interface';
+
+
+export interface IPivotDimensionStrategy {
+    process(collection: any,
+        dimensions: IPivotDimension[],
+        values: IPivotValue[],
+        pivotKeys?: IPivotKeys): any[];
+}
 
 export type PivotAggregation = (members: any[], data: any[]) => any;
 
@@ -77,7 +84,7 @@ export enum PivotDimensionType {
 }
 
 export interface IPivotDimensionData {
-    column: IgxColumnComponent;
+    column: ColumnType;
     dimension: IPivotDimension;
     prevDimensions: IPivotDimension[];
 }

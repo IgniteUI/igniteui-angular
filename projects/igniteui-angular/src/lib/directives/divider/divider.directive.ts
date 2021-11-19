@@ -48,7 +48,7 @@ export class IgxDividerDirective {
     public type: IgxDividerType | string = IgxDividerType.SOLID;
 
     @HostBinding('class.igx-divider--dashed')
-    get isDashed() {
+    public get isDashed() {
         return this.type === IgxDividerType.DASHED;
     }
 
@@ -83,7 +83,7 @@ export class IgxDividerDirective {
      * ```
      */
     @HostBinding('style.margin')
-    set inset(value: string) {
+    public set inset(value: string) {
         this._inset = value;
     }
 
@@ -94,7 +94,7 @@ export class IgxDividerDirective {
      * const inset = this.divider.inset;
      * ```
      */
-    get inset() {
+    public get inset() {
         const baseMargin = '0';
 
         if (this.middle) {
@@ -127,7 +127,7 @@ export class IgxDividerDirective {
      * const isDefault = this.divider.isDefault;
      * ```
      */
-    get isSolid() {
+    public get isSolid() {
         return this.type === IgxDividerType.SOLID;
     }
 }

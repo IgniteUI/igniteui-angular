@@ -3,32 +3,21 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    Input,
+    Inject,
     Renderer2
 } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
-import {
-    AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings,
-    PositionSettings, VerticalAlignment
-} from '../../services/public_api';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/public_api';
+import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
-
-export interface IgxGridRowSelectorsTemplateContext {
-    $implicit: {
-        selectedCount: number;
-        totalCount: number;
-        selectAll?: () => void;
-        deselectAll?: () => void;
-    };
-}
 
 /**
  *
@@ -63,6 +52,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     };
 
     constructor(
+        @Inject(IGX_GRID_BASE) public grid: PivotGridType,
         protected ref: ElementRef<HTMLElement>,
         protected cdr: ChangeDetectorRef,
         protected renderer: Renderer2,

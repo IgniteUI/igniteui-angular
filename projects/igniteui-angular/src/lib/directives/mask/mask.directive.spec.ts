@@ -499,7 +499,6 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
                 DELETE: 'Delete',
                 Y: 'y',
                 Z: 'z'
-
             }
         };
 

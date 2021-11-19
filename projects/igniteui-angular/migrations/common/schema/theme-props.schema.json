@@ -25,13 +25,40 @@
                 "owner"
             ],
             "type": "object"
+        },
+        "ThemeVariableChange": {
+            "properties": {
+                "name": {
+                    "description": "Name of the theme variable",
+                    "type": "string"
+                },
+                "remove": {
+                    "description": "Remove directive/component/property",
+                    "type": "boolean"
+                },
+                "replaceWith": {
+                    "description": "Replace original selector/property with new one",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "type": "object"
         }
     },
     "properties": {
         "changes": {
             "description": "An array of changes to theme function properties",
             "items": {
-                "$ref": "#/definitions/ThemePropertyChange"
+                "anyOf": [
+                    {
+                        "$ref": "#/definitions/ThemePropertyChange"
+                    },
+                    {
+                        "$ref": "#/definitions/ThemeVariableChange"
+                    }
+                ]
             },
             "type": "array"
         }
