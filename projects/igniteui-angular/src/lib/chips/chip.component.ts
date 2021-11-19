@@ -814,7 +814,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    public onChipOverHandler(event: IDropDroppedEventArgs) {
+    public onChipOverHandler(event: IDropBaseEventArgs) {
             const eventArgs: IChipEnterDragAreaEventArgs = {
                 owner: this,
                 dragChip: event.drag.data.chip,

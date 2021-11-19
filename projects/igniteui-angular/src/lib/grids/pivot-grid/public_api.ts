@@ -3,3 +3,7 @@ export * from './pivot-grid.interface';
 export * from './pivot-grid-aggregate';
 export * from './pivot-grid-dimensions';
 export * from './pivot-grid.module';
+export * from './pivot-grid.pipes';
+export * from './pivot-row.component';
+export * from './pivot-header-row.component';
+export * from './pivot-row-dimension-content.component';

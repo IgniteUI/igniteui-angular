@@ -1,48 +1,73 @@
-@import '../light/drop-down';
+@use '../../../base' as *;
+@use '../light/drop-down' as *;
+
 ////
 /// @group schemas
 /// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+/// Generates a base dark drop-down schema.
+/// @type {Map}
+/// @prop {Map} border-color [igx-color: ('grays', 100)] - The border color used for drop-down component.
+$base-dark-drop-down: (
+    border-color: (
+        igx-color: ('grays', 100),
+    ),
+);
+
 /// Generates a dark drop-down schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-drop-down
+/// @requires $light-drop-down
+/// @requires $base-dark-drop-down
 /// @see $default-palette
-$_dark-drop-down: extend($_light-drop-down);
+$dark-drop-down: extend($light-drop-down, $base-dark-drop-down);
 
 /// Generates a dark fluent drop-down schema.
 /// @type {Map}
-/// @prop {Color} selected-item-text-color [#fff)] - The drop-down selected item text color.
-/// @prop {Color} selected-hover-item-text-color [#fff] - The drop-down selected item hover text color.
-/// @prop {Color} selected-focus-item-text-color [#fff] - The drop-down selected item focus text color.
+/// @prop {Map} selected-item-text-color [igx-contrast-color: 'surface'] - The drop-down selected item text color.
+/// @prop {Map} selected-hover-item-text-color [igx-contrast-color: 'surface'] - The drop-down selected item hover text color.
+/// @prop {Map} selected-focus-item-text-color [igx-contrast-color: 'surface'] - The drop-down selected item focus text color.
 /// @requires {function} extend
-/// @requires $_fluent-drop-down
-$_dark-fluent-drop-down: extend(
-    $_fluent-drop-down,
+/// @requires $fluent-drop-down
+/// @requires $base-dark-drop-down
+$dark-fluent-drop-down: extend(
+    $fluent-drop-down,
+    $base-dark-drop-down,
     (
-        selected-item-text-color: #fff,
+        selected-item-text-color: (
+            igx-contrast-color: 'surface'
+        ),
 
-        selected-hover-item-text-color:  #fff,
+        selected-hover-item-text-color:  (
+            igx-contrast-color: 'surface'
+        ),
 
-        selected-focus-item-text-color: #fff,
+        selected-focus-item-text-color: (
+            igx-contrast-color: 'surface'
+        ),
     )
 );
 
 /// Generates a dark bootstrap drop-down schema.
 /// @type {Map}
-/// @prop {Map} background-color [#222] - The drop-down background color.
-/// @prop {Map} item-text-color [#fff] - The drop-down text color.
-/// @prop {Map} hover-item-text-color [#fff] - The drop-down hover text color.
+/// @prop {Map} item-text-color [igx-contrast-color: 'surface'] - The drop-down text color.
+/// @prop {Map} hover-item-text-color [igx-contrast-color: 'surface'] - The drop-down hover text color.
 /// @requires {function} extend
-/// @requires $_bootstrap-drop-down
-$_dark-bootstrap-drop-down: extend(
-    $_bootstrap-drop-down,
+/// @requires $bootstrap-drop-down
+/// @requires $base-dark-drop-down
+$dark-bootstrap-drop-down: extend(
+    $bootstrap-drop-down,
+    $base-dark-drop-down,
     (
-        background-color: #222,
-        item-text-color: #fff,
-        hover-item-text-color: #fff,
+        item-text-color: (
+            igx-contrast-color: 'surface'
+        ),
+
+        hover-item-text-color: (
+            igx-contrast-color: 'surface'
+        ),
     )
 );
 
@@ -50,9 +75,11 @@ $_dark-bootstrap-drop-down: extend(
 /// @type {Map}
 /// @prop {Map} header-text-color [igx-contrast-color: 'surface'] - The drop-down header text color.
 /// @requires {function} extend
-/// @requires $_indigo-drop-down
-$_dark-indigo-drop-down: extend(
-    $_indigo-drop-down,
+/// @requires $indigo-drop-down
+/// @requires $base-dark-drop-down
+$dark-indigo-drop-down: extend(
+    $indigo-drop-down,
+    $base-dark-drop-down,
     (
         header-text-color: (
             igx-contrast-color: 'surface'

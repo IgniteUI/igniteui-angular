@@ -920,7 +920,7 @@ describe('Pivot pipes', () => {
             { 'ProductCategory': 'Components', 'level': 1, 'All': 240, 'All-USA': 240, 'ProductCategory_level': 1 }]);
     });
 
-    fit('should generate correct levels when using predefined date dimension', () => {
+    it('should generate correct levels when using predefined date dimension', () => {
         data = [
             {
                 ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',

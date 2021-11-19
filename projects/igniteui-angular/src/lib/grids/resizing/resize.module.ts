@@ -5,6 +5,9 @@ import { IgxGridColumnResizerComponent } from './resizer.component';
 import { IgxResizeHandleDirective } from './resize-handle.directive';
 import { IgxColumnResizerDirective } from './resizer.directive';
 
+export { IgxGridColumnResizerComponent } from './resizer.component';
+export { IgxResizeHandleDirective } from './resize-handle.directive';
+export { IgxColumnResizerDirective } from './resizer.directive';
 
 @NgModule({
     declarations: [

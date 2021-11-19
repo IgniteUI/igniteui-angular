@@ -13,7 +13,12 @@ import {
     IgxGridToolbarDirective,
     IgxGridToolbarTitleDirective
 } from './common';
-
+export * from './grid-toolbar.component';
+export * from './common';
+export * from './grid-toolbar-advanced-filtering.component';
+export * from './grid-toolbar-exporter.component';
+export * from './grid-toolbar-hiding.component';
+export * from './grid-toolbar-pinning.component';
 
 
 @NgModule({
@@ -46,4 +51,4 @@ import {
         IgxGridToolbarDirective
     ]
 })
-export class IgxGridToolbarModule {}
+export class IgxGridToolbarModule { }
