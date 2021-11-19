@@ -35,8 +35,10 @@ jobs:
             if [[ ${VERSION} == *"alpha"* || ${VERSION} == *"beta"* || ${VERSION} == *"rc"* ]]; then echo "NPM_TAG=next"; else echo "NPM_TAG=latest"; fi >> $GITHUB_ENV
             echo ${NPM_TAG}
 
-      - name: Copy readme for igniteui-angular
-        run: cp ../../README.md README.md
+      - name: Copy readme and license for igniteui-angular
+        run: |
+            cp ../../README.md README.md
+            cp ../../LICENSE LICENSE
         working-directory: dist/igniteui-angular
 
       - name: Copy i18n files
