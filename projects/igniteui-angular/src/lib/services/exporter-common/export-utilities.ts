@@ -19,24 +19,19 @@ export class ExportUtilities {
 
         const keys = new Set(keys1.concat(keys2).concat(keys3));
 
-        return !ExportUtilities.isSpecialData(dataEntry) ? Array.from(keys) : [ 'Column 1' ];
+        return !ExportUtilities.isSpecialData(dataEntry) ? Array.from(keys) : ['Column 1'];
     }
 
     public static saveBlobToFile(blob: Blob, fileName) {
         const a = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        a.download = fileName;
 
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveOrOpenBlob(blob, fileName);
-        } else {
-            const url = window.URL.createObjectURL(blob);
-            a.download = fileName;
-
-            a.href = url;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }
+        a.href = url;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
     }
 
     public static stringToArrayBuffer(s: string): ArrayBuffer {
@@ -52,8 +47,8 @@ export class ExportUtilities {
 
     public static isSpecialData(data: any): boolean {
         return (typeof data === 'string' ||
-                typeof data === 'number' ||
-                data instanceof Date);
+            typeof data === 'number' ||
+            data instanceof Date);
     }
 
     public static hasValue(value: any): boolean {

@@ -8,13 +8,12 @@ import {
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
+import { BaseFilteringComponent } from './base-filtering.component';
 
 /**
  * A component used for presenting Excel style column sorting UI.
  */
 @Component({
-    preserveWhitespaces: false,
     selector: 'igx-excel-style-sorting',
     templateUrl: './excel-style-sorting.component.html'
 })
@@ -33,7 +32,7 @@ export class IgxExcelStyleSortingComponent implements OnDestroy {
 
     private destroy$ = new Subject<boolean>();
 
-    constructor(public esf: IgxGridExcelStyleFilteringComponent, private cdr: ChangeDetectorRef) {
+    constructor(public esf: BaseFilteringComponent, private cdr: ChangeDetectorRef) {
         this.esf.sortingChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.updateSelectedButtons(this.esf.column.field);
         });

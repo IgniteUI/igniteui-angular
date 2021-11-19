@@ -59,7 +59,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(grid.gridAPI.crudService.rowInEditMode).not.toBeNull();
             expect(grid.rowList.first.inEditMode).toBe(true);
 
-            expect(grid.rowList.first.rowData['ID']).toBe('ALFKI');
+            expect(grid.rowList.first.data['ID']).toBe('ALFKI');
             const dataLenght = grid.dataLength;
             actionStrip.show(grid.rowList.first);
             fixture.detectChanges();
@@ -74,7 +74,7 @@ describe('igxGridEditingActions #grid ', () => {
             deleteIcon.parent.triggerEventHandler('click', new Event('click'));
             actionStrip.hide();
             fixture.detectChanges();
-            expect(grid.rowList.first.rowData['ID']).toBe('ANATR');
+            expect(grid.rowList.first.data['ID']).toBe('ANATR');
             expect(dataLenght - 1).toBe(grid.dataLength);
         });
 
@@ -127,7 +127,7 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.menu.selectItem(deleteMenuItem);
             fixture.detectChanges();
 
-            expect(grid.rowList.first.rowData['ID']).toBe('ANATR');
+            expect(grid.rowList.first.data['ID']).toBe('ANATR');
         });
     });
 

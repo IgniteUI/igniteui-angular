@@ -1,5 +1,14 @@
-import { Component, NgModule, EventEmitter, Output, Input, ViewChild, ElementRef,
-    ContentChild, HostBinding } from '@angular/core';
+import {
+    Component,
+    ContentChild,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    NgModule,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
 import { IgxExpansionPanelComponent } from '../expansion-panel/public_api';
 import { IgxIconModule, IgxIconComponent } from '../icon/public_api';
@@ -13,8 +22,7 @@ import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-com
 
 export interface BannerEventArgs extends IBaseEventArgs {
     /**
-     * @deprecated
-     * To get a reference to the banner, use `owner` instead.
+     * @deprecated in 12.1.0. To get a reference to the banner, use `owner` instead
      */
     banner: IgxBannerComponent;
     event?: Event;
@@ -172,7 +180,7 @@ export class IgxBannerComponent implements IToggleView {
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
 
-    constructor(public elementRef: ElementRef) { }
+    constructor(public elementRef: ElementRef<HTMLElement>) { }
 
     /**
      * Opens the banner

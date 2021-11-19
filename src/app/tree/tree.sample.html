@@ -48,7 +48,7 @@
             <button igxButton (click)="deleteNodesFromParent(addParent.value, deleteNodes.value)">Delete Nodes</button>
 
         </div>
-        <igx-buttongroup [values]="selectionModes" (selected)="toggleSelectionMode($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="selectionModes" (selected)="toggleSelectionMode()"></igx-buttongroup>
         <igx-buttongroup [values]="displayDensities" (selected)="changeDensity($event)"></igx-buttongroup>
 
         <div igxLayout igxLayoutDir="row">

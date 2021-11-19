@@ -5,6 +5,9 @@ import { IgxGridSharedModules } from '../../common/shared.module';
 import { IgxGridPipesModule } from '../../common/grid-pipes.module';
 
 
+export { IgxGridFilteringCellComponent as θIgxGridFilteringCellComponent } from './grid-filtering-cell.component';
+export { IgxGridFilteringRowComponent as θIgxGridFilteringRowComponent } from './grid-filtering-row.component';
+
 @NgModule({
     declarations: [
         IgxGridFilteringCellComponent,
@@ -19,4 +22,4 @@ import { IgxGridPipesModule } from '../../common/grid-pipes.module';
         IgxGridFilteringRowComponent
     ]
 })
-export class IgxGridFilteringModule {}
+export class IgxGridFilteringModule { }

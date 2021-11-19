@@ -3,8 +3,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from '../common/events';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -15,9 +14,9 @@ import {
 } from '../../test-utils/grid-samples.spec';
 
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
-import { DebugElement } from '@angular/core';
+import { DebugElement, QueryList } from '@angular/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { CellType } from '../common/cell.interface';
+import { CellType } from '../common/grid.interface';
 
 const DEBOUNCETIME = 30;
 
@@ -370,7 +369,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(fix.componentInstance.selectedCell.column.visibleIndex).toEqual(2);
             // Verify columns
-            let cells = grid.gridAPI.get_row_by_index(0).cells.toArray();
+            let cells = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray();
             expect(cells.length).toEqual(5);
             expect(cells[0].column.field).toEqual('col1');
             expect(cells[1].column.field).toEqual('col3');
@@ -388,7 +387,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(fix.componentInstance.selectedCell.column.visibleIndex).toEqual(0);
 
-            cells = grid.gridAPI.get_row_by_index(0).cells.toArray();
+            cells = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray();
             expect(cells.length).toEqual(5);
             expect(cells[0].column.field).toEqual('col1');
             expect(cells[1].column.field).toEqual('col3');
@@ -842,7 +841,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(2);
-            expect(row.cells.toArray()[0].selected).toBe(true);
+            expect((row.cells as QueryList<CellType>).toArray()[0].selected).toBe(true);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowUp', gridContent);
             await wait(DEBOUNCETIME);
