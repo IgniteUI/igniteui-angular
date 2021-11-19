@@ -63,7 +63,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
     public get selected(): boolean {
         let isSelected = false;
         this.rowDimensionData.forEach(x => {
-            const key = this.getRowDimensionKey(x.column);
+            const key = this.getRowDimensionKey(x.column as IgxColumnComponent);
             if (this.selectionService.isPivotRowSelected(key)) {
                 isSelected = true;
             }
