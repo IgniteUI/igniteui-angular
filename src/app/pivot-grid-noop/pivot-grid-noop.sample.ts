@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import {
-    IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration, IPivotDimension,
+    IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension,
     IPivotValue,
     NoopPivotDimensionsStrategy
 } from 'igniteui-angular';
@@ -55,7 +55,7 @@ export class PivotGridNoopSampleComponent {
             {
                 member: 'UnitsSold',
                 aggregate: {
-                    aggregator:  IgxNumberSummaryOperand.sum,
+                    aggregator:  IgxPivotNumericAggregate.sum,
                     key: 'sum',
                     label: 'Sum'
                 },

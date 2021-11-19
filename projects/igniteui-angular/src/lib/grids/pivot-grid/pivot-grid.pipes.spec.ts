@@ -63,7 +63,7 @@ describe('Pivot pipes', () => {
                 {
                     member: 'UnitsSold',
                     aggregate: {
-                        aggregator: IgxNumberSummaryOperand.sum,
+                        aggregator: IgxPivotNumericAggregate.sum,
                         key: 'sum',
                         label: 'Sum'
                     },
