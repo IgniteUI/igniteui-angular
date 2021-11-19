@@ -57,7 +57,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                         PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
 
                         PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
-                        if (siblingData.length > 1 && siblingData.length < newData[i][pivotKeys.records].length) {
+                        if (PivotUtil.getDimensionDepth(prevDim) > PivotUtil.getDimensionDepth(row) && siblingData.length > 1) {
                             newData[i][row.memberName + '_' + pivotKeys.records] = siblingData;
                         } else {
                             newData.splice(i , 1, ...siblingData);
