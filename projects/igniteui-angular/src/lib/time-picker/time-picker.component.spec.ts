@@ -249,7 +249,7 @@ describe('IgxTimePicker', () => {
             expect(inputGroupFocusedSpy).toHaveBeenCalledTimes(2);
             expect(inputGroupRequiredSet).toHaveBeenCalledTimes(1);
             expect(inputGroupRequiredSet).toHaveBeenCalledWith(true);
-            console.log(inputGroupRequiredSet.calls);
+
             inputGroupRequiredGet.and.returnValue(true);
 
             mockNgControl.statusChanges.emit();
