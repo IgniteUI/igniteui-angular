@@ -346,8 +346,8 @@ describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         const group = GridFunctions.getColGroup(pivotGrid, 'Bulgaria');
         const unitsSold = pivotGrid.getColumnByName('Bulgaria-UnitsSold');
         const amountOfSale = pivotGrid.getColumnByName('Bulgaria-AmountOfSale');
-        const unitsSoldUSA = pivotGrid.getColumnByName('USA-UnitsSold');
-        const amountOfSaleUSA = pivotGrid.getColumnByName('USA-AmountOfSale');
+        const unitsSoldUSA = pivotGrid.getColumnByName('US-UnitsSold');
+        const amountOfSaleUSA = pivotGrid.getColumnByName('US-AmountOfSale');
 
         GridFunctions.clickColumnGroupHeaderUI('Bulgaria', fixture);
         fixture.detectChanges();
