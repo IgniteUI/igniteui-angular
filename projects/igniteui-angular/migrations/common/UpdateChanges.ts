@@ -42,8 +42,8 @@ export class UpdateChanges {
             // and no actual angular metadata will be resolved for the rest of the migration
             const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
             const mainRelPath = wsProject.architect?.build?.options['main'] ?
-            path.join(wsProject.root, wsProject.architect?.build?.options['main']) :
-            `src/main.ts`;
+                path.join(wsProject.root, wsProject.architect?.build?.options['main']) :
+                `src/main.ts`;
             // patch TSConfig so it includes angularOptions.strictTemplates
             // ivy ls requires this in order to function properly on templates
             this.patchTsConfig();
@@ -491,9 +491,8 @@ export class UpdateChanges {
         // use the absolute path for ALL LS operations
         // do not overwrite the entryPath, as Tree operations require relative paths
         const changes = new Set<{ change; position }>();
-        let langServ;
+        let langServ: tss.LanguageService;
         for (const change of memberChanges.changes) {
-
             if (!content.includes(change.member)) {
                 continue;
             }
@@ -532,7 +531,7 @@ export class UpdateChanges {
                 originalContent = this.serverHost.readFile(this.tsconfigPath);
             } catch {
                 this.context?.logger
-                .warn(`Could not read ${this.tsconfigPath}. Some Angular Ivy features might be unavailable during migrations.`);
+                    .warn(`Could not read ${this.tsconfigPath}. Some Angular Ivy features might be unavailable during migrations.`);
                 return;
             }
             let content;
@@ -542,9 +541,9 @@ export class UpdateChanges {
                 content = result.config;
             } else {
                 this.context?.logger
-                .warn(`Could not parse ${this.tsconfigPath}. Angular Ivy language service might be unavailable during migrations.`);
+                    .warn(`Could not parse ${this.tsconfigPath}. Angular Ivy language service might be unavailable during migrations.`);
                 this.context?.logger
-                .warn(`Error:\n${result.error}`);
+                    .warn(`Error:\n${result.error}`);
                 return;
             }
             if (!content.angularCompilerOptions) {
@@ -552,7 +551,7 @@ export class UpdateChanges {
             }
             if (!content.angularCompilerOptions.strictTemplates) {
                 this.context?.logger
-                .info(`Adding 'angularCompilerOptions.strictTemplates' to ${this.tsconfigPath} for migration run.`);
+                    .info(`Adding 'angularCompilerOptions.strictTemplates' to ${this.tsconfigPath} for migration run.`);
                 content.angularCompilerOptions.strictTemplates = true;
                 this.host.overwrite(this.tsconfigPath, JSON.stringify(content));
                 // store initial state and restore it once migrations are finished
