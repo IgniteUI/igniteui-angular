@@ -10,8 +10,7 @@
 /// @type {Map}
 /// @property {Map} background-color [igx-color: ('grays', 50)] - The toolbar background color.
 /// @property {Map} title-text-color [igx-color: ('grays', 600)] - The toolbar title text color.
-///
-/// @property {Color} dropdown-background [#fff] - The toolbar drop-down background color.
+/// @property {Map} dropdown-background [igx-color: ('surface')] - The toolbar drop-down background color.
 /// @property {Map} item-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item text color.
 /// @property {Map} item-hover-background [igx-color: ('grays', 100)] - The toolbar drop-down item hover background color.
 /// @property {Map} item-hover-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item hover text color.
@@ -29,7 +28,9 @@ $light-grid-toolbar: (
         igx-color: ('grays', 600)
     ),
 
-    dropdown-background: #fff,
+    dropdown-background: (
+        igx-color: ('surface')
+    ),
 
     item-text-color: (
         igx-color: ('grays', 600)
