@@ -841,7 +841,7 @@ All notable changes for each version of this project will be documented in this 
 
         Changed the how the grid toolbar is instantiated in the grids. The
         toolbar is now templated rather than being activated through a property on the parent grid. The toolbar features are also exposed as templatable
-        components and the old properties are deprecated.
+        components and the old properties are deprecated. The implementation of the Column Hiding UI has been changed in order to select which columns should be displayed, instead of hidden.
 
         Refer to the official documentation for more information.
 - `FilteringStrategy`
