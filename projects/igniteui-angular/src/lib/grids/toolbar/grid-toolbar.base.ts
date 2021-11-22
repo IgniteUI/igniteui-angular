@@ -8,8 +8,9 @@ import { ElasticPositionStrategy } from '../../services/overlay/position/elastic
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
-import { OverlaySettings } from '../../services/overlay/utilities';
+import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxToolbarToken } from './token';
+import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
 
 
 /**
