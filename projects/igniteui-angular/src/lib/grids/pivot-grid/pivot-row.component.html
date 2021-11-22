@@ -8,6 +8,7 @@
             [width]="grid.pivotRowWidths"
             [unpinnedColumnCollection]="rowDimension"
             (scroll)="grid.preventHeaderScroll($event)"
+            [intRow]="this"
         >
         </igx-pivot-row-dimension-content>
     </div>
@@ -31,7 +32,7 @@
             [column]="col"
             [formatter]="col.formatter"
             [intRow]="this"
-            [active]="isCellActive(col.visibleIndex)"
+            [active]="isPivotCellActive(col)"
             [style.min-height.px]="cellHeight"
             [data]="data"
             [style.min-width]="col.width"
@@ -77,7 +78,7 @@
             [column]="col"
             [formatter]="col.formatter"
             [intRow]="this"
-            [active]="isCellActive(col.visibleIndex)"
+            [active]="isPivotCellActive(col)"
             [firstPinned]="col.isFirstPinned"
             [lastPinned]="col.isLastPinned"
             [style.min-height.px]="cellHeight"

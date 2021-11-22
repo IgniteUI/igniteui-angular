@@ -5,11 +5,12 @@
         <!-- Unpinned columns collection -->
         <ng-template ngFor #headerVirtualContainer let-column
             [ngForOf]="unpinnedColumnCollection | igxTopLevel">
-            <igx-grid-header-group [ngClass]="column.headerGroupClasses"
+            <igx-pivot-row-dimension-header-group [ngClass]="column.headerGroupClasses"
                 [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                 [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
-            </igx-grid-header-group>
+                [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [intRow]="intRow">
+            </igx-pivot-row-dimension-header-group>
         </ng-template>
     </div>
 </div>
