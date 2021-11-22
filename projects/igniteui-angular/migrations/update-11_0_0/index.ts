@@ -2,13 +2,15 @@ import { Element } from '@angular/compiler';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile, serializeNodes } from '../common/util';
+import { nativeImport } from '../common/import-helper.js';
 
 const version = '11.0.0';
 
-export default (): Rule => (host: Tree, context: SchematicContext) => {
+export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(
         `Applying migration for Ignite UI for Angular to version ${version}`
     );
+    const { HtmlParser, getHtmlTagDefinition } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
 
     const update = new UpdateChanges(__dirname, host, context);
 
@@ -55,14 +57,14 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         const ngTemplates = findElementNodes([grid], ['ng-template']);
         const toolbarTemplate = ngTemplates.filter(template => hasAttribute(template as Element, 'igxToolbarCustomContent'))[0];
         if (toolbarTemplate) {
-            return `${warnMsg}\n${serializeNodes((toolbarTemplate as Element).children).join('')}\n`;
+            return `${warnMsg}\n${serializeNodes((toolbarTemplate as Element).children, getHtmlTagDefinition).join('')}\n`;
         }
         return '';
     };
 
     // Row island migration
     for (const path of update.templateFiles) {
-        findElementNodes(parseFile(host, path), 'igx-row-island')
+        findElementNodes(parseFile(new HtmlParser(), host, path), 'igx-row-island')
             .filter(island => hasAttribute(island as Element, prop))
             .map(island => getSourceOffset(island as Element))
             .forEach(offset => {
@@ -80,7 +82,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
     // Clear row island templates
     for (const path of update.templateFiles) {
-        findElementNodes(parseFile(host, path), 'igx-row-island')
+        findElementNodes(parseFile(new HtmlParser(), host, path), 'igx-row-island')
             .filter(grid => hasAttribute(grid as Element, prop))
             .map(grid => findElementNodes([grid], ['ng-template']))
             .reduce((prev, curr) => prev.concat(curr), [])
@@ -99,7 +101,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
     // Prepare the file changes
     for (const path of update.templateFiles) {
-        findElementNodes(parseFile(host, path), TAGS)
+        findElementNodes(parseFile(new HtmlParser(), host, path), TAGS)
             .filter(grid => hasAttribute(grid as Element, prop))
             .map(node => getSourceOffset(node as Element))
             .forEach(offset => {
@@ -116,7 +118,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
     // Remove toolbar templates after migration
     for (const path of update.templateFiles) {
-        findElementNodes(parseFile(host, path), TAGS)
+        findElementNodes(parseFile(new HtmlParser(), host, path), TAGS)
             .filter(grid => hasAttribute(grid as Element, prop))
             .map(grid => findElementNodes([grid], ['ng-template']))
             .reduce((prev, curr) => prev.concat(curr), [])

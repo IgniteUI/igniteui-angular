@@ -31,5 +31,4 @@ export class IgxExpansionPanelDescriptionDirective {
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-icon'
 })
-export class IgxExpansionPanelIconDirective {
-}
+export class IgxExpansionPanelIconDirective { }

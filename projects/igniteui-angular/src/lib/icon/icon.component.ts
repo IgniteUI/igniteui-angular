@@ -2,7 +2,6 @@ import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChi
 import { IgxIconService } from './icon.service';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { SafeHtml } from '@angular/platform-browser';
 
 /**
@@ -78,20 +77,6 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      */
     @Input('active')
     public active = true;
-
-    /**
-     * An @Input property that allows you to change the `color` of the icon.
-     *
-     * * @deprecated
-     *
-     * @example
-     * ```html
-     * <igx-icon color="blue">settings</igx-icon>
-     * ```
-     */
-    @DeprecateProperty('`color` is deprecated.')
-    @Input('color')
-    public color: string;
 
     /**
      *  An @Input property that allows you to set the `name` of the icon.
@@ -194,23 +179,6 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     @HostBinding('class.igx-icon--inactive')
     public get getInactive(): boolean {
         return !this.active;
-    }
-
-    /**
-     * An accessor that returns the opposite value of the `color` property.
-     *
-     * @example
-     * ```typescript
-     * @ViewChild("MyIcon")
-     * public icon: IgxIconComponent;
-     * ngAfterViewInit() {
-     *    let color = this.icon.getColor;
-     * }
-     * ```
-     */
-    @HostBinding('style.color')
-    public get getColor(): string {
-        return this.color;
     }
 
     /**

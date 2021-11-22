@@ -23,8 +23,6 @@ import { IgxGridActionButtonComponent } from './grid-actions/grid-action-button.
         IgxGridActionsBaseDirective,
         IgxGridActionButtonComponent
     ],
-    entryComponents: [
-    ],
     exports: [
         IgxActionStripComponent,
         IgxActionStripMenuItemDirective,

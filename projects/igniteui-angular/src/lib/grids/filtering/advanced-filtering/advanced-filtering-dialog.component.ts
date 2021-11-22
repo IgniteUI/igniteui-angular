@@ -15,13 +15,13 @@ import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.componen
 import { takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/public_api';
-import { IgxColumnComponent } from '../../columns/column.component';
 import { DataUtil } from './../../../data-operations/data-util';
 import { IActiveNode } from '../../grid-navigation.service';
-import { IgxGridBaseDirective } from '../../public_api';
 import { PlatformUtil } from '../../../core/utils';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
+import { ColumnType, GridType } from '../../common/grid.interface';
+import { DisplayDensity } from '../../../core/displayDensity';
 
 /**
  * @hidden
@@ -290,14 +290,14 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private destroy$ = new Subject<any>();
     private _overlayComponentId: string;
     private _overlayService: IgxOverlayService;
-    private _selectedColumn: IgxColumnComponent;
+    private _selectedColumn: ColumnType;
     private _clickTimer;
     private _dblClickDelay = 200;
     private _preventChipClick = false;
     private _editingInputsContainer: ElementRef;
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
-    private _grid: IgxGridBaseDirective;
+    private _grid: GridType;
     private _filteringChange: Subscription;
 
     private _positionSettings = {
@@ -333,21 +333,21 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public get displayDensity() {
+    public get displayDensity(): DisplayDensity {
         return this.grid.displayDensity;
     }
 
     /**
      * @hidden @internal
      */
-    public get selectedColumn(): IgxColumnComponent {
+    public get selectedColumn(): ColumnType {
         return this._selectedColumn;
     }
 
     /**
      * @hidden @internal
      */
-    public set selectedColumn(value: IgxColumnComponent) {
+    public set selectedColumn(value: ColumnType) {
         const oldValue = this._selectedColumn;
 
         if (this._selectedColumn !== value) {
@@ -364,7 +364,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * An @Input property that sets the grid.
      */
     @Input()
-    public set grid(grid: IgxGridBaseDirective) {
+    public set grid(grid: GridType) {
         this._grid = grid;
 
         if (this._filteringChange) {
@@ -385,15 +385,15 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * Returns the grid.
      */
-    public get grid(): IgxGridBaseDirective {
+    public get grid(): GridType {
         return this._grid;
     }
 
     /**
      * @hidden @internal
      */
-    public get filterableColumns(): IgxColumnComponent[] {
-        return this.grid.columns.filter((col) => !col.columnGroup && col.filterable);
+    public get filterableColumns(): ColumnType[] {
+        return this.grid.columnList.filter((col) => !col.columnGroup && col.filterable);
     }
 
     /**
@@ -810,7 +810,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public initialize(grid: IgxGridBaseDirective, overlayService: IgxOverlayService,
+    public initialize(grid: GridType, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.inline = false;
         this.grid = grid;

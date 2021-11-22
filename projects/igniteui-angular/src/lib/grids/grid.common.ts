@@ -32,10 +32,10 @@ export interface IPinningConfig {
  * @hidden
  */
 export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
-    isTop = false;
-    isTopInitialPosition = null;
+    public isTop = false;
+    public isTopInitialPosition = null;
     public settings: RowEditPositionSettings;
-    position(contentElement: HTMLElement, size: { width: number; height: number }, document?: Document, initialCall?: boolean,
+    public position(contentElement: HTMLElement, size: { width: number; height: number }, document?: Document, initialCall?: boolean,
             target?: Point | HTMLElement): void {
         const container = this.settings.container; // grid.tbody
         const targetElement: HTMLElement = target as HTMLElement || this.settings.target as HTMLElement; // current grid.row

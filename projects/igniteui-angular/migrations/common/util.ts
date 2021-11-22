@@ -9,8 +9,8 @@ import {
     Element,
     Expansion,
     ExpansionCase,
-    getHtmlTagDefinition,
     HtmlParser,
+    HtmlTagDefinition,
     Node,
     Text,
     Visitor
@@ -165,13 +165,17 @@ export class FileChange {
 
 /**
  * Parses an Angular template file/content and returns an array of the root nodes of the file.
- *
+ * TODO: Maybe make async and dynamically import the HtmlParser
  * @param host
  * @param filePath
  * @param encoding
  */
-export const parseFile = (host: Tree, filePath: string, encoding = 'utf8') =>
-    new HtmlParser().parse(host.read(filePath).toString(encoding), filePath).rootNodes;
+export const parseFile = (parser: HtmlParser, host: Tree, filePath: string, encoding = 'utf8') =>
+    parser.parse(host.read(filePath).toString(encoding), filePath).rootNodes;
+// export const parseFile = async (host: Tree, filePath: string, encoding = 'utf8') => {
+//     const { HtmlParser } = await import('@angular/compiler')
+//     return new HtmlParser().parse(host.read(filePath).toString(encoding), filePath).rootNodes;
+// }
 
 export const findElementNodes = (root: Node[], tag: string | string[]): Node[] => {
     const tags = new Set(Array.isArray(tag) ? tag : [tag]);
@@ -232,8 +236,13 @@ export const flatten = (list: Node[]) => {
  */
 class SerializerVisitor implements Visitor {
 
+    /**
+     *
+     */
+    constructor(private getHtmlTagDefinition: (tagName: string) => HtmlTagDefinition) { }
+
     public visitElement(element: Element, _context: any): any {
-        if (getHtmlTagDefinition(element.name).isVoid) {
+        if (this.getHtmlTagDefinition(element.name).isVoid) {
             return `<${element.name}${this._visitAll(element.attrs, ' ')}/>`;
         }
 
@@ -269,7 +278,9 @@ class SerializerVisitor implements Visitor {
 }
 
 
-export const serializeNodes = (nodes: Node[]): string[] => nodes.map(node => node.visit(new SerializerVisitor(), null));
+export const serializeNodes = (nodes: Node[], getHtmlTagDefinition: (tagName: string) => HtmlTagDefinition): string[] => {
+    return nodes.map(node => node.visit(new SerializerVisitor(getHtmlTagDefinition), null))
+};
 
 export const makeNgIf = (name: string, value: string) => name.startsWith('[') && value !== 'true';
 

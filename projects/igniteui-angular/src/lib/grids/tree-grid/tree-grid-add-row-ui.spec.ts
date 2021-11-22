@@ -106,7 +106,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             // check row is added as sibling
             expect(treeGrid.rowList.length).toBe(9);
             const addedRow = treeGrid.rowList.toArray()[4] as IgxTreeGridRowComponent;
-            expect(addedRow.rowData.Name).toBe(undefined);
+            expect(addedRow.data.Name).toBe(undefined);
             // should have same parent record.
             expect(addedRow.treeRow.parent).toBe(row.treeRow.parent);
         });
@@ -118,6 +118,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             expect(treeGrid.rowList.length).toBe(0);
 
             // begin add row for empty grid
+            // TODO how to start begin add row for empty grid?
             treeGrid.crudService.enterAddRowMode(null);
             fix.detectChanges();
             endTransition();

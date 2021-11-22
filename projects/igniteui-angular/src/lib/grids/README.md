@@ -185,6 +185,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
 |`oddRowCSS`|string|Additional styling classes applied to all odd rows in the grid.|
 |`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
+|`groupStrategy`| IGridGroupingStrategy | Provides custom group strategy to be used when grouping |
 |`groupingExpressions`| Array | The group by state of the grid.
 |`groupingExpansionState`| Array | The list of expansion states of the group rows. Contains the expansion state(expanded: boolean) and an unique identifier for the group row (Array<IGroupByExpandState>) that contains a list of the group row's parents described via their fieldName and value.
 |`groupsExpanded`| boolean | Determines whether created groups are rendered expanded or collapsed.  |
@@ -227,8 +228,8 @@ A list of the events emitted by the **igx-grid**:
 |`columnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|
 |`columnMovingStart`|Emitted when a column moving starts. Returns the moved column object.|
 |`selected`|Emitted when a cell is selected. Returns the cell object.|
-|`rowSelected`|Emitted when a row selection has changed. Returns array with old and new selected rows' IDs and the target row, if available.|
-|`columnSelected`|Emitted when a column selection has changed. Returns array with old and new selected column' fields|
+|`rowSelectionChanging`|Emitted when row selection is changing. Returns array with old and new selected rows' IDs and the target row, if available.|
+|`columnSelectionChanging`|Emitted when a column selection is changing. Returns array with old and new selected column' fields|
 |`columnInit`|Emitted when the grid columns are initialized. Returns the column object.|
 |`sortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
 |`filteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expressions tree of the column for which the filtering was performed.|
