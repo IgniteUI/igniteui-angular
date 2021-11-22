@@ -481,6 +481,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
     }
 
+    /**
+     * Notifies for dimension change.
+     */
+    public notifyDimensionChange(regenerateColumns = false) {
+        if (regenerateColumns) {
+            this.setupColumns();
+        }
+        this.pipeTrigger++;
+        this.cdr.detectChanges();
+    }
+
     public uniqueDimensionValuesStrategy(column: IgxColumnComponent, exprTree: IFilteringExpressionsTree,
         done: (uniqueValues: any[]) => void) {
         const config = this.pivotConfiguration;
