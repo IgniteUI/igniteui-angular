@@ -627,6 +627,7 @@ export interface PivotGridType extends GridType {
     pivotRowWidths: number;
     setupColumns(): void;
     toggleRow(rowID: any): void;
+    resolveDataTypes(field: any): GridColumnDataType;
     resolveRowDimensionWidth(dim: IPivotDimension): number;
 }
 export interface GridSVGIcon {
