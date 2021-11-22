@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxPivotNumericAggregate } from '../grids/pivot-grid/pivot-grid-aggregate';
 import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
-import { IPivotConfiguration } from '../grids/pivot-grid/pivot-grid.interface';
+import { IPivotConfiguration, PivotAggregation } from '../grids/pivot-grid/pivot-grid.interface';
 
 @Component({
     template: `
@@ -71,7 +71,11 @@ export class IgxPivotGridTestBaseComponent {
             values: [
                 {
                     member: 'UnitsSold',
-                    aggregate: IgxPivotNumericAggregate.sum,
+                    aggregate: {
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'SUM',
+                        label: 'Sum',
+                    },
                     enabled: true,
                     // dataType: 'currency',
                     formatter: (value) => value ? value + '$' : undefined,
@@ -79,7 +83,11 @@ export class IgxPivotGridTestBaseComponent {
                 },
                 {
                     member: 'UnitPrice',
-                    aggregate: IgxPivotNumericAggregate.sum,
+                    aggregate:{
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'SUM',
+                        label: 'Sum',
+                    },
                     enabled: true,
                     dataType: 'currency'
                 }
@@ -126,14 +134,22 @@ export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseCompon
             values: [
                 {
                     member: 'UnitsSold',
-                    aggregate: IgxPivotNumericAggregate.sum,
+                    aggregate: {
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'UnitsSoldSUM',
+                        label: 'Sum of Units Sold'
+                    },
                     enabled: true,
                     // dataType: 'currency',
                     formatter: (value) => value ? value + '$' : undefined
                 },
                 {
                     member: 'UnitPrice',
-                    aggregate: IgxPivotNumericAggregate.sum,
+                    aggregate: {
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'UnitPriceSUM',
+                        label: 'Sum of Unit Price'
+                    },
                     enabled: true,
                     dataType: 'currency'
                 }
@@ -141,4 +157,28 @@ export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseCompon
             filters: null
         };
     }
+}
+export class IgxTotalSaleAggregate {
+    public static totalSale: PivotAggregation = (members, data: any) =>
+        data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
+
+    public static totalMin: PivotAggregation = (members, data: any) => {
+        let min = 0;
+        if (data.length === 1) {
+            min = data[0].UnitPrice * data[0].UnitsSold || 0;
+        } else if (data.length > 1) {
+            min = data.reduce((a, b) => Math.min(a.UnitPrice * a.UnitsSold || 0, b.UnitPrice * b.UnitsSold || 0));
+        }
+        return min;
+    };
+
+    public static totalMax: PivotAggregation = (members, data: any) => {
+        let max = 0;
+        if (data.length === 1) {
+            max = data[0].UnitPrice * data[0].UnitsSold;
+        } else if (data.length > 1) {
+            max = data.reduce((a, b) => Math.max(a.UnitPrice * a.UnitsSold, b.UnitPrice * b.UnitsSold));
+        }
+        return max;
+    };
 }

@@ -2,6 +2,7 @@ import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strateg
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxNumberSummaryOperand } from '../summaries/grid-summary';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
+import { IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 
@@ -61,7 +62,11 @@ describe('Pivot pipes #pivotGrid', () => {
             values: [
                 {
                     member: 'UnitsSold',
-                    aggregate: IgxNumberSummaryOperand.sum,
+                    aggregate: {
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'sum',
+                        label: 'Sum'
+                    },
                     enabled: true
                 }
             ],
@@ -859,12 +864,20 @@ describe('Pivot pipes #pivotGrid', () => {
         pivotConfig.values = [
             {
                 member: 'UnitsSold',
-                aggregate: IgxNumberSummaryOperand.sum,
+                aggregate: {
+                    aggregator: IgxPivotNumericAggregate.sum,
+                    key: 'sum',
+                    label: 'SUM',
+                },
                 enabled: true
             },
             {
                 member: 'UnitPrice',
-                aggregate: IgxNumberSummaryOperand.sum,
+                aggregate: {
+                    aggregator: IgxPivotNumericAggregate.sum,
+                    key: 'sum',
+                    label: 'SUM',
+                },
                 enabled: true
             }
         ];
