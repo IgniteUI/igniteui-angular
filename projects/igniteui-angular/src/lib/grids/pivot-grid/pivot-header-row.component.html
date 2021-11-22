@@ -30,7 +30,7 @@
                 <!-- Columns area -->
                 <igx-chips-area #colArea droppable='true' style="width:fit-content; height: 100%;">
                     <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="true" [id]="col.memberName"
-                        [removable]="true" (remove)="columnRemoved($event)" 
+                        [removable]="true" (remove)="columnRemoved($event)"
                         (dragOver)="onDimDragOver($event, 1)"
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, colArea, 1)"
@@ -80,7 +80,7 @@
             <div #pivotContainer class="igx-grid__tr-action" [style.min-width.px]="grid.pivotRowWidths"
                 (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)" (igxDragLeave)="onAreaDragLeave($event, rowArea)"
                 igxDrop (dropped)="onDimDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()"
-                style='display: flex; align-items: flex-end;'>
+                style='display: flex; align-items: flex-end; z-index: 4; background: inherit;'>
 
                 <div *ngIf="grid.rowDimensions.length === 0">
                     <span class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
