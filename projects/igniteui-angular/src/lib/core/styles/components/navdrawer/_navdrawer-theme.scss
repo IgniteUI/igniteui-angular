@@ -152,7 +152,6 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
-/// @requires $overlay-color
 /// @requires rem
 /// @requires var-get
 @mixin igx-navdrawer($theme) {
@@ -266,7 +265,7 @@
 
     %overlay {
         opacity: 1;
-        background: igx-color(map.get($theme, 'palette'), 'grays');
+        background: igx-color(map.get($theme, 'palette'), 'grays', 500, .54);
         transition: opacity, visibility;
         transition-duration: .25s, .25s;
         transition-timing-function: ease-in, step-start;

@@ -1008,7 +1008,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         // check correct last row is rendered and is last in view
         expect(lastRow.dataRowIndex).toBe(lastIndex);
-        expect(lastRow.rowData).toBe(grid.data[lastIndex]);
+        expect(lastRow.data).toBe(grid.data[lastIndex]);
 
         // last in tbody
         expect(lastRow.element.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);

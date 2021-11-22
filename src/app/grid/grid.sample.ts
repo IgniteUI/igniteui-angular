@@ -168,15 +168,15 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     public updateRecord(event) {
-        this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
+        const row = this.selectedCell.cell.row;
+        this.grid1.updateCell(event, row.key, this.selectedCell.cell.column.field);
     }
 
     public deleteRow() {
         if (this.selectedCell.cell) {
-            const rowIndex = this.selectedCell.cell.row.index;
-            const row = this.grid1.getRowByIndex(rowIndex);
+            const row = this.selectedCell.cell.row;
             row.delete();
-            this.snax.open(`Row with ID ${rowIndex} was deleted`);
+            this.snax.open(`Row with ID ${row.index} was deleted`);
             this.selectedCell = {};
         }
     }

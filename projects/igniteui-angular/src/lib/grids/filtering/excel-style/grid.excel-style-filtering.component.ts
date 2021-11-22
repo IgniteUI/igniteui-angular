@@ -745,7 +745,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             case GridColumnDataType.Time:
                 return formatDate(element, format, locale, timezone);
             case GridColumnDataType.Currency:
-                return formatCurrency(element, currencyCode ?? getLocaleCurrencyCode(locale), display, digitsInfo, locale);
+                return formatCurrency(element, currencyCode || getLocaleCurrencyCode(locale), display, digitsInfo, locale);
             case GridColumnDataType.Number:
                 return formatNumber(element, locale, digitsInfo);
             case GridColumnDataType.Percent:

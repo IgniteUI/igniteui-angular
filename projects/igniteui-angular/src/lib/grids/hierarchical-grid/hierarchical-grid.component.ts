@@ -76,12 +76,11 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      *
      * ```typescript
      * // get the row data for the first selected row
-     * let selectedRowData = this.grid.selectedRows[0].rowData;
+     * let selectedRowData = this.grid.selectedRows[0].data;
      * ```
      */
     @Input()
-    public rowData: any = [];
-
+    public data: any = [];
     /**
      * The index of the row.
      *
@@ -168,7 +167,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.setupEventEmitters();
         this.layout.gridCreated.emit({
             owner: this.layout,
-            parentID: this.rowData.rowID,
+            parentID: this.data.rowID,
             grid: this.hGrid
         });
     }
@@ -180,12 +179,12 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.childLayoutList = this.layout.children;
         const layouts = this.hGrid.childLayoutList.toArray();
         layouts.forEach((l) => this.hGrid.hgridAPI.registerChildRowIsland(l));
-        this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
-        this.layout.rowIslandAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
+        this.parentGrid.hgridAPI.registerChildGrid(this.data.rowID, this.layout.key, this.hGrid);
+        this.layout.rowIslandAPI.registerChildGrid(this.data.rowID, this.hGrid);
 
         this.layout.gridInitialized.emit({
             owner: this.layout,
-            parentID: this.rowData.rowID,
+            parentID: this.data.rowID,
             grid: this.hGrid
         });
 

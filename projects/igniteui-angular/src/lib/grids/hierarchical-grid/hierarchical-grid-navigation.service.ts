@@ -153,14 +153,14 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param cb  Optional.Callback function called when operation is complete.
      */
     protected positionInParent(rowIndex, isNext, cb?: () => void) {
-        const rowObj = this.grid.gridAPI.get_row_by_index(rowIndex);
-        if (!rowObj) {
+        const row = this.grid.gridAPI.get_row_by_index(rowIndex);
+        if (!row) {
             if (cb) {
                 cb();
             }
             return;
         }
-        const positionInfo = this.getPositionInfo(rowObj, isNext);
+        const positionInfo = this.getPositionInfo(row, isNext);
         if (!positionInfo.inView) {
             // stop event from triggering multiple times before scrolling is complete.
             this._pendingNavigation = true;
@@ -257,14 +257,14 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param rowObj
      * @param isNext
      */
-    protected getPositionInfo(rowObj: RowType, isNext: boolean) {
+    protected getPositionInfo(row: RowType, isNext: boolean) {
         // XXX: Fix type
-        let rowElem = (rowObj as any).nativeElement;
-        if ((rowObj as any).layout) {
+        let rowElem = row.nativeElement;
+        if ((row as any).layout) {
             const childLayoutKeys = this.grid.childLayoutKeys;
             const riKey = isNext ? childLayoutKeys[0] : childLayoutKeys[childLayoutKeys.length - 1];
             const pathSegment: IPathSegment = {
-                rowID: rowObj.rowData.rowID,
+                rowID: row.data.rowID,
                 rowIslandKey: riKey
             };
             const childGrid =  this.grid.hgridAPI.getChildGrid([pathSegment]);

@@ -12,10 +12,15 @@ export const NG_CORE_PACKAGE_NAME = '@angular/core';
 export const CUSTOM_TS_PLUGIN_PATH = './tsPlugin';
 export const CUSTOM_TS_PLUGIN_NAME = 'igx-ts-plugin';
 
-enum SynaxTokens {
+enum SyntaxTokens {
     ClosingParenthesis = ')',
     MemberAccess = '.',
     Question = '?'
+}
+
+export class MemberInfo implements Pick<tss.DefinitionInfo, 'name' | 'fileName'> {
+    public name: string;
+    public fileName: string;
 }
 
 /** Returns a source file */
@@ -45,7 +50,9 @@ export const getIdentifierPositions = (source: string | ts.SourceFile, name: str
                 return false;
             }
         }
-        return node.text === name;
+        // for methods the node.text will not contain characters like ()
+        const cleanName = name.match(/\w+/g)[0] || name;
+        return node.text === cleanName;
     };
 
     const findIdentifiers = (node: ts.Node) => {
@@ -251,7 +258,7 @@ const getTypeDefinitions = (langServ: tss.LanguageService, entryPath: string, po
  * @param position Index of identifier
  */
 export const getTypeDefinitionAtPosition =
-    (langServ: tss.LanguageService, entryPath: string, position: number): Pick<tss.DefinitionInfo, 'name' | 'fileName'> | null => {
+    (langServ: tss.LanguageService, entryPath: string, position: number): MemberInfo | null => {
         const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
         if (!definition) {
             return null;
@@ -263,6 +270,19 @@ export const getTypeDefinitionAtPosition =
         }
         if (definition.kind.toString() === 'method') {
             return getMethodTypeDefinition(langServ, definition);
+        }
+        if (entryPath.endsWith('.ts')) {
+            // for ts files we can use the type checker to look up a specific node
+            // and attempt to resolve its actual type
+            const sourceFile = langServ.getProgram().getSourceFile(entryPath);
+            // const node = (tss as any).getTouchingPropertyName(sourceFile, position); -> tss internal that looks up a node
+            const node = findNodeAtPosition(sourceFile, position);
+            if (node) {
+                const memberInfo = resolveMemberInfo(langServ, node);
+                if (memberInfo) {
+                    return memberInfo;
+                }
+            }
         }
 
         let typeDefs = getTypeDefinitions(langServ, definition.fileName || entryPath, definition.textSpan.start);
@@ -311,7 +331,6 @@ export const getTypeDefinitionAtPosition =
         return null;
     };
 
-
 /**
  * Determines if a member belongs to a type in the `igniteui-angular` toolkit.
  *
@@ -325,7 +344,7 @@ export const isMemberIgniteUI =
         const content = langServ.getProgram().getSourceFile(entryPath).getText();
         matchPosition = shiftMatchPosition(matchPosition, content);
         const prevChar = content.substr(matchPosition - 1, 1);
-        if (prevChar === SynaxTokens.ClosingParenthesis) {
+        if (prevChar === SyntaxTokens.ClosingParenthesis) {
             // methodCall().identifier
             matchPosition = langServ.getBraceMatchingAtPosition(entryPath, matchPosition - 1)[0]?.start ?? matchPosition;
         }
@@ -339,6 +358,49 @@ export const isMemberIgniteUI =
             && change.definedIn.indexOf(typeDef.name) !== -1;
     };
 
+const resolveMemberInfo = (langServ: tss.LanguageService, node: tss.Node): MemberInfo | null => {
+    const typeChecker = langServ.getProgram().getTypeChecker();
+    const nodeType = typeChecker.getTypeAtLocation(node);
+    const typeArguments = typeChecker.getTypeArguments(nodeType as tss.TypeReference);
+    if (typeArguments && typeArguments.length < 1) {
+        // it's not a generic type so try to look up its name and fileName
+        // atm we do not support migrating union/intersection generic types
+        // a type symbol (type) should have only one declaration
+        // if the type is 'any' or 'some', there will be no type symbol
+        const name = nodeType.getSymbol()?.getName();
+        const declarations = nodeType.getSymbol()?.getDeclarations();
+        if (declarations && declarations.length > 0) {
+            const fileName = declarations[0].getSourceFile().fileName;
+            if (name && fileName) {
+                return { name, fileName };
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Looks up a node which end property matches the specified position.
+ * Can go to the next node if the currently found one is invalid (comment for example)
+ */
+const findNodeAtPosition = (sourceFile: tss.SourceFile, position: number): tss.Node | null => {
+    if (!sourceFile) {
+        return null;
+    }
+
+    return findInnerNode(sourceFile, position);
+}
+const findInnerNode = (node: tss.Node, position: number): tss.Node | null => {
+    if (position <= node.getEnd()) {
+        // see tss.forEachChild for documentation
+        // look for the innermost child that matches the position
+        return node.forEachChild(cn => findInnerNode(cn, position)) || node;
+    }
+
+    return null;
+}
+
 /**
  * Shifts the match position of the identifier to the left
  * until any character other than an empty string or a '.' is reached. #9347
@@ -347,8 +409,8 @@ const shiftMatchPosition = (matchPosition: number, content: string): number => {
     do {
         matchPosition--;
     } while (matchPosition > 0 && !content[matchPosition - 1].trim()
-        || content[matchPosition - 1] === SynaxTokens.MemberAccess
-        || content[matchPosition - 1] === SynaxTokens.Question);
+    || content[matchPosition - 1] === SyntaxTokens.MemberAccess
+        || content[matchPosition - 1] === SyntaxTokens.Question);
     return matchPosition;
 };
 
@@ -358,8 +420,7 @@ const shiftMatchPosition = (matchPosition: number, content: string): number => {
  * @param langServ The TypeScript LanguageService.
  * @param definition The method definition.
  */
-const getMethodTypeDefinition = (langServ: tss.LanguageService, definition: tss.DefinitionInfo):
-    Pick<tss.DefinitionInfo, 'name' | 'fileName'> | null => {
+const getMethodTypeDefinition = (langServ: tss.LanguageService, definition: tss.DefinitionInfo): MemberInfo | null => {
     // TODO: use typechecker for all the things?
     const sourceFile = langServ.getProgram().getSourceFile(definition.fileName);
 
@@ -385,12 +446,12 @@ const getMethodTypeDefinition = (langServ: tss.LanguageService, definition: tss.
     }
 
     const returnType = typeChecker.getReturnTypeOfSignature(signature);
-    const name = returnType.symbol.escapedName.toString();
-    if (returnType.symbol?.declarations?.length > 0) {
+    const name = returnType?.symbol?.escapedName?.toString();
+    if (name && returnType.symbol?.declarations?.length > 0) {
         // there should never be a case where a type is declared in more than one file
         /**
          * For union return types like T | null | undefined
-         * and interesection return types like T & null & undefined
+         * and intersection return types like T & null & undefined
          * the TypeChecker ignores null and undefined and returns only T which is not
          * marked as a union or intersection type.
          *

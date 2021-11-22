@@ -26,7 +26,7 @@ import { IgxToolbarToken } from './token';
 @Component({
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html',
-    providers: [{ provide: IgxToolbarToken, useClass: IgxGridToolbarComponent }]
+    providers: [{ provide: IgxToolbarToken, useExisting: IgxGridToolbarComponent }]
 })
 export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDestroy {
 
