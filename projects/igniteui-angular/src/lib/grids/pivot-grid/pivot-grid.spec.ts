@@ -79,7 +79,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             checkboxes[1].click();
             fixture.detectChanges();
 
-             // uncheck Bikes
+            // uncheck Bikes
             checkboxes[2].click();
             fixture.detectChanges();
 
@@ -109,19 +109,19 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             checkboxes[1].click();
             fixture.detectChanges();
 
-             // uncheck Uruguay
+            // uncheck Uruguay
             checkboxes[2].click();
             fixture.detectChanges();
 
 
-             // Click 'apply' button to apply filter.
-             GridFunctions.clickApplyExcelStyleFiltering(fixture, excelMenu, 'igx-pivot-grid');
-             fixture.detectChanges();
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleFiltering(fixture, excelMenu, 'igx-pivot-grid');
+            fixture.detectChanges();
 
-             // check columns
-             const colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
-             const expected = ['USA'];
-             expect(colHeaders).toEqual(expected);
+            // check columns
+            const colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+            const expected = ['USA'];
+            expect(colHeaders).toEqual(expected);
         });
 
         it('should apply sorting for dimension via row chip', () => {
@@ -207,14 +207,14 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
                     aggregator: IgxTotalSaleAggregate.totalSale,
                     label: 'Sum of Sale'
                 }, {
-                        key: 'MIN',
-                        aggregator: IgxTotalSaleAggregate.totalMin,
-                        label: 'Minimum of Sale'
-                    }, {
-                        key: 'MAX',
-                        aggregator: IgxTotalSaleAggregate.totalMax,
-                        label: 'Maximum of Sale'
-                    }],
+                    key: 'MIN',
+                    aggregator: IgxTotalSaleAggregate.totalMin,
+                    label: 'Minimum of Sale'
+                }, {
+                    key: 'MAX',
+                    aggregator: IgxTotalSaleAggregate.totalMax,
+                    label: 'Maximum of Sale'
+                }],
                 enabled: true
             });
             pivotGrid.pipeTrigger++;
@@ -274,8 +274,10 @@ describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         const expected =
         {
             'All cities': 'All Cities', 'All cities_level': 0,
-            ProductCategory: 'Bikes', ProductCategory_level: 1,
-            'Uruguay-AmountOfSale': 242.08, 'Uruguay-UnitsSold': 68
+            ProductCategory: 'Clothing', ProductCategory_level: 1,
+            'Bulgaria-AmountOfSale': 3612.42, 'Bulgaria-UnitsSold': 282,
+            'US-AmountOfSale': 14672.72, 'US-UnitsSold': 296,
+            'Uruguay-AmountOfSale': 31158.48, 'Uruguay-UnitsSold': 456
         };
         expect(pivotGrid.selectedRows[0]).toEqual(expected);
 
@@ -303,25 +305,28 @@ describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
                 {
                     AllProducts: 'AllProducts', 'All cities': 'All Cities',
                     'All cities_level': 0, AllProducts_level: 0, 'Bulgaria-UnitsSold': 774,
-                    'Bulgaria-AmountOfSale': 11509.02, 'USA-UnitsSold': 829, 'USA-AmountOfSale': 44098.85999999999,
-                    'Uruguay-UnitsSold': 524, 'Uruguay-AmountOfSale': 31400.56
-                }, {
-                    ProductCategory: 'Clothing', 'All cities': 'All Cities',
-                    ProductCategory_level: 1, 'All cities_level': 0, 'Bulgaria-UnitsSold': 774,
-                    'Bulgaria-AmountOfSale': 11509.02, 'USA-UnitsSold': 296, 'USA-AmountOfSale': 14672.72,
-                    'Uruguay-UnitsSold': 456, 'Uruguay-AmountOfSale': 31158.48
+                    'Bulgaria-AmountOfSale': 11509.02, 'US-UnitsSold': 296, 'US-AmountOfSale': 14672.72,
+                    'Uruguay-UnitsSold': 524, 'Uruguay-AmountOfSale': 31400.56,
+                    'UK-UnitsSold': 293, 'UK-AmountOfSale': 25074.94,
+                    'Japan-UnitsSold': 240, 'Japan-AmountOfSale': 4351.2,
                 }, {
                     ProductCategory: 'Bikes', 'All cities': 'All Cities',
                     ProductCategory_level: 1, 'All cities_level': 0,
                     'Uruguay-UnitsSold': 68, 'Uruguay-AmountOfSale': 242.08
                 }, {
+                    ProductCategory: 'Clothing', 'All cities': 'All Cities',
+                    ProductCategory_level: 1, 'All cities_level': 0, 'Bulgaria-UnitsSold': 282,
+                    'Bulgaria-AmountOfSale': 3612.42, 'US-UnitsSold': 296, 'US-AmountOfSale': 14672.72,
+                    'Uruguay-UnitsSold': 456, 'Uruguay-AmountOfSale': 31158.48
+                }, {
                     ProductCategory: 'Accessories', 'All cities': 'All Cities',
                     ProductCategory_level: 1, 'All cities_level': 0,
-                    'USA-UnitsSold': 293, 'USA-AmountOfSale': 25074.94
+                    'UK-UnitsSold': 293, 'UK-AmountOfSale': 25074.94
                 }, {
                     ProductCategory: 'Components', 'All cities': 'All Cities',
                     ProductCategory_level: 1, 'All cities_level': 0,
-                    'USA-UnitsSold': 240, 'USA-AmountOfSale': 4351.2
+                    'Japan-UnitsSold': 240, 'Japan-AmountOfSale': 4351.2,
+                    'Bulgaria-UnitsSold': 492, 'Bulgaria-AmountOfSale': 7896.6
                 }
             ];
         expect(pivotGrid.selectedRows).toEqual(expected);

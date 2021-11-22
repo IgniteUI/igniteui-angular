@@ -61,7 +61,6 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridTransaction } from '../common/types';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IgxGridAPIService } from '../grid/grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 
 let NEXT_ID = 0;
@@ -412,8 +411,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.dataView.forEach(record => {
             const prev = [];
             for (const dim of this.rowDimensions) {
-                const key = PivotUtil.getRecordKey(record, dim, prev);
-                prev.push(dim);
+                const currDim = record[dim.memberName] ? dim : record[dim.childLevel.memberName] ? dim.childLevel : dim;
+                const key = PivotUtil.getRecordKey(record, currDim, prev);
+                prev.push(currDim);
                 if (this.selectionService.isPivotRowSelected(key) && !selectedRowIds.find(x => x === record)) {
                     selectedRowIds.push(record);
                     break;
