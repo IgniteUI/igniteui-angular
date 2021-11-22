@@ -8,13 +8,13 @@ import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxComboComponent, IgxComboModule } from '../../combo/public_api';
 import { IgxFocusModule } from '../../directives/focus/focus.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxInputGroupModule } from '../../input-group/public_api';
 import { IGridEditEventArgs } from '../common/events';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const first = <T>(array: T[]): T => array[0];
 
@@ -545,9 +545,9 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
         expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
         expect(cell.editMode).toBeTruthy();
-        expect(combo.selectedItems().length).toEqual(3);
+        expect(combo.selection.length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -607,9 +607,9 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
         expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
         expect(cell.editMode).toBeTruthy();
-        expect(combo.selectedItems().length).toEqual(3);
+        expect(combo.selection.length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -662,9 +662,9 @@ describe('Edit cell with data of type Array #grid', () => {
 
         // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
-            rowID: row.rowID,
+            rowID: row.key,
             rowData: initialRowData,
-            oldValue: row.rowData,
+            oldValue: row.data,
             owner: grid,
             isAddRow: row.addRowUI,
             cancel: false,
@@ -675,9 +675,9 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(grid.rowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
         expect(row.inEditMode).toBeTruthy();
         expect(cell.editMode).toBeTruthy();
-        expect(combo.selectedItems().length).toEqual(3);
+        expect(combo.selection.length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -725,9 +725,9 @@ describe('Edit cell with data of type Array #grid', () => {
 
         // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
-            rowID: row.rowID,
+            rowID: row.key,
             rowData: initialRowData,
-            oldValue: row.rowData,
+            oldValue: row.data,
             owner: grid,
             isAddRow: row.addRowUI,
             cancel: false,
@@ -738,9 +738,9 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(grid.rowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
         expect(row.inEditMode).toBeTruthy();
         expect(cell.editMode).toBeTruthy();
-        expect(combo.selectedItems().length).toEqual(3);
+        expect(combo.selection.length).toEqual(3);
 
-        combo.deselectItems([cell.editValue[0], cell.editValue[1]]);
+        combo.deselect([cell.editValue[0], cell.editValue[1]]);
         fixture.detectChanges();
         await fixture.whenStable();
 

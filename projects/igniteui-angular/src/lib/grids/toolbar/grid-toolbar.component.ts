@@ -12,10 +12,9 @@ import { Subscription } from 'rxjs';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import { IgxIconService } from '../../icon/public_api';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
-import { IgxGridToolbarTitleDirective, IgxGridToolbarActionsDirective } from './common';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { GridType } from '../common/grid.interface';
+import { IgxGridToolbarActionsDirective } from './common';
+import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { IgxToolbarToken } from './token';
 
 
 /**
@@ -26,7 +25,8 @@ import { GridType } from '../common/grid.interface';
  */
 @Component({
     selector: 'igx-grid-toolbar',
-    templateUrl: './grid-toolbar.component.html'
+    templateUrl: './grid-toolbar.component.html',
+    providers: [{ provide: IgxToolbarToken, useExisting: IgxGridToolbarComponent }]
 })
 export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDestroy {
 
@@ -56,7 +56,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
         return this.api.grid;
     }
 
-    public set grid(value: IgxGridBaseDirective) {
+    public set grid(value: GridType) {
         this._grid = value;
     }
 
@@ -64,13 +64,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
     public get nativeElement() {
         return this.element.nativeElement;
     }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ContentChild(IgxGridToolbarTitleDirective)
-    public hasTitle: IgxGridToolbarTitleDirective;
 
     /**
      * @hidden
@@ -105,12 +98,12 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
     }
 
 
-    protected _grid: IgxGridBaseDirective;
+    protected _grid: GridType;
     protected sub: Subscription;
 
     constructor(
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        private api: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Inject(IGX_GRID_SERVICE_BASE) private api: GridServiceType,
         private iconService: IgxIconService,
         private element: ElementRef<HTMLElement>
     ) {

@@ -6,6 +6,10 @@ import { IgxGridSharedModules } from '../common/shared.module';
 import { IgxGridPipesModule } from '../common/grid-pipes.module';
 
 
+export { IgxSummaryCellComponent } from './summary-cell.component';
+export { IgxSummaryRowComponent } from './summary-row.component';
+export { IgxSummaryDataPipe } from './grid-root-summary.pipe';
+
 @NgModule({
     declarations: [
         IgxSummaryCellComponent,

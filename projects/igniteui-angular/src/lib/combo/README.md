@@ -7,7 +7,7 @@ The igx-combo exposes intuitive keyboard navigation and it is accessibility comp
 Drop Down items are virtualized, which guarantees smooth work, even if the igx-combo is bound to data source with a lot of items.
 
 
-`igx-combo` is a component.  
+`igx-combo` is a component.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html)
 
 # Usage
@@ -24,17 +24,17 @@ Remote binding, defining `valueKey` and `displayKey`, and exposing `dataPreLoad`
 ```
 
 ```typescript
-public ngOnInit() {
+public ngOnInit(): void {
     this.remoteData = this.remoteService.remoteData;
 }
 
-public ngAfterViewInit() {
+public ngAfterViewInit(): void {
     this.remoteService.getData(this.combo.virtualizationState, (data) => {
         this.combo.totalItemCount = data.length;
     });
 }
 
-public dataLoading(evt) {
+public dataLoading(evt): void {
         if (this.prevRequest) {
             this.prevRequest.unsubscribe();
         }
@@ -46,7 +46,7 @@ public dataLoading(evt) {
     }
 ```
 
-> Note: In order to have combo with remote data, what you need is to have a service that retrieves data chunks from a server. 
+> Note: In order to have combo with remote data, what you need is to have a service that retrieves data chunks from a server.
 What the combo exposes is a `virtualizationState` property that gives state of the combo - first index and the number of items that needs to be loaded.
 The service, should inform the combo for the total items that are on the server - using the `totalItemCount` property.
 
@@ -67,9 +67,9 @@ export class MyCombo {
     public combo: IgxComboComponent;
     public myCustomData: { id: number, text: string } = [{ id: 0, name: "One" }, ...];
     ...
-    ngOnInit() {
+    public ngOnInit(): void {
         // Selection is done only by valueKey property value
-        this.combo.selectItems([0, 1]);
+        this.combo.select([0, 1]);
     }
 }
 ```
@@ -80,8 +80,8 @@ export class MyCombo {
 ```
 ```typescript
 export class MyCombo {
-    ngOnInit() {
-        this.combo.selectItems(this.data[0], this.data[1]);
+    public ngOnInit(): void {
+        this.combo.select([this.data[0], this.data[1]]);
     }
 }
 ```
@@ -166,7 +166,7 @@ Defining a combo's groupKey option will group the items, according to that key.
 
 ### Templates
 Templates for different parts of the control can be defined, including items, header and footer, etc.
-When defining one of the them, you need to reference list of predefined names, as follows:
+When defining one of them, you need to reference list of predefined names, as follows:
 
 #### Defining item template:
 ```html
@@ -289,7 +289,7 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 
 ## Display Density
 **igx-combo** supports setting of different display densities.
-Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possilbe display densities are `compact`, `cosy` and `comfortable` (default).
+Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possible display densities are `compact`, `cosy` and `comfortable` (default).
 Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size.
 
 ## API
@@ -349,8 +349,8 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | `close`            | Closes drop down                         | `void`      | `None`                                                        |
 | `toggle`           | Toggles drop down                        | `void`      | `None`                                                        |
 | `selectedItems`    | Get current selection state              | `any[]`     | `None`                                                        |
-| `selectItems`      | Select defined items                     | `void`      | items: `any[]`, clearCurrentSelection: `boolean`              |
-| `deselectItems`    | Deselect defined items                   | `void`      | items: `any[]`                                                |
+| `select`      | Select defined items                     | `void`      | items: `any[]`, clearCurrentSelection: `boolean`              |
+| `deselect`    | Deselect defined items                   | `void`      | items: `any[]`                                                |
 | `selectAllItems`   | Select all (filtered) items              | `void`      | ignoreFilter?: `boolean` - if `true` selects **all** values   |
 | `deselectAllItems` | Deselect (filtered) all items            | `void`      | ignoreFilter?: `boolean` - if `true` deselects **all** values |
-| `setSelectedItem`  | Toggles (select/deselect) an item by key | `void`      | itemID: any, select = true, event?: Event                     |
+| `selected`  | Toggles (select/deselect) an item by key | `void`      | itemID: any, select = true, event?: Event                     |

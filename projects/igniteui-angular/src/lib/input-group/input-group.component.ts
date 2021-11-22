@@ -449,21 +449,15 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden @internal */
     public ngAfterViewChecked() {
         if (!this._theme) {
-            if(this.platform.isIE) {
-                Promise.resolve().then(() => {
-                    this._theme$.next(IgxInputGroupTheme.Material);
-                });
-            } else {
-                const cssProp = this.document.defaultView
-                    .getComputedStyle(this.element.nativeElement)
-                    .getPropertyValue('--theme')
-                    .trim();
+            const cssProp = this.document.defaultView
+                .getComputedStyle(this.element.nativeElement)
+                .getPropertyValue('--theme')
+                .trim();
 
-                if(cssProp !== '') {
-                    Promise.resolve().then(() => {
-                        this._theme$.next(cssProp);
-                    });
-                }
+            if(cssProp !== '') {
+                Promise.resolve().then(() => {
+                    this._theme$.next(cssProp);
+                });
             }
         }
     }

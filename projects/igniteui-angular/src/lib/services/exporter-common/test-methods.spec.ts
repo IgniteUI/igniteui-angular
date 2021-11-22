@@ -41,10 +41,9 @@ export class TestMethods {
         await wait(16);
 
         const myGrid = fix.componentInstance.grid;
-
         // Pin columns
         colIndices.forEach((i) => {
-            myGrid.columns[i].pinned = true;
+            myGrid.columnList.get(i).pinned = true;
         });
 
         await wait(16);

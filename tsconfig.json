@@ -44,6 +44,8 @@
     },
     "angularCompilerOptions": {
         "generateDeepReexports": true,
-        "strictTemplates": true
+        "strictTemplates": true,
+        "fullTemplateTypeCheck": true,
+        "strictInjectionParameters": true
     }
 }

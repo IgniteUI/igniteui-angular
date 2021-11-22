@@ -150,7 +150,7 @@ The `deleteRow` method takes the `cascadeOnDelete` property of the tree grid int
 
 ```typescript
 const rowForDel = this.treegrid1.selectedCells[0].row;
-this.treegrid1.deleteRow(rowForDel.rowID);
+this.treegrid1.deleteRow(rowForDel.key);
 ```
 
 **NOTE:** The `cascadeOnDelete` property is taken into account only if our tree grid is defined with **primary and foreign keys**. If **child collection** is used instead, then child records will always be deleted when their respective parent is deleted.
