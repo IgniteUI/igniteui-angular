@@ -5766,7 +5766,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public isSummaryRow(rowData): boolean {
-        return rowData.summaries && (rowData.summaries instanceof Map);
+        return rowData && rowData.summaries && (rowData.summaries instanceof Map);
     }
 
     /**
