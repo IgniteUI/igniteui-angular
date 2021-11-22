@@ -229,22 +229,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public loadingGridTemplate: TemplateRef<any>;
 
     /**
-     * Sets summaryRow height
+     * Get/Set summaryRow height
      */
     @Input()
     public set summaryRowHeight(value: number) {
         this._summaryRowHeight = value;
         this.summaryService.summaryHeight = value;
-        // if (value === 0) {
-        //this.summaryService.calcMaxSummaryHeight();
-        // }
         if (!this._init) {
             this.reflow();
         }
     }
 
     public get summaryRowHeight(): number {
-        return this._summaryRowHeight || this.summaryService.summaryHeight;
+        if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
+            return this._summaryRowHeight || this.summaryService.calcMaxSummaryHeight();
+        }
+        return 0;
     }
 
     /**
