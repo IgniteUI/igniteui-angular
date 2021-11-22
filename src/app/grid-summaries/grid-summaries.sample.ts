@@ -803,8 +803,8 @@ export class GridSummaryComponent implements OnInit {
         }
     }
 
-    public disableSummary() {
-        this.grid1.getColumnByName('UnitsInStock').hasSummary = false;
+    public toggleSummary() {
+        this.grid1.getColumnByName('UnitsInStock').hasSummary = !this.grid1.getColumnByName('UnitsInStock').hasSummary;
         // this.grid1.recalculateSummaries();
     }
 
