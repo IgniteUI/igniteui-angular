@@ -59,7 +59,7 @@ $light-chip: extend(
         ),
 
         background: (
-            igx-color: ('grays', 300)
+            igx-color: ('grays', 400, .38)
         ),
 
         border-color: transparent,
@@ -73,7 +73,7 @@ $light-chip: extend(
         ),
 
         hover-background: (
-            igx-color: ('grays', 400, .5)
+            igx-color: ('grays', 400, .54)
         ),
 
         hover-border-color: transparent,
@@ -83,7 +83,7 @@ $light-chip: extend(
         ),
 
         focus-background: (
-            igx-color: ('grays', 400, .5)
+            igx-color: ('grays', 600, .54)
         ),
 
         focus-border-color: transparent,
@@ -93,7 +93,7 @@ $light-chip: extend(
         ),
 
         selected-background: (
-            igx-color: ('grays', 300)
+            igx-color: ('grays', 600, .38)
         ),
 
         selected-border-color: transparent,
@@ -103,7 +103,7 @@ $light-chip: extend(
         ),
 
         hover-selected-background: (
-            igx-color: ('grays', 400, .8)
+            igx-color: ('grays', 400, .54)
         ),
 
         hover-selected-border-color: transparent,
@@ -113,7 +113,7 @@ $light-chip: extend(
         ),
 
         focus-selected-background: (
-            igx-color: ('grays', 400, .8)
+            igx-color: ('grays', 600, .54)
         ),
 
         focus-selected-border-color: transparent
