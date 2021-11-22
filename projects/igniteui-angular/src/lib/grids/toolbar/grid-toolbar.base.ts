@@ -43,7 +43,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     @Input()
     public set overlaySettings(overlaySettings: OverlaySettings) {
         this._overlaySettings = overlaySettings;
-    };
+    }
 
     /**
      * Returns overlay settings
@@ -85,7 +85,12 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     private $sub: Subscription;
 
     private _overlaySettings: OverlaySettings = {
-        positionStrategy: new ElasticPositionStrategy(),
+        positionStrategy: new ConnectedPositioningStrategy({
+            horizontalDirection: HorizontalAlignment.Left,
+            horizontalStartPoint: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            verticalStartPoint: VerticalAlignment.Bottom
+        }),
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnEscape: true,
