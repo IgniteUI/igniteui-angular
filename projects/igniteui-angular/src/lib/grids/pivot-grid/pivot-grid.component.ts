@@ -943,7 +943,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected generateDimensionColumns(): IgxColumnComponent[] {
         const config = this.pivotConfiguration;
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
         const leafFields = PivotUtil.flatten(allDimensions, 0).filter(x => !x.childLevel).map(x => x.memberName);
         const columns = [];
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
