@@ -264,7 +264,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      * ```
      *
      *```typescript
-     * public handleActiveStepChanging(event: IStepTogglingEventArgs) {
+     * public handleActiveStepChanging(event: IStepChangingEventArgs) {
      *  if (event.newIndex < event.oldIndex) {
      *      event.cancel = true;
      *  }

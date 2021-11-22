@@ -1,9 +1,8 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
-    forwardRef, OnInit, AfterViewInit, ContentChildren
+    OnInit, AfterViewInit, ContentChildren
 } from '@angular/core';
-import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
@@ -24,18 +23,13 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode, GridInstanceType } from '../common/enums';
-import { GridType } from '../common/grid.interface';
+import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
-import { RowType } from '../common/row.interface';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
-import { CellType } from '../common/cell.interface';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
-import { IGridGroupingStrategy } from '../../data-operations/grouping-strategy';
-import { ISortingEventArgs } from 'igniteui-angular';
-
+import { IGridGroupingStrategy } from '../common/strategy';
 let NEXT_ID = 0;
 
 export interface IGroupingDoneEventArgs extends IBaseEventArgs {
@@ -65,14 +59,13 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     providers: [
         IgxGridCRUDService,
         IgxGridNavigationService,
         IgxGridSummaryService,
         IgxGridSelectionService,
-        { provide: GridBaseAPIService, useClass: IgxGridAPIService },
-        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxGridComponent) },
+        { provide: IGX_GRID_SERVICE_BASE, useClass: IgxGridAPIService },
+        { provide: IGX_GRID_BASE, useExisting: IgxGridComponent },
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService,
@@ -504,7 +497,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * @deprecated
+     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
+     *
      * Returns a `CellType` object that matches the conditions.
      *
      * @example
@@ -514,7 +508,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param rowIndex
      * @param index
      */
-    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
@@ -601,7 +594,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public trackChanges(index, rec) {
-        if (rec.detailsData !== undefined) {
+        if (rec && rec.detailsData !== undefined) {
             return rec.detailsData;
         }
         return rec;
@@ -909,7 +902,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     owner: tmlpOutlet,
                     index: this.dataView.indexOf(rowData),
                     templateID: {
-                        type:'detailRow',
+                        type: 'detailRow',
                         id: rowID
                     }
                 };
@@ -918,7 +911,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 return {
                     $implicit: rowData.detailsData,
                     templateID: {
-                        type:'detailRow',
+                        type: 'detailRow',
                         id: rowID
                     },
                     index: this.dataView.indexOf(rowData)
@@ -1128,8 +1121,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (index < 0 || index > this.dataView.length) {
             return undefined;
         }
-
-        return new IgxGridRow(this, index, rec);
+        return new IgxGridRow(this as any, index, rec);
     }
 
     /**
@@ -1226,14 +1218,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
 
         if (rec && this.isGroupByRecord(rec)) {
-            row = new IgxGroupByRow(this, index, rec);
+            row = new IgxGroupByRow(this as any, index, rec);
         }
         if (rec && this.isSummaryRow(rec)) {
-            row = new IgxSummaryRow(this, index, rec.summaries, GridInstanceType.Grid);
+            row = new IgxSummaryRow(this as any, index, rec.summaries, GridInstanceType.Grid);
         }
         // if found record is a no a groupby or summary row, return IgxGridRow instance
         if (!row && rec) {
-            row = new IgxGridRow(this, index, rec);
+            row = new IgxGridRow(this as any, index, rec);
         }
 
         return row;
@@ -1302,7 +1294,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _setupNavigationService() {
         if (this.hasColumnLayouts) {
             this.navigation = new IgxGridMRLNavigationService(this.platform);
-            this.navigation.grid = this;
+            this.navigation.grid = this as any;
         }
     }
 

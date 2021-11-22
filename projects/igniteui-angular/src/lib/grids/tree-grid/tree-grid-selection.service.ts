@@ -124,7 +124,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         // retrieve rows/parents/children which has been added/removed from the selection
         this.handleAddedAndRemovedArgs(args);
 
-        this.grid.rowSelected.emit(args);
+        this.grid.rowSelectionChanging.emit(args);
 
         if (args.cancel) {
             return;
@@ -164,8 +164,8 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
             const rowTreeRecord = this.grid.gridAPI.get_rec_by_id(rowID);
             const rowAndAllChildren = this.get_all_children(rowTreeRecord);
             rowAndAllChildren.forEach(row => {
-                if (visibleRowIDs.indexOf(row.rowID) >= 0) {
-                    rowsToBeProcessed.add(row.rowID);
+                if (visibleRowIDs.indexOf(row.key) >= 0) {
+                    rowsToBeProcessed.add(row.key);
                 }
             });
             if (rowTreeRecord && rowTreeRecord.parent) {
@@ -239,27 +239,27 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
     private handleRowSelectionState(treeRow: ITreeGridRecord, visibleRowIDs: any[]) {
         let visibleChildren = [];
         if (treeRow && treeRow.children) {
-            visibleChildren = treeRow.children.filter(child => visibleRowIDs.indexOf(child.rowID) >= 0);
+            visibleChildren = treeRow.children.filter(child => visibleRowIDs.indexOf(child.key) >= 0);
         }
         if (visibleChildren.length) {
-            if (visibleChildren.every(row => this.rowsToBeSelected.has(row.rowID))) {
-                this.rowsToBeSelected.add(treeRow.rowID);
-                this.rowsToBeIndeterminate.delete(treeRow.rowID);
-            } else if (visibleChildren.some(row => this.rowsToBeSelected.has(row.rowID) || this.rowsToBeIndeterminate.has(row.rowID))) {
-                this.rowsToBeIndeterminate.add(treeRow.rowID);
-                this.rowsToBeSelected.delete(treeRow.rowID);
+            if (visibleChildren.every(row => this.rowsToBeSelected.has(row.key))) {
+                this.rowsToBeSelected.add(treeRow.key);
+                this.rowsToBeIndeterminate.delete(treeRow.key);
+            } else if (visibleChildren.some(row => this.rowsToBeSelected.has(row.key) || this.rowsToBeIndeterminate.has(row.key))) {
+                this.rowsToBeIndeterminate.add(treeRow.key);
+                this.rowsToBeSelected.delete(treeRow.key);
             } else {
-                this.rowsToBeIndeterminate.delete(treeRow.rowID);
-                this.rowsToBeSelected.delete(treeRow.rowID);
+                this.rowsToBeIndeterminate.delete(treeRow.key);
+                this.rowsToBeSelected.delete(treeRow.key);
             }
         } else {
             // if the children of the row has been deleted and the row was selected do not change its state
-            if (this.isRowSelected(treeRow.rowID)) {
-                this.rowsToBeSelected.add(treeRow.rowID);
-                this.rowsToBeIndeterminate.delete(treeRow.rowID);
+            if (this.isRowSelected(treeRow.key)) {
+                this.rowsToBeSelected.add(treeRow.key);
+                this.rowsToBeIndeterminate.delete(treeRow.key);
             } else {
-                this.rowsToBeSelected.delete(treeRow.rowID);
-                this.rowsToBeIndeterminate.delete(treeRow.rowID);
+                this.rowsToBeSelected.delete(treeRow.key);
+                this.rowsToBeIndeterminate.delete(treeRow.key);
             }
         }
     }

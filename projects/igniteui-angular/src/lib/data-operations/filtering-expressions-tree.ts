@@ -38,7 +38,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      *
      * @memberof FilteringExpressionsTree
      */
-    filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[] = [];
+    public filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[] = [];
 
     /**
      * Sets/gets the operator.
@@ -51,7 +51,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      *
      * @memberof FilteringExpressionsTree
      */
-    operator: FilteringLogic;
+    public operator: FilteringLogic;
 
     /**
      * Sets/gets the field name of the column where the filtering expression is placed.
@@ -64,7 +64,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      *
      * @memberof FilteringExpressionsTree
      */
-    fieldName?: string;
+    public fieldName?: string;
 
     /**
      * Sets/gets the type of the filtering expressions tree.
@@ -77,7 +77,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      *
      * @memberof FilteringExpressionsTree
      */
-    type?: FilteringExpressionsTreeType;
+    public type?: FilteringExpressionsTreeType;
 
     constructor(operator: FilteringLogic, fieldName?: string) {
         this.operator = operator;

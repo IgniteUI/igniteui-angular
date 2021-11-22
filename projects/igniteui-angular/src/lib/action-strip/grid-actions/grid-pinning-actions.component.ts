@@ -81,7 +81,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         }
         const row = this.strip.context;
         const grid = row.grid;
-        grid.pinRow(row.rowID);
+        grid.pinRow(row.key);
         this.strip.hide();
     }
 
@@ -102,7 +102,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         }
         const row = this.strip.context;
         const grid = row.grid;
-        grid.unpinRow(row.rowID);
+        grid.unpinRow(row.key);
         this.strip.hide();
     }
 
@@ -112,7 +112,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         }
         const context = this.strip.context;
         const grid = context.grid;
-        grid.scrollTo(context.rowData, 0);
+        grid.scrollTo(context.data, 0);
         this.strip.hide();
     }
 
@@ -123,10 +123,10 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         const context = this.strip.context;
         const grid = context.grid;
         if (grid) {
-            this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
-            this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
-            this.iconService.addSvgIconFromText(jumpDown.name, jumpDown.value, 'imx-icons');
-            this.iconService.addSvgIconFromText(jumpUp.name, jumpDown.value, 'imx-icons');
+            this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons', true);
+            this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons', true);
+            this.iconService.addSvgIconFromText(jumpDown.name, jumpDown.value, 'imx-icons', true);
+            this.iconService.addSvgIconFromText(jumpUp.name, jumpDown.value, 'imx-icons', true);
         }
     }
 }
