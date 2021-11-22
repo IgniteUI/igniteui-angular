@@ -1,17 +1,16 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { CellType, IgxHierarchicalGridModule } from './public_api';
-import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { IGridCreatedEventArgs, IgxHierarchicalGridModule } from './public_api';
+import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList } from '@angular/core';
+import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxRowIslandComponent, IGridCreatedEventArgs } from './row-island.component';
+import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
-import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
+import { CellType, IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
@@ -188,7 +187,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     it('should render last cell of rows fully visible when columns does not have width specified and without scrollbar', fakeAsync(() => {
         pending('This test is really flaky. If you call an additional change detection, the whole widths get whacky!');
 
-        const firstRowCell: HTMLElement = hierarchicalGrid.hgridAPI.get_row_by_index(0).cells.first.nativeElement;
+        const firstRowCell: HTMLElement = (hierarchicalGrid.hgridAPI.get_row_by_index(0).cells as QueryList<CellType>).first.nativeElement;
         const cellLeftOffset = firstRowCell.offsetLeft + firstRowCell.parentElement.offsetLeft + firstRowCell.offsetWidth;
         const gridWidth = hierarchicalGrid.nativeElement.offsetWidth;
         expect(cellLeftOffset).not.toBeGreaterThan(gridWidth);
@@ -470,8 +469,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(rowElems[0].query(By.css('igx-icon')).nativeElement.innerText).toEqual('');
         const row2 = hierarchicalGrid.hgridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
         expect(rowElems[1].query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
-        hierarchicalGrid.expandRow(row1.rowData);
-        hierarchicalGrid.expandRow(row2.rowData);
+        hierarchicalGrid.expandRow(row1.data);
+        hierarchicalGrid.expandRow(row2.data);
         expect(row1.expanded).toBe(false);
         expect(row2.expanded).toBe(true);
         hierarchicalGrid.expandAll();
@@ -1111,16 +1110,16 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
         tick();
         fixture.detectChanges();
         // check parent cols
-        expect(hierarchicalGrid.columns.length).toBe(4);
-        expect(hierarchicalGrid.columns[0].field).toBe('ID');
-        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
-        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
-        expect(hierarchicalGrid.columns[3].field).toBe('Col2');
+        expect(hierarchicalGrid.columnList.length).toBe(4);
+        expect(hierarchicalGrid.columnList.get(0).field).toBe('ID');
+        expect(hierarchicalGrid.columnList.get(1).field).toBe('ProductName');
+        expect(hierarchicalGrid.columnList.get(2).field).toBe('Col1');
+        expect(hierarchicalGrid.columnList.get(3).field).toBe('Col2');
         // check child cols
-        expect(child1Grid.columns.length).toBe(3);
-        expect(hierarchicalGrid.columns[0].field).toBe('ID');
-        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
-        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
+        expect(child1Grid.columnList.length).toBe(3);
+        expect(hierarchicalGrid.columnList.get(0).field).toBe('ID');
+        expect(hierarchicalGrid.columnList.get(1).field).toBe('ProductName');
+        expect(hierarchicalGrid.columnList.get(2).field).toBe('Col1');
     }));
 
     it('should update columns for expanded child when adding column to row island', fakeAsync(() => {
@@ -1429,11 +1428,13 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         expect(mainGridOverlayTextContent).toBe(' You have 0 changes in this row\n');
         expect(mainGridOverlayActionsContent).toBe('CancelDone');
 
-        hierarchicalGrid.expandRow(hierarchicalGrid.getRowByIndex(0).rowID);
+        hierarchicalGrid.expandRow(hierarchicalGrid.getRowByIndex(0).key);
         customFixture.detectChanges();
 
         const secondLevelGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
         expect(secondLevelGrid).not.toBeNull();
+
+        secondLevelGrid.primaryKey = 'ID';
         customFixture.detectChanges();
 
         expect(GridFunctions.getRowEditingOverlay(customFixture)).toBeNull();
@@ -1455,7 +1456,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         expect(nestedGridOverlayActionsContent).toBe('Row Edit Actions');
     });
 
-    it(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened 
+    it(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened
             row island with <= 2 data records`, async () => {
         hierarchicalGrid.primaryKey = 'ID';
         hierarchicalGrid.rowEditable = true;

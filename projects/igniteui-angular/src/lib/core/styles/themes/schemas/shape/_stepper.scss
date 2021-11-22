@@ -1,3 +1,5 @@
+@use '../../../base' as *;
+
 ////
 /// @group schemas
 /// @access public
@@ -7,32 +9,45 @@
 /// @type Map
 /// @property {Number} border-radius-indicator [1] - The border radius used for stepper indicator. Can be a fraction between 0 and 1, pixels, or percent.
 /// @property {Number} border-radius-step-header [0] - The border radius used for stepper step-header. Can be a fraction between 0 and 1, pixels, or percent.
-$_default-shape-stepper: (
+$default-shape-stepper: (
     border-radius-indicator: 1,
     border-radius-step-header: 0
 );
 
-$_round-shape-stepper: (
+/// @type Map
+/// @property {Number} border-radius-indicator [1] - The border radius used for stepper indicator. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Number} border-radius-step-header [32px] - The border radius used for stepper step-header. Can be a fraction between 0 and 1, pixels, or percent.
+$round-shape-stepper: (
     border-radius-indicator: 1,
     border-radius-step-header: 32px
 );
 
-$_square-shape-stepper: (
+/// @type Map
+/// @property {Number} border-radius-indicator [0] - The border radius used for stepper indicator. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Number} border-radius-step-header [0] - The border radius used for stepper step-header. Can be a fraction between 0 and 1, pixels, or percent.
+
+$square-shape-stepper: (
     border-radius-indicator: 0,
     border-radius-step-header: 0
 );
 
 /// @type Map
-$_fluent-shape-stepper: (
+/// @property {Number} border-radius-indicator [2px] - The border radius used for stepper indicator. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Number} border-radius-step-header [2px] - The border radius used for stepper step-header. Can be a fraction between 0 and 1, pixels, or percent.
+$fluent-shape-stepper: (
     border-radius-indicator: 2px,
     border-radius-step-header: 2px
 );
 
 /// @type Map
-$_bootstrap-shape-stepper: (
+/// @property {Number} border-radius-indicator [2px] - The border radius used for stepper indicator. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Number} border-radius-step-header [2px] - The border radius used for stepper step-header. Can be a fraction between 0 and 1, pixels, or percent.
+$bootstrap-shape-stepper: (
     border-radius-indicator: 2px,
     border-radius-step-header: 2px
 );
 
 /// @type Map
-$_indigo-shape-stepper: extend($_default-shape-stepper);
+/// @requires {function} extend
+/// @requires {Map} $default-shape-stepper
+$indigo-shape-stepper: extend($default-shape-stepper);

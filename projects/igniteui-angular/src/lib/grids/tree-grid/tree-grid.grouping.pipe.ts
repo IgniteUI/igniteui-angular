@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { formatDate } from '../../core/utils';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { IgxSorting } from '../../data-operations/sorting-strategy';
-import { IgxTreeGridComponent } from './tree-grid.component';
+import { GridType } from '../common/grid.interface';
+import { IgxSorting } from '../common/strategy';
 
 const HIDDEN_FIELD_NAME = '_Igx_Hidden_Data_';
 
@@ -41,13 +42,13 @@ export class IgxGroupedTreeGridSorting extends IgxSorting {
     name: 'treeGridGrouping'
 })
 export class IgxTreeGridGroupingPipe implements PipeTransform {
-    private grid: IgxTreeGridComponent;
+    private grid: GridType;
 
     public transform(collection: any[],
                      groupingExpressions: IGroupingExpression[],
                      groupKey: string,
                      childDataKey: string,
-                     grid: IgxTreeGridComponent,
+                     grid: GridType,
                      aggregations?: ITreeGridAggregation[]
                     ): any[] {
         if (groupingExpressions.length === 0) {
@@ -117,7 +118,7 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
         const map: Map<any, GroupByRecord> = new Map<any, GroupByRecord>();
         for (const record of array) {
             const value = isDateTime
-                ? this.grid.datePipe.transform(record[key])
+                ? formatDate(record[key], column.pipeArgs.format, this.grid.locale)
                 : record[key];
 
             let groupByRecord: GroupByRecord;

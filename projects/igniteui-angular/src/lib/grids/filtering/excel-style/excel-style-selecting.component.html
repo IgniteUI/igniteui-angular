@@ -1,5 +1,5 @@
 <div *ngIf="esf.column"
-    [ngClass]="esf.selectedClass()"
+    [ngClass]="esf.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select'"
     tabindex="0"
     (click)="esf.onSelect()"
     role="button"

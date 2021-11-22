@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IgxColumnComponent } from '../columns/column.component';
+import { ColumnType } from '../common/grid.interface';
 
 /**
  * This enumeration is used to configure whether the drop position is set before or after
@@ -19,5 +19,5 @@ export enum DropPosition {
 export class IgxColumnMovingService {
     public cancelDrop: boolean;
     public icon: HTMLElement;
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 }

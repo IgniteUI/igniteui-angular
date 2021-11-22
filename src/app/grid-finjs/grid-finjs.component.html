@@ -52,8 +52,8 @@
         <ng-template igxCell let-cell="cell">
             <div class="finjs-icons">
                 <span>{{cell.value | currency:'USD':'symbol':'1.4-4'}}</span>
-                <igx-icon *ngIf="trends.positive(cell.row.rowData)">trending_up</igx-icon>
-                <igx-icon *ngIf="trends.negative(cell.row.rowData)">trending_down</igx-icon>
+                <igx-icon *ngIf="trends.positive(cell.row.data)">trending_up</igx-icon>
+                <igx-icon *ngIf="trends.negative(cell.row.data)">trending_down</igx-icon>
             </div>
         </ng-template>
     </igx-column>

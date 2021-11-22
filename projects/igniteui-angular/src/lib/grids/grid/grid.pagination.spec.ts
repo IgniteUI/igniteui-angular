@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './public_api';
 import { GridWithUndefinedDataComponent } from '../../test-utils/grid-samples.spec';
-import { PagingComponent } from '../../test-utils/grid-base-components.spec';
+import { PagingComponent, RemotePagingComponent } from '../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -36,7 +36,8 @@ describe('IgxGrid - Grid Paging #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 PagingComponent,
-                GridWithUndefinedDataComponent
+                GridWithUndefinedDataComponent,
+                RemotePagingComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         });
@@ -282,7 +283,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
             fix.detectChanges();
             await wait(100);
-            expect(grid.rowList.first._rowData).toEqual(grid.data[0]);
+            expect(grid.rowList.first._data).toEqual(grid.data[0]);
         }));
 
         it('should work correct with filtering', () => {
@@ -483,6 +484,15 @@ describe('IgxGrid - Grid Paging #grid', () => {
         paginator = GridFunctions.getGridPaginator(grid);
         expect(paginator).toBeDefined();
         expect(grid.rowList.length).toBe(5);
+    }));
+
+    it('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', fakeAsync(() => {
+        fix = TestBed.createComponent(RemotePagingComponent);
+        fix.detectChanges();
+        tick();
+
+        grid = fix.componentInstance.grid;
+        expect(grid.paginator.totalPages).toBe(4);
     }));
 });
 

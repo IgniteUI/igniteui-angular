@@ -1,10 +1,22 @@
-import { Component, Input, Output, Optional, Inject, EventEmitter,
-    HostBinding, Directive, ContentChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    Host,
+    HostBinding,
+    Inject,
+    Input,
+    Optional,
+    Output,
+} from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
-import { OverlaySettings } from '../services/public_api';
-import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
+import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
+import { OverlaySettings } from '../services/overlay/utilities';
 
 @Directive({ selector: '[igxPaginatorContent],igx-paginator-content' })
 export class IgxPaginatorTemplateDirective {
@@ -248,7 +260,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-                private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
+        private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
         super(_displayDensityOptions);
     }
 
@@ -347,4 +359,43 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     private sortUniqueOptions(values: Array<number>, newOption: number): number[] {
         return Array.from(new Set([...values, newOption])).sort((a, b) => a - b);
     }
+}
+
+
+@Component({
+    selector: 'igx-page-size',
+    templateUrl: 'page-size-selector.component.html',
+})
+export class IgxPageSizeSelectorComponent {
+    /**
+     * @internal
+     * @hidden
+     */
+    @HostBinding('class.igx-page-size')
+    public cssClass = 'igx-page-size';
+
+    constructor(@Host() public paginator: IgxPaginatorComponent) { }
+}
+
+
+@Component({
+    selector: 'igx-page-nav',
+    templateUrl: 'pager.component.html',
+})
+export class IgxPageNavigationComponent {
+    /**
+     * @internal
+     * @hidden
+     */
+    @HostBinding('class.igx-page-nav')
+    public cssClass = 'igx-page-nav';
+
+    /**
+     * An @Input property that sets the `role` attribute of the element.
+     */
+    @HostBinding('attr.role')
+    @Input()
+    public role = 'navigation';
+
+    constructor(@Host() public paginator: IgxPaginatorComponent) { }
 }

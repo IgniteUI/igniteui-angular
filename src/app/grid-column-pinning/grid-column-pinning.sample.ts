@@ -123,10 +123,10 @@ export class GridColumnPinningSampleComponent implements OnInit {
     }
 
     public doSomeAction(row?: RowType) {
-        if (this.grid1.isRecordPinned(row.rowData)) {
-            this.grid1.unpinRow(row.rowData);
+        if (this.grid1.isRecordPinned(row.data)) {
+            this.grid1.unpinRow(row.data);
         } else {
-            this.grid1.pinRow(row.rowData);
+            this.grid1.pinRow(row.data);
         }
     }
 

@@ -3,13 +3,34 @@ import {
     IgxPivotNumericAggregate,
     IgxPivotGridComponent,
     IPivotConfiguration,
-    PivotAggregation
+    PivotAggregation,
+    IgxPivotDateDimension
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 export class IgxTotalSaleAggregate {
     public static totalSale: PivotAggregation = (members, data: any) =>
         data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
+
+    public static totalMin: PivotAggregation = (members, data: any) => {
+        let min = 0;
+        if (data.length === 1) {
+            min = data[0].UnitPrice * data[0].UnitsSold;
+        } else if (data.length > 1) {
+            min = data.reduce((a, b) => Math.min(a.UnitPrice * a.UnitsSold, b.UnitPrice * b.UnitsSold));
+        }
+        return min;
+    };
+
+    public static totalMax: PivotAggregation = (members, data: any) => {
+        let max = 0;
+        if (data.length === 1) {
+            max = data[0].UnitPrice * data[0].UnitsSold;
+        } else if (data.length > 1) {
+            max = data.reduce((a, b) => Math.max(a.UnitPrice * a.UnitsSold, b.UnitPrice * b.UnitsSold));
+        }
+        return max;
+    };
 }
 
 @Component({
@@ -23,31 +44,45 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-
             {
                 memberName: 'Country',
                 enabled: true
             }
-        ]
-        ,
-        rows: [{
-            memberName: 'City',
-            enabled: true
-        }, {
-            memberFunction: () => 'All',
-            memberName: 'AllProducts',
-            enabled: true,
-            childLevel:
+        ],
+        rows: [
+
+            new IgxPivotDateDimension(
                 {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            ),
+            {
+                memberName: 'City',
+                enabled: true
+            },
+            {
+                memberFunction: () => 'All',
+                memberName: 'AllProducts',
+                enabled: true,
+                childLevel: {
                     memberFunction: (data) => data.ProductCategory,
                     memberName: 'ProductCategory',
                     enabled: true
                 }
-        }],
+            }
+        ],
         values: [
             {
                 member: 'UnitsSold',
-                aggregate: IgxPivotNumericAggregate.sum,
+                aggregate: {
+                    key: 'SUM',
+                    aggregator: IgxPivotNumericAggregate.sum,
+                    label: 'Sum'
+                 },
                 enabled: true,
                 styles: {
                     upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
@@ -59,7 +94,24 @@ export class PivotGridSampleComponent {
             {
                 member: 'AmountOfSale',
                 displayName: 'Amount of Sale',
-                aggregate: IgxTotalSaleAggregate.totalSale,
+                aggregate: {
+                    key: 'SUM',
+                    aggregator: IgxTotalSaleAggregate.totalSale,
+                    label: 'Sum of Sale'
+                },
+                aggregateList: [{
+                    key: 'SUM',
+                    aggregator: IgxTotalSaleAggregate.totalSale,
+                    label: 'Sum of Sale'
+                },{
+                    key: 'MIN',
+                    aggregator: IgxTotalSaleAggregate.totalMin,
+                    label: 'Minimum of Sale'
+                },{
+                    key: 'MAX',
+                    aggregator: IgxTotalSaleAggregate.totalMax,
+                    label: 'Maximum of Sale'
+                }],
                 enabled: true,
                 dataType: 'currency',
                 styles: {

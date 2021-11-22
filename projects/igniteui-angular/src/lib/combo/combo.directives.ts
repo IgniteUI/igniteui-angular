@@ -3,73 +3,48 @@ import { Directive } from '@angular/core';
 /**
  * @hidden
  */
-@Directive({
-    selector: '[igxComboHeader]'
-})
-export class IgxComboHeaderDirective {
-}
+@Directive({ selector: '[igxComboHeader]' })
+export class IgxComboHeaderDirective { }
 
 /**
  * @hidden
  */
-@Directive({
-    selector: '[igxComboFooter]'
-})
-export class IgxComboFooterDirective {
-}
+@Directive({ selector: '[igxComboFooter]' })
+export class IgxComboFooterDirective { }
 
 /**
  * @hidden
  */
-@Directive({
-    selector: '[igxComboItem]'
-})
-export class IgxComboItemDirective {
-}
+@Directive({ selector: '[igxComboItem]' })
+export class IgxComboItemDirective { }
 
 /**
  * @hidden
  */
-@Directive({
-    selector: '[igxComboEmpty]'
-})
-export class IgxComboEmptyDirective {
-}
+@Directive({ selector: '[igxComboEmpty]' })
+export class IgxComboEmptyDirective { }
 
 /**
  * @hidden
  */
-@Directive({
-    selector: '[igxComboHeaderItem]'
-})
-
-export class IgxComboHeaderItemDirective {
-}
+@Directive({ selector: '[igxComboHeaderItem]' })
+export class IgxComboHeaderItemDirective { }
 
 /**
  * @hidden
  */
-@Directive({
-    selector: '[igxComboAddItem]'
-})
-export class IgxComboAddItemDirective {
-}
+@Directive({ selector: '[igxComboAddItem]' })
+export class IgxComboAddItemDirective { }
 
 /**
  * @hidden
  */
-@Directive({
-    selector: '[igxComboToggleIcon]'
-})
-export class IgxComboToggleIconDirective {
-}
+@Directive({ selector: '[igxComboToggleIcon]' })
+export class IgxComboToggleIconDirective { }
 
 /**
  * @hidden
  */
-@Directive({
-    selector: '[igxComboClearIcon]'
-})
-export class IgxComboClearIconDirective {
-}
+@Directive({ selector: '[igxComboClearIcon]' })
+export class IgxComboClearIconDirective { }
 

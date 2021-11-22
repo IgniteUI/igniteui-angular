@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IChipsAreaReorderEventArgs } from '../../chips/public_api';
 import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IgxGroupByAreaDirective } from './group-by-area.directive';
 
 /**

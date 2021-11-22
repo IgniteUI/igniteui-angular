@@ -1,7 +1,7 @@
 
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridModule, IgxTreeGridComponent, IGridEditDoneEventArgs } from './public_api';
+import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
@@ -369,8 +369,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a child tree-cell through the treeGrid API', () => {
                 // Test prerequisites: move 'Age' column so it becomes the tree-column
-                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
-                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                const sourceColumn = treeGrid.columnList.filter(c => c.field === 'Age')[0];
+                const targetColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
@@ -387,8 +387,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a child tree-cell through the cellObject API', () => {
                 // Test prerequisites: move 'Age' column so it becomes the tree-column
-                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
-                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                const sourceColumn = treeGrid.columnList.filter(c => c.field === 'Age')[0];
+                const targetColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
@@ -420,7 +420,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
 
                 // Update row on level 1
-                const oldRow = Object.assign({}, treeGrid.getRowByKey(1).data);
                 const newRow = {
                     ID: 1,
                     ParentID: -1,
@@ -517,8 +516,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a child tree-cell through the treeGrid API', () => {
                 // Test prerequisites: move 'Name' column so it becomes the tree-column
-                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
-                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                const sourceColumn = treeGrid.columnList.filter(c => c.field === 'Name')[0];
+                const targetColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
@@ -535,8 +534,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a child tree-cell through the cellObject API', () => {
                 // Test prerequisites: move 'Name' column so it becomes the tree-column
-                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
-                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                const sourceColumn = treeGrid.columnList.filter(c => c.field === 'Name')[0];
+                const targetColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
@@ -561,7 +560,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
                 tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
-                for (const col of treeGrid.columns) {
+                for (const col of treeGrid.columnList) {
                     col.editable = true;
                 }
                 gridContent = GridFunctions.getGridContent(fix);
@@ -702,7 +701,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
                 tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
-                for (const col of treeGrid.columns) {
+                for (const col of treeGrid.columnList) {
                     col.editable = true;
                 }
                 gridContent = GridFunctions.getGridContent(fix);

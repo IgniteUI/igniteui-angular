@@ -21,15 +21,16 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef
+    ViewContainerRef,
+    Injector,
+    NgModuleRef,
+    ApplicationRef
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import { GridBaseAPIService } from '../api.service';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { GridType } from '../common/grid.interface';
-import { IgxGridNavigationService } from '../grid-navigation.service';
+import { GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
@@ -47,7 +48,6 @@ import {
 } from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
-import { RowType } from '../common/row.interface';
 import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
@@ -56,10 +56,13 @@ import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, Trans
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
 import { cloneArray, PlatformUtil } from '../../core/utils';
-import { IgxGridTransaction } from '../hierarchical-grid/public_api';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IgxGridTransaction } from '../common/types';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxGridAPIService } from '../grid/grid-api.service';
+import { GridBaseAPIService } from '../api.service';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -73,7 +76,7 @@ const MINIMUM_COLUMN_WIDTH = 200;
         IgxGridSummaryService,
         IgxGridSelectionService,
         GridBaseAPIService,
-        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxPivotGridComponent) },
+        { provide: IGX_GRID_BASE, useExisting: IgxPivotGridComponent },
         { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
         IgxPivotGridNavigationService,
         IgxForOfSyncService,
@@ -407,13 +410,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         protected transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef,
+        elementRef: ElementRef<HTMLElement>,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
         cdr: ChangeDetectorRef,
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
+        appRef: ApplicationRef,
+        moduleRef: NgModuleRef<any>,
+        factoryResolver: ComponentFactoryResolver,
+        injector: Injector,
         navigation: IgxPivotGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -422,25 +429,29 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         @Inject(LOCALE_ID) localeId: string,
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
-        super(
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            resolver,
-            differs,
-            viewRef,
-            navigation,
-            filteringService,
-            overlayService,
-            summaryService,
-            _displayDensityOptions,
-            localeId,
-            platform);
+            super(
+                selectionService,
+                colResizingService,
+                gridAPI,
+                transactionFactory,
+                elementRef,
+                zone,
+                document,
+                cdr,
+                resolver,
+                differs,
+                viewRef,
+                appRef,
+                moduleRef,
+                factoryResolver,
+                injector,
+                navigation,
+                filteringService,
+                overlayService,
+                summaryService,
+                _displayDensityOptions,
+                localeId,
+                platform);
     }
 
     /**
@@ -620,7 +631,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const state = this.columnGroupStates.get(col.field);
         const newState = !state;
         this.columnGroupStates.set(col.field, newState);
-        this.toggleGroup(col, newState);
+        this.toggleRowGroup(col, newState);
         this.reflow();
     }
 
@@ -829,7 +840,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.calcHeight;
     }
 
-    protected toggleGroup(col: IgxColumnComponent, newState: boolean) {
+    public toggleRowGroup(col: IgxColumnComponent, newState: boolean) {
         if (this.hasMultipleValues) {
             const fieldColumns = col.children.filter(x => !x.columnGroup);
             const groupColumns = col.children.filter(x => x.columnGroup);
@@ -853,6 +864,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 fieldColumn.headerTemplate = undefined;
             }
         }
+    }
+
+    /*
+     * @hidden
+     * @internal
+     * Expose setup columns so it can used in pivot-header-row.component
+     */
+    public setupColumns() {
+        super.setupColumns();
     }
 
     protected resolveToggle(groupColumn: IgxColumnComponent) {
@@ -912,6 +932,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             );
         }
         columns = this.generateColumnHierarchy(fieldsMap, data);
+        this.reflow();
         this._autoGeneratedCols = columns;
 
         this.columnList.reset(columns);
@@ -920,9 +941,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
-    protected generateDimensionColumns() {
+    protected generateDimensionColumns(): IgxColumnComponent[] {
         const config = this.pivotConfiguration;
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
         const leafFields = PivotUtil.flatten(allDimensions, 0).filter(x => !x.childLevel).map(x => x.memberName);
         const columns = [];
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
@@ -958,7 +979,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         let columns = [];
-        fields.forEach((value, key) => {
+        if (fields.size === 0) {
+            return columns;
+        }
+        const first = fields.keys().next().value;
+        const dim: IPivotDimension = fields.get(first).dimension;
+        let currentFields = fields;
+        if (dim && dim.sortDirection) {
+            const reverse = (dim.sortDirection === SortingDirection.Desc ? -1 : 1);
+            currentFields = new Map([...fields.entries()].sort((a, b) => reverse * (a > b ? 1 : a < b ? -1 : 0)));
+        }
+        currentFields.forEach((value, key) => {
             let shouldGenerate = true;
             if (value.dimension && value.dimension.filters) {
                 const state = {
@@ -1022,7 +1053,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 }
             }
         });
-        this.reflow();
+
         return columns;
     }
 

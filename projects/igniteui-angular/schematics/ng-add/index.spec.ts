@@ -38,65 +38,6 @@ describe('ng-add schematics', () => {
     }
   };
 
-    const browserslistrcEnabledIE = `
-# This file is used by the build system to adjust CSS and JS output to support the specified browsers below.
-# For additional information regarding the format and rule options, please see:
-# https://github.com/browserslist/browserslist#queries
-
-# For the full list of supported browsers by the Angular framework, please see:
-# https://angular.io/guide/browser-support
-
-# You can see what browsers were selected by your queries by running:
-#   npx browserslist
-
-last 1 Chrome version
-last 1 Firefox version
-last 2 Edge major versions
-last 2 Safari major versions
-last 2 iOS major versions
-Firefox ESR
-IE 11 # Angular supports IE 11 only as an opt-in. To opt-in, remove the 'not' prefix on this line.
-`;
-
-    const browserslistrcDisabledIE = `
-# This file is used by the build system to adjust CSS and JS output to support the specified browsers below.
-# For additional information regarding the format and rule options, please see:
-# https://github.com/browserslist/browserslist#queries
-
-# For the full list of supported browsers by the Angular framework, please see:
-# https://angular.io/guide/browser-support
-
-# You can see what browsers were selected by your queries by running:
-#   npx browserslist
-
-last 1 Chrome version
-last 1 Firefox version
-last 2 Edge major versions
-last 2 Safari major versions
-last 2 iOS major versions
-Firefox ESR
-not IE 11 # Angular supports IE 11 only as an opt-in. To opt-in, remove the 'not' prefix on this line.
-`;
-
-const _browserslistrcMissingIE = `
-# This file is used by the build system to adjust CSS and JS output to support the specified browsers below.
-# For additional information regarding the format and rule options, please see:
-# https://github.com/browserslist/browserslist#queries
-
-# For the full list of supported browsers by the Angular framework, please see:
-# https://angular.io/guide/browser-support
-
-# You can see what browsers were selected by your queries by running:
-#   npx browserslist
-
-last 1 Chrome version
-last 1 Firefox version
-last 2 Edge major versions
-last 2 Safari major versions
-last 2 iOS major versions
-Firefox ESR
-`;
-
   const pkgJsonConfig = {
     dependencies: {},
     devDependencies: {}
@@ -289,41 +230,5 @@ Firefox ESR
     tree.delete(`${sourceRoot}/styles.styl`);
   });
 
-  it('should properly add web animations', async () => {
-    await runner.runSchematicAsync('ng-add', { normalizeCss: false }, tree).toPromise();
-    const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(pkgJsonData.dependencies['web-animations-js']).toBeTruthy();
-  });
-
-  /**
-   * Projects generated with AngularCLI v10.0 or above have a '.browserslistrc' file in the root folder.
-   * The ng-add schematic will consider a project that contains the '.browserslistrc' file, as a project
-   * that is built with AngularCLI v10.0 or above.
-   */
-  it('should enable IE support and uncomment the IE section in .browserslistrc', async () => {
-    tree.create(`/.browserslistrc`, browserslistrcDisabledIE);
-    await runner.runSchematicAsync('ng-add', { polyfills: true }, tree).toPromise();
-    const browserslistrcFile = (tree.read('/.browserslistrc').toString());
-    expect(browserslistrcFile).toMatch(browserslistrcEnabledIE);
-  });
-
-  it('should enable web-animations and object.entries properly on projects with ng cli version >= 7.3', async () => {
-    const polyfills = `
-/** IE10 and IE11 requires the following for NgClass support on SVG elements */
-// import 'classlist.js';  // Run \`npm install --save classlist.js\`.
-
-// import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
-    `;
-
-    const result = `
-/** IE10 and IE11 requires the following for NgClass support on SVG elements */
-import 'classlist.js';  // Run \`npm install --save classlist.js\`.
-
-import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
-    `;
-
-    tree.create(`${sourceRoot}/polyfills.ts`, polyfills);
-    await runner.runSchematicAsync('ng-add', { polyfills: true }, tree).toPromise();
-    expect(tree.readContent(`${sourceRoot}/polyfills.ts`).replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
-  });
 });
+
