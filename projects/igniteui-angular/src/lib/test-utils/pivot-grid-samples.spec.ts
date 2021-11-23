@@ -5,10 +5,11 @@ import { IPivotConfiguration, PivotAggregation } from '../grids/pivot-grid/pivot
 
 @Component({
     template: `
-    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy">
+    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy" [defaultExpandState]='defaultExpand'>
     </igx-pivot-grid>`
 })
 export class IgxPivotGridTestBaseComponent {
+    public defaultExpand = true;
     @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public pivotGrid: IgxPivotGridComponent;
     public data;
 
