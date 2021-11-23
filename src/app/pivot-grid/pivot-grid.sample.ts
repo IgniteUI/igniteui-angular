@@ -3,7 +3,8 @@ import {
     IgxPivotNumericAggregate,
     IgxPivotGridComponent,
     IPivotConfiguration,
-    PivotAggregation
+    PivotAggregation,
+    IgxPivotDateDimension
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -43,38 +44,34 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-
             {
                 memberName: 'Country',
-                enabled: true,
-                width: '300px'
+                enabled: true
             }
-        ]
-        ,
+        ],
         rows: [
-
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            ),
+            {
+                memberName: 'City',
+                enabled: true
+            },
             {
                 memberFunction: () => 'All',
                 memberName: 'AllProducts',
-                width: '20%',
                 enabled: true,
-                childLevel:
-                {
-                    memberFunction: (data) => data.ProductCategory,
+                childLevel: {
                     memberName: 'ProductCategory',
-                    enabled: true,
-                    childLevel: {
-                        memberName: 'City',
-                        enabled: true
-                    },
+                    enabled: true
                 }
-            },
-            {
-                enabled: true,
-                memberName: 'SellerName',
-                width: '200px'
             }
-
         ],
         values: [
             {

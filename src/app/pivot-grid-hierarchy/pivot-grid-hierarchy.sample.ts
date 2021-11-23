@@ -23,26 +23,32 @@ export class PivotGridHierarchySampleComponent {
                 memberName: 'Product',
                 memberFunction: (data) => data.Product.Name,
                 enabled: true
-
             }
         },
         ],
-        rows: [,{
+        rows: [{
             memberName: 'AllSeller',
-            memberFunction: () => 'All',
+            memberFunction: () => 'All Seller',
             enabled: true,
             childLevel:
             {
                 memberName: 'Seller',
                 memberFunction: (data) => data.Seller.Name,
                 enabled: true,
-                childLevel: {
-                    memberName: 'City',
-                    memberFunction: (data) => data.Seller.City,
-                    enabled: true,
-                }
             }
-        }],
+        },
+        {
+            memberName: 'AllCity',
+            memberFunction: () => 'All City',
+            enabled: true,
+            childLevel:
+            {
+                memberName: 'City',
+                memberFunction: (data) => data.Seller.City,
+                enabled: true,
+            }
+        }
+        ],
         values: [
             {
                 member: 'NumberOfUnits',
