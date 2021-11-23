@@ -29,9 +29,9 @@ export class IgxPivotRowPipe implements PipeTransform {
         config: IPivotConfiguration,
         _: Map<any, boolean>,
         _pipeTrigger?: number,
-        __?,
-        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+        __?
     ): any[] {
+        const pivotKeys = config.pivotKeys || { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
         const enabledRows = config.rows.filter(x => x.enabled);
         const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
         const data = cloneArray(collection, true);
@@ -56,8 +56,8 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         expansionStates: Map<any, boolean>,
         _pipeTrigger?: number,
         __?,
-        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
     ): any[] {
+        const pivotKeys = config.pivotKeys || { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
         const enabledRows = config.rows.filter(x => x.enabled);
         const data = collection ? cloneArray(collection, true) : [];
         let totalLlv = 0;
@@ -100,9 +100,9 @@ export class IgxPivotColumnPipe implements PipeTransform {
         config: IPivotConfiguration,
         _: Map<any, boolean>,
         _pipeTrigger?: number,
-        __?,
-        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+        __?
     ): any[] {
+        const pivotKeys = config.pivotKeys || { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
         const enabledColumns = config.columns.filter(x => x.enabled);
         const enabledValues = config.values.filter(x => x.enabled);
 

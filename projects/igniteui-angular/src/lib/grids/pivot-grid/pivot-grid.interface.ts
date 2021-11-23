@@ -31,6 +31,7 @@ export interface IPivotConfiguration {
     values: IPivotValue[] | null;
     // dimensions to be displayed in the filter area.
     filters?: IPivotDimension[] | null;
+    pivotKeys?: IPivotKeys;
 }
 
 export interface IPivotDimension {

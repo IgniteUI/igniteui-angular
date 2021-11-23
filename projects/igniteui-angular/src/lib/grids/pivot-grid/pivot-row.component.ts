@@ -71,7 +71,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
      */
     public getRowDimensionKey(col: IgxColumnComponent) {
             const dimData = this.rowDimensionData.find(x => x.column === col);
-            const key =  PivotUtil.getRecordKey(this.data, dimData.dimension, dimData.prevDimensions);
+            const key =  PivotUtil.getRecordKey(this.data, dimData.dimension, dimData.prevDimensions, this.grid.pivotKeys);
             return key;
     }
 
@@ -110,8 +110,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         currentLvl += level;
         const prev = [];
         for (const dim of rowDimConfig) {
-            const dimData = PivotUtil.getDimensionLevel(dim, this.data,
-                  { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'});
+            const dimData = PivotUtil.getDimensionLevel(dim, this.data, this.grid.pivotKeys);
             dimIndex += dimData.level;
             currentLvl += dimData.level;
             const column = this.extractFromDimension(dimData.dimension, dimIndex, currentLvl);
@@ -137,9 +136,9 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         ref.instance.header = header;
         ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
         (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
-        if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.data)) {
+        if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.data, this.grid.pivotKeys)) {
             ref.instance.headerTemplate = this.headerTemplate;
-        } else if (lvl < PivotUtil.getTotalLvl(this.data)) {
+        } else if (lvl < PivotUtil.getTotalLvl(this.data, this.grid.pivotKeys)) {
             ref.instance.headerTemplate = this.headerTemplateGray;
         }
         return ref.instance;

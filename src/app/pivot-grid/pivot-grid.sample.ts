@@ -43,6 +43,7 @@ export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
 
     public pivotConfigHierarchy: IPivotConfiguration = {
+        pivotKeys: { aggregations: 'aggregationsVals', records: 'values', children: 'childrenCollection', level: 'lvl'},
         columns: [
             {
                 memberName: 'Country',
