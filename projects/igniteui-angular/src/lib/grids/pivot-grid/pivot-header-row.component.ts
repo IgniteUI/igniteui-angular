@@ -82,8 +82,8 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     public rowRemoved(event: IBaseChipEventArgs) {
         const row = this.grid.pivotConfiguration.rows.find(x => x.memberName === event.owner.id);
         row.enabled = false;
-        this.grid.filteringService.clearFilter(row.memberName);
         this.grid.pipeTrigger++;
+        this.grid.filteringService.clearFilter(row.memberName);
     }
 
     public columnRemoved(event: IBaseChipEventArgs) {

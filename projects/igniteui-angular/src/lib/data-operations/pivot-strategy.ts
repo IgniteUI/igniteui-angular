@@ -28,33 +28,33 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
     }
 
     public process(
-            collection: any,
-            rows: IPivotDimension[],
-            values?: IPivotValue[],
-            pivotKeys: IPivotKeys =
-            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
-        ): any[] {
-            let hierarchies;
-            let data;
-            const prevRowDims = [];
-            let prevDim;
-            for (const row of rows) {
-                if (!data) {
-                    // build hierarchies - groups and subgroups
-                    hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
-                    // generate flat data from the hierarchies
-                    data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
-                    prevRowDims.push(row);
-                    prevDim = row;
-                } else {
-                    const newData = [...data];
-                    for (let i = 0; i < newData.length; i++) {
-                        const currData = newData[i][prevDim.memberName + '_' + pivotKeys.records];
-                        const hierarchyFields = PivotUtil
-                            .getFieldsHierarchy(currData, [row], PivotDimensionType.Row, pivotKeys);
-                        const siblingData = PivotUtil
-                            .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
-                        PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
+        collection: any,
+        rows: IPivotDimension[],
+        values?: IPivotValue[],
+        pivotKeys: IPivotKeys =
+            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+    ): any[] {
+        let hierarchies;
+        let data;
+        const prevRowDims = [];
+        let prevDim;
+        for (const row of rows) {
+            if (!data) {
+                // build hierarchies - groups and subgroups
+                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
+                // generate flat data from the hierarchies
+                data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
+                prevRowDims.push(row);
+                prevDim = row;
+            } else {
+                const newData = [...data];
+                for (let i = 0; i < newData.length; i++) {
+                    const currData = newData[i][prevDim.memberName + '_' + pivotKeys.records];
+                    const hierarchyFields = PivotUtil
+                        .getFieldsHierarchy(currData, [row], PivotDimensionType.Row, pivotKeys);
+                    const siblingData = PivotUtil
+                        .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
+                    PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
 
                         PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
                         if (PivotUtil.getDimensionDepth(prevDim) > PivotUtil.getDimensionDepth(row) && siblingData.length > 1) {
@@ -81,43 +81,57 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
     }
 
     public process(
-            collection: any[],
-            columns: IPivotDimension[],
-            values: IPivotValue[],
-            pivotKeys: IPivotKeys = {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
-        ): any[] {
-            const result = [];
-            collection.forEach(hierarchy => {
-                // apply aggregations based on the created groups and generate column fields based on the hierarchies
-                this.groupColumns(hierarchy, columns, values, pivotKeys);
-                if (hierarchy[pivotKeys.children]) {
-                    let flatCols = {};
-                    PivotUtil.flattenColumnHierarchy(hierarchy[pivotKeys.children], values, pivotKeys).forEach(o => {
-                        delete o[pivotKeys.records];
-                        flatCols = {...flatCols, ...o};
-                    });
-                    delete hierarchy[pivotKeys.children]; /* or we can keep it
-                    and use when creating the columns in pivot grid instead of recreating it */
-                    const keys = Object.keys(hierarchy);
-                    //remove all record keys from final data since we don't need them anymore.
-                    keys.forEach(k => {
-                        if (k.indexOf(pivotKeys.records) !== -1 || k  === pivotKeys.level) {
-                            delete hierarchy[k];
+        collection: any[],
+        columns: IPivotDimension[],
+        values: IPivotValue[],
+        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+    ): any[] {
+        const res = this.processHierarchy(collection, columns, values, pivotKeys);
+        return res;
+    }
+
+    private processHierarchy(collection, columns: IPivotDimension[], values, pivotKeys) {
+        const result = [];
+        collection.forEach(hierarchy => {
+            // apply aggregations based on the created groups and generate column fields based on the hierarchies
+            this.groupColumns(hierarchy, columns, values, pivotKeys);
+            if (hierarchy[pivotKeys.children]) {
+                let flatCols = {};
+                PivotUtil.flattenColumnHierarchy(hierarchy[pivotKeys.children], values, pivotKeys).forEach(o => {
+                    delete o[pivotKeys.records];
+                    flatCols = { ...flatCols, ...o };
+                });
+                delete hierarchy[pivotKeys.children]; /* or we can keep it
+                        and use when creating the columns in pivot grid instead of recreating it */
+                const keys = Object.keys(hierarchy);
+                //remove all record keys from final data since we don't need them anymore.
+                hierarchy.processed = true;
+                keys.forEach(k => {
+                    if (k.indexOf(pivotKeys.records) !== -1) {
+                        if (hierarchy[k] && hierarchy[k].length > 0 && k !== pivotKeys.records) {
+                            const unprocessed = hierarchy[k].filter(r => !r.processed);
+                            this.processHierarchy(unprocessed, columns, values, pivotKeys);
                         }
-                    });
-                    if (this.isLeaf(hierarchy, pivotKeys)) {
-                        delete hierarchy[pivotKeys.records]; /* remove the helper records of the actual records so that
-                    expand indicators can be rendered properly */
+                        //delete hierarchy[k];
                     }
-                    for (const property in flatCols) {
-                        if (flatCols.hasOwnProperty(property)) {
-                            hierarchy[property] = flatCols[property];
-                        }
+                    if (k === pivotKeys.level) {
+                        delete hierarchy[k];
                     }
-                    result.push(hierarchy);
+                });
+                delete hierarchy.processed;
+                if (this.isLeaf(hierarchy, pivotKeys)) {
+                    delete hierarchy[pivotKeys.records]; /* remove the helper records of the actual records so that
+                        expand indicators can be rendered properly */
                 }
-            });
-            return result;
+                for (const property in flatCols) {
+                    if (flatCols.hasOwnProperty(property)) {
+                        hierarchy[property] = flatCols[property];
+                    }
+                }
+                result.push(hierarchy);
+            }
+        });
+        return result;
     }
 
     private groupColumns(hierarchy, columns, values, pivotKeys) {

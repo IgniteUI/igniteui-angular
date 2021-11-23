@@ -50,7 +50,6 @@ export class PivotGridSampleComponent {
             }
         ],
         rows: [
-
             new IgxPivotDateDimension(
                 {
                     memberName: 'Date',
@@ -69,7 +68,6 @@ export class PivotGridSampleComponent {
                 memberName: 'AllProducts',
                 enabled: true,
                 childLevel: {
-                    memberFunction: (data) => data.ProductCategory,
                     memberName: 'ProductCategory',
                     enabled: true
                 }
