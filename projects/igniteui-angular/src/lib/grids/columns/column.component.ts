@@ -436,8 +436,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    // @Input()
-    // public movable = false;
+    @Input()
+    public movable = false;
     /**
      * Gets the `width` of the column.
      * ```typescript
