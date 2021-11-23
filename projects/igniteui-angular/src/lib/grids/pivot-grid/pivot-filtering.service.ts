@@ -18,7 +18,7 @@ export class IgxPivotFilteringService extends IgxFilteringService {
         const config = (grid as IgxPivotGridComponent).pivotConfiguration;
         const allDimensions = PivotUtil.flatten(config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null));
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        const dim = enabledDimensions.find(x => x.memberName === fieldName || x.member === fieldName);
+        const dim = enabledDimensions.find(x => x.memberName === fieldName || x.member === fieldName) || {};
         dim.filters = undefined;
         grid.filteringPipeTrigger++;
         if (PivotUtil.flatten(config.columns).indexOf(dim) !== -1) {
