@@ -35,7 +35,7 @@
         | pivotGridRow:pivotConfiguration:expansionStates:pipeTrigger:sortingExpressions
         | pivotGridColumn:pivotConfiguration:expansionStates:pipeTrigger:sortingExpressions
         | pivotGridColumnSort:sortingExpressions:sortStrategy:pipeTrigger
-        | pivotGridRowExpansion:pivotConfiguration:expansionStates:pipeTrigger"
+        | pivotGridRowExpansion:pivotConfiguration:expansionStates:defaultExpandState:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
