@@ -222,11 +222,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public loadingGridTemplate: TemplateRef<any>;
 
     /**
-     * Get/Set summaryRow height
+     * Get/Set IgxSummaryRow height
      */
     @Input()
     public set summaryRowHeight(value: number) {
-        this._summaryRowHeight = value;
+        this._summaryRowHeight = value | 0;
         this.summaryService.summaryHeight = value;
         if (!this._init) {
             this.reflow();
