@@ -1022,6 +1022,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.parent = parent;
                 ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
                 ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
+                ref.instance.sortable = true;
                 ref.changeDetectorRef.detectChanges();
                 columns.push(ref.instance);
                 if (this.hasMultipleValues) {
@@ -1034,6 +1035,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 const ref = factoryColumnGroup.create(this.viewRef.injector);
                 ref.instance.parent = parent;
                 ref.instance.field = key;
+                ref.instance.sortable = true;
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                 if (value.expandable) {
                     ref.instance.headerTemplate = this.headerTemplate;
@@ -1043,6 +1045,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                     refSibling.instance.field = key;
                     refSibling.instance.parent = parent;
+                    ref.instance.sortable = true;
                     refSibling.instance.hidden = true;
                     refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
                     refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
@@ -1076,6 +1079,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             ref.instance.field = parent.field + '-' + val.member;
             ref.instance.parent = parent;
             ref.instance.hidden = hidden;
+            ref.instance.sortable = true;
             ref.instance.dataType = val.dataType || this.resolveDataTypes(data[0][val.member]);
             ref.instance.formatter = val.formatter;
             ref.changeDetectorRef.detectChanges();
