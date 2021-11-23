@@ -2,13 +2,16 @@ import { Element } from '@angular/compiler';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, getAttribute, findElementNodes, getSourceOffset, hasAttribute, parseFile } from '../common/util';
+import { nativeImport } from '../common/import-helper.js';
 
 const version = '12.0.0';
 
-export default (): Rule => (host: Tree, context: SchematicContext) => {
+export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(
         `Applying migration for Ignite UI for Angular to version ${version}`
     );
+
+    const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
 
     // eslint-disable-next-line max-len
     const UPDATE_NOTE = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;
@@ -85,7 +88,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
 
     // Replace the tabsType input with tabsAligment
     for (const path of htmlFiles) {
-        findElementNodes(parseFile(host, path), 'igx-tabs')
+        findElementNodes(parseFile(new HtmlParser(), host, path), 'igx-tabs')
             .forEach(node => {
                 if (hasAttribute(node as Element, 'type')) {
                     const { startTag, file } = getSourceOffset(node as Element);
@@ -107,7 +110,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
     for (const comp of COMPONENTS) {
         for (const path of htmlFiles) {
             // Replace the <ng-template igxTab> if any with <igx-tab-item>
-            findElementNodes(parseFile(host, path), comp.tags)
+            findElementNodes(parseFile(new HtmlParser(), host, path), comp.tags)
                 .map(tab => findElementNodes([tab], 'ng-template'))
                 .reduce((prev, curr) => prev.concat(curr), [])
                 .filter(template => hasAttribute(template as Element, 'igxTab'))
@@ -124,7 +127,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
 
             // Convert label and icon to igx-tab-header children ->
             // <igx-icon igxTabHeaderIcon> and <span igxTabHeaderLabel>
-            findElementNodes(parseFile(host, path), comp.tags).
+            findElementNodes(parseFile(new HtmlParser(), host, path), comp.tags).
                 map(node => getSourceOffset(node as Element)).
                 forEach(offset => {
                     const { startTag, file, node } = offset;
@@ -173,7 +176,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
 
             // Grab the content between <igx-tabs-group> and create a <igx-tab-content>
             // Also migrate class from igx-tabs-group to igx-tab-content, if any
-            findElementNodes(parseFile(host, path), comp.tags)
+            findElementNodes(parseFile(new HtmlParser(), host, path), comp.tags)
                 .map(node => getSourceOffset(node as Element))
                 .forEach(offset => {
                     const tabHeader = offset.node.children.find(c => (c as Element).name === comp.headerItem);
@@ -202,7 +205,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
 
             // Insert a comment indicating the change/replacement
             if (applyComment) {
-                findElementNodes(parseFile(host, path), comp.component).
+                findElementNodes(parseFile(new HtmlParser(), host, path), comp.component).
                     map(node => getSourceOffset(node as Element)).
                     forEach(offset => {
                         const { startTag, file } = offset;
@@ -254,7 +257,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
 
             // DatePicker and TimePicker don't support templates anymore.
             // That is why migrations inserts a comment to notify the developer to remove the templates.
-            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            findElementNodes(parseFile(new HtmlParser(), host, path), comp.COMPONENT)
                 .map(editor => findElementNodes([editor], 'ng-template'))
                 .reduce((prev, curr) => prev.concat(curr), [])
                 .filter(template => hasAttribute(template as Element, comp.TEMPLATE_DIRECTIVE))
@@ -269,7 +272,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
             // 2. dialog mode is added for those that didn't explicitly set the mode prop.
 
             // 1. Remove dropdown mode
-            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            findElementNodes(parseFile(new HtmlParser(), host, path), comp.COMPONENT)
             .filter(template => hasAttribute(template as Element, EDITORS_MODE))
             .map(node => getSourceOffset(node as Element))
             .forEach(offset => {
@@ -284,7 +287,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
             });
 
             // 2. Insert dialog mode
-            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            findElementNodes(parseFile(new HtmlParser(), host, path), comp.COMPONENT)
             .filter(template => !hasAttribute(template as Element, EDITORS_MODE))
             .map(node => getSourceOffset(node as Element))
             .forEach(offset => {
@@ -295,7 +298,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
 
             // Remove label property and project it as <label igxLabel></label>
             // Check also labelVisibility value.
-            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            findElementNodes(parseFile(new HtmlParser(), host, path), comp.COMPONENT)
             .filter(template => hasAttribute(template as Element, EDITORS_LABEL))
             .map(node => getSourceOffset(node as Element))
             .forEach(offset => {
@@ -322,7 +325,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
             });
 
             // If label and labelVisibility are not set this means that we should project default labels: "Date" & "Time"
-            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            findElementNodes(parseFile(new HtmlParser(), host, path), comp.COMPONENT)
             .filter(template => !hasAttribute(template as Element, EDITORS_LABEL) &&
                 !hasAttribute(template as Element, EDITORS_LABEL_VISIBILITY))
             .map(node => getSourceOffset(node as Element))
@@ -348,7 +351,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
     };
 
     for (const path of htmlFiles) {
-        const inputGroups = findElementNodes(parseFile(host, path), INPUT_GROUP_CHANGES.GROUP_TAG);
+        const inputGroups = findElementNodes(parseFile(new HtmlParser(), host, path), INPUT_GROUP_CHANGES.GROUP_TAG);
         inputGroups.forEach((el) => {
             const parentEl = (el as Element);
             if (hasAttribute(parentEl, INPUT_GROUP_CHANGES.ATTRIBUTES)) {

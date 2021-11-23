@@ -1,10 +1,29 @@
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IPivotDimensionStrategy } from '../../data-operations/pivot-strategy';
-import { IgxColumnComponent } from '../columns/column.component';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { ColumnType } from '../common/grid.interface';
+
+
+export interface IPivotDimensionStrategy {
+    process(collection: any,
+        dimensions: IPivotDimension[],
+        values: IPivotValue[],
+        pivotKeys?: IPivotKeys): any[];
+}
 
 export type PivotAggregation = (members: any[], data: any[]) => any;
+
+export interface IPivotAggregator {
+    /** Aggregation unique key. */
+    key: string;
+    /** Aggregation label to show in the UI. */
+    label: string;
+    /**
+     * Aggregator function can be a custom implementation of `PivotAggregation`, or 
+     * use predefined ones from `IgxPivotAggregate` and its variants.
+     */
+    aggregator: (members: any[], data?: any[]) => any;
+}
 
 /**
  * Configuration of the pivot grid.
@@ -46,10 +65,13 @@ export interface IPivotValue {
     // display name if present shows instead of member for the column header of this value
     displayName?: string;
     /**
-     * Aggregation function - can be a custom implementation of PivotAggregation or
-     * use predefined ones from IgxPivotAggregate and its variants
+     * Active aggregator definition with key, label and aggregator.
      */
-    aggregate: PivotAggregation;
+    aggregate: IPivotAggregator;
+    /**
+     * List of aggregates to show in aggregate drop-down.
+     */
+    aggregateList?: IPivotAggregator[];
     // Enables/Disables a particular value from pivot aggregation.
     enabled: boolean;
     // Allow conditionally styling of the IgxPivotGrid cells
@@ -74,7 +96,7 @@ export enum PivotDimensionType {
 }
 
 export interface IPivotDimensionData {
-    column: IgxColumnComponent;
+    column: ColumnType;
     dimension: IPivotDimension;
     prevDimensions: IPivotDimension[];
 }

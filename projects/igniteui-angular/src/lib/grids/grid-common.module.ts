@@ -29,12 +29,16 @@ import { IgxGridFilteringModule } from './filtering/base/filtering.module';
 import { IgxRowDirective } from './row.directive';
 import {
     IgxExcelStyleHeaderIconDirective,
+    IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective,
+    IgxSortHeaderIconDirective,
     IgxGroupAreaDropDirective,
     IgxHeaderCollapseIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
     IgxRowCollapsedIndicatorDirective,
     IgxRowExpandedIndicatorDirective
 } from './grid/grid.directives';
+export * from './common/grid-pipes.module';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
 
@@ -58,6 +62,9 @@ import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
         IgxHeaderExpandIndicatorDirective,
         IgxHeaderCollapseIndicatorDirective,
         IgxExcelStyleHeaderIconDirective,
+        IgxSortAscendingHeaderIconDirective,
+        IgxSortDescendingHeaderIconDirective,
+        IgxSortHeaderIconDirective,
         IgxGroupAreaDropDirective,
         IgxGroupByMetaPipe
     ],
@@ -93,6 +100,9 @@ import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
         IgxHeaderExpandIndicatorDirective,
         IgxHeaderCollapseIndicatorDirective,
         IgxExcelStyleHeaderIconDirective,
+        IgxSortAscendingHeaderIconDirective,
+        IgxSortDescendingHeaderIconDirective,
+        IgxSortHeaderIconDirective,
         IgxGroupAreaDropDirective,
         IgxGroupByMetaPipe
     ],

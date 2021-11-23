@@ -1,21 +1,23 @@
 import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    Input,
-    TemplateRef,
-    ViewChild,
-    HostBinding,
-    AfterViewInit,
+    DoCheck,
     ElementRef,
+    HostBinding,
+    Input,
     OnInit,
-    ChangeDetectionStrategy,
-    DoCheck
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
-import { IgxColumnComponent } from '../../columns/column.component';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
-import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../../chips/public_api';
-import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
+import { IgxFilteringService } from '../grid-filtering.service';
 import { DisplayDensity } from '../../../core/displayDensity';
+import { ExpressionUI } from '../excel-style/common';
+import { IgxChipsAreaComponent } from '../../../chips/chips-area.component';
+import { IBaseChipEventArgs, IgxChipComponent } from '../../../chips/chip.component';
+import { ColumnType } from '../../common/grid.interface';
 
 /**
  * @hidden
@@ -27,7 +29,7 @@ import { DisplayDensity } from '../../../core/displayDensity';
 })
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
     @Input()
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     @ViewChild('emptyFilter', { read: TemplateRef, static: true })
     protected emptyFilter: TemplateRef<any>;

@@ -17,12 +17,10 @@ module.exports = function (config) {
         require('karma-coverage'),
         require('karma-chrome-launcher'),
         require('karma-jasmine-spec-tags'),
-        require('karma-jasmine-html-reporter'),
-        require('karma-spec-reporter'),
         require('@angular-devkit/build-angular/plugins/karma')
     ],
     parallelOptions: {
-      executors: 3,
+      executors: 2,
       shardStrategy: 'round-robin'
     },
     client: {
@@ -38,22 +36,13 @@ module.exports = function (config) {
     },
     coverageReporter: {
       dir: require('path').join(__dirname, '../../coverage'),
+      subdir: '.',
       reporters: [
         // reporters not supporting the `file` property
-        { type: 'html' },
-        { type: 'json' },
-        { type: 'lcovonly' },
+        { type: 'lcov' },
       ]
     },
     reporters: ['progress', 'coverage'],
-    specReporter: {
-        suppressSkipped: true,
-        suppressErrorSummary: false,
-        suppressFailed: false,
-        suppressPassed: false,
-        showSpecTiming: false,
-        failFast: false
-    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

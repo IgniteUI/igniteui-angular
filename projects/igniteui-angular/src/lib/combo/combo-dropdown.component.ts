@@ -1,5 +1,5 @@
 import {
-    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Optional
+    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Optional, Input
 } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
@@ -11,7 +11,6 @@ import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxComboItemComponent } from './combo-item.component';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { PlatformUtil } from '../core/utils';
 
 /** @hidden */
 @Component({
@@ -20,6 +19,10 @@ import { PlatformUtil } from '../core/utils';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
+    /** @hidden @internal */
+    @Input()
+    public singleMode = false;
+
     /**
      * @hidden
      * @internal
@@ -76,12 +79,11 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil,
         protected selection: IgxSelectionAPIService,
         @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
         protected comboAPI: IgxComboAPIService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(elementRef, cdr, platform, selection, _displayDensityOptions);
+        super(elementRef, cdr, selection, _displayDensityOptions);
     }
 
     /**
@@ -192,9 +194,13 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     private handleEnter() {
         if (this.isAddItemFocused()) {
             this.combo.addItemToCollection();
-        } else {
-            this.close();
+            return;
         }
+        if (this.singleMode && this.focusedItem) {
+            this.combo.select(this.focusedItem.itemID);
+        }
+
+        this.close();
     }
 
     private handleSpace() {

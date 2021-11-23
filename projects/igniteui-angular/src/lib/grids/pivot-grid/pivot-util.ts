@@ -1,4 +1,7 @@
 import { cloneValue } from '../../core/utils';
+import { DataUtil } from '../../data-operations/data-util';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 
 export class PivotUtil {
@@ -19,6 +22,22 @@ export class PivotUtil {
             }
         }
         return hierarchy;
+    }
+
+    public static sort(data: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting(), pivotKeys): any[] {
+        data.forEach(rec => {
+            const keys = Object.keys(rec);
+            rec.sorted = true;
+            keys.forEach(k => {
+                if (k.indexOf(pivotKeys.records) !== -1 && k !== pivotKeys.records) {
+                    const unsorted = rec[k].filter(x => !x.sorted);
+                    // sort all child record collections based on expression recursively.
+                    rec[k] = this.sort(unsorted, expressions, sorting, pivotKeys);
+                }
+            });
+            delete rec.sorted;
+        });
+        return DataUtil.sort(data, expressions, sorting);
     }
 
     public static extractValueFromDimension(dim: IPivotDimension, recData: any) {
@@ -188,7 +207,7 @@ export class PivotUtil {
     public static aggregate(records, values: IPivotValue[]) {
         const result = {};
         for (const pivotValue of values) {
-            result[pivotValue.member] = pivotValue.aggregate(records.map(r => r[pivotValue.member]), records);
+            result[pivotValue.member] = pivotValue.aggregate.aggregator(records.map(r => r[pivotValue.member]), records);
         }
 
         return result;

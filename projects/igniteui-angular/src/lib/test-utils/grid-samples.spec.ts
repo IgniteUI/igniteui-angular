@@ -7,19 +7,18 @@ import {
 } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
-import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
+import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
-import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
 import { CellType, IgxGridComponent } from '../grids/grid/public_api';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { ISortingStrategy } from '../data-operations/sorting-strategy';
+import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
+import { ExpressionUI } from '../grids/filtering/excel-style/common';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -237,13 +236,13 @@ export class RowSelectionWithoutPrimaryKeyComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` rowSelection = "multiple"`,
-        EventSubscriptions.rowSelected,
+        EventSubscriptions.rowSelectionChanging,
         ColumnDefinitions.productBasic)
 })
 export class SelectionCancellableComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
 
-    public rowSelected(evt) {
+    public rowSelectionChanging(evt) {
         if (evt.added.length > 0 && (evt.added[0].ProductID) % 2 === 0) {
             evt.newSelection = evt.oldSelection || [];
         }
@@ -1090,6 +1089,12 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
         </igx-column>
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter">
+        </igx-column>
+        <igx-column width="100px" [field]="'ReleaseTime'" [header]="'Release Time'" [filterable]="filterable"
+            dataType="dateTime">
+        </igx-column>
+        <igx-column width="100px" [field]="'Revenue'" [header]="'Revenue'" [filterable]="filterable"
+            dataType="currency">
         </igx-column>
     </igx-grid>`
 })
@@ -2276,7 +2281,10 @@ export class NoColumnWidthGridComponent extends BasicGridComponent {
     template: GridTemplateStrings.declareGrid(
         '',
         '',
-        ColumnDefinitions.idFirstLastNameSortable)
+        ColumnDefinitions.idFirstLastNameSortable,
+        '',
+        '',
+        TemplateDefinitions.sortIconTemplates)
 })
 export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
     public sort(data: any[], fieldName: string, dir: SortingDirection) {

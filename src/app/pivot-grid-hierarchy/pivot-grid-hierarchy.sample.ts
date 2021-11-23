@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxNumberSummaryOperand, IgxPivotGridComponent, IPivotConfiguration } from 'igniteui-angular';
+import { IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration } from 'igniteui-angular';
 import { DATA } from '../shared/pivot-data';
 
 @Component({
@@ -22,20 +22,13 @@ export class PivotGridHierarchySampleComponent {
 
                 memberName: 'Product',
                 memberFunction: (data) => data.Product.Name,
-                enabled: true,
-                childLevel:
-                {
-                    memberName: 'City',
-                    memberFunction: (data) => data.Seller.City,
-                    enabled: true,
-                }
-
+                enabled: true
             }
         },
         ],
         rows: [{
             memberName: 'AllSeller',
-            memberFunction: () => 'All',
+            memberFunction: () => 'All Seller',
             enabled: true,
             childLevel:
             {
@@ -43,16 +36,36 @@ export class PivotGridHierarchySampleComponent {
                 memberFunction: (data) => data.Seller.Name,
                 enabled: true,
             }
-        }],
+        },
+        {
+            memberName: 'AllCity',
+            memberFunction: () => 'All City',
+            enabled: true,
+            childLevel:
+            {
+                memberName: 'City',
+                memberFunction: (data) => data.Seller.City,
+                enabled: true,
+            }
+        }
+        ],
         values: [
             {
                 member: 'NumberOfUnits',
-                aggregate: IgxNumberSummaryOperand.sum,
+                aggregate: {
+                    aggregator:  IgxPivotNumericAggregate.sum,
+                    key: 'sum',
+                    label: 'Sum'
+                },
                 enabled: true
 
             }, {
                 member: 'Value',
-                aggregate: IgxNumberSummaryOperand.sum,
+                aggregate: {
+                    aggregator:  IgxPivotNumericAggregate.sum,
+                    key: 'sum',
+                    label: 'Sum'
+                },
                 enabled: true,
                 formatter: (val) => val ? parseFloat(val).toFixed(2) : undefined
             }

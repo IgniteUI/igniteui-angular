@@ -32,9 +32,10 @@
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree:filteringPipeTrigger:pipeTrigger
         | pivotGridSort:pivotConfiguration:sortStrategy:id:pipeTrigger
-        | pivotGridRow:pivotConfiguration:expansionStates:pipeTrigger
-        | pivotGridRowExpansion:pivotConfiguration:expansionStates:pipeTrigger
-        | pivotGridColumn:pivotConfiguration:expansionStates:pipeTrigger"
+        | pivotGridRow:pivotConfiguration:expansionStates:pipeTrigger:sortingExpressions
+        | pivotGridColumn:pivotConfiguration:expansionStates:pipeTrigger:sortingExpressions
+        | pivotGridColumnSort:sortingExpressions:sortStrategy:pipeTrigger
+        | pivotGridRowExpansion:pivotConfiguration:expansionStates:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
@@ -46,7 +47,7 @@
             </ng-template>
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>
-            <igx-pivot-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
+            <igx-pivot-row [gridID]="id" [index]="rowIndex" [data]="rowData" [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
             [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-pivot-row>
         </ng-template>

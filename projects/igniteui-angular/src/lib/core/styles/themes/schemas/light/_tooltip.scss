@@ -1,4 +1,5 @@
-@import '../shape/tooltip';
+@use '../../../base' as *;
+@use '../shape/tooltip' as *;
 
 ////
 /// @group schemas
@@ -9,27 +10,22 @@
 /// Generates a light tooltip schema.
 /// @type {Map}
 ///
-/// @property {Map} background [igx-color: ('grays', 700), to-opaque: (), rgba: .9] - The background color of the tooltip.
-/// @property {Map} text-color [igx-color: ('grays', 700), to-opaque: (), rgba: .9, text-contrast: ()] - The text color of the tooltip.
+/// @property {Map} background [igx-color: ('grays', 700, .8),] - The background color of the tooltip.
+/// @property {Map} text-color [igx-contrast-color: ('grays', 700)] - The text color of the tooltip.
 /// @property {Number} border-radius [.25] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
-/// @requires {Map} $_default-shape-tooltip
+/// @requires {Map} $default-shape-tooltip
 /// @see $default-palette
-$_light-tooltip: extend(
-    $_default-shape-tooltip,
+$light-tooltip: extend(
+    $default-shape-tooltip,
     (
         background: (
-            igx-color: ('grays', 700),
-            to-opaque: (),
-            rgba: .9
+            igx-color: ('grays', 700, .9),
         ),
 
         text-color: (
-            igx-color: ('grays', 700),
-            to-opaque: (),
-            rgba: .9,
-            text-contrast: ()
+            igx-contrast-color: ('grays', 700),
         ),
 
         roundness: rem(4px)
@@ -38,18 +34,18 @@ $_light-tooltip: extend(
 
 /// Generates a light fluent tooltip schema.
 /// @type {Map}
-/// @prop {Map} background [igx-color: ('grays', 900)] - The background color of the tooltip.
+/// @prop {Map} background [igx-color: ('grays', 900, .8)] - The background color of the tooltip.
 /// @prop {Map} text-color [igx-contrast-color: ('grays', 900)] - The text color of the tooltip.
 /// @prop {Number} border-radius [2px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires {Map} $_light-tooltip
-/// @requires {Map} $_fluent-shape-tooltip
-$_fluent-tooltip: extend(
-    $_light-tooltip,
-    $_fluent-shape-tooltip,
+/// @requires {Map} $light-tooltip
+/// @requires {Map} $fluent-shape-tooltip
+$fluent-tooltip: extend(
+    $light-tooltip,
+    $fluent-shape-tooltip,
     (
         background: (
-            igx-color: ('grays', 900)
+            igx-color: ('grays', 900, .8)
         ),
 
         text-color: (
@@ -60,18 +56,18 @@ $_fluent-tooltip: extend(
 
 /// Generates a bootstrap tooltip schema.
 /// @type {Map}
-/// @prop {Map} background [igx-color: ('grays', 900)] - The background color of the tooltip.
+/// @prop {Map} background [igx-color: ('grays', 900, .8)] - The background color of the tooltip.
 /// @prop {Map} text-color [igx-contrast-color: ('grays', 900)] - The text color of the tooltip.
 /// @prop {Number} border-radius [4px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires $_light-tooltip
-/// @requires $_bootstrap-shape-tooltip
-$_bootstrap-tooltip: extend(
-    $_light-tooltip,
-    $_bootstrap-shape-tooltip,
+/// @requires $light-tooltip
+/// @requires $bootstrap-shape-tooltip
+$bootstrap-tooltip: extend(
+    $light-tooltip,
+    $bootstrap-shape-tooltip,
     (
         background: (
-            igx-color: ('grays', 900)
+            igx-color: ('grays', 900, .8)
         ),
         text-color: (
             igx-contrast-color: ('grays', 900)
@@ -82,21 +78,12 @@ $_bootstrap-tooltip: extend(
 /// Generates an indigo tooltip schema.
 /// @type {Map}
 ///
-/// @prop {Map} background [igx-color: ('grays', 600)] - The background color of the tooltip.
-/// @prop {Map} text-color [#fff] - The text color of the tooltip.
 /// @prop {Number} border-radius [3px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
-/// @requires {Map} $_light-tooltip
-/// @requires {Map} $_indigo-shape-tooltip
-$_indigo-tooltip: extend(
-    $_light-tooltip,
-    $_indigo-shape-tooltip,
-    (
-        background: (
-            igx-color: ('grays', 600)
-        ),
-
-        text-color: #fff
-    )
+/// @requires {Map} $light-tooltip
+/// @requires {Map} $indigo-shape-tooltip
+$indigo-tooltip: extend(
+    $light-tooltip,
+    $indigo-shape-tooltip,
 );

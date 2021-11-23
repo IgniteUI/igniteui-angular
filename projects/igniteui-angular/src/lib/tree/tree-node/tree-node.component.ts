@@ -1,7 +1,7 @@
 import { AnimationBuilder } from '@angular/animations';
 import {
     Component, OnInit,
-    OnDestroy, Input, Inject, ViewChild, TemplateRef, AfterViewInit, QueryList, ContentChildren, Optional, SkipSelf,
+    OnDestroy, Input, Inject, ViewChild, TemplateRef, QueryList, ContentChildren, Optional, SkipSelf,
     HostBinding,
     ElementRef,
     ChangeDetectorRef,
@@ -135,7 +135,7 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
     ]
 })
-export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements IgxTreeNode<T>, OnInit, AfterViewInit, OnDestroy {
+export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements IgxTreeNode<T>, OnInit, OnDestroy {
     /**
      * The data entry that the node is visualizing.
      *
@@ -520,9 +520,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
             this.cdr.markForCheck();
         });
     }
-
-    /** @hidden @internal */
-    public ngAfterViewInit() { }
 
     /**
      * @hidden @internal
