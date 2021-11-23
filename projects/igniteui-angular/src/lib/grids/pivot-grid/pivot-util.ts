@@ -320,7 +320,7 @@ export class PivotUtil {
         for(const prev of prevDims) {
             const dimData = PivotUtil.getDimensionLevel(prev, rec,
                 { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'});
-                parentFields.push(rec[dimData.dimension.memberName]);
+                parentFields.push(rec[prev.memberName] || rec[dimData.dimension.memberName]);
         }
         parentFields.push(value);
         return parentFields.join('_');
