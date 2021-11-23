@@ -104,9 +104,13 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
     }
 
-    public isPivotCellActive(col: IgxColumnComponent) {
+    public isCellActive(visibleColumnIndex) {
         const node = this.grid.navigation.activeNode;
-        return node ? !node.isRowHeader && super.isCellActive(col.visibleIndex) : false;
+        console.log(node && Object.keys(node).length === 0 && !node.isRowDimensionHeader && super.isCellActive(visibleColumnIndex));
+        return node && Object.keys(node).length !== 0 ?
+            !node.isRowDimensionHeader &&
+            super.isCellActive(visibleColumnIndex) :
+            false;
     }
 
     protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number) {

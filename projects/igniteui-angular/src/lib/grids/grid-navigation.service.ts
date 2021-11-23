@@ -28,6 +28,7 @@ export interface IActiveNode {
     level?: number;
     mchCache?: ColumnGroupsCache;
     layout?: IMultiRowLayoutNode;
+    isRowDimensionHeader?: boolean;
 }
 
 /** @hidden */

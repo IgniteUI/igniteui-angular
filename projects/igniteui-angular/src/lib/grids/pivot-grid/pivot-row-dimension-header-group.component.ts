@@ -45,7 +45,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      */
     public get visibleIndex(): number {
         const field = this.column.field;
-        const rows = this.grid.pivotConfiguration.rows;
+        const rows = this.grid.rowDimensions;
         const rootDimension = this.findRootDimension(field);
         return rows.indexOf(rootDimension);
     }
@@ -54,12 +54,15 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     public get active() {
         const node = this.grid.navigation.activeNode;
         return node && !this.column.columnGroup ?
-            node.isRowHeader && node.row === this.intRow.index && node.column === this.visibleIndex : false;
+            node.isRowDimensionHeader &&
+            node.row === this.intRow.index &&
+            node.column === this.visibleIndex :
+            false;
     }
 
     public get activeGroup() {
         const node = this.grid.navigation.activeNode;
-        return node ? node.isRowHeader && node.row === this.intRow.index && node.column === this.visibleIndex : false;
+        return node ? node.isRowDimensionHeader && node.row === this.intRow.index && node.column === this.visibleIndex : false;
     }
 
     protected get activeNode() {
@@ -67,18 +70,18 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
             row: this.intRow.index, column: this.visibleIndex, level: null,
             mchCache: null,
             layout: null,
-            isRowHeader: true
+            isRowDimensionHeader: true
         };
     }
 
     private findRootDimension(field: string): IPivotDimension {
-        const rows = this.grid.pivotConfiguration.rows;
+        const rows = this.grid.rowDimensions;
         let tempRow;
         let result = null;
         rows.forEach(row => {
             tempRow = row;
             do {
-                if (row.memberName === field) {
+                if (tempRow.memberName === field) {
                     result = row;
                 }
                 tempRow = tempRow.childLevel;
