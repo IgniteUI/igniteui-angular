@@ -154,7 +154,9 @@ export class PivotUtil {
                     currLvl++;
                 }
                 rec[leafDim.memberName + '_' + pivotKeys.level] = currLvl;
-                delete rec[field + '_' + pivotKeys.level];
+                if (leafDim.memberName !== field) {
+                    delete rec[field + '_' + pivotKeys.level];
+                }
             }
         }
         return data;
