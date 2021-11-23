@@ -56,23 +56,23 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                         .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
                     PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
 
-                        PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
-                        if (PivotUtil.getDimensionDepth(prevDim) > PivotUtil.getDimensionDepth(row) && siblingData.length > 1) {
-                            newData[i][row.memberName + '_' + pivotKeys.records] = siblingData;
-                            i++;
-                        } else {
-                            newData.splice(i , 1, ...siblingData);
-                            i += siblingData.length - 1;
-                        }
+                    PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
+                    if (PivotUtil.getDimensionDepth(prevDim) > PivotUtil.getDimensionDepth(row) && siblingData.length > 1) {
+                        newData[i][row.memberName + '_' + pivotKeys.records] = siblingData;
+                        i++;
+                    } else {
+                        newData.splice(i, 1, ...siblingData);
+                        i += siblingData.length - 1;
                     }
-                    data = newData;
-                    prevDim = row;
-                    prevRowDims.push(row);
                 }
+                data = newData;
+                prevDim = row;
+                prevRowDims.push(row);
             }
-            return data;
         }
+        return data;
     }
+}
 
 export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: PivotRowDimensionsStrategy = null;
@@ -175,7 +175,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
     }
 
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false,
-         grid?: PivotGridType): any {
+        grid?: PivotGridType): any {
         const config = grid.pivotConfiguration;
         const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
@@ -191,13 +191,13 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
         return this._instance || (this._instance = new this());
     }
     public sort(data: any[],
-                fieldName: string,
-                dir: SortingDirection,
-                ignoreCase: boolean,
-                valueResolver: (obj: any, key: string, isDate?: boolean) => any,
-                isDate?: boolean,
-                isTime?: boolean,
-                grid?: PivotGridType) {
+        fieldName: string,
+        dir: SortingDirection,
+        ignoreCase: boolean,
+        valueResolver: (obj: any, key: string, isDate?: boolean) => any,
+        isDate?: boolean,
+        isTime?: boolean,
+        grid?: PivotGridType) {
         const key = fieldName;
         const config = grid.pivotConfiguration;
         const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
