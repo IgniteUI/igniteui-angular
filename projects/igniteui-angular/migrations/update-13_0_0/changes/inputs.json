@@ -1,0 +1,14 @@
+{
+    "@scheme": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "color",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-icon",
+                "type": "component"
+            }
+        }
+    ]
+}
+

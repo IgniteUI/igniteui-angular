@@ -822,7 +822,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.rowEditable = true;
             fixture.detectChanges();
             const row = grid.rowList.first;
-            grid.expandRow(row.rowID);
+            grid.expandRow(row.key);
             fixture.detectChanges();
             expect(row.expanded).toBeTrue();
 

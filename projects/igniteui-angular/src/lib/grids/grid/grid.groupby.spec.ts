@@ -642,7 +642,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         // verify data records order
         const expectedDataRecsOrder = [false, true, false, true, null, false, true, true];
         dataRows.forEach((row, index) => {
-            expect(row.rowData.Released).toEqual(expectedDataRecsOrder[index]);
+            expect(row.data.Released).toEqual(expectedDataRecsOrder[index]);
         });
 
     }));
@@ -2187,7 +2187,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(2);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
         expect(groupRows[1].groupRow.records.length).toEqual(2);
-        expect(dataRows[1].rowData.ProductName).toEqual('NetAdvantage');
+        expect(dataRows[1].data.ProductName).toEqual('NetAdvantage');
 
         fix.componentInstance.instance.paginate(1);
         tick();
@@ -2199,7 +2199,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(2);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
         expect(groupRows[1].groupRow.records.length).toEqual(1);
-        expect(dataRows[0].rowData.ProductName).toEqual('Ignite UI for Angular');
+        expect(dataRows[0].data.ProductName).toEqual('Ignite UI for Angular');
 
         fix.componentInstance.instance.paginate(0);
         tick();
@@ -2211,7 +2211,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(2);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
         expect(groupRows[1].groupRow.records.length).toEqual(2);
-        expect(dataRows[1].rowData.ProductName).toEqual('NetAdvantage');
+        expect(dataRows[1].data.ProductName).toEqual('NetAdvantage');
     }));
 
     // GroupBy Area
@@ -3389,7 +3389,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             // verify data records order
             const expectedDataRecsOrder = [true, true, true, true, false, false, false, null];
             dataRows.forEach((row, index) => {
-                expect(row.rowData.Released).toEqual(expectedDataRecsOrder[index]);
+                expect(row.data.Released).toEqual(expectedDataRecsOrder[index]);
             });
 
             const grExprs: ISortingExpression[] = [
@@ -3408,8 +3408,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             const expectedProductNameOrder = ['NetAdvantage', 'NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for JavaScript',
                 'Ignite UI for Angular', 'Ignite UI for Angular', '', null];
             dataRows.forEach((row, index) => {
-                expect(row.rowData.Released).toEqual(expectedReleaseRecsOrder[index]);
-                expect(row.rowData.ProductName).toEqual(expectedProductNameOrder[index]);
+                expect(row.data.Released).toEqual(expectedReleaseRecsOrder[index]);
+                expect(row.data.ProductName).toEqual(expectedProductNameOrder[index]);
             });
         }));
 

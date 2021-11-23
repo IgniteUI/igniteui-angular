@@ -30,7 +30,7 @@
                 <igx-card-content>
                     <div class="igx-form-group">
                         <igx-input-group>
-                            <input igxInput [disabled]="selectedCell?.columnField === 'ID'" [ngModel]="selectedCell?.dataItem" (ngModelChange)="updateRecord($event)">
+                            <input igxInput [disabled]="selectedCell?.cell.column.field === 'ID'" [ngModel]="selectedCell?.cell.value" (ngModelChange)="updateRecord($event)">
                             <label igxLabel>Edit value</label>
                         </igx-input-group>
                     </div>
@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        <igx-grid #grid1 [data]="localData" [autoGenerate]="true" (columnInit)="initColumns($event)" (selected)="selectCell($event)">
+        <igx-grid #grid1 [data]="localData" primaryKey="ID" [autoGenerate]="true" (columnInit)="initColumns($event)" (selected)="selectCell($event)">
         </igx-grid>
 
     </article>

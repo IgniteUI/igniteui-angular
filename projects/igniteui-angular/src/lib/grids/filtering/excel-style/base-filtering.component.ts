@@ -18,12 +18,12 @@ export abstract class BaseFilteringComponent {
     public abstract expressionsList: ExpressionUI[];
     public abstract listData: FilterListItem[];
 
-    abstract loadingStart: EventEmitter<undefined>;
-    abstract loadingEnd: EventEmitter<undefined>;
-    abstract initialized: EventEmitter<undefined>;
-    abstract columnChange: EventEmitter<any>;
-    abstract sortingChanged: EventEmitter<undefined>;
-    abstract listDataLoaded: EventEmitter<undefined>;
+    public abstract loadingStart: EventEmitter<undefined>;
+    public abstract loadingEnd: EventEmitter<undefined>;
+    public abstract initialized: EventEmitter<undefined>;
+    public abstract columnChange: EventEmitter<any>;
+    public abstract sortingChanged: EventEmitter<undefined>;
+    public abstract listDataLoaded: EventEmitter<undefined>;
 
     constructor(
         protected cdr: ChangeDetectorRef,
@@ -32,13 +32,13 @@ export abstract class BaseFilteringComponent {
     ) { }
 
 
-    abstract initialize(column: any, overlayService: IgxOverlayService): void;
-    abstract detectChanges(): void;
-    abstract hide(): void;
-    abstract closeDropdown(): void;
-    abstract onSelect(): void;
-    abstract onPin(): void;
-    abstract onHideToggle(): void;
-    abstract cancel(): void;
+    public abstract initialize(column: any, overlayService: IgxOverlayService): void;
+    public abstract detectChanges(): void;
+    public abstract hide(): void;
+    public abstract closeDropdown(): void;
+    public abstract onSelect(): void;
+    public abstract onPin(): void;
+    public abstract onHideToggle(): void;
+    public abstract cancel(): void;
 
 }

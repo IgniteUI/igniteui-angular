@@ -42,7 +42,8 @@
     [id]="overlayComponentId"
     (keydown)="onKeyDown($event)"
     [style.min-height]="minHeight"
-    [style.max-height]="maxHeight">
+    [style.max-height]="maxHeight"
+    role="menu">
 
     <ng-container *ngIf="this.excelColumnOperationsDirective; else defaultExcelColumnOperations">
         <ng-content select="igx-excel-style-column-operations,[igxExcelStyleColumnOperations]">
