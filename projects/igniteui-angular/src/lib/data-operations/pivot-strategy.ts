@@ -176,7 +176,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false,
          grid?: PivotGridType): any {
         const config = grid.pivotConfiguration;
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
         const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
         return PivotUtil.extractValueFromDimension(dim, rec);
@@ -199,7 +199,7 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
                 grid?: PivotGridType) {
         const key = fieldName;
         const config = grid.pivotConfiguration;
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
         this.dimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === key);
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
