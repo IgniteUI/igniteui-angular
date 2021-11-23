@@ -48,6 +48,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture = TestBed.createComponent(MovableColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            grid.moving = true;
         }));
 
         it('Should be able to reorder columns.', (() => {
@@ -736,6 +737,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture = TestBed.createComponent(MovableTemplatedColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            grid.moving = true;
         }));
 
         it('Should reorder movable columns with templated headers.', (async () => {
@@ -772,6 +774,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture = TestBed.createComponent(MovableColumnsLargeComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            grid.moving = true;
         }));
 
         it('Should be able to scroll forwards to reorder columns that are out of view.', (async () => {
@@ -1305,7 +1308,6 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('Pinning - Should not be able to pin a column programmaticaly if disablePinning is enabled for that column', (async () => {
-            const columnsList = grid.columnList;
 
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
@@ -1399,6 +1401,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            grid.moving = true;
         }));
 
         it('MCH - should reorder only columns on the same level (top level simple column).', (async () => {

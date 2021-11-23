@@ -374,17 +374,17 @@ export class ColumnDefinitions {
     `;
 
     public static multiColHeadersColumns = `
-        <igx-column [width]="'100px'" [movable]="true" [resizable]="true" [pinned]="isPinned"
+        <igx-column [width]="'100px'" [resizable]="true" [pinned]="isPinned"
                     [sortable]="true" [filterable]="true" field="Missing"></igx-column>
-        <igx-column-group [movable]="true" header="General Information">
-            <igx-column [movable]="true" [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
-            <igx-column-group [movable]="true" header="Person Details">
-                <igx-column [movable]="true" [width]="'100px'" field="ContactName"></igx-column>
-                <igx-column [movable]="true" [filterable]="true" [sortable]="true" field="ContactTitle"></igx-column>
+        <igx-column-group  header="General Information">
+            <igx-column [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
+            <igx-column-group  header="Person Details">
+                <igx-column [width]="'100px'" field="ContactName"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" field="ContactTitle"></igx-column>
             </igx-column-group>
         </igx-column-group>
-        <igx-column [movable]="true" [resizable]="true" field="ID"></igx-column>
-        <igx-column-group [movable]="true" header="Address Information">
+        <igx-column [resizable]="true" field="ID"></igx-column>
+        <igx-column-group  header="Address Information">
             <igx-column field="Country" [width]="'90px'">
                 <ng-template igxHeader let-column>
                     {{ column.field }}
@@ -393,9 +393,9 @@ export class ColumnDefinitions {
                     {{val}}
                 </ng-template>
             </igx-column>
-            <igx-column [movable]="true" [width]="'150px'" field="Region"></igx-column>
-            <igx-column [movable]="true" field="City"></igx-column>
-            <igx-column [movable]="true" field="Address"></igx-column>
+            <igx-column [width]="'150px'" field="Region"></igx-column>
+            <igx-column field="City"></igx-column>
+            <igx-column field="Address"></igx-column>
         </igx-column-group>
   `;
 
