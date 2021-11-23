@@ -59,7 +59,7 @@ export class IgxIconService {
     ) {
         this.iconLoaded = this._iconLoaded.asObservable();
 
-        if(this._platformUtil.isBrowser) {
+        if(this._platformUtil?.isBrowser) {
             this._domParser = new DOMParser();
         }
     }
@@ -194,7 +194,7 @@ export class IgxIconService {
     private cacheSvgIcon(name: string, value: string, family = this._family, stripMeta: boolean) {
         family = !!family ? family : this._family;
 
-        if (this._platformUtil.isBrowser && name && value) {
+        if (this._platformUtil?.isBrowser && name && value) {
             const doc = this._domParser.parseFromString(value, 'image/svg+xml');
             const svg = doc.querySelector('svg') as SVGElement;
 
