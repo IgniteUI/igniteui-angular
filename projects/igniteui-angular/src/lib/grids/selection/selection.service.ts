@@ -494,7 +494,8 @@ export class IgxGridSelectionService {
     public isPivotRowSelected(rowID): boolean {
         let contains = false;
         this.rowSelection.forEach(x => {
-            if (rowID.includes(x)) {
+            const correctRowId = rowID.replace(x,'');
+            if (rowID.includes(x) && (correctRowId === '' || correctRowId.startsWith('_')) ) {
                 contains = true;
                 return;
             }

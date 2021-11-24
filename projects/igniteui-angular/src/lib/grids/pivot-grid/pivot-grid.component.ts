@@ -411,11 +411,19 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.dataView.forEach(record => {
             const prev = [];
             for (const dim of this.rowDimensions) {
-                const currDim = record[dim.memberName] ? dim : record[dim.childLevel.memberName] ? dim.childLevel : dim;
-                const key = PivotUtil.getRecordKey(record, currDim, prev);
-                prev.push(currDim);
-                if (this.selectionService.isPivotRowSelected(key) && !selectedRowIds.find(x => x === record)) {
-                    selectedRowIds.push(record);
+                let currDim = dim;
+                let shouldBreak = false;
+                do {
+                    const key = PivotUtil.getRecordKey(record, currDim, prev);
+                    if (this.selectionService.isPivotRowSelected(key) && !selectedRowIds.find(x => x === record)) {
+                        selectedRowIds.push(record);
+                        shouldBreak = true;
+                        break;
+                    }
+                    currDim = currDim.childLevel;
+                } while (currDim);
+                prev.push(dim);
+                if (shouldBreak) {
                     break;
                 }
             }
@@ -449,29 +457,29 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         @Inject(LOCALE_ID) localeId: string,
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
-            super(
-                selectionService,
-                colResizingService,
-                gridAPI,
-                transactionFactory,
-                elementRef,
-                zone,
-                document,
-                cdr,
-                resolver,
-                differs,
-                viewRef,
-                appRef,
-                moduleRef,
-                factoryResolver,
-                injector,
-                navigation,
-                filteringService,
-                overlayService,
-                summaryService,
-                _displayDensityOptions,
-                localeId,
-                platform);
+        super(
+            selectionService,
+            colResizingService,
+            gridAPI,
+            transactionFactory,
+            elementRef,
+            zone,
+            document,
+            cdr,
+            resolver,
+            differs,
+            viewRef,
+            appRef,
+            moduleRef,
+            factoryResolver,
+            injector,
+            navigation,
+            filteringService,
+            overlayService,
+            summaryService,
+            _displayDensityOptions,
+            localeId,
+            platform);
     }
 
     /**
