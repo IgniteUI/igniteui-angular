@@ -106,7 +106,6 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
 
     public isCellActive(visibleColumnIndex) {
         const node = this.grid.navigation.activeNode;
-        console.log(node && Object.keys(node).length === 0 && !node.isRowDimensionHeader && super.isCellActive(visibleColumnIndex));
         return node && Object.keys(node).length !== 0 ?
             !node.isRowDimensionHeader &&
             super.isCellActive(visibleColumnIndex) :
