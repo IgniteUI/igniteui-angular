@@ -72,7 +72,7 @@ describe('Pivot pipes', () => {
     it('transforms flat data to pivot data', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult).toEqual([
             { All: 2127, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, AllCategory: 'All', AllCategory_level: 0 },
             { ProductCategory: 'Clothing', All: 1526, 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456, ProductCategory_level: 1 },
@@ -175,7 +175,7 @@ describe('Pivot pipes', () => {
                 ], level: 0
             }]);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult).toEqual([
             {
                 ProductCategory: 'Clothing', All: 1526, 'All-Bulgaria': 774, 'All-USA': 296,
@@ -192,7 +192,7 @@ describe('Pivot pipes', () => {
         expanded.set('All', false);
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expanded);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
-        const rowPipeCollapseResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expanded);
+        const rowPipeCollapseResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expanded, true);
         expect(rowPipeCollapseResult).toEqual([
             {
                 AllCategory: 'All',
@@ -205,7 +205,7 @@ describe('Pivot pipes', () => {
         ]);
 
         expanded.set('All', true);
-        const rowPipeExpandResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expanded);
+        const rowPipeExpandResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expanded, true);
         expect(rowPipeExpandResult).toEqual([
             { AllCategory: 'All', All: 2127, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, AllCategory_level: 0 },
             { ProductCategory: 'Clothing', All: 1526, 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456, ProductCategory_level: 1 },
@@ -236,7 +236,7 @@ describe('Pivot pipes', () => {
         ];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult).toEqual([
             { Date: '01/01/2021', ProductCategory: 'Clothing', All: 282, 'All-Bulgaria': 282, ProductCategory_level: 0, Date_level: 0 },
             { Date: '01/05/2019', ProductCategory: 'Clothing', All: 296, 'All-USA': 296, ProductCategory_level: 0, Date_level: 0 },
@@ -268,7 +268,7 @@ describe('Pivot pipes', () => {
         }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult).toEqual([
             {
                 'AllDate': 'AllDate', 'AllProd': 'AllProd', 'All': 2127, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, 'AllProd_level': 0,
@@ -363,7 +363,7 @@ describe('Pivot pipes', () => {
         }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
-        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
         /* eslint-disable quote-props */
         expect(rowStatePipeResult).toEqual([
             {
@@ -404,7 +404,7 @@ describe('Pivot pipes', () => {
         }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
-        const rowStateResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStateResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
         /* eslint-disable quote-props */
         expect(rowStateResult).toEqual(
             [
@@ -458,7 +458,7 @@ describe('Pivot pipes', () => {
         ];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
         expect(rowStatePipeResult).toEqual(
             [
                 {
@@ -507,7 +507,7 @@ describe('Pivot pipes', () => {
 
         const rowPipeResult = rowPipe.transform(preprocessedData, pivotConfig, new Map<any, boolean>());
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
-        const rowStateResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStateResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
 
         // same data but expanded
         expect(rowStateResult).toEqual(
@@ -814,7 +814,7 @@ describe('Pivot pipes', () => {
 
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const colPipeRes = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(colPipeRes, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(colPipeRes, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toEqual(39);
         expect(rowStatePipeResult[0]['AllPeriods']).toEqual('All Periods');
         expect(rowStatePipeResult[0]['AllProducts']).toEqual('All');

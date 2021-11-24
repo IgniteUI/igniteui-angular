@@ -78,12 +78,12 @@ export class PivotUtil {
         config: IPivotConfiguration,
         dim: IPivotDimension,
         expansionStates: any,
+        defaultExpandState: boolean,
         pivotKeys: IPivotKeys,
         lvl: number,
         prevDims: IPivotDimension[],
         currDimLvl: number) {
         const data = records;
-        const defaultExpandState = true;
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
             const field = dim.memberName;
@@ -102,7 +102,7 @@ export class PivotUtil {
                 if (dim.childLevel) {
                     if (PivotUtil.getDimensionDepth(dim) > 1) {
                         dimData = this.flattenHierarchy(dimData, config, dim.childLevel,
-                            expansionStates, pivotKeys, lvl - 1, prevDims, currDimLvl + 1);
+                            expansionStates, defaultExpandState, pivotKeys, lvl - 1, prevDims, currDimLvl + 1);
                     } else {
                         dimData.forEach(d => {
                             d[dim.childLevel.memberName + '_' + pivotKeys.level] = currDimLvl + 1;
