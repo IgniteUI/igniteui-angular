@@ -1,12 +1,11 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
-    OnInit, AfterViewInit, ContentChildren
+    OnInit, AfterViewInit, ContentChildren, forwardRef
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { cloneArray, IBaseEventArgs } from '../../core/utils';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
@@ -29,7 +28,10 @@ import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
+import { GridBaseAPIService } from '../api.service';
+
 let NEXT_ID = 0;
 
 export interface IGroupingDoneEventArgs extends IBaseEventArgs {
@@ -59,13 +61,14 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
     providers: [
         IgxGridCRUDService,
         IgxGridNavigationService,
         IgxGridSummaryService,
         IgxGridSelectionService,
-        { provide: IGX_GRID_SERVICE_BASE, useClass: IgxGridAPIService },
-        { provide: IGX_GRID_BASE, useExisting: IgxGridComponent },
+        { provide: GridBaseAPIService, useClass: IgxGridAPIService },
+        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxGridComponent) },
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService,
@@ -375,9 +378,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._gridAPI.arrange_sorting_expressions();
             this.notifyChanges();
         } else {
-            //To do: remove coupling
             // setter called before grid is registered in grid API service
-            this.groupingExpressions.unshift.apply(this._groupingExpressions);
+            this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
         }
         if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columnList) {
             const groupedCols: IgxColumnComponent[] = [];
@@ -508,7 +510,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param rowIndex
      * @param index
      */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
@@ -556,45 +558,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         };
     }
 
-    public sortGrouping(expression: IGroupingExpression | Array<IGroupingExpression>): void {
-        const groupingState = cloneArray(this.groupingExpressions);
-
-        if (expression instanceof Array) {
-            for (const each of expression) {
-                if (each.dir === SortingDirection.None) {
-                    this.gridAPI.remove_grouping_expression(each.fieldName);
-                }
-                this.gridAPI.prepare_grouping_expression([groupingState], each);
-            }
-        } else {
-            if (expression.dir === SortingDirection.None) {
-                this.gridAPI.remove_grouping_expression(expression.fieldName);
-            }
- 
-            this.gridAPI.prepare_grouping_expression([groupingState], expression);
-        }
-
-        const eventArgs: ISortingEventArgs = { owner: this, groupingExpressions: groupingState, cancel: false };
-        this.sorting.emit(eventArgs);
-
-        if (eventArgs.cancel) {
-            return;
-        }
-
-        this.crudService.endEdit(false);
-        if (expression instanceof Array) {
-            this.gridAPI.sort_groupBy_multiple(expression);
-        } else {
-            this.gridAPI.sort_decoupled(expression);
-        }
-        requestAnimationFrame(() => this.sortingDone.emit(expression));
-    }
-
     /**
      * @hidden @internal
      */
     public trackChanges(index, rec) {
-        if (rec && rec.detailsData !== undefined) {
+        if (rec.detailsData !== undefined) {
             return rec.detailsData;
         }
         return rec;
@@ -633,7 +601,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public isDetailRecord(record) {
-        return record && record.detailsData !== undefined;
+        return record.detailsData !== undefined;
     }
 
     /**
@@ -902,7 +870,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     owner: tmlpOutlet,
                     index: this.dataView.indexOf(rowData),
                     templateID: {
-                        type: 'detailRow',
+                        type:'detailRow',
                         id: rowID
                     }
                 };
@@ -911,7 +879,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 return {
                     $implicit: rowData.detailsData,
                     templateID: {
-                        type: 'detailRow',
+                        type:'detailRow',
                         id: rowID
                     },
                     index: this.dataView.indexOf(rowData)
@@ -1001,20 +969,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
 
             sortingExpressions.forEach((sortExpr: ISortingExpression) => {
-                const fieldName = sortExpr.fieldName;
-                const groupingExpr = this.groupingExpressions.find(ex => ex.fieldName === fieldName);
-                if (groupingExpr) {
-                    groupingExpr.dir = sortExpr.dir;
-                }
-            });
-        });
-
-        this.groupingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe((groupingExpressions: IGroupingExpression[]) => {
-            if (!this.groupingExpressions || !this.groupingExpressions.length) {
-                return;
-            }
-
-            groupingExpressions.forEach((sortExpr: IGroupingExpression) => {
                 const fieldName = sortExpr.fieldName;
                 const groupingExpr = this.groupingExpressions.find(ex => ex.fieldName === fieldName);
                 if (groupingExpr) {
@@ -1121,7 +1075,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (index < 0 || index > this.dataView.length) {
             return undefined;
         }
-        return new IgxGridRow(this as any, index, rec);
+
+        return new IgxGridRow(this, index, rec);
     }
 
     /**
@@ -1218,14 +1173,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
 
         if (rec && this.isGroupByRecord(rec)) {
-            row = new IgxGroupByRow(this as any, index, rec);
+            row = new IgxGroupByRow(this, index, rec);
         }
         if (rec && this.isSummaryRow(rec)) {
-            row = new IgxSummaryRow(this as any, index, rec.summaries, GridInstanceType.Grid);
+            row = new IgxSummaryRow(this, index, rec.summaries, GridInstanceType.Grid);
         }
         // if found record is a no a groupby or summary row, return IgxGridRow instance
         if (!row && rec) {
-            row = new IgxGridRow(this as any, index, rec);
+            row = new IgxGridRow(this, index, rec);
         }
 
         return row;
@@ -1288,13 +1243,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     protected _applyGrouping() {
-        this._gridAPI.sort_groupBy_multiple(this._groupingExpressions);
+        this._gridAPI.sort_multiple(this._groupingExpressions);
     }
 
     private _setupNavigationService() {
         if (this.hasColumnLayouts) {
             this.navigation = new IgxGridMRLNavigationService(this.platform);
-            this.navigation.grid = this as any;
+            this.navigation.grid = this;
         }
     }
 
