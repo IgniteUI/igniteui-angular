@@ -71,6 +71,10 @@ export class PivotGridSampleComponent {
                     memberName: 'ProductCategory',
                     enabled: true
                 }
+            },
+            {
+                memberName: 'SellerName',
+                enabled: true
             }
         ],
         values: [

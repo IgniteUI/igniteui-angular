@@ -110,7 +110,14 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                     if (k.indexOf(pivotKeys.records) !== -1) {
                         if (hierarchy[k] && hierarchy[k].length > 0 && k !== pivotKeys.records) {
                             const unprocessed = hierarchy[k].filter(r => !r.processed);
-                            this.processHierarchy(unprocessed, columns, values, pivotKeys);
+                            const res = this.processHierarchy(unprocessed, columns, values, pivotKeys);
+                            if (res.length !== unprocessed.length) {
+                                // some records should be removed from the final flat collection
+                                // since this is no longer the final pipe just mark it for removal.
+                                unprocessed.forEach(element => {
+                                    element.remove = true;
+                                });
+                            }
                         }
                         //delete hierarchy[k];
                     }
