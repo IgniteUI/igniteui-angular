@@ -110,14 +110,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                     if (k.indexOf(pivotKeys.records) !== -1) {
                         if (hierarchy[k] && hierarchy[k].length > 0 && k !== pivotKeys.records) {
                             const unprocessed = hierarchy[k].filter(r => !r.processed);
-                            const res = this.processHierarchy(unprocessed, columns, values, pivotKeys);
-                            if (res.length !== unprocessed.length) {
-                                // some records should be removed from the final flat collection
-                                // since this is no longer the final pipe just mark it for removal.
-                                unprocessed.forEach(element => {
-                                    element.remove = true;
-                                });
-                            }
+                            this.processHierarchy(unprocessed, columns, values, pivotKeys);
                         }
                         //delete hierarchy[k];
                     }
@@ -126,10 +119,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                     }
                 });
                 delete hierarchy.processed;
-                if (this.isLeaf(hierarchy, pivotKeys)) {
-                    delete hierarchy[pivotKeys.records]; /* remove the helper records of the actual records so that
-                        expand indicators can be rendered properly */
-                }
                 for (const property in flatCols) {
                     if (flatCols.hasOwnProperty(property)) {
                         hierarchy[property] = flatCols[property];
