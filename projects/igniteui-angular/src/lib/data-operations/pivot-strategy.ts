@@ -5,7 +5,7 @@ import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 import { FilteringStrategy } from './filtering-strategy';
 import { GridColumnDataType } from './data-util';
 import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
-import { parseDate } from '../core/utils';
+import { cloneArray, parseDate } from '../core/utils';
 
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: NoopPivotDimensionsStrategy = null;
@@ -28,50 +28,52 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
     }
 
     public process(
-        collection: any,
-        rows: IPivotDimension[],
-        values?: IPivotValue[],
-        pivotKeys: IPivotKeys =
-            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
-    ): any[] {
-        let hierarchies;
-        let data;
-        const prevRowDims = [];
-        let prevDim;
-        for (const row of rows) {
-            if (!data) {
-                // build hierarchies - groups and subgroups
-                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
-                // generate flat data from the hierarchies
-                data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
-                prevRowDims.push(row);
-                prevDim = row;
-            } else {
-                const newData = [...data];
-                for (let i = 0; i < newData.length; i++) {
-                    const currData = newData[i][prevDim.memberName + '_' + pivotKeys.records];
-                    const hierarchyFields = PivotUtil
-                        .getFieldsHierarchy(currData, [row], PivotDimensionType.Row, pivotKeys);
-                    const siblingData = PivotUtil
-                        .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
-                    PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
+            collection: any,
+            rows: IPivotDimension[],
+            values?: IPivotValue[],
+            pivotKeys: IPivotKeys =
+            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+        ): any[] {
+            let hierarchies;
+            let data;
+            const prevRowDims = [];
+            let prevDim;
+            const currRows = cloneArray(rows, true);
+            PivotUtil.assignLevels(currRows);
+            for (const row of currRows) {
+                if (!data) {
+                    // build hierarchies - groups and subgroups
+                    hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
+                    // generate flat data from the hierarchies
+                    data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
+                    prevRowDims.push(row);
+                    prevDim = row;
+                } else {
+                    const newData = [...data];
+                    for (let i = 0; i < newData.length; i++) {
+                        const currData = newData[i][prevDim.memberName + '_' + pivotKeys.records];
+                        const hierarchyFields = PivotUtil
+                            .getFieldsHierarchy(currData, [row], PivotDimensionType.Row, pivotKeys);
+                        const siblingData = PivotUtil
+                            .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
+                        PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
 
-                        PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
-                        if (siblingData.length > 1) {
-                            newData[i][row.memberName + '_' + pivotKeys.records] = siblingData;
-                        } else {
-                            newData.splice(i , 1, ...siblingData);
-                        }
+                    PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
+                    if (PivotUtil.getDimensionDepth(prevDim) > PivotUtil.getDimensionDepth(row) && siblingData.length > 1) {
+                        newData[i][row.memberName + '_' + pivotKeys.records] = siblingData;
+                    } else {
+                        newData.splice(i, 1, ...siblingData);
                         i += siblingData.length - 1;
                     }
-                    data = newData;
-                    prevDim = row;
-                    prevRowDims.push(row);
                 }
+                data = newData;
+                prevDim = row;
+                prevRowDims.push(row);
             }
-            return data;
         }
+        return data;
     }
+}
 
 export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: PivotRowDimensionsStrategy = null;
@@ -170,7 +172,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
     }
 
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false,
-         grid?: PivotGridType): any {
+        grid?: PivotGridType): any {
         const config = grid.pivotConfiguration;
         const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
@@ -186,13 +188,13 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
         return this._instance || (this._instance = new this());
     }
     public sort(data: any[],
-                fieldName: string,
-                dir: SortingDirection,
-                ignoreCase: boolean,
-                valueResolver: (obj: any, key: string, isDate?: boolean) => any,
-                isDate?: boolean,
-                isTime?: boolean,
-                grid?: PivotGridType) {
+        fieldName: string,
+        dir: SortingDirection,
+        ignoreCase: boolean,
+        valueResolver: (obj: any, key: string, isDate?: boolean) => any,
+        isDate?: boolean,
+        isTime?: boolean,
+        grid?: PivotGridType) {
         const key = fieldName;
         const config = grid.pivotConfiguration;
         const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
