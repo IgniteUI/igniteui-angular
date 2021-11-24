@@ -34,7 +34,6 @@ import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
-import { IgxCustomSummaryCellTemplateDirective } from '../columns/templates.directive';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -157,8 +156,8 @@ export interface ColumnType {
     filteringIgnoreCase: boolean;
     filteringExpressionsTree: FilteringExpressionsTree;
     hasSummary: boolean;
-    customSummaryCellTemplateDirective: IgxCustomSummaryCellTemplateDirective;
     summaries: any;
+    summaryTemplate: TemplateRef<any>;
     pinned: boolean;
     expanded: boolean;
     selected: boolean;
