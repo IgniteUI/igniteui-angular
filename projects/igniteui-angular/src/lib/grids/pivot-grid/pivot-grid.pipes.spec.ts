@@ -223,8 +223,7 @@ describe('Pivot pipes', () => {
             }]);
     });
 
-    // xit-ing because of https://github.com/IgniteUI/igniteui-angular/issues/10546
-    xit('transforms flat data to pivot data multiple row dimensions', () => {
+    it('transforms flat data to pivot data multiple row dimensions', () => {
         pivotConfig.rows = [
             {
                 memberName: 'ProductCategory',
