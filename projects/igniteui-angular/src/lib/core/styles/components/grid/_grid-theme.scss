@@ -1023,6 +1023,7 @@
         border-bottom: 1px solid var-get($theme, 'row-border-color');
         outline-style: none;
         position: relative;
+        background-clip: content-box !important;
 
         &:hover {
             background: var-get($theme, 'row-hover-background');
@@ -1104,35 +1105,6 @@
     %grid-row--even {
         background: var-get($theme, 'row-even-background');
         color: var-get($theme, 'row-even-text-color');
-    }
-
-    %grid-row--selected {
-        color: var-get($theme, 'row-selected-text-color');
-        background: var-get($theme, 'row-selected-background');
-
-        %grid-cell--selected,
-        %grid-cell--pinned-selected {
-            color: var-get($theme, 'cell-selected-within-text-color');
-            background: var-get($theme, 'cell-selected-within-background');
-        }
-
-        &:hover {
-            background: var-get($theme, 'row-selected-hover-background');
-            color: var-get($theme, 'row-selected-hover-text-color');
-
-            %grid-cell--column-selected {
-                color: var-get($theme, 'row-selected-hover-text-color');
-                background: var-get($theme, 'row-selected-hover-background');
-            }
-        }
-
-        %igx-grid__tree-grouping-indicator {
-            color: var-get($theme, 'row-selected-text-color');
-
-            &:hover {
-                color: var-get($theme, 'row-selected-text-color');
-            }
-        }
     }
 
     %igx-grid__tr--expanded {
@@ -1357,6 +1329,7 @@
         line-height: $grid-cell-lh;
         color: inherit;
         text-align: #{$left};
+        background-clip: border-box !important;
     }
 
     %igx-grid__td--tree-cell {
@@ -1390,6 +1363,7 @@
         }
     }
 
+    %grid-cell--pinned-selected,
     %grid-cell--selected {
         color: var-get($theme, 'cell-selected-text-color');
         background: var-get($theme, 'cell-selected-background');
@@ -1399,6 +1373,35 @@
         %igx-grid__tree-grouping-indicator {
             &:hover {
                 color: var-get($theme, 'cell-selected-text-color');
+            }
+        }
+    }
+
+    %grid-row--selected {
+        color: var-get($theme, 'row-selected-text-color');
+        background: var-get($theme, 'row-selected-background');
+
+        %grid-cell--selected,
+        %grid-cell--pinned-selected {
+            color: var-get($theme, 'cell-selected-within-text-color');
+            background: var-get($theme, 'cell-selected-within-background');
+        }
+
+        &:hover {
+            background: var-get($theme, 'row-selected-hover-background');
+            color: var-get($theme, 'row-selected-hover-text-color');
+
+            %grid-cell--column-selected {
+                color: var-get($theme, 'row-selected-hover-text-color');
+                background: var-get($theme, 'row-selected-hover-background');
+            }
+        }
+
+        %igx-grid__tree-grouping-indicator {
+            color: var-get($theme, 'row-selected-text-color');
+
+            &:hover {
+                color: var-get($theme, 'row-selected-text-color');
             }
         }
     }
@@ -1496,13 +1499,6 @@
         position: relative;
         background: inherit;
         z-index: 9999;
-    }
-
-    %grid-cell--pinned-selected {
-        color: var-get($theme, 'cell-selected-text-color');
-        background: var-get($theme, 'cell-selected-background');
-        // this is causing an issue https://github.com/IgniteUI/igniteui-angular/issues/4981
-        // border-bottom: 0;
     }
 
     %grid-cell--pinned--column-selected {
@@ -1670,8 +1666,23 @@
         background: var-get($theme, 'header-selected-background');
         opacity: if($variant != 'indigo-design', .7, 1);
 
-        .sort-icon::after {
-            background: var-get($theme, 'header-selected-background');
+        .sort-icon {
+            color: var-get($theme, 'header-selected-text-color');
+
+            ::after {
+                background: var-get($theme, 'header-selected-background');
+            }
+        }
+
+        &%igx-grid-th--sorted {
+            .sort-icon {
+                color: var-get($theme, 'header-selected-text-color');
+
+                &:focus,
+                &:hover {
+                    color: var-get($theme, 'header-selected-text-color');
+                }
+            }
         }
     }
 
@@ -1681,6 +1692,17 @@
 
         .sort-icon::after {
             background: var-get($theme, 'header-selected-background');
+        }
+
+        &%igx-grid-th--sorted {
+            .sort-icon {
+                color: var-get($theme, 'header-selected-text-color');
+
+                &:focus,
+                &:hover {
+                    color: var-get($theme, 'header-selected-text-color');
+                }
+            }
         }
     }
 
@@ -1836,7 +1858,6 @@
             border-bottom: none;
         }
 
-        // %igx-grid-summary__label,
         %igx-grid-summary__result {
             color: var-get($theme, 'body-summaries-text-color');
         }
