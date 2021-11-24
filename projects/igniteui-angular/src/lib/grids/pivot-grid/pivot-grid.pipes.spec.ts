@@ -706,7 +706,7 @@ describe('Pivot pipes', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates);
-        expect(rowStatePipeResult.length).toEqual(44);
+        expect(rowStatePipeResult.length).toEqual(45);
         expect(rowStatePipeResult[0]['AllPeriods']).toEqual('All Periods');
         expect(rowStatePipeResult[0]['AllProducts']).toEqual('All');
         expect(rowStatePipeResult[0]['ProductCategory']).not.toBeDefined();
@@ -717,25 +717,25 @@ describe('Pivot pipes', () => {
         expect(rowStatePipeResult[1]['ProductCategory']).toEqual('Clothing');
         expect(rowStatePipeResult[1]['City']).toEqual('Sofia');
 
-        expect(rowStatePipeResult[10]['AllPeriods']).not.toBeDefined();
-        expect(rowStatePipeResult[10]['ProductCategory']).not.toBeDefined();
-        expect(rowStatePipeResult[10]['AllProducts']).toEqual('All');
-        expect(rowStatePipeResult[10]['City']).toEqual('Sofia');
-        expect(rowStatePipeResult[10]['Years']).toEqual('2021');
-        expect(rowStatePipeResult[10]['Years_level']).toEqual(1);
-
         expect(rowStatePipeResult[11]['AllPeriods']).not.toBeDefined();
-        expect(rowStatePipeResult[11]['ProductCategory']).toEqual('Clothing');
-        expect(rowStatePipeResult[11]['AllProducts']).not.toBeDefined();
+        expect(rowStatePipeResult[11]['ProductCategory']).not.toBeDefined();
+        expect(rowStatePipeResult[11]['AllProducts']).toEqual('All');
         expect(rowStatePipeResult[11]['City']).toEqual('Sofia');
         expect(rowStatePipeResult[11]['Years']).toEqual('2021');
         expect(rowStatePipeResult[11]['Years_level']).toEqual(1);
 
-        expect(rowStatePipeResult[15]['AllPeriods']).not.toBeDefined();
-        expect(rowStatePipeResult[15]['ProductCategory']).not.toBeDefined();
-        expect(rowStatePipeResult[15]['AllProducts']).toEqual('All');
-        expect(rowStatePipeResult[15]['City']).toEqual('Sofia');
-        expect(rowStatePipeResult[15]['Years']).not.toBeDefined();
-        expect(rowStatePipeResult[15]['Date']).toEqual('01/01/2021');
+        expect(rowStatePipeResult[12]['AllPeriods']).not.toBeDefined();
+        expect(rowStatePipeResult[12]['ProductCategory']).toEqual('Clothing');
+        expect(rowStatePipeResult[12]['AllProducts']).not.toBeDefined();
+        expect(rowStatePipeResult[12]['City']).toEqual('Sofia');
+        expect(rowStatePipeResult[12]['Years']).toEqual('2021');
+        expect(rowStatePipeResult[12]['Years_level']).toEqual(1);
+
+        expect(rowStatePipeResult[16]['AllPeriods']).not.toBeDefined();
+        expect(rowStatePipeResult[16]['ProductCategory']).not.toBeDefined();
+        expect(rowStatePipeResult[16]['AllProducts']).toEqual('All');
+        expect(rowStatePipeResult[16]['City']).toEqual('Sofia');
+        expect(rowStatePipeResult[16]['Years']).not.toBeDefined();
+        expect(rowStatePipeResult[16]['Date']).toEqual('01/01/2021');
     });
 });
