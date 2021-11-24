@@ -706,7 +706,7 @@ describe('Pivot pipes', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates);
-        expect(rowStatePipeResult.length).toEqual(44);
+        expect(rowStatePipeResult.length).toEqual(36);
         expect(rowStatePipeResult[0]['AllPeriods']).toEqual('All Periods');
         expect(rowStatePipeResult[0]['AllProducts']).toEqual('All');
         expect(rowStatePipeResult[0]['ProductCategory']).not.toBeDefined();
