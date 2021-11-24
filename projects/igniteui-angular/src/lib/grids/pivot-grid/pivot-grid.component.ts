@@ -487,7 +487,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
         const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === column.field);
-        this.getDimensionData(dim, exprTree, uniqueValues => done(uniqueValues));
+        if (dim) {
+            this.getDimensionData(dim, exprTree, uniqueValues => done(uniqueValues));
+        }
     }
 
     public getDimensionData(dim: IPivotDimension,
