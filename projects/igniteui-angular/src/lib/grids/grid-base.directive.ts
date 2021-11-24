@@ -2812,8 +2812,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public abstract id: string;
-    abstract data: any[] | null;
-    abstract filteredData: any[];
+    public abstract data: any[] | null;
+    public abstract filteredData: any[];
     /**
      * Returns an array containing the filtered sorted data.
      *
@@ -5798,7 +5798,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public isSummaryRow(rowData): boolean {
-        return rowData.summaries && (rowData.summaries instanceof Map);
+        return rowData && rowData.summaries && (rowData.summaries instanceof Map);
     }
 
     /**

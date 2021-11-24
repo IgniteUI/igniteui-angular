@@ -633,7 +633,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public isDetailRecord(record) {
-        return record.detailsData !== undefined;
+        return record && record.detailsData !== undefined;
     }
 
     /**
