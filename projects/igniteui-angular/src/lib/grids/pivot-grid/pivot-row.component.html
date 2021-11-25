@@ -109,6 +109,7 @@
 
     <ng-template #headerTemplateGray let-column>
         <div class="igx-grid__tr--header" style='color:gray' class='igx-grid__row-indentation--level-{{getLevel(column)}}'>
+            <igx-icon style='flex-shrink: 0;' [attr.draggable]="false" *ngIf='getLevel(column) > 0'></igx-icon>
             {{column.header}}
         </div>
     </ng-template>
