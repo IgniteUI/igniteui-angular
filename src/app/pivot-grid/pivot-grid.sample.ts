@@ -1,10 +1,14 @@
+import { trigger } from '@angular/animations';
 import { Component, ViewChild } from '@angular/core';
 import {
     IgxPivotNumericAggregate,
     IgxPivotGridComponent,
     IPivotConfiguration,
     PivotAggregation,
-    IgxPivotDateDimension
+    IgxPivotDateDimension,
+    IPivotDimension,
+    IDimensionsChange,
+    DisplayDensity
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -41,37 +45,54 @@ export class IgxTotalSaleAggregate {
 })
 export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
+    public comfortable: DisplayDensity = DisplayDensity.comfortable;
+    public cosy: DisplayDensity = DisplayDensity.cosy;
+    public compact: DisplayDensity = DisplayDensity.compact;
 
-    public pivotConfigHierarchy: IPivotConfiguration = {
-        columns: [
+    public dimensions: IPivotDimension[] = [
+        {
+            memberName: 'Country',
+            enabled: true
+        },
+        new IgxPivotDateDimension(
             {
-                memberName: 'Country',
-                enabled: true
-            }
-        ],
-        rows: [
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: false
-                }
-            ),
-            {
-                memberName: 'City',
+                memberName: 'Date',
                 enabled: true
             },
             {
-                memberFunction: () => 'All',
-                memberName: 'AllProducts',
-                enabled: true,
-                childLevel: {
-                    memberName: 'ProductCategory',
-                    enabled: true
-                }
+                months: false
             }
+        ),
+        {
+            memberFunction: () => 'All',
+            memberName: 'AllProducts',
+            enabled: true,
+            childLevel: {
+                memberFunction: (data) => data.ProductCategory,
+                memberName: 'ProductCategory',
+                enabled: true
+            }
+        },
+        {
+            memberName: 'AllSeller',
+            memberFunction: () => 'All Sellers',
+            enabled: true,
+            childLevel: {
+                enabled: true,
+                memberName: 'Seller'
+            }
+        },
+    ];
+
+    public selected: IPivotDimension[] = [this.dimensions[0], this.dimensions[1], this.dimensions[2]];
+
+    public pivotConfigHierarchy: IPivotConfiguration = {
+        columns: [
+            this.dimensions[0]
+        ],
+        rows: [
+            this.dimensions[1],
+            this.dimensions[2]
         ],
         values: [
             {
@@ -80,7 +101,7 @@ export class PivotGridSampleComponent {
                     key: 'SUM',
                     aggregator: IgxPivotNumericAggregate.sum,
                     label: 'Sum'
-                 },
+                },
                 enabled: true,
                 styles: {
                     upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
@@ -101,11 +122,11 @@ export class PivotGridSampleComponent {
                     key: 'SUM',
                     aggregator: IgxTotalSaleAggregate.totalSale,
                     label: 'Sum of Sale'
-                },{
+                }, {
                     key: 'MIN',
                     aggregator: IgxTotalSaleAggregate.totalMin,
                     label: 'Minimum of Sale'
-                },{
+                }, {
                     key: 'MAX',
                     aggregator: IgxTotalSaleAggregate.totalMax,
                     label: 'Maximum of Sale'
@@ -150,4 +171,34 @@ export class PivotGridSampleComponent {
             ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
             Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
         }];
+
+    public handleChange(event) {
+        let isColumnChange = false
+        const allDims = this.pivotConfigHierarchy.rows.concat(this.pivotConfigHierarchy.columns).concat(this.pivotConfigHierarchy.filters);
+        if (event.added.length > 0) {
+            const dim = allDims.find(x => x && x.memberName === event.added[0].memberName);
+            isColumnChange = this.pivotConfigHierarchy.columns.indexOf(dim) !== -1;
+            if (dim) {
+                dim.enabled = true;
+            } else {
+                // add as row by default
+                this.pivotConfigHierarchy.rows = this.pivotConfigHierarchy.rows.concat(event.added);
+            }
+        } else if (event.removed.length > 0) {
+            const dims = allDims.filter(x => x && event.removed.indexOf(x) !== -1);
+            dims.forEach(x => x.enabled = false);
+            isColumnChange = dims.some(x => this.pivotConfigHierarchy.columns.indexOf(x) !== -1);
+        }
+        this.grid1.notifyDimensionChange(isColumnChange);
+    }
+
+    public dimensionChange(event: IDimensionsChange) {
+        const allDims = this.pivotConfigHierarchy.rows.concat(this.pivotConfigHierarchy.columns).concat(this.pivotConfigHierarchy.filters);
+        const allEnabled = allDims.filter(x => x && x.enabled);
+        this.selected = allEnabled;
+    }
+
+    public setDensity(density: DisplayDensity) {
+        this.grid1.displayDensity = density;
+    }
 }
