@@ -1,6 +1,6 @@
 <div class="igx-grid-thead__wrapper igx-grid-thead__wrapper--pivot" role="row" [style.width.px]="width">
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
-        <div #pivotFilterContainer class="igx-grid__tr-pivot igx-grid__tr-pivot--filter" [style.min-width.px]="grid.pivotRowWidths - 1"
+        <div #pivotFilterContainer class="igx-grid__tr-pivot igx-grid__tr-pivot--filter" [style.min-width.px]="grid.pivotRowWidths - 1" [style.max-width.px]="grid.pivotRowWidths - 1"
             (igxDragEnter)="onAreaDragEnter($event, filterArea, 2)" (igxDragLeave)="onAreaDragLeave($event, filterArea)"
             igxDrop (dropped)="onDimDrop($event, filterArea, 2)" (pointerdown)="$event.preventDefault()">
 
@@ -9,11 +9,11 @@
             <!-- Filter area -->
             <igx-chips-area #filterArea droppable='true'>
                 <igx-chip *ngFor="let filter of grid.filterDimensions" [id]="filter.memberName" [draggable]="true"
+                    [displayDensity]="grid.displayDensity"
                     [removable]="true" (remove)="filterRemoved($event)"
                     (dragOver)="onDimDragOver($event, 2)"
                     (dragLeave)="onDimDragLeave($event)"
-                    (dragDrop)="onDimDrop($event, filterArea, 2)"
-                     >
+                    (dragDrop)="onDimDrop($event, filterArea, 2)">
                     <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, filter)'>filter_list</igx-icon>
                     {{filter.memberName}}
                 </igx-chip>
@@ -29,12 +29,12 @@
                 <!-- Columns area -->
                 <igx-chips-area #colArea droppable='true'>
                     <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="true" [id]="col.memberName"
+                        [displayDensity]="grid.displayDensity"
                         [removable]="true" (remove)="columnRemoved($event)"
                         (dragOver)="onDimDragOver($event, 1)"
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, colArea, 1)"
-                        (click)="onChipSort($event, col, 1)"
-                        >
+                        (click)="onChipSort($event, col, 1)">
                         <igx-icon igxPrefix>view_column</igx-icon>
                         <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, col)'>filter_list</igx-icon>
                         {{col.memberName}}
@@ -54,11 +54,12 @@
                 <!-- Value area -->
                 <igx-chips-area #valueArea droppable='true'>
                     <igx-chip #currChip *ngFor="let value of grid.values" [draggable]="true" [id]="value.member"
+                        [displayDensity]="grid.displayDensity"
                         [removable]="true" (remove)="valueRemoved($event)"
-                         (dragLeave)="onDimDragLeave($event)"
-                         (dragOver)="onDimDragOver($event)"
-                         (dragDrop)="onValueDrop($event, valueArea)">
-                         <div igxPrefix (click)='onSummaryClick($event, value, dropdown, currChip)' (pointerdown)='$event.stopPropagation()'
+                        (dragLeave)="onDimDragLeave($event)"
+                        (dragOver)="onDimDragOver($event)"
+                        (dragDrop)="onValueDrop($event, valueArea)">
+                         <div class="igx-grid__tr-pivot-toggle-icons" igxPrefix (click)='onSummaryClick($event, value, dropdown, currChip)' (pointerdown)='$event.stopPropagation()'
                          [igxDropDownItemNavigation]="dropdown">
                             <igx-icon>functions</igx-icon>
                             <igx-icon>arrow_drop_down</igx-icon>
@@ -85,6 +86,7 @@
             <!-- Row area -->
             <igx-chips-area #rowArea droppable='true'>
                 <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="true" [id]="row.memberName"
+                    [displayDensity]="grid.displayDensity"
                     [removable]="true" (remove)="rowRemoved($event)"
                     (dragLeave)="onDimDragLeave($event)"
                     (dragDrop)="onDimDrop($event, rowArea, 0)"

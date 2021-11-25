@@ -84,6 +84,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         row.enabled = false;
         this.grid.pipeTrigger++;
         this.grid.filteringService.clearFilter(row.memberName);
+        this.grid.dimensionsChange.emit({dimensions: this.grid.pivotConfiguration.rows, dimensionCollectionType: PivotDimensionType.Row});
     }
 
     public columnRemoved(event: IBaseChipEventArgs) {
@@ -92,6 +93,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         this.grid.setupColumns();
         this.grid.filteringService.clearFilter(col.memberName);
         this.grid.pipeTrigger++;
+        this.grid.dimensionsChange.emit({dimensions: this.grid.pivotConfiguration.columns, dimensionCollectionType: PivotDimensionType.Row});
     }
 
     public valueRemoved(event: IBaseChipEventArgs) {
@@ -99,6 +101,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         value.enabled = false;
         this.grid.setupColumns();
         this.grid.pipeTrigger++;
+        this.grid.valuesChange.emit({values: this.grid.pivotConfiguration.values});
     }
 
     public filterRemoved(event: IBaseChipEventArgs) {
@@ -106,6 +109,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         filter.enabled = false;
         this.grid.filteringService.clearFilter(filter.memberName);
         this.grid.pipeTrigger++;
+        this.grid.dimensionsChange.emit({dimensions: this.grid.pivotConfiguration.filters, dimensionCollectionType: PivotDimensionType.Filter});
     }
 
     public onFilteringIconPointerDown(event) {
@@ -243,6 +247,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             currentDim.splice(dragChipIndex, 1);
             currentDim.splice(dragChipIndex > chipIndex ? chipIndex : chipIndex - 1, 0, newDim);
             this.grid.setupColumns();
+            this.grid.valuesChange.emit({values: this.grid.pivotConfiguration.values});
         }
     }
 
@@ -299,6 +304,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             this.grid.setupColumns();
         }
         this.grid.pipeTrigger++;
+        this.grid.dimensionsChange.emit({dimensions: currentDim, dimensionCollectionType: dimension});
     }
 
     protected getDimensionsByType(dimension: PivotDimensionType) {
