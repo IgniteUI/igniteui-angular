@@ -4,7 +4,8 @@ import {
     IgxPivotGridComponent,
     IPivotConfiguration,
     PivotAggregation,
-    IgxPivotDateDimension
+    IgxPivotDateDimension,
+    DisplayDensity
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -41,6 +42,9 @@ export class IgxTotalSaleAggregate {
 })
 export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
+    public comfortable: DisplayDensity = DisplayDensity.comfortable;
+    public cosy: DisplayDensity = DisplayDensity.cosy;
+    public compact: DisplayDensity = DisplayDensity.compact;
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
@@ -71,6 +75,10 @@ export class PivotGridSampleComponent {
                     memberName: 'ProductCategory',
                     enabled: true
                 }
+            },
+            {
+                memberName: 'SellerName',
+                enabled: true
             }
         ],
         values: [
@@ -80,7 +88,7 @@ export class PivotGridSampleComponent {
                     key: 'SUM',
                     aggregator: IgxPivotNumericAggregate.sum,
                     label: 'Sum'
-                 },
+                },
                 enabled: true,
                 styles: {
                     upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
@@ -101,11 +109,11 @@ export class PivotGridSampleComponent {
                     key: 'SUM',
                     aggregator: IgxTotalSaleAggregate.totalSale,
                     label: 'Sum of Sale'
-                },{
+                }, {
                     key: 'MIN',
                     aggregator: IgxTotalSaleAggregate.totalMin,
                     label: 'Minimum of Sale'
-                },{
+                }, {
                     key: 'MAX',
                     aggregator: IgxTotalSaleAggregate.totalMax,
                     label: 'Maximum of Sale'
@@ -149,5 +157,10 @@ export class PivotGridSampleComponent {
         {
             ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
             Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
-        }];
+        }
+    ];
+
+    public setDensity(density: DisplayDensity) {
+        this.grid1.displayDensity = density;
+    }
 }
