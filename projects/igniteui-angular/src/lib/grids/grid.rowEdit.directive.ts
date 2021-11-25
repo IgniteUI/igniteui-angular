@@ -1,5 +1,5 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
-import { GridBaseAPIService } from './api.service';
+import { Directive, ElementRef, HostListener, Inject } from '@angular/core';
+import { GridType, IGX_GRID_BASE } from './common/grid.interface';
 
 /** @hidden @internal */
 @Directive({
@@ -34,11 +34,7 @@ export class IgxRowEditActionsDirective { }
 export class IgxRowEditTabStopDirective {
     private currentCellIndex: number;
 
-    public get grid() {
-        return this.api.grid;
-    }
-
-    constructor(public api: GridBaseAPIService<any>, public element: ElementRef) {}
+    constructor(@Inject(IGX_GRID_BASE) public grid: GridType, public element: ElementRef<HTMLElement>) {}
 
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])

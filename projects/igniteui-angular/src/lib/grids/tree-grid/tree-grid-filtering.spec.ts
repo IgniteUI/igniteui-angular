@@ -285,7 +285,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
         const formattedStrategy = new TreeGridFormattedValuesFilteringStrategy();
         grid.filterStrategy = formattedStrategy;
         const idFormatter = (val: number): number => val % 2;
-        grid.columns[0].formatter = idFormatter;
+        grid.columnList.get(0).formatter = idFormatter;
         fix.detectChanges();
 
         grid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('equals'));
@@ -322,8 +322,8 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
         grid.data = newData;
         grid.allowFiltering = true;
         grid.filterMode = FilterMode.excelStyleFilter;
-        grid.columns[2].formatter = idFormatter;
-        grid.columns[2].dataType = 'string';
+        grid.columnList.get(2).formatter = idFormatter;
+        grid.columnList.get(2).dataType = 'string';
         fix.detectChanges();
 
         GridFunctions.clickExcelFilterIcon(fix, 'HireDate');

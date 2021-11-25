@@ -1,13 +1,11 @@
 import { Component, HostBinding } from '@angular/core';
-import { IgxColumnComponent } from '../../columns/column.component';
-import { IgxColumnGroupComponent } from '../../columns/column-group.component';
-import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
+import { ColumnType } from '../../common/grid.interface';
+import { BaseFilteringComponent } from './base-filtering.component';
 
 /**
  * A component used for presenting Excel style column moving UI.
  */
 @Component({
-    preserveWhitespaces: false,
     selector: 'igx-excel-style-moving',
     templateUrl: './excel-style-moving.component.html'
 })
@@ -18,10 +16,10 @@ export class IgxExcelStyleMovingComponent {
     @HostBinding('class.igx-excel-filter__move')
     public defaultClass = true;
 
-    constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
+    constructor(public esf: BaseFilteringComponent) { }
 
     private get visibleColumns() {
-        return this.esf.grid.visibleColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
+        return this.esf.grid.visibleColumns.filter(col => !col.columnGroup);
     }
 
     /**
@@ -73,7 +71,7 @@ export class IgxExcelStyleMovingComponent {
         this.esf.grid.moveColumn(this.esf.column, targetColumn, moveDirection);
     }
 
-    private findColumn(moveDirection: number, columns: IgxColumnComponent[]) {
+    private findColumn(moveDirection: number, columns: ColumnType[]) {
         let index = columns.indexOf(this.esf.column);
         if (moveDirection === 0) {
             while (index > 0) {
@@ -82,6 +80,7 @@ export class IgxExcelStyleMovingComponent {
                     return columns[index];
                 }
             }
+            return columns[0];
         } else {
             while (index < columns.length - 1) {
                 index++;

@@ -189,11 +189,16 @@ class ButtonWithAttribsComponent {
     `
 })
 class ButtonsWithDisplayDensityComponent {
-    @ViewChild('flat', { read: IgxButtonDirective, static: true }) public flatButton: IgxButtonDirective;
-    @ViewChild('raised', { read: IgxButtonDirective, static: true }) public raisedButton: IgxButtonDirective;
-    @ViewChild('outlined', { read: IgxButtonDirective, static: true }) public outlinedButton: IgxButtonDirective;
-    @ViewChild('fab', { read: IgxButtonDirective, static: true }) public fabButton: IgxButtonDirective;
-    @ViewChild('icon', { read: IgxButtonDirective, static: true }) public iconButton: IgxButtonDirective;
+    @ViewChild('flat', { read: IgxButtonDirective, static: true })
+    public flatButton: IgxButtonDirective;
+    @ViewChild('raised', { read: IgxButtonDirective, static: true })
+    public raisedButton: IgxButtonDirective;
+    @ViewChild('outlined', { read: IgxButtonDirective, static: true })
+    public outlinedButton: IgxButtonDirective;
+    @ViewChild('fab', { read: IgxButtonDirective, static: true })
+    public fabButton: IgxButtonDirective;
+    @ViewChild('icon', { read: IgxButtonDirective, static: true })
+    public iconButton: IgxButtonDirective;
 
     public density: DisplayDensity = DisplayDensity.comfortable;
 }

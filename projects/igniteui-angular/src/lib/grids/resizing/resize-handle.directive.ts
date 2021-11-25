@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, takeUntil} from 'rxjs/operators';
-import { IgxColumnComponent } from '../columns/column.component';
+import { ColumnType } from '../common/grid.interface';
 import { IgxColumnResizingService } from './resizing.service';
 
 
@@ -17,16 +17,14 @@ import { IgxColumnResizingService } from './resizing.service';
  * @hidden
  * @internal
  */
-@Directive({
-    selector: '[igxResizeHandle]'
-})
+@Directive({ selector: '[igxResizeHandle]' })
 export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
 
     /**
      * @hidden
      */
     @Input('igxResizeHandle')
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     /**
      * @hidden

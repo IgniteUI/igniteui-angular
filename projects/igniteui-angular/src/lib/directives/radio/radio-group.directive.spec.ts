@@ -237,9 +237,9 @@ class RadioGroupComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 }
 
-class Person {
-    public name: string;
-    public favoriteSeason: string;
+interface Person {
+    name: string;
+    favoriteSeason: string;
 }
 
 @Component({

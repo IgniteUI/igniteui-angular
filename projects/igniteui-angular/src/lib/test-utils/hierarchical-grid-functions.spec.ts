@@ -43,7 +43,7 @@ export class HierarchicalGridFunctions {
      *
      * @param row the row instance to check for expander
      */
-    public static hasExpander(row: IgxRowDirective<any>): boolean {
+    public static hasExpander(row: IgxRowDirective): boolean {
         return row.nativeElement.children[0].classList.contains(EXPANDER_CLASS);
     }
 

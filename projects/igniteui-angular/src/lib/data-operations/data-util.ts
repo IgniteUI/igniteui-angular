@@ -1,7 +1,5 @@
 import { IFilteringState } from './filtering-state.interface';
 
-import { IgxSorting, IgxDataRecordSorting, IGridSortingStrategy } from './sorting-strategy';
-import { IgxGrouping } from './grouping-strategy';
 import { IGroupByResult } from './grouping-result.interface';
 
 import { IPagingState, PagingError } from './paging-state.interface';
@@ -9,14 +7,20 @@ import { IPagingState, PagingError } from './paging-state.interface';
 import { IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { ISortingExpression } from './sorting-expression.interface';
 import { FilteringStrategy } from './filtering-strategy';
-import { IGridGroupingStrategy } from './grouping-strategy';
-import { ITreeGridRecord } from '../grids/tree-grid/public_api';
 import { cloneValue, mergeObjects, mkenum } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
+import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
+import { ISortingExpression } from './sorting-strategy';
+import {
+    IGridSortingStrategy,
+    IGridGroupingStrategy,
+    IgxDataRecordSorting,
+    IgxSorting,
+    IgxGrouping
+} from '../grids/common/strategy';
 
 /**
  * @hidden
@@ -64,7 +68,7 @@ export class DataUtil {
 
     public static cloneTreeGridRecord(hierarchicalRecord: ITreeGridRecord) {
         const rec: ITreeGridRecord = {
-            rowID: hierarchicalRecord.rowID,
+            key: hierarchicalRecord.key,
             data: hierarchicalRecord.data,
             children: hierarchicalRecord.children,
             isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,

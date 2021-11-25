@@ -80,7 +80,7 @@ export class IgxTextSelectionDirective {
      * @hidden
      */
     @HostListener('focus')
-    public nFocus() {
+    public onFocus() {
         this.trigger();
     }
 

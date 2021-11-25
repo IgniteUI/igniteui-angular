@@ -12,12 +12,11 @@ import {
     ROW_ADD_KEYS,
     PlatformUtil
 } from '../core/utils';
-import { IgxGridBaseDirective } from './grid-base.directive';
-import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
+import { IMultiRowLayoutNode } from './common/types';
+import { SortingDirection } from '../data-operations/sorting-strategy';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -34,7 +33,7 @@ export interface IActiveNode {
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
-    public grid: IgxGridBaseDirective & GridType;
+    public grid: GridType;
     public _activeNode: IActiveNode = {} as IActiveNode;
     public lastActiveNode: IActiveNode = {} as IActiveNode;
     protected pendingNavigation = false;
@@ -421,9 +420,9 @@ export class IgxGridNavigationService {
                 if (this.grid.isRowSelectable && rowObj) {
                     if (this.isDataRow(rowIndex)) {
                         if (rowObj.selected) {
-                            this.grid.selectionService.deselectRow(rowObj.rowID, event);
+                            this.grid.selectionService.deselectRow(rowObj.key, event);
                         } else {
-                            this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
+                            this.grid.selectionService.selectRowById(rowObj.key, false, event);
                         }
                     }
                     if (this.isGroupRow(rowIndex)) {
@@ -503,7 +502,7 @@ export class IgxGridNavigationService {
     protected handleAlt(key: string, event: KeyboardEvent) {
         event.preventDefault();
         // todo TODO ROW
-        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row) as any;
+        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
 
         if (!(this.isToggleKey(key) || this.isAddKey(key)) || !row) {
             return;
@@ -520,16 +519,18 @@ export class IgxGridNavigationService {
                 this.grid.crudService.enterAddRowMode(row, false, event);
             }
         } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
-            if (row.rowID === undefined) {
-                row.toggle();
+            if (row.key === undefined) {
+                // TODO use expanded row.expanded = !row.expanded;
+                (row as any).toggle();
             } else {
-                this.grid.gridAPI.set_row_expansion_state(row.rowID, true, event);
+                this.grid.gridAPI.set_row_expansion_state(row.key, true, event);
             }
         } else if (row.expanded && ROW_COLLAPSE_KEYS.has(key)) {
-            if (row.rowID === undefined) {
-                row.toggle();
+            if (row.key === undefined) {
+                // TODO use expanded row.expanded = !row.expanded;
+                (row as any).toggle();
             } else {
-                this.grid.gridAPI.set_row_expansion_state(row.rowID, false, event);
+                this.grid.gridAPI.set_row_expansion_state(row.key, false, event);
             }
         }
         this.grid.notifyChanges();

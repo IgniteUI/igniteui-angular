@@ -10,7 +10,8 @@ import {
     IgxSummaryResult,
     IgxGroupByRow,
     IgxSummaryRow,
-    IgxGridRow
+    IgxGridRow,
+    IColumnPipeArgs
 } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -27,11 +28,10 @@ import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IColumnPipeArgs } from 'igniteui-angular';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Summaries #grid', () => {
 
@@ -216,7 +216,7 @@ describe('IgxGrid - Summaries #grid', () => {
             });
 
             it('Last column summary cell should be aligned according to its data cells', fakeAsync(/** height/width setter rAF */() => {
-                grid.columns.forEach(c => {
+                grid.columnList.forEach(c => {
                     c.width = '150px';
                 });
                 grid.getColumnByName('UnitsInStock').hasSummary = true;
@@ -1327,7 +1327,7 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(summaryRow4.isSummaryRow).toBe(true);
             // Check rowID, rowData, data, disabled
             expect(summaryRow4.key).toBeUndefined();
-            expect(summaryRow4.rowData).toBeUndefined();
+            expect(summaryRow4.data).toBeUndefined();
             expect(summaryRow4.data).toBeUndefined();
             expect(summaryRow4.pinned).toBeUndefined();
             expect(summaryRow4.selected).toBeUndefined();
@@ -2505,7 +2505,7 @@ class AllDataAvgSummary extends IgxSummaryOperand {
         super();
     }
 
-    public operate(data: any[], allData = [], fieldName = ''): IgxSummaryResult[] {
+    public operate(data: any[], _allData = [], fieldName = ''): IgxSummaryResult[] {
         const result = super.operate(data);
         if (fieldName === 'UnitsInStock') {
             result.push({
