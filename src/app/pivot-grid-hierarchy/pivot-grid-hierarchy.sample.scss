@@ -1,3 +1,8 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
 :host ::ng-deep {
     .upFont {
         color: green;

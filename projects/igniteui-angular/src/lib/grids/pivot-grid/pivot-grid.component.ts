@@ -276,10 +276,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public dragRowID = null;
 
-    protected _defaultExpandState = true;
+    protected _defaultExpandState = false;
     private _data;
     private _filteredData;
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
+
+
+     /**
+     * Gets/Sets the default expand state for all rows.
+     */
+      @Input()
+      public get defaultExpandState() {
+          return this._defaultExpandState;
+      }
+  
+      public set defaultExpandState(val: boolean) {
+          this._defaultExpandState = val;
+      }
 
     /**
      * @hidden @internal
