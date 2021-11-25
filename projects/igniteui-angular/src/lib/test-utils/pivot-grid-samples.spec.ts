@@ -102,7 +102,7 @@ export class IgxPivotGridTestBaseComponent {
 
 @Component({
     template: `
-    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy">
+    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy" [defaultExpandState]="true">
     </igx-pivot-grid>`
 })
 export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseComponent {

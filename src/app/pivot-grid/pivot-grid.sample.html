@@ -14,6 +14,7 @@
 <igx-pivot-grid
     #grid1 [data]="origData"
     [pivotConfiguration]="pivotConfigHierarchy"
-    (dimensionsChange)='dimensionChange($event)'>
+    (dimensionsChange)='dimensionChange($event)'
+    [defaultExpandState]='true'>
 </igx-pivot-grid>
 
