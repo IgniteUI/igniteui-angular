@@ -922,7 +922,7 @@ describe('IgxSimpleCombo', () => {
             const item1 = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
             expect(item1).toBeDefined();
 
-            UIInteractions.simulateClickEvent(item1.nativeElement);
+            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
 
             expect(combo.close).toHaveBeenCalledTimes(1);
@@ -938,7 +938,7 @@ describe('IgxSimpleCombo', () => {
             const toggleButton = fixture.debugElement.query(By.directive(IgxIconComponent));
             expect(toggleButton).toBeDefined();
 
-            UIInteractions.simulateClickEvent(toggleButton.nativeElement);
+            toggleButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
 
             expect(combo.onClick).toHaveBeenCalledTimes(1);
@@ -951,11 +951,12 @@ describe('IgxSimpleCombo', () => {
 
             spyOn(combo, 'close').and.callThrough();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', input);
+            tick();
             fixture.detectChanges();
             expect(document.activeElement).toHaveClass('igx-combo__content');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', input, true, true);
             fixture.detectChanges();
             expect(combo.close).toHaveBeenCalledTimes(1);
         }));
@@ -977,37 +978,37 @@ describe('IgxSimpleCombo', () => {
             combo.select('Wisconsin');
             fixture.detectChanges();
 
-            input.nativeElement.focus();
+            input.triggerEventHandler('focus', {});
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('Backspace', input.nativeElement);
+            UIInteractions.triggerEventHandlerKeyDown('Backspace', input);
             fixture.detectChanges();
             expect(combo.selection.length).toEqual(0);
 
-            input.nativeElement.blur();
+            input.triggerEventHandler('blur', {});
             fixture.detectChanges();
 
             combo.select('Wisconsin');
             fixture.detectChanges();
 
-            input.nativeElement.focus();
+            input.triggerEventHandler('focus', {});
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('Backspace', input.nativeElement);
+            UIInteractions.triggerEventHandlerKeyDown('Backspace', input);
             fixture.detectChanges();
             expect(combo.selection.length).toEqual(0);
         }));
 
-        it('should close the dropdown (if opened) when tabbing outside of the input', fakeAsync(() => {
+        it('should close the dropdown (if opened) when tabbing outside of the input', () => {
             combo.open();
             fixture.detectChanges();
 
             spyOn(combo, 'close').and.callThrough();
 
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', input.nativeElement);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
             fixture.detectChanges();
             expect(combo.close).toHaveBeenCalledTimes(1);
-        }));
+        });
     });
 
     describe('Display density', () => {
