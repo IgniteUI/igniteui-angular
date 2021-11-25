@@ -1,3 +1,8 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
 :host ::ng-deep {
     .upFont {
         color: green;
@@ -16,6 +21,6 @@
     }
 
     .sample-column {
-        max-width: 900px;
+        max-width: 1200px;
     }
 }
