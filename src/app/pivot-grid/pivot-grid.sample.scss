@@ -1,6 +1,6 @@
-.sample-column {
-    height: calc(100vh - 106px);
-    margin: 0 0 0 0 !important;
+:host {
+    display: block;
+    height: 100%;
 }
 
 .density-chooser {
