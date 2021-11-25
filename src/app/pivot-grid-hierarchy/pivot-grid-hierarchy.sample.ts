@@ -26,28 +26,30 @@ export class PivotGridHierarchySampleComponent {
             }
         },
         ],
-        rows: [{
-            memberName: 'AllSeller',
-            memberFunction: () => 'All Seller',
-            enabled: true,
-            childLevel:
+        rows: [
             {
                 memberName: 'Seller',
                 memberFunction: (data) => data.Seller.Name,
                 enabled: true,
-            }
-        },
-        {
-            memberName: 'AllCity',
-            memberFunction: () => 'All City',
-            enabled: true,
-            childLevel:
+            },
+            {
+                memberName: 'All',
+                memberFunction: () => 'All',
+                enabled: true,
+                childLevel:
+                {
+
+                    memberName: 'Product',
+                    memberFunction: (data) => data.Product.Name,
+                    enabled: true
+
+                }
+            },
             {
                 memberName: 'City',
                 memberFunction: (data) => data.Seller.City,
                 enabled: true,
             }
-        }
         ],
         values: [
             {
