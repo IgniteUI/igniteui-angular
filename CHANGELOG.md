@@ -50,6 +50,8 @@ All notable changes for each version of this project will be documented in this 
     - Added `groupSortingDirection` input, which allows you to set groups sorting order.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added new directives for re-templating header sorting indicators - `IgxSortHeaderIconDirective`, `IgxSortAscendingHeaderIconDirective` and `IgxSortDescendingHeaderIconDirective`.
+- `IgxGrid`
+    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
 - `IgxDialog`
     - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
 
@@ -101,8 +103,6 @@ All notable changes for each version of this project will be documented in this 
         ```
     - `IgxColumnActionsComponent`
         - **Breaking Change** -  Input `columns` has been removed. Use `igxGrid` `columns` input instead.
-    - `igxGrid`
-    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
 - `IgxCarousel`
     - **Breaking Changes** - The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
 
@@ -841,7 +841,7 @@ All notable changes for each version of this project will be documented in this 
 
         Changed the how the grid toolbar is instantiated in the grids. The
         toolbar is now templated rather than being activated through a property on the parent grid. The toolbar features are also exposed as templatable
-        components and the old properties are deprecated.
+        components and the old properties are deprecated. The implementation of the Column Hiding UI has been changed in order to select which columns should be displayed, instead of hidden.
 
         Refer to the official documentation for more information.
 - `FilteringStrategy`

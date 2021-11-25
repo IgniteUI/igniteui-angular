@@ -7,46 +7,32 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Generates a base dark grid-toolbar schema.
-/// @type {Map}
-/// @prop {Map} background-color [#222] - The toolbar background color.
-/// @prop {Map} dropdown-background [#222] - The toolbar drop-down background color.
-$base-dark-grid-toolbar: (
-    background-color: #222,
-    dropdown-background: #222
-);
-
 /// Generates a dark grid-toolbar schema based on a mix of $light-grid-toolbar and $base-dark-grid-toolbar.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $light-grid-toolbar
-/// @requires $base-dark-grid-toolbar
 /// @see $default-palette
-$dark-grid-toolbar: extend($light-grid-toolbar, $base-dark-grid-toolbar);
+$dark-grid-toolbar: extend($light-grid-toolbar);
 
 /// Generates a dark fluent grid-toolbar schema based on a mix of $fluent-grid-toolbar and $base-dark-grid-toolbar..
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $fluent-grid-toolbar
-/// @requires $base-dark-grid-toolbar
-$dark-fluent-grid-toolbar: extend($fluent-grid-toolbar, $base-dark-grid-toolbar);
+$dark-fluent-grid-toolbar: extend($fluent-grid-toolbar);
 
 /// Generates a dark bootstrap grid-toolbar schema based on a mix of $bootstrap-grid-toolbar and $base-dark-grid-toolbar..
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $bootstrap-grid-toolbar
-/// @requires $base-dark-grid-toolbar
-$dark-bootstrap-grid-toolbar: extend($bootstrap-grid-toolbar, $base-dark-grid-toolbar);
+$dark-bootstrap-grid-toolbar: extend($bootstrap-grid-toolbar);
 
 /// Generates a dark indigo grid-toolbar schema.
 /// @type {Map}
 /// @property {Map} background-color [igx-color: 'surface'] - The toolbar background color.
 /// @requires {function} extend
 /// @requires $indigo-grid-toolbar
-/// @requires $base-dark-grid-toolbar
 $dark-indigo-grid-toolbar: extend(
     $indigo-grid-toolbar,
-    $base-dark-grid-toolbar,
     (
         background-color: (
             igx-color: 'surface',
