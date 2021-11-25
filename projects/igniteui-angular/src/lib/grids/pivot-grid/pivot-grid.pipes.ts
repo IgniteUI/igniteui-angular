@@ -128,7 +128,7 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
         advancedExpressionsTree: IFilteringExpressionsTree,
         _filterPipeTrigger: number,
         _pipeTrigger: number): any[] {
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
 
         const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
