@@ -1,10 +1,16 @@
 :host {
-    display: block;
+    display: flex;
+    flex-direction: column;
     height: 100%;
 }
 
 .density-chooser {
     margin-bottom: 16px;
+    max-width: 40%;
+}
+
+igx-pivot-grid {
+    flex: 1;
 }
 
 :host ::ng-deep {
