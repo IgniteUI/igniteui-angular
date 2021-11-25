@@ -1,11 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
+import { BaseFilteringComponent } from './base-filtering.component';
 
 /**
  * A component used for presenting Excel style header UI.
  */
 @Component({
-    preserveWhitespaces: false,
     selector: 'igx-excel-style-header',
     templateUrl: './excel-style-header.component.html'
 })
@@ -46,5 +45,5 @@ export class IgxExcelStyleHeaderComponent {
     @Input()
     public showHiding: boolean;
 
-    constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
+    constructor(public esf: BaseFilteringComponent) { }
 }

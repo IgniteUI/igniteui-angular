@@ -1,20 +1,16 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
-import { GridBaseAPIService } from '../api.service';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { DataUtil } from '../../data-operations/data-util';
 import { GridPagingMode } from '../common/enums';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 /**
  * @hidden
  */
-@Pipe({
-    name: 'gridHierarchical',
-    pure: true
-})
+@Pipe({ name: 'gridHierarchical' })
 export class IgxGridHierarchicalPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>) { }
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(
         collection: any,
@@ -23,15 +19,14 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
         primaryKey: any,
         childKeys: string[],
         _pipeTrigger: number
-        ): any[] {
+    ): any[] {
         if (childKeys.length === 0) {
             return collection;
         }
-        const grid: IgxHierarchicalGridComponent = this.gridAPI.grid;
-        if (grid.verticalScrollContainer.isRemote) {
+        if (this.grid.verticalScrollContainer.isRemote) {
             return collection;
         }
-        const result = this.addHierarchy(grid, cloneArray(collection), state, primaryKey, childKeys);
+        const result = this.addHierarchy(this.grid, cloneArray(collection), state, primaryKey, childKeys);
 
         return result;
     }
@@ -47,7 +42,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
                 childGridsData[childKey] = childData;
             });
             if (grid.gridAPI.get_row_expansion_state(v)) {
-                result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridsData});
+                result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridsData });
             }
         });
         return result;
@@ -57,17 +52,14 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({
-    name: 'gridHierarchicalPaging',
-    pure: true
-})
+@Pipe({ name: 'gridHierarchicalPaging' })
 export class IgxGridHierarchicalPagingPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>) { }
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], page = 0, perPage = 15, _id: string, _pipeTrigger: number): any[] {
-        const paginator = this.gridAPI.grid.paginator;
-        if (!paginator || this.gridAPI.grid.pagingMode !== GridPagingMode.Local) {
+        const paginator = this.grid.paginator;
+        if (!paginator || this.grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
 
@@ -76,9 +68,9 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
             recordsPerPage: perPage
         };
 
-        const total = this.gridAPI.grid._totalRecords >= 0 ? this.gridAPI.grid._totalRecords : collection.length;
+        const total = this.grid._totalRecords >= 0 ? this.grid._totalRecords : collection.length;
         const result: any[] = DataUtil.page(cloneArray(collection), state, total);
-        this.gridAPI.grid.pagingState = state;
+        this.grid.pagingState = state;
         return result;
 
     }
