@@ -3,6 +3,10 @@
     height: 100%;
 }
 
+.density-chooser {
+    margin-bottom: 16px;
+}
+
 :host ::ng-deep {
     .upFont {
         color: lightgreen;
