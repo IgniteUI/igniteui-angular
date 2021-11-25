@@ -727,6 +727,22 @@
             }
         }
 
+        @include e(tr-pivot) {
+            @extend %igx-grid__tr-pivot !optional
+        }
+
+        @include e(tr-pivot, $m: 'row-area') {
+            @extend %igx-grid__tr-pivot--row-area !optional
+        }
+
+        @include e(tr-pivot, $m: 'filter') {
+            @extend %igx-grid__tr-pivot--filter !optional
+        }
+
+        @include e(tr-pivot-group) {
+            @extend %igx-grid__tr-pivot-group !optional
+        }
+
         @include excel-filtering-partial();
         @include advanced-filtering-partial();
         @include group-by-area();
