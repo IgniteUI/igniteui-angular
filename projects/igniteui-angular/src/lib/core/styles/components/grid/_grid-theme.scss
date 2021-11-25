@@ -630,16 +630,20 @@
         color: var-get($theme, 'pinned-border-color')
     );
 
+    $padding-comfortable: rem(24px);
+    $padding-cosy: rem(16px);
+    $padding-compact: rem(12px);
+
     $grid-header-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+        comfortable: 0 $padding-comfortable,
+        cosy: 0 $padding-cosy,
+        compact: 0 $padding-compact
     );
 
     $grid-cbx-padding: (
-        comfortable: rem(24px),
-        cosy: rem(16px),
-        compact: rem(12px)
+        comfortable: $padding-comfortable,
+        cosy: $padding-cosy,
+        compact: $padding-compact
     );
 
     $cbx-padding: map.get($grid-cbx-padding, 'comfortable');
@@ -1196,7 +1200,7 @@
     }
 
     %igx-grid__tr--header {
-        display: flex; 
+        display: flex;
         align-items: center;
     }
 
@@ -2865,5 +2869,62 @@
             border-#{$right}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         }
     }
+
+    // Pivot grid
+    %grid-thead--pivot {
+        flex-direction: column;
+    }
+
+    %igx-grid__tr-pivot {
+        display: flex;
+        align-items: center;
+        background: inherit;
+        z-index: 3;
+
+        &:not(&--row-area) {
+            height: map.get($grid-header-height, 'comfortable');
+        }
+
+        padding: map.get($grid-header-padding, 'comfortable');
+        background-clip: border-box !important;
+
+        border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        border-#{$right}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+
+        igx-chips-area {
+            > * {
+                margin-#{$right}: rem(8px);
+            }
+
+            &:last-child {
+                margin-#{$right}: 0;
+            }
+        }
+    }
+
+    %igx-grid__tr-pivot--row-area {
+        align-items: flex-end;
+        padding-bottom: $padding-comfortable;
+        border-#{$left}: 0;
+        border-bottom: 0;
+    }
+
+    %igx-grid__tr-pivot--filter {
+        height: map.get($grid-header-height, 'comfortable');
+        border-left: 0;
+        border-right: 0;
+        border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+    }
+
+    %igx-grid-thead__wrapper--pivot {
+        border-bottom: 0;
+    }
+
+    %igx-grid__tr-pivot-group {
+        flex: 1;
+    }
+    // Pivot grid END
 }
+
 
