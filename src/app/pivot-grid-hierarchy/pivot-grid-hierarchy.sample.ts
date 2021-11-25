@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension } from 'igniteui-angular';
+import { IDimensionsChange, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension } from 'igniteui-angular';
 import { DATA } from '../shared/pivot-data';
 
 @Component({
@@ -100,4 +100,10 @@ export class PivotGridHierarchySampleComponent {
     };
 
     public origData = DATA;
+
+    public dimensionChange(event: IDimensionsChange) {
+        const allDims = this.pivotConfigHierarchy.rows.concat(this.pivotConfigHierarchy.columns).concat(this.pivotConfigHierarchy.filters);
+        const allEnabled = allDims.filter(x => x && x.enabled);
+        this.selected = allEnabled;
+    }
 }

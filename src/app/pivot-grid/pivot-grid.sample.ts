@@ -6,7 +6,8 @@ import {
     IPivotConfiguration,
     PivotAggregation,
     IgxPivotDateDimension,
-    IPivotDimension
+    IPivotDimension,
+    IDimensionsChange
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -185,5 +186,11 @@ export class PivotGridSampleComponent {
                 isColumnChange = dims.some(x => this.pivotConfigHierarchy.columns.indexOf(x) !== -1);
             }
             this.grid1.notifyDimensionChange(isColumnChange);
+        }
+
+        public dimensionChange(event: IDimensionsChange) {
+            const allDims = this.pivotConfigHierarchy.rows.concat(this.pivotConfigHierarchy.columns).concat(this.pivotConfigHierarchy.filters);
+            const allEnabled = allDims.filter(x => x && x.enabled);
+            this.selected = allEnabled;
         }
 }
