@@ -5,12 +5,22 @@
 }
 
 .density-chooser {
-    margin-bottom: 16px;
     max-width: 40%;
 }
 
 igx-pivot-grid {
     flex: 1;
+}
+
+.sample-flex-row {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    > * {
+        flex: 1;
+    }
 }
 
 :host ::ng-deep {
