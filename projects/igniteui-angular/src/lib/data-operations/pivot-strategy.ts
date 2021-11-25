@@ -121,11 +121,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                         delete hierarchy[k];
                     }
                 });
-                delete hierarchy.processed;
-                if (this.isLeaf(hierarchy, pivotKeys)) {
-                    delete hierarchy[pivotKeys.records]; /* remove the helper records of the actual records so that
-                        expand indicators can be rendered properly */
-                }
                 for (const property in flatCols) {
                     if (flatCols.hasOwnProperty(property)) {
                         hierarchy[property] = flatCols[property];
