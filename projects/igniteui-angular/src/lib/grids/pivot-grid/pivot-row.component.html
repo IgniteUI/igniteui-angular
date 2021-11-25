@@ -71,15 +71,14 @@
 
 <ng-template #headerTemplate let-column>
     <div class="igx-grid__tr--header" (click)="this.selectPivotRow(column, $event)">
-        <igx-icon [attr.draggable]="false" (click)="grid.toggleRow(getRowDimensionKey(column))"
-            style='cursor: pointer;'>
+        <igx-icon [attr.draggable]="false" (click)="grid.toggleRow(getRowDimensionKey(column))">
             {{ getExpandState(column) ? 'expand_more' : 'expand_less'}}</igx-icon>
         {{column.header}}
     </div>
 </ng-template>
 
 <ng-template #headerTemplateGray let-column>
-    <div class="igx-grid__tr--header" style='color:gray' (click)="this.selectPivotRow(column, $event)">
+    <div class="igx-grid__tr--header" (click)="this.selectPivotRow(column, $event)">
         {{column.header}}
     </div>
 </ng-template>
