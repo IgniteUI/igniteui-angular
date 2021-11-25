@@ -2,14 +2,9 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 12.2.4
+## 12.3.1
 
 ### General
-- `igxGrid`
-    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
-
-## 12.2.3
-
 - Added `IgxSimpleComboComponent`
     - The `igx-simple-combo` which is a modification of the `igx-combo` component that allows single selection and has the appropriate UI and behavior for that. It inherits most of the `igx-combo`'s API.
     - Allows the selection of single items in a filterable list.
@@ -21,6 +16,14 @@ All notable changes for each version of this project will be documented in this 
         <igx-hint>Please select an item from the dropdown list.</igx-hint>
     </igx-simple-combo>
     ```
+
+## 12.2.4
+
+### General
+- `igxGrid`
+    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
+
+## 12.2.3
 
 ### General
 - **Breaking Change** - `IgxPercentSummaryOperand` and `IgxCurrencySummaryOperand` have been removed and `IgxNumberSummaryOperand` should be used instead. If you have used the percent or currency summary operands to extend a custom summary operand from them, then change the custom operand to extend from the number summary operand.
