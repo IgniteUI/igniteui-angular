@@ -77,6 +77,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
     private cleanState(data, pivotKeys) {
         data.forEach(rec => {
             const keys = Object.keys(rec);
+            delete rec.processed;
             //remove all record keys from final data since we don't need them anymore.
             keys.forEach(k => {
                 if (k.indexOf(pivotKeys.records) !== -1) {

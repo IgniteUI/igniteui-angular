@@ -121,7 +121,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                         delete hierarchy[k];
                     }
                 });
-                delete hierarchy.processed;
                 for (const property in flatCols) {
                     if (flatCols.hasOwnProperty(property)) {
                         hierarchy[property] = flatCols[property];
