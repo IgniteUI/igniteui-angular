@@ -1124,7 +1124,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges()
     @WatchColumnChanges()
-    @Input('summaryTemplate')
+    @Input()
     public get summaryTemplate(): TemplateRef<any> {
         return this._summaryTemplate;
     }
