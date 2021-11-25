@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 12.3.1
+## 12.3.0
 
 ### General
 - Added `IgxSimpleComboComponent`
