@@ -28,8 +28,10 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
     }));
 
     it('should apply formatter and dataType from measures', () => {
-        fixture.detectChanges();
         const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.width = '1500px';
+        fixture.detectChanges();
+
         const actualFormatterValue = pivotGrid.rowList.first.cells.first.title;
         expect(actualFormatterValue).toEqual('774$');
         const actualDataTypeValue = pivotGrid.rowList.first.cells.last.title;
@@ -43,6 +45,67 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(cells.first.nativeElement.classList).toContain('test');
         expect(cells.last.nativeElement.classList).not.toContain('test');
     });
+
+    it('should remove row dimensions from chip', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.pivotConfiguration.rows.push({
+            memberName: 'SellerName',
+            enabled: true
+        });
+        pivotGrid.pipeTrigger++;
+        fixture.detectChanges();
+        expect(pivotGrid.rowDimensions.length).toBe(2);
+        expect(pivotGrid.rowList.first.data['SellerName']).not.toBeUndefined();
+
+        const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        const rowChip = headerRow.querySelector('igx-chip[id="SellerName"]');
+        const removeIcon = rowChip.querySelectorAll('igx-icon')[3];
+        removeIcon.click();
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.rows[1].enabled).toBeFalse();
+        expect(pivotGrid.rowDimensions.length).toBe(1);
+        expect(pivotGrid.rowList.first.data['SellerName']).toBeUndefined();
+
+    });
+
+    it('should remove column dimensions from chip', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        expect(pivotGrid.columns.length).toBe(9);
+        pivotGrid.pivotConfiguration.columns.push({
+            memberName: 'SellerName',
+            enabled: true
+        });
+        pivotGrid.pipeTrigger++;
+        pivotGrid.setupColumns();
+        fixture.detectChanges();
+        expect(pivotGrid.columnDimensions.length).toBe(2);
+        expect(pivotGrid.columns.length).not.toBe(9);
+
+        const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        const rowChip = headerRow.querySelector('igx-chip[id="SellerName"]');
+        const removeIcon = rowChip.querySelectorAll('igx-icon')[3];
+        removeIcon.click();
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.columns[1].enabled).toBeFalse();
+        expect(pivotGrid.columnDimensions.length).toBe(1);
+        expect(pivotGrid.columns.length).toBe(9);
+    });
+
+    it('should remove value from chip', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        expect(pivotGrid.columns.length).toBe(9);
+        expect(pivotGrid.values.length).toBe(2);
+
+        const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        const rowChip = headerRow.querySelector('igx-chip[id="UnitsSold"]');
+        const removeIcon = rowChip.querySelectorAll('igx-icon')[3];
+        removeIcon.click();
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.values[0].enabled).toBeFalse();
+        expect(pivotGrid.values.length).toBe(1);
+        expect(pivotGrid.columns.length).not.toBe(9);
+    });
+
     describe('IgxPivotGrid Features #pivotGrid', () => {
         it('should show excel style filtering via dimension chip.', () => {
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fixture, 'igx-pivot-grid');
@@ -269,8 +332,9 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         });
 
         it('should allow changing default aggregation via value chip drop-down.', () => {
-            fixture.detectChanges();
             const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.width = '1500px';
+            fixture.detectChanges();
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             const valueChip = headerRow.querySelector('igx-chip[id="UnitsSold"]');
             let content = valueChip.querySelector('.igx-chip__content');

@@ -69,13 +69,15 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
             PivotUtil.flattenHierarchy(data, config, row, expansionStates, defaultExpand, pivotKeys, totalLlv, prevDims, 0);
             prevDims.push(row);
         }
-        this.cleanState(data, pivotKeys);
-        return data;
+        const finalData = config.columnStrategy ? data : data.filter(x => x[pivotKeys.records]);
+        this.cleanState(finalData, pivotKeys);
+        return finalData;
     }
 
     private cleanState(data, pivotKeys) {
         data.forEach(rec => {
             const keys = Object.keys(rec);
+            delete rec.processed;
             //remove all record keys from final data since we don't need them anymore.
             keys.forEach(k => {
                 if (k.indexOf(pivotKeys.records) !== -1) {
@@ -128,7 +130,7 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
         advancedExpressionsTree: IFilteringExpressionsTree,
         _filterPipeTrigger: number,
         _pipeTrigger: number): any[] {
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null);
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
 
         const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);

@@ -813,9 +813,9 @@ describe('Pivot pipes', () => {
         ];
 
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
-        const colPipeRes = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
-        const rowStatePipeResult = rowStatePipe.transform(colPipeRes, pivotConfig, expansionStates, true);
-        expect(rowStatePipeResult.length).toEqual(39);
+        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
+        expect(rowStatePipeResult.length).toEqual(31);
         expect(rowStatePipeResult[0]['AllPeriods']).toEqual('All Periods');
         expect(rowStatePipeResult[0]['AllProducts']).toEqual('All');
         expect(rowStatePipeResult[0]['ProductCategory']).not.toBeDefined();

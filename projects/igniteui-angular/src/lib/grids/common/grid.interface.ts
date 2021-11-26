@@ -34,7 +34,7 @@ import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
-import { IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue } from '../pivot-grid/pivot-grid.interface';
+import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange } from '../pivot-grid/pivot-grid.interface';
 
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
@@ -628,6 +628,9 @@ export interface PivotGridType extends GridType {
     setupColumns(): void;
     toggleRow(rowID: any): void;
     resolveDataTypes(field: any): GridColumnDataType;
+    resolveRowDimensionWidth(dim: IPivotDimension): number;
+    dimensionsChange: EventEmitter<IDimensionsChange>;
+    valuesChange: EventEmitter<IValuesChange>;
     pivotKeys: IPivotKeys;
 }
 export interface GridSVGIcon {

@@ -548,9 +548,42 @@
             }
         }
 
+        // Pivot start
+        @include e(tr-pivot) {
+            @extend %igx-grid__tr-pivot !optional
+        }
+
+        @include e(tr-pivot, $m: 'row-area') {
+            @extend %igx-grid__tr-pivot--row-area !optional
+        }
+
+        @include e(tr-pivot, $m: 'filter') {
+            @extend %igx-grid__tr-pivot--filter !optional
+        }
+
+        @include e(tr-pivot-group) {
+            @extend %igx-grid__tr-pivot-group !optional
+        }
+
+        @include e(tr-pivot-toggle-icons) {
+            @extend %igx-grid__tr-pivot-toggle-icons !optional;
+        }
+        // pivot end
 
         @include m(cosy) {
             @extend %grid-display !optional;
+
+            @include e(tr-pivot) {
+                @extend %igx-grid__tr-pivot--cosy !optional
+            }
+
+            @include e(tr-pivot, $m: 'row-area') {
+                @extend %igx-grid__tr-pivot--row-area--cosy !optional
+            }
+
+            @include e(tr-pivot, $m: 'filter') {
+                @extend %igx-grid__tr-pivot--filter--cosy !optional
+            }
 
             @include e(drag-indicator) {
                 @extend %igx-grid__drag-indicator--cosy !optional;
@@ -641,6 +674,18 @@
         @include m(compact) {
             @extend %grid-display !optional;
 
+            @include e(tr-pivot) {
+                @extend %igx-grid__tr-pivot--compact !optional
+            }
+
+            @include e(tr-pivot, $m: 'row-area') {
+                @extend %igx-grid__tr-pivot--row-area--compact !optional
+            }
+
+            @include e(tr-pivot, $m: 'filter') {
+                @extend %igx-grid__tr-pivot--filter--compact !optional
+            }
+
             @include e(drag-indicator) {
                 @extend %igx-grid__drag-indicator--compact !optional;
             }
@@ -725,22 +770,6 @@
             @include e(td, $m: pinned-chip) {
                 @extend %grid-cell--pinned-chip--compact !optional;
             }
-        }
-
-        @include e(tr-pivot) {
-            @extend %igx-grid__tr-pivot !optional
-        }
-
-        @include e(tr-pivot, $m: 'row-area') {
-            @extend %igx-grid__tr-pivot--row-area !optional
-        }
-
-        @include e(tr-pivot, $m: 'filter') {
-            @extend %igx-grid__tr-pivot--filter !optional
-        }
-
-        @include e(tr-pivot-group) {
-            @extend %igx-grid__tr-pivot-group !optional
         }
 
         @include excel-filtering-partial();
