@@ -323,28 +323,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Get a reference to the grid that contains the selected row.
-     *
-     * ```typescript
-     * handleRowSelection(event) {
-     *  // the grid on which the rowSelected event was triggered
-     *  const grid = event.row.grid;
-     * }
-     * ```
-     *
-     * ```html
-     *  <igx-grid
-     *    [data]="data"
-     *    (rowSelected)="handleRowSelection($event)">
-     *  </igx-grid>
-     * ```
-     */
-    public get grid(): T {
-        return this.gridAPI.grid;
-    }
-
-     * Gets the ID of the row.
+     /* Gets the ID of the row.
      * A row in the grid is identified either by:
      * - primaryKey data value,
      * - the whole data, if the primaryKey is omitted.

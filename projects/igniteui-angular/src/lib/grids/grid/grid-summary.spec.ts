@@ -987,7 +987,6 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(cell.selected).toBe(true);
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
 
-            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
             fix.detectChanges();
 

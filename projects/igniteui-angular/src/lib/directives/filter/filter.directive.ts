@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
     Directive,
-    ElementRef,
     EventEmitter,
     Input,
     NgModule,
@@ -9,7 +8,6 @@ import {
     Output,
     Pipe,
     PipeTransform,
-    Renderer2,
     SimpleChanges
 } from '@angular/core';
 
