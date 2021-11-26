@@ -3,8 +3,8 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPivotGridModule } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxPivotGridTestBaseComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
@@ -28,8 +28,10 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
     }));
 
     it('should apply formatter and dataType from measures', () => {
-        fixture.detectChanges();
         const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.width = '1500px';
+        fixture.detectChanges();
+
         const actualFormatterValue = pivotGrid.rowList.first.cells.first.title;
         expect(actualFormatterValue).toEqual('774$');
         const actualDataTypeValue = pivotGrid.rowList.first.cells.last.title;
@@ -330,8 +332,9 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         });
 
         it('should allow changing default aggregation via value chip drop-down.', () => {
-            fixture.detectChanges();
             const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.width = '1500px';
+            fixture.detectChanges();
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             const valueChip = headerRow.querySelector('igx-chip[id="UnitsSold"]');
             let content = valueChip.querySelector('.igx-chip__content');
@@ -404,5 +407,132 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'USA').value).toBe(0);
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Uruguay').value).toBe(242.08);
         });
+    });
+});
+
+describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
+    let fixture;
+    configureTestSuite((() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxPivotGridTestComplexHierarchyComponent
+            ],
+            imports: [
+                NoopAnimationsModule, IgxPivotGridModule]
+        });
+    }));
+
+    beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+        fixture.detectChanges();
+    }));
+
+    it('should select/deselect the correct row', () => {
+        fixture.detectChanges();
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        const pivotRows = GridFunctions.getPivotRows(fixture);
+        const row = pivotRows[2].componentInstance;
+        row.selectPivotRow(row.rowDimensionData[1].column);
+        fixture.detectChanges();
+        expect(row.selected).toBeTrue();
+        expect(pivotGrid.selectedRows).not.toBeNull();
+        expect(pivotGrid.selectedRows.length).toBe(1);
+        const expected =
+        {
+            'All cities': 'All Cities', 'All cities_level': 0,
+            ProductCategory: 'Clothing', ProductCategory_level: 1,
+            'Bulgaria-AmountOfSale': 3612.42, 'Bulgaria-UnitsSold': 282,
+            'US-AmountOfSale': 14672.72, 'US-UnitsSold': 296,
+            'Uruguay-AmountOfSale': 31158.48, 'Uruguay-UnitsSold': 456
+        };
+        expect(pivotGrid.selectedRows[0]).toEqual(expected);
+
+        //deselect
+        row.selectPivotRow(row.rowDimensionData[1].column);
+        fixture.detectChanges();
+        expect(row.selected).toBeFalse();
+        expect(pivotGrid.selectedRows.length).toBe(0);
+    });
+
+    it('should select/deselect the correct group of rows', () => {
+        fixture.detectChanges();
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        const pivotRows = GridFunctions.getPivotRows(fixture);
+        const row = pivotRows[2].componentInstance;
+        row.selectPivotRow(row.rowDimensionData[0].column);
+        fixture.detectChanges();
+        for (let i = 0; i < 5; ++i) {
+            expect(pivotRows[i].componentInstance.selected).toBeTrue();
+        }
+        expect(pivotGrid.selectedRows).not.toBeNull();
+        expect(pivotGrid.selectedRows.length).toBe(5);
+        const expected =
+            [
+                {
+                    AllProducts: 'AllProducts', 'All cities': 'All Cities',
+                    'All cities_level': 0, AllProducts_level: 0, 'Bulgaria-UnitsSold': 774,
+                    'Bulgaria-AmountOfSale': 11509.02, 'US-UnitsSold': 296, 'US-AmountOfSale': 14672.72,
+                    'Uruguay-UnitsSold': 524, 'Uruguay-AmountOfSale': 31400.56,
+                    'UK-UnitsSold': 293, 'UK-AmountOfSale': 25074.94,
+                    'Japan-UnitsSold': 240, 'Japan-AmountOfSale': 4351.2,
+                }, {
+                    ProductCategory: 'Bikes', 'All cities': 'All Cities',
+                    ProductCategory_level: 1, 'All cities_level': 0,
+                    'Uruguay-UnitsSold': 68, 'Uruguay-AmountOfSale': 242.08,
+                    City: 'Ciudad de la Costa', Country: 'Uruguay',
+                    Date: '01/06/2011', SellerName: 'Lydia Burson',
+                    UnitPrice: 3.56, UnitsSold: 68
+                }, {
+                    ProductCategory: 'Clothing', 'All cities': 'All Cities',
+                    ProductCategory_level: 1, 'All cities_level': 0, 'Bulgaria-UnitsSold': 282,
+                    'Bulgaria-AmountOfSale': 3612.42, 'US-UnitsSold': 296, 'US-AmountOfSale': 14672.72,
+                    'Uruguay-UnitsSold': 456, 'Uruguay-AmountOfSale': 31158.48
+                }, {
+                    ProductCategory: 'Accessories', 'All cities': 'All Cities',
+                    ProductCategory_level: 1, 'All cities_level': 0,
+                    'UK-UnitsSold': 293, 'UK-AmountOfSale': 25074.94,
+                    City: 'London', Country: 'UK', Date: '04/07/2012',
+                    SellerName: 'David Haley', UnitPrice: 85.58, UnitsSold: 293
+                }, {
+                    ProductCategory: 'Components', 'All cities': 'All Cities',
+                    ProductCategory_level: 1, 'All cities_level': 0,
+                    'Japan-UnitsSold': 240, 'Japan-AmountOfSale': 4351.2,
+                    'Bulgaria-UnitsSold': 492, 'Bulgaria-AmountOfSale': 7896.6
+                }
+            ];
+        expect(pivotGrid.selectedRows).toEqual(expected);
+    });
+
+    it('should select/deselect the correct column', () => {
+        fixture.detectChanges();
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        const unitsSold = pivotGrid.getColumnByName('Bulgaria-UnitsSold');
+        GridFunctions.clickColumnHeaderUI('Bulgaria-UnitsSold', fixture);
+        GridSelectionFunctions.verifyColumnAndCellsSelected(unitsSold);
+    });
+
+    it('should select/deselect the correct column group', () => {
+        fixture.detectChanges();
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        const group = GridFunctions.getColGroup(pivotGrid, 'Bulgaria');
+        const unitsSold = pivotGrid.getColumnByName('Bulgaria-UnitsSold');
+        const amountOfSale = pivotGrid.getColumnByName('Bulgaria-AmountOfSale');
+        const unitsSoldUSA = pivotGrid.getColumnByName('US-UnitsSold');
+        const amountOfSaleUSA = pivotGrid.getColumnByName('US-AmountOfSale');
+
+        GridFunctions.clickColumnGroupHeaderUI('Bulgaria', fixture);
+        fixture.detectChanges();
+
+        GridSelectionFunctions.verifyColumnSelected(unitsSold);
+        GridSelectionFunctions.verifyColumnSelected(amountOfSale);
+        GridSelectionFunctions.verifyColumnGroupSelected(fixture, group);
+
+        GridSelectionFunctions.verifyColumnsSelected([unitsSoldUSA, amountOfSaleUSA], false);
+
+        GridFunctions.clickColumnGroupHeaderUI('Bulgaria', fixture);
+
+        GridSelectionFunctions.verifyColumnSelected(unitsSold, false);
+        GridSelectionFunctions.verifyColumnSelected(amountOfSale, false);
+        GridSelectionFunctions.verifyColumnGroupSelected(fixture, group, false);
     });
 });

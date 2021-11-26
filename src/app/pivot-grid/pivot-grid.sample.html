@@ -10,11 +10,10 @@
             <button igxButton [disabled]="grid1.displayDensity === compact" (click)="setDensity('compact')">Compact</button>
         </igx-buttongroup>
     </div>
+    <igx-pivot-grid #grid1 [data]="origData" [width]="'100%'" [height]="'100%'" [defaultExpandState]='true'
+        [pivotConfiguration]="pivotConfigHierarchy" [rowSelection]="'single'" [columnSelection]="'single'"
+        (dimensionsChange)='dimensionChange($event)'
+        [cellSelection]="'single'">
+    </igx-pivot-grid>
 </div>
-<igx-pivot-grid
-    #grid1 [data]="origData"
-    [pivotConfiguration]="pivotConfigHierarchy"
-    (dimensionsChange)='dimensionChange($event)'
-    [defaultExpandState]='true'>
-</igx-pivot-grid>
 

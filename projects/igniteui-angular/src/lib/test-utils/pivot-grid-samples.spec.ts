@@ -5,7 +5,8 @@ import { IPivotConfiguration, PivotAggregation } from '../grids/pivot-grid/pivot
 
 @Component({
     template: `
-    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy" [defaultExpandState]='defaultExpand'>
+    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
+        [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]='defaultExpand'>
     </igx-pivot-grid>`
 })
 export class IgxPivotGridTestBaseComponent {
@@ -84,7 +85,7 @@ export class IgxPivotGridTestBaseComponent {
                 },
                 {
                     member: 'UnitPrice',
-                    aggregate:{
+                    aggregate: {
                         aggregator: IgxPivotNumericAggregate.sum,
                         key: 'SUM',
                         label: 'Sum',
@@ -102,63 +103,97 @@ export class IgxPivotGridTestBaseComponent {
 
 @Component({
     template: `
-    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy" [defaultExpandState]="true">
+    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
+        [rowSelection]="'single'" [columnSelection]="'single'"
+        [defaultExpandState]='defaultExpand'>
     </igx-pivot-grid>`
 })
-export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseComponent {
-
-
+export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestBaseComponent {
+    public defaultExpand = true;
     constructor() {
         super();
-        this.pivotConfigHierarchy = {
-            columns: [{
-                memberName: 'SellerName',
-                enabled: true
+        this.data = [
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley Brooker',
+                Country: 'Bulgaria', City: 'Plovdiv', Date: '01/01/2012', UnitsSold: 282
             },
-            ],
+            {
+                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa Longbottom',
+                Country: 'US', City: 'New York', Date: '01/05/2013', UnitsSold: 296
+            },
+            {
+                ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia Burson',
+                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2011', UnitsSold: 68
+            },
+            {
+                ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David Haley',
+                Country: 'UK', City: 'London', Date: '04/07/2012', UnitsSold: 293
+            },
+            {
+                ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John Smith',
+                Country: 'Japan', City: 'Yokohama', Date: '12/08/2012', UnitsSold: 240
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry Lieb',
+                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2011', UnitsSold: 456
+            },
+            {
+                ProductCategory: 'Components', UnitPrice: 16.05, SellerName: 'Walter Pang',
+                Country: 'Bulgaria', City: 'Sofia', Date: '02/19/2013', UnitsSold: 492
+            }];
+        this.pivotConfigHierarchy = {
+            columns: [
+
+                {
+                    memberName: 'Country',
+                    enabled: true
+                }
+            ]
+            ,
             rows: [{
-                memberName: 'All',
-                memberFunction: () => 'All',
+                memberName: 'All cities',
+                memberFunction: () => 'All Cities',
                 enabled: true,
                 childLevel: {
-                    memberName: 'ProductCategory',
-                    memberFunction: (data) => data.ProductCategory,
+                    memberName: 'City',
                     enabled: true
                 }
             }, {
-                memberName: 'Country',
-                enabled: true
-            }, {
-                memberName: 'Date',
-                enabled: true
+                memberFunction: () => 'AllProducts',
+                memberName: 'AllProducts',
+                enabled: true,
+                childLevel:
+                {
+                    memberFunction: (data) => data.ProductCategory,
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
             }],
             values: [
                 {
                     member: 'UnitsSold',
                     aggregate: {
                         aggregator: IgxPivotNumericAggregate.sum,
-                        key: 'UnitsSoldSUM',
-                        label: 'Sum of Units Sold'
+                        key: 'SUM',
+                        label: 'Sum'
                     },
-                    enabled: true,
-                    // dataType: 'currency',
-                    formatter: (value) => value ? value + '$' : undefined
+                    enabled: true
                 },
                 {
-                    member: 'UnitPrice',
+                    member: 'AmountOfSale',
+                    displayName: 'Amount of Sale',
                     aggregate: {
-                        aggregator: IgxPivotNumericAggregate.sum,
-                        key: 'UnitPriceSUM',
-                        label: 'Sum of Unit Price'
+                        aggregator: IgxTotalSaleAggregate.totalSale,
+                        key: 'TOTAL',
+                        label: 'Total'
                     },
-                    enabled: true,
-                    dataType: 'currency'
+                    enabled: true
                 }
-            ],
-            filters: null
+            ]
         };
     }
 }
+
 export class IgxTotalSaleAggregate {
     public static totalSale: PivotAggregation = (members, data: any) =>
         data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
