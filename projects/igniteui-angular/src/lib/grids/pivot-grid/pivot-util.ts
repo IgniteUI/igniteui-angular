@@ -84,6 +84,7 @@ export class PivotUtil {
         prevDims: IPivotDimension[],
         currDimLvl: number) {
         const data = records;
+        const dimMaxLvl = PivotUtil.getDimensionDepth(dim);
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
             const field = dim.memberName;
@@ -97,7 +98,7 @@ export class PivotUtil {
                 expansionStates.get(expansionRowKey);
             if (rec[field + '_' + pivotKeys.records] &&
                 rec[field + '_' + pivotKeys.records].length > 0 &&
-                isExpanded && lvl > 0) {
+                ((isExpanded && lvl > 0)  || (dimMaxLvl == currDimLvl))) {
                 let dimData = rec[field + '_' + pivotKeys.records];
                 if (dim.childLevel) {
                     if (PivotUtil.getDimensionDepth(dim) > 1) {
