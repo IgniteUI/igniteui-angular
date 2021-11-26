@@ -640,6 +640,12 @@
         compact: 0 $padding-compact
     );
 
+    $pivot-row-aria-padding: (
+        comfortable: $padding-comfortable,
+        cosy: $padding-cosy,
+        compact: $padding-compact
+    );
+
     $grid-cbx-padding: (
         comfortable: $padding-comfortable,
         cosy: $padding-cosy,
@@ -2879,20 +2885,29 @@
         display: flex;
         align-items: center;
         background: inherit;
+        overflow: hidden;
         z-index: 3;
+        height: map.get($grid-header-height, 'comfortable');
 
-        &:not(&--row-area) {
-            height: map.get($grid-header-height, 'comfortable');
+        &--cosy {
+            height: map.get($grid-header-height, 'cosy');
+            padding: map.get($grid-header-padding, 'cosy');
+        }
+
+        &--compact {
+            height: map.get($grid-header-height, 'compact');
+            padding: map.get($grid-header-padding, 'compact');
         }
 
         padding: map.get($grid-header-padding, 'comfortable');
         background-clip: border-box !important;
-
         border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         border-#{$right}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 
         igx-chips-area {
+            flex-wrap: nowrap;
+
             > * {
                 margin-#{$right}: rem(8px);
             }
@@ -2904,14 +2919,33 @@
     }
 
     %igx-grid__tr-pivot--row-area {
+        height: auto !important;
         align-items: flex-end;
-        padding-bottom: $padding-comfortable;
+        padding-bottom: map.get($pivot-row-aria-padding, 'comfortable');
+
+        &--cosy{
+            padding-bottom: map.get($pivot-row-aria-padding, 'cosy');
+        }
+
+        &--compact{
+            padding-bottom: map.get($pivot-row-aria-padding, 'compact');
+        }
+
         border-#{$left}: 0;
         border-bottom: 0;
     }
 
     %igx-grid__tr-pivot--filter {
         height: map.get($grid-header-height, 'comfortable');
+
+        &--cosy {
+            height: map.get($grid-header-height, 'cosy');
+        }
+
+        &--compact {
+            height: map.get($grid-header-height, 'compact');
+        }
+
         border-left: 0;
         border-right: 0;
         border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
@@ -2924,7 +2958,12 @@
     %igx-grid__tr-pivot-group {
         flex: 1;
     }
+
+    %igx-grid__tr-pivot-toggle-icons {
+        display: inline-flex !important;
+    }
     // Pivot grid END
 }
+
 
 

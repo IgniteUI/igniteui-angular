@@ -3,6 +3,14 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { ColumnType } from '../common/grid.interface';
 
+export interface IDimensionsChange {
+    dimensions: IPivotDimension[],
+    dimensionCollectionType: PivotDimensionType
+}
+
+export interface IValuesChange {
+    values: IPivotValue[]
+}
 
 export interface IPivotDimensionStrategy {
     process(collection: any,
@@ -58,6 +66,8 @@ export interface IPivotDimension {
     filter?: FilteringExpressionsTree | null;
     sortDirection?: SortingDirection;
     dataType?: GridColumnDataType;
+    // The width of the dimension cells to be rendered.Can be pixel or %.
+    width? : string;
 }
 
 export interface IPivotValue {

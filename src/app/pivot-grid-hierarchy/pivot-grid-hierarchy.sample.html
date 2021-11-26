@@ -1,7 +1,9 @@
-<igx-pivot-grid
-    #grid1
-    [defaultExpandState]='true'
-    [data]="origData"
-    [pivotConfiguration]="pivotConfigHierarchy">
-</igx-pivot-grid>
-
+<div class="sample-column">
+    <span>Dimensions:</span>
+    <igx-combo #combo class="combo" [itemsMaxHeight]="250" (selectionChanging)="handleChange($event)"
+        [data]="dimensions" [displayKey]="'memberName'" [(ngModel)]="selected"
+        placeholder="Dimension(s)" searchPlaceholder="Search...">
+    </igx-combo>
+    <igx-pivot-grid #grid1 [data]="origData" [pivotConfiguration]="pivotConfigHierarchy" (dimensionsChange)='dimensionChange($event)' [defaultExpandState]='true'>
+    </igx-pivot-grid>
+</div>
