@@ -87,48 +87,56 @@ export class PivotGridSampleComponent {
     public selected: IPivotDimension[] = [this.dimensions[0], this.dimensions[1], this.dimensions[2]];
 
     public pivotConfigHierarchy: IPivotConfiguration = {
-        columns: [{
-            memberName: 'SellerName',
-            enabled: true
-        },
+        columns: [
+            this.dimensions[0]
         ],
-        rows: [{
-            memberName: 'All',
-            memberFunction: () => 'All',
-            enabled: true,
-            childLevel: {
-                memberName: 'ProductCategory',
-                memberFunction: (data) => data.ProductCategory,
-                enabled: true
-            }
-        }, {
-            memberName: 'Country',
-            enabled: true
-        }, {
-            memberName: 'Date',
-            enabled: true
-        }],
+        rows: [
+            this.dimensions[1],
+            this.dimensions[2]
+        ],
         values: [
             {
                 member: 'UnitsSold',
                 aggregate: {
+                    key: 'SUM',
                     aggregator: IgxPivotNumericAggregate.sum,
-                    key: 'UnitsSoldSUM',
-                    label: 'Sum of Units Sold'
+                    label: 'Sum'
                 },
                 enabled: true,
+                styles: {
+                    upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
+                    downFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 300
+                },
                 // dataType: 'currency',
                 formatter: (value) => value ? value + '$' : undefined
             },
             {
-                member: 'UnitPrice',
+                member: 'AmountOfSale',
+                displayName: 'Amount of Sale',
                 aggregate: {
-                    aggregator: IgxPivotNumericAggregate.sum,
-                    key: 'UnitPriceSUM',
-                    label: 'Sum of Unit Price'
+                    key: 'SUM',
+                    aggregator: IgxTotalSaleAggregate.totalSale,
+                    label: 'Sum of Sale'
                 },
+                aggregateList: [{
+                    key: 'SUM',
+                    aggregator: IgxTotalSaleAggregate.totalSale,
+                    label: 'Sum of Sale'
+                }, {
+                    key: 'MIN',
+                    aggregator: IgxTotalSaleAggregate.totalMin,
+                    label: 'Minimum of Sale'
+                }, {
+                    key: 'MAX',
+                    aggregator: IgxTotalSaleAggregate.totalMax,
+                    label: 'Maximum of Sale'
+                }],
                 enabled: true,
-                dataType: 'currency'
+                dataType: 'currency',
+                styles: {
+                    upFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 50,
+                    downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 50
+                },
             }
         ],
         filters: null
