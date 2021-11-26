@@ -1,16 +1,10 @@
-    <!-- Row Dimension -->
-    <div #rowDimensionContainer>
-            <igx-pivot-row-dimension-content class="igx-grid-thead" tabindex="0"
-            [grid]="grid"
-            [hasMRL]="grid.hasColumnLayouts"
-            [density]="grid.displayDensity"
-            [activeDescendant]="grid.activeDescendant"
-            [width]="grid.pivotRowWidths"
-            [unpinnedColumnCollection]="rowDimension"
-            (scroll)="grid.preventHeaderScroll($event)"
-        >
-        </igx-pivot-row-dimension-content>
-    </div>
+<!-- Row Dimension -->
+<div #rowDimensionContainer>
+    <igx-pivot-row-dimension-content class="igx-grid-thead" tabindex="0" [grid]="grid" [hasMRL]="grid.hasColumnLayouts"
+        [density]="grid.displayDensity" [activeDescendant]="grid.activeDescendant" [width]="grid.pivotRowWidths"
+        [unpinnedColumnCollection]="rowDimension" (scroll)="grid.preventHeaderScroll($event)">
+    </igx-pivot-row-dimension-content>
+</div>
 
 <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
     <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-template>
@@ -29,9 +23,8 @@
         [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
         [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)" [column]="col"
         [formatter]="col.formatter" [intRow]="this" [active]="isCellActive(col.visibleIndex)"
-        [style.min-height.px]="cellHeight" [rowData]="data" [style.min-width]="col.width"
-        [style.max-width]="col.width" [style.flex-basis]="col.width" [width]="col.getCellWidth()"
-        [visibleColumnIndex]="col.visibleIndex"
+        [style.min-height.px]="cellHeight" [rowData]="data" [style.min-width]="col.width" [style.max-width]="col.width"
+        [style.flex-basis]="col.width" [width]="col.getCellWidth()" [visibleColumnIndex]="col.visibleIndex"
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate" [lastSearchInfo]="grid.lastSearchInfo"
         [cellSelectionMode]="grid.cellSelection" [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
@@ -70,21 +63,18 @@
 </ng-template>
 
 <ng-template #headerTemplate let-column>
-    <div class="igx-grid__tr--header" (click)="this.selectPivotRow(column, $event)">
-        <igx-icon [attr.draggable]="false" (click)="grid.toggleRow(getRowDimensionKey(column))">
-            {{ getExpandState(column) ? 'expand_more' : 'expand_less'}}</igx-icon>
-        {{column.header}}
-    </div>
-</ng-template>
-
-<ng-template #headerTemplateGray let-column>
-    <div class="igx-grid__tr--header" (click)="this.selectPivotRow(column, $event)">
+    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel(column)}}' (click)="this.selectPivotRow(column, $event)">
+            <igx-icon [attr.draggable]=" false" (click)="grid.toggleRow(getRowDimensionKey(column))">
+        {{ getExpandState(column) ? 'expand_more' : 'chevron_right'}}</igx-icon>
         {{column.header}}
     </div>
 </ng-template>
 
 <ng-template #headerDefaultTemplate let-column>
-    <div class="igx-grid__tr--header" (click)="this.selectPivotRow(column, $event)">
+
+    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel(column)}}' (click)="this.selectPivotRow(column, $event)">
+            <igx-icon style='flex-shrink: 0;' [attr.draggable]=" false">
+        </igx-icon>
         {{column.header}}
     </div>
 </ng-template>
