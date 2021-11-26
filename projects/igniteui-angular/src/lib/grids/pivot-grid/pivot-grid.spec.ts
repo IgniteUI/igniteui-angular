@@ -28,8 +28,10 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
     }));
 
     it('should apply formatter and dataType from measures', () => {
-        fixture.detectChanges();
         const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.width = '1500px';
+        fixture.detectChanges();
+
         const actualFormatterValue = pivotGrid.rowList.first.cells.first.title;
         expect(actualFormatterValue).toEqual('774$');
         const actualDataTypeValue = pivotGrid.rowList.first.cells.last.title;
@@ -330,8 +332,9 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         });
 
         it('should allow changing default aggregation via value chip drop-down.', () => {
-            fixture.detectChanges();
             const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.width = '1500px';
+            fixture.detectChanges();
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             const valueChip = headerRow.querySelector('igx-chip[id="UnitsSold"]');
             let content = valueChip.querySelector('.igx-chip__content');
