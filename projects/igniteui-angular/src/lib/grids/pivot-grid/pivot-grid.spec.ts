@@ -475,7 +475,10 @@ describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
                 }, {
                     ProductCategory: 'Bikes', 'All cities': 'All Cities',
                     ProductCategory_level: 1, 'All cities_level': 0,
-                    'Uruguay-UnitsSold': 68, 'Uruguay-AmountOfSale': 242.08
+                    'Uruguay-UnitsSold': 68, 'Uruguay-AmountOfSale': 242.08,
+                    City: 'Ciudad de la Costa', Country: 'Uruguay',
+                    Date: '01/06/2011', SellerName: 'Lydia Burson',
+                    UnitPrice: 3.56, UnitsSold: 68
                 }, {
                     ProductCategory: 'Clothing', 'All cities': 'All Cities',
                     ProductCategory_level: 1, 'All cities_level': 0, 'Bulgaria-UnitsSold': 282,
@@ -484,7 +487,9 @@ describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
                 }, {
                     ProductCategory: 'Accessories', 'All cities': 'All Cities',
                     ProductCategory_level: 1, 'All cities_level': 0,
-                    'UK-UnitsSold': 293, 'UK-AmountOfSale': 25074.94
+                    'UK-UnitsSold': 293, 'UK-AmountOfSale': 25074.94,
+                    City: 'London', Country: 'UK', Date: '04/07/2012',
+                    SellerName: 'David Haley', UnitPrice: 85.58, UnitsSold: 293
                 }, {
                     ProductCategory: 'Components', 'All cities': 'All Cities',
                     ProductCategory_level: 1, 'All cities_level': 0,
