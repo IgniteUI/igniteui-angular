@@ -905,6 +905,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.calcHeight;
     }
 
+    public getColumnGroupExpandState(col: IgxColumnComponent) {
+        const state = this.columnGroupStates.get(col.field);
+        // columns are expanded by default?
+        return state !== undefined && state !== null ? state : false;
+    }
+
     public toggleRowGroup(col: IgxColumnComponent, newState: boolean) {
         if (this.hasMultipleValues) {
             const parentCols = col.parent ? col.parent.children.toArray() : this.columns.filter(x => x.level === 0);
