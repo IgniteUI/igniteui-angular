@@ -170,6 +170,16 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(defaultFiltSettings).not.toEqual(instance.advancedFiltAction.overlaySettings);
             expect(defaultExportSettings).not.toEqual(instance.exporterAction.overlaySettings);
         });
+
+        it('should initialize input property columnsAreaMaxHeight properly', () => {
+            expect(instance.data).toBeDefined();
+            expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('100%');
+
+            instance.pinningAction.columnsAreaMaxHeight = '50px';
+            fixture.detectChanges();
+
+            expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('50px');
+        });
     });
 });
 
