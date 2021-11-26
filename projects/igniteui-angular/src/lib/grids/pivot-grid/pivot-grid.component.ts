@@ -520,7 +520,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 filtered,
                 [dim],
                 PivotDimensionType.Column,
-                {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+                this.pivotKeys
                 );
             const flatData = Array.from(allValuesHierarchy.values());
             columnValues = flatData.map(record => this.extractValue(record['value']));
@@ -943,7 +943,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             data,
             this.columnDimensions,
             PivotDimensionType.Column,
-            {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
+            this.pivotKeys
             );
         }
         columns = this.generateColumnHierarchy(fieldsMap, data);
