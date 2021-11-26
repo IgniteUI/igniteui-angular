@@ -61,7 +61,6 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridTransaction } from '../common/types';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IgxGridAPIService } from '../grid/grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 
 let NEXT_ID = 0;
@@ -445,6 +444,35 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public set batchEditing(_val: boolean) {
     }
 
+    public get selectedRows(): any[] {
+        if (!this.selectionService.getSelectedRows()) {
+            return [];
+        }
+        const selectedRowIds = [];
+        this.dataView.forEach(record => {
+            const prev = [];
+            for (const dim of this.rowDimensions) {
+                let currDim = dim;
+                let shouldBreak = false;
+                do {
+                    const key = PivotUtil.getRecordKey(record, currDim, prev);
+                    if (this.selectionService.isPivotRowSelected(key) && !selectedRowIds.find(x => x === record)) {
+                        selectedRowIds.push(record);
+                        shouldBreak = true;
+                        break;
+                    }
+                    currDim = currDim.childLevel;
+                } while (currDim);
+                prev.push(dim);
+                if (shouldBreak) {
+                    break;
+                }
+            }
+
+        });
+
+        return selectedRowIds;
+    }
 
     constructor(
         public selectionService: IgxGridSelectionService,
