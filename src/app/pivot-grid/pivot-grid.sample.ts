@@ -87,56 +87,48 @@ export class PivotGridSampleComponent {
     public selected: IPivotDimension[] = [this.dimensions[0], this.dimensions[1], this.dimensions[2]];
 
     public pivotConfigHierarchy: IPivotConfiguration = {
-        columns: [
-            this.dimensions[0]
+        columns: [{
+            memberName: 'SellerName',
+            enabled: true
+        },
         ],
-        rows: [
-            this.dimensions[1],
-            this.dimensions[2]
-        ],
+        rows: [{
+            memberName: 'All',
+            memberFunction: () => 'All',
+            enabled: true,
+            childLevel: {
+                memberName: 'ProductCategory',
+                memberFunction: (data) => data.ProductCategory,
+                enabled: true
+            }
+        }, {
+            memberName: 'Country',
+            enabled: true
+        }, {
+            memberName: 'Date',
+            enabled: true
+        }],
         values: [
             {
                 member: 'UnitsSold',
                 aggregate: {
-                    key: 'SUM',
                     aggregator: IgxPivotNumericAggregate.sum,
-                    label: 'Sum'
+                    key: 'UnitsSoldSUM',
+                    label: 'Sum of Units Sold'
                 },
                 enabled: true,
-                styles: {
-                    upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
-                    downFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 300
-                },
                 // dataType: 'currency',
                 formatter: (value) => value ? value + '$' : undefined
             },
             {
-                member: 'AmountOfSale',
-                displayName: 'Amount of Sale',
+                member: 'UnitPrice',
                 aggregate: {
-                    key: 'SUM',
-                    aggregator: IgxTotalSaleAggregate.totalSale,
-                    label: 'Sum of Sale'
+                    aggregator: IgxPivotNumericAggregate.sum,
+                    key: 'UnitPriceSUM',
+                    label: 'Sum of Unit Price'
                 },
-                aggregateList: [{
-                    key: 'SUM',
-                    aggregator: IgxTotalSaleAggregate.totalSale,
-                    label: 'Sum of Sale'
-                }, {
-                    key: 'MIN',
-                    aggregator: IgxTotalSaleAggregate.totalMin,
-                    label: 'Minimum of Sale'
-                }, {
-                    key: 'MAX',
-                    aggregator: IgxTotalSaleAggregate.totalMax,
-                    label: 'Maximum of Sale'
-                }],
                 enabled: true,
-                dataType: 'currency',
-                styles: {
-                    upFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 50,
-                    downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 50
-                },
+                dataType: 'currency'
             }
         ],
         filters: null

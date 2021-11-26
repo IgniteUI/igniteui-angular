@@ -5,8 +5,9 @@ import { IgxPivotGridComponent, IgxPivotGridModule } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent } from '../../test-utils/pivot-grid-samples.spec';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
+const DEBOUNCE_TIME = 250;
 const PIVOT_TBODY_CSS_CLASS = '.igx-grid__tbody';
 const PIVOT_ROW_DIMENSION_CONTENT = 'igx-pivot-row-dimension-content';
 const PIVOT_HEADER_ROW = 'igx-pivot-header-row';
@@ -43,7 +44,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         let  activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', firstCell.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', pivotGrid.theadRow.nativeElement);
         fixture.detectChanges();
         GridFunctions.verifyHeaderIsFocused(secondCell.parent);
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
@@ -56,7 +57,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         UIInteractions.simulateClickAndSelectEvent(firstCell);
         fixture.detectChanges();
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', firstCell.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', pivotGrid.theadRow.nativeElement);
         fixture.detectChanges();
 
         GridFunctions.verifyHeaderIsFocused(firstCell.parent);
@@ -66,7 +67,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         UIInteractions.simulateClickAndSelectEvent(thirdCell);
         fixture.detectChanges();
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', firstCell.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', pivotGrid.theadRow.nativeElement);
         fixture.detectChanges();
 
         GridFunctions.verifyHeaderIsFocused(thirdCell.parent);
@@ -93,13 +94,13 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         expect(activeCells.length).toBe(1);
     });
 
-    it('should allow navigating from first to last row headers(Ctrl + End)', () => {
-        const [firstCell] = fixture.debugElement.queryAll(
+    it('should allow navigating from first to last row headers(Ctrl + ArrowDown)', () => {
+        const [_firstCell, _secondCell, thirdCell] = fixture.debugElement.queryAll(
             By.css(`${PIVOT_TBODY_CSS_CLASS} ${PIVOT_ROW_DIMENSION_CONTENT} ${HEADER_CELL_CSS_CLASS}`));
-        UIInteractions.simulateClickAndSelectEvent(firstCell);
+        UIInteractions.simulateClickAndSelectEvent(thirdCell);
         fixture.detectChanges();
 
-        UIInteractions.triggerKeyDownEvtUponElem('End', pivotGrid.theadRow.nativeElement, false, false, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', pivotGrid.theadRow.nativeElement, true, false, false, true);
         fixture.detectChanges();
 
         const allCells = fixture.debugElement.queryAll(
@@ -108,12 +109,6 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         GridFunctions.verifyHeaderIsFocused(lastCell.parent);
         const activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
-
-        const scrollTop = pivotGrid.verticalScrollContainer.getScroll().scrollTop;
-        const scrollHeight = pivotGrid.verticalScrollContainer.getScroll().scrollHeight;
-        const tbody = fixture.debugElement.query(By.css(`${PIVOT_TBODY_CSS_CLASS}`)).nativeElement;
-        const scrolledToBottom = Math.round(scrollTop + tbody.scrollHeight) === scrollHeight;
-        expect(scrolledToBottom).toBeTruthy();
     });
 
     it('should allow navigating between column headers', () => {
@@ -132,7 +127,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
     });
-    it('should allow navigating from first to last column headers', () => {
+    it('should allow navigating from first to last column headers', async () => {
         const [firstHeader] = fixture.debugElement.queryAll(
             By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`));
         UIInteractions.simulateClickAndSelectEvent(firstHeader);
@@ -143,6 +138,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         expect(activeCells.length).toBe(1);
 
         UIInteractions.triggerKeyDownEvtUponElem('End', pivotGrid.theadRow.nativeElement);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         const allHeaders = fixture.debugElement.queryAll(
