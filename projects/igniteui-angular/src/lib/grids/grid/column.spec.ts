@@ -64,7 +64,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
         headerSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Header text'));
         cellSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Cell text'));
-        summarySpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Summarry text'));
+        summarySpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Summary text'));
     });
 
     it('should provide a way to change templates dynamically', () => {
@@ -1210,7 +1210,7 @@ export class TemplatedColumnsComponent {
             <span class="customEditorTemplate">{{ value }}</span>
         </ng-template>
 
-        <ng-template #summaryTemplate igxSummary let-summaryResults>
+        <ng-template #summary igxSummary let-summaryResults>
             <span class="customSummaryTemplate">{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span>
         </ng-template>
     `
