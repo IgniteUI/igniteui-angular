@@ -42,12 +42,6 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
     /**
      * @hidden @internal
      */
-     @ViewChild('headerTemplateGray', { read: TemplateRef, static: true })
-     public headerTemplateGray: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
     @ViewChild('headerDefaultTemplate', { read: TemplateRef, static: true })
     public headerTemplateDefault: TemplateRef<any>;
 
@@ -162,8 +156,6 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
         if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.data)) {
             ref.instance.headerTemplate = this.headerTemplate;
-        } else if (lvl < PivotUtil.getTotalLvl(this.data)) {
-            ref.instance.headerTemplate = this.headerTemplateGray;
         } else {
             ref.instance.headerTemplate = this.headerTemplateDefault;
         }
