@@ -192,7 +192,7 @@ export class IgxGridNavigationService {
         return row.expression || row.detailsData ? false : !this.isColumnFullyVisible(visibleColIndex);
     }
 
-    public shouldPerformVerticalScroll(targetRowIndex: number): boolean {
+    public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
         if (this.grid.isRecordPinnedByViewIndex(targetRowIndex)) {
             return false;
         }
@@ -208,8 +208,8 @@ export class IgxGridNavigationService {
             || containerHeight && endTopOffset - containerHeight > 5;
     }
 
-    public performVerticalScrollToCell(rowIndex: number, cb?: () => void) {
-        if (!this.shouldPerformVerticalScroll(rowIndex)) {
+    public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {
+        if (!this.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
             return;
         }
         this.pendingNavigation = true;
@@ -686,7 +686,7 @@ export class IgxGridNavigationService {
             this.grid.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex)
             .find(c => this.isColumnFullyVisible(c.visibleIndex))?.visibleIndex;
         const column = this.grid.visibleColumns.find((col) => !col.columnLayout && col.visibleIndex === colIndex);
-        const rowInd = rowIndex ? rowIndex : this.grid.rowList.find(r => !this.shouldPerformVerticalScroll(r.index))?.index;
+        const rowInd = rowIndex ? rowIndex : this.grid.rowList.find(r => !this.shouldPerformVerticalScroll(r.index, colIndex))?.index;
         const node = { row: rowInd ?? 0,
             column: column?.visibleIndex ?? 0, level: column?.level ?? 0,
             mchCache: column ? {level: column.level, visibleIndex: column.visibleIndex} : {} as ColumnGroupsCache,
