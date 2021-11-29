@@ -46,7 +46,8 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
             rowSelection: true,
             columnSelection: true,
             rowIslands: true,
-            expansion: true
+            expansion: true,
+            moving: true
         };
 
         fix.detectChanges();
