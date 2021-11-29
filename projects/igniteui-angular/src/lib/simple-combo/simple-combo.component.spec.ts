@@ -916,7 +916,7 @@ describe('IgxSimpleCombo', () => {
             expect(document.activeElement).toEqual(addItemButton.nativeElement);
         }));
 
-        it('should close when an item is clicked on', fakeAsync(() => {
+        it('should close when an item is clicked on', () => {
             spyOn(combo, 'close').and.callThrough();
             combo.open();
             fixture.detectChanges();
@@ -927,9 +927,9 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             expect(combo.close).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should scroll to top when opened and there is no selection', fakeAsync(() => {
+        it('should scroll to top when opened and there is no selection', () => {
             combo.deselect();
             fixture.detectChanges();
 
@@ -944,7 +944,7 @@ describe('IgxSimpleCombo', () => {
 
             expect(combo.onClick).toHaveBeenCalledTimes(1);
             expect((combo as any).virtDir.scrollTo).toHaveBeenCalledWith(0);
-        }));
+        });
 
         it('should close the dropdown with Alt + ArrowUp', fakeAsync(() => {
             combo.open();
@@ -962,7 +962,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.close).toHaveBeenCalledTimes(1);
         }));
 
-        it('should select the first filtered item with Enter', fakeAsync(() => {
+        it('should select the first filtered item with Enter', () => {
             UIInteractions.setInputElementValue(input, 'con', fixture);
             expect(combo.comboInput.value).toEqual('con');
 
@@ -973,9 +973,9 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
             fixture.detectChanges();
             expect(input.nativeElement.value).toEqual('Wisconsin');
-        }));
+        });
 
-        it('should clear selection when all text in input is removed by Backspace and Delete', fakeAsync(() => {
+        it('should clear selection when all text in input is removed by Backspace and Delete', () => {
             combo.select('Wisconsin');
             fixture.detectChanges();
 
@@ -998,7 +998,7 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.triggerEventHandlerKeyDown('Backspace', input);
             fixture.detectChanges();
             expect(combo.selection.length).toEqual(0);
-        }));
+        });
 
         it('should close the dropdown (if opened) when tabbing outside of the input', () => {
             combo.open();
