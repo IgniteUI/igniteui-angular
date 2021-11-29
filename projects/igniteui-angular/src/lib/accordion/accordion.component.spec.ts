@@ -209,6 +209,7 @@ describe('Rendering Tests', () => {
                 argsIng = { event: expArgs.event, cancel: expArgs.cancel, owner: accordion, panel: expArgs.owner };
             });
             accordion.panels[0].collapse();
+            accordion.panels[0].collapse();
             tick();
             fix.detectChanges();
 

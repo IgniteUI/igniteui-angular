@@ -364,7 +364,9 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
             });
             panel.contentCollapsing.pipe(takeUntil(this._unsubChildren$)).subscribe((args: IExpansionPanelCancelableEventArgs) => {
                 const evArgs: IAccordionCancelableEventArgs = { ...args, owner: this, panel: args.owner };
-                this.panelCollapsing.emit(evArgs);
+                if (!args.owner.closeAnimationPlayer?._started) {
+                    this.panelCollapsing.emit(evArgs);
+                }
                 if (evArgs.cancel) {
                     args.cancel = true;
                 }
