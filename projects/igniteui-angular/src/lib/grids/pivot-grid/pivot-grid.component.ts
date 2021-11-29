@@ -922,6 +922,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 const groupColumns = col.children.filter(x => x.columnGroup);
                 groupColumns.forEach(groupColumn => {
                     groupColumn.hidden = newState;
+                    this.columnGroupStates.set(groupColumn.field, newState);
                     this.resolveToggle(groupColumn);
                 });
 
@@ -932,6 +933,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 const groupColumns = siblingCol.children.filter(x => x.columnGroup);
                 groupColumns.forEach(groupColumn => {
                     groupColumn.hidden = newState;
+                    this.columnGroupStates.set(groupColumn.field, newState);
                     this.resolveToggle(groupColumn);
                 });
             }
