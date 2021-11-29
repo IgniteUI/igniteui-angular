@@ -79,7 +79,7 @@ export class PivotGridSampleComponent {
             enabled: true,
             childLevel: {
                 enabled: true,
-                memberName: 'Seller'
+                memberName: 'SellerName'
             }
         },
     ];

@@ -66,6 +66,8 @@ export interface IPivotDimension {
     filter?: FilteringExpressionsTree | null;
     sortDirection?: SortingDirection;
     dataType?: GridColumnDataType;
+    // The width of the dimension cells to be rendered.Can be pixel or %.
+    width? : string;
 }
 
 export interface IPivotValue {

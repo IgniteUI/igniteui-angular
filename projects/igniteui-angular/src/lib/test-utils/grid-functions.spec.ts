@@ -22,6 +22,7 @@ import { parseDate } from '../core/utils';
 import { IgxGridHeaderRowComponent } from '../grids/headers/grid-header-row.component';
 import { IgxGridRowComponent } from '../grids/grid/grid-row.component';
 import { IgxGridCellComponent } from '../grids/cell.component';
+import { IgxPivotRowComponent } from '../grids/pivot-grid/pivot-row.component';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../grids/row.directive';
 import { GridType, RowType } from '../grids/common/grid.interface';
@@ -156,6 +157,11 @@ export class GridFunctions {
         } else {
             throw new Error('More than one column group found.');
         }
+    }
+
+    public static getPivotRows(fix): DebugElement[] {
+        const rows: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxPivotRowComponent));
+        return rows;
     }
 
     /**
