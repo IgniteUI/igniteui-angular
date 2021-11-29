@@ -29,6 +29,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public autoFocusSearch = true;
     public items: any[] = [];
     public values1:  Array<any> = ['Arizona'];
+    public singleValue = 'Arizona';
     public values2:  Array<any>;
     public isDisabled = false;
 
