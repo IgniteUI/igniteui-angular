@@ -38,6 +38,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
             let data;
             const prevRowDims = [];
             let prevDim;
+            let prevDimTopRecords = [];
             const currRows = cloneArray(rows, true);
             PivotUtil.assignLevels(currRows);
             for (const row of currRows) {
@@ -48,8 +49,10 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                     data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
                     prevRowDims.push(row);
                     prevDim = row;
+                    prevDimTopRecords = data;
                 } else {
                     const newData = [...data];
+                    const curDimTopRecords = [];
                     for (let i = 0; i < newData.length; i++) {
                         const currData = newData[i][prevDim.memberName + '_' + pivotKeys.records];
                         const leafData = PivotUtil.getDirectLeafs(currData, pivotKeys);
@@ -60,15 +63,22 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                         PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
 
                     PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
-                    if (PivotUtil.getDimensionDepth(prevDim) > PivotUtil.getDimensionDepth(row) && siblingData.length > 1) {
+                    if ((prevDimTopRecords[i].length != undefined && prevDimTopRecords[i].length < siblingData.length) || prevDimTopRecords.length <= siblingData.length) {
                         newData[i][row.memberName + '_' + pivotKeys.records] = siblingData;
                     } else {
                         newData.splice(i, 1, ...siblingData);
+                        if (prevDimTopRecords[i].length == undefined ) {
+                            prevDimTopRecords.splice(siblingData.length, prevDimTopRecords.length - siblingData.length, ...prevDimTopRecords);
+                        } else {
+                            prevDimTopRecords[i].splice(siblingData.length, prevDimTopRecords.length -  siblingData.length, ...prevDimTopRecords[i]);
+                        }
                         i += siblingData.length - 1;
                     }
+                    curDimTopRecords.push(cloneArray(siblingData, true));
                 }
                 data = newData;
                 prevDim = row;
+                prevDimTopRecords = curDimTopRecords;
                 prevRowDims.push(row);
             }
         }
