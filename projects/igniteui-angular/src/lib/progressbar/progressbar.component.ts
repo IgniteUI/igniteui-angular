@@ -178,14 +178,11 @@ export abstract class BaseProgressDirective {
             return;
         }
 
-        if (maxNum < this._value) {
-            this._value = maxNum;
+        if (maxNum < this._value || maxNum < this._initValue) {
+            this._initValue = this._value = maxNum;
         }
 
         this._max = maxNum;
-        // const value = this._value + Math.abs(this.step - this._value);
-        // this._value = toValue(this._value, maxNum);
-        // this.valueInPercent = toPercent(this.value, this._max);
         this.runAnimation(this.value);
     }
 
@@ -230,7 +227,8 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public get valueInPercent(): number {
-        return toPercent(this._value, this._max);
+        const val = this.max <= 0 ? 0 : toPercent(this._value, this._max);
+        return val;
     }
 
     /**
@@ -487,12 +485,14 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
             return;
         }
 
+        const valueInPercent = this.max <= 0 ? 0 : toPercent(value, this.max);
+
         const FRAMES = [];
         FRAMES[0] = {
             ...this.animationState
         };
 
-        this.animationState.width = toPercent(value, this.max) + '%';
+        this.animationState.width = valueInPercent + '%';
         FRAMES[1] = {
             ...this.animationState
         };
@@ -619,10 +619,12 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
             return;
         }
 
+        const valueInPercent = this.max <= 0 ? 0 : toPercent(value, this.max);
+
         const FRAMES = [];
         FRAMES[0] = {...this.animationState};
 
-        this.animationState.strokeDashoffset = this.getProgress(toPercent(value, this.max));
+        this.animationState.strokeDashoffset = this.getProgress(valueInPercent);
         this.animationState.strokeOpacity = toPercent(value, this.max) / this.STROKE_OPACITY_DVIDER + this.STROKE_OPACITY_ADDITION;
 
         FRAMES[1] = {
