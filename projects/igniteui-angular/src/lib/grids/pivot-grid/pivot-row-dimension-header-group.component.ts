@@ -52,25 +52,27 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
 
     @HostBinding('class.igx-grid-th--active')
     public get active() {
-        const node = this.grid.navigation.activeNode;
+        const nav = this.grid.navigation;
+        const node = nav.activeNode;
         return node && !this.column.columnGroup ?
-            node.isRowDimensionHeader &&
+            nav.isRowHeaderActive &&
             node.row === this.intRow.index &&
             node.column === this.visibleIndex :
             false;
     }
 
     public get activeGroup() {
-        const node = this.grid.navigation.activeNode;
-        return node ? node.isRowDimensionHeader && node.row === this.intRow.index && node.column === this.visibleIndex : false;
+        const nav = this.grid.navigation;
+        const node = nav.activeNode;
+        return node ? nav.isRowHeaderActive && node.row === this.intRow.index && node.column === this.visibleIndex : false;
     }
 
     protected get activeNode() {
+        this.grid.navigation.isRowHeaderActive = true;
         return {
             row: this.intRow.index, column: this.visibleIndex, level: null,
             mchCache: null,
-            layout: null,
-            isRowDimensionHeader: true
+            layout: null
         };
     }
 
@@ -88,5 +90,11 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
             } while(tempRow)
         });
         return result;
+    }
+
+
+    public activate() {
+        this.grid.navigation.isRowHeader = true;
+        this.grid.navigation.setActiveNode(this.activeNode);
     }
 }

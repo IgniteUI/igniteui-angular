@@ -7,12 +7,14 @@ import { HEADER_KEYS } from '../../core/utils';
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {
     public grid: IgxPivotGridComponent;
 
+    public isRowHeaderActive: boolean;
+
     public get lastRowDimensionsIndex() {
         return this.grid.rowDimensions.length - 1;
     }
 
     public focusOutRowHeader() {
-        this.activeNode.isRowDimensionHeader = false;
+        this.isRowHeaderActive = false;
     }
 
     public headerNavigation(event: KeyboardEvent) {
@@ -23,12 +25,11 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         }
         event.preventDefault();
 
-        if (this.activeNode.isRowDimensionHeader) {
+        if (this.isRowHeaderActive) {
             const newActiveNode = {
                 row: this.activeNode.row, column: this.activeNode.column, level: null,
                 mchCache: null,
-                layout: null,
-                isRowDimensionHeader: this.activeNode.isRowDimensionHeader
+                layout: null
             }
 
             if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
