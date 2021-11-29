@@ -150,7 +150,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         expect(activeCells.length).toBe(1);
     });
 
-    fit('should allow navigating in column headers when switching focus from rows to columns', () => {
+    it('should allow navigating in column headers when switching focus from rows to columns', () => {
         const [firstCell] = fixture.debugElement.queryAll(
             By.css(`${PIVOT_TBODY_CSS_CLASS} ${PIVOT_ROW_DIMENSION_CONTENT} ${HEADER_CELL_CSS_CLASS}`));
         UIInteractions.simulateClickAndSelectEvent(firstCell);
