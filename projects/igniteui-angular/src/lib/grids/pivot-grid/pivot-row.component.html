@@ -29,7 +29,7 @@
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate" [lastSearchInfo]="grid.lastSearchInfo"
         [cellSelectionMode]="grid.cellSelection" [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
-        (pointerdown)="grid.navigation.focusValueCells($event)">
+        (pointerdown)="grid.navigation.focusOutRowHeader($event)">
     </igx-grid-cell>
 </ng-template>
 
@@ -61,7 +61,7 @@
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate" [lastSearchInfo]="grid.lastSearchInfo"
         [cellSelectionMode]="grid.cellSelection" [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
-        (pointerdown)="grid.navigation.focusValueCells($event)">
+        (pointerdown)="grid.navigation.focusOutRowHeader($event)">
     </igx-grid-cell>
 </ng-template>
 

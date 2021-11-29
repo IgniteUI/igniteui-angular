@@ -127,6 +127,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
     });
+
     it('should allow navigating from first to last column headers', async () => {
         const [firstHeader] = fixture.debugElement.queryAll(
             By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`));
@@ -145,6 +146,28 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`));
         const lastHeader = allHeaders[allHeaders.length - 1];
         GridFunctions.verifyHeaderIsFocused(lastHeader.parent);
+        activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+        expect(activeCells.length).toBe(1);
+    });
+
+    fit('should allow navigating in column headers when switching focus from rows to columns', () => {
+        const [firstCell] = fixture.debugElement.queryAll(
+            By.css(`${PIVOT_TBODY_CSS_CLASS} ${PIVOT_ROW_DIMENSION_CONTENT} ${HEADER_CELL_CSS_CLASS}`));
+        UIInteractions.simulateClickAndSelectEvent(firstCell);
+        fixture.detectChanges();
+
+        const [firstHeader, secondHeader] = fixture.debugElement.queryAll(
+            By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`));
+        UIInteractions.simulateClickAndSelectEvent(firstHeader);
+        fixture.detectChanges();
+
+        GridFunctions.verifyHeaderIsFocused(firstHeader.parent);
+        let  activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+        expect(activeCells.length).toBe(1);
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', firstHeader.nativeElement);
+        fixture.detectChanges();
+        GridFunctions.verifyHeaderIsFocused(secondHeader.parent);
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
     });

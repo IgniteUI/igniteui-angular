@@ -11,7 +11,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         return this.grid.rowDimensions.length - 1;
     }
 
-    public focusValueCells() {
+    public focusOutRowHeader() {
         this.activeNode.isRowDimensionHeader = false;
     }
 
