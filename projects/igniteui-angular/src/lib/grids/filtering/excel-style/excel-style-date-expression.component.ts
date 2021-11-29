@@ -1,8 +1,4 @@
-import {
-    Component,
-    ViewChild,
-    Input
-} from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { DisplayDensity } from '../../../core/density';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
@@ -13,7 +9,6 @@ import { IgxTimePickerComponent } from '../../../time-picker/time-picker.compone
  * @hidden
  */
 @Component({
-    preserveWhitespaces: false,
     selector: 'igx-excel-style-date-expression',
     templateUrl: './excel-style-date-expression.component.html'
 })

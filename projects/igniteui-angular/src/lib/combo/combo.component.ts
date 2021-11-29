@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, OnDestroy, Optional, Inject, Injector, ViewChild, Input
+    AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, OnDestroy,
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -18,7 +19,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { IgxForOfModule, IForOfState } from '../directives/for-of/for_of.directive';
+import { IgxForOfModule } from '../directives/for-of/for_of.directive';
 import { IgxIconModule, IgxIconService } from '../icon/public_api';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -115,22 +116,6 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
     OnDestroy, EditorProvider {
     /**
-     * Defines whether the caseSensitive icon should be shown in the search input
-     *
-     * ```typescript
-     * // get
-     * let myComboShowSearchCaseIcon = this.combo.showSearchCaseIcon;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [showSearchCaseIcon]='true'></igx-combo>
-     * ```
-     */
-    @Input()
-    public showSearchCaseIcon = false;
-
-    /**
      * An @Input property that controls whether the combo's search box
      * should be focused after the `opened` event is called
      * When `false`, the combo's list item container will be focused instead
@@ -162,6 +147,16 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      */
     @Input()
     public searchPlaceholder = 'Enter a Search Term';
+
+    /**
+     * Emitted when item selection is changing, before the selection completes
+     *
+     * ```html
+     * <igx-combo (selectionChanging)='handleSelection()'></igx-combo>
+     * ```
+     */
+    @Output()
+    public selectionChanging = new EventEmitter<IComboSelectionChangingEventArgs>();
 
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
@@ -369,13 +364,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         }
     }
 
-    /**
-     * @hidden @internal
-     */
-    public toggleCaseSensitive() {
-        this.filteringOptions = { caseSensitive: !this.filteringOptions.caseSensitive };
-    }
-
     /** @hidden @internal */
     public handleOpened() {
         this.triggerCheck();
@@ -452,29 +440,51 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
  * @hidden
  */
 @NgModule({
-    declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboGroupingPipe,
-        IgxComboFilteringPipe, IgxComboDropDownComponent, IgxComboAddItemComponent,
-        IgxComboItemDirective,
-        IgxComboEmptyDirective,
-        IgxComboHeaderItemDirective,
-        IgxComboHeaderDirective,
-        IgxComboFooterDirective,
+    declarations: [
+        IgxComboAddItemComponent,
         IgxComboAddItemDirective,
-        IgxComboToggleIconDirective,
-        IgxComboClearIconDirective],
-    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboAddItemComponent,
-        IgxComboGroupingPipe, // TODO: create common ng module
-        IgxComboFilteringPipe,
-        IgxComboItemDirective,
-        IgxComboEmptyDirective,
-        IgxComboHeaderItemDirective,
-        IgxComboHeaderDirective,
-        IgxComboFooterDirective,
-        IgxComboAddItemDirective,
-        IgxComboToggleIconDirective,
         IgxComboClearIconDirective,
-        IgxInputGroupModule],
-    imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule]
+        IgxComboComponent,
+        IgxComboDropDownComponent,
+        IgxComboEmptyDirective,
+        IgxComboFilteringPipe,
+        IgxComboFooterDirective,
+        IgxComboGroupingPipe,
+        IgxComboHeaderDirective,
+        IgxComboHeaderItemDirective,
+        IgxComboItemComponent,
+        IgxComboItemDirective,
+        IgxComboToggleIconDirective
+    ],
+    exports: [
+        IgxComboAddItemComponent,
+        IgxComboAddItemDirective,
+        IgxComboClearIconDirective,
+        IgxComboComponent,
+        IgxComboDropDownComponent,
+        IgxComboEmptyDirective,
+        IgxComboFilteringPipe,
+        IgxComboFooterDirective,
+        IgxComboGroupingPipe,
+        IgxComboHeaderDirective,
+        IgxComboHeaderItemDirective,
+        IgxComboItemComponent,
+        IgxComboItemDirective,
+        IgxComboToggleIconDirective,
+        IgxInputGroupModule
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IgxButtonModule,
+        IgxCheckboxModule,
+        IgxDropDownModule,
+        IgxForOfModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxRippleModule,
+        IgxToggleModule,
+        ReactiveFormsModule
+    ]
 })
 export class IgxComboModule { }

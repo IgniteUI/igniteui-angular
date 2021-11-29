@@ -1,12 +1,13 @@
-$palette: $dark-indigo-palette;
-$schema: $dark-indigo-schema;
-$typeface: $indigo-typeface;
-$type-scale: $indigo-type-scale;
+@use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
-$legacy-support: false;
+$palette: $dark-fluent-word-palette;
+$schema: $dark-fluent-schema;
+$typeface: $fluent-typeface;
+$type-scale: $fluent-type-scale;
+
 $direction: ltr;
 
-$igx-background-color: darken(igx-color($palette, 'surface'), 5%);
+$igx-background-color: igx-contrast-color($palette, 'grays', 900);
 $igx-foreground-color: igx-color($palette, 'grays', 900);
 
 $default-palette: $palette;

@@ -1,6 +1,6 @@
 
 export interface ITreeGridRecord {
-    rowID: any;
+    key: any;
     data: any;
     children?: ITreeGridRecord[];
     parent?: ITreeGridRecord;

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { IgxGridBaseDirective } from './grid-base.directive';
 import { first } from 'rxjs/operators';
-import { IgxColumnComponent } from './columns/column.component';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { HORIZONTAL_NAV_KEYS, HEADER_KEYS } from '../core/utils';
 import { GridKeydownTargetType } from './common/enums';
+import { ColumnType, GridType } from './common/grid.interface';
 
 /** @hidden */
 @Injectable()
 export class IgxGridMRLNavigationService extends IgxGridNavigationService {
-    public grid: IgxGridBaseDirective;
+    public grid: GridType;
 
     public isValidPosition(rowIndex: number, colIndex: number): boolean {
         if (rowIndex < 0 || colIndex < 0 || this.grid.dataView.length - 1 < rowIndex ||
@@ -102,7 +101,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             });
     }
 
-    getNextHorizontalCellPosition(previous = false) {
+    public getNextHorizontalCellPosition(previous = false) {
         const parent = this.parentByChildIndex(this.activeNode.column);
         if (!this.hasNextHorizontalPosition(previous, parent)) {
             return { row: this.activeNode.row, column: this.activeNode.column };
@@ -121,7 +120,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return { row: this.activeNode.row, column: column.visibleIndex };
     }
 
-    getNextVerticalPosition(previous = false) {
+    public getNextVerticalPosition(previous = false) {
         this.activeNode.column = this.activeNode.column || 0;
         if (!this.hasNextVerticalPosition(previous)) {
             return { row: this.activeNode.row, column: this.activeNode.column };
@@ -138,7 +137,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return { row: nextBlock ? nextRI : this.activeNode.row, column: col.visibleIndex };
     }
 
-    headerNavigation(event: KeyboardEvent) {
+    public headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!HEADER_KEYS.has(key)) {
             return;
@@ -266,7 +265,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         this.performHorizontalScrollToCell(newActiveNode.column);
     }
 
-    private isParentColumnFullyVisible(parent: IgxColumnComponent): boolean {
+    private isParentColumnFullyVisible(parent: ColumnType): boolean {
         if (!this.forOfDir().getScroll().clientWidth || parent?.pinned) {
             return true;
         }
@@ -277,7 +276,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     private getChildColumnScrollPositions(visibleColIndex: number) {
-        const targetCol: IgxColumnComponent = this.grid.getColumnByVisibleIndex(visibleColIndex);
+        const targetCol = this.grid.getColumnByVisibleIndex(visibleColIndex);
         const parentVIndex = this.forOfDir().igxForOf.indexOf(targetCol.parent);
         let leftScroll = this.forOfDir().getColumnScrollLeft(parentVIndex);
         let rightScroll = this.forOfDir().getColumnScrollLeft(parentVIndex + 1);

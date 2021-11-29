@@ -1,8 +1,6 @@
 import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, DoCheck, ChangeDetectionStrategy } from '@angular/core';
-import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowDirective } from '../row.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxTreeGridAPIService } from './tree-grid-api.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -10,7 +8,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
     templateUrl: 'tree-grid-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxTreeGridRowComponent) }]
 })
-export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponent> implements DoCheck {
+export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck {
     @ViewChildren('treeCell')
     protected _cells: QueryList<any>;
 
@@ -37,7 +35,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     public set treeRow(value: ITreeGridRecord) {
         if (this._treeRow !== value) {
             this._treeRow = value;
-            this.rowData = this._treeRow.data;
+            this.data = this._treeRow.data;
         }
     }
 
@@ -50,9 +48,9 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
      */
     public set pinned(value: boolean) {
         if (value) {
-            this.grid.pinRow(this.rowID);
+            this.grid.pinRow(this.key);
         } else {
-            this.grid.unpinRow(this.rowID);
+            this.grid.unpinRow(this.key);
         }
     }
 
@@ -73,7 +71,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
         let treeRec = this.treeRow;
         const isPinnedArea = this.pinned && !this.disabled;
         if (isPinnedArea) {
-            treeRec = this.grid.unpinnedRecords.find(x => x.data === this.rowData);
+            treeRec = this.grid.unpinnedRecords.find(x => x.data === this.data);
         }
         return treeRec.level === 0;
     }
@@ -107,7 +105,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
      * ```
      */
     public set expanded(value: boolean) {
-        (this.gridAPI as IgxTreeGridAPIService).set_row_expansion_state(this._treeRow.rowID, value);
+        this.grid.gridAPI.set_row_expansion_state(this._treeRow.key, value);
     }
 
     /**
@@ -123,10 +121,10 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
      */
     public get showIndicator() {
         return this.grid.loadChildrenOnDemand ?
-            this.grid.expansionStates.has(this.rowID) ?
+            this.grid.expansionStates.has(this.key) ?
                 this.treeRow.children && this.treeRow.children.length :
                 this.grid.hasChildrenKey ?
-                    this.rowData[this.grid.hasChildrenKey] :
+                    this.data[this.grid.hasChildrenKey] :
                     true :
             this.treeRow.children && this.treeRow.children.length;
     }
@@ -135,14 +133,14 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
      * @hidden
      */
     public get indeterminate(): boolean {
-        return this.selectionService.isRowInIndeterminateState(this.rowID);
+        return this.selectionService.isRowInIndeterminateState(this.key);
     }
 
     /**
      * @hidden
      */
     public ngDoCheck() {
-        this.isLoading = this.grid.loadChildrenOnDemand ? this.grid.loadingRows.has(this.rowID) : false;
+        this.isLoading = this.grid.loadChildrenOnDemand ? this.grid.loadingRows.has(this.key) : false;
         super.ngDoCheck();
     }
 

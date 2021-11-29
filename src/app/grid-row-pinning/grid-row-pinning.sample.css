@@ -3,15 +3,16 @@
     margin-top: 24px;
 }
 
-[igxButton]+[igxButton] {
+[igxButton] + [igxButton] {
     margin-left: 8px;
 }
 
 .pin-icon {
     cursor: pointer;
-    color: #999;
+    opacity: .8;
+    transition: opacity 240ms ease-in-out;
 }
 
 .pin-icon:hover {
-    color: #444
+    opacity: 1;
 }

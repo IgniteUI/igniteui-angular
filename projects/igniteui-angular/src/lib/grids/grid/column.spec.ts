@@ -17,11 +17,11 @@ import {
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { getLocaleCurrencySymbol } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Column properties #grid', () => {
 
@@ -294,19 +294,19 @@ describe('IgxGrid - Column properties #grid', () => {
         fix.detectChanges();
 
         expect(grid.calcWidth).toBe(600);
-        expect(grid.columns[0].width).toBe('300px');
-        expect(!grid.columns[0].widthSetByUser);
-        expect(grid.columns[1].width).toBe('300px');
-        expect(!grid.columns[1].widthSetByUser);
-        grid.columns[0].hidden = true;
+        expect(grid.columnList.get(0).width).toBe('300px');
+        expect(!grid.columnList.get(0).widthSetByUser);
+        expect(grid.columnList.get(1).width).toBe('300px');
+        expect(!grid.columnList.get(1).widthSetByUser);
+        grid.columnList.get(0).hidden = true;
         fix.detectChanges();
 
-        expect(grid.columns[1].width).toBe('600px');
-        grid.columns[0].hidden = false;
+        expect(grid.columnList.get(1).width).toBe('600px');
+        grid.columnList.get(0).hidden = false;
         fix.detectChanges();
 
-        expect(grid.columns[0].width).toBe('300px');
-        expect(grid.columns[1].width).toBe('300px');
+        expect(grid.columnList.get(0).width).toBe('300px');
+        expect(grid.columnList.get(1).width).toBe('300px');
     });
 
     it('should support passing templates through the markup as an input property', () => {
@@ -335,8 +335,8 @@ describe('IgxGrid - Column properties #grid', () => {
 
         const grid = fixture.componentInstance.instance;
         const contextObject = {property1: 'cellContent', property2: 'cellContent1'};
-        const firstColumn = grid.columns[0];
-        const secondColumn = grid.columns[1];
+        const firstColumn = grid.columnList.get(0);
+        const secondColumn = grid.columnList.get(1);
 
         expect(firstColumn.additionalTemplateContext).toEqual(contextObject);
         expect(firstColumn._cells[0].nativeElement.innerText).toEqual(contextObject.property1);
@@ -350,7 +350,7 @@ describe('IgxGrid - Column properties #grid', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
-        const col = grid.columns[1];
+        const col = grid.columnList.get(1);
         expect(col.formatter).toBeUndefined();
         const rowCount = grid.rowList.length;
         for (let i = 0; i < rowCount; i++) {
@@ -383,7 +383,7 @@ describe('IgxGrid - Column properties #grid', () => {
         grid.allowFiltering = true;
         fix.detectChanges();
 
-        expect(grid.columns.length).toBe(7);
+        expect(grid.columnList.length).toBe(7);
 
         grid.filter('CompanyName', 'NoItemsFound', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
@@ -396,7 +396,7 @@ describe('IgxGrid - Column properties #grid', () => {
         }).not.toThrow();
 
         expect(grid.rowList.length).toBeGreaterThan(10);
-        expect(grid.columns.length).toBe(4);
+        expect(grid.columnList.length).toBe(4);
     });
 
     it('should clear grouping when a columns is removed dynamically', () => {
@@ -428,7 +428,7 @@ describe('IgxGrid - Column properties #grid', () => {
         groupRows = grid.nativeElement.querySelectorAll('igx-grid-groupby-row');
 
         expect(groupRows.length).toBe(0);
-        expect(grid.columns.length).toBe(4);
+        expect(grid.columnList.length).toBe(4);
     });
 
     it('should apply custom CSS bindings to the grid cells', () => {
@@ -441,7 +441,7 @@ describe('IgxGrid - Column properties #grid', () => {
         };
 
         const grid = fix.componentInstance.grid;
-        grid.columns.forEach(c => c.cellStyles = styles);
+        grid.columnList.forEach(c => c.cellStyles = styles);
         fix.detectChanges();
 
         const row = grid.gridAPI.get_row_by_index(0);
@@ -459,7 +459,7 @@ describe('IgxGrid - Column properties #grid', () => {
             color: 'white'
         };
 
-        grid.columns.forEach(col => col.headerStyles = styles);
+        grid.columnList.forEach(col => col.headerStyles = styles);
         fix.detectChanges();
 
         grid.headerCellList.forEach(header => expect(header.nativeElement.getAttribute('style')).toMatch('background: rebeccapurple'));
@@ -477,7 +477,7 @@ describe('IgxGrid - Column properties #grid', () => {
             color: 'white'
         };
 
-        grid.columns.forEach(col => col.headerGroupStyles = styles);
+        grid.columnList.forEach(col => col.headerGroupStyles = styles);
         fix.detectChanges();
 
         grid.headerGroupsList.forEach(hGroup => expect(hGroup.nativeElement.getAttribute('style')).toMatch('background: rebeccapurple'));

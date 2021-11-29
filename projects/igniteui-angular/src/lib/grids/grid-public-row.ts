@@ -1,24 +1,19 @@
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { CellType } from './common/cell.interface';
 import { IgxEditRow } from './common/crud.service';
 import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
-import { RowType } from './common/row.interface';
 import { IgxGridCell } from './grid-public-cell';
-import { IgxGridAPIService } from './grid/grid-api.service';
-import { IgxGridComponent } from './grid/grid.component';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxSummaryResult } from './summaries/grid-summary';
-import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
+import { CellType, GridServiceType, GridType, RowType } from './common/grid.interface';
 
 abstract class BaseRow implements RowType {
     public index: number;
     /**
      * The grid that contains the row.
      */
-    public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
+    public grid: GridType;
     protected _data?: any;
 
     /**
@@ -62,22 +57,6 @@ abstract class BaseRow implements RowType {
                 });
         }
         return this._data ?? this.grid.dataView[this.index];
-    }
-
-    /**
-     * @deprecated Use 'data' instead
-     *
-     * The data record that populates the row
-     */
-    public get rowData(): any {
-        return this.data;
-    }
-
-    /**
-     * @deprecated Use 'key' instead
-     */
-    public get rowID(): any {
-        return this.key;
     }
 
     /**
@@ -260,8 +239,10 @@ export class IgxGridRow extends BaseRow implements RowType {
     /**
      * @hidden
      */
-    constructor(public grid: IgxGridComponent,
-        public index: number, data?: any) {
+    constructor(
+        public grid: GridType,
+        public index: number, data?: any
+    ) {
         super();
         this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
     }
@@ -336,8 +317,10 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     /**
      * @hidden
      */
-    constructor(public grid: IgxTreeGridComponent,
-        public index: number, data?: any, private _treeRow?: ITreeGridRecord) {
+    constructor(
+        public grid: GridType,
+        public index: number, data?: any, private _treeRow?: ITreeGridRecord
+    ) {
         super();
         this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
     }
@@ -364,7 +347,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      *  The data passed to the row component.
      *
      * ```typescript
-     * let selectedRowData = this.grid.selectedRows[0].rowData;
+     * let selectedRowData = this.grid.selectedRows[0].data;
      * ```
      */
     public get data(): any {
@@ -399,7 +382,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      * Returns the parent row.
      */
     public get parent(): RowType {
-        const row = this.grid.getRowByKey(this.treeRow.parent?.rowID);
+        const row = this.grid.getRowByKey(this.treeRow.parent?.key);
         return row;
     }
 
@@ -490,8 +473,10 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
     /**
      * @hidden
      */
-    constructor(public grid: IgxHierarchicalGridComponent,
-        public index: number, data?: any) {
+    constructor(
+        public grid: GridType,
+        public index: number, data?: any
+    ) {
         super();
         this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
     }
@@ -537,7 +522,7 @@ export class IgxGroupByRow implements RowType {
     /**
      * The grid that contains the row.
      */
-    public grid: IgxGridComponent;
+    public grid: GridType;
 
     /**
      * Returns always true, because this is in instance of an IgxGroupByRow.
@@ -611,7 +596,7 @@ export class IgxGroupByRow implements RowType {
     /**
      * @hidden
      */
-    constructor(grid: IgxGridComponent, index: number, private _groupRow?: IGroupByRecord) {
+    constructor(grid: GridType, index: number, private _groupRow?: IGroupByRecord) {
         this.grid = grid;
         this.index = index;
         this.isGroupByRow = true;
@@ -676,8 +661,8 @@ export class IgxGroupByRow implements RowType {
         this.grid.toggleGroup(this.groupRow);
     }
 
-    private get gridAPI(): IgxGridAPIService {
-        return this.grid.gridAPI as IgxGridAPIService;
+    private get gridAPI(): GridServiceType {
+        return this.grid.gridAPI as GridServiceType;
     }
 }
 
@@ -690,7 +675,7 @@ export class IgxSummaryRow implements RowType {
     /**
      * The grid that contains the row.
      */
-    public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
+    public grid: GridType;
 
     /**
      * Returns always true, because this is in instance of an IgxGroupByRow.
@@ -716,7 +701,6 @@ export class IgxSummaryRow implements RowType {
     public get viewIndex(): number {
         if (this.grid.hasSummarizedColumns && this.grid.page > 0) {
             if (this.gridType === GridInstanceType.Grid) {
-                this.grid = this.grid as IgxGridComponent;
                 if (this.grid.page) {
                     const precedingDetailRows = [];
                     const precedingGroupRows = [];
@@ -758,7 +742,6 @@ export class IgxSummaryRow implements RowType {
                     return this.index;
                 }
             } else if (this.gridType === GridInstanceType.TreeGrid) {
-                this.grid = this.grid as IgxTreeGridComponent;
                 if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
                     const firstRowIndex = this.grid.processedExpandedFlatData.indexOf(this.grid.dataView[0].data);
                     const precedingSummaryRows = this.grid.summaryPosition === GridSummaryPosition.bottom ?
@@ -775,8 +758,10 @@ export class IgxSummaryRow implements RowType {
     /**
      * @hidden
      */
-    constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
-        index: number, private _summaries?: Map<string, IgxSummaryResult[]>, type?: GridInstanceType) {
+    constructor(
+        grid: GridType,
+        index: number, private _summaries?: Map<string, IgxSummaryResult[]>, type?: GridInstanceType
+    ) {
         this.grid = grid;
         this.index = index;
         this.isSummaryRow = true;

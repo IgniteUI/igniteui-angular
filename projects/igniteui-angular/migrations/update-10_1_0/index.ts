@@ -8,7 +8,7 @@ import { getIdentifierPositions } from '../common/tsUtils';
 
 const version = '10.1.0';
 
-export default (): Rule => (host: Tree, context: SchematicContext) => {
+export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
     const update = new UpdateChanges(__dirname, host, context);

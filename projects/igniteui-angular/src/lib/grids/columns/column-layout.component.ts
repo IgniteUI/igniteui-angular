@@ -101,14 +101,14 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     public set hidden(value: boolean) {
         this._hidden = value;
         this.children.forEach(child => child.hidden = value);
-        if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
+        if (this.grid && this.grid.columnList && this.grid.columnList.length > 0) {
             // reset indexes in case columns are hidden/shown runtime
             const columns = this.grid && this.grid.pinnedColumns && this.grid.unpinnedColumns ?
-            this.grid.pinnedColumns.concat(this.grid.unpinnedColumns) : [];
+                this.grid.pinnedColumns.concat(this.grid.unpinnedColumns) : [];
             if (!this._hidden && !columns.find(c => c.field === this.field)) {
                 this.grid.resetColumnCollections();
             }
-            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columnList.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
     }
 
@@ -155,8 +155,9 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      */
     public populateVisibleIndexes() {
         this.childrenVisibleIndexes = [];
-        const grid = this.gridAPI.grid;
-        const columns = grid && grid.pinnedColumns && grid.unpinnedColumns ? grid.pinnedColumns.concat(grid.unpinnedColumns) : [];
+        const columns = this.grid?.pinnedColumns && this.grid?.unpinnedColumns
+            ? this.grid.pinnedColumns.concat(this.grid.unpinnedColumns)
+            : [];
         const orderedCols = columns
             .filter(x => !x.columnGroup && !x.hidden)
             .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
