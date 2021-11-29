@@ -5,13 +5,14 @@ import {
     ComponentFactoryResolver,
     ElementRef,
     forwardRef,
+    HostBinding,
+    Input,
     Inject,
     OnChanges,
     SimpleChanges,
     TemplateRef,
     ViewChild,
-    ViewContainerRef,
-    Input
+    ViewContainerRef
 } from '@angular/core';
 import { IgxRowDirective } from '../row.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -36,8 +37,8 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
     /**
      * @hidden @internal
      */
-     @ViewChild('headerTemplate', { read: TemplateRef, static: true })
-     public headerTemplate: TemplateRef<any>;
+    @ViewChild('headerTemplate', { read: TemplateRef, static: true })
+    public headerTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
@@ -49,6 +50,22 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
 
     public get rowDimension() {
         return this.rowDimensionData?.map(x => x.column);
+    }
+
+    /**
+     * @hidden
+     */
+    @Input()
+    @HostBinding('attr.aria-selected')
+    public get selected(): boolean {
+        let isSelected = false;
+        this.rowDimensionData.forEach(x => {
+            const key = this.getRowDimensionKey(x.column as IgxColumnComponent);
+            if (this.selectionService.isPivotRowSelected(key)) {
+                isSelected = true;
+            }
+        });
+        return isSelected;
     }
 
     constructor(
@@ -65,7 +82,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
      * @hidden
      * @internal
      */
-     public get viewIndex(): number {
+    public get viewIndex(): number {
         return this.index;
     }
 
@@ -74,7 +91,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
      * @internal
      */
     public getRowDimensionKey(col: IgxColumnComponent) {
-            const dimData = this.rowDimensionData.find(x => x.column === col);
+            const dimData = this.rowDimensionData.find(x => x.column.field === col.field);
             const key =  PivotUtil.getRecordKey(this.data, dimData.dimension, dimData.prevDimensions, this.grid.pivotKeys);
             return key;
     }
@@ -118,6 +135,22 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         const colName = col.field.split('-');
         const measureName = colName[colName.length - 1];
         return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public selectPivotRow(col: any, event?: any) {
+        if (this.grid.rowSelection === 'none') {
+            return;
+        }
+        event?.stopPropagation();
+        const key = this.getRowDimensionKey(col);
+        if (this.grid.selectionService.isRowSelected(key)) {
+            this.grid.selectionService.deselectRow(key, event);
+        } else {
+            this.grid.selectionService.selectRowById(key, true, event);
+        }
     }
 
     protected extractFromDimensions(rowDimConfig: IPivotDimension[], level: number) {
