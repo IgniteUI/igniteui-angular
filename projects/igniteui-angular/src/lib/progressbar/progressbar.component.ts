@@ -184,8 +184,8 @@ export abstract class BaseProgressDirective {
 
         this._internalState.newVal = Math.round(toValue(toPercent(this.value, maxNum), maxNum));
         this._value = this._internalState.oldVal = Math.round(toValue(this.valueInPercent, maxNum));
-        if (maxNum < this._value || maxNum < this._initValue) {
-            this._initValue = this._value = maxNum;
+        if (maxNum < this._value) {
+            this._value = maxNum;
         }
 
         this._max = maxNum;
@@ -274,6 +274,9 @@ export abstract class BaseProgressDirective {
         if (this._contentInit) {
             this.triggerProgressTransition(this._value, valInRange);
         } else {
+            if (this._initValue > this.max) {
+                this._initValue = this.max;
+            }
             this._initValue = valInRange;
         }
     }
