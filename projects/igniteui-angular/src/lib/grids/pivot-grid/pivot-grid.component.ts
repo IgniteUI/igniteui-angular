@@ -949,12 +949,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
-        const hasChildGroup = groupColumn.children.filter(x => x.columnGroup).length > 0;
         groupColumn.hidden = state;
         this.columnGroupStates.set(groupColumn.field, state);
-        if (!groupColumn.hidden && hasChildGroup) {
-            const groupChildren = groupColumn.children.filter(x => x.columnGroup);
-            groupChildren.forEach(group => {
+        const childrenTotal = this.hasMultipleValues ?
+         groupColumn.children.filter(x => x.columnGroup && x.children.filter(y => !y.columnGroup).length === this.values.length) :
+         groupColumn.children.filter(x => !x.columnGroup);
+         const childrenSubgroups = this.hasMultipleValues ?
+         groupColumn.children.filter(x => x.columnGroup && x.children.filter(y => !y.columnGroup).length === 0) :
+         groupColumn.children.filter(x => x.columnGroup);
+         childrenTotal.forEach(group => {
+            if (state) {
+                group.headerTemplate = this.headerTemplate;
+            } else {
+                group.headerTemplate = undefined;
+            }
+         });
+        if (!groupColumn.hidden && childrenSubgroups.length > 0) {
+            childrenSubgroups.forEach(group => {
                 this.resolveToggle(group, state);
             });
         }
