@@ -919,30 +919,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             const siblingIndex = parentCols.indexOf(siblingCol);
             if (currIndex < siblingIndex) {
                 // clicked on the full hierarchy header
-                const groupColumns = col.children.filter(x => x.columnGroup);
-                groupColumns.forEach(groupColumn => {
-                    groupColumn.hidden = newState;
-                    this.columnGroupStates.set(groupColumn.field, newState);
-                    this.resolveToggle(groupColumn);
-                });
-
+                this.resolveToggle(col, newState);
                 siblingCol.headerTemplate = this.headerTemplate;
             } else {
                 // clicked on summary parent column that contains just the measures
                 col.headerTemplate = undefined;
-                const groupColumns = siblingCol.children.filter(x => x.columnGroup);
-                groupColumns.forEach(groupColumn => {
-                    groupColumn.hidden = newState;
-                    this.columnGroupStates.set(groupColumn.field, newState);
-                    this.resolveToggle(groupColumn);
-                });
+                this.resolveToggle(siblingCol, newState);
             }
         } else {
             const parentCols = col.parent ? col.parent.children : this.columns.filter(x => x.level === 0);
             const fieldColumn = parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
             const groupColumn = parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
-            groupColumn.hidden = newState;
-            this.resolveToggle(groupColumn);
+            this.resolveToggle(groupColumn, newState);
             if (newState) {
                 fieldColumn.headerTemplate = this.headerTemplate;
             } else {
@@ -960,12 +948,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         super.setupColumns();
     }
 
-    protected resolveToggle(groupColumn: IgxColumnComponent) {
+    protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
         const hasChildGroup = groupColumn.children.filter(x => x.columnGroup).length > 0;
+        groupColumn.hidden = state;
+        this.columnGroupStates.set(groupColumn.field, state);
         if (!groupColumn.hidden && hasChildGroup) {
             const groupChildren = groupColumn.children.filter(x => x.columnGroup);
             groupChildren.forEach(group => {
-                this.resolveToggle(group);
+                this.resolveToggle(group, state);
             });
         }
     }
