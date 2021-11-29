@@ -2064,6 +2064,20 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.filteredData).toBeNull();
         }));
 
+        it('should not reset expression when input is cleared', fakeAsync(() => {
+            grid.filter('ProductName', 'I', IgxStringFilteringOperand.instance().condition('startsWith'));
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+
+            grid.filteringRow.onClearClick();
+            tick(100);
+            fix.detectChanges();
+            console.log(grid.filteringRow.expression.condition.name);
+
+            expect(grid.filteringRow.expression.condition.name).toEqual('startsWith');
+        }));
+
         it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy', fakeAsync(() => {
             const formattedStrategy = new FormattedValuesFilteringStrategy(['Downloads']);
             grid.filterStrategy = formattedStrategy;
@@ -6627,8 +6641,6 @@ const emitFilteringDoneOnInputClear = (fix, grid, filterVal, columnName, conditi
     filterGrid(fix, grid, columnName, filterVal, condition);
 
     GridFunctions.clickFilterCellChip(fix, columnName);
-
-    // spyOn(grid.filteringDone, 'emit');
 
     grid.filteringRow.onClearClick();
     tick(100);
