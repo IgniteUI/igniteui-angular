@@ -93,6 +93,10 @@ export abstract class BaseProgressDirective {
     protected _step;
     protected _animation;
     protected _valueInPercent;
+    protected _internalState = {
+        oldVal: 0,
+        newVal: 0
+    };
 
     constructor() { }
 
@@ -178,12 +182,14 @@ export abstract class BaseProgressDirective {
             return;
         }
 
+        this._internalState.newVal = Math.round(toValue(toPercent(this.value, maxNum), maxNum));
+        this._value = this._internalState.oldVal = Math.round(toValue(this.valueInPercent, maxNum));
         if (maxNum < this._value || maxNum < this._initValue) {
             this._initValue = this._value = maxNum;
         }
 
         this._max = maxNum;
-        this.runAnimation(this.value);
+        this.triggerProgressTransition(this._internalState.oldVal, this._internalState.newVal, true);
     }
 
     /**
@@ -272,7 +278,7 @@ export abstract class BaseProgressDirective {
         }
     }
 
-    protected triggerProgressTransition(oldVal, newVal) {
+    protected triggerProgressTransition(oldVal, newVal, maxUpdate = false) {
         if (oldVal === newVal) {
             return;
         }
@@ -294,6 +300,9 @@ export abstract class BaseProgressDirective {
             this.updateProgress(newVal);
         }
 
+        if (maxUpdate) {
+            return;
+        }
         this.progressChanged.emit(changedValues);
     }
 
