@@ -17,10 +17,7 @@ igx-pivot-grid {
     display: flex;
     gap: 16px;
     margin-bottom: 16px;
-
-    > * {
-        flex: 1;
-    }
+    flex-direction: column;
 }
 
 :host ::ng-deep {

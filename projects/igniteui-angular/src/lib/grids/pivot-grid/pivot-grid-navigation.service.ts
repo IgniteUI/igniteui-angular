@@ -17,15 +17,15 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         this.isRowHeaderActive = false;
     }
 
-    public headerNavigation(event: KeyboardEvent) {
-        const key = event.key.toLowerCase();
-        const ctrl = event.ctrlKey;
-        if (!HEADER_KEYS.has(key)) {
-            return;
-        }
-        event.preventDefault();
-
+    public handleNavigation(event: KeyboardEvent) {
         if (this.isRowHeaderActive) {
+            const key = event.key.toLowerCase();
+            const ctrl = event.ctrlKey;
+            if (!HEADER_KEYS.has(key)) {
+                return;
+            }
+            event.preventDefault();
+
             const newActiveNode = {
                 row: this.activeNode.row, column: this.activeNode.column, level: null,
                 mchCache: null,
@@ -47,7 +47,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             this.setActiveNode(newActiveNode);
             this.grid.navigateTo(newActiveNode.row);
         } else {
-            super.headerNavigation(event);
+            super.handleNavigation(event);
         }
     }
 }

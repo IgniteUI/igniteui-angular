@@ -11,7 +11,7 @@ import { IPivotDimension } from './pivot-grid.interface';
 /**
  * @hidden
  */
- @Component({
+@Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-header-group',
     templateUrl: '../headers/grid-header-group.component.html'
@@ -24,8 +24,8 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
         public colResizingService: IgxColumnResizingService,
         public filteringService: IgxFilteringService,
         protected platform: PlatformUtil) {
-            super(cdRef, grid, elementRef, colResizingService, filteringService, platform);
-         }
+        super(cdRef, grid, elementRef, colResizingService, filteringService, platform);
+    }
 
     /**
      * @hidden
@@ -87,7 +87,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
                     result = row;
                 }
                 tempRow = tempRow.childLevel;
-            } while(tempRow)
+            } while (tempRow)
         });
         return result;
     }
@@ -96,5 +96,19 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     public activate() {
         this.grid.navigation.isRowHeader = true;
         this.grid.navigation.setActiveNode(this.activeNode);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public pointerdown(_event: PointerEvent): void {
+        this.activate();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onMouseDown(_event: MouseEvent): void {
+        this.activate();
     }
 }
