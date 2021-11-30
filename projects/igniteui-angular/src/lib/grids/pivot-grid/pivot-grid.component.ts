@@ -293,7 +293,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public columnGroupStates = new Map<string, boolean>();
     public dimensionDataColumns;
-    public pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
+    public get pivotKeys() {
+        return this.pivotConfiguration.pivotKeys || {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'};
+    }
     public isPivot = true;
 
     /**
@@ -455,7 +457,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 let currDim = dim;
                 let shouldBreak = false;
                 do {
-                    const key = PivotUtil.getRecordKey(record, currDim, prev);
+                    const key = PivotUtil.getRecordKey(record, currDim, prev, this.pivotKeys);
                     if (this.selectionService.isPivotRowSelected(key) && !selectedRowIds.find(x => x === record)) {
                         selectedRowIds.push(record);
                         shouldBreak = true;
@@ -575,24 +577,24 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public getDimensionData(dim: IPivotDimension,
         dimExprTree: IFilteringExpressionsTree,
         done: (colVals: any[]) => void) {
-        let columnValues = [];
-        const data = this.gridAPI.get_data();
-        const state = {
-            expressionsTree: dimExprTree,
-            strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
-            advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
-        };
-        const filtered = DataUtil.filter(data, state, this);
-        const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
-            filtered,
-            [dim],
-            PivotDimensionType.Column,
-            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
-        );
-        const flatData = Array.from(allValuesHierarchy.values());
-        columnValues = flatData.map(record => this.extractValue(record['value']));
-        done(columnValues);
-        return;
+            let columnValues = [];
+            const data = this.gridAPI.get_data();
+            const state = {
+                expressionsTree: dimExprTree,
+                strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
+                advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
+            };
+            const filtered = DataUtil.filter(data, state, this);
+            const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
+                filtered,
+                [dim],
+                PivotDimensionType.Column,
+                this.pivotKeys
+                );
+            const flatData = Array.from(allValuesHierarchy.values());
+            columnValues = flatData.map(record => this.extractValue(record['value']));
+            done(columnValues);
+            return;
     }
 
     /** @hidden */
@@ -1018,10 +1020,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             fieldsMap = this.generateFromData(filteredFields);
         } else {
             fieldsMap = PivotUtil.getFieldsHierarchy(
-                data,
-                this.columnDimensions,
-                PivotDimensionType.Column,
-                { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+            data,
+            this.columnDimensions,
+            PivotDimensionType.Column,
+            this.pivotKeys
             );
         }
         columns = this.generateColumnHierarchy(fieldsMap, data);
