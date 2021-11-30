@@ -2073,9 +2073,22 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             grid.filteringRow.onClearClick();
             tick(100);
             fix.detectChanges();
-            console.log(grid.filteringRow.expression.condition.name);
 
             expect(grid.filteringRow.expression.condition.name).toEqual('startsWith');
+        }));
+
+        it('should reset expression when the condition is unary', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+
+            // iterate over unary conditions
+            // empty
+            GridFunctions.openFilterDDAndSelectCondition(fix, 6);
+
+            grid.filteringRow.onClearClick();
+            tick(100);
+            fix.detectChanges();
+
+            expect(grid.filteringRow.expression.condition.name).toEqual('contains');
         }));
 
         it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy', fakeAsync(() => {

@@ -73,7 +73,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             const index = this.expressionsList.findIndex(item => item.expression === this.expression);
             if (index === 0 && this.expressionsList.length === 1) {
                 this.filteringService.clearFilter(this.column.field);
-                
+
                 if (this.expression.condition.isUnary) {
                     this.resetExpression();
                 }
