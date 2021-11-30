@@ -1117,7 +1117,7 @@
         z-index: 10000;
 
         %igx-grid__hierarchical-expander--empty {
-            border-#{$right}: 1px solid transparent;
+            border-#{$right}: rem(1px) solid var-get($theme, 'header-border-color');
         }
     }
 
