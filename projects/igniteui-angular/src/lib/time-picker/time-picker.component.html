@@ -1,11 +1,11 @@
-<igx-input-group [displayDensity]="displayDensity" [type]="type" [suppressInputAutofocus]="this.isDropdown"
-    (click)="!this.isDropdown && this.toggle()">
+<igx-input-group [displayDensity]="displayDensity" [type]="type" [suppressInputAutofocus]="this.isDropdown">
     <input [displayValuePipe]="this.formatter ? displayValue : null" igxInput [igxDateTimeEditor]="this.inputFormat"
         type="text" [readonly]="!this.isDropdown || this.readOnly" [minValue]="this.minValue" [maxValue]="this.maxValue"
         [locale]="this.locale" [spinDelta]="this.itemsDelta" [spinLoop]="this.spinLoop" [placeholder]="this.placeholder"
         [disabled]="this.disabled" [displayFormat]="this.displayFormat"
         [igxTextSelection]="this.isDropdown && !this.readOnly" role="combobox" aria-haspopup="dialog"
-        [attr.aria-expanded]="!this.toggleDirective.collapsed" [attr.aria-labelledby]="this.label?.id" />
+        [attr.aria-expanded]="!this.toggleDirective.collapsed" [attr.aria-labelledby]="this.label?.id"
+        (click)="!this.isDropdown && this.toggle()"/>
 
     <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
         <igx-icon [title]="this.value ? resourceStrings.igx_time_picker_change_time : resourceStrings.igx_time_picker_choose_time">access_time</igx-icon>
