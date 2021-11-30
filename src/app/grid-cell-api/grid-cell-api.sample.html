@@ -211,7 +211,7 @@
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-tree-grid #treeGrid [paging]='true' [allowFiltering]='true' [data]="treeData" [columnSelection]="'single'" primaryKey="employeeID" foreignKey="PID" [rowSelection]="'multiple'" [width]="'800px'" [height]="'600px'">
+        <igx-tree-grid #treeGrid [paging]='true' [allowFiltering]='true' [moving]="true" [data]="treeData" [columnSelection]="'single'" primaryKey="employeeID" foreignKey="PID" [rowSelection]="'multiple'" [width]="'800px'" [height]="'600px'">
             <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
                 [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>

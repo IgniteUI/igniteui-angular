@@ -1848,7 +1848,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(nextCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 0 });
         });
 
-        it(`GetPreviousCell: should return correctly next cell coordinates`, async () => {
+        fit(`GetPreviousCell: should return correctly next cell coordinates`, async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(15, 5);
             fix.detectChanges();
@@ -1876,7 +1876,7 @@ describe('IgxGrid Component Tests #grid', () => {
             prevCellCoords = grid.getPreviousCell(0, 2, (col) => col.editable);
             expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 2 });
             // when the filter function has no matching colums
-            prevCellCoords = grid.getPreviousCell(0, 3);
+            prevCellCoords = grid.getPreviousCell(0, 3, (col) => col.pinned);
             expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 3 });
             // when grid has no data
             grid.filter('col0', 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));

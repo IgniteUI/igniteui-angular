@@ -10,7 +10,7 @@
     <igx-tree-grid #grid1 [moving]="true" [data]="data1" primaryKey="employeeID" foreignKey="PID"
         [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees" [batchEditing]="true"
         [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'800px'"
-        [summaryCalculationMode]="summaryMode" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+        [summaryCalculationMode]="summaryMode" [allowFiltering]="true" [moving]="true" [filterMode]="'excelStyleFilter'">
         <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
             <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
             <igx-grid-toolbar-actions>

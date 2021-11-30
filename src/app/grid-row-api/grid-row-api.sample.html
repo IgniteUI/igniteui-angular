@@ -109,7 +109,7 @@
     <div class="grid-wrapper">
         <igx-tree-grid #treeGridHier id="testTreeGrid" [pinning]="pinningConfig" [width]="'900px'" [height]="'500px'"
             [data]="treeGridHierData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1"
-            [rowSelection]="'multiple'">
+            [rowSelection]="'multiple'" [moving]="true">
             <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
                 [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true"
                 [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="c.minWidth"

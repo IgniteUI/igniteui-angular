@@ -1,6 +1,6 @@
 <div>
     <igx-tree-grid [pinning]="pinningConfig" #grid [moving]="true" [allowFiltering]="true" [data]="data" primaryKey="employeeID"
-        foreignKey="PID" [width]="'900px'" [height]="'800px'" [rowEditable]="true">
+        foreignKey="PID" [width]="'900px'" [height]="'800px'" [rowEditable]="true" [moving]="true">
         <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
             [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
             [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [minWidth]="c.minWidth"

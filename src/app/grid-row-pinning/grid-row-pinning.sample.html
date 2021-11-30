@@ -17,7 +17,7 @@
         </div>
         <igx-grid [rowEditable]="true" [batchEditing]="true" [igxGridState]="options" [allowFiltering]="true"
             primaryKey="ID" [pinning]="pinningConfig" #grid1 [data]="data" [width]="'800px'" [height]="'600px'"
-            [rowSelection]="'multiple'">
+            [rowSelection]="'multiple'" [moving]="true">
             <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
                 <app-grid-search-box [grid]="grid1" [style.width]="'400px'"></app-grid-search-box>
                 <igx-grid-toolbar-actions>
