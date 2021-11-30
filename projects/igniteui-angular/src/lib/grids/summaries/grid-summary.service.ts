@@ -204,7 +204,7 @@ export class IgxGridSummaryService {
         }
         row = row.children ? row : row.parent;
         while (row) {
-            rowID = row.rowID;
+            rowID = row.key;
             this.deleteSummaryCache(rowID, columnName);
             row = row.parent;
         }

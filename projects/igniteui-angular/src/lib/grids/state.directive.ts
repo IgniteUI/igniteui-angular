@@ -299,7 +299,7 @@ export class IgxGridStateDirective {
         },
         rowPinning: {
             getFeatureState: (context: IgxGridStateDirective): IGridState => {
-                const pinned = context.currGrid.pinnedRows.map(x => x.rowID);
+                const pinned = context.currGrid.pinnedRows.map(x => x.key);
                 return { rowPinning: pinned };
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: any[]): void => {

@@ -863,7 +863,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
             const activeElement = this.selectionService.activeElement;
             const row = activeElement ? this.grid.gridAPI.get_row_by_index(activeElement.row) : null;
-            if (this.grid.crudService.rowEditingBlocked && row && this.intRow.rowID !== row.rowID) {
+            if (this.grid.crudService.rowEditingBlocked && row && this.intRow.key !== row.key) {
                 return;
             }
 
@@ -996,7 +996,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private getCellType(useRow?: boolean): CellType {
-        const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.rowData) : this.intRow.index;
+        const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.data) : this.intRow.index;
         // TODO: Fix types
         return new IgxGridCell(this.grid, rowID, this.column.field);
     }

@@ -559,7 +559,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public trackChanges(index, rec) {
-        if (rec.detailsData !== undefined) {
+        if (rec && rec.detailsData !== undefined) {
             return rec.detailsData;
         }
         return rec;
@@ -598,7 +598,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public isDetailRecord(record) {
-        return record.detailsData !== undefined;
+        return record && record.detailsData !== undefined;
     }
 
     /**

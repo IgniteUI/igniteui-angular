@@ -50,6 +50,8 @@ All notable changes for each version of this project will be documented in this 
     - Added `groupSortingDirection` input, which allows you to set groups sorting order.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added new directives for re-templating header sorting indicators - `IgxSortHeaderIconDirective`, `IgxSortAscendingHeaderIconDirective` and `IgxSortDescendingHeaderIconDirective`.
+- `IgxGrid`
+    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
 - `IgxDialog`
     - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
 
@@ -80,13 +82,37 @@ All notable changes for each version of this project will be documented in this 
         Use `IgxGridToolbarComponent`, `IgxGridToolbarHidingComponent`, `IgxGridToolbarPinningComponent` instead.
     - **Breaking Change** - The `rowSelected` event is renamed to `rowSelectionChanging` to better reflect its function.
     - **Breaking Change** - The `columnSelected` event is renamed to `columnSelectionChanging` to better reflect its function.
-- `igxGrid`
-    - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
-- `IgxColumnActionsComponent`
-    - **Breaking Change** - The following input has been removed
-        - Input `columns`. Use `igxGrid` `columns` input instead.
+    - **Breaking Change** - `columnsCollection` is removed. Use `columns` instead. If at certain ocasions `columns` return empty array, query the columns using `ViewChildren` and access those in `ngAfterViewInit`:
+    ```ts
+    @ViewChildren(IgxColumnComponent, { read: IgxColumnComponent })
+    public columns: QueryList<IgxColumnComponent>;
+    ```
+    - `RowType`, `IgxRowDirective`
+        - **Breaking Change** - `rowData` and `rowID` deprecated properties are now removed. Use `data` and `key` instead. Use `ng update` for automatic migration.
+    - `igxRowSelector`
+        - `rowID` in the context object of the `igxRowSelector` is now deprecated and will be removed in future version. Use `key` property instead:
+        ```html
+        <igx-grid [data]="data", [rowSelection]="'multiple'" primaryKey="ID">
+            <igx-column field="Name"></igx-column>
+            <igx-column field="Age"></igx-column>
+
+            <ng-template igxRowSelector let-rowContext>
+                <span>{{ rowContext.key }}</span>
+            </ng-template>
+        </igx-grid>
+        ```
+    - `IgxColumnActionsComponent`
+        - **Breaking Change** -  Input `columns` has been removed. Use `igxGrid` `columns` input instead.
 - `IgxCarousel`
-    - **Breaking Changes** -The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
+    - **Breaking Changes** - The carousel animation type `CarouselAnimationType` is renamed to `HorizontalAnimationType`.
+
+- `Theming`
+    - **Breaking Change** - Changed CSS palette variables from HEX values to a list of H, S, L comma-separated values, which requires the use of the CSS `hsl` function when accessing these values directly.
+        ```scss
+        .bozo {
+            background: hsl(var(--igx-surface-500));
+        }
+        ```
 
 ## 12.2.3
 
@@ -815,7 +841,7 @@ All notable changes for each version of this project will be documented in this 
 
         Changed the how the grid toolbar is instantiated in the grids. The
         toolbar is now templated rather than being activated through a property on the parent grid. The toolbar features are also exposed as templatable
-        components and the old properties are deprecated.
+        components and the old properties are deprecated. The implementation of the Column Hiding UI has been changed in order to select which columns should be displayed, instead of hidden.
 
         Refer to the official documentation for more information.
 - `FilteringStrategy`

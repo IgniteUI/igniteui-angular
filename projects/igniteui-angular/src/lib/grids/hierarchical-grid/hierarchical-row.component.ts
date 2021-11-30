@@ -68,7 +68,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
      * ```
      */
     public get expanded() {
-        return this.grid.gridAPI.get_row_expansion_state(this.rowData);
+        return this.grid.gridAPI.get_row_expansion_state(this.data);
     }
 
     /**
@@ -88,7 +88,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
      */
     @HostBinding('class.igx-grid__tr--highlighted')
     public get highlighted() {
-        return this.grid && this.grid.highlightedRowID === this.rowID;
+        return this.grid && this.grid.highlightedRowID === this.key;
     }
 
    /**
@@ -110,7 +110,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
             return;
         }
         this.endEdit(this.grid.rootGrid);
-        this.grid.gridAPI.set_row_expansion_state(this.rowID, !this.expanded);
+        this.grid.gridAPI.set_row_expansion_state(this.key, !this.expanded);
         this.grid.cdr.detectChanges();
     }
 
@@ -119,7 +119,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
      * @internal
      */
     public select = () => {
-        this.grid.selectRows([this.rowID]);
+        this.grid.selectRows([this.key]);
     };
 
     /**
@@ -127,7 +127,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
      * @internal
      */
     public deselect = () => {
-        this.grid.deselectRows([this.rowID]);
+        this.grid.deselectRows([this.key]);
     };
 
     /**
@@ -136,7 +136,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     public get iconTemplate() {
         let expandable = true;
         if (this.grid.hasChildrenKey) {
-            expandable = this.rowData[this.grid.hasChildrenKey];
+            expandable = this.data[this.grid.hasChildrenKey];
         }
         if (!expandable || (this.pinned && !this.disabled)) {
             return this.defaultEmptyTemplate;

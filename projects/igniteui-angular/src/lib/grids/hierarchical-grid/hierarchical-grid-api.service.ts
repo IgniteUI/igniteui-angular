@@ -99,7 +99,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
     public get_row_expansion_state(record: any): boolean {
         let inState;
         if (record.childGridsData !== undefined) {
-            const ri = record.rowID;
+            const ri = record.key;
             const states = this.grid.expansionStates;
             const expanded = states.get(ri);
             if (expanded !== undefined) {

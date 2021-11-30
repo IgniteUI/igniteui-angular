@@ -109,7 +109,7 @@ export class IgxGridRowClassesPipe implements PipeTransform {
         for (const cssClass of Object.keys(cssClasses ?? {})) {
             const callbackOrValue = cssClasses[cssClass];
             this.row.index = index;
-            (this.row as any)._data = row.rowData;
+            (this.row as any)._data = row.data;
             const apply = typeof callbackOrValue === 'function' ? callbackOrValue(this.row) : callbackOrValue;
             if (apply) {
                 result.add(cssClass);

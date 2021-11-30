@@ -45,7 +45,7 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
     @Input()
     public get row(): RowType {
         // TODO: Fix types
-        return new IgxTreeGridRow(this.grid as any, this.intRow.index, this.intRow.rowData);
+        return new IgxTreeGridRow(this.grid as any, this.intRow.index, this.intRow.data);
     }
 
     /**
@@ -53,7 +53,7 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
      */
     public toggle(event: Event) {
         event.stopPropagation();
-        this.grid.gridAPI.set_row_expansion_state(this.intRow.rowID, !this.intRow.expanded, event);
+        this.grid.gridAPI.set_row_expansion_state(this.intRow.key, !this.intRow.expanded, event);
     }
 
     /**

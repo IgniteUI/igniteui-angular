@@ -234,13 +234,14 @@
         flex-wrap: wrap;
         flex-grow: 1;
         justify-content: flex-end;
+        margin-#{$right}: map.get($grid-toolbar-spacer, 'comfortable');
     }
 
     %igx-grid-toolbar__actions {
         display: flex;
         align-items: center;
         flex-flow: row wrap;
-        margin-#{$left}: map.get($grid-toolbar-spacer, 'comfortable');
+        margin-#{$left}: auto;
 
         > * {
             display: flex;

@@ -283,7 +283,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
             fix.detectChanges();
             await wait(100);
-            expect(grid.rowList.first._rowData).toEqual(grid.data[0]);
+            expect(grid.rowList.first._data).toEqual(grid.data[0]);
         }));
 
         it('should work correct with filtering', () => {

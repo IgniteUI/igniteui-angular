@@ -469,8 +469,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(rowElems[0].query(By.css('igx-icon')).nativeElement.innerText).toEqual('');
         const row2 = hierarchicalGrid.hgridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
         expect(rowElems[1].query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
-        hierarchicalGrid.expandRow(row1.rowData);
-        hierarchicalGrid.expandRow(row2.rowData);
+        hierarchicalGrid.expandRow(row1.data);
+        hierarchicalGrid.expandRow(row2.data);
         expect(row1.expanded).toBe(false);
         expect(row2.expanded).toBe(true);
         hierarchicalGrid.expandAll();
@@ -1428,7 +1428,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         expect(mainGridOverlayTextContent).toBe(' You have 0 changes in this row\n');
         expect(mainGridOverlayActionsContent).toBe('CancelDone');
 
-        hierarchicalGrid.expandRow(hierarchicalGrid.getRowByIndex(0).rowID);
+        hierarchicalGrid.expandRow(hierarchicalGrid.getRowByIndex(0).key);
         customFixture.detectChanges();
 
         const secondLevelGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
