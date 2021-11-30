@@ -220,8 +220,8 @@ export class PivotUtil {
             const children = hierarchy[pivotKeys.children];
             if (children && children.size > 0) {
                 this.applyAggregations(children, values, pivotKeys);
-                const childrenAggregations = this.collectAggregations(children, pivotKeys);
-                hierarchy[pivotKeys.aggregations] = this.aggregate(childrenAggregations, values);
+                const childRecords = this.collectRecords(children, pivotKeys);
+                hierarchy[pivotKeys.aggregations] = this.aggregate(childRecords, values);
             } else if (hierarchy[pivotKeys.records]) {
                 hierarchy[pivotKeys.aggregations] = this.aggregate(hierarchy[pivotKeys.records], values);
             }
@@ -400,10 +400,9 @@ export class PivotUtil {
         return flatData;
     }
 
-    private static collectAggregations(children, pivotKeys) {
-        const result = [];
-        children.forEach(value => result.push(value[pivotKeys.aggregations]));
-
+    private static collectRecords(children, pivotKeys: IPivotKeys) {
+        let result = [];
+        children.forEach(value => result = result.concat(value[pivotKeys.records]));
         return result;
     }
 
