@@ -423,7 +423,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(expansionState);
     });
 
-    fit('setState should correctly restore grid columns state from string', async () => {
+    it('setState should correctly restore grid columns state from string', async () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
