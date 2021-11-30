@@ -1,6 +1,6 @@
 <div class="igx-grid-thead__wrapper igx-grid-thead__wrapper--pivot" role="row" [style.width.px]="width">
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
-        <div #pivotFilterContainer class="igx-grid__tr-pivot igx-grid__tr-pivot--filter" [style.min-width.px]="grid.pivotRowWidths - 1" [style.max-width.px]="grid.pivotRowWidths - 1"
+        <div #pivotFilterContainer *ngIf="grid.showPivotConfigurationUI" class="igx-grid__tr-pivot igx-grid__tr-pivot--filter" [style.min-width.px]="grid.pivotRowWidths - 1" [style.max-width.px]="grid.pivotRowWidths - 1"
             (igxDragEnter)="onAreaDragEnter($event, filterArea, 2)" (igxDragLeave)="onAreaDragLeave($event, filterArea)"
             igxDrop (dropped)="onDimDrop($event, filterArea, 2)" (pointerdown)="$event.preventDefault()">
 
@@ -21,7 +21,7 @@
         </div>
 
         <div class="igx-grid__tr-pivot-group">
-            <div #pivotColumnContainer class="igx-grid__tr-pivot" (dropped)="onDimDrop($event, colArea, 1)" igxDrop
+            <div #pivotColumnContainer *ngIf="grid.showPivotConfigurationUI" class="igx-grid__tr-pivot" (dropped)="onDimDrop($event, colArea, 1)" igxDrop
                 (igxDragEnter)="onAreaDragEnter($event, colArea, 1)" (igxDragLeave)="onAreaDragLeave($event, colArea)">
 
                 <span *ngIf="grid.columnDimensions.length === 0" class='igx-pivot__emptyChipArea'>Drop Column Fields here.</span>
@@ -44,7 +44,7 @@
                 </igx-chips-area>
             </div>
 
-            <div #pivotValueContainer class="igx-grid__tr-pivot" (pointerdown)="$event.preventDefault()"
+            <div #pivotValueContainer *ngIf="grid.showPivotConfigurationUI" class="igx-grid__tr-pivot" (pointerdown)="$event.preventDefault()"
                 (dropped)="onValueDrop($event, valueArea)" igxDrop
                 (igxDragEnter)="onAreaDragEnter($event, valueArea)"
                 (igxDragLeave)="onAreaDragLeave($event, valueArea)">
@@ -81,10 +81,10 @@
             (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)" (igxDragLeave)="onAreaDragLeave($event, rowArea)"
             igxDrop (dropped)="onDimDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()">
 
-            <span *ngIf="grid.rowDimensions.length === 0" class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
+            <span *ngIf="grid.rowDimensions.length === 0 && grid.showPivotConfigurationUI" class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
 
             <!-- Row area -->
-            <igx-chips-area #rowArea droppable='true'>
+            <igx-chips-area *ngIf="grid.showPivotConfigurationUI" #rowArea droppable='true'>
                 <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="true" [id]="row.memberName"
                     [displayDensity]="grid.displayDensity"
                     [removable]="true" (remove)="rowRemoved($event)"
