@@ -47,7 +47,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
             columnSelection: true,
             rowIslands: true,
             expansion: true,
-            moving: true
+            moving: false
         };
 
         fix.detectChanges();
@@ -341,6 +341,7 @@ class HelperFunctions {
 export class IgxTreeGridTreeDataTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
+
     /* eslint-disable max-len */
     public columns: any[] = [
         { field: 'ID', header: 'ID', width: '150px', dataType: 'number', pinned: true, movable: true, sortable: true, filterable: true, groupable: false, hasSummary: false, hidden: false, maxWidth: '300px', searchable: false, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: 'testCss', headerGroupClasses: '', resizable: true },

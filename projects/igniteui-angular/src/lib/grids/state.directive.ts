@@ -55,6 +55,7 @@ export interface IGridStateOptions {
     pinningConfig?: boolean;
     expansion?: boolean;
     rowIslands?: boolean;
+    moving?: boolean;
 }
 
 export interface IColumnState {
@@ -111,7 +112,8 @@ export class IgxGridStateDirective {
         columnSelection: true,
         rowPinning: true,
         expansion: true,
-        rowIslands: true
+        rowIslands: true,
+        moving: false
     };
     private FEATURES = {
         sorting:  {
