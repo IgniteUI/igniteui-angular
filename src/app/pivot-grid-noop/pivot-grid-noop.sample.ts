@@ -91,11 +91,11 @@ export class PivotGridNoopSampleComponent {
 
     public mockRemoteDataDifferentSeparator = [
         {
-            ProductCategory: 'All', AllProducts: 'All Products', All: 1000, 'All_Country-Bulgaria': 774, 'All_Country-USA': 829, 'All_Country-Uruguay': 524, 'AllProducts-records': [
-                { ProductCategory: 'Clothing', 'All_Country-Bulgaria': 774, 'All_Country-USA': 296, 'All_Country-Uruguay': 456 },
-                { ProductCategory: 'Bikes', 'All_Country-Uruguay': 68 },
-                { ProductCategory: 'Accessories', 'All_Country-USA': 293 },
-                { ProductCategory: 'Components', 'All_Country-USA': 240 }
+            ProductCategory: 'All', AllProducts: 'All Products', All: 2127, 'All_Country-Bulgaria': 774, 'All_Country-USA': 829, 'All_Country-Uruguay': 524, 'AllProducts-records': [
+                { ProductCategory: 'Clothing', All: 1523, 'All_Country-Bulgaria': 774, 'All_Country-USA': 296, 'All_Country-Uruguay': 456,  },
+                { ProductCategory: 'Bikes', All: 68, 'All_Country-Uruguay': 68 },
+                { ProductCategory: 'Accessories', All: 293, 'All_Country-USA': 293 },
+                { ProductCategory: 'Components', All: 240, 'All_Country-USA': 240 }
             ]
         }
     ];

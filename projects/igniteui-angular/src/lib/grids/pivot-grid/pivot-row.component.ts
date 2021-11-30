@@ -101,7 +101,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
     }
 
     public getLevel(col: IgxColumnComponent) {
-        return this.data[col.field + '_level'];
+        return this.data[col.field + this.grid.pivotKeys.rowDimensionSeparator + this.grid.pivotKeys.level];
     }
 
 
@@ -131,7 +131,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         if (configuration.values.length === 1) {
             return configuration.values[0].styles;
         }
-        const colName = col.field.split('-');
+        const colName = col.field.split(this.grid.pivotKeys.columnDimensionSeparator);
         const measureName = colName[colName.length - 1];
         return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
     }

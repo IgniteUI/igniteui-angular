@@ -1182,6 +1182,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return cols;
     }
     private extractValue(value) {
-        return value.split('-')[value.split('-').length - 1];
+        return value.split(this.pivotKeys.columnDimensionSeparator)[value.split(this.pivotKeys.columnDimensionSeparator).length - 1];
     }
 }
