@@ -98,6 +98,8 @@ export interface IPivotKeys {
     records: string;
     aggregations: string;
     level: string;
+    columnDimensionSeparator: string;
+    rowDimensionSeparator: string;
 }
 
 export enum PivotDimensionType {

@@ -4,8 +4,10 @@ import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IPivotConfiguration, IPivotKeys } from './pivot-grid.interface';
-import { DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
-     PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import {
+    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
+    PivotRowDimensionsStrategy
+} from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -31,7 +33,10 @@ export class IgxPivotRowPipe implements PipeTransform {
         _pipeTrigger?: number,
         __?
     ): any[] {
-        const pivotKeys = config.pivotKeys || { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
+        const pivotKeys = config.pivotKeys || {
+            aggregations: 'aggregations', records: 'records', children: 'children', level: 'level',
+            rowDimensionSeparator: '_', columnDimensionSeparator: '-'
+        };
         const enabledRows = config.rows.filter(x => x.enabled);
         const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
         const data = cloneArray(collection, true);
@@ -58,7 +63,10 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         _pipeTrigger?: number,
         __?,
     ): any[] {
-        const pivotKeys = config.pivotKeys || { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
+        const pivotKeys = config.pivotKeys || {
+            aggregations: 'aggregations', records: 'records', children: 'children', level: 'level',
+            rowDimensionSeparator: '_', columnDimensionSeparator: '-'
+        };
         const enabledRows = config.rows.filter(x => x.enabled);
         const data = collection ? cloneArray(collection, true) : [];
         let totalLlv = 0;
@@ -105,7 +113,10 @@ export class IgxPivotColumnPipe implements PipeTransform {
         _pipeTrigger?: number,
         __?
     ): any[] {
-        const pivotKeys = config.pivotKeys || { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
+        const pivotKeys = config.pivotKeys || {
+            aggregations: 'aggregations', records: 'records', children: 'children', level: 'level',
+            rowDimensionSeparator: '_', columnDimensionSeparator: '-'
+        };
         const enabledColumns = config.columns.filter(x => x.enabled);
         const enabledValues = config.values.filter(x => x.enabled);
 
@@ -171,7 +182,10 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy,
         pipeTrigger: number,
-        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+        pivotKeys: IPivotKeys = {
+            aggregations: 'aggregations', records: 'records', children: 'children', level: 'level',
+            rowDimensionSeparator: '_', columnDimensionSeparator: '-'
+        }
     ): any[] {
         let result: any[];
 
@@ -187,7 +201,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
 /**
  * @hidden
  */
- @Pipe({
+@Pipe({
     name: 'pivotGridSort',
     pure: true
 })

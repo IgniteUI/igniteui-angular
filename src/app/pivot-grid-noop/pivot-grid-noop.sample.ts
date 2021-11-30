@@ -30,20 +30,32 @@ export class MyColumnStrategy extends NoopPivotDimensionsStrategy {
 export class PivotGridNoopSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
     public pivotConfigHierarchy: IPivotConfiguration = {
+        pivotKeys: {
+            aggregations: 'aggregations',
+            records: 'records',
+            children: 'children',
+            level: 'level',
+            columnDimensionSeparator: '_',
+            rowDimensionSeparator: '-'
+        },
         columnStrategy: NoopPivotDimensionsStrategy.instance(),
         rowStrategy: NoopPivotDimensionsStrategy.instance(),
         columns: [
-
             {
-                memberName: 'Country',
-                enabled: true
+                memberName: 'All',
+                memberFunction: () => 'All',
+                enabled: true,
+                childLevel: {
+                    memberName: 'Country',
+                    enabled: true
+                }
             }
         ]
         ,
         rows: [
             {
-                memberName: 'All',
-                memberFunction: () => 'AllProd',
+                memberName: 'AllProducts',
+                memberFunction: () => 'All Products',
                 enabled: true,
                 childLevel: {
                     memberName: 'ProductCategory',
@@ -55,7 +67,7 @@ export class PivotGridNoopSampleComponent {
             {
                 member: 'UnitsSold',
                 aggregate: {
-                    aggregator:  IgxPivotNumericAggregate.sum,
+                    aggregator: IgxPivotNumericAggregate.sum,
                     key: 'sum',
                     label: 'Sum'
                 },
@@ -67,11 +79,23 @@ export class PivotGridNoopSampleComponent {
 
     public mockRemoteData = [
         {
-            ProductCategory: 'All', All: 1000, Bulgaria: 774, USA: 829, Uruguay: 524, All_records: [
-                { ProductCategory: 'Clothing', Bulgaria: 774, USA: 296, Uruguay: 456 },
-                { ProductCategory: 'Bikes', Uruguay: 68 },
-                { ProductCategory: 'Accessories', USA: 293 },
-                { ProductCategory: 'Components', USA: 240 }
+            ProductCategory: 'All', AllProducts: 'All Products', All: 1000, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, AllProducts_records: [
+                { ProductCategory: 'Clothing', 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456 },
+                { ProductCategory: 'Bikes', 'All-Uruguay': 68 },
+                { ProductCategory: 'Accessories', 'All-USA': 293 },
+                { ProductCategory: 'Components', 'All-USA': 240 }
+            ]
+        }
+    ];
+
+
+    public mockRemoteDataDifferentSeparator = [
+        {
+            ProductCategory: 'All', AllProducts: 'All Products', All: 1000, 'All_Country-Bulgaria': 774, 'All_Country-USA': 829, 'All_Country-Uruguay': 524, 'AllProducts-records': [
+                { ProductCategory: 'Clothing', 'All_Country-Bulgaria': 774, 'All_Country-USA': 296, 'All_Country-Uruguay': 456 },
+                { ProductCategory: 'Bikes', 'All_Country-Uruguay': 68 },
+                { ProductCategory: 'Accessories', 'All_Country-USA': 293 },
+                { ProductCategory: 'Components', 'All_Country-USA': 240 }
             ]
         }
     ];

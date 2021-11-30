@@ -119,8 +119,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         }
         if (changes.pivotRowWidths && this.rowDimensionData) {
             for (const dim of rowDimConfig) {
-                const dimData = PivotUtil.getDimensionLevel(dim, this.data,
-                      { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'});
+                const dimData = PivotUtil.getDimensionLevel(dim, this.data, this.grid.pivotKeys);
                 const data = this.rowDimensionData.find(x => x.dimension.memberName === dimData.dimension.memberName);
                 data.column.width = this.grid.resolveRowDimensionWidth(dim) + 'px';
             }
