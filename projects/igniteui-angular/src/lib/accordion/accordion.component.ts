@@ -114,11 +114,11 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      */
     @Input()
     public get singleBranchExpand(): boolean {
-        return this._singeBranchExpand;
+        return this._singleBranchExpand;
     }
 
     public set singleBranchExpand(val: boolean) {
-        this._singeBranchExpand = val;
+        this._singleBranchExpand = val;
         if (val) {
             this.collapseAllExceptLast();
         }
@@ -209,7 +209,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     private _destroy$ = new Subject<void>();
     private _unsubChildren$ = new Subject<void>();
     private _enabledPanels!: IgxExpansionPanelComponent[];
-    private _singeBranchExpand = false;
+    private _singleBranchExpand = false;
 
     constructor() { }
 
