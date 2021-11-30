@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxPivotGridModule } from 'igniteui-angular';
+import { IgxPivotDateDimension, IgxPivotGridModule } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
@@ -104,6 +104,75 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(pivotGrid.pivotConfiguration.values[0].enabled).toBeFalse();
         expect(pivotGrid.values.length).toBe(1);
         expect(pivotGrid.columns.length).not.toBe(9);
+    });
+
+    it('should collapse column with 1 value dimension', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.pivotConfiguration.values.pop();
+        pivotGrid.pivotConfiguration.columns = [{
+            memberName: 'AllCountries',
+            memberFunction: () => 'All Countries',
+            enabled: true,
+            childLevel: {
+                memberName: 'Country',
+                enabled: true
+            }
+        }];
+        pivotGrid.pivotConfiguration.rows[0] = new IgxPivotDateDimension(
+            {
+                memberName: 'Date',
+                enabled: true
+            }, {
+            total: false
+        }
+        );
+        pivotGrid.notifyDimensionChange(true);
+        expect(pivotGrid.columns.length).toBe(5);
+        expect(pivotGrid.columnGroupStates.size).toBe(0);
+        const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        const header = headerRow.querySelector('igx-grid-header-group');
+        const expander = header.querySelectorAll('igx-icon')[0];
+        expander.click();
+        fixture.detectChanges();
+        expect(pivotGrid.columnGroupStates.size).toBe(1);
+        const value = pivotGrid.columnGroupStates.entries().next().value;
+        expect(value[0]).toEqual('All Countries');
+        expect(value[1]).toBeTrue();
+    });
+
+    it('should collapse column with 2 value dimension', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.pivotConfiguration.columns = [{
+            memberName: 'AllCountries',
+            memberFunction: () => 'All Countries',
+            enabled: true,
+            childLevel: {
+                memberName: 'Country',
+                enabled: true
+            }
+        },
+        {
+            memberName: 'SellerName',
+            enabled: true
+        }];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+        expect(pivotGrid.columnGroupStates.size).toBe(0);
+        const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        const header = headerRow.querySelector('igx-grid-header-group');
+        const expander = header.querySelectorAll('igx-icon')[0];
+        expander.click();
+        fixture.detectChanges();
+        expect(pivotGrid.columnGroupStates.size).toBe(1);
+        let value = pivotGrid.columnGroupStates.entries().next().value;
+        expect(value[0]).toEqual('All Countries');
+        expect(value[1]).toBeTrue();
+
+        expander.click();
+        fixture.detectChanges();
+        value = pivotGrid.columnGroupStates.entries().next().value;
+        expect(value[0]).toEqual('All Countries');
+        expect(value[1]).toBeFalse();
     });
 
     describe('IgxPivotGrid Features #pivotGrid', () => {

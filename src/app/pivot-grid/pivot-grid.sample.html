@@ -1,4 +1,5 @@
 <div class="sample-flex-row">
+    <div>
     <igx-combo #combo class="combo" [itemsMaxHeight]="250" (selectionChanging)="handleChange($event)"
                [data]="dimensions" [displayKey]="'memberName'" [(ngModel)]="selected"
                placeholder="Dimension(s)" searchPlaceholder="Search...">
@@ -15,5 +16,6 @@
         (dimensionsChange)='dimensionChange($event)'
         [cellSelection]="'single'">
     </igx-pivot-grid>
+</div>
 </div>
 
