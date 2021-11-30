@@ -1848,7 +1848,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(nextCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 0 });
         });
 
-        fit(`GetPreviousCell: should return correctly next cell coordinates`, async () => {
+        it(`GetPreviousCell: should return correctly next cell coordinates`, async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(15, 5);
             fix.detectChanges();
