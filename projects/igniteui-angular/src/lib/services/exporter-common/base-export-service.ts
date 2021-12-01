@@ -54,6 +54,8 @@ export interface IColumnInfo {
     level?: number;
     exportIndex?: number;
     pinnedIndex?: number;
+    columnGroupParent?: ColumnType;
+    columnGroup?: ColumnType;
 }
 /**
  * rowExporting event arguments
@@ -307,8 +309,12 @@ export abstract class IgxBaseExporter {
                         shouldReorderColumns = true;
                     }
 
-                    if (column.skip && index <= indexOfLastPinnedColumn) {
-                        skippedPinnedColumnsCount++;
+                    if (column.skip) {
+                        if (index <= indexOfLastPinnedColumn) {
+                            skippedPinnedColumnsCount++;
+                        }
+
+                        this.calculateColSpans(column, mapRecord);
                     }
 
                     if (this._sort && this._sort.fieldName === column.field) {
@@ -344,6 +350,44 @@ export abstract class IgxBaseExporter {
         });
     }
 
+    private calculateColSpans(column: IColumnInfo, mapRecord: IColumnList) {
+        if (column.headerType === HeaderType.MultiColumnHeader && column.skip) {
+            const columnGroupChildren = mapRecord.columns.filter(c => c.columnGroupParent === column.columnGroup);
+
+            columnGroupChildren.forEach(cgc => {
+                if (cgc.headerType === HeaderType.MultiColumnHeader) {
+                    cgc.columnSpan = 0;
+                    cgc.columnGroupParent = null;
+                    cgc.skip = true;
+
+                    this.calculateColSpans(cgc, mapRecord);
+                } else {
+                    cgc.skip = true;
+                }
+            });
+        }
+
+        if(column.columnGroupParent) {
+            const targetCol = mapRecord.columns.filter(c => c.columnGroup === column.columnGroupParent)[0];
+
+            if (targetCol !== undefined) {
+                if (column.columnSpan === 0) {
+                    targetCol.columnSpan = 0 ;
+                } else {
+                    targetCol.columnSpan -= column.columnSpan;
+                }
+
+                if (targetCol.columnSpan === 0) {
+                    targetCol.skip = true;
+                }
+
+                if (targetCol.columnGroupParent !== null) {
+                    this.calculateColSpans(targetCol, mapRecord);
+                }
+            }
+        }
+    }
+
     private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
         if (!isSpecialData) {
             const owner = record.owner === undefined ? DEFAULT_OWNER : record.owner;
@@ -351,7 +395,7 @@ export abstract class IgxBaseExporter {
 
             if (record.type !== ExportRecordType.HeaderRecord) {
                 const columns = ownerCols
-                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader)
+                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
                     .sort((a, b) => a.startIndex - b.startIndex)
                     .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
@@ -866,7 +910,9 @@ export abstract class IgxBaseExporter {
                     Number.MAX_VALUE :
                     !column.hidden ?
                         column.grid.pinnedColumns.indexOf(column)
-                        : NaN
+                        : NaN,
+                columnGroupParent: column.parent ? column.parent : null,
+                columnGroup: isMultiColHeader ? column : null
             };
 
             if (this.options.ignoreColumnsOrder) {
