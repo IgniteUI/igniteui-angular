@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, ContentChildren, EventEmitter,
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter,
     HostBinding, Input, OnDestroy, Output, QueryList } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -211,7 +211,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     private _enabledPanels!: IgxExpansionPanelComponent[];
     private _singleBranchExpand = false;
 
-    constructor() { }
+    constructor(private cdr: ChangeDetectorRef) { }
 
     /** @hidden @internal **/
     public ngAfterContentInit(): void {
@@ -274,9 +274,9 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         this.panels?.forEach((p: IgxExpansionPanelComponent) => {
             if (p !== lastExpanded && !p.header.disabled) {
                 p.collapsed = true;
-                p.cdr.detectChanges();
             }
         });
+        this.cdr.detectChanges();
     }
 
     private handleKeydown(event: KeyboardEvent, panel: IgxExpansionPanelComponent): void {
