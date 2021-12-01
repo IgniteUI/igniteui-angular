@@ -84,19 +84,21 @@
             <span *ngIf="grid.rowDimensions.length === 0 && grid.showPivotConfigurationUI" class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
 
             <!-- Row area -->
-            <igx-chips-area *ngIf="grid.showPivotConfigurationUI" #rowArea droppable='true'>
-                <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="true" [id]="row.memberName"
-                    [displayDensity]="grid.displayDensity"
-                    [removable]="true" (remove)="rowRemoved($event)"
-                    (dragLeave)="onDimDragLeave($event)"
-                    (dragDrop)="onDimDrop($event, rowArea, 0)"
-                    (dragOver)="onDimDragOver($event, 0)"
-                    (click)="onChipSort($event, row, 0)">
-                    <igx-icon igxPrefix>table_rows</igx-icon>
-                    <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
-                    {{ row.memberName}}
-                    <igx-icon *ngIf="row.sortDirection" igxSuffix> {{ row.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
-                </igx-chip>
+            <igx-chips-area #rowArea droppable='true'>
+                <ng-container *ngIf="grid.showPivotConfigurationUI">
+                    <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="true" [id]="row.memberName"
+                        [displayDensity]="grid.displayDensity"
+                        [removable]="true" (remove)="rowRemoved($event)"
+                        (dragLeave)="onDimDragLeave($event)"
+                        (dragDrop)="onDimDrop($event, rowArea, 0)"
+                        (dragOver)="onDimDragOver($event, 0)"
+                        (click)="onChipSort($event, row, 0)">
+                        <igx-icon igxPrefix>table_rows</igx-icon>
+                        <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
+                        {{ row.memberName}}
+                        <igx-icon *ngIf="row.sortDirection" igxSuffix> {{ row.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+                    </igx-chip>
+                </ng-container>
             </igx-chips-area>
         </div>
 
