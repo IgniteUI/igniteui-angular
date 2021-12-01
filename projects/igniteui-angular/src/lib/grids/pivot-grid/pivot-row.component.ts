@@ -127,7 +127,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         }
     }
 
-    public getCellClass(col: any) {
+    public getCellClass(col: IgxColumnComponent) {
         const configuration = this.grid.pivotConfiguration;
         if (configuration.values.length === 1) {
             return configuration.values[0].styles;
@@ -135,6 +135,15 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         const colName = col.field.split('-');
         const measureName = colName[colName.length - 1];
         return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
+    }
+
+    public isCellActive(visibleColumnIndex) {
+        const nav = this.grid.navigation
+        const node = nav.activeNode;
+        return node && Object.keys(node).length !== 0 ?
+            !nav.isRowHeaderActive &&
+            super.isCellActive(visibleColumnIndex) :
+            false;
     }
 
     /**

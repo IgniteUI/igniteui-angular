@@ -7,3 +7,4 @@ export * from './pivot-grid.pipes';
 export * from './pivot-row.component';
 export * from './pivot-header-row.component';
 export * from './pivot-row-dimension-content.component';
+export * from './pivot-row-dimension-header-group.component';

@@ -778,13 +778,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public getColumnByVisibleIndex(_index: number): IgxColumnComponent {
-        return;
-    }
-
-    /**
-     * @hidden @internal
-     */
     @Input()
     public get totalRecords(): number {
         return;
