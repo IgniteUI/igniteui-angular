@@ -1,6 +1,6 @@
 
 import { GridType, PivotGridType } from '../grids/common/grid.interface';
-import { IPivotDimension, IPivotDimensionStrategy, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IPivotDimension, IPivotDimensionStrategy, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 import { FilteringStrategy } from './filtering-strategy';
 import { GridColumnDataType } from './data-util';
@@ -28,47 +28,57 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
     }
 
     public process(
-            collection: any,
-            rows: IPivotDimension[],
-            values?: IPivotValue[],
-            pivotKeys: IPivotKeys =
-            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'}
-        ): any[] {
-            let hierarchies;
-            let data;
-            const prevRowDims = [];
-            let prevDim;
-            const currRows = cloneArray(rows, true);
-            PivotUtil.assignLevels(currRows);
-            for (const row of currRows) {
-                if (!data) {
-                    // build hierarchies - groups and subgroups
-                    hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
-                    // generate flat data from the hierarchies
-                    data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
-                    prevRowDims.push(row);
-                    prevDim = row;
-                } else {
-                    const newData = [...data];
-                    for (let i = 0; i < newData.length; i++) {
-                        const currData = newData[i][prevDim.memberName + '_' + pivotKeys.records];
-                        const leafData = PivotUtil.getDirectLeafs(currData, pivotKeys);
-                        const hierarchyFields = PivotUtil
-                            .getFieldsHierarchy(leafData, [row], PivotDimensionType.Row, pivotKeys);
-                        const siblingData = PivotUtil
-                            .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
-                        PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
+        collection: any,
+        rows: IPivotDimension[],
+        values?: IPivotValue[],
+        pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
+    ): any[] {
+        let hierarchies;
+        let data;
+        const prevRowDims = [];
+        let prevDim;
+        let prevDimTopRecords = [];
+        const currRows = cloneArray(rows, true);
+        PivotUtil.assignLevels(currRows);
+        for (const row of currRows) {
+            if (!data) {
+                // build hierarchies - groups and subgroups
+                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
+                // generate flat data from the hierarchies
+                data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
+                prevRowDims.push(row);
+                prevDim = row;
+                prevDimTopRecords = data;
+            } else {
+                const newData = [...data];
+                const curDimTopRecords = [];
+                for (let i = 0; i < newData.length; i++) {
+                    const currData = newData[i][prevDim.memberName + '_' + pivotKeys.records];
+                    const leafData = PivotUtil.getDirectLeafs(currData, pivotKeys);
+                    const hierarchyFields = PivotUtil
+                        .getFieldsHierarchy(leafData, [row], PivotDimensionType.Row, pivotKeys);
+                    const siblingData = PivotUtil
+                        .processHierarchy(hierarchyFields, newData[i] ?? [], pivotKeys, 0);
+                    PivotUtil.processSiblingProperties(newData[i], siblingData, pivotKeys);
 
                     PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
-                    if (PivotUtil.getDimensionDepth(prevDim) > PivotUtil.getDimensionDepth(row) && siblingData.length > 1) {
+                    if ((prevDimTopRecords[i].length != undefined && prevDimTopRecords[i].length < siblingData.length) || prevDimTopRecords.length < siblingData.length) {
+                        // Add the sibling data as child records because the previous dimension contains more dense version of the previous dimension records.
                         newData[i][row.memberName + '_' + pivotKeys.records] = siblingData;
                     } else {
+                        // Replace the current record with the sibling records because the current dimension is a denser version or produces the same amount of records.
                         newData.splice(i, 1, ...siblingData);
+                        // Shift the prevDimTopRecords item to the right because of the previous row transforms the newData and increases the elements in newData
+                        prevDimTopRecords.splice(siblingData.length, prevDimTopRecords.length - siblingData.length, ...prevDimTopRecords);
+                        // Increase the index the amount of sibling record that replaces the current one. Subtract 1 because there is already i++ in the for cycle.
                         i += siblingData.length - 1;
                     }
+                    // Add the current top sibling elements for the dimension
+                    curDimTopRecords.push(cloneArray(siblingData, true));
                 }
                 data = newData;
                 prevDim = row;
+                prevDimTopRecords = curDimTopRecords;
                 prevRowDims.push(row);
             }
         }
@@ -87,7 +97,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         collection: any[],
         columns: IPivotDimension[],
         values: IPivotValue[],
-        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+        pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
     ): any[] {
         const res = this.processHierarchy(collection, columns, values, pivotKeys);
         return res;

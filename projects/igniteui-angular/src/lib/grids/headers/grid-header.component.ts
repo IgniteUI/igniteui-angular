@@ -213,7 +213,9 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
                 }
             }
         }
-        this.grid.theadRow.nativeElement.focus();
+        if (!this.grid.isPivot || !this.grid.navigation.isRowHeaderActive) {
+            this.grid.theadRow.nativeElement.focus();
+        }
     }
 
     /**

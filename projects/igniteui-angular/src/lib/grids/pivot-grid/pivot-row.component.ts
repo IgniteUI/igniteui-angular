@@ -92,7 +92,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
      */
     public getRowDimensionKey(col: IgxColumnComponent) {
             const dimData = this.rowDimensionData.find(x => x.column.field === col.field);
-            const key =  PivotUtil.getRecordKey(this.data, dimData.dimension, dimData.prevDimensions);
+            const key =  PivotUtil.getRecordKey(this.data, dimData.dimension, dimData.prevDimensions, this.grid.pivotKeys);
             return key;
     }
 
@@ -101,7 +101,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
     }
 
     public getLevel(col: IgxColumnComponent) {
-        return this.data[col.field + '_level'];
+        return this.data[col.field + this.grid.pivotKeys.rowDimensionSeparator + this.grid.pivotKeys.level];
     }
 
 
@@ -119,22 +119,30 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         }
         if (changes.pivotRowWidths && this.rowDimensionData) {
             for (const dim of rowDimConfig) {
-                const dimData = PivotUtil.getDimensionLevel(dim, this.data,
-                      { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'});
+                const dimData = PivotUtil.getDimensionLevel(dim, this.data, this.grid.pivotKeys);
                 const data = this.rowDimensionData.find(x => x.dimension.memberName === dimData.dimension.memberName);
                 data.column.width = this.grid.resolveRowDimensionWidth(dim) + 'px';
             }
         }
     }
 
-    public getCellClass(col: any) {
+    public getCellClass(col: IgxColumnComponent) {
         const configuration = this.grid.pivotConfiguration;
         if (configuration.values.length === 1) {
             return configuration.values[0].styles;
         }
-        const colName = col.field.split('-');
+        const colName = col.field.split(this.grid.pivotKeys.columnDimensionSeparator);
         const measureName = colName[colName.length - 1];
         return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
+    }
+
+    public isCellActive(visibleColumnIndex) {
+        const nav = this.grid.navigation
+        const node = nav.activeNode;
+        return node && Object.keys(node).length !== 0 ?
+            !nav.isRowHeaderActive &&
+            super.isCellActive(visibleColumnIndex) :
+            false;
     }
 
     /**
@@ -159,8 +167,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         currentLvl += level;
         const prev = [];
         for (const dim of rowDimConfig) {
-            const dimData = PivotUtil.getDimensionLevel(dim, this.data,
-                  { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'});
+            const dimData = PivotUtil.getDimensionLevel(dim, this.data, this.grid.pivotKeys);
             dimIndex += dimData.level;
             currentLvl += dimData.level;
             const column = this.extractFromDimension(dimData.dimension, dimIndex, currentLvl, dim);
@@ -187,7 +194,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         ref.instance.header = header;
         ref.instance.width = this.grid.resolveRowDimensionWidth(rootDim) + 'px';
         (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
-        if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.data)) {
+        if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.data, this.grid.pivotKeys)) {
             ref.instance.headerTemplate = this.headerTemplate;
         } else {
             ref.instance.headerTemplate = this.headerTemplateDefault;

@@ -3,9 +3,11 @@ import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IPivotConfiguration, IPivotKeys } from './pivot-grid.interface';
-import { DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
-     PivotRowDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotKeys } from './pivot-grid.interface';
+import {
+    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
+    PivotRowDimensionsStrategy
+} from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -13,6 +15,7 @@ import { GridType } from '../common/grid.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IGridSortingStrategy } from '../common/strategy';
+
 /**
  * @hidden
  */
@@ -29,9 +32,9 @@ export class IgxPivotRowPipe implements PipeTransform {
         config: IPivotConfiguration,
         _: Map<any, boolean>,
         _pipeTrigger?: number,
-        __?,
-        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+        __?
     ): any[] {
+        const pivotKeys = config.pivotKeys || DEFAULT_PIVOT_KEYS;
         const enabledRows = config.rows.filter(x => x.enabled);
         const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
         const data = cloneArray(collection, true);
@@ -57,8 +60,8 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         defaultExpand: boolean,
         _pipeTrigger?: number,
         __?,
-        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
     ): any[] {
+        const pivotKeys = config.pivotKeys || DEFAULT_PIVOT_KEYS;
         const enabledRows = config.rows.filter(x => x.enabled);
         const data = collection ? cloneArray(collection, true) : [];
         let totalLlv = 0;
@@ -66,7 +69,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         for (const row of enabledRows) {
             const lvl = PivotUtil.getDimensionDepth(row);
             totalLlv += lvl;
-            PivotUtil.flattenHierarchy(data, config, row, expansionStates, defaultExpand, pivotKeys, totalLlv, prevDims, 0);
+            PivotUtil.flattenHierarchy(data, config, row, expansionStates, defaultExpand, pivotKeys, totalLlv, prevDims, 0, lvl);
             prevDims.push(row);
         }
         const finalData = config.columnStrategy ? data : data.filter(x => x[pivotKeys.records]);
@@ -103,9 +106,9 @@ export class IgxPivotColumnPipe implements PipeTransform {
         config: IPivotConfiguration,
         _: Map<any, boolean>,
         _pipeTrigger?: number,
-        __?,
-        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+        __?
     ): any[] {
+        const pivotKeys = config.pivotKeys || DEFAULT_PIVOT_KEYS;
         const enabledColumns = config.columns.filter(x => x.enabled);
         const enabledValues = config.values.filter(x => x.enabled);
 
@@ -171,7 +174,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy,
         pipeTrigger: number,
-        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+        pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
     ): any[] {
         let result: any[];
 
@@ -187,7 +190,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
 /**
  * @hidden
  */
- @Pipe({
+@Pipe({
     name: 'pivotGridSort',
     pure: true
 })
