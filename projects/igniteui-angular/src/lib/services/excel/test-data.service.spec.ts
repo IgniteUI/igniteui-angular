@@ -1461,9 +1461,8 @@ export class FileContentData {
 
     public get exportMultiColumnHeadersDataWithAllParentsSkipped() {
         this._worksheetData =
-            `<dimension ref="A1"/>
-            <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
-            <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+            `<sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+            <sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/>
             <sheetData/>`;
 
         return this.createData();
