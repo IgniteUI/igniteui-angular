@@ -194,6 +194,61 @@ export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestB
     }
 }
 
+@Component({
+    template: `
+    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy" [defaultExpandState]="true">
+    </igx-pivot-grid>`
+})
+export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseComponent {
+
+
+    constructor() {
+        super();
+        this.pivotConfigHierarchy = {
+            columns: [{
+                memberName: 'SellerName',
+                enabled: true
+            },
+            ],
+            rows: [{
+                memberName: 'ProductCategory',
+                memberFunction: (data) => data.ProductCategory,
+                enabled: true
+            }, {
+                memberName: 'Country',
+                enabled: true
+            }, {
+                memberName: 'Date',
+                enabled: true
+            }],
+            values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: {
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'UnitsSoldSUM',
+                        label: 'Sum of Units Sold'
+                    },
+                    enabled: true,
+                    // dataType: 'currency',
+                    formatter: (value) => value ? value + '$' : undefined
+                },
+                {
+                    member: 'UnitPrice',
+                    aggregate: {
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'UnitPriceSUM',
+                        label: 'Sum of Unit Price'
+                    },
+                    enabled: true,
+                    dataType: 'currency'
+                }
+            ],
+            filters: null
+        };
+    }
+}
+
 export class IgxTotalSaleAggregate {
     public static totalSale: PivotAggregation = (members, data: any) =>
         data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
