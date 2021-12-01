@@ -24,7 +24,7 @@
         [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
         [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)" [column]="col"
         [formatter]="col.formatter" [intRow]="this" [active]="isCellActive(col.visibleIndex)"
-        [style.min-height.px]="cellHeight" [data]="data" [style.min-width]="col.width" [style.max-width]="col.width"
+        [style.min-height.px]="cellHeight" [rowData]="data" [style.min-width]="col.width" [style.max-width]="col.width"
         [style.flex-basis]="col.width" [width]="col.getCellWidth()" [visibleColumnIndex]="col.visibleIndex"
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate" [lastSearchInfo]="grid.lastSearchInfo"
