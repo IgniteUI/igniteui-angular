@@ -2,6 +2,37 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.1.0
+
+### New Features
+- Added `IgxPivotGrid` component(Preview)
+    - The igxPivotGrid is a data presentation control for displaying data in a pivot table. It enables users to perform complex analysis on the supplied data. Main purpose is to transform and display a flat array of data into a complex grouped structure with aggregated values based on the main 3 dimensions: rows, columns and values, which the user may specify depending on his/her business needs. The whole pivot grid configuration is set through `IPivotConfiguration` interface.
+
+    ```html
+    <igx-pivot-grid [data]="origData" [pivotConfiguration]="pivotConfigHierarchy">
+    </igx-pivot-grid>
+    ```
+
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/pivot-grid/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxPivotGrid-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotgrid).
+
+## 13.0.1
+
+### New Features
+- Add `igxSummary` directive in order to re-template the default summary cell layout.
+    - Expose `summaryTemplate` input in order to bind the column summary template through API.
+    - Expose `summaryRowHeight` property which overrides the default hight of the summary row.
+    - Code example below:
+
+    ```html
+    <igx-column ... [hasSummary]="true">
+        <ng-template igxSummary let-summaryResult>
+            <span> My custom summary template</span>
+            <span>{{ summaryResult[0].label }} - {{ summaryResult[0].summaryResult }}</span>
+        </ng-template>
+    </igx-column>
+    ```
+    - Please, refer to the [Summaries](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/summaries#summary-template) topic for more information.
+
 ## 13.0.0
 
 ### New Features

@@ -130,6 +130,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
 
+    @Input()
+    /**
+     * Gets/Sets the pivot configuration ui for the pivot grid - chips and their
+     * corresponding containers for row, filter, column dimensions and values
+     *
+     * @example
+     * ```html
+     * <igx-pivot-grid [showPivotConfigurationUI]="false"></igx-pivot-grid>
+     * ```
+     */
+    public showPivotConfigurationUI: boolean = true;
+
     /**
      * @hidden @internal
      */

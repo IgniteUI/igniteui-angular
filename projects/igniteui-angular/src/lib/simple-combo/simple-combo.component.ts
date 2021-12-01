@@ -199,7 +199,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public handleInputChange(event?: any) {
-        this.searchValue = event.target.value;
+        if (event !== undefined) {
+            this.searchValue = typeof event === 'string' ? event : event.target.value;
+        }
         this._onChangeCallback(this.searchValue);
         if (this.collapsed && this.comboInput.focused) {
             this.open();
@@ -362,10 +364,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         };
         this.selectionChanging.emit(args);
         if (!args.cancel) {
-            const argsSelection = args.newSelection !== undefined
+            let argsSelection = args.newSelection !== undefined
                 && args.newSelection !== null
-                ? [args.newSelection]
+                ? args.newSelection
                 : [];
+            argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
             this.selectionService.select_items(this.id, argsSelection, true);
             if (this._updateInput) {
                 this.comboInput.value = this._value = displayText !== args.displayText
