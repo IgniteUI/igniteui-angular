@@ -3,6 +3,11 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { ColumnType } from '../common/grid.interface';
 
+export const DEFAULT_PIVOT_KEYS = {
+    aggregations: 'aggregations', records: 'records', children: 'children', level: 'level',
+    rowDimensionSeparator: '_', columnDimensionSeparator: '-'
+};
+
 export interface IDimensionsChange {
     dimensions: IPivotDimension[],
     dimensionCollectionType: PivotDimensionType

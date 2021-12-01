@@ -33,7 +33,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -294,10 +294,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public columnGroupStates = new Map<string, boolean>();
     public dimensionDataColumns;
     public get pivotKeys() {
-        return this.pivotConfiguration.pivotKeys || {
-            aggregations: 'aggregations', records: 'records', children: 'children', level: 'level',
-            rowDimensionSeparator: '_', columnDimensionSeparator: '-'
-        };
+        return this.pivotConfiguration.pivotKeys || DEFAULT_PIVOT_KEYS;
     }
     public isPivot = true;
 
@@ -1019,7 +1016,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             const rowFields = PivotUtil.flatten(this.pivotConfiguration.rows).map(x => x.memberName);
             const keyFields = Object.values(this.pivotKeys);
             const filteredFields = fields.filter(x => rowFields.indexOf(x) === -1 && keyFields.indexOf(x) === -1 &&
-                x.indexOf(this.pivotKeys.rowDimensionSeparator + 'level') === -1 && x.indexOf(this.pivotKeys.rowDimensionSeparator + 'records') === -1);
+                x.indexOf(this.pivotKeys.rowDimensionSeparator + this.pivotKeys.level) === -1 &&
+                x.indexOf(this.pivotKeys.rowDimensionSeparator + this.pivotKeys.records) === -1);
             fieldsMap = this.generateFromData(filteredFields);
         } else {
             fieldsMap = PivotUtil.getFieldsHierarchy(
