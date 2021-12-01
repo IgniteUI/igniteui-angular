@@ -293,7 +293,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public columnGroupStates = new Map<string, boolean>();
     public dimensionDataColumns;
-    public pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' };
+    public get pivotKeys() {
+        return this.pivotConfiguration.pivotKeys || {aggregations: 'aggregations', records: 'records', children: 'children', level: 'level'};
+    }
     public isPivot = true;
 
     /**
@@ -455,7 +457,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 let currDim = dim;
                 let shouldBreak = false;
                 do {
-                    const key = PivotUtil.getRecordKey(record, currDim, prev);
+                    const key = PivotUtil.getRecordKey(record, currDim, prev, this.pivotKeys);
                     if (this.selectionService.isPivotRowSelected(key) && !selectedRowIds.find(x => x === record)) {
                         selectedRowIds.push(record);
                         shouldBreak = true;
@@ -575,24 +577,24 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public getDimensionData(dim: IPivotDimension,
         dimExprTree: IFilteringExpressionsTree,
         done: (colVals: any[]) => void) {
-        let columnValues = [];
-        const data = this.gridAPI.get_data();
-        const state = {
-            expressionsTree: dimExprTree,
-            strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
-            advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
-        };
-        const filtered = DataUtil.filter(data, state, this);
-        const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
-            filtered,
-            [dim],
-            PivotDimensionType.Column,
-            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
-        );
-        const flatData = Array.from(allValuesHierarchy.values());
-        columnValues = flatData.map(record => this.extractValue(record['value']));
-        done(columnValues);
-        return;
+            let columnValues = [];
+            const data = this.gridAPI.get_data();
+            const state = {
+                expressionsTree: dimExprTree,
+                strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
+                advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
+            };
+            const filtered = DataUtil.filter(data, state, this);
+            const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
+                filtered,
+                [dim],
+                PivotDimensionType.Column,
+                this.pivotKeys
+                );
+            const flatData = Array.from(allValuesHierarchy.values());
+            columnValues = flatData.map(record => this.extractValue(record['value']));
+            done(columnValues);
+            return;
     }
 
     /** @hidden */
@@ -926,24 +928,32 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.calcHeight;
     }
 
+    public getColumnGroupExpandState(col: IgxColumnComponent) {
+        const state = this.columnGroupStates.get(col.field);
+        // columns are expanded by default?
+        return state !== undefined && state !== null ? state : false;
+    }
+
     public toggleRowGroup(col: IgxColumnComponent, newState: boolean) {
         if (this.hasMultipleValues) {
-            const fieldColumns = col.children.filter(x => !x.columnGroup);
-            const groupColumns = col.children.filter(x => x.columnGroup);
-            groupColumns.forEach(groupColumn => {
-                groupColumn.hidden = newState;
-                this.resolveToggle(groupColumn);
-            });
-            fieldColumns.forEach(fieldColumn => {
-                fieldColumn.hidden = !newState;
-            });
+            const parentCols = col.parent ? col.parent.children.toArray() : this.columns.filter(x => x.level === 0);
+            const siblingCol = parentCols.filter(x => x.header === col.header && x !== col)[0];
+            const currIndex = parentCols.indexOf(col);
+            const siblingIndex = parentCols.indexOf(siblingCol);
+            if (currIndex < siblingIndex) {
+                // clicked on the full hierarchy header
+                this.resolveToggle(col, newState);
+                siblingCol.headerTemplate = this.headerTemplate;
+            } else {
+                // clicked on summary parent column that contains just the measures
+                col.headerTemplate = undefined;
+                this.resolveToggle(siblingCol, newState);
+            }
         } else {
             const parentCols = col.parent ? col.parent.children : this.columns.filter(x => x.level === 0);
             const fieldColumn = parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
             const groupColumn = parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
-            groupColumn.hidden = newState;
-            this.resolveToggle(groupColumn);
-            fieldColumn.hidden = !newState;
+            this.resolveToggle(groupColumn, newState);
             if (newState) {
                 fieldColumn.headerTemplate = this.headerTemplate;
             } else {
@@ -961,16 +971,25 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         super.setupColumns();
     }
 
-    protected resolveToggle(groupColumn: IgxColumnComponent) {
-        const hasChildGroup = groupColumn.children.filter(x => x.columnGroup).length > 0;
-        if (!groupColumn.hidden && hasChildGroup) {
-            const fieldChildren = groupColumn.children.filter(x => !x.columnGroup);
-            const groupChildren = groupColumn.children.filter(x => x.columnGroup);
-            groupChildren.forEach(group => {
-                this.resolveToggle(group);
-            });
-            fieldChildren.forEach(fieldChild => {
-                fieldChild.hidden = true;
+    protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
+        groupColumn.hidden = state;
+        this.columnGroupStates.set(groupColumn.field, state);
+        const childrenTotal = this.hasMultipleValues ?
+         groupColumn.children.filter(x => x.columnGroup && x.children.filter(y => !y.columnGroup).length === this.values.length) :
+         groupColumn.children.filter(x => !x.columnGroup);
+         const childrenSubgroups = this.hasMultipleValues ?
+         groupColumn.children.filter(x => x.columnGroup && x.children.filter(y => !y.columnGroup).length === 0) :
+         groupColumn.children.filter(x => x.columnGroup);
+         childrenTotal.forEach(group => {
+            if (state) {
+                group.headerTemplate = this.headerTemplate;
+            } else {
+                group.headerTemplate = undefined;
+            }
+         });
+        if (!groupColumn.hidden && childrenSubgroups.length > 0) {
+            childrenSubgroups.forEach(group => {
+                this.resolveToggle(group, state);
             });
         }
     }
@@ -1011,10 +1030,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             fieldsMap = this.generateFromData(filteredFields);
         } else {
             fieldsMap = PivotUtil.getFieldsHierarchy(
-                data,
-                this.columnDimensions,
-                PivotDimensionType.Column,
-                { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+            data,
+            this.columnDimensions,
+            PivotDimensionType.Column,
+            this.pivotKeys
             );
         }
         columns = this.generateColumnHierarchy(fieldsMap, data);
@@ -1116,31 +1135,46 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 if (value.expandable) {
                     ref.instance.headerTemplate = this.headerTemplate;
                 }
-                if (!this.hasMultipleValues) {
-                    const refSibling = factoryColumn.create(this.viewRef.injector);
-                    refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
-                    refSibling.instance.field = key;
-                    refSibling.instance.parent = parent;
-                    ref.instance.width = value.dimension.width || MINIMUM_COLUMN_WIDTH + 'px';
-                    ref.instance.sortable = true;
-                    refSibling.instance.hidden = true;
-                    refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
-                    refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
-                    columns.push(refSibling.instance);
-                }
                 const children = this.generateColumnHierarchy(value.children, data, ref.instance);
                 const filteredChildren = children.filter(x => x.level === ref.instance.level + 1);
                 ref.changeDetectorRef.detectChanges();
                 columns.push(ref.instance);
                 if (this.hasMultipleValues) {
-                    const measureChildren = this.getMeasureChildren(factoryColumn, data, ref.instance, true, value.dimension.width);
-                    const nestedChildren = filteredChildren.concat(measureChildren);
-                    const allChildren = children.concat(measureChildren);
+                    let measureChildren = this.getMeasureChildren(factoryColumn, data, ref.instance, true, value.dimension.width);
+                    const nestedChildren = filteredChildren;
+                    //const allChildren = children.concat(measureChildren);
                     ref.instance.children.reset(nestedChildren);
-                    columns = columns.concat(allChildren);
+                    columns = columns.concat(children);
+                    if (value.dimension.childLevel) {
+                        const refSibling = factoryColumnGroup.create(this.viewRef.injector);
+                        refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
+                        refSibling.instance.field = key;
+                        refSibling.instance.parent = parent;
+                        ref.instance.width = value.dimension.width || MINIMUM_COLUMN_WIDTH + 'px';
+                        ref.instance.sortable = true;
+                        refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
+                        refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
+                        columns.push(refSibling.instance);
+
+                        measureChildren = this.getMeasureChildren(factoryColumn, data, refSibling.instance, false, value.dimension.width);
+                        refSibling.instance.children.reset(measureChildren);
+                        columns = columns.concat(measureChildren);
+                    }
+
                 } else {
                     ref.instance.children.reset(filteredChildren);
                     columns = columns.concat(children);
+                    if (value.dimension.childLevel) {
+                        const refSibling = factoryColumn.create(this.viewRef.injector);
+                        refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
+                        refSibling.instance.field = key;
+                        refSibling.instance.parent = parent;
+                        ref.instance.width = value.dimension.width || MINIMUM_COLUMN_WIDTH + 'px';
+                        ref.instance.sortable = true;
+                        refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
+                        refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
+                        columns.push(refSibling.instance);
+                    }
                 }
             }
         });

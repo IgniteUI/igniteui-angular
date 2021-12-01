@@ -26,10 +26,10 @@ export class PivotUtil {
                 this.extractValuesForRow(dimensions, rec, pivotKeys);
             for (const [key, val] of vals) { // this should go in depth also vals.children
                 if (hierarchy.get(val.value) != null) {
-                    this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys.records);
+                    this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys);
                 } else {
                     hierarchy.set(val.value, cloneValue(val));
-                    this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys.records);
+                    this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys);
                 }
             }
         }
@@ -82,7 +82,8 @@ export class PivotUtil {
         pivotKeys: IPivotKeys,
         lvl: number,
         prevDims: IPivotDimension[],
-        currDimLvl: number) {
+        currDimLvl: number,
+        maxDimLvl: number) {
         const data = records;
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
@@ -91,18 +92,18 @@ export class PivotUtil {
                 continue;
             }
             rec[field + '_' + pivotKeys.level] = currDimLvl;
-            const expansionRowKey = PivotUtil.getRecordKey(rec, dim, prevDims);
+            const expansionRowKey = PivotUtil.getRecordKey(rec, dim, prevDims, pivotKeys);
             const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
                 defaultExpandState :
                 expansionStates.get(expansionRowKey);
             if (rec[field + '_' + pivotKeys.records] &&
                 rec[field + '_' + pivotKeys.records].length > 0 &&
-                isExpanded && lvl > 0) {
+                ((isExpanded && lvl > 0)  || (maxDimLvl == currDimLvl))) {
                 let dimData = rec[field + '_' + pivotKeys.records];
                 if (dim.childLevel) {
                     if (PivotUtil.getDimensionDepth(dim) > 1) {
                         dimData = this.flattenHierarchy(dimData, config, dim.childLevel,
-                            expansionStates, defaultExpandState, pivotKeys, lvl - 1, prevDims, currDimLvl + 1);
+                            expansionStates, defaultExpandState, pivotKeys, lvl - 1, prevDims, currDimLvl + 1, maxDimLvl);
                     } else {
                         dimData.forEach(d => {
                             d[dim.childLevel.memberName + '_' + pivotKeys.level] = currDimLvl + 1;
@@ -243,7 +244,7 @@ export class PivotUtil {
         }
         for (const property in parentRec) {
             if (parentRec.hasOwnProperty(property) &&
-                Object.keys(pivotKeys).indexOf(property) === -1) {
+                Object.values(pivotKeys).indexOf(property) === -1) {
                 siblingData.forEach(s => {
                     s[property] = parentRec[property];
                 });
@@ -317,7 +318,10 @@ export class PivotUtil {
                 for (const nested of nestedData) {
                     if (nested[pivotKeys.records] && nested[pivotKeys.records].length === 1) {
                         // only 1 child record, apply same props to parent.
-                        PivotUtil.processSiblingProperties(nested[pivotKeys.records][0], [nested], pivotKeys);
+                        const keys = Object.assign({}, pivotKeys) as any;
+                        const memberName = h[pivotKeys.children].entries().next().value[1].dimension.memberName;
+                        keys[memberName] = nested[memberName];
+                        PivotUtil.processSiblingProperties(nested[pivotKeys.records][0], [nested], keys);
                     }
                 }
                 obj[pivotKeys.records] = this.getDirectLeafs(nestedData, pivotKeys);
@@ -344,23 +348,22 @@ export class PivotUtil {
         return leafs;
     }
 
-    public static getRecordKey(rec, currentDim: IPivotDimension, prevDims: IPivotDimension[]) {
+    public static getRecordKey(rec, currentDim: IPivotDimension, prevDims: IPivotDimension[], pivotKeys: IPivotKeys) {
         const parentFields = [];
         const field = currentDim.memberName;
         const value = rec[field];
         for (const prev of prevDims) {
-            const dimData = PivotUtil.getDimensionLevel(prev, rec,
-                { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' });
+            const dimData = PivotUtil.getDimensionLevel(prev, rec, pivotKeys);
             parentFields.push(rec[prev.memberName] || rec[dimData.dimension.memberName]);
         }
         parentFields.push(value);
         return parentFields.join('_');
     }
 
-    public static getTotalLvl(rec) {
+    public static getTotalLvl(rec, pivotKeys: IPivotKeys) {
         let total = 0;
         Object.keys(rec).forEach(key => {
-            if (key.indexOf('_level') !== -1 && key.indexOf('level_') === -1 && key.indexOf('records') === -1) {
+            if (key.indexOf('_' + pivotKeys.level) !== -1 && key.indexOf(pivotKeys.level + '_') === -1 && key.indexOf(pivotKeys.records) === -1) {
                 total += rec[key] || 0;
             }
         });
@@ -405,10 +408,12 @@ export class PivotUtil {
         return result;
     }
 
-    private static applyHierarchyChildren(hierarchy, val, rec, recordsKey) {
-        const childCollection = val.children;
-        if (Array.isArray(hierarchy.get(val.value).children)) {
-            hierarchy.get(val.value).children = new Map<string, any>();
+    private static applyHierarchyChildren(hierarchy, val, rec, pivotKeys: IPivotKeys) {
+        const recordsKey = pivotKeys.records;
+        const childKey = pivotKeys.children;
+        const childCollection = val[childKey];
+        if (Array.isArray(hierarchy.get(val.value)[childKey])) {
+            hierarchy.get(val.value)[childKey] = new Map<string, any>();
         }
         if (!childCollection || childCollection.size === 0) {
             const dim = hierarchy.get(val.value).dimension;
@@ -422,26 +427,26 @@ export class PivotUtil {
             }
         } else {
             for (const [key, child] of childCollection) {
-                if (!hierarchy.get(val.value).children.get(child.value)) {
-                    hierarchy.get(val.value).children.set(child.value, child);
+                if (!hierarchy.get(val.value)[childKey].get(child.value)) {
+                    hierarchy.get(val.value)[childKey].set(child.value, child);
                 }
 
-                if (hierarchy.get(val.value).children.get(child.value)[recordsKey]) {
+                if (hierarchy.get(val.value)[childKey].get(child.value)[recordsKey]) {
                     const copy = Object.assign({}, rec);
                     if (rec[recordsKey]) {
                         // not all nested children are valid
-                        const nestedValue = hierarchy.get(val.value).children.get(child.value).value;
-                        const dimension = hierarchy.get(val.value).children.get(child.value).dimension;
+                        const nestedValue = hierarchy.get(val.value)[childKey].get(child.value).value;
+                        const dimension = hierarchy.get(val.value)[childKey].get(child.value).dimension;
                         const validRecs = rec[recordsKey].filter(x => this.extractValueFromDimension(dimension, x) === nestedValue);
                         copy[recordsKey] = validRecs;
                     }
-                    hierarchy.get(val.value).children.get(child.value)[recordsKey].push(copy);
+                    hierarchy.get(val.value)[childKey].get(child.value)[recordsKey].push(copy);
                 } else {
-                    hierarchy.get(val.value).children.get(child.value)[recordsKey] = [rec];
+                    hierarchy.get(val.value)[childKey].get(child.value)[recordsKey] = [rec];
                 }
 
-                if (child.children && child.children.size > 0) {
-                    this.applyHierarchyChildren(hierarchy.get(val.value).children, child, rec, recordsKey);
+                if (child[childKey] && child[childKey].size > 0) {
+                    this.applyHierarchyChildren(hierarchy.get(val.value)[childKey], child, rec, pivotKeys);
                 }
             }
         }

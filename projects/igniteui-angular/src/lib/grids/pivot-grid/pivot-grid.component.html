@@ -34,7 +34,7 @@
         | pivotGridSort:pivotConfiguration:sortStrategy:id:pipeTrigger
         | pivotGridRow:pivotConfiguration:expansionStates:pipeTrigger:sortingExpressions
         | pivotGridColumn:pivotConfiguration:expansionStates:pipeTrigger:sortingExpressions
-        | pivotGridColumnSort:sortingExpressions:sortStrategy:pipeTrigger
+        | pivotGridColumnSort:sortingExpressions:sortStrategy:pipeTrigger:pivotKeys
         | pivotGridRowExpansion:pivotConfiguration:expansionStates:defaultExpandState:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
@@ -119,7 +119,7 @@
     <div class="igx-grid__tr--header">
         <igx-icon [attr.draggable]="false"
                   (click)="toggleColumn(column)">
-                  {{columnGroupStates.get(column.field) ? 'expand_more' : 'expand_less'}}</igx-icon>
+                  {{getColumnGroupExpandState(column) ? 'chevron_right' : 'expand_more'}}</igx-icon>
         {{column.header}}
     </div>
 </ng-template>
