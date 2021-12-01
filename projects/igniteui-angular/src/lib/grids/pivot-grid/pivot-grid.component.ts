@@ -89,7 +89,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * Emitted when the dimension collection is changed via the grid chip area.
      *
      * @remarks
-     * Returns the new dimension collection and its type: 
+     * Returns the new dimension collection and its type:
      * @example
      * ```html
      * <igx-pivot-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
@@ -316,7 +316,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
       public get defaultExpandState() {
           return this._defaultExpandState;
       }
-  
+
       public set defaultExpandState(val: boolean) {
           this._defaultExpandState = val;
       }
@@ -1114,7 +1114,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                 ref.instance.field = key;
                 ref.instance.parent = parent;
-                ref.instance.width = value.dimension.width || MINIMUM_COLUMN_WIDTH + 'px';
+                ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
                 ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
                 ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
                 ref.instance.sortable = true;
@@ -1150,13 +1150,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                         refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                         refSibling.instance.field = key;
                         refSibling.instance.parent = parent;
-                        ref.instance.width = value.dimension.width || MINIMUM_COLUMN_WIDTH + 'px';
+                        ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
                         ref.instance.sortable = true;
                         refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
                         refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
                         columns.push(refSibling.instance);
 
-                        measureChildren = this.getMeasureChildren(factoryColumn, data, refSibling.instance, false, value.dimension.width);
+                        measureChildren = this.getMeasureChildren(factoryColumn, data, refSibling.instance, false, value.dimension?.width);
                         refSibling.instance.children.reset(measureChildren);
                         columns = columns.concat(measureChildren);
                     }
@@ -1169,7 +1169,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                         refSibling.instance.header = parent != null ? key.split(parent.header + '-')[1] : key;
                         refSibling.instance.field = key;
                         refSibling.instance.parent = parent;
-                        ref.instance.width = value.dimension.width || MINIMUM_COLUMN_WIDTH + 'px';
+                        ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
                         ref.instance.sortable = true;
                         refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
                         refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
