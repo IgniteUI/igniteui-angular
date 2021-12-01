@@ -1,6 +1,6 @@
 
 import { GridType, PivotGridType } from '../grids/common/grid.interface';
-import { IPivotDimension, IPivotDimensionStrategy, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IPivotDimension, IPivotDimensionStrategy, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 import { FilteringStrategy } from './filtering-strategy';
 import { GridColumnDataType } from './data-util';
@@ -31,8 +31,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         collection: any,
         rows: IPivotDimension[],
         values?: IPivotValue[],
-        pivotKeys: IPivotKeys =
-            { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+        pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
     ): any[] {
         let hierarchies;
         let data;
@@ -98,7 +97,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         collection: any[],
         columns: IPivotDimension[],
         values: IPivotValue[],
-        pivotKeys: IPivotKeys = { aggregations: 'aggregations', records: 'records', children: 'children', level: 'level' }
+        pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
     ): any[] {
         const res = this.processHierarchy(collection, columns, values, pivotKeys);
         return res;
