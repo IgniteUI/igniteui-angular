@@ -222,6 +222,25 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public loadingGridTemplate: TemplateRef<any>;
 
     /**
+     * Get/Set IgxSummaryRow height
+     */
+    @Input()
+    public set summaryRowHeight(value: number) {
+        this._summaryRowHeight = value | 0;
+        this.summaryService.summaryHeight = value;
+        if (!this._init) {
+            this.reflow();
+        }
+    }
+
+    public get summaryRowHeight(): number {
+        if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
+            return this._summaryRowHeight || this.summaryService.calcMaxSummaryHeight();
+        }
+        return 0;
+    }
+
+    /**
      * Controls the copy behavior of the grid.
      */
     @Input()
@@ -2510,10 +2529,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public tfootHeight: number;
-    /**
-     * @hidden @internal
-     */
-    public summariesHeight: number;
 
     /**
      * @hidden @internal
@@ -2752,6 +2767,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _summaryPosition: GridSummaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
     private _showSummaryOnCollapse = false;
+    private _summaryRowHeight = 0;
     private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
     private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _selectRowOnClick = true;
@@ -3220,7 +3236,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
             this.crudService.endEdit(false);
+            if (this._summaryRowHeight === 0) {
             this.summaryService.summaryHeight = 0;
+            }
             this.notifyChanges(true);
         });
     }
@@ -6321,10 +6339,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected calculateGridHeight() {
         this.calcGridHeadRow();
-        this.summariesHeight = 0;
-        if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
-            this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
-        }
 
         this.calcHeight = this._calculateGridBodyHeight();
         if (this.pinnedRowHeight && this.calcHeight) {
@@ -6349,7 +6363,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected getFooterHeight(): number {
-        return this.summariesHeight || this.getComputedHeight(this.tfoot.nativeElement);
+        return this.summaryRowHeight || this.getComputedHeight(this.tfoot.nativeElement);
     }
     /**
      * @hidden
