@@ -199,7 +199,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
 
     private _collapsed = true;
 
-    constructor(public cdr: ChangeDetectorRef, protected builder: AnimationBuilder, private elementRef?: ElementRef) {
+    constructor(private cdr: ChangeDetectorRef, protected builder: AnimationBuilder, private elementRef?: ElementRef) {
         super(builder);
     }
 
