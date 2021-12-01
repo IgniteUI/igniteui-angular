@@ -1,3 +1,5 @@
+@use '../../../base' as *;
+
 ////
 /// @group schemas
 /// @access public
@@ -7,38 +9,37 @@
 /// Generates a light ripple schema.
 /// @type {Map}
 ///
-/// @property {Map} color [igx-color: ('grays', 800)] - The color of the ripple.
+/// @property {Map} color [igx-color: ('grays', 800, 7)] - The color of the ripple.
 ///
 /// @see $default-palette
-$_light-ripple: (
+$light-ripple: (
     variant: 'material',
 
     color: (
-        igx-color: ('grays', 800)
+        igx-color: ('grays', 800, .7)
     )
 );
 
 /// Generates a fluent ripple schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {Map} $_light-ripple
-$_fluent-ripple: extend($_light-ripple, (
+/// @requires {Map} $light-ripple
+$fluent-ripple: extend($light-ripple, (
     variant: 'fluent'
 ));
 
 /// Generates a bootstrap ripple schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {Map} $_light-ripple
-$_bootstrap-ripple: extend($_light-ripple, (
+/// @requires {Map} $light-ripple
+$bootstrap-ripple: extend($light-ripple, (
     variant: 'bootstrap'
 ));
 
 /// Generates an indigo ripple schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {Map} $_light-ripple
-$_indigo-ripple: extend($_light-ripple, (
+/// @requires {Map} $light-ripple
+$indigo-ripple: extend($light-ripple, (
     variant: 'indigo-design'
 ));
-

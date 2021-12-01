@@ -1,6 +1,5 @@
 @use 'node_modules/sass-true' as *;
-@import '../base/index';
-@import '../themes/index';
+@use '../base' as *;
 
 @include describe('Unit conversions') {
     @include it('should convert pixel numbers to rem') {
@@ -55,16 +54,6 @@
 }
 
 @include describe('Meta introspection') {
-    @include it('legacy should return true with $legacy-support on') {
-        $igx-legacy-support: true !global;
-        @include assert-equal(legacy(), true);
-    }
-
-    @include it('legacy should return false with $legacy-support off') {
-        $igx-legacy-support: false !global;
-        @include assert-equal(legacy(), false);
-    }
-
     @include it('is-root should return true if called from root') {
         @include assert('when called from root') {
             // Defined at root level
@@ -95,7 +84,7 @@
 $_primary: #09f;
 $_secondary: #97c;
 $_palette: igx-palette($_primary, $_secondary);
-$default-palette: $_palette;
+$theme-palette: $_palette;
 
 @include describe('Palette operations') {
     @include describe('igx-color') {
@@ -115,46 +104,23 @@ $default-palette: $_palette;
         }
     }
 
-    @include describe('igx-color w/ legacy support') {
-        $igx-legacy-support: true !global;
-
-        @include it('should return a value of type color w/o arguments')  {
-            $value: igx-color();
-            @include assert-equal(type-of($value), color);
-        }
-
-        @include it('should return a value of type color from $default-palette w/ color as only argument')  {
-            $value: igx-color($color: secondary);
-            $actual: igx-color($default-palette, 'secondary');
-            @include assert-equal($value, $actual);
-        }
-
-        @include it('should return a value of type color from $default-palette w/ color and variant as only arguments')  {
-            $value: igx-color($color: secondary, $variant: 700);
-            $actual: igx-color($default-palette, 'secondary', 700);
-            @include assert-equal($value, $actual);
-        }
-    }
-
-    @include describe('igx-color w/o legacy support') {
-        $igx-legacy-support: false !global;
-
+    @include describe('igx-color') {
         @include it('should return a value of type string as CSS var w/o arguments')  {
             $value: igx-color();
             @include assert-equal(type-of($value), string);
-            @include assert-equal($value, var(--igx-primary-500));
+            @include assert-equal($value, hsla(var(--igx-primary-500), var(--igx-primary-a)));
         }
 
         @include it('should return a value of type string as CSS var w/ color as only argument')  {
             $value: igx-color($color: secondary);
             @include assert-equal(type-of($value), string);
-            @include assert-equal($value, var(--igx-secondary-500));
+            @include assert-equal($value, hsla(var(--igx-secondary-500), var(--igx-secondary-a)));
         }
 
         @include it('should return a value of type string as CSS var w/ color and variant as only arguments')  {
             $value: igx-color($color: secondary, $variant: 'A400');
             @include assert-equal(type-of($value), string);
-            @include assert-equal($value, var(--igx-secondary-A400));
+            @include assert-equal($value, hsla(var(--igx-secondary-A400), var(--igx-secondary-a)));
         }
     }
 }
@@ -189,7 +155,7 @@ $default-palette: $_palette;
 
     @include it('should resolve simple schema colors as CSS vars w/o palette') {
         $actual: resolve-value($value: $simple-color, $payload: null);
-        $expected: var(--igx-primary-500);
+        $expected: hsla(var(--igx-primary-500), var(--igx-primary-a));
 
         @include assert-equal($actual, $expected);
     }
@@ -224,5 +190,35 @@ $default-palette: $_palette;
             'p-margin-left': 12px
         );
         @include assert-equal($actual, $expected);
+    }
+}
+
+@include describe('Theme Module System') {
+    $components: (
+        igx-checkbox: (
+            'usedBy': (
+                igx-combo,
+                igx-grid
+            )
+        )
+    ) !global;
+
+    @include it('should include theme if other themes depend on it') {
+        $excluded: (igx-checkbox, igx-combo);
+        $test: is-used(
+            $name: 'igx-checkbox',
+            $checklist: $excluded,
+        );
+        @include assert-equal($test, true);
+    }
+
+    @include it('should exclude theme if no themes depend on it') {
+        $excluded: (igx-checkbox, igx-grid, igx-combo);
+        $test: is-used(
+            $name: 'igx-checkbox',
+            $checklist: $excluded,
+        );
+
+        @include assert-equal($test, false);
     }
 }

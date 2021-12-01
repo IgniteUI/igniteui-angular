@@ -104,6 +104,7 @@ describe('Rendering Tests', () => {
 
             expect(accordion.panelCollapsed.emit).toHaveBeenCalledTimes(3);
 
+            accordion.panels[0].expand();
             accordion.panels[1].expand();
             tick();
             fix.detectChanges();

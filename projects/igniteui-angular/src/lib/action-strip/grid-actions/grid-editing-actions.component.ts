@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
-import { showMessage } from '../../core/deprecateDecorators';
+import { showMessage } from '../../core/utils';
 import { addRow, addChild  } from '@igniteui/material-icons-extended';
 
 @Component({
@@ -127,7 +127,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         }
         const context = this.strip.context;
         const grid = context.grid;
-        grid.deleteRow(context.rowID);
+        grid.deleteRow(context.key);
 
         this.strip.hide();
     }
@@ -154,7 +154,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * @internal
      */
     private registerIcons() {
-        this.iconService.addSvgIconFromText(addRow.name, addRow.value, 'imx-icons');
-        this.iconService.addSvgIconFromText(addChild.name, addChild.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(addRow.name, addRow.value, 'imx-icons', true,);
+        this.iconService.addSvgIconFromText(addChild.name, addChild.value, 'imx-icons', true);
     }
 }

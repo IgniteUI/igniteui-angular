@@ -1,7 +1,4 @@
-<ng-template #title>
-    <ng-content select="[igxGridToolbarTitle],igx-grid-toolbar-title"></ng-content>
-</ng-template>
-<ng-container *ngTemplateOutlet="title"></ng-container>
+<ng-content select="[igxGridToolbarTitle],igx-grid-toolbar-title"></ng-content>
 
 <div class="igx-grid-toolbar__custom-content">
     <ng-content></ng-content>
@@ -12,8 +9,6 @@
 </ng-template>
 <igx-grid-toolbar-actions *ngIf="!hasActions">
     <igx-grid-toolbar-advanced-filtering *ngIf="grid.allowAdvancedFiltering"></igx-grid-toolbar-advanced-filtering>
-    <igx-grid-toolbar-exporter *ngIf="grid.exportExcel || grid.exportCsv" (exportStarted)="showProgress = true" (exportEnded)="showProgress = false">
-    </igx-grid-toolbar-exporter>
 </igx-grid-toolbar-actions>
 <ng-container *ngTemplateOutlet="actions"></ng-container>
 

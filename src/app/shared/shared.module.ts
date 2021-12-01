@@ -21,6 +21,7 @@ import {
     IgxExpansionPanelModule,
     IgxFilterModule,
     IgxFocusModule,
+    IgxFocusTrapModule,
     IgxForOfModule,
     IgxInputGroupModule,
     IgxLayoutModule,
@@ -33,6 +34,7 @@ import {
     IgxRippleModule,
     IgxSliderModule,
     IgxSnackbarModule,
+    IgxStepperModule,
     IgxSwitchModule,
     IgxSplitterModule,
     IgxTabsModule,
@@ -42,7 +44,8 @@ import {
     IgxTooltipModule,
     IgxSelectModule,
     IgxDateRangePickerModule,
-    IgxTreeModule
+    IgxTreeModule,
+    IgxSimpleComboModule
 } from 'igniteui-angular';
 
 
@@ -62,12 +65,14 @@ const igniteModules = [
     IgxCheckboxModule,
     IgxChipsModule,
     IgxComboModule,
+    IgxSimpleComboModule,
     IgxDatePickerModule,
     IgxDialogModule,
     IgxDropDownModule,
     IgxExpansionPanelModule,
     IgxFilterModule,
     IgxFocusModule,
+    IgxFocusTrapModule,
     IgxForOfModule,
     IgxInputGroupModule,
     IgxLayoutModule,
@@ -80,6 +85,7 @@ const igniteModules = [
     IgxRippleModule,
     IgxSliderModule,
     IgxSnackbarModule,
+    IgxStepperModule,
     IgxSwitchModule,
     IgxSplitterModule,
     IgxTreeModule,

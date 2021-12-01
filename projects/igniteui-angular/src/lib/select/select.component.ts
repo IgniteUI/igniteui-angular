@@ -27,14 +27,13 @@ import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
 import { OverlaySettings } from '../services/overlay/utilities';
-import { IgxOverlayService } from '../services/public_api';
 import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
@@ -42,6 +41,7 @@ import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 import { ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
+import { IgxOverlayService } from '../services/overlay/overlay';
 
 /** @hidden @internal */
 @Directive({
@@ -325,13 +325,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil,
         protected selection: IgxSelectionAPIService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
-        super(elementRef, cdr, platform, selection, _displayDensityOptions);
+        super(elementRef, cdr, selection, _displayDensityOptions);
     }
 
     //#region ControlValueAccessor

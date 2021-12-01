@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import {
     IgxGridComponent,
     OverlaySettings,
@@ -21,7 +21,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     templateUrl: 'grid-column-selection.sample.html'
 })
 
-export class GridColumnSelectionSampleComponent implements OnInit {
+export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
 
@@ -64,10 +64,16 @@ export class GridColumnSelectionSampleComponent implements OnInit {
         closeOnOutsideClick: true
     };
 
+    constructor(private cdr: ChangeDetectorRef) {}
+
     public log(event) {
         console.log(event);
     }
 
+    public ngAfterViewInit() {
+        this.cdr.detectChanges();
+    }
+    
     public ngOnInit(): void {
         this.displayDensities = [
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },

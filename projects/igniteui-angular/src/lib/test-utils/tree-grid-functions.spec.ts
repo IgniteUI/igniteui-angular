@@ -1,6 +1,6 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxGridBaseDirective } from '../grids/tree-grid/public_api';
-import { IGridDataBindable } from '../grids/common/grid.interface';
+import { IgxTreeGridComponent } from '../grids/tree-grid/public_api';
+import { CellType } from '../grids/common/grid.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { GridFunctions } from './grid-functions.spec';
@@ -279,14 +279,14 @@ export class TreeGridFunctions {
     /**
      * Returns true if a tree-grid row is 'grayed out' because of filtering
      */
-    public static checkRowIsGrayedOut(row: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>): boolean {
+    public static checkRowIsGrayedOut(row: IgxRowDirective): boolean {
         return row.nativeElement.classList.contains('igx-grid__tr--filtered');
     }
 
     /**
      * Returns true if a tree-grid row is NOT 'grayed out' because of filtering
      */
-    public static checkRowIsNotGrayedOut(row: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>): boolean {
+    public static checkRowIsNotGrayedOut(row: IgxRowDirective): boolean {
         return !row.nativeElement.classList.contains('igx-grid__tr--filtered');
     }
 
@@ -400,7 +400,8 @@ export class TreeGridFunctions {
         return cellDOM.nativeElement.classList.contains(TREE_CELL_SELECTION_CSS_CLASS);
     }
 
-    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent, cell: IgxGridCellComponent, selected: boolean = true) {
+    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent,
+                                             cell: IgxGridCellComponent | CellType, selected: boolean = true) {
         expect(cell).toBeDefined();
         if (cell) {
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(cell)).toBe(selected);
@@ -463,7 +464,7 @@ export class TreeGridFunctions {
 
 
     public static moveGridCellWithTab =
-        (fix, cell: IgxGridCellComponent) => new Promise<void>(async resolve => {
+        (fix, cell: IgxGridCellComponent | CellType) => new Promise<void>(async resolve => {
             UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();

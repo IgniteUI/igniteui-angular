@@ -9,8 +9,7 @@ import {
     QueryList,
     ElementRef
 } from '@angular/core';
-import { IgxColumnComponent } from '../../columns/column.component';
-import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
+import { IgxFilteringService } from '../grid-filtering.service';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import {
@@ -22,25 +21,21 @@ import {
     IgxTimeFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
-import {
-    AutoPositionStrategy,
-    OverlaySettings,
-    VerticalAlignment,
-    PositionSettings,
-    HorizontalAlignment,
-    IgxOverlayService,
-    AbsoluteScrollStrategy
-} from '../../../services/public_api';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 import { DisplayDensity } from '../../../core/density';
 import { PlatformUtil } from '../../../core/utils';
+import { ExpressionUI } from './common';
+import { ColumnType } from '../../common/grid.interface';
+import { HorizontalAlignment, OverlaySettings, PositionSettings, VerticalAlignment } from '../../../services/overlay/utilities';
+import { AutoPositionStrategy } from '../../../services/overlay/position/auto-position-strategy';
+import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
+import { IgxOverlayService } from '../../../services/overlay/overlay';
 
 /**
  * @hidden
  */
 @Component({
-    preserveWhitespaces: false,
     selector: 'igx-excel-style-custom-dialog',
     templateUrl: './excel-style-custom-dialog.component.html'
 })
@@ -48,7 +43,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public expressionsList = new Array<ExpressionUI>();
     @Input()
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     @Input()
     public selectedOperator: string;
@@ -58,9 +53,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     @Input()
     public overlayComponentId: string;
-
-    @Input()
-    public overlayService: IgxOverlayService;
 
     @Input()
     public displayDensity: DisplayDensity;
@@ -98,7 +90,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     };
 
 
-    constructor(private cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
+    constructor(
+        protected overlayService: IgxOverlayService,
+        private cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil
+    ) { }
 
     public ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;

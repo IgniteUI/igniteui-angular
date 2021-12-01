@@ -1,30 +1,47 @@
+@use '../../../base' as *;
+@use '../light/divider' as *;
+
 ////
 /// @group schemas
 /// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+/// Generates a base dark divider schema.
+/// @type {Map}
+/// @property {Map} color [igx-color: ('grays', 100)] - The color used for the divider.
+///
+$base-dark-divider: (
+    color: (
+        igx-color: ('grays', 100)
+    )
+);
+
 /// Generates a dark divider schema.
 /// @type {Map}
-/// @requires {function} extend
-/// @requires $_light-divider
 /// @see $default-palette
-$_dark-divider: extend($_light-divider);
+/// @requires $light-divider
+/// @requires $base-dark-divider
+/// @requires {function} extend
+$dark-divider: extend($light-divider, $base-dark-divider);
 
 /// Generates a dark fluent divider schema.
 /// @type {Map}
+/// @requires $fluent-divider
+/// @requires $base-dark-divider
 /// @requires {function} extend
-/// @requires $_fluent-divider
-$_dark-fluent-divider: extend($_fluent-divider);
+$dark-fluent-divider: extend($fluent-divider, $base-dark-divider);
 
 /// Generates a dark bootstrap divider schema.
 /// @type {Map}
+/// @requires $bootstrap-divider
+/// @requires $base-dark-divider
 /// @requires {function} extend
-/// @requires $_bootstrap-divider
-$_dark-bootstrap-divider: extend($_bootstrap-divider);
+$dark-bootstrap-divider: extend($bootstrap-divider, $base-dark-divider);
 
 /// Generates a dark indigo divider schema.
 /// @type {Map}
+/// @requires $indigo-divider
+/// @requires $base-dark-divider
 /// @requires {function} extend
-/// @requires $_indigo-divider
-$_dark-indigo-divider: extend($_indigo-divider);
+$dark-indigo-divider: extend($indigo-divider, $base-dark-divider);

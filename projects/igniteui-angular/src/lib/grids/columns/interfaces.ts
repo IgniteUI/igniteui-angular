@@ -1,4 +1,4 @@
-import { IgxColumnComponent } from './column.component';
+import { ColumnType } from '../common/grid.interface';
 
 
 /**
@@ -6,7 +6,7 @@ import { IgxColumnComponent } from './column.component';
  * @internal
  */
 export interface MRLColumnSizeInfo {
-    ref: IgxColumnComponent;
+    ref: ColumnType;
     width: number;
     colSpan: number;
     colEnd: number;
@@ -18,7 +18,7 @@ export interface MRLColumnSizeInfo {
  * @internal
  */
 export interface MRLResizeColumnInfo {
-    target: IgxColumnComponent;
+    target: ColumnType;
     spanUsed: number;
 }
 
