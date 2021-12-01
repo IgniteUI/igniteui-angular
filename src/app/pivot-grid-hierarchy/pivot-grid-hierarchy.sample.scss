@@ -1,7 +1,29 @@
 :host {
-    display: block;
+    display: flex;
+    flex-direction: column;
     height: 100%;
 }
+
+.sample-flex-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    span {
+        margin-bottom: 8px;
+    }
+
+    igx-combo {
+        min-width: 400px;
+    }
+}
+
+igx-pivot-grid {
+    flex: 1;
+}
+
 
 :host ::ng-deep {
     .upFont {
@@ -9,7 +31,7 @@
     }
 
     .downFont {
-        color:red;
+        color: red;
     }
 
     .upFont1 {
@@ -17,7 +39,7 @@
     }
 
     .downFont1 {
-        color:yellow;
+        color: yellow;
     }
 
     .sample-column {

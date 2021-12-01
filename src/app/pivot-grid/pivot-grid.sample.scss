@@ -5,7 +5,9 @@
 }
 
 .density-chooser {
-    max-width: 40%;
+    max-width: 60%;
+    min-width: 400px;
+
 }
 
 igx-pivot-grid {
@@ -15,9 +17,13 @@ igx-pivot-grid {
 .sample-flex-row {
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
     margin-bottom: 16px;
-    flex-direction: column;
+
+    igx-combo {
+        min-width: 400px;
+    }
 }
 
 :host ::ng-deep {
