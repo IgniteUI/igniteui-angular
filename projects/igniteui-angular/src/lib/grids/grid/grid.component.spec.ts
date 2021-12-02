@@ -237,20 +237,25 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it('should change displayDensity runtime correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
+            const grid = fixture.componentInstance.grid;
             fixture.componentInstance.columns[1].hasSummary = true;
+            grid.summaryRowHeight = 0;
             fixture.detectChanges();
 
-            const grid = fixture.componentInstance.grid;
             const headerHight = fixture.debugElement.query(By.css(THEAD_CLASS)).query(By.css('.igx-grid__tr')).nativeElement;
             const rowHeight = fixture.debugElement.query(By.css(TBODY_CLASS)).query(By.css('.igx-grid__tr')).nativeElement;
-            const summaryItemHeigh = fixture.debugElement.query(By.css('.igx-grid__tfoot'))
+            const summaryItemHeight = fixture.debugElement.query(By.css('.igx-grid__tfoot'))
                 .query(By.css('.igx-grid-summary__item')).nativeElement;
-
+            const summaryRowHeight = fixture.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement;
+            
+            
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(51);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
+            expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
+            expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
             grid.displayDensity = 'cosy';
+            grid.summaryRowHeight = null;
             tick(16);
             fixture.detectChanges();
 
@@ -258,8 +263,10 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.defaultRowHeight).toBe(40);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(41);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
+            expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
+            expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
             grid.displayDensity = 'compact';
+            grid.summaryRowHeight = undefined;
             tick(16);
             fixture.detectChanges();
 
@@ -267,7 +274,8 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.defaultRowHeight).toBe(32);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(33);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
+            expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
+            expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
         }));
 
         it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
