@@ -109,12 +109,17 @@ export class IgxSorting implements IGridSortingStrategy {
         const res = [];
         const key = expression.fieldName;
         const len = data.length;
-        const groupval = this.getFieldValue(data[index], key, isDate);
+        let groupval = this.getFieldValue(data[index], key, isDate);
         res.push(data[index]);
         index++;
         const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
         for (let i = index; i < len; i++) {
-            if (comparer(this.getFieldValue(data[i], key, isDate), groupval) === 0) {
+            let fieldValue = this.getFieldValue(data[i], key, isDate);
+            if (expression.ignoreCase) {
+                fieldValue = fieldValue.toLowerCase();
+                groupval = groupval.toLowerCase();
+            }
+            if (comparer(fieldValue, groupval) === 0) {
                 res.push(data[i]);
             } else {
                 break;
