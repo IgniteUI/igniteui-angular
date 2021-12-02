@@ -2,6 +2,24 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.0.1
+
+### New Features
+- Add `igxSummary` directive in order to re-template the default summary cell layout.
+    - Expose `summaryTemplate` input in order to bind the column summary template through API.
+    - Expose `summaryRowHeight` property which overrides the default hight of the summary row.
+    - Code example below:
+
+    ```html
+    <igx-column ... [hasSummary]="true">
+        <ng-template igxSummary let-summaryResult>
+            <span> My custom summary template</span>
+            <span>{{ summaryResult[0].label }} - {{ summaryResult[0].summaryResult }}</span>
+        </ng-template>
+    </igx-column>
+    ```
+    - Please, refer to the [Summaries](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/summaries#summary-template) topic for more information.
+
 ## 13.0.0
 
 ### New Features
