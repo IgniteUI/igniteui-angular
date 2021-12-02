@@ -1,9 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { GridFunctions } from "../../test-utils/grid-functions.spec";
 
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
@@ -50,6 +51,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(DefaultToolbarComponent);
             fixture.detectChanges();
+
         }));
 
         it ('toolbar is rendered when declared between grid tags', () => {
@@ -171,15 +173,26 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(defaultExportSettings).not.toEqual(instance.exporterAction.overlaySettings);
         });
 
-        it('should initialize input property columnsAreaMaxHeight properly', () => {
+        it('should initialize input property columnsAreaMaxHeight properly', fakeAsync(() => {
             expect(instance.data).toBeDefined();
+
             expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('100%');
 
             instance.pinningAction.columnsAreaMaxHeight = '50px';
             fixture.detectChanges();
 
             expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('50px');
-        });
+
+            instance.pinningAction.columnsAreaMaxHeight = '100%'
+            fixture.detectChanges();
+
+            const pinningButton = GridFunctions.getColumnPinningButton(fixture);
+            pinningButton.click();
+            tick(100);
+            fixture.detectChanges()
+
+            expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('50px');
+        }));
     });
 });
 
