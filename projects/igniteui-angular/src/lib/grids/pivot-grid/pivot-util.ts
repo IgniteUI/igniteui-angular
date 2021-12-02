@@ -14,7 +14,7 @@ export class PivotUtil {
                 currDim = currDim.childLevel;
                 lvl++;
             }
-
+            currDim.level = lvl;
         }
     }
     public static getFieldsHierarchy(data: any[], dimensions: IPivotDimension[],
