@@ -188,26 +188,34 @@ export class ColumnDefinitions {
     `;
 
     public static columnTemplates = `
-    <igx-column field="ID">
+    <igx-column field="ID" [hasSummary]="true">
         <ng-template igxHeader>
             <span class="header">Header text</span>
         </ng-template>
 
         <ng-template igxCell>
             <span class="cell">Cell text</span>
+        </ng-template>
+
+        <ng-template igxSummary>
+            <span class="summary">Summary text</span>
         </ng-template>
 
         <ng-template igxFooter>
             <span class="footer">Footer text</span>
         </ng-template>
     </igx-column>
-    <igx-column field="Name">
+    <igx-column field="Name" [hasSummary]="true">
         <ng-template igxHeader>
             <span class="header">Header text</span>
         </ng-template>
 
         <ng-template igxCell>
             <span class="cell">Cell text</span>
+        </ng-template>
+
+        <ng-template igxSummary>
+            <span class="summary">Summary text</span>
         </ng-template>
 
         <ng-template igxFooter>

@@ -157,6 +157,7 @@ export interface ColumnType {
     filteringExpressionsTree: FilteringExpressionsTree;
     hasSummary: boolean;
     summaries: any;
+    summaryTemplate: TemplateRef<any>;
     pinned: boolean;
     expanded: boolean;
     selected: boolean;
@@ -373,6 +374,7 @@ export interface GridType extends IGridDataBindable {
     dataWithAddedInTransactionRows: any[];
     transactions: TransactionService<Transaction, State>;
     defaultSummaryHeight: number;
+    summaryRowHeight: number;
     rowEditingOverlay: IgxToggleDirective;
     totalRowsCountAfterFilter: number;
     _totalRecords: number;

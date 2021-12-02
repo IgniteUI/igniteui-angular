@@ -1,5 +1,9 @@
+<div class="density-chooser">
+    <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+</div>
 <igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [displayDensity]="'compact'" [width]="w" [height]="h"
-    [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'">
+    [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'" [showSummaryOnCollapse]="true"
+    [summaryRowHeight]="rh" [rowSelection]="rowSelection ? 'multiple' : 'none'" [displayDensity]="density">
     <igx-grid-toolbar *ngIf="showToolbar" [displayDensity]="grid1.displayDensity">
         <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
         <igx-grid-toolbar-actions>
@@ -30,6 +34,16 @@
         <ng-template igxCell let-cell="cell" let-val let-row>
             ${{val}}
         </ng-template>
+        <ng-template igxSummary let-summaryResults>
+            <div style="font-size: 0.75rem">
+                <span>Custom summary cell:</span><br>
+                <span>Number of Summaries: {{ summaryResults.length }}</span><br>
+                <span>First Summary - {{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span><br>
+                <span>Second Summary - {{ summaryResults[1].label }}: {{ summaryResults[1].summaryResult }}</span><br>
+                <span>Third Summary - {{ summaryResults[2].label }}: {{ summaryResults[2].summaryResult }}</span><br>
+                <span> Fourth Summary - {{ summaryResults[3].label }}: {{ summaryResults[3].summaryResult }}</span><br>
+            </div>
+        </ng-template>
     </igx-column>
     <igx-column field="OrderDate" [width]="cw" [dataType]="'date'" [hasSummary]="false" [sortable]="true">
     </igx-column>
@@ -55,6 +69,10 @@
     <label> Columns Width </label>
     <input [(ngModel)]="cw">
 </div>
+<div class="properties-input">
+    <label> Summary Row Height </label>
+    <input type="number" [(ngModel)]="rh">
+</div>
 
 <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
 <igx-switch [(ngModel)]="grid1.allowFiltering">allowFiltering</igx-switch>
@@ -68,9 +86,10 @@
 <igx-switch [(ngModel)]="disablePinning">ReorderLevel disablePinning</igx-switch>
 <igx-switch [(ngModel)]="hasSummaryUnit">hasSummaryUnit</igx-switch>
 <igx-switch [(ngModel)]="hasHidden">hasHidden</igx-switch>
+<igx-switch [(ngModel)]="rowSelection">Row Selection</igx-switch>
 
 <button (click)="enableSummary()"> Enable Summary for column ReorderLevel</button>
-<button (click)="disableSummary()">Disable Summary</button>
+<button (click)="toggleSummary()">Toggle Custom Summary</button>
 <button (click)="updateData()">Update Data</button>
 <button (click)="addRow()">Add Row</button>
 <button (click)="deleteRow()">Delete Row</button>
