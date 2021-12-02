@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
+import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef } from '@angular/core';
 import {
     IgxSummaryOperand,
     IgxSummaryResult
@@ -32,6 +32,9 @@ export class IgxSummaryCellComponent {
 
     @Input()
     public summaryFormatter: (summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
+
+    @Input()
+    public summaryTemplate: TemplateRef<any>;
 
     /** @hidden */
     @Input()
