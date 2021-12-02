@@ -21,6 +21,7 @@ import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-fu
 import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { DisplayDensity } from '../../core/displayDensity';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
@@ -448,6 +449,44 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(summaryRow.children.length).toEqual(2);
             expect(childSummaryIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
         }));
+
+        it('should size summaries for parent and child grids correctly when display density is changed and summaryRowHeight is set to falsy value', () => {
+            hierarchicalGrid.displayDensity = DisplayDensity.comfortable;
+            fixture.detectChanges();
+
+            hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
+            hierarchicalGrid.summaryRowHeight = 0;
+            fixture.detectChanges();
+
+            let childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            let tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
+            let childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
+
+            expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
+            expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
+
+            hierarchicalGrid.displayDensity = DisplayDensity.cosy;
+            hierarchicalGrid.summaryRowHeight = 0;
+            fixture.detectChanges();
+
+            childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
+            childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
+
+            expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
+            expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
+
+            hierarchicalGrid.displayDensity = DisplayDensity.compact;
+            hierarchicalGrid.summaryRowHeight = 0;
+            fixture.detectChanges();
+
+            childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
+            childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
+
+            expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
+            expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
+        })
 
         it('should render summaries for column inside a column group.', fakeAsync(() => {
             fixture.componentInstance.rowIsland.childColumns.first.hasSummary = false;
