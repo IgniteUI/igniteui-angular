@@ -56,12 +56,15 @@ describe('IgxGrid - Column properties #grid', () => {
 
         const headerSpans: DebugElement[] = fix.debugElement.queryAll(By.css('.header'));
         const cellSpans: DebugElement[] = fix.debugElement.queryAll(By.css('.cell'));
+        const summarySpans: DebugElement[] = fix.debugElement.queryAll(By.css('.summary'));
 
         grid.columnList.forEach((column) => expect(column.bodyTemplate).toBeDefined());
         grid.columnList.forEach((column) => expect(column.headerTemplate).toBeDefined());
+        grid.columnList.forEach((column) => expect(column.summaryTemplate).toBeDefined());
 
         headerSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Header text'));
         cellSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Cell text'));
+        summarySpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Summary text'));
     });
 
     it('should provide a way to change templates dynamically', () => {
@@ -72,14 +75,17 @@ describe('IgxGrid - Column properties #grid', () => {
 
         grid.columnList.forEach((column) => column.headerTemplate = fix.componentInstance.newHeaderTemplate);
         grid.columnList.forEach((column) => column.bodyTemplate = fix.componentInstance.newCellTemplate);
+        grid.columnList.forEach((column) => column.summaryTemplate = fix.componentInstance.newSummaryTemplate);
 
         fix.detectChanges();
 
         const headerSpans: DebugElement[] = fix.debugElement.queryAll(By.css('.new-header'));
         const cellSpans: DebugElement[] = fix.debugElement.queryAll(By.css('.new-cell'));
+        const summarySpans: DebugElement[] = fix.debugElement.queryAll(By.css('.new-summary'));
 
         headerSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('New header text'));
         cellSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('New cell text'));
+        summarySpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('New summary text'));
     });
 
     it('should reflect column hiding correctly in the DOM dynamically', () => {
@@ -221,12 +227,12 @@ describe('IgxGrid - Column properties #grid', () => {
         cityCol = grid.getColumnByName('City');
         expect(cityCol).not.toBeDefined();
 
-         // add to pinned area
+        // add to pinned area
         fix.componentInstance.columns.push({ field: 'City', width: 150, movable: true, type: 'string', pinned: true });
         fix.detectChanges();
 
         cityCol = grid.getColumnByName('City');
-        expect(cityCol.visibleIndex).toEqual( 1);
+        expect(cityCol.visibleIndex).toEqual(1);
     }));
 
     it('should apply columnWidth on columns that don\'t have explicit width', () => {
@@ -321,6 +327,9 @@ describe('IgxGrid - Column properties #grid', () => {
         grid.headerCellList.forEach(header =>
             expect(header.nativeElement.querySelector('.customHeaderTemplate')).toBeDefined());
 
+        grid.summariesRowList.forEach(summary =>
+            expect(summary.nativeElement.querySelector('.customSummaryTemplate')).not.toBeNull());
+
         const cell = grid.getCellByColumn(0, 'ID');
         cell.editMode = true;
         fixture.detectChanges();
@@ -334,7 +343,7 @@ describe('IgxGrid - Column properties #grid', () => {
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.instance;
-        const contextObject = {property1: 'cellContent', property2: 'cellContent1'};
+        const contextObject = { property1: 'cellContent', property2: 'cellContent1' };
         const firstColumn = grid.columnList.get(0);
         const secondColumn = grid.columnList.get(1);
 
@@ -624,7 +633,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0 €', '20 000 €', '39 004 €', '3 900,4 €']);
         });
 
-        it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs' ,fakeAsync(()=> {
+        it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             tick();
             fix.detectChanges();
@@ -653,7 +662,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 digitsInfo: '3.3-3',
                 currencyCode: 'EUR',
                 display: 'symbol-narrow'
-              };
+            };
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, unitsColumn.field);
@@ -684,7 +693,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             discountColumn.pipeArgs = {
                 digitsInfo: '3.2-2',
-              };
+            };
             fix.detectChanges();
 
             grid.sort({ fieldName: 'Discount', dir: SortingDirection.Desc, ignoreCase: false });
@@ -775,7 +784,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '-70%', '1,100%', '2,153.9%', '215.39%']);
         });
 
-        it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs' ,fakeAsync(()=> {
+        it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
             tick();
             fix.detectChanges();
@@ -804,7 +813,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 digitsInfo: '3.3-3',
                 currencyCode: 'EUR',
                 display: 'symbol-narrow'
-              };
+            };
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, unitsColumn.field);
@@ -971,7 +980,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ['Count', 'Earliest', 'Latest'], ['10', '6:40 AM', '8:20 PM']);
         });
 
-        it('DateTime: filtering UI list should be populated with correct values based on the pipeArgs' ,fakeAsync(()=> {
+        it('DateTime: filtering UI list should be populated with correct values based on the pipeArgs', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
             tick();
             fix.detectChanges();
@@ -998,7 +1007,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             orderDateColumn.pipeArgs = {
                 format: 'short'
-              };
+            };
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, orderDateColumn.field);
@@ -1013,7 +1022,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('8/18/16, 11:17 AM');
         }));
 
-        it('Time: filtering UI list should be populated with correct values based on the pipeArgs' ,fakeAsync(()=> {
+        it('Time: filtering UI list should be populated with correct values based on the pipeArgs', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
             tick();
             fix.detectChanges();
@@ -1054,7 +1063,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('12:12 PM');
         }));
 
-        it('DateTime: dateTime input should be disabled when try to filter based on unary conditions - today or etc. #ivy' ,fakeAsync(()=> {
+        it('DateTime: dateTime input should be disabled when try to filter based on unary conditions - today or etc. #ivy', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
             tick();
             fix.detectChanges();
@@ -1090,9 +1099,9 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             const sortedValues = [new Date(2015, 2, 12, 21, 31, 22), new Date(2015, 9, 1, 11, 37, 22), new Date(2016, 7, 18, 11, 17, 22),
-                new Date(2018, 6, 14, 17, 27, 23), new Date(2019, 3, 17, 5, 5, 15), new Date(2019, 9, 30, 16, 17, 27),
-                new Date(2021, 4, 11, 7, 47, 1), new Date(2021, 4, 11, 18, 37, 2),
-                new Date(2021, 7, 3, 15, 15, 0), new Date(2021, 7, 3, 15, 15, 0)];
+            new Date(2018, 6, 14, 17, 27, 23), new Date(2019, 3, 17, 5, 5, 15), new Date(2019, 9, 30, 16, 17, 27),
+            new Date(2021, 4, 11, 7, 47, 1), new Date(2021, 4, 11, 18, 37, 2),
+            new Date(2021, 7, 3, 15, 15, 0), new Date(2021, 7, 3, 15, 15, 0)];
 
             expect(grid.rowList.length).toEqual(sortedValues.length);
             sortedValues.forEach((value, index) => {
@@ -1119,7 +1128,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             const sortedValues = ['6:40:18 AM', '8:37:11 AM', '12:12:02 PM', '12:47:42 PM', '12:47:42 PM', '2:07:12 PM',
-            '2:30:00 PM', '3:30:22 PM', '3:30:30 PM', '8:20:24 PM'];
+                '2:30:00 PM', '3:30:22 PM', '3:30:30 PM', '8:20:24 PM'];
 
             expect(grid.rowList.length).toEqual(sortedValues.length);
             sortedValues.forEach((value, index) => {
@@ -1158,6 +1167,10 @@ export class ColumnsFromIterableComponent {
 
         <ng-template #newCell>
             <span class="new-cell">New cell text</span>
+        </ng-template>
+        
+        <ng-template #newSummary>
+            <span class="new-summary">New summary text</span>
         </ng-template>`
 })
 export class TemplatedColumnsComponent {
@@ -1170,6 +1183,9 @@ export class TemplatedColumnsComponent {
     @ViewChild('newCell', { read: TemplateRef, static: true })
     public newCellTemplate: TemplateRef<any>;
 
+    @ViewChild('newSummary', { read: TemplateRef, static: true })
+    public newSummaryTemplate: TemplateRef<any>;
+
     public data = SampleTestData.personIDNameData();
 }
 
@@ -1178,7 +1194,7 @@ export class TemplatedColumnsComponent {
         <igx-grid [data]="data">
             <igx-column *ngFor="let field of columns" [field]="field" [editable]="true"
                 [cellTemplate]="cell" [headerTemplate]="header"
-                [cellEditorTemplate]="editor">
+                [cellEditorTemplate]="editor" [hasSummary]="true" [summaryTemplate]="summary">
             </igx-column>
         </igx-grid>
 
@@ -1192,6 +1208,10 @@ export class TemplatedColumnsComponent {
 
         <ng-template #editor let-value>
             <span class="customEditorTemplate">{{ value }}</span>
+        </ng-template>
+
+        <ng-template #summary igxSummary let-summaryResults>
+            <span class="customSummaryTemplate">{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span>
         </ng-template>
     `
 })
@@ -1223,7 +1243,7 @@ export class TemplatedInputColumnsComponent {
 export class TemplatedContextInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
-    public contextObject = {property1: 'cellContent', property2: 'cellContent1'};
+    public contextObject = { property1: 'cellContent', property2: 'cellContent1' };
 
     public data = SampleTestData.personNameAgeData();
 }
