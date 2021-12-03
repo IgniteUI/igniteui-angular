@@ -320,7 +320,7 @@ export class PivotUtil {
                         // only 1 child record, apply same props to parent.
                         const keys = Object.assign({}, pivotKeys) as any;
                         const memberName = h[pivotKeys.children].entries().next().value[1].dimension.memberName;
-                        keys[memberName] = nested[memberName];
+                        keys[memberName] = memberName;
                         PivotUtil.processSiblingProperties(nested[pivotKeys.records][0], [nested], keys);
                     }
                 }
