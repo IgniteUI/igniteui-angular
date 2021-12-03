@@ -1315,8 +1315,8 @@ describe('Pivot pipes #pivotGrid', () => {
             }, {
                 memberName: 'Discontinued',
                 enabled: true,
-                memberFunction: (data) => {
-                    return data.Discontinued.toString();
+                memberFunction: (rowData) => {
+                    return rowData.Discontinued.toString();
                 }
             }];
         // Date, Product, Country, Seller, Discontinued
