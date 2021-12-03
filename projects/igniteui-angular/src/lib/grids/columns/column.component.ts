@@ -43,7 +43,8 @@ import {
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCollapsibleIndicatorTemplateDirective,
-    IgxFilterCellTemplateDirective
+    IgxFilterCellTemplateDirective,
+    IgxSummaryTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
@@ -836,6 +837,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    @ContentChild(IgxSummaryTemplateDirective, { read: IgxSummaryTemplateDirective })
+    protected summaryTemplateDirective: IgxSummaryTemplateDirective;
+    /**
+     * @hidden
+     */
     @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;
     /**
@@ -853,7 +859,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
     protected collapseIndicatorTemplate: IgxCollapsibleIndicatorTemplateDirective;
-
     /**
      * @hidden
      */
@@ -1108,6 +1113,39 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             default:
                 return '80';
         }
+    }
+    /**
+     * Returns a reference to the `summaryTemplate`.
+     * ```typescript
+     * let summaryTemplate = this.column.summaryTemplate;
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public get summaryTemplate(): TemplateRef<any> {
+        return this._summaryTemplate;
+    }
+    /**
+     * Sets the summary template.
+     * ```html
+     * <ng-template #summaryTemplate igxSummary let-summaryResults>
+     *    <p>{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</p>
+     *    <p>{{ summaryResults[1].label }}: {{ summaryResults[1].summaryResult }}</p>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'summaryTemplate'", {read: TemplateRef })
+     * public summaryTemplate: TemplateRef<any>;
+     * this.column.summaryTemplate = this.summaryTemplate;
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    public set summaryTemplate(template: TemplateRef<any>) {
+        this._summaryTemplate = template;
     }
     /**
      * Returns a reference to the `bodyTemplate`.
@@ -1568,6 +1606,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    protected _summaryTemplate: TemplateRef<any>;
+    /**
+     * @hidden
+     */
     protected _inlineEditorTemplate: TemplateRef<any>;
     /**
      * @hidden
@@ -1672,6 +1714,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     public ngAfterContentInit(): void {
+        if (this.summaryTemplateDirective) {
+            this._summaryTemplate = this.summaryTemplateDirective.template;
+        }
         if (this.cellTemplate) {
             this._bodyTemplate = this.cellTemplate.template;
         }
