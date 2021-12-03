@@ -1100,7 +1100,7 @@ describe('Pivot pipes #pivotGrid', () => {
         ]);
     });
 
-    it('should generate correct data with 4 dimensions with varying depth.', () => {
+    it('should generate correct row data with 4 dimensions with varying depth.', () => {
 
         // 4 dimensions - depths 3, 2, 1, 1
         const dims = [
@@ -1224,7 +1224,6 @@ describe('Pivot pipes #pivotGrid', () => {
 
         const prod_country_date_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
         const allProdsRecords = prod_country_date_seller.filter(x => x['AllProduct'] === 'All Products');
-        debugger;
         expect(allProdsRecords).toEqual([
             { AllProduct: 'All Products', Country: 'Bulgaria', AllPeriods: 'All Periods', SellerName: 'Stanley' },
             { AllProduct: 'All Products', Country: 'Bulgaria', AllPeriods: 'All Periods', SellerName: 'Walter' },
@@ -1262,6 +1261,225 @@ describe('Pivot pipes #pivotGrid', () => {
             { ProductCategory: 'Clothing', Country: 'Uruguay', AllPeriods: 'All Periods', SellerName: 'Larry' },
             { ProductCategory: 'Clothing', Country: 'Uruguay', Years: '2020', SellerName: 'Larry' },
             { ProductCategory: 'Clothing', Country: 'Uruguay', Date: '05/12/2020', SellerName: 'Larry' }
+        ]);
+    });
+
+    it('should generate correct row data with 5 dimensions with varying depth.', () => {
+        data = [
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282, Discontinued: false
+            },
+            { ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa', Country: 'USA', Date: '01/05/2019', UnitsSold: 296, Discontinued: true },
+            { ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia', Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68, Discontinued: true },
+            { ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David', Country: 'USA', Date: '04/07/2021', UnitsSold: 293, Discontinued: false },
+            { ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John', Country: 'USA', Date: '12/08/2021', UnitsSold: 240, Discontinued: false },
+            { ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry', Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456, Discontinued: true },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492, Discontinued: false
+            }];
+        // 5 dimensions - depths 3, 2, 2, 1, 1
+        const dims = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false,
+                    total: true
+                }
+            ),
+            {
+                memberName: 'AllProduct',
+                memberFunction: () => 'All Products',
+                enabled: true,
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+            },
+            {
+                memberName: 'AllCountries',
+                memberFunction: () => 'All Countries',
+                enabled: true,
+                childLevel: {
+                    memberName: 'Country',
+                    enabled: true
+                }
+            },
+            {
+                memberName: 'SellerName',
+                enabled: true
+            }, {
+                memberName: 'Discontinued',
+                enabled: true,
+                memberFunction: (data) => {
+                    return data.Discontinued.toString();
+                }
+            }];
+        // Date, Product, Country, Seller, Discontinued
+        pivotConfig.rows = [
+            dims[0], // Date
+            dims[1], // Product
+            dims[2], // Country
+            dims[3], // Seller
+            dims[4] // Discontinued
+        ];
+
+        let rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        let columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        let rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
+        expect(rowStatePipeResult.length).toBe(77);
+        const prod_country_date_seller_discontinued = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const allPeriods_allProducts_records = prod_country_date_seller_discontinued.filter(x => x['AllPeriods'] === 'All Periods' &&
+            x['AllProduct'] === 'All Products');
+        expect(allPeriods_allProducts_records).toEqual(
+            [
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Stanley', Discontinued: 'false' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Walter', Discontinued: 'false' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Elisa', Discontinued: 'true' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'David', Discontinued: 'false' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'John', Discontinued: 'false' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Larry', Discontinued: 'true' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Lydia', Discontinued: 'true' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Stanley', Discontinued: 'false' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Walter', Discontinued: 'false' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'Elisa', Discontinued: 'true' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'David', Discontinued: 'false' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'John', Discontinued: 'false' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Uruguay', SellerName: 'Larry', Discontinued: 'true' },
+                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Uruguay', SellerName: 'Lydia', Discontinued: 'true' }
+            ]
+        );
+
+        // TODO - check the rest of the 'All Periods' fields here once issue: https://github.com/IgniteUI/igniteui-angular/issues/10680 is resolved.
+
+        // Discontinued, Date, Product, Country, Seller
+        pivotConfig.rows = [
+            dims[4],
+            dims[0],
+            dims[1],
+            dims[2],
+            dims[3]
+        ];
+
+        rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
+        expect(rowStatePipeResult.length).toBe(77);
+        const discontinued_prod_country_date_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const ongoing_records = discontinued_prod_country_date_seller.filter(x => x['Discontinued'] === 'false');
+        const discontinued_records = discontinued_prod_country_date_seller.filter(x => x['Discontinued'] === 'true');
+        expect(discontinued_records.length).toBe(33);
+        expect(ongoing_records.length).toBe(44);
+        const ongoing_allPeriods = ongoing_records.filter(x => x['AllPeriods'] === 'All Periods');
+        expect(ongoing_allPeriods).toEqual([
+            { Discontinued: 'false', AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Stanley' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Walter' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'David' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'John' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Stanley' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Walter' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'David' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'John' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Stanley' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Walter' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', ProductCategory: 'Clothing', Country: 'Bulgaria', SellerName: 'Stanley' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', ProductCategory: 'Clothing', Country: 'Bulgaria', SellerName: 'Walter' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', ProductCategory: 'Accessories', AllCountries: 'All Countries', SellerName: 'David' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', ProductCategory: 'Accessories', Country: 'USA', SellerName: 'David' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', ProductCategory: 'Components', AllCountries: 'All Countries', SellerName: 'John' },
+            { Discontinued: 'false', AllPeriods: 'All Periods', ProductCategory: 'Components', Country: 'USA', SellerName: 'John' }
+        ]);
+        const ongoing_2021 = ongoing_records.filter(x => x['Years'] === '2021');
+        expect(ongoing_2021).toEqual([
+            { Discontinued: 'false', Years: '2021', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Stanley' },
+            { Discontinued: 'false', Years: '2021', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'David' },
+            { Discontinued: 'false', Years: '2021', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'John' },
+            { Discontinued: 'false', Years: '2021', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Stanley' },
+            { Discontinued: 'false', Years: '2021', AllProduct: 'All Products', Country: 'USA', SellerName: 'David' },
+            { Discontinued: 'false', Years: '2021', AllProduct: 'All Products', Country: 'USA', SellerName: 'John' },
+            { Discontinued: 'false', Years: '2021', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Stanley' },
+            { Discontinued: 'false', Years: '2021', ProductCategory: 'Clothing', Country: 'Bulgaria', SellerName: 'Stanley' },
+            { Discontinued: 'false', Years: '2021', ProductCategory: 'Accessories', AllCountries: 'All Countries', SellerName: 'David' },
+            { Discontinued: 'false', Years: '2021', ProductCategory: 'Accessories', Country: 'USA', SellerName: 'David' },
+            { Discontinued: 'false', Years: '2021', ProductCategory: 'Components', AllCountries: 'All Countries', SellerName: 'John' },
+            { Discontinued: 'false', Years: '2021', ProductCategory: 'Components', Country: 'USA', SellerName: 'John' },
+        ]);
+
+
+        // Seller, Country, Date, Product, Discontinued
+        pivotConfig.rows = [
+            dims[3], // Seller
+            dims[2], // Country
+            dims[0], // Date
+            dims[1], // Product
+            dims[4] // Discontinued
+        ];
+
+        rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
+        expect(rowStatePipeResult.length).toBe(84);
+        const seller_country_date_prod_disc = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const stanley_allCountries_allPeriods = seller_country_date_prod_disc.filter(x => x['SellerName'] === 'Stanley' &&
+            x['AllCountries'] === 'All Countries' && x['AllPeriods'] === 'All Periods');
+        expect(stanley_allCountries_allPeriods).toEqual([
+            { SellerName: 'Stanley', AllCountries: 'All Countries', AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'false' },
+            { SellerName: 'Stanley', AllCountries: 'All Countries', AllPeriods: 'All Periods', ProductCategory: 'Clothing', Discontinued: 'false' }
+        ]);
+
+        // TODO - check the rest of the 'AllCountries' fields here once issue: https://github.com/IgniteUI/igniteui-angular/issues/10662 is resolved.
+
+        const stanley_allCountries_2021 = seller_country_date_prod_disc.filter(x => x['SellerName'] === 'Stanley' &&
+            x['AllCountries'] === 'All Countries' && x['Years'] === '2021');
+        expect(stanley_allCountries_2021).toEqual([
+            { SellerName: 'Stanley', AllCountries: 'All Countries', Years: '2021', AllProduct: 'All Products', Discontinued: 'false' },
+            { SellerName: 'Stanley', AllCountries: 'All Countries', Years: '2021', ProductCategory: 'Clothing', Discontinued: 'false' }
+        ]);
+
+        // Date, Product, Discontinued, Countries, Seller
+        pivotConfig.rows = [
+            dims[0], // Date
+            dims[1], // Product
+            dims[4], // Discontinued
+            dims[2], // Country
+            dims[3], // Seller
+        ];
+
+        rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
+        expect(rowStatePipeResult.length).toBe(73);
+        const date_prod_disc_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+
+        const date_allPeriods_allProducts_records = date_prod_disc_seller.filter(x => x['AllPeriods'] === 'All Periods' && x['AllProduct'] === 'All Products');
+        expect(date_allPeriods_allProducts_records).toEqual([
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'false', AllCountries: 'All Countries', SellerName: 'Stanley' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'false', AllCountries: 'All Countries', SellerName: 'Walter' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'false', AllCountries: 'All Countries', SellerName: 'David' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'false', AllCountries: 'All Countries', SellerName: 'John' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'false', Country: 'Bulgaria', SellerName: 'Stanley' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'false', Country: 'Bulgaria', SellerName: 'Walter' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'false', Country: 'USA', SellerName: 'David' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'false', Country: 'USA', SellerName: 'John' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'true', AllCountries: 'All Countries', SellerName: 'Elisa' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'true', AllCountries: 'All Countries', SellerName: 'Larry' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'true', AllCountries: 'All Countries', SellerName: 'Lydia' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'true', Country: 'USA', SellerName: 'Elisa' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'true', Country: 'Uruguay', SellerName: 'Larry' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Discontinued: 'true', Country: 'Uruguay', SellerName: 'Lydia' }
+        ]);
+        const date_2021_allProducts_records = date_prod_disc_seller.filter(x => x['Years'] === '2021' && x['AllProduct'] === 'All Products');
+        expect(date_2021_allProducts_records).toEqual([
+            { Years: '2021', AllProduct: 'All Products', Discontinued: 'false', AllCountries: 'All Countries', SellerName: 'Stanley' },
+            { Years: '2021', AllProduct: 'All Products', Discontinued: 'false', AllCountries: 'All Countries', SellerName: 'David' },
+            { Years: '2021', AllProduct: 'All Products', Discontinued: 'false', AllCountries: 'All Countries', SellerName: 'John' },
+            { Years: '2021', AllProduct: 'All Products', Discontinued: 'false', Country: 'Bulgaria', SellerName: 'Stanley' },
+            { Years: '2021', AllProduct: 'All Products', Discontinued: 'false', Country: 'USA', SellerName: 'David' },
+            { Years: '2021', AllProduct: 'All Products', Discontinued: 'false', Country: 'USA', SellerName: 'John' }
         ]);
     });
 });
