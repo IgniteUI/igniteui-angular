@@ -968,7 +968,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *
      * @returns Array of selected items
      * ```typescript
-     * let selectedItems = this.combo.selectedItems();
+     * let selectedItems = this.combo.selection;
      * ```
      */
     public get selection() {
