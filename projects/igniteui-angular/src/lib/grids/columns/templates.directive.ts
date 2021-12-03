@@ -50,3 +50,11 @@ export class IgxCollapsibleIndicatorTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
+
+@Directive({
+    selector: '[igxSummary]'
+})
+export class IgxSummaryTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) { }
+}
