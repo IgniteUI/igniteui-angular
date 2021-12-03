@@ -168,6 +168,16 @@ export abstract class BaseToolbarDirective implements OnDestroy {
      @Input()
      public columnDisplayOrder: ColumnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
 
+    /**
+     * Gets/sets the max height of the columns area.
+     *
+     * @remarks
+     * The default max height is 100%.
+     * @example
+     * ```html
+     * <igx-grid-toolbar-hiding  [columnsAreaMaxHeight]="200px"></igx-grid-toolbar-hiding>
+     * ```
+     */
      @Input()
      public columnsAreaMaxHeight = '100%';
 
