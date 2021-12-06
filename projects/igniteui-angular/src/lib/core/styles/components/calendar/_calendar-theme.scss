@@ -333,13 +333,13 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {function} text-contrast
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires em
 /// @requires rem
 /// @requires {mixin} ellipsis
 /// @requires var-get
 @mixin igx-calendar($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $palette: map.get($theme, 'palette');
     $cal-header-year-margin: 0;
@@ -715,7 +715,7 @@
 
     %cal-value--selected--hover {
         %cal-value-content::after {
-            background: igx-color($palette, 'grays', 100, .18);
+            background: color($palette, 'grays', 100, .18);
         }
     }
 
@@ -1116,7 +1116,7 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header-year: 'subtitle-1', header-date: 'h4', picker-date: 'subtitle-1', content: 'body-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin igx-calendar-typography($type-scale, $categories: (
     header-year: 'subtitle-1',
     header-date: 'h4',
@@ -1131,35 +1131,35 @@
     $content: map.get($categories, 'content');
 
     %cal-header-year {
-        @include igx-type-style($type-scale, $header-year) {
+        @include type-style($type-scale, $header-year) {
             margin: 0;
         }
     }
 
     %cal-header-date {
-        @include igx-type-style($type-scale, $header-date) {
+        @include type-style($type-scale, $header-date) {
             margin: 0;
         }
     }
 
     %cal-picker-date {
-        @include igx-type-style($type-scale, $picker-date) {
+        @include type-style($type-scale, $picker-date) {
             margin: 0;
         }
     }
 
     %cal-value-content {
-        @include igx-type-style($type-scale, $content) {
+        @include type-style($type-scale, $content) {
             margin: 0;
         }
     }
 
     %cal-value--label {
-        @include igx-type-style($type-scale, $weekday-label)
+        @include type-style($type-scale, $weekday-label)
     }
 
     %cal-value--year-current {
-        @include igx-type-style($type-scale, $content) {
+        @include type-style($type-scale, $content) {
             font-size: rem(24px);
             line-height: rem(52px);
             margin: 0;

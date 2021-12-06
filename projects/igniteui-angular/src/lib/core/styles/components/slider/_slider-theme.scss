@@ -106,11 +106,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
 @mixin igx-slider($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
 
@@ -593,7 +593,7 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(ticks-label: 'caption', thumb-label: 'caption')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin igx-slider-typography(
     $type-scale,
     $categories: (
@@ -605,10 +605,10 @@
     $thumb-label: map.get($categories, 'thumb-label');
 
     %igx-slider-thumb-label__container {
-        @include igx-type-style($type-scale, $thumb-label)
+        @include type-style($type-scale, $thumb-label)
     }
 
     %igx-slider__tick-label {
-        @include igx-type-style($type-scale, $ticks-label)
+        @include type-style($type-scale, $ticks-label)
     }
 }

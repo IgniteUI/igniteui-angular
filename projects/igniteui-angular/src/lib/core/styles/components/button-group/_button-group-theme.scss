@@ -169,11 +169,11 @@
 
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
-/// @requires igx-color
+/// @requires {mixin} css-vars
+/// @requires color
 /// @requires var-get
 @mixin igx-button-group($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
     $group-item-min-width: 24px;
     $group-item-border-thickness: 1px;
     $group-items-margin: rem(10px, 16px);
@@ -312,7 +312,7 @@
                 #{$right}: 0;
                 bottom: 0;
                 #{$left}: 0;
-                background: igx-color($palette, 'grays', 500, .12);
+                background: color($palette, 'grays', 500, .12);
             }
         }
     }

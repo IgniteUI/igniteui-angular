@@ -13,15 +13,15 @@ body {
     --some-dynamic-color: hsl(#{random(360)}, 100%, 50%);
 }
 
-@include igx-core($direction: $direction);
-@include igx-typography($font-family: $typeface, $type-scale: $type-scale);
-@include igx-theme(
+@include core($direction: $direction);
+@include typography($font-family: $typeface, $type-scale: $type-scale);
+@include theme(
     $palette: $palette,
     $schema: $schema,
 );
 
 .dock {
-    @include igx-css-vars(igc-dock-manager-theme());
+    @include css-vars(igc-dock-manager-theme());
 }
 
 .nav-header {

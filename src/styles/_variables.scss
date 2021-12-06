@@ -7,8 +7,8 @@ $type-scale: $fluent-type-scale;
 
 $direction: ltr;
 
-$igx-background-color: igx-contrast-color($palette, 'grays', 900);
-$igx-foreground-color: igx-color($palette, 'grays', 900);
+$igx-background-color: contrast-color($palette, 'grays', 900);
+$igx-foreground-color: color($palette, 'grays', 900);
 
 $default-palette: $palette;
 

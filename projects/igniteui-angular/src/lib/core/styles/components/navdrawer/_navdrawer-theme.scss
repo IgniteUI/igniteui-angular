@@ -151,11 +151,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
 @mixin igx-navdrawer($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -265,7 +265,7 @@
 
     %overlay {
         opacity: 1;
-        background: igx-color(map.get($theme, 'palette'), 'grays', 500, .54);
+        background: color(map.get($theme, 'palette'), 'grays', 500, .54);
         transition: opacity, visibility;
         transition-duration: .25s, .25s;
         transition-timing-function: ease-in, step-start;
@@ -450,7 +450,7 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(item: 'subtitle-2', header: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin igx-navdrawer-typography(
     $type-scale,
     $categories: (
@@ -462,11 +462,11 @@
     $header: map.get($categories, 'header');
 
     %item {
-        @include igx-type-style($type-scale, $item);
+        @include type-style($type-scale, $item);
     }
 
     %item--header {
-        @include igx-type-style($type-scale, $header) {
+        @include type-style($type-scale, $header) {
             margin: 0;
         }
     }

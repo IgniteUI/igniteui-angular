@@ -25,8 +25,8 @@
 ///
 /// @example scss
 ///   $my-chart-theme: igx-doughnut-chart-theme($brushes: (orange, blue, pink));
-///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($my-chart-theme);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-chart-theme);
 @function igx-doughnut-chart-theme(
     $palette: null,
     $schema: $light-schema,

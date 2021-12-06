@@ -9,13 +9,13 @@
 
 /// Generates a dark card schema.
 /// @type {Map}
-/// @prop {Map} outline-color [igx-color: ('grays', 400, .38)] - The outline color of an outlined type card.
+/// @prop {Map} outline-color [color: ('grays', 400, .38)] - The outline color of an outlined type card.
 /// @requires {function} extend
 /// @requires $light-card
 /// @see $default-palette
 $dark-card: extend($light-card, (
     outline-color: (
-        igx-color: ('grays', 400, .38)
+        color: ('grays', 400, .38)
     )
 ));
 
@@ -33,14 +33,14 @@ $dark-bootstrap-card: $bootstrap-card;
 
 /// Generates a dark indigo card schema.
 /// @type {Map}
-/// @prop {Map} outline-color [igx-color: ('grays', 200)] - The outline color of an outlined type card.
+/// @prop {Map} outline-color [color: ('grays', 200)] - The outline color of an outlined type card.
 /// @requires {function} extend
 /// @requires $ndigo-card
 $dark-indigo-card: extend(
     $indigo-card,
     (
         outline-color: (
-            igx-color: ('grays', 200, .54)
+            color: ('grays', 200, .54)
         ),
     )
 );

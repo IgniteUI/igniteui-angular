@@ -152,11 +152,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
 @mixin igx-time-picker($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $variant: map.get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
@@ -348,7 +348,7 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header-time-period: 'subtitle-1', header-hour: 'h4', content: 'body-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin igx-time-picker-typography($type-scale, $categories: (
     header-time-period: 'subtitle-1',
     header-hour: 'h4',
@@ -359,17 +359,17 @@
     $content: map.get($categories, 'content');
 
     %time-picker__header-ampm {
-        @include igx-type-style($type-scale, $time-period);
+        @include type-style($type-scale, $time-period);
     }
 
     %time-picker__header-hour {
-        @include igx-type-style($type-scale, $header-hour) {
+        @include type-style($type-scale, $header-hour) {
             margin-top: 0;
         }
     }
 
     %time-picker__column {
-        @include igx-type-style($type-scale, $content) {
+        @include type-style($type-scale, $content) {
             margin-top: 0;
             margin-bottom: 0;
         }

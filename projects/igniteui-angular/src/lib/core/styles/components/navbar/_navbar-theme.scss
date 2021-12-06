@@ -88,11 +88,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
 @mixin igx-navbar($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $navbar-padding: rem(16px);
     $navbar-title-fz: rem(18px, 16px);
@@ -181,12 +181,12 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(title: 'h6')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin igx-navbar-typography($type-scale, $categories: (title: 'h6')) {
     $title: map.get($categories, 'title');
 
     %igx-navbar-title {
-        @include igx-type-style($type-scale, $title);
+        @include type-style($type-scale, $title);
         margin-bottom: 0;
     }
 }

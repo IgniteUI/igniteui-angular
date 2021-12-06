@@ -38,7 +38,7 @@
 ///   @include igx-badge($my-badge-theme);
 ///
 ///   // Theming using css variables (not supported in IE11):
-///   @include igx-css-vars($my-badge-theme);
+///   @include css-vars($my-badge-theme);
 @function igx-badge-theme(
     $palette: null,
     $schema: $light-schema,
@@ -96,12 +96,12 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
-/// @requires igx-color
+/// @requires {mixin} css-vars
+/// @requires color
 /// @requires rem
 /// @requires var-get
 @mixin igx-badge($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $palette: map.get($theme, 'palette');
 
@@ -152,19 +152,19 @@
     }
 
     %igx-badge--success {
-        background: igx-color($palette, 'success');
+        background: color($palette, 'success');
     }
 
     %igx-badge--info {
-        background: igx-color($palette, 'info');
+        background: color($palette, 'info');
     }
 
     %igx-badge--warn {
-        background: igx-color($palette, 'warn');
+        background: color($palette, 'warn');
     }
 
     %igx-badge--error {
-        background: igx-color($palette, 'error');
+        background: color($palette, 'error');
     }
 
     %igx-badge--hidden {

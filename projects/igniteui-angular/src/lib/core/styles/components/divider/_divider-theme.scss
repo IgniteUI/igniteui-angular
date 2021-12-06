@@ -46,11 +46,11 @@
 
 ///
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires var-get
 ///
 @mixin igx-divider($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     %igx-divider-display {
         display: block;

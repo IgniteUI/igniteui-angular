@@ -328,11 +328,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
 @mixin igx-stepper($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
 
@@ -966,7 +966,7 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(title: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin igx-stepper-typography(
     $type-scale,
     $categories: (
@@ -978,14 +978,14 @@
     $subtitle: map.get($categories, 'subtitle');
 
     %igx-stepper__step-title {
-        @include igx-type-style($type-scale, $title) {
+        @include type-style($type-scale, $title) {
             margin-top: 0;
             margin-bottom: 0;
         }
     }
 
     %igx-stepper__step-subtitle {
-        @include igx-type-style($type-scale, $subtitle) {
+        @include type-style($type-scale, $subtitle) {
             margin-top: 0;
             margin-bottom: 0;
         }

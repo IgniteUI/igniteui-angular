@@ -95,10 +95,10 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires var-get
 @mixin igx-tree($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -336,7 +336,7 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin igx-tree-typography(
     $type-scale,
     $categories: (label: 'body-2')
@@ -344,6 +344,6 @@
     $text: map.get($categories, 'label');
 
     %node-content {
-        @include igx-type-style($type-scale, $text)
+        @include type-style($type-scale, $text)
     }
 }

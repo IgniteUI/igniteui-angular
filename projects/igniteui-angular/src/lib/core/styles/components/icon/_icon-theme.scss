@@ -54,10 +54,10 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires var-get
 @mixin igx-icon($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $igx-icon-font-size: var-get($theme, 'size');
 
@@ -78,11 +78,11 @@
     }
 
     %igx-icon--success {
-        color: igx-color(map.get($theme, 'palette'), 'success');
+        color: color(map.get($theme, 'palette'), 'success');
     }
 
     %igx-icon--error {
-        color: igx-color(map.get($theme, 'palette'), 'error');
+        color: color(map.get($theme, 'palette'), 'error');
     }
 
     %igx-icon--inactive {

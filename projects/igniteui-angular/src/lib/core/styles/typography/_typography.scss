@@ -48,7 +48,7 @@
 @use '../components/tree/tree-theme' as *;
 
 /// @access private
-@mixin _igx-typography-styles($font-family, $type-scale) {
+@mixin _typography-styles($font-family, $type-scale) {
     $_variant: map.get(map.get($type-scale, '_meta'), 'variant');
 
     // TODO: Replace string.unquote with meta.inspect
@@ -161,7 +161,7 @@
 /// @requires $material-type-scale
 /// @see $material-typeface
 /// @see $material-type-scale
-@mixin igx-typography(
+@mixin typography(
     $font-family: $material-typeface,
     $type-scale: $material-type-scale,
 ) {
@@ -170,7 +170,7 @@
         // between the igx-typography class selector
         // and all typographic elements.
         @include b(igx-typography) {
-            @include _igx-typography-styles($font-family, $type-scale);
+            @include _typography-styles($font-family, $type-scale);
 
             // Maps type scale typographic categories
             // to native elements.
@@ -195,7 +195,7 @@
                     // typographic style to be able to easily extend it
                     // elsewhere.
                     %#{$category} {
-                        @include igx-type-style($type-scale, $category);
+                        @include type-style($type-scale, $category);
                     }
 
                     // Add native element typographic styles.
@@ -214,7 +214,7 @@
             /* stylint-enable max-nesting-depth */
         }
     } @else {
-        @include _igx-typography-styles($font-family, $type-scale);
+        @include _typography-styles($font-family, $type-scale);
     }
 }
 

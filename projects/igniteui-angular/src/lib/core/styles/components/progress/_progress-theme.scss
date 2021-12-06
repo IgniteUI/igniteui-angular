@@ -81,11 +81,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
 @mixin igx-progress-linear($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
 
@@ -311,7 +311,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires {mixin} rotate-center
 /// @requires var-get
@@ -319,7 +319,7 @@
     // Include rotate animation
     @include rotate-center();
 
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
 

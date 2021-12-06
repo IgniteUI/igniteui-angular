@@ -85,9 +85,9 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} hide-default
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
 /// @requires {mixin} igx-ripple
@@ -96,7 +96,7 @@
 /// @requires em
 /// @requires var-get
 @mixin igx-checkbox($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     @include scale-in-out($start-scale: .9);
 
@@ -327,7 +327,7 @@
 
     %cbx-ripple {
         @include igx-ripple($ripple-theme);
-        @include igx-css-vars($ripple-theme);
+        @include css-vars($ripple-theme);
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
@@ -436,7 +436,7 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin igx-checkbox-typography(
     $type-scale,
     $categories: (label: 'subtitle-1')
@@ -444,7 +444,7 @@
     $label: map.get($categories, 'label');
 
     %cbx-label {
-        @include igx-type-style($type-scale, $label) {
+        @include type-style($type-scale, $label) {
             margin-top: 0;
             margin-bottom: 0;
         }

@@ -18,8 +18,8 @@
 ///
 /// @example scss
 ///   $my-map-theme: igx-geo-map-theme($width: 550px);
-///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($my-map-theme);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-map-theme);
 @function igx-geo-map-theme(
     $palette: null,
     $schema: $light-schema,

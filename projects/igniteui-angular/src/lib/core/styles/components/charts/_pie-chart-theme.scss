@@ -27,8 +27,8 @@
 ///
 /// @example scss
 ///   $my-chart-theme: igx-pie-chart-theme($brushes: (red, orange, blue));
-///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($my-chart-theme);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-chart-theme);
 @function igx-pie-chart-theme(
     $palette: null,
     $schema: $light-schema,

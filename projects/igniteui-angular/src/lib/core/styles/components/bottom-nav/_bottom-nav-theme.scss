@@ -76,16 +76,16 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} ellipsis
 /// @requires igx-bottom-nav-theme
-/// @requires igx-color
+/// @requires color
 /// @requires extend
 /// @requires rem
 /// @requires $ease-in-out-quad
 /// @requires var-get
 @mixin igx-bottom-nav($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $menu-height: rem(56px);
     $item-min-width: rem(80px);
@@ -195,12 +195,12 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'caption')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin igx-bottom-nav-typography($type-scale, $categories: (label: 'caption')) {
     $label: map.get($categories, 'label');
 
     %igx-tab-label {
-        @include igx-type-style($type-scale, $label) {
+        @include type-style($type-scale, $label) {
             margin: 0
         }
     }

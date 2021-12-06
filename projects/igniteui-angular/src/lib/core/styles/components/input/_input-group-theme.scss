@@ -241,12 +241,12 @@
 
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires {mixin} ellipsis
 /// @requires var-get
 @mixin igx-input-group($theme) {
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $palette: map.get($theme, 'palette');
 
@@ -785,7 +785,7 @@
         transform-origin: top #{$left};
         margin-top: 0 !important;
         height: auto;
-        color: igx-color(map.get($theme, 'palette'), 'grays', 800);
+        color: color(map.get($theme, 'palette'), 'grays', 800);
     }
 
     %fluent-label-success {
@@ -797,7 +797,7 @@
     }
 
     %fluent-label-disabled {
-        color: igx-color(map.get($theme, 'palette'), 'grays', 500);
+        color: color(map.get($theme, 'palette'), 'grays', 500);
     }
 
     %fluent-label-filled {
@@ -805,7 +805,7 @@
     }
 
     %fluent-label-focused {
-        color: igx-color(map.get($theme, 'palette'), 'grays', 800);
+        color: color(map.get($theme, 'palette'), 'grays', 800);
         transform: translateY(0) scale(1);
     }
 
@@ -1042,12 +1042,12 @@
     %form-group-clear-icon {
         &:focus {
             border-radius: 4px;
-            background-color: igx-color($palette, 'primary', 500);
-            color: igx-contrast-color($palette, 'primary', 500);
+            background-color: color($palette, 'primary', 500);
+            color: contrast-color($palette, 'primary', 500);
 
             @if $variant == 'material' {
                 background-color: transparent;
-                color: igx-color($palette, 'secondary', 500);
+                color: color($palette, 'secondary', 500);
             }
 
             @if $variant == 'fluent' {
@@ -1056,7 +1056,7 @@
 
             @if $variant == 'bootstrap' {
                 border-radius: 0;
-                color: igx-contrast-color($palette, 'primary', 600);
+                color: contrast-color($palette, 'primary', 600);
             }
         }
     }
@@ -1704,30 +1704,30 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(helper-text: 'caption', input-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin igx-input-group-typography($type-scale, $categories: (
     helper-text: 'caption',
     input-text: 'subtitle-1')
 ) {
     $helper-text: map.get($categories, 'helper-text');
     $input-text: map.get($categories, 'input-text');
-    $input-text-props: igx-type-scale-category($type-scale, $input-text);
+    $input-text-props: type-scale-category($type-scale, $input-text);
 
     %form-group-input {
-        @include igx-type-style($type-scale, $input-text) {
+        @include type-style($type-scale, $input-text) {
             margin: 0;
         }
     }
 
     %form-group-helper {
-        @include igx-type-style($type-scale, $helper-text) {
+        @include type-style($type-scale, $helper-text) {
             margin: 0;
         }
     }
 
     %form-group-prefix,
     %form-group-suffix {
-        @include igx-type-style($type-scale, $input-text) {
+        @include type-style($type-scale, $input-text) {
             margin: 0;
         }
     }
