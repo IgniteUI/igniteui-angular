@@ -65,7 +65,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * @internal
      * @param context
      */
-    protected isRow(context): context is IgxRowDirective<any> {
+    protected isRow(context): context is IgxRowDirective {
         return context && context instanceof IgxRowDirective;
     }
 }

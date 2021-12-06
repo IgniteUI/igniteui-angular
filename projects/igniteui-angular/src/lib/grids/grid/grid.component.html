@@ -71,7 +71,7 @@
         | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
-        | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
+        | gridGroupBy:groupingExpressions:groupingExpansionState:groupStrategy:groupsExpanded:id:groupsRecords:pipeTrigger
         | gridPaging:paginator?.page:paginator?.perPage:id:pipeTrigger
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
         | gridDetails:hasDetails:expansionStates:pipeTrigger
@@ -93,15 +93,15 @@
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
         <ng-template #record_template let-rowIndex="index" let-rowData let-disabledRow="disabled">
-            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [disabled]="disabledRow"
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData" [disabled]="disabledRow"
                 [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
-                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
+                [ngStyle]="rowStyles | igxGridRowStyles:data:rowIndex:pipeTrigger" #row>
             </igx-grid-row>
         </ng-template>
         <ng-template #pinned_record_template let-rowIndex="index" let-rowData>
-            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData"
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData"
                 [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
-                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger"#row #pinnedRow>
+                [ngStyle]="rowStyles | igxGridRowStyles:data:rowIndex:pipeTrigger"#row #pinnedRow>
             </igx-grid-row>
         </ng-template>
         <ng-template #group_template let-rowIndex="index" let-rowData>
@@ -157,14 +157,14 @@
 </div>
 
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
+<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summaryRowHeight' #tfoot>
     <div tabindex="0" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" [attr.aria-activedescendant]="activeDescendant">
-        <igx-grid-summary-row [style.width.px]='calcWidth'  [style.height.px]='summariesHeight'
+        <igx-grid-summary-row [style.width.px]='calcWidth'  [style.height.px]='summaryRowHeight'
             *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
             [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
             class="igx-grid__summaries" #summaryRow>
         </igx-grid-summary-row>
-        <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summariesHeight'
+        <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summaryRowHeight'
             [style.width.px]="scrollSize"></div>
     </div>
 </div>

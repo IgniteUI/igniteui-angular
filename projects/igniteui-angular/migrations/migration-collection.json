@@ -107,7 +107,7 @@
             "factory": "./update-12_1_0"
         },
         "migration-22": {
-            "version": "13.0.0",
+            "version": "13.0.0-alpha",
             "description": "Updates Ignite UI for Angular from v12.2.x to v13.0.0",
             "factory": "./update-13_0_0"
         }

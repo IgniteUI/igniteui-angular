@@ -1295,7 +1295,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         public zone: NgZone,
         protected syncService: IgxForOfScrollSyncService,
         platformUtil: PlatformUtil) {
-        super(viewContainer, template, differs, fResolver, changeDet, zone, syncService, platformUtil, document);
+        super(viewContainer, template, differs, changeDet, zone, syncService, platformUtil, document);
     }
     public onScroll(evt) {
         const ind = this.scrTopArray.length - 1;

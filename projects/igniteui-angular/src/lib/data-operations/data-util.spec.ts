@@ -1,9 +1,8 @@
 import { waitForAsync } from '@angular/core/testing';
 import { DataGenerator } from './test-util/data-generator';
 
-import { DefaultSortingStrategy } from './sorting-strategy';
+import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from './sorting-strategy';
 import { cloneArray } from '../core/utils';
-import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { DataUtil } from './data-util';
 import { IGroupByResult } from './grouping-result.interface';
 import { IGroupingState } from './groupby-state.interface';
@@ -263,7 +262,7 @@ const testGroupBy = () => {
             // sort
             const res = DataUtil.sort(data, [expr]);
             // group by
-            DataUtil.group(res, state, null, groupRecords);
+            DataUtil.group(res, state, undefined, null, groupRecords);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
@@ -279,7 +278,7 @@ const testGroupBy = () => {
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2]);
              // group by
-            DataUtil.group(sorted, state, null, groupRecords);
+            DataUtil.group(sorted, state, undefined, null, groupRecords);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
