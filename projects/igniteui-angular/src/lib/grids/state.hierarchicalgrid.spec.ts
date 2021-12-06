@@ -17,7 +17,7 @@ import { ISortingExpression, SortingDirection } from '../data-operations/sorting
 import { GridSelectionRange } from './common/types';
 
 /* eslint-disable max-len */
-describe('IgxHierarchicalGridState - input properties #hGrid', () => {
+fdescribe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
     configureTestSuite((() => {
@@ -52,7 +52,8 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
             rowSelection: true,
             columnSelection: true,
             expansion: true,
-            rowIslands: true
+            rowIslands: true,
+            moving: true
         };
 
         const state = fix.componentInstance.state;
@@ -79,7 +80,8 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
             rowSelection: true,
             columnSelection: true,
             expansion: true,
-            rowIslands: false
+            rowIslands: false,
+            moving:true
         };
 
         const state = fix.componentInstance.state;
@@ -133,7 +135,8 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         const optionsInput = {
             paging: false,
-            sorting: false
+            sorting: false,
+            moving: false
         };
 
         state.options = optionsInput;
@@ -141,6 +144,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         let gridState = state.getState(false) as IGridState;
         expect(gridState['sorting']).toBeFalsy();
         expect(gridState['paging']).toBeFalsy();
+        expect(gridState['moving']).toBeFalsy();
 
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
@@ -148,11 +152,49 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
             expect(childGrid.state['paging']).toBeFalsy();
         });
 
-        gridState = state.getState(false, ['filtering', 'sorting', 'paging', 'rowIslands']) as IGridState;
+        gridState = state.getState(false, ['filtering', 'sorting', 'paging', 'rowIslands', 'moving']) as IGridState;
         expect(gridState['sorting']).toBeFalsy();
         expect(gridState['paging']).toBeFalsy();
+        expect(gridState['moving']).toBeFalsy();
     });
 
+    it('getState should return correct moving state', () => {
+        const state = fix.componentInstance.state;
+        const initialState = HelperFunctions.buildStateString(grid, 'moving', 'true', 'true');
+
+        let gridState = state.getState(true, ['moving', 'rowIslands']);
+        expect(gridState).toBe(initialState);
+
+        gridState = state.getState(false, ['moving', 'rowIslands']) as IGridState;
+        HelperFunctions.verifyMoving(grid.moving, gridState);
+    });
+
+    
+    it('setState should correctly restore grid moving state from string', fakeAsync(() => {
+        const state = fix.componentInstance.state;
+        
+        const initialState = HelperFunctions.buildStateString(grid, 'moving', 'true', 'true');
+        const movingState = HelperFunctions.buildStateString(grid, 'moving', 'false', 'true');
+        
+        const movingStateObject = JSON.parse(movingState) as IGridState;
+        movingStateObject.columns = fix.componentInstance.childColumns;
+        
+        let gridState = state.getState(true, ['moving', 'rowIslands']);
+        expect(gridState).toBe(initialState);
+        
+        state.setState(JSON.stringify(movingStateObject));
+        tick();
+        fix.detectChanges();
+        gridState = state.getState(false, ['moving', 'rowIslands']) as IGridState;
+        HelperFunctions.verifyMoving(grid.moving, gridState);
+        const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
+        gridsCollection.forEach(childGrid => {
+            expect(childGrid.grid.moving).toEqual(childGrid.grid.moving);
+        });
+        gridState = state.getState(true, ['moving', 'rowIslands']);
+        expect(gridState).toBe(movingState);
+    }));
+      
     it('getState should return correct filtering state', () => {
         const state = fix.componentInstance.state;
         const filtering = grid.filteringExpressionsTree;
@@ -521,6 +563,10 @@ class HelperFunctions {
         expect(paging).toEqual(jasmine.objectContaining(gridState.paging));
     }
 
+    public static verifyMoving(moving: boolean, gridState: IGridState){
+        expect(moving).toEqual(gridState.moving);
+    }
+
     public static verifyRowSelection(selectedRows: any[], gridState: IGridState) {
         gridState.rowSelection.forEach((s, index) => {
             expect(s).toBe(selectedRows[index]);
@@ -581,7 +627,7 @@ class HelperFunctions {
 @Component({
     template: `
     <igx-hierarchical-grid #hGrid [moving]="true" [data]="data" igxGridState [expandChildren]="true" primaryKey="ID"
-     [autoGenerate]="false" [height]="'800px'" [width]="'800px'" rowSelection="multiple" cellSelection="multiple">
+     [autoGenerate]="false" [height]="'800px'" [width]="'800px'" [moving]="true" rowSelection="multiple" cellSelection="multiple">
         <igx-column *ngFor="let c of columns"
             [width]="c.width"
             [sortable]="c.sortable"
