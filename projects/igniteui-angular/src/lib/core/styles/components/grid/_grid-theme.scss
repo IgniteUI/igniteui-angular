@@ -975,6 +975,9 @@
     }
 
     %grid-tfoot-thumb {
+        position: absolute;
+        top: 0;
+        #{$right}: 0;
         background: --var($theme, 'header-background');
         border-#{$left}: 1px solid igx-color($palette, 'grays', 300);
     }
