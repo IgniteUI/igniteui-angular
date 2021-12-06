@@ -17,7 +17,7 @@ import { ISortingExpression, SortingDirection } from '../data-operations/sorting
 import { GridSelectionRange } from './common/types';
 
 /* eslint-disable max-len */
-fdescribe('IgxHierarchicalGridState - input properties #hGrid', () => {
+describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
     configureTestSuite((() => {

@@ -16,7 +16,7 @@ import { IgxTreeGridComponent, IgxTreeGridModule } from './tree-grid/public_api'
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
 
-fdescribe('IgxTreeGridState - input properties #tGrid', () => {
+describe('IgxTreeGridState - input properties #tGrid', () => {
     configureTestSuite();
     let fix;
     let grid;
