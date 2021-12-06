@@ -483,16 +483,16 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $grays: igx-color($palette, 'grays');
-    $surface: igx-color($palette, 'surface');
+    $grays: color($palette, 'grays');
+    $surface: color($palette, 'surface');
 
     $light-palette: palette(
-        $primary: igx-color($palette, 'primary'),
-        $secondary: igx-color($palette, 'secondary'),
-        $info: igx-color($palette, 'info'),
-        $success: igx-color($palette, 'success'),
-        $warn: igx-color($palette, 'warn'),
-        $error: igx-color($palette, 'error'),
+        $primary: color($palette, 'primary'),
+        $secondary: color($palette, 'secondary'),
+        $info: color($palette, 'info'),
+        $success: color($palette, 'success'),
+        $warn: color($palette, 'warn'),
+        $error: color($palette, 'error'),
         $surface: if($surface != #fff, $surface, #fff),
         $grays: if($grays != rgba(0, 0, 0, .38), $grays, #000),
     );
@@ -515,16 +515,16 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $grays: igx-color($palette, 'grays');
-    $surface: igx-color($palette, 'surface');
+    $grays: color($palette, 'grays');
+    $surface: color($palette, 'surface');
 
     $dark-palette: palette(
-        $primary: igx-color($palette, 'primary'),
-        $secondary: igx-color($palette, 'secondary'),
-        $info: igx-color($palette, 'info'),
-        $success: igx-color($palette, 'success'),
-        $warn: igx-color($palette, 'warn'),
-        $error: igx-color($palette, 'error'),
+        $primary: color($palette, 'primary'),
+        $secondary: color($palette, 'secondary'),
+        $info: color($palette, 'info'),
+        $success: color($palette, 'success'),
+        $warn: color($palette, 'warn'),
+        $error: color($palette, 'error'),
         $surface: if($surface != #fff, $surface, #222),
         $grays: if($grays != rgba(0, 0, 0, .38), $grays, #fff),
     );
@@ -547,9 +547,9 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
         $palette: palette(
@@ -574,9 +574,9 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
         $palette: palette(
@@ -602,9 +602,9 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
         $palette: palette(
@@ -629,9 +629,9 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
         $palette: palette(
@@ -656,9 +656,9 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
         $palette: palette(
@@ -683,9 +683,9 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
         $palette: palette(
