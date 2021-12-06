@@ -130,7 +130,7 @@
 /// @param {Color} $color-1 - The umbra shadow color.
 /// @param {Color} $color-2 - The penumbra shadow color.
 /// @param {Color} $color-3 - The ambient shadow color.
-@function igx-elevations($color-1, $color-2, $color-3) {
+@function elevations($color-1, $color-2, $color-3) {
     $result: ('0': none);
 
     @for $i from 1 through 24 {
@@ -147,7 +147,7 @@
 /// @prop {Color} $color-2 [rgba(0, 0, 0, .12)] - The color used for the penumbra shadow.
 /// @prop {Color} $color-3 [rgba(0, 0, 0, .08)] - The color used for the ambient shadow.
 /// @requires igx-elevations
-$igx-elevations: igx-elevations(
+$elevations: elevations(
     rgba(0, 0, 0, .26),
     rgba(0, 0, 0, .12),
     rgba(0, 0, 0, .08)
@@ -158,7 +158,7 @@ $igx-elevations: igx-elevations(
 /// @param {Map} $elevations [null] - The igx-elevations map to extract the elevation from.
 /// @param {number} $elevation [0] - The elevation level from 0 to 24.
 /// @returns {String} Returns a box-shadow value.
-@function igx-elevation($elevations: null, $elevation: 0) {
+@function elevation($elevations: null, $elevation: 0) {
     @if meta.type-of($elevation) != number or not math.is-unitless($elevation) {
         @error '$elevation must be a number';
     }

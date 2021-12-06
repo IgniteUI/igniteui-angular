@@ -45,7 +45,7 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires text-contrast
 /// @requires round-borders
 ///
@@ -102,8 +102,8 @@
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'boostrap';
 
-    $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 1));
-    $buttons-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 4));
+    $tab-area-shadow: if($disable-shadow == true, none, elevation($elevation: 1));
+    $buttons-shadow: if($disable-shadow == true, none, elevation($elevation: 4));
 
     @if not($item-text-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {
@@ -218,7 +218,7 @@
 /// @requires {mixin} ellipsis
 /// @requires igx-ripple-theme
 /// @requires {mixin} igx-ripple
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires rem
 /// @requires var-get
 @mixin igx-tabs($theme) {

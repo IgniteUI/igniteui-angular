@@ -22,10 +22,10 @@
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
 /// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
 /// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
-/// @param {Map} $elevations [$igx-elevations] - The elevation map to be used by all component themes.
+/// @param {Map} $elevations [$elevations] - The elevation map to be used by all component themes.
 /// @requires $components
 /// @requires $theme-palette
-/// @requires $igx-elevations
+/// @requires $elevations
 /// @requires {function} is-component
 @mixin theme(
     $palette,
@@ -33,7 +33,7 @@
     $exclude: (),
     $roundness: null,
     $elevation: true,
-    $elevations: $igx-elevations,
+    $elevations: $elevations,
 ) {
     // Stores all excluded component styles
     $excluded: ();

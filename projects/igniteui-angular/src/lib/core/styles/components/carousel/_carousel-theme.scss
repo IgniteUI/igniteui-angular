@@ -32,7 +32,7 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires text-contrast
 /// @requires round-borders
 ///
@@ -82,7 +82,7 @@
 
     @if not($button-shadow) {
         $button-elevation: map.get($carousel-schema, 'button-elevation');
-        $button-shadow: igx-elevation($elevations, $button-elevation);
+        $button-shadow: elevation($elevations, $button-elevation);
     }
 
     @if not($button-arrow-color) and $button-background {
@@ -125,7 +125,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires color
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires {mixin} animation
 /// @requires {mixin} scale-in-center
 /// @requires {mixin} scale-out-center
@@ -272,7 +272,7 @@
         @if $variant != 'indigo-design' {
             border: $indicator-border-style;
             border-color: var-get($theme, 'indicator-border-color');
-            box-shadow: igx-elevation($elevation: 1);
+            box-shadow: elevation($elevation: 1);
             opacity: .7;
         }
 

@@ -27,7 +27,7 @@
         width: rem(320px);
         height: 100%;
         flex-grow: 1;
-        box-shadow: igx-elevation($elevation: 12);
+        box-shadow: elevation($elevation: 12);
         overflow: auto;
         min-width: rem(320px);
     }
@@ -335,7 +335,7 @@
         width: 520px;
         min-width: 520px;
         background: var-get($theme, 'filtering-row-background');
-        box-shadow: igx-elevation($elevation: 12);
+        box-shadow: elevation($elevation: 12);
         border-radius: rem(4px);
     }
 

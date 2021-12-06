@@ -37,7 +37,7 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires text-contrast
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires extend
 /// @requires round-borders
 ///
@@ -122,12 +122,12 @@
 
     @if not($modal-shadow) {
         $elevation: map.get($time-picker-schema, 'modal-elevation');
-        $modal-shadow: igx-elevation($elevations, $elevation);
+        $modal-shadow: elevation($elevations, $elevation);
     }
 
     @if not($dropdown-shadow) {
         $elevation: map.get($time-picker-schema, 'dropdown-elevation');
-        $dropdown-shadow: igx-elevation($elevations, $elevation);
+        $dropdown-shadow: elevation($elevations, $elevation);
     }
 
     @return extend($theme, (

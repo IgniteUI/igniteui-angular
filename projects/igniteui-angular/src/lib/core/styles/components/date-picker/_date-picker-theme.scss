@@ -9,7 +9,7 @@
 ////
 
 /// @param {Map} $theme - The calendar theme used to style the component.
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires text-contrast
 /// @requires var-get
 /// @requires rem
@@ -23,7 +23,7 @@
     $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {
-        box-shadow: igx-elevation($elevation: 24);
+        box-shadow: elevation($elevation: 24);
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'content-background');
         overflow: hidden;
@@ -147,7 +147,7 @@
         display: flex;
         flex: 1 0 0;
         flex-direction: column;
-        box-shadow: igx-elevation($elevation: 3);
+        box-shadow: elevation($elevation: 3);
     }
 
     %date-picker__buttons {

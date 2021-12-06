@@ -66,7 +66,7 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires round-borders
 ///
 /// @example scss Change the focused border and label colors
@@ -169,15 +169,15 @@
     }
 
     @if not($search-resting-shadow) {
-        $search-resting-shadow: igx-elevation($elevations, $search-resting-elevation);
+        $search-resting-shadow: elevation($elevations, $search-resting-elevation);
     }
 
     @if not($search-hover-shadow) {
-        $search-hover-shadow: igx-elevation($elevations, $search-hover-elevation);
+        $search-hover-shadow: elevation($elevations, $search-hover-elevation);
     }
 
     @if not($search-disabled-shadow) {
-        $search-disabled-shadow: igx-elevation($elevations, $search-disabled-elevation);
+        $search-disabled-shadow: elevation($elevations, $search-disabled-elevation);
     }
 
     @return extend($theme, (

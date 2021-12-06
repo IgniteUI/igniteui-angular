@@ -124,7 +124,7 @@
 /// @requires text-contrast
 /// @requires to-opaque
 /// @requires extend
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires round-borders
 @function igx-grid-theme(
     $palette: null,
@@ -456,12 +456,12 @@
 
     @if not($grid-shadow) {
         $grid-elevation: map.get($grid-schema, 'grid-elevation');
-        $grid-shadow: igx-elevation($elevations, $grid-elevation);
+        $grid-shadow: elevation($elevations, $grid-elevation);
     }
 
     @if not($drag-shadow) {
         $drag-elevation: map.get($grid-schema, 'drag-elevation');
-        $drag-shadow: igx-elevation($elevations, $drag-elevation);
+        $drag-shadow: elevation($elevations, $drag-elevation);
     }
 
     @return extend($theme, (

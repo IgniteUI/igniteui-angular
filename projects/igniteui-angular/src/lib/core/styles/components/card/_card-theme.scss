@@ -31,7 +31,7 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires round-borders
 ///
 /// @example scss Change the background and content text colors in card
@@ -95,12 +95,12 @@
 
     @if not($resting-shadow) {
         $resting-elevation: map.get($card-schema, 'resting-elevation');
-        $resting-shadow: igx-elevation($elevations, $resting-elevation);
+        $resting-shadow: elevation($elevations, $resting-elevation);
     }
 
     @if not($hover-shadow) {
         $hover-elevation: map.get($card-schema, 'hover-elevation');
-        $hover-shadow: igx-elevation($elevations, $hover-elevation);
+        $hover-shadow: elevation($elevations, $hover-elevation);
     }
 
     @return extend($theme, (
