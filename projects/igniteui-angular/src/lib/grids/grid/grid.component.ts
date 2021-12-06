@@ -155,8 +155,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxGridDetailTemplateDirective, { read: TemplateRef, static: false })
-    public detailTemplate: TemplateRef<any> = null;
+    @ContentChildren(IgxGridDetailTemplateDirective, { read: TemplateRef })
+    public detailTemplate: QueryList<TemplateRef<any>> = new QueryList();
 
     /**
      * @hidden @internal
@@ -206,12 +206,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
     /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxGridDetailTemplateDirective, { read: IgxGridDetailTemplateDirective, static: false })
-    protected gridDetailsTemplate: IgxGridDetailTemplateDirective;
-
-    /**
      * @hidden
      * @internal
      */
@@ -247,6 +241,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Does not include children of collapsed group rows.
      */
     public groupingFlatResult: any[];
+
+    /** @hidden @internal */
+    public trackChanges: (index, rec) => any;
     /**
      * @hidden
      */
@@ -563,16 +560,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public trackChanges(index, rec) {
-        if (rec.detailsData !== undefined) {
-            return rec.detailsData;
-        }
-        return rec;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public detailsViewFocused(container, rowIndex) {
         this.navigation.setActiveNode({ row: rowIndex });
     }
@@ -581,7 +568,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public get hasDetails() {
-        return !!this.gridDetailsTemplate;
+        return !!this.detailTemplate.length;
     }
 
     /**
@@ -942,6 +929,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (this.groupTemplate) {
             this._groupRowTemplate = this.groupTemplate.template;
         }
+
+        this.detailTemplate.changes.subscribe(() =>
+            this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec));
 
         if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);
