@@ -314,7 +314,7 @@ export abstract class IgxBaseExporter {
                             skippedPinnedColumnsCount++;
                         }
 
-                        this.calculateColSpans(column, mapRecord);
+                        this.calculateColSpans(column, key, mapRecord);
                     }
 
                     if (this._sort && this._sort.fieldName === column.field) {
@@ -350,9 +350,10 @@ export abstract class IgxBaseExporter {
         });
     }
 
-    private calculateColSpans(column: IColumnInfo, mapRecord: IColumnList) {
+    private calculateColSpans(column: IColumnInfo, key: any, mapRecord: IColumnList) {
         if (column.headerType === HeaderType.MultiColumnHeader && column.skip) {
             const columnGroupChildren = mapRecord.columns.filter(c => c.columnGroupParent === column.columnGroup);
+            this._ownersMap.get(key).maxLevel--;
 
             columnGroupChildren.forEach(cgc => {
                 if (cgc.headerType === HeaderType.MultiColumnHeader) {
@@ -360,7 +361,7 @@ export abstract class IgxBaseExporter {
                     cgc.columnGroupParent = null;
                     cgc.skip = true;
 
-                    this.calculateColSpans(cgc, mapRecord);
+                    this.calculateColSpans(cgc, key, mapRecord);
                 } else {
                     cgc.skip = true;
                 }
@@ -378,11 +379,12 @@ export abstract class IgxBaseExporter {
                 }
 
                 if (targetCol.columnSpan === 0) {
+                    this._ownersMap.get(key).maxLevel--;
                     targetCol.skip = true;
                 }
 
                 if (targetCol.columnGroupParent !== null) {
-                    this.calculateColSpans(targetCol, mapRecord);
+                    this.calculateColSpans(targetCol, key, mapRecord);
                 }
             }
         }
