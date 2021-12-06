@@ -284,7 +284,7 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabs.offset).toBeGreaterThan(0);
 
-            tabs.scrollLeft(null);
+            tabs.scrollPrev(null);
 
             tick(100);
             fixture.detectChanges();
