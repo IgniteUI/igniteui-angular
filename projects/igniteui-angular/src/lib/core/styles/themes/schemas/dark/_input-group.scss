@@ -49,8 +49,8 @@ $dark-fluent-input-group: extend(
 /// @requires $bootstrap-input-group
 /// @requires $base-dark-input-group
 $dark-bootstrap-input-group: extend(
-    $bootstrap-input-group,
-    $base-dark-input-group
+    $base-dark-input-group,
+    $bootstrap-input-group
 );
 
 /// Generates an dark indigo input-group schema
@@ -97,7 +97,6 @@ $dark-indigo-input-group: extend(
         focused-bottom-line-color: (
             igx-contrast-color: ('surface')
         ),
-
     )
 );
 
