@@ -32,7 +32,7 @@ import { RowType } from '../common/row.interface';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
 import { CellType } from '../common/cell.interface';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
+import { IGridGroupingStrategy } from '../../data-operations/grouping-strategy';
 
 let NEXT_ID = 0;
 
@@ -266,6 +266,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden
      */
+    protected _groupStrategy: IGridGroupingStrategy;
+    /**
+     * @hidden
+     */
     protected groupingDiffer;
     private _data?: any[] | null;
     private _hideGroupedColumns = false;
@@ -456,6 +460,25 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
+     * Gets/Sets the grouping strategy of the grid.
+     *
+     * @remarks The default IgxGrouping extends from IgxSorting and a custom one can be used as a `sortStrategy` as well.
+     *
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [groupStrategy]="groupStrategy"></igx-grid>
+     * ```
+     */
+    @Input()
+    public get groupStrategy(): IGridGroupingStrategy {
+        return this._groupStrategy;
+    }
+
+    public set groupStrategy(value: IGridGroupingStrategy) {
+        this._groupStrategy = value;
+    }
+
+    /**
      * Gets/Sets the message displayed inside the GroupBy drop area where columns can be dragged on.
      *
      * @remarks
@@ -478,7 +501,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * @deprecated
+     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
+     *
      * Returns a `CellType` object that matches the conditions.
      *
      * @example
@@ -488,7 +512,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param rowIndex
      * @param index
      */
-    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
