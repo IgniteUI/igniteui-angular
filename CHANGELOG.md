@@ -1,6 +1,10 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 13.0.2
+
+### RTL Support
+- `igxTabs` have full right-to-left (RTL) support.
 
 ## 13.0.1
 

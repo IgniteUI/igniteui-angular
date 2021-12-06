@@ -1,10 +1,10 @@
-@use '../../base' as *;
-@use '../../typography/base' as *;
-@use '../../themes/schemas' as *;
-@use '../ripple/ripple-theme' as *;
-@use '../ripple/ripple-component' as *;
-@use 'sass:map';
-@use 'sass:meta';
+@use "../../base" as *;
+@use "../../typography/base" as *;
+@use "../../themes/schemas" as *;
+@use "../ripple/ripple-theme" as *;
+@use "../ripple/ripple-component" as *;
+@use "sass:map";
+@use "sass:meta";
 
 ////
 /// @group themes
@@ -58,33 +58,26 @@
 @function igx-tabs-theme(
     $palette: null,
     $schema: $light-schema,
-
     $item-text-color: null,
     $item-background: null,
-
     $item-hover-background: null,
     $item-hover-color: null,
-
     $item-active-color: null,
     $item-active-icon-color: null,
     $item-active-background: null,
     $indicator-color: null,
-
     $button-color: null,
     $button-background: null,
     $button-hover-background: null,
     $button-hover-color: null,
-
     $tab-ripple-color: null,
     $button-ripple-color: null,
     $border-radius: null,
-
     $border-color: null,
     $border-color--hover: null,
-
     $disable-shadow: true
 ) {
-    $name: 'igx-tabs';
+    $name: "igx-tabs";
     $tabs-schema: ();
 
     @if map.has-key($schema, $name) {
@@ -93,21 +86,31 @@
         $tabs-schema: $schema;
     }
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($tabs-schema, 'border-radius')), 0, 6px
-    );
+    $border-radius: round-borders(if($border-radius, $border-radius, map.get($tabs-schema, "border-radius")), 0, 6px);
 
     $theme: apply-palette($tabs-schema, $palette);
 
     $variant: map.get($theme, variant);
-    $bootstrap-theme: $variant == 'boostrap';
+    $bootstrap-theme: $variant == "boostrap";
 
-    $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 1));
-    $buttons-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 4));
+    $tab-area-shadow: if(
+        $disable-shadow == true,
+        none,
+        igx-elevation(
+            $elevation: 1,
+        )
+    );
+    $buttons-shadow: if(
+        $disable-shadow == true,
+        none,
+        igx-elevation(
+            $elevation: 4,
+        )
+    );
 
     @if not($item-text-color) and $item-background {
-        @if meta.type-of($item-background) == 'color' {
-            $item-text-color: rgba(text-contrast($item-background), .54);
+        @if meta.type-of($item-background) == "color" {
+            $item-text-color: rgba(text-contrast($item-background), 0.54);
         }
     }
 
@@ -157,26 +160,26 @@
     }
 
     @if not($button-background) and $item-background {
-        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
+        @if meta.type-of($item-background) == "color" and lightness($item-background) > 50 {
             $button-background: transparent;
         } @else {
-            $button-background: rgba(255, 255, 255 , .1);
+            $button-background: rgba(255, 255, 255, 0.1);
         }
     }
 
     @if not($button-hover-background) and $item-background {
-        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
-            $button-hover-background: rgba(0, 0, 0, .05);
+        @if meta.type-of($item-background) == "color" and lightness($item-background) > 50 {
+            $button-hover-background: rgba(0, 0, 0, 0.05);
         } @else {
-            $button-hover-background: rgba(255, 255, 255 , .14);
+            $button-hover-background: rgba(255, 255, 255, 0.14);
         }
     }
 
     @if not($button-ripple-color) and $button-background {
-        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
-            $button-ripple-color: rgba(0, 0, 0, .4);
+        @if meta.type-of($item-background) == "color" and lightness($item-background) > 50 {
+            $button-ripple-color: rgba(0, 0, 0, 0.4);
         } @else {
-            $button-ripple-color: rgba(255, 255, 255, .4);
+            $button-ripple-color: rgba(255, 255, 255, 0.4);
         }
     }
     // Button end
@@ -189,28 +192,31 @@
         $tab-ripple-color: text-contrast($item-background);
     }
 
-    @return extend($theme, (
-        name: $name,
-        palette: $palette,
-        item-text-color: $item-text-color,
-        item-background: $item-background,
-        item-hover-color: $item-hover-color,
-        item-hover-background: $item-hover-background,
-        item-active-color: $item-active-color,
-        item-active-icon-color: $item-active-icon-color,
-        item-active-background: $item-active-background,
-        indicator-color: $indicator-color,
-        button-color: $button-color,
-        button-background: $button-background,
-        button-hover-background:$button-hover-background,
-        button-hover-color:$button-hover-color,
-        tab-ripple-color: $tab-ripple-color,
-        button-ripple-color: $button-ripple-color,
-        tab-area-shadow: $tab-area-shadow,
-        buttons-shadow: $buttons-shadow,
-        border-color: $border-color,
-        border-radius: $border-radius,
-    ));
+    @return extend(
+        $theme,
+        (
+            name: $name,
+            palette: $palette,
+            item-text-color: $item-text-color,
+            item-background: $item-background,
+            item-hover-color: $item-hover-color,
+            item-hover-background: $item-hover-background,
+            item-active-color: $item-active-color,
+            item-active-icon-color: $item-active-icon-color,
+            item-active-background: $item-active-background,
+            indicator-color: $indicator-color,
+            button-color: $button-color,
+            button-background: $button-background,
+            button-hover-background: $button-hover-background,
+            button-hover-color: $button-hover-color,
+            tab-ripple-color: $tab-ripple-color,
+            button-ripple-color: $button-ripple-color,
+            tab-area-shadow: $tab-area-shadow,
+            buttons-shadow: $buttons-shadow,
+            border-color: $border-color,
+            border-radius: $border-radius,
+        )
+    );
 }
 
 /// @param {Map} $theme - The theme used to style the component.
@@ -224,25 +230,25 @@
 @mixin igx-tabs($theme) {
     @include igx-css-vars($theme);
 
-    $variant: map.get($theme, 'variant');
-    $not-bootstrap-theme: $variant != 'bootstrap';
-    $bootstrap-theme: $variant == 'bootstrap';
-    $indigo-theme: $variant == 'indigo-design';
+    $variant: map.get($theme, "variant");
+    $not-bootstrap-theme: $variant != "bootstrap";
+    $bootstrap-theme: $variant == "bootstrap";
+    $indigo-theme: $variant == "indigo-design";
 
     $item-min-width: 90px;
     $item-max-width: 360px;
 
-    $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
+    $tabs-animation-function: cubic-bezier(0.35, 0, 0.25, 1);
 
     $item-padding: rem(11px) rem(16px);
 
     $tabs-ripple-theme: igx-ripple-theme(
         $schema: $light-schema,
-        $color: var-get($theme, 'tab-ripple-color')
+        $color: var-get($theme, "tab-ripple-color"),
     );
     $button-ripple-theme: igx-ripple-theme(
         $schema: $light-schema,
-        $color: var-get($theme, 'button-ripple-color')
+        $color: var-get($theme, "button-ripple-color"),
     );
 
     $left: if-ltr(left, right);
@@ -251,7 +257,7 @@
     $icon-space: (
         comfortable: rem(12px),
         cosy: rem(8px),
-        compact: rem(4px)
+        compact: rem(4px),
     );
 
     %tabs-header,
@@ -267,8 +273,8 @@
 
     %tabs-header {
         overflow: hidden;
-        background: var-get($theme, 'item-background');
-        box-shadow: var-get($theme, 'tab-area-shadow');
+        background: var-get($theme, "item-background");
+        box-shadow: var-get($theme, "tab-area-shadow");
         min-height: rem(42px);
         z-index: 1;
 
@@ -285,24 +291,24 @@
     %tabs-header-wrapper {
         position: relative;
         flex-grow: 1;
-        transition: transform .2s $tabs-animation-function;
+        transition: transform 0.2s $tabs-animation-function;
 
         @if $bootstrap-theme or $indigo-theme {
             &::after {
-                content: '';
+                content: "";
                 position: absolute;
                 bottom: 0;
                 left: 0;
                 width: 100%;
                 height: 1px;
-                background: var-get($theme, 'border-color');
+                background: var-get($theme, "border-color");
                 z-index: 0;
             }
         }
     }
 
     %tabs-header-scroll {
-        display: flex;       
+        display: flex;
         height: 100%;
     }
 
@@ -316,22 +322,22 @@
         width: rem(48px);
         cursor: pointer;
         position: relative;
-        background: var-get($theme, 'button-background');
-        color: var-get($theme, 'button-color');
+        background: var-get($theme, "button-background");
+        color: var-get($theme, "button-color");
         outline: 0;
 
         @if not $indigo-theme {
-            box-shadow: var-get($theme, 'buttons-shadow');
+            box-shadow: var-get($theme, "buttons-shadow");
         }
 
         &:hover {
-            background: var-get($theme, 'button-hover-background');
-            color: var-get($theme, 'button-hover-color');
+            background: var-get($theme, "button-hover-background");
+            color: var-get($theme, "button-hover-color");
         }
 
         &:focus {
             outline: 0;
-            background: var-get($theme, 'button-hover-background');
+            background: var-get($theme, "button-hover-background");
         }
 
         &::-moz-focus-inner {
@@ -347,12 +353,16 @@
             display: none;
         }
 
+        @include if-rtl() {
+            transform: scaleX(-1);
+        }
+
         @include igx-ripple($button-ripple-theme);
         @include igx-css-vars($button-ripple-theme);
     }
 
     %tabs-header-item {
-        @include icon-w-margin(map.get($icon-space, 'comfortable'), $left);
+        @include icon-w-margin(map.get($icon-space, "comfortable"), $left);
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -368,22 +378,22 @@
         position: relative;
 
         @if $not-bootstrap-theme {
-            transition: all .3s $tabs-animation-function;
+            transition: all 0.3s $tabs-animation-function;
         }
 
         user-select: none;
-        background: var-get($theme, 'item-background');
-        color: var-get($theme, 'item-text-color');
+        background: var-get($theme, "item-background");
+        color: var-get($theme, "item-text-color");
         outline: 0;
 
         @if $bootstrap-theme {
             border: 1px solid transparent;
-            border-top-left-radius: var-get($theme, 'border-radius');
-            border-top-right-radius: var-get($theme, 'border-radius');
+            border-top-left-radius: var-get($theme, "border-radius");
+            border-top-right-radius: var-get($theme, "border-radius");
         }
 
         @if $indigo-theme {
-            border-bottom: 1px solid var-get($theme, 'border-color');
+            border-bottom: 1px solid var-get($theme, "border-color");
         }
 
         &::-moz-focus-inner {
@@ -391,25 +401,25 @@
         }
 
         &:focus {
-            background: var-get($theme, 'item-active-background');
+            background: var-get($theme, "item-active-background");
             border-bottom-color: transparent;
         }
 
         &:hover {
-            background: var-get($theme, 'item-hover-background');
-            color: var-get($theme, 'item-hover-color');
+            background: var-get($theme, "item-hover-background");
+            color: var-get($theme, "item-hover-color");
 
             @if $bootstrap-theme {
-                border-color: var-get($theme, 'border-color--hover') var-get($theme, 'border-color--hover') transparent;
+                border-color: var-get($theme, "border-color--hover") var-get($theme, "border-color--hover") transparent;
             }
         }
 
         @if $not-bootstrap-theme {
-            border: 1px solid var-get($theme, 'border-color');
+            border: 1px solid var-get($theme, "border-color");
 
             &:hover,
             &:focus {
-                border: 1px solid var-get($theme, 'border-color--hover');
+                border: 1px solid var-get($theme, "border-color--hover");
             }
         }
 
@@ -432,50 +442,50 @@
 
     %tabs-header-item--selected {
         outline: 0;
-        color: var-get($theme, 'item-active-color');
+        color: var-get($theme, "item-active-color");
 
         @if $bootstrap-theme {
-            border-color: var-get($theme, 'border-color--hover') var-get($theme, 'border-color--hover') transparent;
+            border-color: var-get($theme, "border-color--hover") var-get($theme, "border-color--hover") transparent;
         }
 
         &:focus {
-            background: var-get($theme, 'item-active-background');
-            color: var-get($theme, 'item-active-color');
+            background: var-get($theme, "item-active-background");
+            color: var-get($theme, "item-active-color");
         }
 
         &:hover {
-            background: var-get($theme, 'item-active-background');
-            color: var-get($theme, 'item-active-color');
+            background: var-get($theme, "item-active-background");
+            color: var-get($theme, "item-active-color");
         }
 
         igx-icon {
-            color: var-get($theme, 'item-active-icon-color');
+            color: var-get($theme, "item-active-icon-color");
         }
 
         @if $bootstrap-theme {
-            background: var-get($theme, 'item-active-background');
+            background: var-get($theme, "item-active-background");
             position: relative;
             z-index: 1;
-            border-top-color: var-get($theme, 'border-color');
-            border-left-color: var-get($theme, 'border-color');
-            border-right-color: var-get($theme, 'border-color');
+            border-top-color: var-get($theme, "border-color");
+            border-left-color: var-get($theme, "border-color");
+            border-right-color: var-get($theme, "border-color");
             border-bottom-color: transparent;
 
             &::after {
-                content: '';
+                content: "";
                 position: absolute;
                 bottom: -1px;
                 left: 0;
                 width: 100%;
                 height: 1px;
-                background: var-get($theme, 'item-active-background');
+                background: var-get($theme, "item-active-background");
             }
 
             &:hover,
             &:focus {
-                border-top-color: var-get($theme, 'border-color');
-                border-left-color: var-get($theme, 'border-color');
-                border-right-color: var-get($theme, 'border-color');
+                border-top-color: var-get($theme, "border-color");
+                border-left-color: var-get($theme, "border-color");
+                border-right-color: var-get($theme, "border-color");
                 border-bottom-color: transparent;
             }
         }
@@ -484,10 +494,10 @@
     %tabs-header-item--disabled {
         outline: 0;
         @if not $indigo-theme {
-            opacity: .5;
-        } @else  {
+            opacity: 0.5;
+        } @else {
             > * {
-                opacity: .4;
+                opacity: 0.4;
             }
         }
         cursor: default;
@@ -517,8 +527,8 @@
         transform: translateX(0);
         height: 2px;
         min-width: $item-min-width;
-        background: var-get($theme, 'indicator-color');
-        transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
+        background: var-get($theme, "indicator-color");
+        transition: transform 0.3s $tabs-animation-function, width 0.2s $tabs-animation-function;
         @if $bootstrap-theme {
             display: none;
         }
@@ -551,7 +561,7 @@
             outline-width: 0;
         }
 
-        &[tabindex='0'] {
+        &[tabindex="0"] {
             position: relative;
         }
     }
@@ -584,15 +594,13 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'button')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
-@mixin igx-tabs-typography($type-scale, $categories: (label: 'button')) {
-    $label: map.get($categories, 'label');
+@mixin igx-tabs-typography($type-scale, $categories: (label: "button")) {
+    $label: map.get($categories, "label");
 
-    %tabs-header-item-inner > [igxtabheaderlabel]{
+    %tabs-header-item-inner > [igxtabheaderlabel] {
         @include igx-type-style($type-scale, $label) {
             margin-top: 0;
             margin-bottom: 0;
         }
     }
 }
-
-
