@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     IgxGridComponent,
     IgxNumberSummaryOperand,
@@ -30,7 +30,7 @@ class MySummary extends IgxNumberSummaryOperand {
     styleUrls: ['./grid-summaries.component.scss'],
     templateUrl: 'grid-summaries.sample.html'
 })
-export class GridSummaryComponent {
+export class GridSummaryComponent implements OnInit {
 
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     private grid1: IgxGridComponent;
@@ -40,6 +40,7 @@ export class GridSummaryComponent {
     public w = '1200px';
     public h = '500px';
     public cw = '200px';
+    public rh = 0;
 
     public groupable = false;
     public filterable = true;
@@ -50,7 +51,9 @@ export class GridSummaryComponent {
     public columnHiding = false;
     public columnPinning = false;
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
-
+    public rowSelection = false;
+    public density = 'compact';
+    public displayDensities;
 
     public data = [{
         __metadata: {
@@ -707,6 +710,16 @@ export class GridSummaryComponent {
             this.data[i]['Index'] = i;
         }
     }
+    public ngOnInit(): void {
+        this.displayDensities = [
+            { label: 'compact', selected: this.density === 'compact', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }];
+        }
+
+    public selectDensity(event) {
+         this.density = this.displayDensities[event.index].label;
+    }
 
     public updateData() {
         const d = [].concat(this.data).concat(this.data2);
@@ -790,8 +803,8 @@ export class GridSummaryComponent {
         }
     }
 
-    public disableSummary() {
-        this.grid1.getColumnByName('UnitsInStock').hasSummary = false;
+    public toggleSummary() {
+        this.grid1.getColumnByName('UnitsInStock').hasSummary = !this.grid1.getColumnByName('UnitsInStock').hasSummary;
         // this.grid1.recalculateSummaries();
     }
 
