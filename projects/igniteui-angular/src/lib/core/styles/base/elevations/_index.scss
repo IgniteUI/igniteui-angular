@@ -146,16 +146,16 @@
 /// @prop {Color} $color-1 [rgba(0, 0, 0, .26)] - The color used for the umbra shadow.
 /// @prop {Color} $color-2 [rgba(0, 0, 0, .12)] - The color used for the penumbra shadow.
 /// @prop {Color} $color-3 [rgba(0, 0, 0, .08)] - The color used for the ambient shadow.
-/// @requires igx-elevations
+/// @requires elevations
 $elevations: elevations(
     rgba(0, 0, 0, .26),
     rgba(0, 0, 0, .12),
     rgba(0, 0, 0, .08)
 ) !default;
 
-/// Returns an igx elevation from an igx-elevations produced map.
+/// Returns an igx elevation from an elevations produced map.
 /// @access public
-/// @param {Map} $elevations [null] - The igx-elevations map to extract the elevation from.
+/// @param {Map} $elevations [null] - The elevations map to extract the elevation from.
 /// @param {number} $elevation [0] - The elevation level from 0 to 24.
 /// @returns {String} Returns a box-shadow value.
 @function elevation($elevations: null, $elevation: 0) {

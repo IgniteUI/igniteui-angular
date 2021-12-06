@@ -95,11 +95,11 @@
 }
 
 /* stylelint-disable max-nesting-depth */
-@include describe('igx-palette-vars') {
+@include describe('palette-vars') {
     $primary: red;
     $secondary: green;
 
-    $my-palette: igx-palette(
+    $my-palette: palette(
         $primary: $primary,
         $secondary: $secondary,
     );
@@ -112,7 +112,7 @@
     @include it('should generate variables for all palette colors') {
         @include assert() {
             @include output() {
-                @include igx-palette-vars($my-palette);
+                @include palette-vars($my-palette);
             }
 
             @include contains() {
