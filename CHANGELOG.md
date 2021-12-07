@@ -72,6 +72,8 @@ All notable changes for each version of this project will be documented in this 
     - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
 - `IgxDialog`
     - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
+- `IgxProgressBar`
+    - Exposed new animationDuration input - sets the duration of the progress animation. 
 
 ### General
 

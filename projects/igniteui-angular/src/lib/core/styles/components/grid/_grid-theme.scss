@@ -982,7 +982,7 @@
         top: 0;
         #{$right}: 0;
         background: var-get($theme, 'header-background');
-        border-#{$left}: 1px solid var-get($theme, 'header-border-color');
+        border-#{$left}: 1px solid igx-color($palette, 'grays', 300);
     }
 
     %grid-tbody-scrollbar {
