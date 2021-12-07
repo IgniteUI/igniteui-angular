@@ -24,8 +24,7 @@ describe('IgCircularBar', () => {
             imports: [
                 IgxProgressBarModule
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     it('Initialize circularProgressbar with default values', () => {
@@ -55,7 +54,7 @@ describe('IgCircularBar', () => {
         expect(progress.value).toBe(expectedValue);
     });
 
-    it('If passed value is higher then max it should stay equal to maximum (default max size)', fakeAsync(() => {
+    it('If passed value is higher then max it should stay equal to maximum (default max size)', () => {
         const progressBarValue = 120;
         const expectedMaxValue = 100;
         const fixture = TestBed.createComponent(InitCircularProgressBarComponent);
@@ -63,14 +62,12 @@ describe('IgCircularBar', () => {
 
         const progress = fixture.componentInstance.circularBar;
         progress.value = progressBarValue;
-
-        tick(2500);
         fixture.detectChanges();
 
         expect(progress.value).toBe(expectedMaxValue);
-    }));
+    });
 
-    it('If passed value is higher then max it should stay equal to maximum (custom max size)', fakeAsync(() => {
+    it('If passed value is higher then max it should stay equal to maximum (custom max size)', () => {
         const progressBarMaxValue = 150;
         const progressBarValue = 170;
         const fixture = TestBed.createComponent(InitCircularProgressBarComponent);
@@ -80,13 +77,11 @@ describe('IgCircularBar', () => {
         progress.max = progressBarMaxValue;
         progress.value = progressBarValue;
 
-        tick(3000);
         fixture.detectChanges();
-
         expect(progress.value).toBe(progressBarMaxValue);
-    }));
+    });
 
-    it('should not update value if max is updated', fakeAsync(() => {
+    it('should not update value if max is updated', () => {
         let progressBarMaxValue = 150;
         const progressBarValue = 120;
         const fixture = TestBed.createComponent(InitCircularProgressBarComponent);
@@ -97,7 +92,7 @@ describe('IgCircularBar', () => {
         progress.max = progressBarMaxValue;
         progress.value = progressBarValue;
 
-        tick(tickTime);
+
         fixture.detectChanges();
 
         expect(progress.value).toBe(progressBarValue);
@@ -106,37 +101,11 @@ describe('IgCircularBar', () => {
         progressBarMaxValue = 200;
         progress.max = progressBarMaxValue;
 
-        tick(tickTime);
         fixture.detectChanges();
 
         expect(progress.value).toBe(progressBarValue);
         expect(progress.max).toBe(progressBarMaxValue);
-    }));
-
-    it('Should update value when we try to decrease it', fakeAsync(() => {
-        const fixture = TestBed.createComponent(CircularBarComponent);
-        fixture.detectChanges();
-
-        const progressBar = fixture.componentInstance.progressbar;
-        let expectedValue = 50;
-
-        fixture.componentInstance.value = expectedValue;
-
-        tick(tickTime);
-        fixture.detectChanges();
-        tick(tickTime);
-
-        expect(progressBar.value).toBe(expectedValue);
-
-        expectedValue = 20;
-        fixture.componentInstance.value = expectedValue;
-
-        tick(tickTime);
-        fixture.detectChanges();
-        tick(tickTime);
-
-        expect(progressBar.value).toBe(expectedValue);
-    }));
+    });
 
     it('Should update value when we try to decrease it (without animation)', () => {
         const fixture = TestBed.createComponent(CircularBarComponent);
@@ -160,21 +129,20 @@ describe('IgCircularBar', () => {
         expect(progressBar.value).toBe(expectedValue);
     });
 
-    it('When passed value is string progress indication should remain the same', fakeAsync(() => {
+    it('When passed value is string progress indication should remain the same', () => {
         const fix = TestBed.createComponent(CircularBarComponent);
         fix.detectChanges();
 
         const bar = fix.componentInstance.progressbar;
         const expectedRes = fix.componentInstance.value as number;
 
-        tick(tickTime);
         expect(bar.value).toEqual(expectedRes);
 
         fix.componentInstance.value = '0345-234';
-        tick(tickTime);
         fix.detectChanges();
+
         expect(bar.value).toEqual(expectedRes);
-    }));
+    });
 
     it('The update step is 1% of the maximum value, which prevents from slow update with big nums', () => {
         const fix = TestBed.createComponent(InitCircularProgressBarComponent);
@@ -193,35 +161,31 @@ describe('IgCircularBar', () => {
         expect(bar.step).toBe(expectedValue);
     });
 
-    it('Value should not exceed the lower limit (0) when operating with floating numbers', fakeAsync(() => {
+    it('Value should not exceed the lower limit (0) when operating with floating numbers', () => {
         const fix = TestBed.createComponent(CircularBarComponent);
         const compInstance = fix.componentInstance;
+        const bar = compInstance.progressbar;
         fix.detectChanges();
-        tick(tickTime);
+
+        compInstance.value = 0;
+        fix.detectChanges();
 
         compInstance.max = 2.5;
-        fix.detectChanges();
-
         compInstance.value = -0.3;
         fix.detectChanges();
 
-        tick(tickTime);
-        const bar = compInstance.progressbar;
         const expectedRes = 0;
         expect(bar.value).toBe(expectedRes);
         expect(bar.valueInPercent).toBe(expectedRes);
-
-        compInstance.animate = false;
-        fix.detectChanges();
 
         compInstance.value = -2;
         fix.detectChanges();
 
         expect(bar.value).toBe(expectedRes);
         expect(bar.valueInPercent).toBe(expectedRes);
-    }));
+    });
 
-    it('Value should not exceed the max limit when operating with floating numbers', fakeAsync(() => {
+    it('Value should not exceed the max limit when operating with floating numbers', () => {
         const fix = TestBed.createComponent(CircularBarComponent);
         const compInstance = fix.componentInstance;
         let value = 2.67;
@@ -234,7 +198,6 @@ describe('IgCircularBar', () => {
         fix.detectChanges();
 
         const bar = compInstance.progressbar;
-        tick(tickTime);
         expect(bar.value).toBe(max);
         expect(bar.valueInPercent).toBe(100);
 
@@ -247,7 +210,7 @@ describe('IgCircularBar', () => {
 
         expect(bar.value).toBe(max);
         expect(bar.valueInPercent).toBe(100);
-    }));
+    });
 
     it('when passing string as value it should be parsed correctly', () => {
         const fix = TestBed.createComponent(CircularBarComponent);
@@ -265,7 +228,7 @@ describe('IgCircularBar', () => {
         expect(bar.value).toBe(expectedRes);
     });
 
-    it('when update step is bigger than passed value the progress indicator should follow the value representation', fakeAsync(() => {
+    it('when update step is bigger than passed value the progress indicator should follow the value representation', () => {
         const fix = TestBed.createComponent(InitCircularProgressBarComponent);
         fix.detectChanges();
 
@@ -278,17 +241,16 @@ describe('IgCircularBar', () => {
         bar.value = value;
 
         fix.detectChanges();
-        tick(tickTime);
 
         const percentValue = Common.calcPercentage(value, max);
         expect(bar.value).toBe(value);
         expect(bar.step).toBe(step);
         expect(bar.max).toBe(max);
         expect(bar.valueInPercent).toBe(percentValue);
-    }));
+    });
 
     it(`when step value is not divisble to passed value the result returned from the
-    value getter should be the same as the passed one`, fakeAsync(() => {
+    value getter should be the same as the passed one`, () => {
         const fix = TestBed.createComponent(InitCircularProgressBarComponent);
         fix.detectChanges();
 
@@ -299,7 +261,6 @@ describe('IgCircularBar', () => {
         bar.step = step;
         bar.value = value;
 
-        tick(tickTime);
         fix.detectChanges();
         expect(bar.step).toBe(step);
         expect(bar.value).toBe(value);
@@ -308,11 +269,11 @@ describe('IgCircularBar', () => {
         value = 10;
         valueInPercent = Common.calcPercentage(value, bar.max);
         bar.value = value;
-        tick(tickTime);
         fix.detectChanges();
+
         expect(bar.value).toBe(value);
         expect(bar.valueInPercent).toBe(valueInPercent);
-    }));
+    });
 
     it('should apply its template correctly', () => {
         const fixture = TestBed.createComponent(CircularBarTemplateComponent);
@@ -463,7 +424,7 @@ describe('IgCircularBar', () => {
         });
     });
 });
-@Component({ template: `<igx-circular-bar></igx-circular-bar>` })
+@Component({ template: `<igx-circular-bar [animate]="false"></igx-circular-bar>` })
 class InitCircularProgressBarComponent {
     @ViewChild(IgxCircularProgressBarComponent, { static: true }) public circularBar: IgxCircularProgressBarComponent;
 }
@@ -481,7 +442,7 @@ class CircularBarComponent {
 
     public value: string | number = 30;
     public max = 100;
-    public animate = true;
+    public animate = false;
 }
 
 @Component({
