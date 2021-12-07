@@ -113,8 +113,8 @@ export class IgxGridStateDirective {
         columnSelection: true,
         rowPinning: true,
         expansion: true,
-        rowIslands: true,
-        moving: true
+        moving: true,
+        rowIslands: true
     };
     private FEATURES = {
         sorting:  {

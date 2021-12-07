@@ -168,16 +168,14 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         gridState = state.getState(false, ['moving', 'rowIslands']) as IGridState;
         HelperFunctions.verifyMoving(grid.moving, gridState);
     });
-
     
     it('setState should correctly restore grid moving state from string', fakeAsync(() => {
         const state = fix.componentInstance.state;
         
         const initialState = HelperFunctions.buildStateString(grid, 'moving', 'true', 'true');
-        const movingState = HelperFunctions.buildStateString(grid, 'moving', 'false', 'true');
+        const movingState = HelperFunctions.buildStateString(grid, 'moving', 'false', 'false');
         
         const movingStateObject = JSON.parse(movingState) as IGridState;
-        movingStateObject.columns = fix.componentInstance.childColumns;
         
         let gridState = state.getState(true, ['moving', 'rowIslands']);
         expect(gridState).toBe(initialState);
@@ -189,7 +187,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         HelperFunctions.verifyMoving(grid.moving, gridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
-            expect(childGrid.grid.moving).toEqual(childGrid.grid.moving);
+            HelperFunctions.verifyMoving(childGrid.grid.moving, childGrid.state);
         });
         gridState = state.getState(true, ['moving', 'rowIslands']);
         expect(gridState).toBe(movingState);
