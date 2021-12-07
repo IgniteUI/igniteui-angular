@@ -253,18 +253,6 @@ export class IgxHasVisibleColumnsPipe implements PipeTransform {
 
 }
 
-/** @hidden @internal */
-function buildDataView(): MethodDecorator {
-    return function(_target: unknown, _propertyKey: string, descriptor: PropertyDescriptor) {
-        const original = descriptor.value;
-        descriptor.value = function(...args: unknown[]) {
-            const result = original.apply(this, args);
-            this.gridAPI.grid.buildDataView();
-            return result;
-        };
-        return descriptor;
-    };
-}
 
 /**
  * @hidden
@@ -277,24 +265,28 @@ export class IgxGridRowPinningPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    @buildDataView()
     public transform(collection: any[], id: string, isPinned = false, _pipeTrigger: number) {
         const grid = this.gridAPI.grid;
 
-        if (grid.hasPinnedRecords && isPinned) {
-            const result = collection.filter(rec => !grid.isSummaryRow(rec) && grid.isRecordPinned(rec));
-            result.sort((rec1, rec2) => grid.getInitialPinnedIndex(rec1) - grid.getInitialPinnedIndex(rec2));
-            return result;
-        }
+        const inner = () => {
+            if (grid.hasPinnedRecords && isPinned) {
+                const result = collection.filter(rec => !grid.isSummaryRow(rec) && grid.isRecordPinned(rec));
+                result.sort((rec1, rec2) => grid.getInitialPinnedIndex(rec1) - grid.getInitialPinnedIndex(rec2));
+                return result;
+            }
 
-        grid.unpinnedRecords = collection;
-        if (!grid.hasPinnedRecords) {
-            grid.pinnedRecords = [];
-            return isPinned ? [] : collection;
-        }
+            grid.unpinnedRecords = collection;
+            if (!grid.hasPinnedRecords) {
+                grid.pinnedRecords = [];
+                return isPinned ? [] : collection;
+            }
 
-        return collection.map((rec) => !grid.isSummaryRow(rec) &&
-            grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true } : rec);
+            return collection.map((rec) => !grid.isSummaryRow(rec) &&
+                grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true } : rec);
+        };
+        const r = inner();
+        (grid as any).buildDataView();
+        return r;
     }
 }
 
