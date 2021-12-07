@@ -50,4 +50,12 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             super.handleNavigation(event);
         }
     }
+
+    public focusTbody(event) {
+        if (!this.activeNode || this.activeNode.row === null || this.activeNode.row === undefined) {
+            this.activeNode = this.lastActiveNode;
+        } else {
+            super.focusTbody(event);
+        }
+    }
 }
