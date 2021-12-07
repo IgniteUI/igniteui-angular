@@ -35,7 +35,7 @@
     }
 
     @include it('should autoprefix web component themes like dockmanager with "igc"'){
-        $theme: igc-dock-manager-theme();
+        $theme: dock-manager-theme();
         $key: 'active-color';
 
         @include assert() {
