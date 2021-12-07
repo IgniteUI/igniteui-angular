@@ -47,14 +47,14 @@
 /// @requires round-borders
 ///
 /// @example scss Change the background, text, and border colors
-///   $my-button-group-theme: igx-button-group-theme(
+///   $my-button-group-theme: button-group-theme(
 ///     $item-text-color: white,
 ///     $item-background: rgba(0, 0, 0, .8),
 ///     $item-border-color: #dadada
 ///   );
-///   // Pass the theme to the igx-button-group component mixin
-///   @include igx-button-group($my-button-group-theme);
-@function igx-button-group-theme(
+///   // Pass the theme to the button-group component mixin
+///   @include button-group($my-button-group-theme);
+@function button-group-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -172,7 +172,7 @@
 /// @requires {mixin} css-vars
 /// @requires color
 /// @requires var-get
-@mixin igx-button-group($theme) {
+@mixin button-group($theme) {
     @include css-vars($theme);
     $group-item-min-width: 24px;
     $group-item-border-thickness: 1px;

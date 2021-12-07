@@ -57,10 +57,10 @@
 /// @requires luminance
 ///
 /// @example scss Change the list background color
-///   $my-list-theme: igx-list-theme($background: black);
-///   // Pass the theme to the igx-list component mixin
-///   @include igx-list($my-list-theme);
-@function igx-list-theme(
+///   $my-list-theme: list-theme($background: black);
+///   // Pass the theme to the list component mixin
+///   @include list($my-list-theme);
+@function list-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -258,7 +258,7 @@
 /// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
-@mixin igx-list($theme) {
+@mixin list($theme) {
     @include css-vars($theme);
 
     $variant: map.get($theme, variant);

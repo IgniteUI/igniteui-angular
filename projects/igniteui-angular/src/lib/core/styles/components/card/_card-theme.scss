@@ -35,13 +35,13 @@
 /// @requires round-borders
 ///
 /// @example scss Change the background and content text colors in card
-///   $my-card-theme: igx-card-theme(
+///   $my-card-theme: card-theme(
 ///     $background: #fff,
 ///     $content-text-color: rgba(0, 0, 0, .8)
 ///   );
-///   // Pass the theme to the igx-card component mixin
-///   @include igx-card($my-card-theme);
-@function igx-card-theme(
+///   // Pass the theme to the card component mixin
+///   @include card($my-card-theme);
+@function card-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -123,7 +123,7 @@
 /// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
-@mixin igx-card($theme) {
+@mixin card($theme) {
     @include css-vars($theme);
 
     $variant: map.get($theme, 'variant');

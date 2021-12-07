@@ -126,7 +126,7 @@
 /// @requires extend
 /// @requires elevation
 /// @requires round-borders
-@function igx-grid-theme(
+@function grid-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -584,7 +584,7 @@
 /// @requires contrast-color
 /// @requires rem
 /// @requires var-get
-@mixin igx-grid($theme) {
+@mixin grid($theme) {
     @include css-vars($theme);
 
     @include scale-in-ver-center();

@@ -21,7 +21,7 @@ body {
 );
 
 .dock {
-    @include css-vars(igc-dock-manager-theme());
+    @include css-vars(dock-manager-theme());
 }
 
 .nav-header {

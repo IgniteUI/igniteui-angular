@@ -29,10 +29,10 @@
 /// @requires elevation
 ///
 /// @example scss Change the background color
-///   $my-navbar-theme: igx-navbar-theme($background: green);
-///   // Pass the theme to the igx-navbar component mixin
-///   @include igx-navbar($my-navbar-theme);
-@function igx-navbar-theme(
+///   $my-navbar-theme: navbar-theme($background: green);
+///   // Pass the theme to the navbar component mixin
+///   @include navbar($my-navbar-theme);
+@function navbar-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -91,7 +91,7 @@
 /// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
-@mixin igx-navbar($theme) {
+@mixin navbar($theme) {
     @include css-vars($theme);
 
     $navbar-padding: rem(16px);

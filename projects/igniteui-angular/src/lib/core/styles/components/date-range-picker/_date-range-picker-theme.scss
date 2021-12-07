@@ -14,7 +14,7 @@
 /// @param {color} $label-color [null] - The color for date range separator label.
 /// @requires var-get
 /// @requires rem
-@function igx-date-range-picker-theme(
+@function date-range-picker-theme(
     $palette: null,
     $schema: $light-schema,
     $label-color: null
@@ -41,7 +41,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-date-range-picker($theme) {
+@mixin date-range-picker($theme) {
     @include css-vars($theme);
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);

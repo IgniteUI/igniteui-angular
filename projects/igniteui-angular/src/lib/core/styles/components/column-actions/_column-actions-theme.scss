@@ -29,7 +29,7 @@
 ///   // Pass the theme to the igx-column-actions component mixin
 ///   @include igx-column-actions($column-actions-theme);
 ////
-@function igx-column-actions-theme(
+@function column-actions-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -65,7 +65,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-column-actions($theme) {
+@mixin column-actions($theme) {
     @include css-vars($theme);
 
     %column-actions-display {

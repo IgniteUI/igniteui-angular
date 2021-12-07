@@ -70,10 +70,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $custom-chart-theme: igx-category-chart-theme($brushes: (red, green, blue));
+///   $custom-chart-theme: category-chart-theme($brushes: (red, green, blue));
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($custom-chart-theme);
-@function igx-category-chart-theme(
+@function category-chart-theme(
     $palette: null,
     $schema: $light-schema,
 

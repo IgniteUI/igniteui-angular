@@ -29,13 +29,13 @@
 /// @requires text-contrast
 ///
 /// @example scss Change the toolbar background color
-///   $my-toolbar-theme: igx-grid-toolbar-theme(
+///   $my-toolbar-theme: grid-toolbar-theme(
 ///     $background-color: black
 ///   );
-///   // Pass the theme to the igx-grid-filtering component mixin
-///   @include igx-grid-toolbar($my-toolbar-theme);
+///   // Pass the theme to the grid-toolbar component mixin
+///   @include grid-toolbar($my-toolbar-theme);
 
-@function igx-grid-toolbar-theme(
+@function grid-toolbar-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -109,7 +109,7 @@
 /// @requires rem
 /// @requires em
 /// @requires var-get
-@mixin igx-grid-toolbar($theme) {
+@mixin grid-toolbar($theme) {
     @include css-vars($theme);
 
     $variant: map.get($theme, variant);

@@ -46,10 +46,10 @@
 /// @requires round-borders
 ///
 /// @example scss Set custom track and thumb on colors
-///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);
-///   // Pass the theme to the igx-bottom-nav component mixin
-///   @include igx-switch($my-switch-theme);
-@function igx-switch-theme(
+///   $my-switch-theme: switch-theme($thumb-on-color: black, $track-on-color: yellow);
+///   // Pass the theme to the switch component mixin
+///   @include switch($my-switch-theme);
+@function switch-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -153,14 +153,14 @@
 /// @requires {mixin} css-vars
 /// @requires {mixin} css-vars
 /// @requires {mixin} scale-in-out
-/// @requires {mixin} igx-ripple
+/// @requires {mixin} ripple
 /// @requires {mixin} hide-default
-/// @requires igx-ripple-theme
+/// @requires ripple-theme
 /// @requires em
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
 /// @requires var-get
-@mixin igx-switch($theme) {
+@mixin switch($theme) {
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
@@ -238,7 +238,7 @@
 
     $input-transition: all .2s $ease-in-out-quad;
 
-    $ripple-theme: igx-ripple-theme(
+    $ripple-theme: ripple-theme(
         $schema: $light-schema,
         $color: var-get($theme, 'thumb-on-color')
     );
@@ -342,7 +342,7 @@
     }
 
     %switch-ripple {
-        @include igx-ripple($ripple-theme);
+        @include ripple($ripple-theme);
         @include css-vars($ripple-theme);
         display: $ripple-display;
         position: absolute;

@@ -23,7 +23,7 @@
 ///   $my-ripple-theme: igx-ripple-theme($color: yellow);
 ///   // Pass the theme to the igx-ripple component mixin
 ///   igx-ripple($my-ripple-theme);
-@function igx-ripple-theme(
+@function ripple-theme(
     $palette: null,
     $schema: $light-schema,
     $color: null
@@ -52,7 +52,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires var-get
-@mixin igx-ripple($theme) {
+@mixin ripple($theme) {
     @include css-vars($theme);
 
     %igx-ripple-display {

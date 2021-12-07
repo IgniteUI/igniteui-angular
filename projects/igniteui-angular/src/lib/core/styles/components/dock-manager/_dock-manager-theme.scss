@@ -55,10 +55,10 @@
 /// @requires extend
 ///
 /// @example scss Change the background and icon colors in icon dock-managers
-///   $my-dock-manager-theme: igc-dock-manager-theme();
-///   // Pass the theme to the igc-dock-manager component mixin
+///   $my-dock-manager-theme: dock-manager-theme();
+///   // Pass the theme to the dock-manager component mixin
 ///   @include css-vars($my-dock-manager-theme);
-@function igc-dock-manager-theme(
+@function dock-manager-theme(
     $palette: null,
     $schema: $light-schema,
     $rest...
@@ -79,7 +79,7 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
-@mixin igc-dock-manager($theme) {
+@mixin dock-manager($theme) {
     @include css-vars($theme);
 }
 

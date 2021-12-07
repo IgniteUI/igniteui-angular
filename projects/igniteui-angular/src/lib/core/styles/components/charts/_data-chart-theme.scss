@@ -28,10 +28,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $my-chart-theme: igx-data-chart-theme($brushes: (orange, blue, pink));
+///   $my-chart-theme: data-chart-theme($brushes: (orange, blue, pink));
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($my-chart-theme);
-@function igx-data-chart-theme(
+@function data-chart-theme(
     $palette: null,
     $schema: $light-schema,
 

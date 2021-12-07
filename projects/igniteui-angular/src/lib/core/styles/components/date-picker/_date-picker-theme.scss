@@ -13,7 +13,7 @@
 /// @requires text-contrast
 /// @requires var-get
 /// @requires rem
-@mixin igx-date-picker($theme) {
+@mixin date-picker($theme) {
     $palette: map.get($theme, 'palette');
     $selected-hover-color: text-contrast(map.get($theme, 'date-selected-background'), $palette: $palette);
 

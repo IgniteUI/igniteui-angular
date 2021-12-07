@@ -33,13 +33,13 @@
 /// @requires round-borders
 ///
 /// @example scss Change the text and icon colors in a badge
-///   $my-badge-theme: igx-badge-theme($icon-color: black, $background-color: white);
-///   // IE Supported theme - Pass the theme to the igx-badge component mixin
-///   @include igx-badge($my-badge-theme);
+///   $my-badge-theme: badge-theme($icon-color: black, $background-color: white);
+///   // IE Supported theme - Pass the theme to the badge component mixin
+///   @include badge($my-badge-theme);
 ///
 ///   // Theming using css variables (not supported in IE11):
 ///   @include css-vars($my-badge-theme);
-@function igx-badge-theme(
+@function badge-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -100,7 +100,7 @@
 /// @requires color
 /// @requires rem
 /// @requires var-get
-@mixin igx-badge($theme) {
+@mixin badge($theme) {
     @include css-vars($theme);
 
     $palette: map.get($theme, 'palette');

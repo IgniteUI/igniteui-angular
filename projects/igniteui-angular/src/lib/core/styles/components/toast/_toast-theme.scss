@@ -32,10 +32,10 @@
 /// @requires elevation
 ///
 /// @example scss Set a custom background color
-///   $my-toast-theme: igx-toast-theme($background: green);
-///   // Pass the theme to the igx-toast component mixin
-///   @include igx-toast($my-toast-theme);
-@function igx-toast-theme(
+///   $my-toast-theme: toast-theme($background: green);
+///   // Pass the theme to the toast component mixin
+///   @include toast($my-toast-theme);
+@function toast-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -83,7 +83,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-toast($theme) {
+@mixin toast($theme) {
     @include css-vars($theme);
 
     $variant: map.get($theme, variant);

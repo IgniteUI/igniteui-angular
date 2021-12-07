@@ -39,14 +39,14 @@
 /// @requires round-borders
 ///
 /// @example scss Change the background and item colors
-///   $navdrawer-theme: igx-navdrawer-theme(
+///   $navdrawer-theme: navdrawer-theme(
 ///     $background: #2d313a,
 ///     $item-active-background: #ecc256,
 ///     $item-icon-color: #ecc256
 ///   );
-///   // Pass the theme to the igx-navdrawer component mixin
-///   @include igx-navdrawer($navdrawer-theme);
-@function igx-navdrawer-theme(
+///   // Pass the theme to the navdrawer component mixin
+///   @include navdrawer($navdrawer-theme);
+@function navdrawer-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -154,7 +154,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-navdrawer($theme) {
+@mixin navdrawer($theme) {
     @include css-vars($theme);
 
     $left: if-ltr(left, right);

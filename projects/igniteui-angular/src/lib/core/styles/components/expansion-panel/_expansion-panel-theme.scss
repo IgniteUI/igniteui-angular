@@ -33,10 +33,10 @@
 /// @requires round-borders
 ///
 /// @example scss Change the background color
-///   $my-expansion-panel-theme: igx-expansion-panel($header-background: black);
-///   // Pass the theme to the igx-expansion-panel component mixin
-///   @include igx-expansion-panel($my-igx-expansion-panel-theme);
-@function igx-expansion-panel-theme(
+///   $my-expansion-panel-theme: expansion-panel($header-background: black);
+///   // Pass the theme to the expansion-panel component mixin
+///   @include expansion-panel($my-expansion-panel-theme);
+@function expansion-panel-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -104,7 +104,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-expansion-panel($theme) {
+@mixin expansion-panel($theme) {
     @include css-vars($theme);
 
     $left: if-ltr(left, right);

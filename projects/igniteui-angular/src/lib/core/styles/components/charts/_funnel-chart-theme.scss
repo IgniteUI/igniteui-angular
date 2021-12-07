@@ -25,10 +25,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $my-chart-theme: igx-funnel-chart-theme($brushes: (orange, blue, pink));
+///   $my-chart-theme: funnel-chart-theme($brushes: (orange, blue, pink));
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($my-chart-theme);
-@function igx-funnel-chart-theme(
+@function funnel-chart-theme(
     $palette: null,
     $schema: $light-schema,
 

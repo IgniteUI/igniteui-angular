@@ -31,10 +31,10 @@
 /// @requires round-borders
 ///
 /// @example scss Change the background color
-///   $my-dialog-theme: igx-dialog-theme($background: black);
+///   $my-dialog-theme: dialog-theme($background: black);
 ///   // Pass the theme to the igx-dialog component mixin
-///   @include igx-dialog($my-dialog-theme);
-@function igx-dialog-theme(
+///   @include dialog($my-dialog-theme);
+@function dialog-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -96,7 +96,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-dialog($theme) {
+@mixin dialog($theme) {
     @include css-vars($theme);
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);

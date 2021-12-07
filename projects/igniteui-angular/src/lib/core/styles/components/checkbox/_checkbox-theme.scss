@@ -36,7 +36,7 @@
 ///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
 ///   // Pass the theme to the igx-checkbox component mixin
 ///   @include igx-checkbox($my-checkbox-theme);
-@function igx-checkbox-theme(
+@function checkbox-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -90,12 +90,12 @@
 /// @requires {mixin} css-vars
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
-/// @requires {mixin} igx-ripple
-/// @requires igx-ripple-theme
+/// @requires {mixin} ripple
+/// @requires ripple-theme
 /// @requires rem
 /// @requires em
 /// @requires var-get
-@mixin igx-checkbox($theme) {
+@mixin checkbox($theme) {
     @include css-vars($theme);
 
     @include scale-in-out($start-scale: .9);
@@ -152,7 +152,7 @@
     $ripple-size: em(48px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $ripple-theme: igx-ripple-theme(
+    $ripple-theme: ripple-theme(
         $schema: $light-schema,
         $color: var-get($theme, 'fill-color')
     );
@@ -326,7 +326,7 @@
     }
 
     %cbx-ripple {
-        @include igx-ripple($ripple-theme);
+        @include ripple($ripple-theme);
         @include css-vars($ripple-theme);
         display: $ripple-display;
         position: absolute;

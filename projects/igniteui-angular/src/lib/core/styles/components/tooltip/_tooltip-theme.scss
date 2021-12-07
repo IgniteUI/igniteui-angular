@@ -27,10 +27,10 @@
 /// @requires round-borders
 ///
 /// @example scss Change the tooltip background
-///   $my-tooltip-theme: igx-tooltip-theme($background: magenta);
-///   // Pass the theme to the igx-tooltip component mixin
-///   @include igx-tooltip($my-checkbox-theme);
-@function igx-tooltip-theme(
+///   $my-tooltip-theme: tooltip-theme($background: magenta);
+///   // Pass the theme to the tooltip component mixin
+///   @include tooltip($my-checkbox-theme);
+@function tooltip-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -72,7 +72,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires var-get
-@mixin igx-tooltip($theme) {
+@mixin tooltip($theme) {
     @include css-vars($theme);
 
     %tooltip-display {

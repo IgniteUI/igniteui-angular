@@ -90,10 +90,10 @@
 /// @include igx-stepper($my-stepper-theme);
 ///
 /// @example scss Set custom steppet colors
-///   $my-stepper-theme: igx-stepper-theme($step-hover-background: red);
-///   // Pass the theme to the igx-stepper component mixin
-///   @include igx-stepper($my-stepper-theme);
-@function igx-stepper-theme(
+///   $my-stepper-theme: stepper-theme($step-hover-background: red);
+///   // Pass the theme to the stepper component mixin
+///   @include stepper($my-stepper-theme);
+@function stepper-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -331,7 +331,7 @@
 /// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
-@mixin igx-stepper($theme) {
+@mixin stepper($theme) {
     @include css-vars($theme);
 
     $variant: map.get($theme, variant);

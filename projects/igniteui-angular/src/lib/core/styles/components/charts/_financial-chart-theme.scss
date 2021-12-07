@@ -74,10 +74,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $my-chart-theme: igx-financial-chart-theme($title-alignment: left, $brushes: red, blue, yellow, pink);
+///   $my-chart-theme: financial-chart-theme($title-alignment: left, $brushes: red, blue, yellow, pink);
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($my-chart-theme);
-@function igx-financial-chart-theme(
+@function financial-chart-theme(
     $palette: null,
     $schema: $light-schema,
 

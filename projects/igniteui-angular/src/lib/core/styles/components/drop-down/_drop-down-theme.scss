@@ -51,7 +51,7 @@
 /// @requires text-contrast
 /// @requires elevation
 /// @requires round-borders
-@function igx-drop-down-theme(
+@function drop-down-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -204,7 +204,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-drop-down($theme) {
+@mixin drop-down($theme) {
     @include css-vars($theme);
 
     $item-height: (

@@ -37,10 +37,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $custom-gauge-theme: igx-linear-gauge-theme($brushes: (red, green, blue));
+///   $custom-gauge-theme: linear-gauge-theme($brushes: (red, green, blue));
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($custom-gauge-theme);
-@function igx-linear-gauge-theme(
+@function linear-gauge-theme(
     $palette: null,
     $schema: $light-schema,
     $rest...
@@ -91,10 +91,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $custom-gauge-theme: igx-radial-gauge-theme($brushes: (red, green, blue));
+///   $custom-gauge-theme: radial-gauge-theme($brushes: (red, green, blue));
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($custom-gauge-theme);
-@function igx-radial-gauge-theme(
+@function radial-gauge-theme(
     $palette: null,
     $schema: $light-schema,
     $rest...

@@ -23,10 +23,10 @@
 /// @requires extend
 ///
 /// @example scss Change the background and icon colors in icon avatars
-///   $my-avatar-theme: igx-avatar-theme($icon-background: black, $icon-color: white);
-///   // Pass the theme to the igx-avatar component mixin
-///   @include igx-avatar($my-avatar-theme);
-@function igx-avatar-theme(
+///   $my-avatar-theme: avatar-theme($icon-background: black, $icon-color: white);
+///   // Pass the theme to the avatar component mixin
+///   @include avatar($my-avatar-theme);
+@function avatar-theme(
     $palette: null,
     $schema: $light-schema,
     $background: null,
@@ -67,7 +67,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-avatar($theme) {
+@mixin avatar($theme) {
     @include css-vars($theme);
 
     $size: map.get($theme, 'size');

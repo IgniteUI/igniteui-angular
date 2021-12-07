@@ -38,10 +38,10 @@
 /// @requires text-contrast
 ///
 /// @example scss Set custom track and thumb on colors
-///   $my-slider-theme: igx-slider-theme($thumb-on-color: black, $track-on-color: yellow);
-///   // Pass the theme to the igx-slider component mixin
-///   @include igx-slider($my-slider-theme);
-@function igx-slider-theme(
+///   $my-slider-theme: slider-theme($thumb-on-color: black, $track-on-color: yellow);
+///   // Pass the theme to the slider component mixin
+///   @include slider($my-slider-theme);
+@function slider-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -109,7 +109,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-slider($theme) {
+@mixin slider($theme) {
     @include css-vars($theme);
 
     $variant: map.get($theme, variant);

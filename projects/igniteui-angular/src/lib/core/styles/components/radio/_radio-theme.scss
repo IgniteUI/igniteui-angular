@@ -32,10 +32,10 @@
 ///
 /// Set light to true when the surrounding area is dark.
 /// @example scss Change the checked dot and border colors
-///   $my-radio-theme: igx-radio-theme($fill-color: magenta);
-///   // Pass the theme to the igx-radio component mixin
-///   @include igx-radio($my-radio-theme);
-@function igx-radio-theme(
+///   $my-radio-theme: radio-theme($fill-color: magenta);
+///   // Pass the theme to the radio component mixin
+///   @include radio($my-radio-theme);
+@function radio-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -77,12 +77,12 @@
 /// @requires {mixin} css-vars
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
-/// @requires {mixin} igx-ripple
+/// @requires {mixin} ripple
 /// @requires {mixin} hide-default
-/// @requires igx-ripple-theme
+/// @requires ripple-theme
 /// @requires em
 /// @requires var-get
-@mixin igx-radio($theme) {
+@mixin radio($theme) {
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
@@ -135,7 +135,7 @@
     $ripple-size: em(48px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $ripple-theme: igx-ripple-theme(
+    $ripple-theme: ripple-theme(
         $schema: $light-schema,
         $color: var-get($theme, 'fill-color')
     );
@@ -289,7 +289,7 @@
     }
 
     %radio-ripple {
-        @include igx-ripple($ripple-theme);
+        @include ripple($ripple-theme);
         @include css-vars($ripple-theme);
         display: $ripple-display;
         position: absolute;

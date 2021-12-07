@@ -19,7 +19,7 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-@function igx-combo-theme(
+@function combo-theme(
     $palette: null,
     $schema: $light-schema,
     $search-separator-border-color: null,
@@ -50,7 +50,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-combo($theme) {
+@mixin combo($theme) {
     @include css-vars($theme);
 
     $left: if-ltr(left, right);

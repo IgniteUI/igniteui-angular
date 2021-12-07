@@ -33,10 +33,10 @@
 /// @requires round-borders
 ///
 /// @example scss Set a custom background color
-///   $my-snackbar-theme: igx-snackbar-theme($background: white);
-///   // Pass the theme to the igx-bottom-nav component mixin
-///   @include igx-snackbar($my-snackbar-theme);
-@function igx-snackbar-theme(
+///   $my-snackbar-theme: snackbar-theme($background: white);
+///   // Pass the theme to the snackbar component mixin
+///   @include snackbar($my-snackbar-theme);
+@function snackbar-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -90,7 +90,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-snackbar($theme) {
+@mixin snackbar($theme) {
     @include css-vars($theme);
     @include fade-in();
 

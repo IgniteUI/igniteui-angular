@@ -37,13 +37,13 @@
 /// @requires round-borders
 ///
 /// @example scss Change the previous/next button colors
-///   $my-carousel-theme: igx-carousel-theme(
+///   $my-carousel-theme: carousel-theme(
 ///     $button-background: black,
 ///     $button-hover-background: white
 ///   );
-///   // Pass the carousel theme to the igx-carousel component mixin
-///   @include igx-carousel($my-carousel-theme);
-@function igx-carousel-theme(
+///   // Pass the carousel theme to the carousel component mixin
+///   @include carousel($my-carousel-theme);
+@function carousel-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -130,7 +130,7 @@
 /// @requires {mixin} scale-in-center
 /// @requires {mixin} scale-out-center
 /// @requires var-get
-@mixin igx-carousel($theme) {
+@mixin carousel($theme) {
     @include css-vars($theme);
 
     $left: if-ltr(left, right);

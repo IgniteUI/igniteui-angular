@@ -30,10 +30,10 @@
 /// @requires $elevations
 ///
 /// @example scss Set a custom background color
-///   $my-bottom-nav-theme: igx-bottom-nav-theme($background: black);
-///   // Pass the theme to the igx-bottom-nav component mixin
-///   @include igx-bottom-nav($my-bottom-nav-theme);
-@function igx-bottom-nav-theme(
+///   $my-bottom-nav-theme: bottom-nav-theme($background: black);
+///   // Pass the theme to the bottom-nav component mixin
+///   @include bottom-nav($my-bottom-nav-theme);
+@function bottom-nav-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -84,7 +84,7 @@
 /// @requires rem
 /// @requires $ease-in-out-quad
 /// @requires var-get
-@mixin igx-bottom-nav($theme) {
+@mixin bottom-nav($theme) {
     @include css-vars($theme);
 
     $menu-height: rem(56px);

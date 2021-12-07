@@ -22,12 +22,12 @@
 /// @requires extend
 ///
 /// @example scss Change the stripes color
-///   $my-paginator-theme: igx-paginator-theme(
+///   $my-paginator-theme: paginator-theme(
 ///     $stripes-color: orange
 ///   );
-///   // Pass the theme to the igx-paginator component mixin
-///   @include igx-paginator($my-paginator-theme);
-@function igx-paginator-theme(
+///   // Pass the theme to the paginator component mixin
+///   @include paginator($my-paginator-theme);
+@function paginator-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -64,7 +64,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-paginator($theme) {
+@mixin paginator($theme) {
     @include css-vars($theme);
 
     $paginator-padding: (

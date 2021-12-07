@@ -56,7 +56,7 @@
 ///   $my-chip-theme: igx-chip-theme($background: black);
 ///   // Pass the theme to the igx-chip component mixin
 ///   @include igx-chip($my-chip-theme);
-@function igx-chip-theme(
+@function chip-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -245,7 +245,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-chip($theme) {
+@mixin chip($theme) {
     @include css-vars($theme);
 
     $transition: all 120ms $ease-in-out-quad;

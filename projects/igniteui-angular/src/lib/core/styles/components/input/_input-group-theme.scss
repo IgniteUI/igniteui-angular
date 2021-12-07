@@ -70,10 +70,10 @@
 /// @requires round-borders
 ///
 /// @example scss Change the focused border and label colors
-///   $my-input-group-theme: igx-input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
-///   // Pass the theme to the igx-input-group component mixin
-///   @include igx-input-group($my-input-group-theme);
-@function igx-input-group-theme(
+///   $my-input-group-theme: input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
+///   // Pass the theme to the input-group component mixin
+///   @include input-group($my-input-group-theme);
+@function input-group-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -245,7 +245,7 @@
 /// @requires rem
 /// @requires {mixin} ellipsis
 /// @requires var-get
-@mixin igx-input-group($theme) {
+@mixin input-group($theme) {
     @include css-vars($theme);
 
     $palette: map.get($theme, 'palette');

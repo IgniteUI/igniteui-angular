@@ -22,10 +22,10 @@
 /// @requires extend
 ///
 /// @example scss Change the icon color
-///   $my-icon-theme: igx-icon-theme($color: orange);
-///   // Pass the theme to the igx-icon component mixin
-///   @include igx-icon($my-icon-theme);
-@function igx-icon-theme(
+///   $my-icon-theme: icon-theme($color: orange);
+///   // Pass the theme to the icon component mixin
+///   @include icon($my-icon-theme);
+@function icon-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -56,7 +56,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires var-get
-@mixin igx-icon($theme) {
+@mixin icon($theme) {
     @include css-vars($theme);
 
     $igx-icon-font-size: var-get($theme, 'size');

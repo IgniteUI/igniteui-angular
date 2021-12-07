@@ -30,10 +30,10 @@
 /// @requires extend
 /// @requires text-contrast
 /// @example scss Change the tree background
-///   $my-tree-theme: igx-tree-theme($background: magenta);
-///   // Pass the theme to the igx-tree component mixin
-///   @include igx-tree($my-tree-theme);
-@function igx-tree-theme(
+///   $my-tree-theme: tree-theme($background: magenta);
+///   // Pass the theme to the tree component mixin
+///   @include tree($my-tree-theme);
+@function tree-theme(
     $palette: null,
     $schema: $light-schema,
     $background: null,
@@ -97,7 +97,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires var-get
-@mixin igx-tree($theme) {
+@mixin tree($theme) {
     @include css-vars($theme);
 
     $left: if-ltr(left, right);

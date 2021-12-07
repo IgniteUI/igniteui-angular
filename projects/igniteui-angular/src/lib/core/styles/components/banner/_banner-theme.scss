@@ -26,10 +26,10 @@
 /// @requires extend
 ///
 /// @example scss Change the background in banner
-///   $my-banner-theme: igx-banner-theme($banner-background: #000);
-///   // Pass the theme to the igx-banner component mixin
-///   @include igx-banner($my-banner-theme);
-@function igx-banner-theme(
+///   $my-banner-theme: banner-theme($banner-background: #000);
+///   // Pass the theme to the banner component mixin
+///   @include banner($my-banner-theme);
+@function banner-theme(
     $palette: null,
     $schema: $light-schema,
     $banner-background: null,
@@ -68,7 +68,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-banner($theme) {
+@mixin banner($theme) {
     @include css-vars($theme);
 
     $left: if-ltr(left, right);

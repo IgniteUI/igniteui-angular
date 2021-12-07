@@ -24,10 +24,10 @@
 /// @requires round-borders
 ///
 /// @example scss Change the watermark link background
-///   $my-watermark-theme: igx-watermark-theme($link-background: magenta);
-///   // Pass the theme to the igx-watermark component mixin
-///   @include igx-watermark($my-watermark-theme);
-@function igx-watermark-theme(
+///   $my-watermark-theme: watermark-theme($link-background: magenta);
+///   // Pass the theme to the watermark component mixin
+///   @include watermark($my-watermark-theme);
+@function watermark-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -70,7 +70,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires var-get
-@mixin igx-watermark($theme) {
+@mixin watermark($theme) {
     @include css-vars($theme);
 
     %igx-watermark {

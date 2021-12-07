@@ -25,10 +25,10 @@
 /// @requires text-contrast
 ///
 /// @example scss Change the background and icon colors in action strip
-///   $my-action-strip-theme: igx-action-strip-theme($background: black);
-///   // Pass the theme to the igx-action-strip component mixin
-///   @include igx-action-strip($my-action-strip-theme);
-@function igx-action-strip-theme(
+///   $my-action-strip-theme: action-strip-theme($background: black);
+///   // Pass the theme to the action-strip component mixin
+///   @include action-strip($my-action-strip-theme);
+@function action-strip-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -72,7 +72,7 @@
 /// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-action-strip($theme) {
+@mixin action-strip($theme) {
     @include css-vars($theme);
 
     $padding: (

@@ -72,7 +72,7 @@
         // TODO The border-radius should not be hardcoded.
         border-radius: rem(4px);
 
-        @include igx-button-group(igx-button-group-theme(
+        @include button-group(button-group-theme(
             $shadow: none,
             $schema: $dark-schema,
             $item-background: var-get($theme, 'filtering-row-background'),

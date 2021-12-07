@@ -78,13 +78,13 @@
 /// @requires extend
 ///
 /// @example scss Change the header and content background colors
-///   $my-calendar-theme: igx-calendar-theme(
+///   $my-calendar-theme: calendar-theme(
 ///     $header-background: purple,
 ///     $content-background: black
 ///   );
-///   // Pass the theme to the igx-calendar component mixin
-///   @include igx-calendar($my-calendar-theme);
-@function igx-calendar-theme(
+///   // Pass the theme to the calendar component mixin
+///   @include calendar($my-calendar-theme);
+@function calendar-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -338,7 +338,7 @@
 /// @requires rem
 /// @requires {mixin} ellipsis
 /// @requires var-get
-@mixin igx-calendar($theme) {
+@mixin calendar($theme) {
     @include css-vars($theme);
 
     $palette: map.get($theme, 'palette');
