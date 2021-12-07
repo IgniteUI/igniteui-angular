@@ -584,7 +584,7 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'button')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
-@mixin igx-tabs-typography($type-scale, $categories: (label: 'button')) {
+@mixin tabs-typography($type-scale, $categories: (label: 'button')) {
     $label: map.get($categories, 'label');
 
     %tabs-header-item-inner > [igxtabheaderlabel]{

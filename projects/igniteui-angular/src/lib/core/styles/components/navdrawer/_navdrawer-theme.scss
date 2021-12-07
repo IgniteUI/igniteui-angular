@@ -451,7 +451,7 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(item: 'subtitle-2', header: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
-@mixin igx-navdrawer-typography(
+@mixin navdrawer-typography(
     $type-scale,
     $categories: (
         item: 'subtitle-2',

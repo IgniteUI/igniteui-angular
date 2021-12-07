@@ -87,7 +87,7 @@
 /// @access private
 /// @group typography
 /// @requires {mixin} type-style
-@mixin igx-dock-manager-typography() {
+@mixin dock-manager-typography() {
     igx-dock-manager {
         --igc-font-family: var(--igx-font-family, inherit);
     }

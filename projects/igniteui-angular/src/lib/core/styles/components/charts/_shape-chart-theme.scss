@@ -221,7 +221,7 @@
 /// 'y-axis-title-text-style': 'h3',
 /// )] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
-@mixin igx-shape-chart-typography($type-scale, $categories: (
+@mixin shape-chart-typography($type-scale, $categories: (
     'title': 'h6',
     'subtitle': 'subtitle-1',
     'x-axis-label-text-style': 'h4',

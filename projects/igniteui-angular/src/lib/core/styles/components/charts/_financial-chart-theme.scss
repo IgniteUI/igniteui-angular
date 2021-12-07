@@ -262,7 +262,7 @@
     );
 }
 
-@mixin igx-financial-chart-typography($type-scale, $categories: (
+@mixin financial-chart-typography($type-scale, $categories: (
     'title': 'h1',
     'subtitle': 'subtitle-1',
     'x-axis-label-text-style': 'h4',

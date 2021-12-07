@@ -349,7 +349,7 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header-time-period: 'subtitle-1', header-hour: 'h4', content: 'body-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
-@mixin igx-time-picker-typography($type-scale, $categories: (
+@mixin time-picker-typography($type-scale, $categories: (
     header-time-period: 'subtitle-1',
     header-hour: 'h4',
     content: 'body-1')

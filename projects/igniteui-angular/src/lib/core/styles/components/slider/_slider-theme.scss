@@ -594,7 +594,7 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(ticks-label: 'caption', thumb-label: 'caption')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
-@mixin igx-slider-typography(
+@mixin slider-typography(
     $type-scale,
     $categories: (
         ticks-label: 'caption',

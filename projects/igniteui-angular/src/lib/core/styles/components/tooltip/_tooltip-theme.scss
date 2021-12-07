@@ -107,7 +107,7 @@
 /// @param {Map} $categories [(text-desktop: null, text-mobile: 'body-2')] - The categories from the typographic scale used for type styles.
 /// @requires rem
 /// @requires {mixin} type-style
-@mixin igx-tooltip-typography(
+@mixin tooltip-typography(
     $type-scale,
     $categories: (text-desktop: null, text-mobile: 'body-2')
 ) {

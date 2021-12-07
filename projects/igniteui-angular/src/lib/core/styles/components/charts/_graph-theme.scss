@@ -109,7 +109,7 @@
 /// @access private
 /// @group typography
 /// @requires {mixin} type-style
-@mixin igx-graph-typography() {
+@mixin graph-typography() {
     igx-bullet-graph {
         --bullet-graph-font: var(--igx-font-family, inherit);
     }

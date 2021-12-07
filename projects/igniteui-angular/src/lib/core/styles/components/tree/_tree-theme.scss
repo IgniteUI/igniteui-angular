@@ -337,7 +337,7 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
-@mixin igx-tree-typography(
+@mixin tree-typography(
     $type-scale,
     $categories: (label: 'body-2')
 ) {

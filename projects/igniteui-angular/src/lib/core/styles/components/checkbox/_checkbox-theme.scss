@@ -437,7 +437,7 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
-@mixin igx-checkbox-typography(
+@mixin checkbox-typography(
     $type-scale,
     $categories: (label: 'subtitle-1')
 ) {

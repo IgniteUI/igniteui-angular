@@ -65,7 +65,7 @@
     ));
 }
 
-@mixin igx-funnel-chart-typography($type-scale, $categories: (
+@mixin funnel-chart-typography($type-scale, $categories: (
     outer-label-text-style: 'h1',
     text-style: 'subtitle-1',
 )) {
