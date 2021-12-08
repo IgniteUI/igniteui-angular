@@ -21,6 +21,8 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
     $variant: map.get($theme, 'variant');
+    $bootstrap-theme: $variant == 'bootstrap';
+
 
     %grid-excel-filter {
         display: block;
@@ -248,8 +250,13 @@
             overflow: hidden;
             margin: rem(8px) -#{rem(16px)} 0;
             border: 0;
-            border-top: 1px dashed igx-color($palette, 'grays', 300);
-            border-bottom: 1px dashed igx-color($palette, 'grays', 300);
+            @if $bootstrap-theme {
+                border-top: 1px dashed igx-color($palette, 'grays', 100);
+                border-bottom: 1px dashed igx-color($palette, 'grays', 100);
+            } @else {
+                border-top: 1px dashed igx-color($palette, 'grays', 300);
+                border-bottom: 1px dashed igx-color($palette, 'grays', 300);
+            }
         }
     }
 
@@ -376,7 +383,11 @@
     }
 
     %grid-excel-menu__secondary-header {
-        border-bottom: 1px solid igx-color($palette, 'grays', 300);
+        @if $bootstrap-theme {
+            border-bottom: 1px solid igx-color($palette, 'grays', 100);
+        } @else {
+            border-bottom: 1px solid igx-color($palette, 'grays', 300);
+        }
     }
 
     %grid-excel-menu__secondary-main {
@@ -385,7 +396,11 @@
     }
 
     %grid-excel-menu__secondary-footer {
-        border-top: 1px dashed igx-color($palette, 'grays', 300);
+        @if $bootstrap-theme {
+            border-top: 1px dashed igx-color($palette, 'grays', 100);
+        } @else {
+            border-top: 1px dashed igx-color($palette, 'grays', 300);
+        }
 
         %grid-excel-filter__apply,
         %grid-excel-filter__cancel {

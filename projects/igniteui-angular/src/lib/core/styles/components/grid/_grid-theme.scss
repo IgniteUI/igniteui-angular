@@ -1859,7 +1859,11 @@
     }
 
     %grid-summaries-patch {
-        background: inherit;
+        @if $bootstrap-theme {
+            background: igx-color($palette, 'grays', 100);
+        } @else {
+            background: inherit;
+        }
         position: relative;
         z-index: 1;
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
