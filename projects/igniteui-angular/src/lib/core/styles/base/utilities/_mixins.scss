@@ -190,11 +190,12 @@
 /// @access public
 /// @param {Map} $palette [null] - The palette to use to generate CSS variables for.
 /// @param {bool} $contrast [true] - Specify if contrast colors should be included.
+/// @param {string} $prefix [igx] - The prefix attached to the CSS variables.
 ///
 /// @example scss Generate css variables for the `$default-palette`.
 ///    @include palette-vars($default-palette);
 ///
-@mixin palette-vars($palette, $contrast: true) {
+@mixin palette-vars($palette, $contrast: true, $prefix: 'igx') {
     $scope: if(is-root(), ':root', '&');
     $_meta: map.get($palette, '_meta');
     $theme: if($_meta, map.get($_meta, 'variant'), null);
@@ -207,21 +208,21 @@
                 $_valid-variant: not(string.index(#{$variant}, 'contrast')) and not(string.index(#{$variant}, 'variant')) and $theme;
 
                 @if $_valid-base and $variant == 500 {
-                    --igx-#{$name}-h: #{math.round(color.hue($value))};
-                    --igx-#{$name}-s: #{math.round(color.saturation($value))};
-                    --igx-#{$name}-l: #{math.round(color.lightness($value))};
+                    --#{$prefix}-#{$name}-h: #{math.round(color.hue($value))};
+                    --#{$prefix}-#{$name}-s: #{math.round(color.saturation($value))};
+                    --#{$prefix}-#{$name}-l: #{math.round(color.lightness($value))};
 
                     @if $name != 'grays' {
-                        --igx-#{$name}-a: #{color.alpha($value)};
+                        --#{$prefix}-#{$name}-a: #{color.alpha($value)};
                     } @else {
-                        --igx-#{$name}-a: 1;
+                        --#{$prefix}-#{$name}-a: 1;
                     }
                 }
 
                 @if $_valid-base and $_valid-variant {
-                    --igx-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme, $gray)};
+                    --#{$prefix}-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme, $gray)};
                 } @else if $name != '_meta' {
-                    --igx-#{$name}-#{$variant}: #{$value};
+                    --#{$prefix}-#{$name}-#{$variant}: #{$value};
                 }
             }
         }
@@ -229,22 +230,48 @@
 }
 // stylelint-enable max-nesting-depth
 
+/// Translates Ignite UI for Angular palette CSS variables
+/// into Ignite UI for Web Components compatible ones
+/// @access public
+/// @param {Map} $palette [null] - The palette to use to generate CSS variables for.
+///
+/// @example scss Translates igx- prefixed variables from `$default-palette` to igc- prefixed ones.
+///    @include palette-to-wc($default-palette);
+///
+@mixin palette-to-wc($palette) {
+    @include palette-vars($palette, $contrast: true, $prefix: 'igc');
+}
+
 /// Generates CSS variables for a given elevations map.
 /// @access public
 /// @param {Map} $elevations - The elevations map to use to generate CSS variables for.
+/// @param {string} $prefix [igx] - The prefix attached to the CSS variables.
 ///
 /// @example scss Generate CSS variables for elevations.
 ///    $elevations: elevations(red, green, blue); // umbra, penumbra, ambient
 ///    @include elevation-vars($elevations);
 ///
-@mixin elevation-vars($elevations) {
+@mixin elevation-vars($elevations, $prefix: 'igx') {
     $scope: if(is-root(), ':root', '&');
 
     #{$scope} {
         @each $level, $shadow in $elevations {
-            --igx-elevation-#{$level}: #{$shadow};
+            --#{$prefix}-elevation-#{$level}: #{$shadow};
         }
     }
+}
+
+/// Translates Ignite UI for Angular CSS variables for elevations
+/// into Ignite UI for Web Components compatible ones
+/// @access public
+/// @param {Map} $elevations - The elevations map to use to generate CSS variables for.
+///
+/// @example scss Translates igx- prefixed variables for elevations to igc- prefixed ones.
+///    $elevations: elevations(red, green, blue);
+///    @include elevations-to-wc($elevations);
+///
+@mixin elevations-to-wc($elevations) {
+    @include elevation-vars($elevations, $prefix: 'igc');
 }
 
 /// Generates CSS class names for all colors from
