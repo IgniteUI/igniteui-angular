@@ -208,10 +208,32 @@ $dark-fluent-grid: extend(
 
 /// Generates a dark bootstrap grid schema based on a mix of $bootstrap-grid and $base-dark-grid.
 /// @type {Map}
+/// @prop {Map} header-background [igx-color: ('grays', 50)] - The table header background color.
+/// @prop {Map} content-background [igx-color: ('grays', 50)] - The table body background color.
+/// @prop {Map} drop-area-background [igx-color: ('grays', 100, .5)] - The drop area background color.
+/// @prop {Map} grouparea-background [igx-color: 'surface'] - The grid group area background color.
+/// @prop {Map} grouparea-color [igx-contrast-color: 'surface'] - The grid group area color.
+
 /// @requires {function} extend
 /// @requires $bootstrap-grid
 /// @requires $base-dark-grid
-$dark-bootstrap-grid: extend($bootstrap-grid, $base-dark-grid);
+$dark-bootstrap-grid: extend(
+    $bootstrap-grid,
+    $base-dark-grid,
+    (
+        header-background: (
+            igx-color: ('grays', 50)
+        ),
+
+        content-background: (
+            igx-color: ('grays', 50)
+        ),
+
+        drop-area-background: (
+            igx-color: ('grays', 100, .5)
+        )
+    )
+);
 
 /// Generates a dark indigo grid schema.
 /// @type {Map}

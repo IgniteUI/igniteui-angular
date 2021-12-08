@@ -28,6 +28,8 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
+    $bootstrap-theme: $variant == 'bootstrap';
+
     %advanced-filter {
         width: 660px;
         min-width: 660px;
@@ -42,9 +44,20 @@
         align-items: center;
         padding: $vertical-space-comfortable;
         color: igx-color($palette, 'grays', 700);
-        background-color: igx-color($palette, 'grays', 200);
+
+        @if $bootstrap-theme {
+            background-color: igx-color($palette, 'grays', 100, .5);
+        } @else {
+            background-color: igx-color($palette, 'grays', 200);
+        }
+
         user-select: none;
         cursor: grab;
+
+        h4,
+        .igx-typography__h6 {
+            margin-bottom: 0;
+        }
     }
 
     %advanced-filter__main {

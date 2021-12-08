@@ -31,11 +31,11 @@ $dark-bootstrap-scrollbar: extend(
     $bootstrap-scrollbar,
     (
         thumb-background: (
-            igx-color: ('grays', 50)
+            igx-color: ('grays', 200, .5)
         ),
 
         track-background: (
-            igx-color: ('grays', 50, .3)
+            igx-color: ('grays', 100, .5)
         ),
     )
 );
