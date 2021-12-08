@@ -220,7 +220,7 @@
                 }
 
                 @if $_valid-base and $_valid-variant {
-                    --#{$prefix}-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme, $gray)};
+                    --#{$prefix}-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme, $gray, #{$prefix})};
                 } @else if $name != '_meta' {
                     --#{$prefix}-#{$name}-#{$variant}: #{$value};
                 }
