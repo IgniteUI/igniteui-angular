@@ -3,8 +3,8 @@ import {
     Component,
     Input
 } from '@angular/core';
+import { IgxPivotRowComponent } from 'igniteui-angular';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { IgxRowDirective } from '../row.directive';
 
 /**
  *
@@ -25,5 +25,5 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
      * @internal
      */
     @Input()
-    public intRow: IgxRowDirective;
+    public intRow: IgxPivotRowComponent;
 }
