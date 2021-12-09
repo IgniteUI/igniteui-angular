@@ -1,5 +1,6 @@
 import { AnimationBuilder } from '@angular/animations';
 import { AfterViewInit, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { Direction } from 'igniteui-angular';
 import { getResizeObserver, mkenum } from '../../core/utils';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
@@ -134,6 +135,14 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             });
             this._resizeObserver.observe(this.headerContainer.nativeElement);
             this._resizeObserver.observe(this.viewPort.nativeElement);
+        });
+
+        this.selectedItemChange.subscribe(args => {
+            if (args.newItem && args.newItem.direction === Direction.NEXT) {
+                this.scroll(true);
+            } else {
+                this.scroll(false);
+            }
         });
     }
 
