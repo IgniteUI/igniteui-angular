@@ -33,7 +33,7 @@
 /// @prop {Map} group-row-selected-background [igx-color: ('grays', 100)] - The drop area background on drop color.
 /// @prop {Map} body-summaries-background [igx-color: ('grays', 100)] - The background color of the summary groups located the body.
 /// @prop {Map} body-summaries-text-color [igx-contrast-color: ('grays', 100)] - The text color of the summary groups located the body.
-/// @prop {Map} root-summaries-background [igx-color: ('grays', 200)] - The background color of the summary groups located the footer.
+/// @prop {Map} root-summaries-background [igx-color: ('grays', 50)] - The background color of the summary groups located the footer.
 /// @prop {Map} root-summaries-text-color [igx-contrast-color: ('grays', 200)] - The text color of the summary groups located the footer.
 $base-dark-grid: (
     content-background: (
@@ -208,12 +208,14 @@ $dark-fluent-grid: extend(
 
 /// Generates a dark bootstrap grid schema based on a mix of $bootstrap-grid and $base-dark-grid.
 /// @type {Map}
+/// @prop {Map} group-row-background [igx-color: 'surface'] - The grid group row background color.
+/// @prop {Map} group-row-selected-background [igx-color: 'surface'] - The drop area background on drop color.
 /// @prop {Map} header-background [igx-color: ('grays', 50)] - The table header background color.
 /// @prop {Map} content-background [igx-color: ('grays', 50)] - The table body background color.
 /// @prop {Map} drop-area-background [igx-color: ('grays', 100, .5)] - The drop area background color.
 /// @prop {Map} grouparea-background [igx-color: 'surface'] - The grid group area background color.
 /// @prop {Map} grouparea-color [igx-contrast-color: 'surface'] - The grid group area color.
-
+/// @prop {Map} root-summaries-background [igx-color: ('grays', 100)] - The background color of the summary groups located the footer.
 /// @requires {function} extend
 /// @requires $bootstrap-grid
 /// @requires $base-dark-grid
@@ -221,6 +223,18 @@ $dark-bootstrap-grid: extend(
     $bootstrap-grid,
     $base-dark-grid,
     (
+        root-summaries-background: (
+            igx-color: ('grays', 100),
+        ),
+
+        group-row-background: (
+            igx-color: 'surface',
+        ),
+
+        group-row-selected-background: (
+            igx-color: 'surface',
+        ),
+
         header-background: (
             igx-color: ('grays', 50)
         ),
