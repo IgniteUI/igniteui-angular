@@ -40,3 +40,19 @@ $_my-elevations: elevations(red, green, blue);
         }
     }
 }
+
+@include describe('elevations-to-wc') {
+    @include it('should generate CSS variables for a given elevations map prefixed with --igc') {
+        @include assert() {
+            @include output() {
+                @include elevations-to-wc($_my-elevations);
+            }
+
+            @include contains() {
+                @each $level, $shadow in $_my-elevations {
+                    --igc-elevation-#{$level}: #{$shadow};
+                }
+            }
+        }
+    }
+}
