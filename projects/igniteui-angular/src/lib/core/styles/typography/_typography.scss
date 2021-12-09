@@ -191,6 +191,11 @@
                     // as mapped in the $category-element-map
                     $e: map.get($category-element-map, $category);
 
+                    // Add CSS variables to .igx-typography class selector
+                    @each $key, $value in $type-style {
+                        --igx-#{$category}-#{$key}: #{$value};
+                    }
+
                     // Create a placeholder selector with styles for each
                     // typographic style to be able to easily extend it
                     // elsewhere.
