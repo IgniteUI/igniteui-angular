@@ -135,6 +135,15 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             this._resizeObserver.observe(this.headerContainer.nativeElement);
             this._resizeObserver.observe(this.viewPort.nativeElement);
         });
+
+        this.selectedItemChange.subscribe(args => {
+            // Check the scroll direction of a tab item
+            if (args.newItem && args.newItem.direction === 1) {
+                this.scroll(true);
+            } else {
+                this.scroll(false);
+            }
+        });
     }
 
     /** @hidden @internal */
