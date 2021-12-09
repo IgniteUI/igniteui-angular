@@ -320,7 +320,13 @@ export abstract class IgxBaseExporter {
                             skippedPinnedColumnsCount++;
                         }
 
-                        this.calculateColSpans(column, key, mapRecord);
+                        this.calculateColumnSpans(column, mapRecord, column.columnSpan);
+
+                        const nonSkippedColumns = mapRecord.columns.filter(c => !c.skip);
+
+                        if (nonSkippedColumns.length > 0) {
+                            this._ownersMap.get(key).maxLevel = nonSkippedColumns.sort((a, b) => b.level - a.level)[0].level;
+                        }
                     }
 
                     if (this._sort && this._sort.fieldName === column.field) {
@@ -356,10 +362,9 @@ export abstract class IgxBaseExporter {
         });
     }
 
-    private calculateColSpans(column: IColumnInfo, key: any, mapRecord: IColumnList) {
+    private calculateColumnSpans(column: IColumnInfo, mapRecord: IColumnList, span: number) {
         if (column.headerType === HeaderType.MultiColumnHeader && column.skip) {
             const columnGroupChildren = mapRecord.columns.filter(c => c.columnGroupParent === column.columnGroup);
-            this._ownersMap.get(key).maxLevel--;
 
             columnGroupChildren.forEach(cgc => {
                 if (cgc.headerType === HeaderType.MultiColumnHeader) {
@@ -367,31 +372,23 @@ export abstract class IgxBaseExporter {
                     cgc.columnGroupParent = null;
                     cgc.skip = true;
 
-                    this.calculateColSpans(cgc, key, mapRecord);
+                    this.calculateColumnSpans(cgc, mapRecord, cgc.columnSpan);
                 } else {
                     cgc.skip = true;
                 }
             });
         }
 
-        if(column.columnGroupParent) {
-            const targetCol = mapRecord.columns.filter(c => c.columnGroup === column.columnGroupParent)[0];
+        const targetCol = mapRecord.columns.filter(c => column.columnGroupParent !== null && c.columnGroup === column.columnGroupParent)[0];
+        if (targetCol !== undefined) {
+            targetCol.columnSpan -= span;
 
-            if (targetCol !== undefined) {
-                if (column.columnSpan === 0) {
-                    targetCol.columnSpan = 0 ;
-                } else {
-                    targetCol.columnSpan -= column.columnSpan;
-                }
+            if (targetCol.columnGroupParent !== null) {
+                this.calculateColumnSpans(targetCol, mapRecord, span);
+            }
 
-                if (targetCol.columnSpan === 0) {
-                    this._ownersMap.get(key).maxLevel--;
-                    targetCol.skip = true;
-                }
-
-                if (targetCol.columnGroupParent !== null) {
-                    this.calculateColSpans(targetCol, key, mapRecord);
-                }
+            if (targetCol.columnSpan === 0) {
+                targetCol.skip = true;
             }
         }
     }
