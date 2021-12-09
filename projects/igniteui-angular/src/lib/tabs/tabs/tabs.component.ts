@@ -1,6 +1,5 @@
 import { AnimationBuilder } from '@angular/animations';
 import { AfterViewInit, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
-import { Direction } from 'igniteui-angular';
 import { getResizeObserver, mkenum } from '../../core/utils';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
@@ -138,7 +137,8 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         });
 
         this.selectedItemChange.subscribe(args => {
-            if (args.newItem && args.newItem.direction === Direction.NEXT) {
+            // Check the scroll direction of a tab item
+            if (args.newItem && args.newItem.direction === 1) {
                 this.scroll(true);
             } else {
                 this.scroll(false);
