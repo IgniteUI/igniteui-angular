@@ -1,5 +1,5 @@
 import { AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { fadeIn } from '../animations/fade';
 import { slideInLeft } from '../animations/slide';
 import { mkenum } from '../core/utils';
@@ -47,7 +47,7 @@ export abstract class IgxCarouselComponentBase {
     /** @hidden */
     protected newDuration = 0;
 
-    constructor(private builder: AnimationBuilder) {
+    constructor(private builder: AnimationBuilder, private cdr: ChangeDetectorRef) {
     }
 
     /** @hidden */
@@ -83,6 +83,7 @@ export abstract class IgxCarouselComponentBase {
         if (this.animationStarted(this.enterAnimationPlayer)) {
             this.enterAnimationPlayer.reset();
             this.enterAnimationDone.emit();
+            this.cdr.markForCheck();
         }
     }
 
@@ -152,6 +153,7 @@ export abstract class IgxCarouselComponentBase {
             this.newDuration = 0;
             this.previousItem.previous = false;
             this.enterAnimationDone.emit();
+            this.cdr.markForCheck();
         });
         this.previousItem.previous = true;
         this.enterAnimationPlayer.play();
