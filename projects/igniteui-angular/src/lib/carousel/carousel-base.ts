@@ -1,4 +1,5 @@
 import { AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
+import { EventEmitter } from '@angular/core';
 import { fadeIn } from '../animations/fade';
 import { slideInLeft } from '../animations/slide';
 import { mkenum } from '../core/utils';
@@ -27,6 +28,9 @@ export interface IgxSlideComponentBase {
 export abstract class IgxCarouselComponentBase {
     /** @hidden */
     public animationType = CarouselAnimationType.slide;
+
+    /** @hidden @internal */
+    public enterAnimationDone = new EventEmitter();
 
     /** @hidden */
     protected currentItem: IgxSlideComponentBase;
@@ -78,6 +82,7 @@ export abstract class IgxCarouselComponentBase {
 
         if (this.animationStarted(this.enterAnimationPlayer)) {
             this.enterAnimationPlayer.reset();
+            this.enterAnimationDone.emit();
         }
     }
 
@@ -146,6 +151,7 @@ export abstract class IgxCarouselComponentBase {
             this.animationPosition = 0;
             this.newDuration = 0;
             this.previousItem.previous = false;
+            this.enterAnimationDone.emit();
         });
         this.previousItem.previous = true;
         this.enterAnimationPlayer.play();
