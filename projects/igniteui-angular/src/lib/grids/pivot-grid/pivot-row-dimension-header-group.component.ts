@@ -5,8 +5,8 @@ import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxRowDirective } from '../row.directive';
 import { IPivotDimension } from './pivot-grid.interface';
-import { IgxPivotRowComponent } from './pivot-row.component';
 
 /**
  * @hidden
@@ -32,7 +32,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      * @internal
      */
     @Input()
-    public intRow: IgxPivotRowComponent;
+    public intRow: IgxRowDirective;
 
     @HostBinding('attr.id')
     public get headerID() {
@@ -48,7 +48,8 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
             return;
         }
         event?.stopPropagation();
-        const key = this.intRow.getRowDimensionKey(this.column as IgxColumnComponent);
+        const row = this.grid.rowList.find(r => r.key === this.intRow.key);
+        const key = row.getRowDimensionKey(this.column as IgxColumnComponent);
         if (this.grid.selectionService.isRowSelected(key)) {
             this.grid.selectionService.deselectRow(key, event);
         } else {
