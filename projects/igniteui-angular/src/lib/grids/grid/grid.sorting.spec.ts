@@ -284,9 +284,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             grid.sortingExpressions = exprs;
 
             fixture.detectChanges();
-            expect(grid.getCellByColumn(0, secondColumn).value).toEqual('ALex');
-            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual('Smith');
-            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(5);
+            expect(grid.getCellByColumn(0, secondColumn).value).toEqual('Alex');
+            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual('Wilson');
+            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(4);
             expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual('Rick');
             expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual('BRown');
             expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
@@ -299,9 +299,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             grid.sort(exprs);
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, secondColumn).value).toEqual('ALex');
-            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual('Smith');
-            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(5);
+            expect(grid.getCellByColumn(0, secondColumn).value).toEqual('Alex');
+            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual('Wilson');
+            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(4);
             expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual('Rick');
             expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual('BRown');
             expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
