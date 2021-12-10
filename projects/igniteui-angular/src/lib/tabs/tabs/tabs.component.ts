@@ -239,7 +239,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
                     break;
                 }
             } else {
-                if (element.offsetWidth + element.offsetLeft >= this.offset) {
+                if (element.offsetWidth + element.offsetLeft >= this.offset - 1) {
                     this.scrollElement(element, scrollRight);
                     break;
                 }
@@ -251,7 +251,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
 
         this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
-        this.itemsWrapper.nativeElement.style.transform = `translate(${-this.offset}px)`;
+        this.viewPort.nativeElement.scrollLeft = this.offset;
         this.updateScrollButtons();
     }
 
