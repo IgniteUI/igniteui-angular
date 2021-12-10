@@ -118,7 +118,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver: ResizeObserver;
 
-    constructor(builder: AnimationBuilder, protected cdr: ChangeDetectorRef, private ngZone: NgZone) {
+    constructor(builder: AnimationBuilder, cdr: ChangeDetectorRef, private ngZone: NgZone) {
         super(builder, cdr);
     }
 

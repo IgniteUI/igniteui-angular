@@ -3,8 +3,7 @@ import {
     AfterViewInit, ChangeDetectorRef, ContentChildren, Directive, EventEmitter,
     Input, OnDestroy, Output, QueryList
 } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IBaseEventArgs } from '../core/utils';
 import { IgxTabItemDirective } from './tab-item.directive';
@@ -118,11 +117,10 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     private _selectedIndex = -1;
     private _itemChanges$: Subscription;
-    private destroy$ = new Subject();
 
     /** @hidden */
-    constructor(builder: AnimationBuilder, protected cdr: ChangeDetectorRef) {
-        super(builder);
+    constructor(builder: AnimationBuilder, cdr: ChangeDetectorRef) {
+        super(builder, cdr);
     }
 
     /** @hidden */
@@ -149,18 +147,11 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             this.onItemChanges();
         });
 
-        this.enterAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.cdr.markForCheck();
-        });
-
         this.setAttributes();
     }
 
     /** @hidden */
     public ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
-
         if (this._itemChanges$) {
             this._itemChanges$.unsubscribe();
         }
