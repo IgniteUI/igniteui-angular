@@ -77,7 +77,7 @@
 
     <!-- Column headers area -->
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
-        <div #pivotContainer class="igx-grid__tr-pivot igx-grid__tr-pivot--row-area" [style.min-width.px]="grid.pivotRowWidths"
+        <div #pivotContainer class="igx-grid__tr-pivot igx-grid__tr-pivot--row-area" [style.min-width.px]="grid.pivotRowWidths - 1"
             (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)" (igxDragLeave)="onAreaDragLeave($event, rowArea)"
             igxDrop (dropped)="onDimDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()">
 
