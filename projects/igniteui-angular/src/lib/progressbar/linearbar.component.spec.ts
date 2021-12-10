@@ -12,7 +12,7 @@ const STRIPED_CLASS = 'igx-linear-bar--striped';
 const LINEAR_BAR_TAG = 'igx-linear-bar';
 const INDETERMINATE_CLASS = 'igx-linear-bar--indeterminate';
 
-describe('IgLinearBar', () => {
+describe('IgxLinearBar', () => {
     configureTestSuite();
     const tickTime = 2000;
     beforeAll(waitForAsync(() => {
@@ -142,7 +142,7 @@ describe('IgLinearBar', () => {
         expect(progress.value).toBe(progressBarValue);
     });
 
-    it('Should update value when we try to decrese it', fakeAsync(() => {
+    it('Should update value when we try to decrese it', () => {
         const fixture = TestBed.createComponent(LinearBarComponent);
         fixture.detectChanges();
         const progressBar = fixture.componentInstance.progressbar;
@@ -150,56 +150,33 @@ describe('IgLinearBar', () => {
 
         fixture.componentInstance.value = expectedValue;
 
-        tick(tickTime);
-        fixture.detectChanges();
-        tick(tickTime);
-
-        expect(progressBar.value).toBe(expectedValue);
-
-        expectedValue = 20;
-        fixture.componentInstance.value = expectedValue;
-
-        tick(tickTime);
-        fixture.detectChanges();
-        tick(tickTime);
-
-        expect(progressBar.value).toBe(expectedValue);
-    }));
-
-    it('Should update value when we try to decrease it (without animation)', () => {
-        const fixture = TestBed.createComponent(LinearBarComponent);
-        const progressBar = fixture.componentInstance.progressbar;
-        let expectedValue = 50;
-
-        fixture.componentInstance.animate = false;
-        fixture.componentInstance.value = expectedValue;
         fixture.detectChanges();
 
         expect(progressBar.value).toBe(expectedValue);
 
         expectedValue = 20;
         fixture.componentInstance.value = expectedValue;
+
         fixture.detectChanges();
 
         expect(progressBar.value).toBe(expectedValue);
     });
 
-    it('When passed value is string progress indication should remain the same', fakeAsync(() => {
+    it('When passed value is string progress indication should remain the same', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         fix.detectChanges();
 
         const progressbar = fix.componentInstance.progressbar;
         const expectedRes = fix.componentInstance.value as number;
 
-        tick(tickTime);
         fix.detectChanges();
         expect(progressbar.value).toEqual(expectedRes);
 
         fix.componentInstance.value = '0345-234';
-        tick(tickTime);
+
         fix.detectChanges();
         expect(progressbar.value).toEqual(expectedRes);
-    }));
+    });
 
     it('The update step is 1% of the maximum value, which prevents from slow update with big nums', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
@@ -218,25 +195,24 @@ describe('IgLinearBar', () => {
         expect(bar.step).toBe(expectedValue);
     });
 
-    it('Value should not exceed the lower limit (0) when operating with floating numbers', fakeAsync(() => {
+    it('Value should not exceed the lower limit (0) when operating with floating numbers', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         const compInstance = fix.componentInstance;
         fix.detectChanges();
-        tick(tickTime);
+        compInstance.value = 0;
+        fix.detectChanges();
 
         compInstance.max = 2.5;
         fix.detectChanges();
 
         compInstance.value = -0.3;
         fix.detectChanges();
-        tick(tickTime);
 
         const bar = compInstance.progressbar;
         const expectedRes = 0;
         expect(bar.value).toBe(expectedRes);
         expect(bar.valueInPercent).toBe(expectedRes);
 
-        compInstance.animate = false;
         fix.detectChanges();
 
         compInstance.value = -2;
@@ -244,9 +220,9 @@ describe('IgLinearBar', () => {
 
         expect(bar.value).toBe(expectedRes);
         expect(bar.valueInPercent).toBe(expectedRes);
-    }));
+    });
 
-    it('Value should not exceed the max limit when operating with floating numbers', fakeAsync(() => {
+    it('Value should not exceed the max limit when operating with floating numbers', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         const compInstance = fix.componentInstance;
         let value = 2.67;
@@ -259,12 +235,11 @@ describe('IgLinearBar', () => {
         fix.detectChanges();
 
         const bar = compInstance.progressbar;
-        tick(tickTime);
+
         expect(bar.value).toBe(max);
         expect(bar.valueInPercent).toBe(100);
 
         value = 3.01;
-        compInstance.animate = false;
         fix.detectChanges();
 
         compInstance.value = value;
@@ -272,14 +247,13 @@ describe('IgLinearBar', () => {
 
         expect(bar.value).toBe(max);
         expect(bar.valueInPercent).toBe(100);
-    }));
+    });
 
     it('when passing string as value it should be parsed correctly', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         const compInstance = fix.componentInstance;
         const bar = compInstance.progressbar;
 
-        compInstance.animate = false;
         fix.detectChanges();
 
         const stringValue = '20';
@@ -290,7 +264,7 @@ describe('IgLinearBar', () => {
         expect(bar.value).toBe(expectedRes);
     });
 
-    it('when update step is bigger than passed value the progress indicator should follow the value itself', fakeAsync(() => {
+    it('when update step is bigger than passed value the progress indicator should follow the value itself', () => {
         const fix = TestBed.createComponent(InitLinearProgressBarComponent);
         fix.detectChanges();
 
@@ -303,17 +277,16 @@ describe('IgLinearBar', () => {
         bar.value = value;
 
         fix.detectChanges();
-        tick(tickTime);
 
         const percentValue = Common.calcPercentage(value, max);
         expect(bar.value).toBe(value);
         expect(bar.step).toBe(step);
         expect(bar.max).toBe(max);
         expect(bar.valueInPercent).toBe(percentValue);
-    }));
+    });
 
     it(`when step value is not divisble to passed value the result returned from the
-        value getter should be as same as the passed one`, fakeAsync(() => {
+        value getter should be as same as the passed one`, () => {
             const fix = TestBed.createComponent(InitLinearProgressBarComponent);
             fix.detectChanges();
 
@@ -324,7 +297,6 @@ describe('IgLinearBar', () => {
             bar.step = step;
             bar.value = value;
 
-            tick(tickTime);
             fix.detectChanges();
             expect(bar.step).toBe(step);
             expect(bar.value).toBe(value);
@@ -333,11 +305,11 @@ describe('IgLinearBar', () => {
             value = 10;
             valueInPercent = Common.calcPercentage(value, bar.max);
             bar.value = value;
-            tick(tickTime);
+
             fix.detectChanges();
             expect(bar.value).toBe(value);
             expect(bar.valueInPercent).toBe(valueInPercent);
-    }));
+    });
 
     it('When indeterminate mode is on value should not be updated', () => {
         const fix = TestBed.createComponent(InitLinearProgressBarComponent);
@@ -362,20 +334,17 @@ describe('IgLinearBar', () => {
     // UI Tests
     describe('UI tests linear bar', () => {
         // configureTestSuite();
-        it('The percentage representation should respond to passed value correctly', fakeAsync(() => {
+        it('The percentage representation should respond to passed value correctly', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
             const componentInstance = fixture.componentInstance;
             const linearBar = fixture.debugElement.nativeElement.querySelector(LINEAR_BAR_TAG);
-            const progressIndicator = linearBar.querySelector('.igx-linear-bar__indicator');
 
-            tick(tickTime);
             fixture.detectChanges();
 
-            expect(progressIndicator.style.width).toBe(componentInstance.value + '%');
             expect(linearBar.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
-        }));
+        });
 
         it('Should change class suffix which would be relevant to the type that has been passed', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
@@ -425,25 +394,6 @@ describe('IgLinearBar', () => {
             expect(linearBar.classList.contains(STRIPED_CLASS)).toEqual(true);
         });
 
-        it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
-            const fix = TestBed.createComponent(InitLinearProgressBarComponent);
-            fix.detectChanges();
-
-            const bar = fix.componentInstance.linearBar;
-            const maxVal = 1.25;
-            const val = 0.50;
-
-            bar.max = maxVal;
-            bar.value = val;
-            tick(tickTime);
-            fix.detectChanges();
-
-            const progressRepresentation = Common.calcPercentage(val, maxVal);
-            const progressbar = fix.debugElement.nativeElement.querySelector(LINEAR_BAR_TAG);
-            const progressIndicator = progressbar.querySelector('.igx-linear-bar__indicator');
-            expect(progressIndicator.style.width).toBe(`${progressRepresentation}%`);
-        }));
-
         it('Prevent constant update of progress value when value and max value differ', fakeAsync(() => {
             const fix = TestBed.createComponent(InitLinearProgressBarComponent);
             fix.detectChanges();
@@ -478,7 +428,7 @@ describe('IgLinearBar', () => {
     });
 });
 
-@Component({ template: `<igx-linear-bar [animate]="true"></igx-linear-bar>` })
+@Component({ template: `<igx-linear-bar [animate]="false"></igx-linear-bar>` })
 class InitLinearProgressBarComponent {
     @ViewChild(IgxLinearProgressBarComponent, { static: true }) public linearBar: IgxLinearProgressBarComponent;
 }
@@ -486,7 +436,7 @@ class InitLinearProgressBarComponent {
 @Component({
     template: `<div #wrapper>
                             <igx-linear-bar #linearBar [value]="value" [max]="max"
-                                [animate]="animate" [type]="type" [striped]="striped">
+                                [animate]="false" [type]="type" [striped]="striped">
                             </igx-linear-bar>
                         </div>` })
 class LinearBarComponent {
@@ -496,5 +446,4 @@ class LinearBarComponent {
     public max = 100;
     public type = 'default';
     public striped = false;
-    public animate = true;
 }
