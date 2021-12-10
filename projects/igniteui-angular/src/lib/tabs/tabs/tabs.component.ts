@@ -1,7 +1,5 @@
 import { AnimationBuilder } from '@angular/animations';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { getResizeObserver, mkenum } from '../../core/utils';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
@@ -119,10 +117,9 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver: ResizeObserver;
-    private destroy$ = new Subject();
 
-    constructor(builder: AnimationBuilder, private cdr: ChangeDetectorRef, private ngZone: NgZone) {
-        super(builder);
+    constructor(builder: AnimationBuilder, protected cdr: ChangeDetectorRef, private ngZone: NgZone) {
+        super(builder, cdr);
     }
 
 
@@ -138,17 +135,10 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             this._resizeObserver.observe(this.headerContainer.nativeElement);
             this._resizeObserver.observe(this.viewPort.nativeElement);
         });
-        
-        this.enterAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.cdr.markForCheck();
-        });
     }
 
     /** @hidden @internal */
     public ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
-
         super.ngOnDestroy();
 
         this.ngZone.runOutsideAngular(() => {
