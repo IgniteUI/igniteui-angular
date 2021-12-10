@@ -48,7 +48,7 @@
         @if $bootstrap-theme {
             background-color: igx-color($palette, 'grays', 100, .5);
         } @else {
-            background-color: igx-color($palette, 'grays', 200);
+            background-color: igx-color($palette, 'grays', 100);
         }
 
         user-select: none;

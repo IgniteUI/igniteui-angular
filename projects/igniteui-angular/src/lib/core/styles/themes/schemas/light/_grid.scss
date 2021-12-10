@@ -816,23 +816,23 @@ $indigo-grid: extend(
         ),
 
         cell-selected-within-background: (
-            igx-color: ('primary', 300),
+            igx-color: ('primary', 200),
         ),
 
         cell-selected-within-text-color: (
-            igx-contrast-color: ('primary', 300)
+            igx-contrast-color: ('primary', 200)
         ),
 
         row-selected-hover-background: (
-            igx-color: ('primary', 100),
+            igx-color: ('primary', 200),
         ),
 
         row-selected-hover-text-color: (
-            igx-contrast-color: ('primary', 50)
+            igx-contrast-color: ('primary', 200)
         ),
 
         pinned-border-color: (
-            igx-color: ('primary', 200)
+            igx-color: ('primary', 300)
         ),
 
         resize-line-color: (

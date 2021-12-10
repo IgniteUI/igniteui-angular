@@ -311,7 +311,7 @@ $dark-indigo-grid: extend(
         ),
 
         header-border-color: (
-            igx-color: ('grays', 50, .24)
+            igx-color: ('grays', 100, .24)
         ),
 
         header-text-color: (
@@ -351,7 +351,7 @@ $dark-indigo-grid: extend(
         ),
 
         drop-area-background: (
-            igx-color: ('grays', 200)
+            igx-color: ('grays', 100)
         ),
 
         drop-area-text-color: (
@@ -371,7 +371,7 @@ $dark-indigo-grid: extend(
         ),
 
         row-border-color: (
-            igx-color: ('grays', 50, .24),
+            igx-color: ('grays', 100, .24),
         ),
 
         row-hover-background: (
@@ -379,7 +379,7 @@ $dark-indigo-grid: extend(
         ),
 
         row-hover-text-color: (
-            igx-contrast-color: ('grays', 200),
+            igx-contrast-color: ('grays',100),
         ),
 
         row-selected-background: (
@@ -399,11 +399,11 @@ $dark-indigo-grid: extend(
         ),
 
         group-row-background: (
-            igx-color: 'surface',
+            igx-color: ('grays', 50),
         ),
 
         group-row-selected-background: (
-            igx-color: ('grays', 200),
+            igx-color: ('grays', 100),
         ),
 
         group-count-text-color: (
