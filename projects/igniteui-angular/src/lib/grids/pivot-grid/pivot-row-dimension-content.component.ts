@@ -3,7 +3,7 @@ import {
     Component,
     Input
 } from '@angular/core';
-import { IgxPivotRowComponent } from 'igniteui-angular';
+import { IgxPivotRowComponent } from './pivot-row.component'
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 
 /**
