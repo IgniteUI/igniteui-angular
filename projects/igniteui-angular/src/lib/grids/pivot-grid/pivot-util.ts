@@ -14,7 +14,7 @@ export class PivotUtil {
                 currDim = currDim.childLevel;
                 lvl++;
             }
-
+            currDim.level = lvl;
         }
     }
     public static getFieldsHierarchy(data: any[], dimensions: IPivotDimension[],
@@ -303,6 +303,7 @@ export class PivotUtil {
         const flatData = [];
         hierarchies.forEach((h, key) => {
             const field = h.dimension.memberName;
+            const keys = Object.assign({}, pivotKeys) as any;
             let obj = {};
             obj[field] = key;
             if (h[pivotKeys.records]) {
@@ -318,7 +319,6 @@ export class PivotUtil {
                 for (const nested of nestedData) {
                     if (nested[pivotKeys.records] && nested[pivotKeys.records].length === 1) {
                         // only 1 child record, apply same props to parent.
-                        const keys = Object.assign({}, pivotKeys) as any;
                         const memberName = h[pivotKeys.children].entries().next().value[1].dimension.memberName;
                         keys[memberName] = memberName;
                         PivotUtil.processSiblingProperties(nested[pivotKeys.records][0], [nested], keys);
@@ -327,7 +327,7 @@ export class PivotUtil {
                 obj[pivotKeys.records] = this.getDirectLeafs(nestedData, pivotKeys);
                 obj[field + pivotKeys.rowDimensionSeparator + pivotKeys.records] = nestedData;
                 if (!rootData) {
-                    PivotUtil.processSiblingProperties(rec, obj[field + pivotKeys.rowDimensionSeparator + pivotKeys.records], pivotKeys);
+                    PivotUtil.processSiblingProperties(rec, obj[field + pivotKeys.rowDimensionSeparator + pivotKeys.records], keys);
                 }
             }
         });
