@@ -43,7 +43,7 @@ $dark-bootstrap-scrollbar: extend(
 /// Generates a dark indigo scrollbar schema.
 /// @type {Map}
 /// @property {Map} thumb-background [igx-color: ('grays', 100)] - The background color used for the thumb.
-/// @property {Color} track-background [igx-color: ('grays', 50, .6)] - The background color used for the track.
+/// @property {Color} track-background [igx-color: ('grays', 50)] - The background color used for the track.
 /// @requires {function} extend
 /// @requires $indigo-scrollbar
 $dark-indigo-scrollbar: extend(
@@ -54,7 +54,7 @@ $dark-indigo-scrollbar: extend(
         ),
 
         track-background: (
-            igx-color: ('grays', 50, .6)
+            igx-color: ('grays', 50)
         ),
     )
 );
