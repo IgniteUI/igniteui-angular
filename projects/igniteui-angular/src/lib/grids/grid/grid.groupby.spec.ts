@@ -39,7 +39,8 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GroupByDataMoreColumnsComponent,
                 GroupByEmptyColumnFieldComponent,
                 MultiColumnHeadersWithGroupingComponent,
-                GridGroupByRowCustomSelectorsComponent
+                GridGroupByRowCustomSelectorsComponent,
+                GridGroupByCaseSensitiveComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         });
@@ -63,7 +64,11 @@ describe('IgxGrid - GroupBy #grid', () => {
                 if (level === maxLevel) {
                     count++;
                 }
-                expect(rec[field]).toEqual(val);
+                if (groupRow.groupRow.expression.ignoreCase) {
+                    expect(rec[field]?.toString().toLowerCase()).toEqual(val?.toString().toLowerCase());
+                } else {
+                    expect(rec[field]).toEqual(val);
+                }
             }
         }
     };
@@ -373,6 +378,30 @@ describe('IgxGrid - GroupBy #grid', () => {
         checkGroups(groupRows,
             [null, 'Ignite UI for Angular', false, 'Ignite UI for Angular', 'Ignite UI for JavaScript',
                 'NetAdvantage', true, null, '', 'Ignite UI for JavaScript', 'NetAdvantage'],
+            grid.groupingExpressions);
+    }));
+
+    it('should group records correctly when ignoreCase is set to true.', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByCaseSensitiveComponent);
+        fix.detectChanges();
+
+        // set groupingExpressions
+        const grid = fix.componentInstance.instance;
+        const exprs: ISortingExpression[] = [
+            { fieldName: 'ContactTitle', dir: SortingDirection.Asc, ignoreCase: true }
+        ];
+        grid.groupingExpressions = exprs;
+        tick();
+        fix.detectChanges();
+
+        let groupRows = grid.groupsRowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
+
+        expect(groupRows.length).toEqual(2);
+        expect(dataRows.length).toEqual(5);
+        // verify groups
+        checkGroups(groupRows,
+            ['Order Administrator', 'Owner'],
             grid.groupingExpressions);
     }));
 
@@ -3700,4 +3729,46 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
     public onGroupByRowClick(_event, _context) {
         this.groupByRowClick = _event;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height'
+            [data]="testData">
+            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ContactTitle'" [header]="'ContactTitle'" [width]="200" [groupable]="true" [hasSummary]="false"
+                dataType="string"></igx-column>
+        </igx-grid>
+    `
+})
+export class GridGroupByCaseSensitiveComponent extends DataParent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    public width = '800px';
+    public height = null;
+    public testData = [
+        {
+            ID: 1,
+            ContactTitle: "Owner"
+        },
+        {
+            ID: 2,
+            ContactTitle: 'Order Administrator'
+        },
+        {
+            ID: 3,
+            ContactTitle: "owner"
+        },
+        {
+            ID: 4,
+            ContactTitle: "Owner"
+        },
+        {
+            ID: 5,
+            ContactTitle: 'Order Administrator'
+        }
+    ];
 }
