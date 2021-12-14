@@ -927,7 +927,7 @@ describe('Pivot pipes #pivotGrid', () => {
                 {
 
                     memberName: 'Product',
-                    memberFunction: (data) => data.Product.Name,
+                    memberFunction: (recData) => recData.Product.Name,
                     enabled: true
                 }
             },
@@ -938,7 +938,7 @@ describe('Pivot pipes #pivotGrid', () => {
                 childLevel:
                 {
                     memberName: 'Seller',
-                    memberFunction: (data) => data.Seller.Name,
+                    memberFunction: (recData) => recData.Seller.Name,
                     enabled: true,
                 },
             },
