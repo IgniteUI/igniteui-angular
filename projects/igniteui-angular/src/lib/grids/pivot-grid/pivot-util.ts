@@ -47,7 +47,6 @@ export class PivotUtil {
                     rec[k] = this.sort(unsorted, expressions, sorting, pivotKeys);
                 }
             });
-            delete rec.sorted;
         });
         return DataUtil.sort(data, expressions, sorting);
     }
