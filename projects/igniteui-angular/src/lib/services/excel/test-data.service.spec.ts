@@ -1402,4 +1402,18 @@ export class FileContentData {
 
         return this.createData();
     }
+
+    public get exportHierarchicalDataWithMultiColumnHeadersOnlyInIsland() {
+        this._sharedStringsData =
+            `count="34" uniqueCount="29"><si><t>CompanyName</t></si><si><t>Alfreds Futterkiste</t></si><si><t>General Information</t></si><si><t>Address Information</t></si><si><t>Personal Details</t></si><si><t>Location</t></si><si><t>Contact Information</t></si><si><t>ContactName</t></si><si><t>ContactTitle</t></si><si><t>Address</t></si><si><t>City</t></si><si><t>PostalCode</t></si><si><t>Country</t></si><si><t>Phone</t></si><si><t>Fax</t></si><si><t>Ana Trujillo Emparedados y helados</t></si><si><t>Ana Trujillo</t></si><si><t>Owner</t></si><si><t>Avda. de la Constitución 2222</t></si><si><t>México D.F.</t></si><si><t>05021</t></si><si><t>Mexico</t></si><si><t>(5) 555-4729</t></si><si><t>(5) 555-3745</t></si><si><t>Antonio Moreno Taquería</t></si><si><t>Antonio Moreno</t></si><si><t>Mataderos 2312</t></si><si><t>05023</t></si><si><t>(5) 555-3932</t></si>`;
+
+        this._worksheetData =
+            `<sheetPr><outlinePr summaryBelow="0"/></sheetPr>
+            <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+            <sheetFormatPr defaultRowHeight="15" outlineLevelRow="1" x14ac:dyDescent="0.25"/>
+            <cols><col min="1" max="15" width="20" customWidth="1"/></cols>
+            <sheetData><row r="1"><c r="A1" s="3" t="s"><v>0</v></c></row><row r="2"><c r="A2" t="s"><v>1</v></c></row><row r="3" outlineLevel="1"><c r="B3" s="3" t="s"><v>2</v></c><c r="C3" s="3" /><c r="D3" s="3" /><c r="E3" s="3" t="s"><v>3</v></c><c r="F3" s="3" /><c r="G3" s="3" /><c r="H3" s="3" /><c r="I3" s="3" /><c r="J3" s="3" /></row><row r="4" outlineLevel="1"><c r="B4" s="3" t="s"><v>0</v></c><c r="C4" s="3" t="s"><v>4</v></c><c r="D4" s="3" /><c r="E4" s="3" t="s"><v>5</v></c><c r="F4" s="3" /><c r="G4" s="3" /><c r="H4" s="3" /><c r="I4" s="3" t="s"><v>6</v></c><c r="J4" s="3" /></row><row r="5" outlineLevel="1"><c r="B5" t="s" s="3"><v>0</v></c><c r="C5" t="s" s="3"><v>7</v></c><c r="D5" t="s" s="3"><v>8</v></c><c r="E5" t="s" s="3"><v>9</v></c><c r="F5" t="s" s="3"><v>10</v></c><c r="G5" t="s" s="3"><v>11</v></c><c r="H5" t="s" s="3"><v>12</v></c><c r="I5" t="s" s="3"><v>13</v></c><c r="J5" t="s" s="3"><v>14</v></c></row><row r="6" outlineLevel="1"><c r="B6" t="s"><v>15</v></c><c r="C6" t="s"><v>16</v></c><c r="D6" t="s"><v>17</v></c><c r="E6" t="s"><v>18</v></c><c r="F6" t="s"><v>19</v></c><c r="G6" t="s"><v>20</v></c><c r="H6" t="s"><v>21</v></c><c r="I6" t="s"><v>22</v></c><c r="J6" t="s"><v>23</v></c></row><row r="7" outlineLevel="1"><c r="B7" t="s"><v>24</v></c><c r="C7" t="s"><v>25</v></c><c r="D7" t="s"><v>17</v></c><c r="E7" t="s"><v>26</v></c><c r="F7" t="s"><v>19</v></c><c r="G7" t="s"><v>27</v></c><c r="H7" t="s"><v>21</v></c><c r="I7" t="s"><v>28</v></c><c r="J7" s="1"/></row></sheetData><mergeCells count="6"> <mergeCell ref="B3:D3" /> <mergeCell ref="E3:J3" /> <mergeCell ref="B4:B5" /> <mergeCell ref="C4:D4" /> <mergeCell ref="E4:H4" /> <mergeCell ref="I4:J4" /></mergeCells>`;
+
+        return this.createData();
+    }
 }
