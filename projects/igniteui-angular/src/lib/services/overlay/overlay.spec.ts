@@ -4447,14 +4447,12 @@ const DIRECTIVE_COMPONENTS = [
 @NgModule({
     imports: [BrowserModule],
     declarations: [DYNAMIC_COMPONENTS],
-    exports: [DYNAMIC_COMPONENTS],
-    entryComponents: [DYNAMIC_COMPONENTS]
+    exports: [DYNAMIC_COMPONENTS]
 })
 export class DynamicModule { }
 
 @NgModule({
-    imports: [IgxCalendarModule, IgxAvatarModule, IgxDatePickerModule],
-    entryComponents: IgniteUIComponents
+    imports: [IgxCalendarModule, IgxAvatarModule, IgxDatePickerModule]
 })
 export class IgxComponentsModule {
 }
