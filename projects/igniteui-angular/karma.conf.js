@@ -31,9 +31,6 @@ module.exports = function (config) {
       tagPrefix: '#',
       skipTags: 'perf'
     },
-    preprocessors: {
-      'projects/igniteui-angular/**/*.js': ['coverage']
-    },
     coverageReporter: {
       dir: require('path').join(__dirname, '../../coverage'),
       subdir: '.',
