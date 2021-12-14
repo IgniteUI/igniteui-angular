@@ -17,6 +17,7 @@ module.exports = function (config) {
         require('karma-coverage'),
         require('karma-chrome-launcher'),
         require('karma-jasmine-spec-tags'),
+        require('karma-jasmine-html-reporter'),
         require('@angular-devkit/build-angular/plugins/karma')
     ],
     parallelOptions: {
@@ -39,7 +40,7 @@ module.exports = function (config) {
         { type: 'lcov' },
       ]
     },
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
