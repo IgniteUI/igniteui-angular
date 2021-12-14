@@ -242,7 +242,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Gets/Sets the filtering strategy of the grid.
+     * Gets/Sets the data clone strategy of the grid when in edit mode.
      *
      * @example
      * ```html

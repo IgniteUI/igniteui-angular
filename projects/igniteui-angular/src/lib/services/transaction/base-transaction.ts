@@ -1,5 +1,5 @@
 import { TransactionService, Transaction, State, StateUpdateEvent } from './transaction';
-import { EventEmitter, Optional } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
