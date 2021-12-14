@@ -1,5 +1,5 @@
 import { AnimationBuilder } from '@angular/animations';
-import { AfterViewInit, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { getResizeObserver, mkenum } from '../../core/utils';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
@@ -118,8 +118,8 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver: ResizeObserver;
 
-    constructor(builder: AnimationBuilder, private ngZone: NgZone) {
-        super(builder);
+    constructor(builder: AnimationBuilder, cdr: ChangeDetectorRef, private ngZone: NgZone) {
+        super(builder, cdr);
     }
 
 
