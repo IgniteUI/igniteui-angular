@@ -157,8 +157,11 @@ $dark-grid: extend($light-grid, $base-dark-grid);
 /// @prop {Map} row-selected-background [igx-color: ('grays', 100)] - The selected row background color.
 /// @prop {Map} row-selected-hover-background [igx-color: ('grays', 200)] - The selected row background color on hover.
 /// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('grays', 200)] - The selected row hover text color.
-/// @prop {Map} cell-selected-within-background [igx-color: ('grays', 300)] - The background of the selected cell inside a selected row/column.
-/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('grays', 300)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('grays', 200)] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('grays', 200)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} group-row-background [igx-color: ('grays', 100, .5)] - The grid group row background color.
+/// @prop {Map} group-row-selected-background [igx-color: ('grays', 100)] - The drop area background on drop color.
+
 ///
 /// @requires {function} extend
 /// @requires $fluent-grid
@@ -192,7 +195,7 @@ $dark-fluent-grid: extend(
         ),
 
         cell-selected-within-background: (
-            igx-color: ('grays', 100),
+            igx-color: ('grays', 200),
         ),
 
         cell-selected-within-text-color: (
@@ -201,6 +204,14 @@ $dark-fluent-grid: extend(
 
         row-selected-hover-background: (
             igx-color: ('grays', 200)
+        ),
+
+        group-row-background: (
+            igx-color: ('grays', 100, .5)
+        ),
+
+        group-row-selected-background: (
+            igx-color: ('grays', 100)
         ),
     )
 );
