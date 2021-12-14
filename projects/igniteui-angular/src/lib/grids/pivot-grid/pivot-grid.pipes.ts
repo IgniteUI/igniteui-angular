@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -11,7 +11,7 @@ import {
 import { PivotUtil } from './pivot-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { GridType } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IGridSortingStrategy } from '../common/strategy';
@@ -168,7 +168,7 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
     pure: true
 })
 export class IgxPivotGridColumnSortingPipe implements PipeTransform {
-
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
     public transform(
         collection: any[],
         expressions: ISortingExpression[],
@@ -183,6 +183,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
         } else {
             result = PivotUtil.sort(cloneArray(collection, true), expressions, sorting, pivotKeys);
         }
+        this.grid.setFilteredSortedData(result, false);
         return result;
     }
 }
