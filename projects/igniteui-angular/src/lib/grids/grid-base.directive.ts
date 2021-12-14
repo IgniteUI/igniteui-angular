@@ -150,6 +150,7 @@ import { IGridSortingStrategy } from './common/strategy';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
+import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -239,6 +240,24 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         return 0;
     }
+
+    /**
+     * Gets/Sets the filtering strategy of the grid.
+     *
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [dataCloneStrategy]="customCloneStrategy"></igx-grid>
+     * ```
+     */
+     @Input()
+     public get dataCloneStrategy(): IDataCloneStrategy {
+         return this._dataCloneStrategy;
+     }
+
+     public set dataCloneStrategy(strategy: IDataCloneStrategy) {
+         this._dataCloneStrategy = strategy;
+     }
+
 
     /**
      * Controls the copy behavior of the grid.
@@ -2395,7 +2414,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (val !== this._batchEditing) {
             delete this._transactions;
             this._batchEditing = val;
-            this.switchTransactionService(val);
+            this.switchTransactionService(val, this.dataCloneStrategy);
             this.subscribeToTransactions();
         }
     }
@@ -2796,6 +2815,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private transactionChange$ = new Subject<void>();
     private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
+    private _dataCloneStrategy : IDataCloneStrategy;
 
     /**
      * @hidden @internal
@@ -2950,7 +2970,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     ) {
         super(_displayDensityOptions);
         this.locale = this.locale || this.localeId;
-        this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+        this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None, this.dataCloneStrategy);
         this.cdr.detach();
     }
 
@@ -5917,11 +5937,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    protected switchTransactionService(val: boolean) {
+    protected switchTransactionService(val: boolean, cloneStrategy?: IDataCloneStrategy) {
         if (val) {
-            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base);
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base, cloneStrategy);
         } else {
-            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None, cloneStrategy);
         }
     }
 

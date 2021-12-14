@@ -1,6 +1,7 @@
 import { TransactionService, Transaction, State, StateUpdateEvent } from './transaction';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Optional } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
+import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 export class IgxBaseTransactionService<T extends Transaction, S extends State> implements TransactionService<T, S> {
     /**
@@ -28,6 +29,8 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @inheritdoc
      */
     public onStateUpdate = new EventEmitter<StateUpdateEvent>();
+
+    constructor( public cloneStrategy?: IDataCloneStrategy){}
 
     protected _isPending = false;
     protected _pendingTransactions: T[] = [];

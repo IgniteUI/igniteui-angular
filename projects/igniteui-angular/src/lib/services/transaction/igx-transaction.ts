@@ -195,6 +195,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     protected addTransaction(transaction: T, states: Map<any, S>, recordRef?: any) {
+        debugger;
         this.updateState(states, transaction, recordRef);
 
         const transactions = this._isPending ? this._pendingTransactions : this._transactions;
@@ -272,14 +273,15 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                             state.value = this.mergeValues(state.value, transaction.newValue);
                         }
                         if (state.type === TransactionType.UPDATE) {
-                            mergeObjects(state.value, transaction.newValue);
+                                mergeObjects(state.value, transaction.newValue);
                         }
                     } else {
                         state.value = transaction.newValue;
                     }
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef, type: transaction.type } as S;
+            const clonedValue = this.cloneStrategy? this.cloneStrategy.clone(transaction.newValue) : cloneValue(transaction.newValue);
+            state = { value: clonedValue, recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
 
