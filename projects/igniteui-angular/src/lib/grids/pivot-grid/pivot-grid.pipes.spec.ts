@@ -816,7 +816,7 @@ describe('Pivot pipes #pivotGrid', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-        expect(rowStatePipeResult.length).toEqual(31);
+        expect(rowStatePipeResult.length).toEqual(37);
         expect(rowStatePipeResult[0]['AllPeriods']).toEqual('All Periods');
         expect(rowStatePipeResult[0]['AllProducts']).toEqual('All');
         expect(rowStatePipeResult[0]['ProductCategory']).not.toBeDefined();
@@ -828,15 +828,12 @@ describe('Pivot pipes #pivotGrid', () => {
         expect(rowStatePipeResult[1]['City']).toEqual('Sofia');
 
         expect(rowStatePipeResult[11]['AllPeriods']).not.toBeDefined();
-        expect(rowStatePipeResult[11]['AllProducts']).not.toBeDefined();
         expect(rowStatePipeResult[11]['City']).toEqual('Sofia');
         expect(rowStatePipeResult[11]['Years']).toEqual('2021');
 
-        expect(rowStatePipeResult[13]['AllPeriods']).not.toBeDefined();
-        expect(rowStatePipeResult[13]['AllProducts']).toEqual('All');
-        expect(rowStatePipeResult[13]['City']).toEqual('Sofia');
-        expect(rowStatePipeResult[13]['Years']).not.toBeDefined();
-        expect(rowStatePipeResult[13]['Date']).toEqual('01/01/2021');
+        expect(rowStatePipeResult[12]['AllPeriods']).not.toBeDefined();
+        expect(rowStatePipeResult[12]['City']).toEqual('Sofia');
+        expect(rowStatePipeResult[12]['Date']).toEqual('01/01/2021');
     });
 
     // automation for https://github.com/IgniteUI/igniteui-angular/issues/10545
