@@ -423,7 +423,7 @@ $light-grid: extend(
 /// @prop {Map} grouparea-background [igx-color: 'surface'] - The grid group area background color.
 /// @prop {Map} group-row-background [igx-color: ('grays', 50)] - The grid group row background color.
 /// @prop {Map} group-row-selected-background [igx-color: ('grays', 100)] - The drop area background on drop color.
-/// @prop {Map} filtering-header-background [igx-color: ('grays', 100)] - The background color of the filtered column header.
+/// @prop {Map} filtering-header-background [igx-color: ('grays', 50)] - The background color of the filtered column header.
 /// @prop {Map} filtering-header-text-color [igx-color: ('grays', 900)] - The text color color of the filtered column header.
 /// @prop {Map} filtering-row-background [igx-color: ('grays', 200)] - The background color of the filtering row.
 /// @prop {Map} root-summaries-background [igx-color: 'surface'] - The background color of the summary groups located the footer.
@@ -513,7 +513,7 @@ $fluent-grid: extend(
         ),
 
         filtering-header-background: (
-            igx-color: ('grays', 100)
+            igx-color: ('grays', 50)
         ),
 
         filtering-header-text-color: (
@@ -521,7 +521,7 @@ $fluent-grid: extend(
         ),
 
         filtering-row-background: (
-            igx-color: ('grays', 200)
+            igx-color: ('grays', 50)
         ),
 
         row-selected-background: (
