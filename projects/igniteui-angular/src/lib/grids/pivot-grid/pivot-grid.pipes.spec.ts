@@ -893,7 +893,7 @@ describe('Pivot pipes #pivotGrid', () => {
                 memberName: 'AllProducts',
                 enabled: true,
                 childLevel: {
-                    memberFunction: (data) => data.ProductCategory,
+                    memberFunction: (recData) => recData.ProductCategory,
                     memberName: 'ProductCategory',
                     enabled: true
                 }
