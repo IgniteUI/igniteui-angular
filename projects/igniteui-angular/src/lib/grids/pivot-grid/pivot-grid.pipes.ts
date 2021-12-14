@@ -51,7 +51,7 @@ export class IgxPivotRowPipe implements PipeTransform {
 })
 export class IgxPivotRowExpansionPipe implements PipeTransform {
 
-    constructor() { }
+    constructor(@Inject(IGX_GRID_BASE) private grid?: GridType) { }
 
     public transform(
         collection: any[],
@@ -74,6 +74,10 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         }
         const finalData = config.columnStrategy ? data : data.filter(x => x[pivotKeys.records]);
         this.cleanState(finalData, pivotKeys);
+
+        if (this.grid) {
+            this.grid.setFilteredSortedData(finalData, false);
+        }
         return finalData;
     }
 
@@ -168,7 +172,6 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
     pure: true
 })
 export class IgxPivotGridColumnSortingPipe implements PipeTransform {
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
     public transform(
         collection: any[],
         expressions: ISortingExpression[],
@@ -183,7 +186,6 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
         } else {
             result = PivotUtil.sort(cloneArray(collection, true), expressions, sorting, pivotKeys);
         }
-        this.grid.setFilteredSortedData(result, false);
         return result;
     }
 }
