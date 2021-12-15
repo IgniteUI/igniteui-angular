@@ -980,7 +980,7 @@ describe('Stepper service unit tests', () => {
         };
 
         stepperService = new IgxStepperService();
-        stepper = new IgxStepperComponent(mockAnimationBuilder, stepperService, mockElementRef);
+        stepper = new IgxStepperComponent(mockCdr, mockAnimationBuilder, stepperService, mockElementRef);
         steps = [];
         for (let index = 0; index < 4; index++) {
             const newStep = new IgxStepComponent(stepper, mockCdr, null,
