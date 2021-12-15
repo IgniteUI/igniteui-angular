@@ -195,7 +195,6 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     protected addTransaction(transaction: T, states: Map<any, S>, recordRef?: any) {
-        debugger;
         this.updateState(states, transaction, recordRef);
 
         const transactions = this._isPending ? this._pendingTransactions : this._transactions;
