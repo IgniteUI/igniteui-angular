@@ -53,7 +53,7 @@
 
                 <!-- Value area -->
                 <igx-chips-area #valueArea droppable='true'>
-                    <igx-chip #currChip *ngFor="let value of grid.values" [draggable]="true" [id]="value.member"
+                    <igx-chip #currChip *ngFor="let value of grid.values" [draggable]="true" [id]="value.displayName || value.member"
                         [displayDensity]="grid.displayDensity"
                         [removable]="true" (remove)="valueRemoved($event)"
                         (dragLeave)="onDimDragLeave($event)"

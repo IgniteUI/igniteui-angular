@@ -456,7 +456,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             pivotGrid.setupColumns();
             fixture.detectChanges();
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
-            const valueChip = headerRow.querySelector('igx-chip[id="AmountOfSale"]');
+            const valueChip = headerRow.querySelector('igx-chip[id="Amount of Sale"]');
             let content = valueChip.querySelector('.igx-chip__content');
             expect(content.textContent.trim()).toBe('SUM(Amount of Sale)');
 
