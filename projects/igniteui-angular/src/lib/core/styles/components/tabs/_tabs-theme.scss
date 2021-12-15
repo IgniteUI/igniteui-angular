@@ -266,12 +266,12 @@
     %tabs-header-content {
         flex: 1 1 auto;
         overflow: hidden;
+        scroll-behavior: smooth;
     }
 
     %tabs-header-wrapper {
         position: relative;
         flex-grow: 1;
-        transition: transform .2s $tabs-animation-function;
 
         @if $bootstrap-theme or $indigo-theme {
             &::after {
