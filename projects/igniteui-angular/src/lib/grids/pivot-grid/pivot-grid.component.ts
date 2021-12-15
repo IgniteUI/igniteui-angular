@@ -321,17 +321,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
 
 
-     /**
-     * Gets/Sets the default expand state for all rows.
-     */
-      @Input()
-      public get defaultExpandState() {
-          return this._defaultExpandState;
-      }
+    /**
+    * Gets/Sets the default expand state for all rows.
+    */
+    @Input()
+    public get defaultExpandState() {
+        return this._defaultExpandState;
+    }
 
-      public set defaultExpandState(val: boolean) {
-          this._defaultExpandState = val;
-      }
+    public set defaultExpandState(val: boolean) {
+        this._defaultExpandState = val;
+    }
 
     /**
      * @hidden @internal
@@ -604,7 +604,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.pivotKeys
         );
         const flatData = Array.from(allValuesHierarchy.values());
-        columnValues = flatData.map(record => this.extractValue(record['value']));
+        // Note: Once ESF supports tree view, we should revert this back.
+        columnValues = flatData.map(record => record['value']);
         done(columnValues);
         return;
     }
@@ -987,18 +988,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         groupColumn.hidden = state;
         this.columnGroupStates.set(groupColumn.field, state);
         const childrenTotal = this.hasMultipleValues ?
-         groupColumn.children.filter(x => x.columnGroup && x.children.filter(y => !y.columnGroup).length === this.values.length) :
-         groupColumn.children.filter(x => !x.columnGroup);
-         const childrenSubgroups = this.hasMultipleValues ?
-         groupColumn.children.filter(x => x.columnGroup && x.children.filter(y => !y.columnGroup).length === 0) :
-         groupColumn.children.filter(x => x.columnGroup);
-         childrenTotal.forEach(group => {
+            groupColumn.children.filter(x => x.columnGroup && x.children.filter(y => !y.columnGroup).length === this.values.length) :
+            groupColumn.children.filter(x => !x.columnGroup);
+        const childrenSubgroups = this.hasMultipleValues ?
+            groupColumn.children.filter(x => x.columnGroup && x.children.filter(y => !y.columnGroup).length === 0) :
+            groupColumn.children.filter(x => x.columnGroup);
+        childrenTotal.forEach(group => {
             if (state) {
                 group.headerTemplate = this.headerTemplate;
             } else {
                 group.headerTemplate = undefined;
             }
-         });
+        });
         if (!groupColumn.hidden && childrenSubgroups.length > 0) {
             childrenSubgroups.forEach(group => {
                 this.resolveToggle(group, state);
@@ -1215,8 +1216,5 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             cols.push(ref.instance);
         });
         return cols;
-    }
-    private extractValue(value) {
-        return value.split(this.pivotKeys.columnDimensionSeparator)[value.split(this.pivotKeys.columnDimensionSeparator).length - 1];
     }
 }
