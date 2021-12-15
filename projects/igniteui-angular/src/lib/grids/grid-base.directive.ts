@@ -150,7 +150,7 @@ import { IGridSortingStrategy } from './common/strategy';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
-import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
+import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -2414,7 +2414,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (val !== this._batchEditing) {
             delete this._transactions;
             this._batchEditing = val;
-            this.switchTransactionService(val, this.dataCloneStrategy);
+            this.switchTransactionService(val);
             this.subscribeToTransactions();
         }
     }
@@ -2815,7 +2815,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private transactionChange$ = new Subject<void>();
     private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
-    private _dataCloneStrategy : IDataCloneStrategy;
+    private _dataCloneStrategy : IDataCloneStrategy = new DefaultDataCloneStrategy();
 
     /**
      * @hidden @internal
@@ -5937,11 +5937,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    protected switchTransactionService(val: boolean, cloneStrategy?: IDataCloneStrategy) {
+    protected switchTransactionService(val: boolean) {
         if (val) {
-            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base, cloneStrategy);
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base, this.dataCloneStrategy);
         } else {
-            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None, cloneStrategy);
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None, this.dataCloneStrategy);
         }
     }
 
