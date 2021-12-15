@@ -231,16 +231,19 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     private scroll(scrollRight: boolean): void {
         const tabsArray = this.items.toArray();
-        for (const tab of tabsArray) {
+
+        for (let index = 0; index < tabsArray.length; index++) {
+            const tab = tabsArray[index];
             const element = tab.headerComponent.nativeElement;
+
             if (scrollRight) {
                 if (element.offsetWidth + element.offsetLeft > this.viewPort.nativeElement.offsetWidth + this.offset) {
                     this.scrollElement(element, scrollRight);
                     break;
                 }
             } else {
-                if (element.offsetWidth + element.offsetLeft >= this.offset - 1) {
-                    this.scrollElement(element, scrollRight);
+                if (element.offsetLeft >= this.offset) {
+                    this.scrollElement(tabsArray[index - 1].headerComponent.nativeElement, scrollRight);
                     break;
                 }
             }
