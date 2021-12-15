@@ -5,7 +5,7 @@ export interface IDataCloneStrategy {
 }
 
 export class DefaultDataCloneStrategy implements IDataCloneStrategy {
-    public constructor() {  }
+    constructor() {  }
 
     public clone(data: any[]): any[] {
         return cloneValue(data);
