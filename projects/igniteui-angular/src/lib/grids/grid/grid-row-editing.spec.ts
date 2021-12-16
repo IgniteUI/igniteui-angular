@@ -2855,7 +2855,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should be able to clone data with custom clone strategy`, () => {
-            let trans = grid.transactions;
+            trans = grid.transactions;
             expect(trans.cloneStrategy).toBeInstanceOf(DefaultDataCloneStrategy);
 
             grid.dataCloneStrategy = new ObjectCloneStrategy();
