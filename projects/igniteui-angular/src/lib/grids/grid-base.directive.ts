@@ -446,7 +446,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      public get dataCloneStrategy(): IDataCloneStrategy {
          return this._dataCloneStrategy;
      }
- 
+
      public set dataCloneStrategy(strategy: IDataCloneStrategy) {
          this._dataCloneStrategy = strategy;
          if (this._batchEditing) {
