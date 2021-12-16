@@ -1,6 +1,6 @@
 <div class="igx-grid-thead__wrapper igx-grid-thead__wrapper--pivot" role="row" [style.width.px]="width">
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
-        <div class='igx-grid__tr-pivot--filterContainer'>
+        <div class='igx-grid__tr-pivot--filter-container'>
             <div #pivotFilterContainer *ngIf="grid.showPivotConfigurationUI"
                 class="igx-grid__tr-pivot igx-grid__tr-pivot--filter" [style.min-width.px]="grid.pivotRowWidths - 1"
                 [style.max-width.px]="grid.pivotRowWidths - 1" (igxDragEnter)="onAreaDragEnter($event, filterArea, 2)"
@@ -25,7 +25,7 @@
                     </igx-chip>
                 </igx-chips-area>
             </div>
-            <div class='igx-grid__tr-pivot--rowDropAreaContainer' style='height:100%;' (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)"
+            <div class='igx-grid__tr-pivot--drop-row-area' (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)"
             (igxDragLeave)="onAreaDragLeave($event, rowArea)" igxDrop (dropped)="onDimDrop($event, rowArea, 0)">
             </div>
         </div>

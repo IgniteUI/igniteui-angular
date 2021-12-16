@@ -557,6 +557,14 @@
             @extend %igx-grid__tr-pivot--row-area !optional
         }
 
+        @include e(tr-pivot, $m: 'filter-container') {
+            @extend %igx-grid__tr-pivot--filter-container !optional
+        }
+
+        @include e(tr-pivot, $m: 'drop-row-area') {
+            @extend %igx-grid__tr-pivot--drop-row-area !optional
+        }
+
         @include e(tr-pivot, $m: 'filter') {
             @extend %igx-grid__tr-pivot--filter !optional
         }

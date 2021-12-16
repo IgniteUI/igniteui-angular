@@ -2936,6 +2936,15 @@
         border-bottom: 0;
     }
 
+    %igx-grid__tr-pivot--filter-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    %igx-grid__tr-pivot--drop-row-area {
+        flex-grow: 1;
+    }
+
     %igx-grid__tr-pivot--filter {
         height: map.get($grid-header-height, 'comfortable');
 
