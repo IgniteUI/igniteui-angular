@@ -9,8 +9,7 @@
                 <!-- Filter area -->
                 <igx-chips-area #filterArea droppable='true'>
                     <span id='empty' igxDrop (dropped)="onDimDrop($event, filterArea, 2)"
-                        *ngIf="grid.filterDimensions.length === 0" class='igx-pivot__emptyChipArea'>Drop Filter Fields
-                        here.</span>
+                        *ngIf="grid.filterDimensions.length === 0" class='igx-pivot__emptyChipArea'>{{grid.resourceStrings.igx_grid_pivot_empty_filter_drop_area}}</span>
                     <ng-container *ngFor="let filter of grid.filterDimensions; let last = last;">
                         <span [style.visibility]='"hidden"' class="igx-grid__tr-pivot--chip_drop_indicator"
                             [style.height.px]='getAreaHeight(filterArea)'></span>
@@ -28,7 +27,7 @@
                         </ng-container>
                     </ng-container>
                     <igx-chip igxDrop (dragDrop)="onDimDrop($event, filterArea, 2)" #notifyChip [hidden]='true' [displayDensity]="grid.displayDensity">
-                        Drop here to use as filter
+                        {{grid.resourceStrings.igx_grid_pivot_filter_drop_chip}}
                     </igx-chip>
                 </igx-chips-area>
             </div>
@@ -44,7 +43,7 @@
                 <!-- Columns area -->
                 <igx-chips-area #colArea droppable='true'>
                     <span id='empty' (dropped)="onDimDrop($event, colArea, 1)" igxDrop *ngIf="grid.columnDimensions.length === 0"
-                        class='igx-pivot__emptyChipArea'>Drop Column Fields here.</span>
+                        class='igx-pivot__emptyChipArea'> {{grid.resourceStrings.igx_grid_pivot_empty_column_drop_area}}</span>
                     <ng-container *ngFor="let col of grid.columnDimensions; let last = last;">
                         <span [style.visibility]='"hidden"' class="igx-grid__tr-pivot--chip_drop_indicator"
                             [style.height.px]='getAreaHeight(colArea)'></span>
@@ -66,7 +65,7 @@
                         </ng-container>
                     </ng-container>
                     <igx-chip igxDrop (dragDrop)="onDimDrop($event, colArea, 1)" #notifyChip [hidden]='true'  [displayDensity]="grid.displayDensity">
-                        Drop here to use as column
+                        {{grid.resourceStrings.igx_grid_pivot_column_drop_chip}}
                     </igx-chip>
                 </igx-chips-area>
             </div>
@@ -77,7 +76,7 @@
                 <!-- Value area -->
                 <igx-chips-area #valueArea droppable='true'>
                     <span id='empty' (dropped)="onValueDrop($event, valueArea)" igxDrop *ngIf="grid.values.length === 0"
-                        class='igx-pivot__emptyChipArea'>Drop Value Fields here.</span>
+                        class='igx-pivot__emptyChipArea'>{{grid.resourceStrings.igx_grid_pivot_empty_value_drop_area}}</span>
                     <ng-container *ngFor="let value of grid.values; let last = last;">
                         <span [style.visibility]='"hidden"' class="igx-grid__tr-pivot--chip_drop_indicator"
                         [style.height.px]='getAreaHeight(valueArea)'></span>
@@ -99,7 +98,7 @@
                         </ng-container>
                     </ng-container>
                     <igx-chip igxDrop (dragDrop)="onValueDrop($event, valueArea)" #notifyValueChip [hidden]='true' [displayDensity]="grid.displayDensity">
-                        Drop here to use as value
+                        {{grid.resourceStrings.igx_grid_pivot_value_drop_chip}}
                     </igx-chip>
                 </igx-chips-area>
             </div>
@@ -121,7 +120,7 @@
                 <ng-container *ngIf="grid.showPivotConfigurationUI">
                     <span id='empty' igxDrop (dropped)="onDimDrop($event, rowArea, 0)"
                         *ngIf="grid.rowDimensions.length === 0 && grid.showPivotConfigurationUI"
-                        class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
+                        class='igx-pivot__emptyChipArea'>{{grid.resourceStrings.igx_grid_pivot_empty_row_drop_area}}</span>
                     <ng-container *ngFor="let row of grid.rowDimensions; let last = last;">
                         <span [style.visibility]='"hidden"' class="igx-grid__tr-pivot--chip_drop_indicator"
                             [style.height.px]='getAreaHeight(rowArea)'></span>
@@ -143,7 +142,7 @@
                         </ng-container>
                     </ng-container>
                     <igx-chip igxDrop (dragDrop)="onDimDrop($event, rowArea, 0)" #notifyChip [hidden]='true'  [displayDensity]="grid.displayDensity">
-                        Drop here to use as row
+                        {{grid.resourceStrings.igx_grid_pivot_row_drop_chip}}
                     </igx-chip>
                 </ng-container>
             </igx-chips-area>
