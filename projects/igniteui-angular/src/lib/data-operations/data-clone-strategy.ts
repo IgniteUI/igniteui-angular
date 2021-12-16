@@ -1,4 +1,4 @@
-import { cloneValue } from "../core/utils";
+import { cloneValue } from '../core/utils';
 
 export interface IDataCloneStrategy {
     clone(data: any): any;
