@@ -847,7 +847,6 @@ describe('Excel Exporter', () => {
             const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent);
             fix.detectChanges();
 
-
             const hGrid = fix.componentInstance.hGrid;
             options = createExportOptions('HierarchicalGridMCHExcelExport');
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithMultiColumnHeadersOnlyInIsland);
