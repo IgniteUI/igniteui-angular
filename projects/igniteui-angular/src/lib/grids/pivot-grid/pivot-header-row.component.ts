@@ -313,7 +313,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             } else {
                 const newDim = Object.assign({}, dims[0]);
                 newDim.enabled = true;
-                currentDim.splice(chipIndex, 0, newDim);
+                currentDim.splice(targetIndex, 0, newDim);
             }
             const isDraggedFromColumn = !!this.grid.pivotConfiguration.columns?.find(x => x && x.memberName === dragId);
             if (isDraggedFromColumn) {
@@ -334,7 +334,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         }
         this.grid.pipeTrigger++;
         this.grid.dimensionsChange.emit({ dimensions: currentDim, dimensionCollectionType: dimension });
+        // clean states
         this.onDimDragEnd();
+        this.onAreaDragLeave(event, area);
     }
 
     protected getDimensionsByType(dimension: PivotDimensionType) {

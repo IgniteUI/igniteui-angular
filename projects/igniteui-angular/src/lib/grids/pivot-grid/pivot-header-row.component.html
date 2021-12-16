@@ -142,7 +142,7 @@
                                 [style.height.px]='getAreaHeight(rowArea)'></span>
                         </ng-container>
                     </ng-container>
-                    <igx-chip igxDrop (dragDrop)="onDimDrop($event, rowArea, 0)" #notifyChip [hidden]='true'>
+                    <igx-chip igxDrop (dragDrop)="onDimDrop($event, rowArea, 0)" #notifyChip [hidden]='true'  [displayDensity]="grid.displayDensity">
                         Drop here to use as row
                     </igx-chip>
                 </ng-container>
