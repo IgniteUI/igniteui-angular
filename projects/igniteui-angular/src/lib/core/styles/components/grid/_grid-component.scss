@@ -561,6 +561,10 @@
             @extend %igx-grid__tr-pivot--filter-container !optional
         }
 
+        @include e(tr-pivot, $m: 'chip_drop_indicator') {
+            @extend %igx-grid__tr-pivot--chip_drop_indicator !optional
+        }
+
         @include e(tr-pivot, $m: 'drop-row-area') {
             @extend %igx-grid__tr-pivot--drop-row-area !optional
         }

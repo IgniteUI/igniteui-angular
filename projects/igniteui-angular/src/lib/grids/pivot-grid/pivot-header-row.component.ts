@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
+import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
@@ -39,8 +40,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
     public value: IPivotValue;
     private _dropPos = DropPosition.AfterDropTarget;
-    private _dropLeftIndicatorClass = 'igx-pivot-grid__drop-indicator--left';
-    private _dropRightIndicatorClass = 'igx-pivot-grid__drop-indicator--right';
     private valueData: Map<string, IPivotAggregator[]>;
     private _subMenuPositionSettings: PositionSettings = {
         verticalStartPoint: VerticalAlignment.Bottom,
@@ -84,6 +83,11 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         for (let chip of this.notificationChips) {
             chip.nativeElement.hidden = true;
         }
+    }
+
+    public getAreaHeight(area: IgxChipsAreaComponent) {
+        const chips =  area.chipsList;
+        return chips && chips.length > 0 ? chips.first.nativeElement.clientHeight : 0;
     }
 
     public getAggregateList(val: IPivotValue): IPivotAggregator[] {
@@ -216,23 +220,17 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
         this._dropPos = event.originalEvent.offsetX > pos ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
         if (this._dropPos === DropPosition.AfterDropTarget) {
-            event.owner.nativeElement.style.borderRight = '1px solid red';
-            event.owner.nativeElement.style.borderLeft = '';
-            this.renderer.removeClass(event.owner.nativeElement, this._dropLeftIndicatorClass);
-            this.renderer.addClass(event.owner.nativeElement, this._dropRightIndicatorClass);
+            event.owner.nativeElement.previousElementSibling.style.visibility = 'hidden';
+            event.owner.nativeElement.nextElementSibling.style.visibility = '';
         } else {
-            event.owner.nativeElement.style.borderRight = '';
-            event.owner.nativeElement.style.borderLeft = '1px solid red';
-            this.renderer.addClass(event.owner.nativeElement, this._dropLeftIndicatorClass);
-            this.renderer.removeClass(event.owner.nativeElement, this._dropRightIndicatorClass);
+            event.owner.nativeElement.nextElementSibling.style.visibility = 'hidden';
+            event.owner.nativeElement.previousElementSibling.style.visibility = '';
         }
     }
 
     public onDimDragLeave(event) {
-        this.renderer.removeClass(event.owner.nativeElement, this._dropLeftIndicatorClass);
-        this.renderer.removeClass(event.owner.nativeElement, this._dropRightIndicatorClass);
-        event.owner.nativeElement.style.borderLeft = '';
-        event.owner.nativeElement.style.borderRight = '';
+        event.owner.nativeElement.previousElementSibling.style.visibility = 'hidden';
+        event.owner.nativeElement.nextElementSibling.style.visibility = 'hidden';
         this._dropPos = DropPosition.AfterDropTarget;
     }
 
@@ -250,16 +248,14 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             const targetElem = event.detail.originalEvent.target;
             const targetOwner = event.detail.owner.element.nativeElement.parentElement;
             if (targetOwner !== lastElem && targetElem.getBoundingClientRect().x >= lastElem.getBoundingClientRect().x) {
-                this.renderer.addClass(area.chipsList.last.nativeElement, this._dropRightIndicatorClass);
-                // TODO- remove once classes are added.
-                area.chipsList.last.nativeElement.style.borderRight = '1px solid red';
+                area.chipsList.last.nativeElement.nextElementSibling.style.visibility = '';
             }
         }
     }
     public onAreaDragLeave(event, area) {
         area.chipsList.toArray().forEach(element => {
-            this.renderer.removeClass(element.nativeElement, this._dropRightIndicatorClass);
-            element.nativeElement.style.borderRight = '';
+            event.owner.nativeElement.previousElementSibling.style.visibility = 'hidden';
+            event.owner.nativeElement.nextElementSibling.style.visibility = 'hidden';
         });
     }
 
