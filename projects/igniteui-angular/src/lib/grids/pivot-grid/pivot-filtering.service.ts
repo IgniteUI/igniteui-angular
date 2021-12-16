@@ -18,7 +18,7 @@ export class IgxPivotFilteringService extends IgxFilteringService {
         const config = (grid as IgxPivotGridComponent).pivotConfiguration;
         const allDimensions = PivotUtil.flatten(config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined));
         const dim = allDimensions.find(x => x.memberName === fieldName || x.member === fieldName);
-        dim.filters = undefined;
+        dim.filter = undefined;
         grid.filteringPipeTrigger++;
         if (PivotUtil.flatten(config.columns).indexOf(dim) !== -1) {
             // update columns
@@ -33,14 +33,14 @@ export class IgxPivotFilteringService extends IgxFilteringService {
         const allDimensions = PivotUtil.flatten(config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined));
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
         const dim = enabledDimensions.find(x => x.memberName === fieldName || x.member === fieldName);
-        const filteringTree = dim.filters || new FilteringExpressionsTree(FilteringLogic.And);
+        const filteringTree = dim.filter || new FilteringExpressionsTree(FilteringLogic.And);
         const fieldFilterIndex = filteringTree.findIndex(fieldName);
         if (fieldFilterIndex > -1) {
             filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
         }
 
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
-        dim.filters = filteringTree;
+        dim.filter = filteringTree;
         grid.filteringPipeTrigger++;
         if (PivotUtil.flatten(config.columns).indexOf(dim) !== -1) {
             // update columns

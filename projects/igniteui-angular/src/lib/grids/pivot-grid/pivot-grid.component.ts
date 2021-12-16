@@ -1115,9 +1115,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
         currentFields.forEach((value, key) => {
             let shouldGenerate = true;
-            if (value.dimension && value.dimension.filters) {
+            if (value.dimension && value.dimension.filter) {
                 const state = {
-                    expressionsTree: value.dimension.filters.filteringOperands[0],
+                    expressionsTree: value.dimension.filter.filteringOperands[0],
                     strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
                     advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
                 };

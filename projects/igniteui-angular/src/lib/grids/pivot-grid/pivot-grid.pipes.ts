@@ -3,7 +3,7 @@ import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotKeys } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotKeys } from './pivot-grid.interface';
 import {
     DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
@@ -142,9 +142,9 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
 
         const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
         // add expression trees from all filters
-        PivotUtil.flatten(enabledDimensions).forEach(x => {
-            if (x.filters) {
-                expressionsTree.filteringOperands.push(x.filters);
+        PivotUtil.flatten(enabledDimensions).forEach((x: IPivotDimension) => {
+            if (x.filter && x.filter.filteringOperands) {
+                expressionsTree.filteringOperands.push(...x.filter.filteringOperands);
             }
         });
         const state = {
