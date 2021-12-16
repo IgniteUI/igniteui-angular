@@ -27,7 +27,7 @@
                                 [style.height.px]='getAreaHeight(filterArea)'></span>
                         </ng-container>
                     </ng-container>
-                    <igx-chip igxDrop (dragDrop)="onDimDrop($event, filterArea, 2)" #notifyChip [hidden]='true'>
+                    <igx-chip igxDrop (dragDrop)="onDimDrop($event, filterArea, 2)" #notifyChip [hidden]='true' [displayDensity]="grid.displayDensity">
                         Drop here to use as filter
                     </igx-chip>
                 </igx-chips-area>
@@ -65,7 +65,7 @@
                                 [style.height.px]='getAreaHeight(colArea)'></span>
                         </ng-container>
                     </ng-container>
-                    <igx-chip igxDrop (dragDrop)="onDimDrop($event, colArea, 1)" #notifyChip [hidden]='true'>
+                    <igx-chip igxDrop (dragDrop)="onDimDrop($event, colArea, 1)" #notifyChip [hidden]='true'  [displayDensity]="grid.displayDensity">
                         Drop here to use as column
                     </igx-chip>
                 </igx-chips-area>
@@ -98,7 +98,7 @@
                                 [style.height.px]='getAreaHeight(valueArea)'></span>
                         </ng-container>
                     </ng-container>
-                    <igx-chip igxDrop (dragDrop)="onValueDrop($event, valueArea)" #notifyValueChip [hidden]='true'>
+                    <igx-chip igxDrop (dragDrop)="onValueDrop($event, valueArea)" #notifyValueChip [hidden]='true' [displayDensity]="grid.displayDensity">
                         Drop here to use as value
                     </igx-chip>
                 </igx-chips-area>
