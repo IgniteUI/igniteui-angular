@@ -1,3 +1,118 @@
 <igx-input-group type="box" [displayDensity]="displayDensity">
-    <input #input igxInput placeholder="Search" />
+    <input
+        #input
+        igxInput
+        tabindex="0"
+        placeholder="Search"
+        autocomplete="off"
+    />
 </igx-input-group>
+
+<igx-list [displayDensity]="displayDensity">
+    <div style="overflow: hidden; position: relative">
+        <igx-list-item
+            *igxFor="let item of dimensions; scrollOrientation: 'vertical'"
+        >
+            <igx-checkbox
+                [value]="item"
+                [tabindex]="-1"
+                [checked]="item.isSelected"
+                [disableRipple]="true"
+                [indeterminate]="item.indeterminate"
+                [disableTransitions]="true"
+            >
+                {{ item.memberName }}
+            </igx-checkbox>
+        </igx-list-item>
+    </div>
+</igx-list>
+
+<div>
+    <header style="display: flex">
+        <igx-icon>expand_more</igx-icon>
+        <h6>Filters</h6>
+        <igx-icon>filter_list</igx-icon>
+        <igx-chip>1</igx-chip>
+    </header>
+    <igx-list [displayDensity]="displayDensity">
+        <div style="overflow: hidden; position: relative">
+            <igx-list-item
+                *igxFor="
+                    let item of grid.filterDimensions;
+                    scrollOrientation: 'vertical'
+                "
+            >
+                <div>
+                    {{ item.memberName }}
+                </div>
+            </igx-list-item>
+        </div>
+    </igx-list>
+</div>
+
+<div>
+    <header style="display: flex">
+        <igx-icon>expand_more</igx-icon>
+        <h6>Columns</h6>
+        <igx-icon>view_week</igx-icon>
+        <igx-chip>1</igx-chip>
+    </header>
+    <igx-list [displayDensity]="displayDensity">
+        <div style="overflow: hidden; position: relative">
+            <igx-list-item
+                *igxFor="
+                    let item of grid.columnDimensions;
+                    scrollOrientation: 'vertical'
+                "
+            >
+                <div>
+                    {{ item.memberName }}
+                </div>
+            </igx-list-item>
+        </div>
+    </igx-list>
+</div>
+
+<div>
+    <header style="display: flex">
+        <igx-icon>expand_more</igx-icon>
+        <h6>Rows</h6>
+        <igx-icon>table_rows</igx-icon>
+        <igx-chip>1</igx-chip>
+    </header>
+    <igx-list [displayDensity]="displayDensity">
+        <div style="overflow: hidden; position: relative">
+            <igx-list-item
+                *igxFor="
+                    let item of grid.rowDimensions;
+                    scrollOrientation: 'vertical'
+                "
+            >
+                <div>
+                    {{ item.memberName }}
+                </div>
+            </igx-list-item>
+        </div>
+    </igx-list>
+</div>
+
+<div>
+    <header style="display: flex">
+        <igx-icon>expand_more</igx-icon>
+        <h6>Values</h6>
+        <igx-icon>sum</igx-icon>
+        <igx-chip>1</igx-chip>
+    </header>
+    <igx-list [displayDensity]="displayDensity">
+        <div style="overflow: hidden; position: relative">
+            <igx-list-item
+                *igxFor="let item of grid.values; scrollOrientation: 'vertical'"
+            >
+                <div>
+                    {{ item.aggregate.key }}
+                    {{ item.member }}
+                </div>
+            </igx-list-item>
+        </div>
+    </igx-list>
+</div>

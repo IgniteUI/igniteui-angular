@@ -9,6 +9,7 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { IgxPivotDataSelectorComponent } from './pivot-data-selector.component';
+import { IgxComboModule } from '../../combo/combo.component';
 
 /**
  * @hidden
@@ -45,6 +46,7 @@ import { IgxPivotDataSelectorComponent } from './pivot-data-selector.component';
   ],
   imports: [
     IgxGridModule,
+    IgxComboModule
   ],
   entryComponents: [
     IgxGridComponent

@@ -48,12 +48,18 @@
 
     %pivot-data-selector-base {
         display: flex;
+        flex-direction: column;
         width: 200px;
         height: 200px;
         background: var-get($theme, 'background');
 
-        > * {
-            flex: 1 1 auto;
+        > igx-input-group {
+            flex: 0 1 auto;
+        }
+
+        igx-display-container {
+            display: flex;
+            flex-direction: column;
         }
     }
 }
