@@ -119,7 +119,7 @@
             <!-- Row area -->
             <igx-chips-area #rowArea droppable='true'>
                 <ng-container *ngIf="grid.showPivotConfigurationUI">
-                    <span igxDrop (dropped)="onDimDrop($event, rowArea, 0)"
+                    <span id='empty' igxDrop (dropped)="onDimDrop($event, rowArea, 0)"
                         *ngIf="grid.rowDimensions.length === 0 && grid.showPivotConfigurationUI"
                         class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
                     <ng-container *ngFor="let row of grid.rowDimensions; let last = last;">
