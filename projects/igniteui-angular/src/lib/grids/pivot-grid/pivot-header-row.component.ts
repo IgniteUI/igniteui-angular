@@ -4,7 +4,9 @@ import {
     Component,
     ElementRef,
     Inject,
-    Renderer2
+    QueryList,
+    Renderer2,
+    ViewChildren
 } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
@@ -58,6 +60,30 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         protected renderer: Renderer2,
     ) {
         super(ref, cdr);
+    }
+
+    @ViewChildren('notifyChip')
+    public notificationChips: QueryList<IgxChipComponent>;
+
+    public showDropDimensionChips = false;
+
+    public onDimDragStart(event, area) {
+        this.showDropDimensionChips = true;
+        this.cdr.detectChanges();
+        for (let chip of this.notificationChips) {
+            if (area.chipsList.toArray().indexOf(chip) === -1 &&
+             chip.nativeElement.parentElement.children.length > 0 &&
+             chip.nativeElement.parentElement.children.item(0).tagName !== 'SPAN' ) {
+                chip.nativeElement.hidden = false;
+                chip.nativeElement.scrollIntoView();
+            }
+        }
+    }
+
+    public onDimDragEnd() {
+        for (let chip of this.notificationChips) {
+            chip.nativeElement.hidden = true;
+        }
     }
 
     public getAggregateList(val: IPivotValue): IPivotAggregator[] {
@@ -218,8 +244,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             // cannot drag between dimensions and value
             return;
         }
-        const lastElem = area.chipsList.last?.nativeElement;
-        if (lastElem) {
+        const lastChip = area.chipsList.last;
+        if (lastChip && this.notificationChips.toArray().indexOf(lastChip) === -1) {
+            const lastElem = area.chipsList.last?.nativeElement;
             const targetElem = event.detail.originalEvent.target;
             const targetOwner = event.detail.owner.element.nativeElement.parentElement;
             if (targetOwner !== lastElem && targetElem.getBoundingClientRect().x >= lastElem.getBoundingClientRect().x) {
@@ -307,6 +334,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         }
         this.grid.pipeTrigger++;
         this.grid.dimensionsChange.emit({ dimensions: currentDim, dimensionCollectionType: dimension });
+        this.onDimDragEnd();
     }
 
     protected getDimensionsByType(dimension: PivotDimensionType) {

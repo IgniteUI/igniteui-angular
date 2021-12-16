@@ -4,18 +4,24 @@
             (igxDragEnter)="onAreaDragEnter($event, filterArea, 2)" (igxDragLeave)="onAreaDragLeave($event, filterArea)"
             igxDrop (dropped)="onDimDrop($event, filterArea, 2)" (pointerdown)="$event.preventDefault()">
 
-            <span *ngIf="grid.filterDimensions.length === 0" class='igx-pivot__emptyChipArea'>Drop Filter Fields here.</span>
+
 
             <!-- Filter area -->
             <igx-chips-area #filterArea droppable='true'>
+                <span  igxDrop (dropped)="onDimDrop($event, filterArea, 2)" *ngIf="grid.filterDimensions.length === 0" class='igx-pivot__emptyChipArea'>Drop Filter Fields here.</span>
                 <igx-chip *ngFor="let filter of grid.filterDimensions" [id]="filter.memberName" [draggable]="true"
                     [displayDensity]="grid.displayDensity"
                     [removable]="true" (remove)="filterRemoved($event)"
                     (dragOver)="onDimDragOver($event, 2)"
                     (dragLeave)="onDimDragLeave($event)"
-                    (dragDrop)="onDimDrop($event, filterArea, 2)">
+                    (dragDrop)="onDimDrop($event, filterArea, 2)"
+                    (moveStart)= 'onDimDragStart($event, filterArea)'
+                    (moveEnd)= 'onDimDragEnd()'>
                     <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, filter)'>filter_list</igx-icon>
                     {{filter.memberName}}
+                </igx-chip>
+                <igx-chip igxDrop (dragDrop)="onDimDrop($event, filterArea, 2)" #notifyChip [hidden]='true'>
+                    Drop here to use as filter
                 </igx-chip>
             </igx-chips-area>
         </div>
@@ -23,23 +29,26 @@
         <div class="igx-grid__tr-pivot-group">
             <div #pivotColumnContainer *ngIf="grid.showPivotConfigurationUI" class="igx-grid__tr-pivot" (dropped)="onDimDrop($event, colArea, 1)" igxDrop
                 (igxDragEnter)="onAreaDragEnter($event, colArea, 1)" (igxDragLeave)="onAreaDragLeave($event, colArea)">
-
-                <span *ngIf="grid.columnDimensions.length === 0" class='igx-pivot__emptyChipArea'>Drop Column Fields here.</span>
-
                 <!-- Columns area -->
                 <igx-chips-area #colArea droppable='true'>
+                    <span  (dropped)="onDimDrop($event, colArea, 1)" igxDrop *ngIf="grid.columnDimensions.length === 0" class='igx-pivot__emptyChipArea'>Drop Column Fields here.</span>
                     <igx-chip *ngFor="let col of grid.columnDimensions" [draggable]="true" [id]="col.memberName"
                         [displayDensity]="grid.displayDensity"
                         [removable]="true" (remove)="columnRemoved($event)"
                         (dragOver)="onDimDragOver($event, 1)"
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, colArea, 1)"
+                        (moveStart)= 'onDimDragStart($event, colArea)'
+                        (moveEnd)= 'onDimDragEnd()'
                         (click)="onChipSort($event, col, 1)">
                         <igx-icon igxPrefix>view_column</igx-icon>
                         <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, col)'>filter_list</igx-icon>
                         {{col.memberName}}
 
                         <igx-icon *ngIf="col.sortDirection"  igxSuffix> {{ col.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+                    </igx-chip>
+                    <igx-chip igxDrop (dragDrop)="onDimDrop($event, colArea, 1)" #notifyChip [hidden]='true'>
+                        Drop here to use as column
                     </igx-chip>
                 </igx-chips-area>
             </div>
@@ -48,11 +57,9 @@
                 (dropped)="onValueDrop($event, valueArea)" igxDrop
                 (igxDragEnter)="onAreaDragEnter($event, valueArea)"
                 (igxDragLeave)="onAreaDragLeave($event, valueArea)">
-
-                <span *ngIf="grid.values.length === 0" class='igx-pivot__emptyChipArea'>Drop Value Fields here.</span>
-
                 <!-- Value area -->
                 <igx-chips-area #valueArea droppable='true'>
+                    <span (dropped)="onValueDrop($event, valueArea)" igxDrop *ngIf="grid.values.length === 0" class='igx-pivot__emptyChipArea'>Drop Value Fields here.</span>
                     <igx-chip #currChip *ngFor="let value of grid.values" [draggable]="true" [id]="value.displayName || value.member"
                         [displayDensity]="grid.displayDensity"
                         [removable]="true" (remove)="valueRemoved($event)"
@@ -65,6 +72,9 @@
                             <igx-icon>arrow_drop_down</igx-icon>
                          </div>
                         {{value.aggregate.key}}({{value.displayName || value.member}})
+                    </igx-chip>
+                    <igx-chip igxDrop (dragDrop)="onValueDrop($event, valueArea)" #notifyValueChip [hidden]='true'>
+                        Drop here to use as value
                     </igx-chip>
                 </igx-chips-area>
             </div>
@@ -80,23 +90,26 @@
         <div #pivotContainer class="igx-grid__tr-pivot igx-grid__tr-pivot--row-area" [style.min-width.px]="grid.pivotRowWidths - 1"
             (igxDragEnter)="onAreaDragEnter($event, rowArea, 0)" (igxDragLeave)="onAreaDragLeave($event, rowArea)"
             igxDrop (dropped)="onDimDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()">
-
-            <span *ngIf="grid.rowDimensions.length === 0 && grid.showPivotConfigurationUI" class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
-
             <!-- Row area -->
             <igx-chips-area #rowArea droppable='true'>
                 <ng-container *ngIf="grid.showPivotConfigurationUI">
+                    <span igxDrop (dropped)="onDimDrop($event, rowArea, 0)" *ngIf="grid.rowDimensions.length === 0 && grid.showPivotConfigurationUI" class='igx-pivot__emptyChipArea'>Drop Row Fields here.</span>
                     <igx-chip *ngFor="let row of grid.rowDimensions" [draggable]="true" [id]="row.memberName"
                         [displayDensity]="grid.displayDensity"
                         [removable]="true" (remove)="rowRemoved($event)"
                         (dragLeave)="onDimDragLeave($event)"
                         (dragDrop)="onDimDrop($event, rowArea, 0)"
                         (dragOver)="onDimDragOver($event, 0)"
+                        (moveStart)= 'onDimDragStart($event, rowArea)'
+                        (moveEnd)= 'onDimDragEnd()'
                         (click)="onChipSort($event, row, 0)">
                         <igx-icon igxPrefix>table_rows</igx-icon>
                         <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
                         {{ row.memberName}}
                         <igx-icon *ngIf="row.sortDirection" igxSuffix> {{ row.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+                    </igx-chip>
+                    <igx-chip igxDrop (dragDrop)="onDimDrop($event, rowArea, 0)" #notifyChip [hidden]='true'>
+                        Drop here to use as row
                     </igx-chip>
                 </ng-container>
             </igx-chips-area>
