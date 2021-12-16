@@ -249,15 +249,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *  <igx-grid #grid [data]="localData" [dataCloneStrategy]="customCloneStrategy"></igx-grid>
      * ```
      */
-     @Input()
-     public get dataCloneStrategy(): IDataCloneStrategy {
-         return this._dataCloneStrategy;
-     }
+    @Input()
+    public get dataCloneStrategy(): IDataCloneStrategy {
+        return this._dataCloneStrategy;
+    }
 
-     public set dataCloneStrategy(strategy: IDataCloneStrategy) {
-         this._dataCloneStrategy = strategy;
-     }
-
+    public set dataCloneStrategy(strategy: IDataCloneStrategy) {
+        this._dataCloneStrategy = strategy;
+        if (this._batchEditing) {
+            this.switchTransactionService(this._batchEditing);
+        }
+    }
 
     /**
      * Controls the copy behavior of the grid.
@@ -2815,7 +2817,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private transactionChange$ = new Subject<void>();
     private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
-    private _dataCloneStrategy : IDataCloneStrategy = new DefaultDataCloneStrategy();
+    private _dataCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
 
     /**
      * @hidden @internal
