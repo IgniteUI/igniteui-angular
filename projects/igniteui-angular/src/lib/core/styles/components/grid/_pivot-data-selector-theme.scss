@@ -49,8 +49,7 @@
     %pivot-data-selector-base {
         display: flex;
         flex-direction: column;
-        width: 200px;
-        height: 200px;
+        width: 100%;
         background: var-get($theme, 'background');
 
         > igx-input-group {
@@ -61,5 +60,11 @@
             display: flex;
             flex-direction: column;
         }
+    }
+
+    %pivot-data-selector-header,
+    %pivot-data-selector-header-extra {
+        display: flex;
+        align-items: center;
     }
 }

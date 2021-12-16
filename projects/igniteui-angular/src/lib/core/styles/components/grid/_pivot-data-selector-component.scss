@@ -10,5 +10,13 @@
         );
 
         @extend %pivot-data-selector-base !optional;
+
+        @include e(header) {
+            @extend %pivot-data-selector-header !optional;
+        }
+
+        @include e(header-extra) {
+            @extend %pivot-data-selector-header-extra !optional;
+        }
     }
 }
