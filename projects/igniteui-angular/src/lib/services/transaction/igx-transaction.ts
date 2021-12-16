@@ -279,7 +279,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                     }
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef, type: transaction.type } as S;
+            state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
 

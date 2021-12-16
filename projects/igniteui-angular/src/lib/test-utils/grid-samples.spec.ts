@@ -20,6 +20,7 @@ import { FilteringLogic } from '../data-operations/filtering-expression.interfac
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { ISortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
+import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -2464,4 +2465,19 @@ export class ColumnsAddedOnInitComponent extends BasicGridComponent implements O
         }
     }
 
+}
+export class ObjectCloneStrategy implements IDataCloneStrategy {
+    public clone(data: any): any {
+        let clonedData = {};
+        if (data) {
+            let clone = Object.defineProperties({}, Object.getOwnPropertyDescriptors(data));
+            for (let key in clone) {
+                clonedData[key] = clone[key]
+            }
+
+            clonedData['cloned'] = true;
+        }
+
+        return clonedData;
+    }
 }
