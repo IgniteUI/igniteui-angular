@@ -5,7 +5,9 @@ All notable changes for each version of this project will be documented in this 
 ## 13.0.1
 
 ### New Features
-- Add `igxSummary` directive in order to re-template the default summary cell layout.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added `dataCloneStrategy` input, which allows users provide their own implementation of how data objects are cloned when row and/or batch editing is enabled. The custom strategy should implement the `IDataCloneStrategy` interface.
+    - Add `igxSummary` directive in order to re-template the default summary cell layout.
     - Expose `summaryTemplate` input in order to bind the column summary template through API.
     - Expose `summaryRowHeight` property which overrides the default hight of the summary row.
     - Code example below:
