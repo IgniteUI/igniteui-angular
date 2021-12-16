@@ -286,6 +286,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         const chipsArray = area.chipsList.toArray();
         const chip = chipsArray.find(x => x.id === dragId);
         const isNewChip = chip === undefined;
+        const isReorder = event.owner.id !== undefined;
         //const chipIndex = chipsArray.indexOf(event.owner) !== -1 ? chipsArray.indexOf(event.owner) : chipsArray.length;
         const chipIndex = currentDim.findIndex(x => x.memberName === event.owner.id) !== -1 ?
             currentDim.findIndex(x => x.memberName === event.owner.id) : currentDim.length;
@@ -320,7 +321,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
                 // columns have changed.
                 this.grid.setupColumns();
             }
-        } else {
+        } else if (isReorder) {
             // chip from same collection, reordered.
             const newDim = currentDim.find(x => x.memberName === dragId);
             //const dragChipIndex = chipsArray.indexOf(event.dragChip || event.dragData.chip);

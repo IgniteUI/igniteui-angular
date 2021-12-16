@@ -2907,6 +2907,7 @@
 
         igx-chips-area {
             flex-wrap: nowrap;
+            width: auto;
 
             > * {
                 margin-#{$right}: rem(8px);
