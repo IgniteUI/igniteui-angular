@@ -72,7 +72,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         for (let chip of this.notificationChips) {
             if (area.chipsList.toArray().indexOf(chip) === -1 &&
              chip.nativeElement.parentElement.children.length > 0 &&
-             chip.nativeElement.parentElement.children.item(0).tagName !== 'SPAN' ) {
+             chip.nativeElement.parentElement.children.item(0).id !== 'empty' ) {
                 chip.nativeElement.hidden = false;
                 chip.nativeElement.scrollIntoView();
             }
@@ -253,9 +253,12 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         }
     }
     public onAreaDragLeave(event, area) {
-        area.chipsList.toArray().forEach(element => {
-            event.owner.nativeElement.previousElementSibling.style.visibility = 'hidden';
-            event.owner.nativeElement.nextElementSibling.style.visibility = 'hidden';
+        const dataChips = area.chipsList.toArray().filter(x => this.notificationChips.toArray().indexOf(x) === -1);
+        dataChips.forEach(element => {
+            element.nativeElement.previousElementSibling.style.visibility = 'hidden';
+            if (element.nativeElement.nextElementSibling) {
+                element.nativeElement.nextElementSibling.style.visibility = 'hidden';
+            }
         });
     }
 
