@@ -237,7 +237,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
             return this._summaryRowHeight || this.summaryService.calcMaxSummaryHeight();
         }
-        return 0;
+        return this.summaryService.summaryHeight;
     }
 
     /**
