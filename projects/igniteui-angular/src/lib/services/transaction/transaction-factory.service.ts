@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { IgxBaseTransactionService } from './base-transaction';
 import { HierarchicalTransactionService } from './hierarchical-transaction';
 import { IgxHierarchicalTransactionService } from './igx-hierarchical-transaction';
