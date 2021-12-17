@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { IDataCloneStrategy } from 'igniteui-angular';
+import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 export enum TransactionType {
     ADD = 'add',
@@ -54,7 +54,7 @@ export interface HierarchicalState extends State {
     path: any[];
 }
 
-export interface TransactionService<T extends Transaction, S extends State> {    
+export interface TransactionService<T extends Transaction, S extends State> {
     /**
      * Returns whether transaction is enabled for this service
      */
