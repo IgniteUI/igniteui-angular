@@ -272,7 +272,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         if (grid.transactions.enabled) {
             const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
-            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
+            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData, cloneStrategy : grid.transactions.cloneStrategy };
             grid.transactions.add(transaction);
         } else {
             grid.data.push(rowData);
@@ -285,14 +285,14 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         const grid = this.grid;
         if (index !== -1) {
             if (grid.transactions.enabled) {
-                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
+                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null, cloneStrategy : grid.transactions.cloneStrategy};
                 grid.transactions.add(transaction, grid.data[index]);
             } else {
                 grid.data.splice(index, 1);
             }
         } else {
             const state: State = grid.transactions.getState(rowID);
-            grid.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
+            grid.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null, cloneStrategy : grid.transactions.cloneStrategy }, state && state.recordRef);
         }
     }
 
@@ -485,7 +485,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             const transaction: Transaction = {
                 id: rowID,
                 type: TransactionType.UPDATE,
-                newValue: rowNewValue
+                newValue: rowNewValue,
+                cloneStrategy: grid.transactions.cloneStrategy
             };
             grid.transactions.add(transaction, rowCurrentValue);
         } else {

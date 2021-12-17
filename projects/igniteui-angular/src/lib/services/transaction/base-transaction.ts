@@ -7,6 +7,17 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
+    public get cloneStrategy(): IDataCloneStrategy {
+        return this._cloneStrategy;
+    }
+
+     public set cloneStrategy(strategy: IDataCloneStrategy) {
+        this._cloneStrategy = strategy || new DefaultDataCloneStrategy();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public get canRedo(): boolean {
         return false;
     }
@@ -30,11 +41,10 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      */
     public onStateUpdate = new EventEmitter<StateUpdateEvent>();
 
-    constructor(public cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy()){}
-
     protected _isPending = false;
     protected _pendingTransactions: T[] = [];
     protected _pendingStates: Map<any, S> = new Map();
+    private _cloneStrategy : IDataCloneStrategy;
 
     /**
      * @inheritdoc

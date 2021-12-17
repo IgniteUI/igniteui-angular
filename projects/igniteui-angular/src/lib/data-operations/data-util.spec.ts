@@ -20,6 +20,7 @@ import {
 import { IPagingState, PagingError } from './paging-state.interface';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/public_api';
+import { DefaultDataCloneStrategy } from './data-clone-strategy';
 
 /* Test sorting */
 const testSort = () => {
@@ -485,14 +486,15 @@ const testPage = () => {
 const testMerging = () => {
     describe('Test merging', () => {
         it('Should merge add transactions correctly', () => {
+            const cloneStrategy = new DefaultDataCloneStrategy();
             const data = SampleTestData.personIDNameData();
             const addRow4 = { ID: 4, IsEmployed: true, Name: 'Peter' };
             const addRow5 = { ID: 5, IsEmployed: true, Name: 'Mimi' };
             const addRow6 = { ID: 6, IsEmployed: false, Name: 'Pedro' };
             const transactions: Transaction[] = [
-                { id: addRow4.ID, newValue: addRow4, type: TransactionType.ADD },
-                { id: addRow5.ID, newValue: addRow5, type: TransactionType.ADD },
-                { id: addRow6.ID, newValue: addRow6, type: TransactionType.ADD },
+                { id: addRow4.ID, newValue: addRow4, type: TransactionType.ADD, cloneStrategy: cloneStrategy },
+                { id: addRow5.ID, newValue: addRow5, type: TransactionType.ADD, cloneStrategy: cloneStrategy },
+                { id: addRow6.ID, newValue: addRow6, type: TransactionType.ADD, cloneStrategy: cloneStrategy },
             ];
 
             DataUtil.mergeTransactions(data, transactions, 'ID');
@@ -503,10 +505,11 @@ const testMerging = () => {
         });
 
         it('Should merge update transactions correctly', () => {
+            const cloneStrategy = new DefaultDataCloneStrategy();
             const data = SampleTestData.personIDNameData();
             const transactions: Transaction[] = [
-                { id: 1, newValue: { Name: 'Peter' }, type: TransactionType.UPDATE },
-                { id: 3, newValue: { Name: 'Mimi' }, type: TransactionType.UPDATE },
+                { id: 1, newValue: { Name: 'Peter' }, type: TransactionType.UPDATE, cloneStrategy: cloneStrategy },
+                { id: 3, newValue: { Name: 'Mimi' }, type: TransactionType.UPDATE, cloneStrategy: cloneStrategy },
             ];
 
             DataUtil.mergeTransactions(data, transactions, 'ID');
@@ -516,11 +519,12 @@ const testMerging = () => {
         });
 
         it('Should merge delete transactions correctly', () => {
+            const cloneStrategy = new DefaultDataCloneStrategy();
             const data = SampleTestData.personIDNameData();
             const secondRow = data[1];
             const transactions: Transaction[] = [
-                { id: 1, newValue: null, type: TransactionType.DELETE },
-                { id: 3, newValue: null, type: TransactionType.DELETE },
+                { id: 1, newValue: null, type: TransactionType.DELETE, cloneStrategy: cloneStrategy },
+                { id: 3, newValue: null, type: TransactionType.DELETE, cloneStrategy: cloneStrategy },
             ];
 
             DataUtil.mergeTransactions(data, transactions, 'ID', true);
@@ -529,14 +533,15 @@ const testMerging = () => {
         });
 
         it('Should merge add hierarchical transactions correctly', () => {
+            const cloneStrategy = new DefaultDataCloneStrategy();
             const data = SampleTestData.employeeSmallTreeData();
             const addRootRow = { ID: 1000, Name: 'Pit Peter', HireDate: new Date(2008, 3, 20), Age: 55 };
             const addChildRow1 = { ID: 1001, Name: 'Marry May', HireDate: new Date(2018, 4, 1), Age: 102 };
             const addChildRow2 = { ID: 1002, Name: 'April Alison', HireDate: new Date(2021, 5, 10), Age: 4 };
             const transactions: HierarchicalTransaction[] = [
-                { id: addRootRow.ID, newValue: addRootRow, type: TransactionType.ADD, path: [] },
-                { id: addChildRow1.ID, newValue: addChildRow1, type: TransactionType.ADD, path: [data[0].ID, data[0].Employees[1].ID] },
-                { id: addChildRow2.ID, newValue: addChildRow2, type: TransactionType.ADD, path: [addRootRow.ID] },
+                { id: addRootRow.ID, newValue: addRootRow, type: TransactionType.ADD, cloneStrategy: cloneStrategy, path: [] },
+                { id: addChildRow1.ID, newValue: addChildRow1, type: TransactionType.ADD, cloneStrategy: cloneStrategy, path: [data[0].ID, data[0].Employees[1].ID] },
+                { id: addChildRow2.ID, newValue: addChildRow2, type: TransactionType.ADD, cloneStrategy: cloneStrategy, path: [addRootRow.ID] },
             ];
 
             DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', false);
@@ -555,6 +560,7 @@ const testMerging = () => {
         });
 
         it('Should merge update hierarchical transactions correctly', () => {
+            const cloneStrategy = new DefaultDataCloneStrategy();
             const data = SampleTestData.employeeSmallTreeData();
             const updateRootRow = { Name: 'May Peter', Age: 13 };
             const updateChildRow1 = { HireDate: new Date(2100, 1, 12), Age: 1300 };
@@ -565,18 +571,21 @@ const testMerging = () => {
                     id: data[1].ID,
                     newValue: updateRootRow,
                     type: TransactionType.UPDATE,
+                    cloneStrategy: cloneStrategy,
                     path: []
                 },
                 {
                     id: data[2].Employees[0].ID,
                     newValue: updateChildRow1,
                     type: TransactionType.UPDATE,
+                    cloneStrategy: cloneStrategy,
                     path: [data[2].ID]
                 },
                 {
                     id: (data[0].Employees[2] as any).Employees[0].ID,
                     newValue: updateChildRow2,
                     type: TransactionType.UPDATE,
+                    cloneStrategy: cloneStrategy,
                     path: [data[0].ID, data[0].Employees[2].ID]
                 },
             ];
@@ -593,16 +602,17 @@ const testMerging = () => {
         });
 
         it('Should merge delete hierarchical transactions correctly', () => {
+            const cloneStrategy = new DefaultDataCloneStrategy();
             const data = SampleTestData.employeeSmallTreeData();
             const transactions: HierarchicalTransaction[] = [
                 //  root row with no children
-                { id: data[1].ID, newValue: null, type: TransactionType.DELETE, path: [] },
+                { id: data[1].ID, newValue: null, type: TransactionType.DELETE, cloneStrategy: cloneStrategy, path: [] },
                 //  root row with children
-                { id: data[2].ID, newValue: null, type: TransactionType.DELETE, path: [] },
+                { id: data[2].ID, newValue: null, type: TransactionType.DELETE, cloneStrategy: cloneStrategy, path: [] },
                 //  child row with no children
-                { id: data[0].Employees[0].ID, newValue: null, type: TransactionType.DELETE, path: [data[0].ID] },
+                { id: data[0].Employees[0].ID, newValue: null, type: TransactionType.DELETE, cloneStrategy: cloneStrategy, path: [data[0].ID] },
                 //  child row with children
-                { id: data[0].Employees[2].ID, newValue: null, type: TransactionType.DELETE, path: [data[0].ID] }
+                { id: data[0].Employees[2].ID, newValue: null, type: TransactionType.DELETE, cloneStrategy: cloneStrategy, path: [data[0].ID] }
             ];
 
             DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', true);

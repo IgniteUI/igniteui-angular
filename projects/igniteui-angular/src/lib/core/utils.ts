@@ -25,6 +25,7 @@ import {
 } from '../animations/main';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
+import { IDataCloneStrategy } from 'igniteui-angular';
 
 /**
  * @hidden
@@ -48,14 +49,14 @@ export const getResizeObserver = () => window.ResizeObserver;
 /**
  * @hidden
  */
-export const cloneArray = (array: any[], deep?: boolean) => {
+export const cloneArray = (array: any[], deep?: boolean, strategy ?: IDataCloneStrategy) => {
     const arr = [];
     if (!array) {
         return arr;
     }
     let i = array.length;
     while (i--) {
-        arr[i] = deep ? cloneValue(array[i]) : array[i];
+        arr[i] = deep ? (strategy ? strategy.clone(array[i]) : cloneValue(array[i])) : array[i];
     }
     return arr;
 };
@@ -124,6 +125,7 @@ export const cloneValue = (value: any): any => {
         }
         return result;
     }
+    
     return value;
 };
 

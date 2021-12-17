@@ -256,9 +256,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set dataCloneStrategy(strategy: IDataCloneStrategy) {
         this._dataCloneStrategy = strategy;
-        if (this._batchEditing) {
-            this.switchTransactionService(this._batchEditing);
-        }
+        this._transactions.cloneStrategy = strategy;
     }
 
     /**
@@ -2857,7 +2855,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get dataWithAddedInTransactionRows() {
-        const result = cloneArray(this.gridAPI.get_all_data());
+        const result = cloneArray(this.gridAPI.get_all_data(), true, this._transactions.cloneStrategy);
         if (this.transactions.enabled) {
             result.push(...this.transactions.getAggregatedChanges(true)
                 .filter(t => t.type === TransactionType.ADD)
@@ -2972,7 +2970,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     ) {
         super(_displayDensityOptions);
         this.locale = this.locale || this.localeId;
-        this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None, this.dataCloneStrategy);
+        this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+        if (this.dataCloneStrategy) {
+            this._transactions.cloneStrategy = this.dataCloneStrategy;
+        }
         this.cdr.detach();
     }
 
@@ -5941,9 +5942,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected switchTransactionService(val: boolean) {
         if (val) {
-            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base, this.dataCloneStrategy);
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base);
         } else {
-            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None, this.dataCloneStrategy);
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+        }
+
+        if (this.dataCloneStrategy) {
+            this._transactions.cloneStrategy = this.dataCloneStrategy;
         }
     }
 
@@ -6198,14 +6203,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         //  if there is a row in ADD or UPDATE state change it's state to DELETE
         if (index !== -1) {
             if (this.transactions.enabled) {
-                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
+                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null, cloneStrategy : this.dataCloneStrategy };
                 this.transactions.add(transaction, this.data[index]);
             } else {
                 this.data.splice(index, 1);
             }
         } else {
             const state: State = this.transactions.getState(rowID);
-            this.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
+            this.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null, cloneStrategy : this.dataCloneStrategy }, state && state.recordRef);
         }
     }
 

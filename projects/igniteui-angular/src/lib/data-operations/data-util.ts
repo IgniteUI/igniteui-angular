@@ -205,7 +205,7 @@ export class DataUtil {
                     case TransactionType.UPDATE:
                         const updateIndex = collection.findIndex(x => x[primaryKey] === transaction.id);
                         if (updateIndex !== -1) {
-                            collection[updateIndex] = mergeObjects(cloneValue(collection[updateIndex]), transaction.newValue);
+                            collection[updateIndex] = mergeObjects(transaction.cloneStrategy.clone(collection[updateIndex]), transaction.newValue);
                         }
                         break;
                     case TransactionType.DELETE:
