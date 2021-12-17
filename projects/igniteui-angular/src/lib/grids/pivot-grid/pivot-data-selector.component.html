@@ -36,7 +36,10 @@
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
-            <igx-list [displayDensity]="displayDensity">
+            <igx-list
+                [displayDensity]="displayDensity"
+                *ngIf="grid.filterDimensions.length > 0"
+            >
                 <igx-list-item
                     *igxFor="
                         let item of grid.filterDimensions;
@@ -54,6 +57,12 @@
                     </div>
                 </igx-list-item>
             </igx-list>
+            <div
+                class="igx-pivot-data-selector__empty"
+                *ngIf="grid.filterDimensions.length === 0"
+            >
+                Drag Items Here
+            </div>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     <igx-expansion-panel>
@@ -67,7 +76,10 @@
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
-            <igx-list [displayDensity]="displayDensity">
+            <igx-list
+                *ngIf="grid.columnDimensions.length > 0"
+                [displayDensity]="displayDensity"
+            >
                 <igx-list-item
                     *igxFor="
                         let item of grid.columnDimensions;
@@ -85,6 +97,12 @@
                     </div>
                 </igx-list-item>
             </igx-list>
+            <div
+                class="igx-pivot-data-selector__empty"
+                *ngIf="grid.columnDimensions.length === 0"
+            >
+                Drag Items Here
+            </div>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     <igx-expansion-panel>
@@ -98,7 +116,10 @@
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
-            <igx-list [displayDensity]="displayDensity">
+            <igx-list
+                *ngIf="grid.rowDimensions.length > 0"
+                [displayDensity]="displayDensity"
+            >
                 <igx-list-item
                     *igxFor="
                         let item of grid.rowDimensions;
@@ -116,6 +137,12 @@
                     </div>
                 </igx-list-item>
             </igx-list>
+            <div
+                class="igx-pivot-data-selector__empty"
+                *ngIf="grid.rowDimensions.length === 0"
+            >
+                Drag Items Here
+            </div>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     <igx-expansion-panel>
@@ -129,7 +156,10 @@
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
-            <igx-list [displayDensity]="displayDensity">
+            <igx-list
+                *ngIf="grid.values.length > 0"
+                [displayDensity]="displayDensity"
+            >
                 <igx-list-item
                     *igxFor="
                         let item of grid.values;
@@ -150,6 +180,12 @@
                     </div>
                 </igx-list-item>
             </igx-list>
+            <div
+                class="igx-pivot-data-selector__empty"
+                *ngIf="grid.values.length === 0"
+            >
+                Drag Items Here
+            </div>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
 </igx-accordion>
