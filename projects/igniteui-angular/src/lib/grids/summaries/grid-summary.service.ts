@@ -133,6 +133,7 @@ export class IgxGridSummaryService {
         this.summaryHeight = 0;
         this.grid.summaryPipeTrigger++;
         if (this.grid.rootSummariesEnabled) {
+            this.grid.summaryRowHeight = 0;
             this.retriggerRootPipe++;
         }
     }
