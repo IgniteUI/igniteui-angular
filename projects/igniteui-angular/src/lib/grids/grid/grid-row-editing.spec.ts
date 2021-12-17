@@ -9,7 +9,6 @@ import { IgxGridModule, RowType } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxGridCellComponent } from '../cell.component';
 import { TransactionType, Transaction } from '../../services/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -36,6 +35,7 @@ const ROW_DELETED_CLASS = 'igx-grid__tr--deleted';
 const SUMMARY_ROW = 'igx-grid-summary-row';
 const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 const DEBOUNCETIME = 30;
+const STRATEGY = new DefaultDataCloneStrategy();
 
 describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite((() => {
@@ -2462,7 +2462,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             const expectedTransaction: Transaction = {
                 id: 1,
                 newValue: { ProductName: 'Updated value' },
-                type: TransactionType.UPDATE
+                type: TransactionType.UPDATE,
+                cloneStrategy: STRATEGY
             };
             expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
         });
@@ -2494,7 +2495,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             const expectedTransaction: Transaction = {
                 id: 1,
                 newValue: { OrderDate: newValue },
-                type: TransactionType.UPDATE
+                type: TransactionType.UPDATE,
+                cloneStrategy: STRATEGY
             };
             expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
         });
