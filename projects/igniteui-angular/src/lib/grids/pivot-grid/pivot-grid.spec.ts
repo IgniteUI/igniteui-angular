@@ -507,6 +507,29 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'USA').value).toBe(0);
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Uruguay').value).toBe(242.08);
         });
+        it('should show one aggregations drop-down at a time', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.width = '1500px';
+            fixture.detectChanges();
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const valueChipUnitsSold = headerRow.querySelector('igx-chip[id="UnitsSold"]');
+
+            const aggregatesIconUnitsSold = valueChipUnitsSold.querySelectorAll('igx-icon')[1];
+            aggregatesIconUnitsSold.click();
+            fixture.detectChanges();
+
+            let dropDown = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_LIST}`));
+            expect(dropDown.length).toBe(1);
+
+            const valueChipUnitPrice = headerRow.querySelector('igx-chip[id="UnitPrice"]');
+
+            const aggregatesIconUnitPrice = valueChipUnitPrice.querySelectorAll('igx-icon')[1];
+            aggregatesIconUnitPrice.click();
+            fixture.detectChanges();
+
+            dropDown = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_LIST}`));
+            expect(dropDown.length).toBe(1);
+        });
     });
 });
 
