@@ -64,10 +64,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     @ViewChildren('notifyChip')
     public notificationChips: QueryList<IgxChipComponent>;
 
-    public showDropDimensionChips = false;
-
     public onDimDragStart(event, area) {
-        this.showDropDimensionChips = true;
         this.cdr.detectChanges();
         for (let chip of this.notificationChips) {
             if (area.chipsList.toArray().indexOf(chip) === -1 &&

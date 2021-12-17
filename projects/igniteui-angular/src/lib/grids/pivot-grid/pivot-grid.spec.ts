@@ -2,10 +2,13 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPivotDateDimension, IgxPivotGridModule } from 'igniteui-angular';
+import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { PivotDimensionType } from './pivot-grid.interface';
+import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -476,6 +479,156 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'USA').value).toBe(0);
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Uruguay').value).toBe(242.08);
         });
+
+        it('should allow reorder in row chip area.', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberName: 'ProductCategory',
+                    enabled: true
+                },
+                {
+                    memberName: 'SellerName',
+                    enabled: true
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            pivotGrid.setupColumns();
+            fixture.detectChanges();
+
+            const headerRow: IgxPivotHeaderRowComponent = fixture.debugElement.query(By.directive(IgxPivotHeaderRowComponent)).componentInstance;
+            const chipAreas = fixture.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+            const rowChipArea: IgxChipsAreaComponent = chipAreas[3].componentInstance;
+            const rowChip1 = rowChipArea.chipsList.toArray()[0];
+            const rowChip2 = rowChipArea.chipsList.toArray()[1];
+
+            // start drag in row chip area.
+            headerRow.onDimDragStart({}, rowChipArea);
+            fixture.detectChanges();
+
+            // move first chip over the second one
+            headerRow.onDimDragOver({
+                dragChip: {
+                    id: 'ProductCategory'
+                },
+                owner: rowChip2,
+                originalEvent: {
+                    offsetX: 100
+                }
+            }, PivotDimensionType.Row);
+            fixture.detectChanges();
+            
+            // check drop indicator has shown after the second chip
+            expect((rowChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('');
+
+            // drop chip
+            headerRow.onDimDrop({
+                dragChip: {
+                    id: 'ProductCategory'
+                },
+                owner: rowChip2
+            }, rowChipArea, PivotDimensionType.Row);
+            pivotGrid.cdr.detectChanges();
+            //check chip order is updated.
+            expect(rowChipArea.chipsList.toArray()[0]).toBe(rowChip2);
+            expect(rowChipArea.chipsList.toArray()[1]).toBe(rowChip1);
+            // check dimension order is updated.
+            expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['SellerName', 'ProductCategory']);
+            // check rows reflect new order of dims
+            expect(pivotGrid.gridAPI.get_row_by_index(0).rowDimensionData.map(x => x.dimension.memberName))
+            .toEqual(['SellerName', 'ProductCategory']);
+        });
+
+        it('should allow reorder in column chip area.', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration.columns.push({
+                memberName: 'SellerName',
+                enabled: true
+            });
+            pivotGrid.pipeTrigger++;
+            pivotGrid.setupColumns();
+            fixture.detectChanges();
+
+            const headerRow: IgxPivotHeaderRowComponent = fixture.debugElement.query(By.directive(IgxPivotHeaderRowComponent)).componentInstance;
+            const chipAreas = fixture.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+            const colChipArea: IgxChipsAreaComponent = chipAreas[1].componentInstance;
+            const colChip1 = colChipArea.chipsList.toArray()[0];
+            const colChip2 = colChipArea.chipsList.toArray()[1];
+
+             // start drag in col chip area.
+             headerRow.onDimDragStart({}, colChipArea);
+             fixture.detectChanges();
+ 
+             // move first chip over the second one
+             headerRow.onDimDragOver({
+                 dragChip: {
+                     id: 'Country'
+                 },
+                 owner: colChip2,
+                 originalEvent: {
+                     offsetX: 100
+                 }
+             }, PivotDimensionType.Column);
+             fixture.detectChanges();
+             
+             // check drop indicator has shown after the second chip
+             expect((colChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('');
+ 
+             // drop chip
+             headerRow.onDimDrop({
+                 dragChip: {
+                     id: 'Country'
+                 },
+                 owner: colChip2
+             }, colChipArea, PivotDimensionType.Column);
+             pivotGrid.cdr.detectChanges();
+             //check chip order is updated.
+             expect(colChipArea.chipsList.toArray()[0]).toBe(colChip2);
+             expect(colChipArea.chipsList.toArray()[1]).toBe(colChip1);
+             // check dimension order is updated.
+             expect(pivotGrid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['SellerName', 'Country']);
+             // check columns reflect new order of dims
+             const cols = pivotGrid.columns;
+             expect(cols.filter(x => x.level === 0).map(x => x.field)).toEqual(['Stanley', 'Elisa', 'Lydia', 'David', 'John', 'Larry', 'Walter']);
+        });
+        it('should allow reorder in the value chip area', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            fixture.detectChanges();
+            const headerRow: IgxPivotHeaderRowComponent = fixture.debugElement.query(By.directive(IgxPivotHeaderRowComponent)).componentInstance;
+            const chipAreas = fixture.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+            const valuesChipArea: IgxChipsAreaComponent = chipAreas[2].componentInstance;
+            const valChip1 = valuesChipArea.chipsList.toArray()[0];
+            const valChip2 = valuesChipArea.chipsList.toArray()[1];
+ 
+             // move first chip over the second one
+             headerRow.onDimDragOver({
+                 dragChip: {
+                     id: 'UnitsSold'
+                 },
+                 owner: valChip2,
+                 originalEvent: {
+                     offsetX: 100
+                 }
+             });
+             fixture.detectChanges();
+             
+             // check drop indicator has shown after the second chip
+             expect((valChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('');
+ 
+             // drop chip
+             headerRow.onValueDrop({
+                 dragChip: valChip1,
+                 owner: valChip2
+             }, valuesChipArea);
+             pivotGrid.cdr.detectChanges();
+             //check chip order is updated.
+             expect(valuesChipArea.chipsList.toArray()[0]).toBe(valChip2);
+             expect(valuesChipArea.chipsList.toArray()[1]).toBe(valChip1);
+             // check dimension order is updated.
+             expect(pivotGrid.pivotConfiguration.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
+
+        });
+        // fit('should allow moving dimension between rows, columns and filters.', () => {});
     });
 });
 
