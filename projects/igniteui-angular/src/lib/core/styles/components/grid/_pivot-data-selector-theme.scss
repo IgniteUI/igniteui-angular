@@ -46,7 +46,7 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
-    %pivot-data-selector-base {
+    %selector-base {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -62,9 +62,15 @@
         }
     }
 
-    %pivot-data-selector-header,
-    %pivot-data-selector-header-extra {
+    %selector-header,
+    %selector-header-extra {
         display: flex;
         align-items: center;
+    }
+
+    %selector-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 }

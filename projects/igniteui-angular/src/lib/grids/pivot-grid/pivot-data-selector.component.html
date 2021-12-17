@@ -9,22 +9,20 @@
 </igx-input-group>
 
 <igx-list [displayDensity]="displayDensity">
-    <div style="overflow: hidden; position: relative">
-        <igx-list-item
-            *igxFor="let item of dimensions; scrollOrientation: 'vertical'"
+    <igx-list-item
+        *igxFor="let item of dimensions; scrollOrientation: 'vertical'"
+    >
+        <igx-checkbox
+            [value]="item"
+            [tabindex]="-1"
+            [checked]="item.isSelected"
+            [disableRipple]="true"
+            [indeterminate]="item.indeterminate"
+            [disableTransitions]="true"
         >
-            <igx-checkbox
-                [value]="item"
-                [tabindex]="-1"
-                [checked]="item.isSelected"
-                [disableRipple]="true"
-                [indeterminate]="item.indeterminate"
-                [disableTransitions]="true"
-            >
-                {{ item.memberName }}
-            </igx-checkbox>
-        </igx-list-item>
-    </div>
+            {{ item.memberName }}
+        </igx-checkbox>
+    </igx-list-item>
 </igx-list>
 <igx-accordion>
     <igx-expansion-panel [collapsed]="false">
@@ -33,24 +31,28 @@
                 <h6 class="igx-pivot-data-selector__header-title">Filters</h6>
                 <div class="igx-pivot-data-selector__header-extra">
                     <igx-icon>filter_list</igx-icon>
-                    <igx-chip>1</igx-chip>
+                    <igx-chip>{{ grid.filterDimensions.length }}</igx-chip>
                 </div>
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
             <igx-list [displayDensity]="displayDensity">
-                <div style="overflow: hidden; position: relative">
-                    <igx-list-item
-                        *igxFor="
-                            let item of grid.filterDimensions;
-                            scrollOrientation: 'vertical'
-                        "
-                    >
-                        <div>
+                <igx-list-item
+                    *igxFor="
+                        let item of grid.filterDimensions;
+                        scrollOrientation: 'vertical'
+                    "
+                >
+                    <div class="igx-pivot-data-selector__item">
+                        <div class="igx-pivot-data-selector__item-text">
                             {{ item.memberName }}
                         </div>
-                    </igx-list-item>
-                </div>
+                        <div class="igx-pivot-data-selector__item-actions">
+                            <igx-icon>arrow_downward</igx-icon>
+                            <igx-icon>drag_handle</igx-icon>
+                        </div>
+                    </div>
+                </igx-list-item>
             </igx-list>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
@@ -59,25 +61,29 @@
             <igx-expansion-panel-title class="igx-pivot-data-selector__header"
                 ><h6 class="igx-pivot-data-selector__header-title">Columns</h6>
                 <div class="igx-pivot-data-selector__header-extra">
-                    <igx-icon>table_rows</igx-icon>
-                    <igx-chip>1</igx-chip>
+                    <igx-icon>view_week</igx-icon>
+                    <igx-chip>{{ grid.columnDimensions.length }}</igx-chip>
                 </div>
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
             <igx-list [displayDensity]="displayDensity">
-                <div style="overflow: hidden; position: relative">
-                    <igx-list-item
-                        *igxFor="
-                            let item of grid.columnDimensions;
-                            scrollOrientation: 'vertical'
-                        "
-                    >
-                        <div>
+                <igx-list-item
+                    *igxFor="
+                        let item of grid.columnDimensions;
+                        scrollOrientation: 'vertical'
+                    "
+                >
+                    <div class="igx-pivot-data-selector__item">
+                        <div class="igx-pivot-data-selector__item-text">
                             {{ item.memberName }}
                         </div>
-                    </igx-list-item>
-                </div>
+                        <div class="igx-pivot-data-selector__item-actions">
+                            <igx-icon>arrow_downward</igx-icon>
+                            <igx-icon>drag_handle</igx-icon>
+                        </div>
+                    </div>
+                </igx-list-item>
             </igx-list>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
@@ -87,24 +93,28 @@
                 ><h6 class="igx-pivot-data-selector__header-title">Rows</h6>
                 <div class="igx-pivot-data-selector__header-extra">
                     <igx-icon>table_rows</igx-icon>
-                    <igx-chip>1</igx-chip>
+                    <igx-chip>{{ grid.rowDimensions.length }}</igx-chip>
                 </div>
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
             <igx-list [displayDensity]="displayDensity">
-                <div style="overflow: hidden; position: relative">
-                    <igx-list-item
-                        *igxFor="
-                            let item of grid.rowDimensions;
-                            scrollOrientation: 'vertical'
-                        "
-                    >
-                        <div>
+                <igx-list-item
+                    *igxFor="
+                        let item of grid.rowDimensions;
+                        scrollOrientation: 'vertical'
+                    "
+                >
+                    <div class="igx-pivot-data-selector__item">
+                        <div class="igx-pivot-data-selector__item-text">
                             {{ item.memberName }}
                         </div>
-                    </igx-list-item>
-                </div>
+                        <div class="igx-pivot-data-selector__item-actions">
+                            <igx-icon>arrow_downward</igx-icon>
+                            <igx-icon>drag_handle</igx-icon>
+                        </div>
+                    </div>
+                </igx-list-item>
             </igx-list>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
@@ -113,26 +123,32 @@
             <igx-expansion-panel-title class="igx-pivot-data-selector__header">
                 <h6 class="igx-pivot-data-selector__header">Values</h6>
                 <div class="igx-pivot-data-selector__header-extra">
-                    <igx-icon>sum</igx-icon>
-                    <igx-chip>1</igx-chip>
+                    <igx-icon>functions</igx-icon>
+                    <igx-chip>{{ grid.values.length }}</igx-chip>
                 </div>
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
             <igx-list [displayDensity]="displayDensity">
-                <div style="overflow: hidden; position: relative">
-                    <igx-list-item
-                        *igxFor="
-                            let item of grid.values;
-                            scrollOrientation: 'vertical'
-                        "
-                    >
-                        <div>
-                            {{ item.aggregate.key }}
-                            {{ item.member }}
+                <igx-list-item
+                    *igxFor="
+                        let item of grid.values;
+                        scrollOrientation: 'vertical'
+                    "
+                >
+                    <div class="igx-pivot-data-selector__item">
+                        <div class="igx-pivot-data-selector__item-text">
+                            <span>{{ item.aggregate.key }}</span>
+                            <span>(</span>
+                            <span>{{ item.member }}</span>
+                            <span>)</span>
                         </div>
-                    </igx-list-item>
-                </div>
+                        <div class="igx-pivot-data-selector__item-actions">
+                            <igx-icon>functions</igx-icon>
+                            <igx-icon>drag_handle</igx-icon>
+                        </div>
+                    </div>
+                </igx-list-item>
             </igx-list>
         </igx-expansion-panel-body>
     </igx-expansion-panel>

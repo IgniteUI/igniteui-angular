@@ -9,14 +9,26 @@
             $deps: ()
         );
 
-        @extend %pivot-data-selector-base !optional;
+        @extend %selector-base !optional;
 
         @include e(header) {
-            @extend %pivot-data-selector-header !optional;
+            @extend %selector-header !optional;
         }
 
         @include e(header-extra) {
-            @extend %pivot-data-selector-header-extra !optional;
+            @extend %selector-header-extra !optional;
+        }
+
+        @include e(item) {
+            @extend %selector-item !optional;
+        }
+
+        @include e(item-text) {
+            @extend %selector-item-text !optional;
+        }
+
+        @include e(item-actions) {
+            @extend %selector-item-actions !optional;
         }
     }
 }
