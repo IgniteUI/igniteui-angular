@@ -628,7 +628,134 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
              expect(pivotGrid.pivotConfiguration.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
 
         });
-        // fit('should allow moving dimension between rows, columns and filters.', () => {});
+        it('should allow moving dimension between rows, columns and filters.', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration.filters = [{
+                memberName: 'SellerName',
+                enabled: true
+            }];
+            fixture.detectChanges();
+            const headerRow: IgxPivotHeaderRowComponent = fixture.debugElement.query(By.directive(IgxPivotHeaderRowComponent)).componentInstance;
+            const chipAreas = fixture.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+            const colChipArea: IgxChipsAreaComponent = chipAreas[1].componentInstance;
+            const rowChipArea: IgxChipsAreaComponent = chipAreas[3].componentInstance;
+            const filterChipArea: IgxChipsAreaComponent = chipAreas[0].componentInstance;
+            const filterChip = filterChipArea.chipsList.first;
+             // start drag in filter chip area.
+             headerRow.onDimDragStart({}, filterChipArea);
+             fixture.detectChanges();
+
+             // check drop here chips are displayed in other areas
+             expect(headerRow.notificationChips.toArray()[1].nativeElement.hidden).toBeFalse();
+             expect(headerRow.notificationChips.toArray()[2].nativeElement.hidden).toBeFalse();
+            
+             const dropHereRowChip = headerRow.notificationChips.toArray()[2];
+             // move Seller onto the drop here chip
+ 
+             // drop chip
+             headerRow.onDimDrop({
+                 dragChip: filterChip,
+                 owner: dropHereRowChip
+             }, rowChipArea, PivotDimensionType.Row);
+             pivotGrid.cdr.detectChanges();
+
+             // check dimensions
+             expect(pivotGrid.pivotConfiguration.filters.filter(x => x.enabled).length).toBe(0);
+             expect(pivotGrid.pivotConfiguration.rows.filter(x => x.enabled).length).toBe(2);
+
+             const rowSellerChip = rowChipArea.chipsList.toArray()[1];
+             const colChip = colChipArea.chipsList.first;
+             // start drag in row chip area.
+             headerRow.onDimDragStart({}, rowChipArea);
+             fixture.detectChanges();
+
+             // drag Seller from row dimension as first chip in columns
+             headerRow.onDimDragOver({
+                dragChip: rowSellerChip,
+                owner: colChip,
+                originalEvent: {
+                    offsetX: 0
+                }
+            }, PivotDimensionType.Column);
+            fixture.detectChanges();
+            //check drop indicator between chips
+            expect((colChip.nativeElement.previousElementSibling as any).style.visibility).toBe('');
+            expect((colChip.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
+
+             // drop chip
+             headerRow.onDimDrop({
+                dragChip: rowSellerChip,
+                owner: colChip
+            }, colChipArea, PivotDimensionType.Column);
+            pivotGrid.cdr.detectChanges();
+
+             // check dimensions
+             expect(pivotGrid.pivotConfiguration.filters.filter(x => x.enabled).length).toBe(0);
+             expect(pivotGrid.pivotConfiguration.rows.filter(x => x.enabled).length).toBe(1);
+             expect(pivotGrid.pivotConfiguration.columns.filter(x => x.enabled).length).toBe(2);
+
+             // drag Seller over filter area
+             const colSellerChip = colChipArea.chipsList.toArray()[0];
+             // start drag in col chip area.
+             headerRow.onDimDragStart({}, colChipArea);
+              // drop chip
+              headerRow.onDimDrop({
+                dragChip: colSellerChip,
+                owner: {}
+            }, filterChipArea, PivotDimensionType.Filter);
+            pivotGrid.cdr.detectChanges();
+
+            expect(pivotGrid.pivotConfiguration.filters.filter(x => x.enabled).length).toBe(1);
+            expect(pivotGrid.pivotConfiguration.rows.filter(x => x.enabled).length).toBe(1);
+            expect(pivotGrid.pivotConfiguration.columns.filter(x => x.enabled).length).toBe(1);
+        });
+
+        it('should hide drop indicators when moving out of the drop area.', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberName: 'ProductCategory',
+                    enabled: true
+                },
+                {
+                    memberName: 'SellerName',
+                    enabled: true
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            pivotGrid.setupColumns();
+            fixture.detectChanges();
+
+            const headerRow: IgxPivotHeaderRowComponent = fixture.debugElement.query(By.directive(IgxPivotHeaderRowComponent)).componentInstance;
+            const chipAreas = fixture.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+            const rowChipArea: IgxChipsAreaComponent = chipAreas[3].componentInstance;
+            const rowChip1 = rowChipArea.chipsList.toArray()[0];
+            const rowChip2 = rowChipArea.chipsList.toArray()[1];
+
+             // start drag in row chip area.
+             headerRow.onDimDragStart({}, rowChipArea);
+             fixture.detectChanges();
+
+             // drag second chip before prev chip
+             headerRow.onDimDragOver({
+                dragChip: rowChip2,
+                owner: rowChip1,
+                originalEvent: {
+                    offsetX: 0
+                }
+            }, PivotDimensionType.Row);
+            fixture.detectChanges();
+
+            // should show the prev drop indicator for the 1st chip
+            expect((rowChip1.nativeElement.previousElementSibling as any).style.visibility).toBe('');
+            expect((rowChip1.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
+
+            // simulate drag area leave
+            headerRow.onAreaDragLeave({}, rowChipArea);
+
+            expect((rowChip1.nativeElement.previousElementSibling as any).style.visibility).toBe('hidden');
+            expect((rowChip1.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
+        });
     });
 });
 
