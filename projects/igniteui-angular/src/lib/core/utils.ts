@@ -23,6 +23,7 @@ import {
     swingInTopBck, swingInTopFwd, swingOutBottomBck, swingOutBottomFwd, swingOutLeftBck,
     swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
 } from '../animations/main';
+
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 /**

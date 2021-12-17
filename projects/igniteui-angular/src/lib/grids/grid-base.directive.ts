@@ -2855,7 +2855,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get dataWithAddedInTransactionRows() {
-        const result = cloneArray(this.gridAPI.get_all_data(), true);
+        const result = cloneArray(this.gridAPI.get_all_data());
         if (this.transactions.enabled) {
             result.push(...this.transactions.getAggregatedChanges(true)
                 .filter(t => t.type === TransactionType.ADD)
