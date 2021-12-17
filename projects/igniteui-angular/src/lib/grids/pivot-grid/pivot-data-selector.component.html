@@ -25,164 +25,44 @@
     </igx-list-item>
 </igx-list>
 <igx-accordion>
-    <igx-expansion-panel [collapsed]="false">
+    <igx-expansion-panel [collapsed]="false" *ngFor="let panel of _panels">
         <igx-expansion-panel-header iconPosition="left" [disabled]="false">
             <igx-expansion-panel-title class="igx-pivot-data-selector__header">
-                <h6 class="igx-pivot-data-selector__header-title">Filters</h6>
+                <h6 class="igx-pivot-data-selector__header-title">
+                    {{ panel.name }}
+                </h6>
                 <div class="igx-pivot-data-selector__header-extra">
-                    <igx-icon>filter_list</igx-icon>
-                    <igx-chip>{{ grid.filterDimensions.length }}</igx-chip>
+                    <igx-icon>{{ panel.icon }}</igx-icon>
+                    <igx-chip>{{ this.grid[panel.dataKey].length }}</igx-chip>
                 </div>
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
             <igx-list
                 [displayDensity]="displayDensity"
-                *ngIf="grid.filterDimensions.length > 0"
+                *ngIf="this.grid[panel.dataKey].length > 0"
             >
                 <igx-list-item
                     *igxFor="
-                        let item of grid.filterDimensions;
+                        let item of this.grid[panel.dataKey];
                         scrollOrientation: 'vertical'
                     "
                 >
                     <div class="igx-pivot-data-selector__item">
                         <div class="igx-pivot-data-selector__item-text">
-                            {{ item.memberName }}
+                            {{ item[panel.itemKey] }}
                         </div>
                         <div class="igx-pivot-data-selector__item-actions">
-                            <igx-icon>arrow_downward</igx-icon>
-                            <igx-icon>drag_handle</igx-icon>
+                            <igx-icon *ngFor="let action of panel.actions">{{
+                                action.icon
+                            }}</igx-icon>
                         </div>
                     </div>
                 </igx-list-item>
             </igx-list>
             <div
                 class="igx-pivot-data-selector__empty"
-                *ngIf="grid.filterDimensions.length === 0"
-            >
-                Drag Items Here
-            </div>
-        </igx-expansion-panel-body>
-    </igx-expansion-panel>
-    <igx-expansion-panel [collapsed]="false">
-        <igx-expansion-panel-header iconPosition="left" [disabled]="false">
-            <igx-expansion-panel-title class="igx-pivot-data-selector__header"
-                ><h6 class="igx-pivot-data-selector__header-title">Columns</h6>
-                <div class="igx-pivot-data-selector__header-extra">
-                    <igx-icon>view_week</igx-icon>
-                    <igx-chip>{{ grid.columnDimensions.length }}</igx-chip>
-                </div>
-            </igx-expansion-panel-title>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body>
-            <igx-list
-                *ngIf="grid.columnDimensions.length > 0"
-                [displayDensity]="displayDensity"
-            >
-                <igx-list-item
-                    *igxFor="
-                        let item of grid.columnDimensions;
-                        scrollOrientation: 'vertical'
-                    "
-                >
-                    <div class="igx-pivot-data-selector__item">
-                        <div class="igx-pivot-data-selector__item-text">
-                            {{ item.memberName }}
-                        </div>
-                        <div class="igx-pivot-data-selector__item-actions">
-                            <igx-icon>arrow_downward</igx-icon>
-                            <igx-icon>drag_handle</igx-icon>
-                        </div>
-                    </div>
-                </igx-list-item>
-            </igx-list>
-            <div
-                class="igx-pivot-data-selector__empty"
-                *ngIf="grid.columnDimensions.length === 0"
-            >
-                Drag Items Here
-            </div>
-        </igx-expansion-panel-body>
-    </igx-expansion-panel>
-    <igx-expansion-panel [collapsed]="false">
-        <igx-expansion-panel-header iconPosition="left" [disabled]="false">
-            <igx-expansion-panel-title class="igx-pivot-data-selector__header"
-                ><h6 class="igx-pivot-data-selector__header-title">Rows</h6>
-                <div class="igx-pivot-data-selector__header-extra">
-                    <igx-icon>table_rows</igx-icon>
-                    <igx-chip>{{ grid.rowDimensions.length }}</igx-chip>
-                </div>
-            </igx-expansion-panel-title>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body>
-            <igx-list
-                *ngIf="grid.rowDimensions.length > 0"
-                [displayDensity]="displayDensity"
-            >
-                <igx-list-item
-                    *igxFor="
-                        let item of grid.rowDimensions;
-                        scrollOrientation: 'vertical'
-                    "
-                >
-                    <div class="igx-pivot-data-selector__item">
-                        <div class="igx-pivot-data-selector__item-text">
-                            {{ item.memberName }}
-                        </div>
-                        <div class="igx-pivot-data-selector__item-actions">
-                            <igx-icon>arrow_downward</igx-icon>
-                            <igx-icon>drag_handle</igx-icon>
-                        </div>
-                    </div>
-                </igx-list-item>
-            </igx-list>
-            <div
-                class="igx-pivot-data-selector__empty"
-                *ngIf="grid.rowDimensions.length === 0"
-            >
-                Drag Items Here
-            </div>
-        </igx-expansion-panel-body>
-    </igx-expansion-panel>
-    <igx-expansion-panel [collapsed]="false">
-        <igx-expansion-panel-header iconPosition="left" [disabled]="false">
-            <igx-expansion-panel-title class="igx-pivot-data-selector__header">
-                <h6 class="igx-pivot-data-selector__header">Values</h6>
-                <div class="igx-pivot-data-selector__header-extra">
-                    <igx-icon>functions</igx-icon>
-                    <igx-chip>{{ grid.values.length }}</igx-chip>
-                </div>
-            </igx-expansion-panel-title>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body>
-            <igx-list
-                *ngIf="grid.values.length > 0"
-                [displayDensity]="displayDensity"
-            >
-                <igx-list-item
-                    *igxFor="
-                        let item of grid.values;
-                        scrollOrientation: 'vertical'
-                    "
-                >
-                    <div class="igx-pivot-data-selector__item">
-                        <div class="igx-pivot-data-selector__item-text">
-                            <span>{{ item.aggregate.key }}</span>
-                            <span>(</span>
-                            <span>{{ item.member }}</span>
-                            <span>)</span>
-                        </div>
-                        <div class="igx-pivot-data-selector__item-actions">
-                            <igx-icon>functions</igx-icon>
-                            <igx-icon>drag_handle</igx-icon>
-                        </div>
-                    </div>
-                </igx-list-item>
-            </igx-list>
-            <div
-                class="igx-pivot-data-selector__empty"
-                *ngIf="grid.values.length === 0"
+                *ngIf="this.grid[panel.dataKey].length === 0"
             >
                 Drag Items Here
             </div>

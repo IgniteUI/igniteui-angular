@@ -1,14 +1,22 @@
-import { AfterViewInit, Component, HostBinding, Input } from "@angular/core";
+import { Component, HostBinding, Input } from "@angular/core";
 import { DisplayDensity } from "../../core/displayDensity";
 import { PivotGridType } from "../common/grid.interface";
 import { IgxPivotDateDimension } from "./pivot-grid-dimensions";
 import { IPivotDimension } from "./pivot-grid.interface";
 
+interface IDataSelectorPanel {
+    name: string;
+    dataKey: string;
+    icon: string;
+    actions: { icon: string }[];
+    itemKey: string;
+}
+
 @Component({
     selector: "igx-pivot-data-selector",
     templateUrl: "./pivot-data-selector.component.html",
 })
-export class IgxPivotDataSelectorComponent implements AfterViewInit {
+export class IgxPivotDataSelectorComponent {
     @HostBinding("class.igx-pivot-data-selector")
     public cssClass = "igx-pivot-data-selector";
 
@@ -47,7 +55,61 @@ export class IgxPivotDataSelectorComponent implements AfterViewInit {
             },
         },
     ];
-    public selected: IPivotDimension[] = [this.dimensions[0], this.dimensions[1], this.dimensions[2]];
+
+    /**
+     * @hidden @internal
+     */
+    public _panels: IDataSelectorPanel[] = [
+        {
+            name: "Filters",
+            dataKey: "filterDimensions",
+            icon: "filter_list",
+            actions: [],
+            itemKey: "memberName",
+        },
+        {
+            name: "Columns",
+            dataKey: "columnDimensions",
+            icon: "view_column",
+            actions: [
+                {
+                    icon: "arrow_downward",
+                },
+                {
+                    icon: "drag_handle",
+                },
+            ],
+            itemKey: "memberName",
+        },
+        {
+            name: "Rows",
+            dataKey: "rowDimensions",
+            icon: "table_rows",
+            actions: [
+                {
+                    icon: "arrow_downward",
+                },
+                {
+                    icon: "drag_handle",
+                },
+            ],
+            itemKey: "memberName",
+        },
+        {
+            name: "Values",
+            dataKey: "values",
+            icon: "functions",
+            actions: [
+                {
+                    icon: "functions",
+                },
+                {
+                    icon: "drag_handle",
+                },
+            ],
+            itemKey: "member",
+        },
+    ];
 
     /**
      * @hidden @internal
@@ -69,15 +131,5 @@ export class IgxPivotDataSelectorComponent implements AfterViewInit {
      */
     public get grid(): PivotGridType {
         return this._grid;
-    }
-
-    public ngAfterViewInit() {
-        console.log(this.grid.values);
-        // this.dimensions = this.grid.rowDimensions;
-        this.selected = [
-            this.dimensions[0],
-            this.dimensions[1],
-            this.dimensions[2],
-        ];
     }
 }
