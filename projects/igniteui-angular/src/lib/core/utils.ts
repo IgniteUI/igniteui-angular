@@ -49,14 +49,14 @@ export const getResizeObserver = () => window.ResizeObserver;
 /**
  * @hidden
  */
-export const cloneArray = (array: any[], deep?: boolean, strategy ?: IDataCloneStrategy) => {
+export const cloneArray = (array: any[], deep?: boolean) => {
     const arr = [];
     if (!array) {
         return arr;
     }
     let i = array.length;
     while (i--) {
-        arr[i] = deep ? (strategy ? strategy.clone(array[i]) : cloneValue(array[i])) : array[i];
+        arr[i] = deep ? cloneValue(array[i]) : array[i];
     }
     return arr;
 };

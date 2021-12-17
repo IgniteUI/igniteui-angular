@@ -175,7 +175,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @param second Value to merge
      */
     protected mergeValues<U>(first: U, second: U): U {
-        if (isObject(first) || isObject(second)) {
+        if (isObject(first) && isObject(second)) {
             return mergeObjects(this.cloneStrategy.clone(first), second);
         } else {
             return second ? second : first;
