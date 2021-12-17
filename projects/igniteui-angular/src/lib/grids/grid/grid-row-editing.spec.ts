@@ -35,7 +35,6 @@ const ROW_DELETED_CLASS = 'igx-grid__tr--deleted';
 const SUMMARY_ROW = 'igx-grid-summary-row';
 const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 const DEBOUNCETIME = 30;
-const STRATEGY = new DefaultDataCloneStrategy();
 
 describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite((() => {
@@ -2462,8 +2461,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const expectedTransaction: Transaction = {
                 id: 1,
                 newValue: { ProductName: 'Updated value' },
-                type: TransactionType.UPDATE,
-                cloneStrategy: STRATEGY
+                type: TransactionType.UPDATE
             };
             expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
         });
@@ -2495,8 +2493,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const expectedTransaction: Transaction = {
                 id: 1,
                 newValue: { OrderDate: newValue },
-                type: TransactionType.UPDATE,
-                cloneStrategy: STRATEGY
+                type: TransactionType.UPDATE
             };
             expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
         });
