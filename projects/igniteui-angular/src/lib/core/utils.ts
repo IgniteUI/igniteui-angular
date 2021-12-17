@@ -25,7 +25,7 @@ import {
 } from '../animations/main';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
-import { IDataCloneStrategy } from 'igniteui-angular';
+import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 
 /**
  * @hidden
