@@ -2,6 +2,9 @@ import { IgxTransactionService } from './igx-transaction';
 import { Transaction, TransactionType, HierarchicalTransaction } from './transaction';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalTransactionService } from './igx-hierarchical-transaction';
+import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
+
+const _STRATEGY = new DefaultDataCloneStrategy();
 
 describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
@@ -19,16 +22,16 @@ describe('IgxTransaction', () => {
         it('Should add transactions to the transactions log', () => {
             const trans = new IgxTransactionService();
             const transactions: Transaction[] = [
-                { id: '1', type: TransactionType.ADD, newValue: 1 },
-                { id: '2', type: TransactionType.ADD, newValue: 2 },
-                { id: '3', type: TransactionType.ADD, newValue: 3 },
-                { id: '1', type: TransactionType.UPDATE, newValue: 4 },
-                { id: '5', type: TransactionType.ADD, newValue: 5 },
-                { id: '6', type: TransactionType.ADD, newValue: 6 },
-                { id: '2', type: TransactionType.DELETE, newValue: 7 },
-                { id: '8', type: TransactionType.ADD, newValue: 8 },
-                { id: '9', type: TransactionType.ADD, newValue: 9 },
-                { id: '8', type: TransactionType.UPDATE, newValue: 10 }
+                { id: '1', type: TransactionType.ADD, newValue: 1, cloneStrategy: _STRATEGY},
+                { id: '2', type: TransactionType.ADD, newValue: 2, cloneStrategy: _STRATEGY },
+                { id: '3', type: TransactionType.ADD, newValue: 3, cloneStrategy: _STRATEGY },
+                { id: '1', type: TransactionType.UPDATE, newValue: 4, cloneStrategy: _STRATEGY },
+                { id: '5', type: TransactionType.ADD, newValue: 5, cloneStrategy: _STRATEGY },
+                { id: '6', type: TransactionType.ADD, newValue: 6, cloneStrategy: _STRATEGY },
+                { id: '2', type: TransactionType.DELETE, newValue: 7, cloneStrategy: _STRATEGY },
+                { id: '8', type: TransactionType.ADD, newValue: 8, cloneStrategy: _STRATEGY },
+                { id: '9', type: TransactionType.ADD, newValue: 9, cloneStrategy: _STRATEGY },
+                { id: '8', type: TransactionType.UPDATE, newValue: 10, cloneStrategy: _STRATEGY }
             ];
             expect(trans['_transactions'].length).toEqual(0);
             expect(trans['_redoStack'].length).toEqual(0);
@@ -45,20 +48,20 @@ describe('IgxTransaction', () => {
         it('Should throw an error when trying to add duplicate transaction', () => {
             const trans = new IgxTransactionService();
             const transactions: Transaction[] = [
-                { id: '1', type: TransactionType.ADD, newValue: 1 },
-                { id: '2', type: TransactionType.ADD, newValue: 2 },
-                { id: '3', type: TransactionType.ADD, newValue: 3 },
-                { id: '1', type: TransactionType.UPDATE, newValue: 4 },
-                { id: '5', type: TransactionType.ADD, newValue: 5 },
-                { id: '6', type: TransactionType.ADD, newValue: 6 },
-                { id: '2', type: TransactionType.DELETE, newValue: 7 },
-                { id: '8', type: TransactionType.ADD, newValue: 8 },
-                { id: '9', type: TransactionType.ADD, newValue: 9 },
-                { id: '8', type: TransactionType.UPDATE, newValue: 10 }
+                { id: '1', type: TransactionType.ADD, newValue: 1, cloneStrategy: _STRATEGY},
+                { id: '2', type: TransactionType.ADD, newValue: 2, cloneStrategy: _STRATEGY },
+                { id: '3', type: TransactionType.ADD, newValue: 3, cloneStrategy: _STRATEGY },
+                { id: '1', type: TransactionType.UPDATE, newValue: 4, cloneStrategy: _STRATEGY },
+                { id: '5', type: TransactionType.ADD, newValue: 5, cloneStrategy: _STRATEGY },
+                { id: '6', type: TransactionType.ADD, newValue: 6, cloneStrategy: _STRATEGY },
+                { id: '2', type: TransactionType.DELETE, newValue: 7, cloneStrategy: _STRATEGY },
+                { id: '8', type: TransactionType.ADD, newValue: 8, cloneStrategy: _STRATEGY },
+                { id: '9', type: TransactionType.ADD, newValue: 9, cloneStrategy: _STRATEGY },
+                { id: '8', type: TransactionType.UPDATE, newValue: 10, cloneStrategy: _STRATEGY }
             ];
             transactions.forEach(t => trans.add(t));
 
-            const transaction = { id: '6', type: TransactionType.ADD, newValue: 6 };
+            const transaction = { id: '6', type: TransactionType.ADD, newValue: 6, cloneStrategy: _STRATEGY };
             expect(trans.getTransactionLog('6').pop()).toEqual(transaction);
             const msg = `Cannot add this transaction. Transaction with id: ${transaction.id} has been already added.`;
             expect(() => trans.add(transaction)).toThrowError(msg);
@@ -67,20 +70,20 @@ describe('IgxTransaction', () => {
         it('Should throw an error when trying to update transaction with no recordRef', () => {
             const trans = new IgxTransactionService();
             const transactions: Transaction[] = [
-                { id: '1', type: TransactionType.ADD, newValue: 1 },
-                { id: '2', type: TransactionType.ADD, newValue: 2 },
-                { id: '3', type: TransactionType.ADD, newValue: 3 },
-                { id: '1', type: TransactionType.UPDATE, newValue: 4 },
-                { id: '5', type: TransactionType.ADD, newValue: 5 },
-                { id: '6', type: TransactionType.ADD, newValue: 6 },
-                { id: '2', type: TransactionType.DELETE, newValue: 7 },
-                { id: '8', type: TransactionType.ADD, newValue: 8 },
-                { id: '9', type: TransactionType.ADD, newValue: 9 },
-                { id: '8', type: TransactionType.UPDATE, newValue: 10 }
+                { id: '1', type: TransactionType.ADD, newValue: 1, cloneStrategy: _STRATEGY},
+                { id: '2', type: TransactionType.ADD, newValue: 2, cloneStrategy: _STRATEGY },
+                { id: '3', type: TransactionType.ADD, newValue: 3, cloneStrategy: _STRATEGY },
+                { id: '1', type: TransactionType.UPDATE, newValue: 4, cloneStrategy: _STRATEGY },
+                { id: '5', type: TransactionType.ADD, newValue: 5, cloneStrategy: _STRATEGY },
+                { id: '6', type: TransactionType.ADD, newValue: 6, cloneStrategy: _STRATEGY },
+                { id: '2', type: TransactionType.DELETE, newValue: 7, cloneStrategy: _STRATEGY },
+                { id: '8', type: TransactionType.ADD, newValue: 8, cloneStrategy: _STRATEGY },
+                { id: '9', type: TransactionType.ADD, newValue: 9, cloneStrategy: _STRATEGY },
+                { id: '8', type: TransactionType.UPDATE, newValue: 10, cloneStrategy: _STRATEGY }
             ];
             transactions.forEach(transaction => trans.add(transaction));
 
-            const updateTransaction = { id: '2', type: TransactionType.DELETE, newValue: 7 };
+            const updateTransaction = { id: '2', type: TransactionType.DELETE, newValue: 7, cloneStrategy: _STRATEGY };
             expect(trans.getTransactionLog('2').pop()).toEqual(updateTransaction);
             const msg = `Cannot add this transaction. This is first transaction of type ${updateTransaction.type} ` +
                 `for id ${updateTransaction.id}. For first transaction of this type recordRef is mandatory.`;
@@ -93,7 +96,7 @@ describe('IgxTransaction', () => {
         it('Should throw an error when trying to delete an already deleted item', () => {
             const trans = new IgxTransactionService();
             const recordRef = { key: 'Key1', value: 1 };
-            const deleteTransaction: Transaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null };
+            const deleteTransaction: Transaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY };
             trans.add(deleteTransaction, recordRef);
             expect(trans.getTransactionLog('Key1').pop()).toEqual(deleteTransaction);
 
@@ -104,7 +107,7 @@ describe('IgxTransaction', () => {
         it('Should throw an error when trying to update an already deleted item', () => {
             const trans = new IgxTransactionService();
             const recordRef = { key: 'Key1', value: 1 };
-            const deleteTransaction: Transaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null };
+            const deleteTransaction: Transaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY };
             trans.add(deleteTransaction, recordRef);
             expect(trans.getTransactionLog('Key1').pop()).toEqual(deleteTransaction);
 
@@ -118,37 +121,37 @@ describe('IgxTransaction', () => {
 
         it('Should get a transaction by transaction id', () => {
             const trans = new IgxTransactionService();
-            let transaction: Transaction = { id: '0', type: TransactionType.ADD, newValue: 0 };
+            let transaction: Transaction = { id: '0', type: TransactionType.ADD, newValue: 0, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('0').pop()).toEqual(transaction);
-            transaction = { id: '1', type: TransactionType.ADD, newValue: 1 };
+            transaction = { id: '1', type: TransactionType.ADD, newValue: 1, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('1').pop()).toEqual(transaction);
-            transaction = { id: '2', type: TransactionType.ADD, newValue: 2 };
+            transaction = { id: '2', type: TransactionType.ADD, newValue: 2, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('2').pop()).toEqual(transaction);
-            transaction = { id: '3', type: TransactionType.ADD, newValue: 3 };
+            transaction = { id: '3', type: TransactionType.ADD, newValue: 3, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('3').pop()).toEqual(transaction);
-            transaction = { id: '1', type: TransactionType.UPDATE, newValue: 4 };
+            transaction = { id: '1', type: TransactionType.UPDATE, newValue: 4, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('1').pop()).toEqual(transaction);
-            transaction = { id: '5', type: TransactionType.ADD, newValue: 5 };
+            transaction = { id: '5', type: TransactionType.ADD, newValue: 5, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('5').pop()).toEqual(transaction);
-            transaction = { id: '6', type: TransactionType.ADD, newValue: 6 };
+            transaction = { id: '6', type: TransactionType.ADD, newValue: 6, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('6').pop()).toEqual(transaction);
-            transaction = { id: '2', type: TransactionType.DELETE, newValue: 7 };
+            transaction = { id: '2', type: TransactionType.DELETE, newValue: 7, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('2').pop()).toEqual(transaction);
-            transaction = { id: '8', type: TransactionType.ADD, newValue: 8 };
+            transaction = { id: '8', type: TransactionType.ADD, newValue: 8, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('8').pop()).toEqual(transaction);
-            transaction = { id: '9', type: TransactionType.ADD, newValue: 9 };
+            transaction = { id: '9', type: TransactionType.ADD, newValue: 9, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('9').pop()).toEqual(transaction);
-            transaction = { id: '8', type: TransactionType.UPDATE, newValue: 10 };
+            transaction = { id: '8', type: TransactionType.UPDATE, newValue: 10, cloneStrategy: _STRATEGY };
             trans.add(transaction);
             expect(trans.getTransactionLog('8').pop()).toEqual(transaction);
 
@@ -162,7 +165,7 @@ describe('IgxTransaction', () => {
             expect(trans).toBeDefined();
 
             // ADD
-            const addTransaction: Transaction = { id: 0, type: TransactionType.ADD, newValue: 1 };
+            const addTransaction: Transaction = { id: 0, type: TransactionType.ADD, newValue: 1, cloneStrategy: _STRATEGY };
             trans.add(addTransaction);
             expect(trans.getAggregatedValue(0, true)).toEqual(1);
             expect(trans.getTransactionLog(0).pop()).toEqual(addTransaction);
@@ -208,7 +211,7 @@ describe('IgxTransaction', () => {
 
             // ADD -> DELETE
             trans.add(addTransaction);
-            const deleteTransaction: Transaction = { id: 0, type: TransactionType.DELETE, newValue: 1 };
+            const deleteTransaction: Transaction = { id: 0, type: TransactionType.DELETE, newValue: 1, cloneStrategy: _STRATEGY };
             trans.add(deleteTransaction);
             expect(trans.getTransactionLog()).toEqual([addTransaction, deleteTransaction]);
             expect(trans.getAggregatedChanges(true)).toEqual([]);
@@ -258,7 +261,7 @@ describe('IgxTransaction', () => {
 
             // ADD -> UPDATE
             trans.add(addTransaction);
-            const updateTransaction: Transaction = { id: 0, type: TransactionType.UPDATE, newValue: 2 };
+            const updateTransaction: Transaction = { id: 0, type: TransactionType.UPDATE, newValue: 2, cloneStrategy: _STRATEGY };
             trans.add(updateTransaction);
             expect(trans.getTransactionLog()).toEqual([addTransaction, updateTransaction]);
             expect(trans.getState(addTransaction.id)).toEqual({
@@ -309,7 +312,7 @@ describe('IgxTransaction', () => {
 
             // DELETE
             const recordRef = { key: 'Key1', value: 1 };
-            const deleteTransaction: Transaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null };
+            const deleteTransaction: Transaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY };
             trans.add(deleteTransaction, recordRef);
             expect(trans.getTransactionLog('Key1').pop()).toEqual(deleteTransaction);
             expect(trans.getTransactionLog()).toEqual([deleteTransaction]);
@@ -350,7 +353,7 @@ describe('IgxTransaction', () => {
             // UPDATE
             const recordRef = { key: 'Key1', value: 1 };
             const newValue = { key: 'Key1', value: 2 };
-            const updateTransaction: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue };
+            const updateTransaction: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue, cloneStrategy: _STRATEGY };
             trans.add(updateTransaction, recordRef);
             expect(trans.getState('Key1')).toBeTruthy();
             expect(trans.getAggregatedValue('Key1', true)).toEqual(newValue);
@@ -390,7 +393,7 @@ describe('IgxTransaction', () => {
             // UPDATE -> UPDATE
             trans.add(updateTransaction, recordRef);
             const newValue2 = { key: 'Key1', value: 3 };
-            const updateTransaction2: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue2 };
+            const updateTransaction2: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue2, cloneStrategy: _STRATEGY };
             trans.add(updateTransaction2, recordRef);
             expect(trans.getTransactionLog('Key1').pop()).toEqual(updateTransaction2);
             expect(trans.getTransactionLog()).toEqual([updateTransaction, updateTransaction2]);
@@ -403,7 +406,7 @@ describe('IgxTransaction', () => {
 
             // UPDATE -> UPDATE (to initial recordRef)
             trans.add(updateTransaction, recordRef);
-            const asRecordRefTransaction: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: recordRef };
+            const asRecordRefTransaction: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: recordRef, cloneStrategy: _STRATEGY };
             trans.add(asRecordRefTransaction, recordRef);
             expect(trans.getTransactionLog('Key1').pop()).toEqual(asRecordRefTransaction);
             expect(trans.getTransactionLog()).toEqual([updateTransaction, asRecordRefTransaction]);
@@ -440,7 +443,7 @@ describe('IgxTransaction', () => {
 
             // UPDATE -> DELETE
             trans.add(updateTransaction, recordRef);
-            const deleteTransaction: Transaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null };
+            const deleteTransaction: Transaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY };
             trans.add(deleteTransaction);
             expect(trans.getTransactionLog('Key1').pop()).toEqual(deleteTransaction);
             expect(trans.getTransactionLog()).toEqual([updateTransaction, deleteTransaction]);
@@ -486,11 +489,11 @@ describe('IgxTransaction', () => {
             // Stacks are clear by default
             expect(transaction.canRedo).toBeFalsy();
             expect(transaction.canUndo).toBeFalsy();
-            let addItem: Transaction = { id: 1, type: TransactionType.ADD, newValue: { Category: 'Something' } };
+            let addItem: Transaction = { id: 1, type: TransactionType.ADD, newValue: { Category: 'Something' }, cloneStrategy: _STRATEGY };
             transaction.add(addItem);
             expect(transaction.canRedo).toBeFalsy();
             expect(transaction.canUndo).toBeTruthy();
-            addItem = { id: 2, type: TransactionType.ADD, newValue: { Category: 'Something 2' } };
+            addItem = { id: 2, type: TransactionType.ADD, newValue: { Category: 'Something 2' }, cloneStrategy: _STRATEGY};
             transaction.add(addItem);
             expect(transaction.canRedo).toBeFalsy();
             expect(transaction.canUndo).toBeTruthy();
@@ -513,10 +516,10 @@ describe('IgxTransaction', () => {
             const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
-            const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' }, cloneStrategy: _STRATEGY };
             trans.add(item0Update1, originalData[1]);
 
-            const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null };
+            const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY };
             trans.add(item10Delete, originalData[10]);
 
             const newItem1: Transaction = {
@@ -529,7 +532,8 @@ describe('IgxTransaction', () => {
                     ReleaseDate: new Date(),
                     Released: true,
                     Test: 'test Added'
-                }
+                },
+                cloneStrategy: _STRATEGY
             };
 
             trans.add(newItem1, undefined);
@@ -546,10 +550,10 @@ describe('IgxTransaction', () => {
             const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
-            const item0Update1: Transaction = { id: 0, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            const item0Update1: Transaction = { id: 0, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' }, cloneStrategy: _STRATEGY };
             trans.add(item0Update1, originalData[1]);
 
-            const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null };
+            const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY };
             trans.add(item10Delete, originalData[10]);
 
             const newItem1: Transaction = {
@@ -562,7 +566,8 @@ describe('IgxTransaction', () => {
                     ReleaseDate: new Date(),
                     Released: true,
                     Test: 'test Added'
-                }
+                },
+                cloneStrategy: _STRATEGY
             };
 
             trans.add(newItem1, undefined);
@@ -599,14 +604,14 @@ describe('IgxTransaction', () => {
             const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
-            const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated Row' };
+            const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated Row', cloneStrategy: _STRATEGY };
             trans.add(item0Update1, originalData[1]);
 
-            const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null };
+            const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY };
             trans.add(item10Delete, originalData[10]);
 
             const newItem1: Transaction = {
-                id: 'add1', type: TransactionType.ADD, newValue: 'Added Row'
+                id: 'add1', type: TransactionType.ADD, newValue: 'Added Row', cloneStrategy: _STRATEGY
             };
 
             trans.add(newItem1, undefined);
@@ -623,14 +628,14 @@ describe('IgxTransaction', () => {
             const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
-            const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated Row' };
+            const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated Row', cloneStrategy: _STRATEGY };
             trans.add(item0Update1, originalData[1]);
 
-            const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null };
+            const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY };
             trans.add(item10Delete, originalData[10]);
 
             const newItem1: Transaction = {
-                id: 'add1', type: TransactionType.ADD, newValue: 'Added Row'
+                id: 'add1', type: TransactionType.ADD, newValue: 'Added Row', cloneStrategy: _STRATEGY
             };
 
             trans.add(newItem1, undefined);
@@ -669,7 +674,7 @@ describe('IgxTransaction', () => {
             expect(trans).toBeDefined();
             const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
             let newValue: any = { key: 'Key1', value1: 10 };
-            let updateTransaction: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue };
+            let updateTransaction: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue, cloneStrategy: _STRATEGY };
 
             trans.startPending();
             trans.add(updateTransaction, recordRef);
@@ -680,7 +685,7 @@ describe('IgxTransaction', () => {
             expect(trans.getAggregatedChanges(true)).toEqual([]);
 
             newValue = { key: 'Key1', value3: 30 };
-            updateTransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue };
+            updateTransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue, cloneStrategy: _STRATEGY };
             trans.add(updateTransaction, recordRef);
 
             expect(trans.getState('Key1')).toBeUndefined();
@@ -719,7 +724,7 @@ describe('IgxTransaction', () => {
             expect(trans).toBeDefined();
             const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
             let newValue: any = { key: 'Key1', value1: 10 };
-            let updateTransaction: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue };
+            let updateTransaction: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue, cloneStrategy: _STRATEGY };
 
             trans.startPending();
             trans.add(updateTransaction, recordRef);
@@ -728,7 +733,7 @@ describe('IgxTransaction', () => {
             expect(trans.getAggregatedChanges(true)).toEqual([]);
 
             newValue = { key: 'Key1', value3: 30 };
-            updateTransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue };
+            updateTransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue, cloneStrategy: _STRATEGY };
             trans.add(updateTransaction, recordRef);
 
             expect(trans.getTransactionLog()).toEqual([]);
@@ -746,19 +751,19 @@ describe('IgxTransaction', () => {
             const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
-            let transaction: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            let transaction: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' }, cloneStrategy: _STRATEGY };
             trans.add(transaction, originalData[1]);
 
-            transaction = { id: 2, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            transaction = { id: 2, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' }, cloneStrategy: _STRATEGY };
             trans.add(transaction, originalData[2]);
 
-            transaction = { id: 2, type: TransactionType.UPDATE, newValue: { Items: 'Some new value' } };
+            transaction = { id: 2, type: TransactionType.UPDATE, newValue: { Items: 'Some new value' }, cloneStrategy: _STRATEGY };
             trans.add(transaction, originalData[2]);
 
-            transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some very new value' } };
+            transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some very new value' }, cloneStrategy: _STRATEGY };
             trans.add(transaction, originalData[1]);
 
-            transaction = { id: 10, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            transaction = { id: 10, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' }, cloneStrategy: _STRATEGY };
             trans.add(transaction, originalData[10]);
 
             expect(trans.getTransactionLog().length).toBe(5);
@@ -798,14 +803,14 @@ describe('IgxTransaction', () => {
             expect(transaction).toBeDefined();
 
             const path: any[] = ['P1', 'P2'];
-            const addTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.ADD, newValue: 'Add row', path };
+            const addTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.ADD, newValue: 'Add row', cloneStrategy: _STRATEGY, path };
             transaction.add(addTransaction);
             expect(transaction.getState(1).path).toBeDefined();
             expect(transaction.getState(1).path.length).toBe(2);
             expect(transaction.getState(1).path).toEqual(path);
 
             path.push('P3');
-            const updateTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated row', path };
+            const updateTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated row', cloneStrategy: _STRATEGY, path };
             transaction.add(updateTransaction, 'Update row');
             expect(transaction.getState(1).path.length).toBe(3);
             expect(transaction.getState(1).path).toEqual(path);
@@ -816,20 +821,20 @@ describe('IgxTransaction', () => {
             expect(transaction).toBeDefined();
 
             const path: any[] = [];
-            let addTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.ADD, newValue: 'Parent row', path };
+            let addTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.ADD, newValue: 'Parent row', cloneStrategy: _STRATEGY, path };
             transaction.add(addTransaction);
             expect(transaction.getState(1).path).toBeDefined();
             expect(transaction.getState(1).path.length).toBe(0);
             expect(transaction.getState(1).path).toEqual(path);
 
             path.push(addTransaction.id);
-            addTransaction = { id: 2, type: TransactionType.ADD, newValue: 'Child row', path };
+            addTransaction = { id: 2, type: TransactionType.ADD, newValue: 'Child row', cloneStrategy: _STRATEGY, path };
             transaction.add(addTransaction);
             expect(transaction.getState(2).path).toBeDefined();
             expect(transaction.getState(2).path.length).toBe(1);
             expect(transaction.getState(2).path).toEqual(path);
 
-            const deleteTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.DELETE, newValue: null, path: [] };
+            const deleteTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY, path: [] };
             transaction.add(deleteTransaction);
             expect(transaction.getState(1)).toBeUndefined();
             expect(transaction.getState(2)).toBeUndefined();
@@ -840,20 +845,20 @@ describe('IgxTransaction', () => {
             expect(transaction).toBeDefined();
 
             const path: any[] = [];
-            let updateTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Parent row', path };
+            let updateTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Parent row', cloneStrategy: _STRATEGY, path };
             transaction.add(updateTransaction, 'Original value');
             expect(transaction.getState(1).path).toBeDefined();
             expect(transaction.getState(1).path.length).toBe(0);
             expect(transaction.getState(1).path).toEqual(path);
 
             path.push(updateTransaction.id);
-            updateTransaction = { id: 2, type: TransactionType.UPDATE, newValue: 'Child row', path };
+            updateTransaction = { id: 2, type: TransactionType.UPDATE, newValue: 'Child row', cloneStrategy: _STRATEGY, path };
             transaction.add(updateTransaction, 'Original Value');
             expect(transaction.getState(2).path).toBeDefined();
             expect(transaction.getState(2).path.length).toBe(1);
             expect(transaction.getState(2).path).toEqual(path);
 
-            const deleteTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.DELETE, newValue: null, path: [] };
+            const deleteTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY, path: [] };
             transaction.add(deleteTransaction);
             expect(transaction.getState(1)).toBeDefined();
             expect(transaction.getState(1).type).toBe(TransactionType.DELETE);
@@ -865,7 +870,7 @@ describe('IgxTransaction', () => {
             const transaction = new IgxHierarchicalTransactionService();
             expect(transaction).toBeDefined();
 
-            const deleteTransaction: HierarchicalTransaction = { id: 0, type: TransactionType.DELETE, newValue: null, path: [] };
+            const deleteTransaction: HierarchicalTransaction = { id: 0, type: TransactionType.DELETE, newValue: null, cloneStrategy: _STRATEGY, path: [] };
             transaction.add(deleteTransaction, 'Deleted row');
 
             expect(transaction.getAggregatedChanges(false)).toEqual([deleteTransaction]);
@@ -888,6 +893,7 @@ describe('IgxTransaction', () => {
                     OnPTO: false,
                     Employees: []
                 },
+                cloneStrategy: _STRATEGY,
                 path: null
             };
             transaction.add(addTransaction);
@@ -898,6 +904,7 @@ describe('IgxTransaction', () => {
                 newValue: {
                     Age: 60
                 },
+                cloneStrategy: _STRATEGY,
                 path: [data[0].ID]
             };
             transaction.add(updateTransaction, data[0].Employees[0]);
@@ -906,6 +913,7 @@ describe('IgxTransaction', () => {
                 id: 711,
                 type: TransactionType.DELETE,
                 newValue: {},
+                cloneStrategy: _STRATEGY,
                 path: [data[0].ID, data[0].Employees[2].ID]
             };
             transaction.add(deleteTransaction, data[0].Employees[2].Employees[0]);
@@ -949,6 +957,7 @@ describe('IgxTransaction', () => {
                 newValue: {
                     Age: 60
                 },
+                cloneStrategy: _STRATEGY,
                 path: [data[0].ID]
             };
             transaction.add(updateTransaction, data[0].Employees[0]);
