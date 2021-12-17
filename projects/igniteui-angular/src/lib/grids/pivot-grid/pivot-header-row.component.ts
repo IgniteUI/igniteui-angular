@@ -231,24 +231,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         this._dropPos = DropPosition.AfterDropTarget;
     }
 
-    public onAreaDragEnter(event, area, dimension?: PivotDimensionType) {
-        const dragId = event.detail.owner.element.nativeElement.parentElement.id;
-        const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === dragId || x.displayName === dragId) :
-            !this.grid.pivotConfiguration.values.find(x => x.member === dragId || x.displayName === dragId);
-        if (typeMismatch) {
-            // cannot drag between dimensions and value
-            return;
-        }
-        const lastChip = area.chipsList.last;
-        if (lastChip && this.notificationChips.toArray().indexOf(lastChip) === -1) {
-            const lastElem = area.chipsList.last?.nativeElement;
-            const targetElem = event.detail.originalEvent.target;
-            const targetOwner = event.detail.owner.element.nativeElement.parentElement;
-            if (targetOwner !== lastElem && targetElem.getBoundingClientRect().x >= lastElem.getBoundingClientRect().x) {
-                area.chipsList.last.nativeElement.nextElementSibling.style.visibility = '';
-            }
-        }
-    }
     public onAreaDragLeave(event, area) {
         const dataChips = area.chipsList.toArray().filter(x => this.notificationChips.toArray().indexOf(x) === -1);
         dataChips.forEach(element => {
