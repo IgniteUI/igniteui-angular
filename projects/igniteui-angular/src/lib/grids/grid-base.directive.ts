@@ -255,8 +255,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public set dataCloneStrategy(strategy: IDataCloneStrategy) {
-        this._dataCloneStrategy = strategy;
-        this._transactions.cloneStrategy = strategy;
+        if (strategy) {
+            this._dataCloneStrategy = strategy;
+            this._transactions.cloneStrategy = strategy;
+        }
     }
 
     /**
@@ -2971,9 +2973,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         super(_displayDensityOptions);
         this.locale = this.locale || this.localeId;
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
-        if (this.dataCloneStrategy) {
-            this._transactions.cloneStrategy = this.dataCloneStrategy;
-        }
+        this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
     }
 

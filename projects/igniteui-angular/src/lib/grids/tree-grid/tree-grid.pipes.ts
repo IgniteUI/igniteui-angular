@@ -262,8 +262,8 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                         hierarchicalDataClone,
                         aggregatedChanges,
                         childDataKey,
-                        this.grid.transactions.cloneStrategy,
-                        this.grid.primaryKey
+                        this.grid.primaryKey,
+                        this.grid.transactions.cloneStrategy
                         );
                 }
             }
