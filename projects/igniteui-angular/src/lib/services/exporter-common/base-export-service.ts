@@ -18,6 +18,7 @@ import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/hier
 import { IgxRowIslandComponent } from '../../grids/hierarchical-grid/row-island.component';
 import { IPathSegment } from './../../grids/hierarchical-grid/hierarchical-grid-base.directive';
 import { IgxColumnGroupComponent } from './../../grids/columns/column-group.component';
+import { ColumnType } from '../../grids/common/column.interface';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
