@@ -524,7 +524,7 @@ const testMerging = () => {
                 { id: 3, newValue: null, type: TransactionType.DELETE },
             ];
 
-            DataUtil.mergeTransactions(data, transactions, 'ID', true);
+            DataUtil.mergeTransactions(data, transactions, 'ID', new DefaultDataCloneStrategy(), true);
             expect(data.length).toBe(1);
             expect(data[0]).toEqual(secondRow);
         });
