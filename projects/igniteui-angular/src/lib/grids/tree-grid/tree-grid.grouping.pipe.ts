@@ -115,7 +115,6 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
         const isDateTime = column?.dataType === GridColumnDataType.Date ||
             column?.dataType === GridColumnDataType.DateTime ||
             column?.dataType === GridColumnDataType.Time;
-        const isString = column?.dataType === GridColumnDataType.String;
         const map: Map<any, GroupByRecord> = new Map<any, GroupByRecord>();
         for (const record of array) {
             const value = isDateTime
@@ -125,8 +124,7 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
             let valueCase = value;
             let groupByRecord: GroupByRecord;
 
-            if (groupingExpression.ignoreCase && isString) {
-                // when column's dataType is string but the value is number
+            if (groupingExpression.ignoreCase) {
                 valueCase = value?.toString().toLowerCase();
             }
             if (map.has(valueCase)) {
