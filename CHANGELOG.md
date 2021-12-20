@@ -7,6 +7,7 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `igxGrid`
     - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
+    - Added `dataCloneStrategy` input, which allows users provide their own implementation of how data objects are cloned when row and/or batch editing is enabled. The custom strategy should implement the `IDataCloneStrategy` interface.
 
 ## 12.2.3
 
