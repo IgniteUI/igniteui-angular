@@ -12,7 +12,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     }
 
      public set cloneStrategy(strategy: IDataCloneStrategy) {
-        this._cloneStrategy = strategy;
+        this._cloneStrategy = strategy || new DefaultDataCloneStrategy();
     }
 
     /**

@@ -544,7 +544,6 @@ describe('IgxTransaction', () => {
         it('Should update data for provided id when data is list of objects', () => {
             const originalData = SampleTestData.generateProductData(50);
             const trans = new IgxTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             expect(trans).toBeDefined();
 
             const item0Update1: Transaction = { id: 0, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
@@ -563,8 +562,7 @@ describe('IgxTransaction', () => {
                     ReleaseDate: new Date(),
                     Released: true,
                     Test: 'test Added'
-                },
-                cloneStrategy: strategy
+                }
             };
 
             trans.add(newItem1, undefined);
@@ -599,7 +597,6 @@ describe('IgxTransaction', () => {
         it('Should update data when data is list of primitives', () => {
             const originalData = SampleTestData.generateListOfPrimitiveValues(50, 'String');
             const trans = new IgxTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             expect(trans).toBeDefined();
 
             const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated Row' };
@@ -624,7 +621,6 @@ describe('IgxTransaction', () => {
         it('Should update data for provided id when data is list of primitives', () => {
             const originalData = SampleTestData.generateListOfPrimitiveValues(50, 'String');
             const trans = new IgxTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             expect(trans).toBeDefined();
 
             const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated Row' };
@@ -668,7 +664,6 @@ describe('IgxTransaction', () => {
 
         it('Should add pending transaction and push it to transaction log, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             spyOn(trans.onStateUpdate, 'emit').and.callThrough();
 
             expect(trans).toBeDefined();
@@ -719,7 +714,6 @@ describe('IgxTransaction', () => {
 
         it('Should not add pending transaction and push it to transaction log, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             spyOn(trans.onStateUpdate, 'emit').and.callThrough();
 
             expect(trans).toBeDefined();
@@ -750,7 +744,6 @@ describe('IgxTransaction', () => {
         it('Should clear transactions for provided id', () => {
             const originalData = SampleTestData.generateProductData(50);
             const trans = new IgxTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             expect(trans).toBeDefined();
 
             let transaction: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
@@ -802,7 +795,6 @@ describe('IgxTransaction', () => {
     describe('IgxHierarchicalTransaction UNIT Test', () => {
         it('Should set path for each state when transaction is added in Hierarchical data source', () => {
             const transaction = new IgxHierarchicalTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             expect(transaction).toBeDefined();
 
             const path: any[] = ['P1', 'P2'];
@@ -821,7 +813,6 @@ describe('IgxTransaction', () => {
 
         it('Should remove added transaction from states when deleted in Hierarchical data source', () => {
             const transaction = new IgxHierarchicalTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             expect(transaction).toBeDefined();
 
             const path: any[] = [];
@@ -846,7 +837,6 @@ describe('IgxTransaction', () => {
 
         it('Should mark update transactions state as deleted type when deleted in Hierarchical data source', () => {
             const transaction = new IgxHierarchicalTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             expect(transaction).toBeDefined();
 
             const path: any[] = [];
@@ -873,7 +863,6 @@ describe('IgxTransaction', () => {
 
         it('Should correctly call getAggregatedChanges without commit when recordRef is null', () => {
             const transaction = new IgxHierarchicalTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             expect(transaction).toBeDefined();
 
             const deleteTransaction: HierarchicalTransaction = { id: 0, type: TransactionType.DELETE, newValue: null, path: [] };
@@ -886,7 +875,6 @@ describe('IgxTransaction', () => {
             const data = SampleTestData.employeeTreeData();
 
             const transaction = new IgxHierarchicalTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             expect(transaction).toBeDefined();
 
             const addTransaction: HierarchicalTransaction = {
@@ -900,7 +888,6 @@ describe('IgxTransaction', () => {
                     OnPTO: false,
                     Employees: []
                 },
-                cloneStrategy: strategy,
                 path: null
             };
             transaction.add(addTransaction);
@@ -911,7 +898,6 @@ describe('IgxTransaction', () => {
                 newValue: {
                     Age: 60
                 },
-                cloneStrategy: strategy,
                 path: [data[0].ID]
             };
             transaction.add(updateTransaction, data[0].Employees[0]);
@@ -920,7 +906,6 @@ describe('IgxTransaction', () => {
                 id: 711,
                 type: TransactionType.DELETE,
                 newValue: {},
-                cloneStrategy: strategy,
                 path: [data[0].ID, data[0].Employees[2].ID]
             };
             transaction.add(deleteTransaction, data[0].Employees[2].Employees[0]);
@@ -955,7 +940,6 @@ describe('IgxTransaction', () => {
         it('Should emit onStateUpdate once when commiting a hierarchical transaction', () => {
             const data = SampleTestData.employeeTreeData();
             const transaction = new IgxHierarchicalTransactionService();
-            const strategy = new DefaultDataCloneStrategy();
             spyOn(transaction.onStateUpdate, 'emit').and.callThrough();
             expect(transaction).toBeDefined();
 
@@ -965,7 +949,6 @@ describe('IgxTransaction', () => {
                 newValue: {
                     Age: 60
                 },
-                cloneStrategy: strategy,
                 path: [data[0].ID]
             };
             transaction.add(updateTransaction, data[0].Employees[0]);
