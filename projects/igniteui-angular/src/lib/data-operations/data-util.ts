@@ -8,7 +8,7 @@ import { IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { FilteringStrategy } from './filtering-strategy';
-import { cloneValue, mergeObjects, mkenum } from '../core/utils';
+import { mergeObjects, mkenum } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
@@ -21,7 +21,7 @@ import {
     IgxSorting,
     IgxGrouping
 } from '../grids/common/strategy';
-import { DefaultDataCloneStrategy, IDataCloneStrategy } from 'igniteui-angular';
+import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 
 /**
  * @hidden

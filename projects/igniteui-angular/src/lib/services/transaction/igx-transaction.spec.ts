@@ -2,7 +2,6 @@ import { IgxTransactionService } from './igx-transaction';
 import { Transaction, TransactionType, HierarchicalTransaction } from './transaction';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalTransactionService } from './igx-hierarchical-transaction';
-import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
@@ -20,7 +19,7 @@ describe('IgxTransaction', () => {
         it('Should add transactions to the transactions log', () => {
             const trans = new IgxTransactionService();
             const transactions: Transaction[] = [
-                { id: '1', type: TransactionType.ADD, newValue: 1},
+                { id: '1', type: TransactionType.ADD, newValue: 1 },
                 { id: '2', type: TransactionType.ADD, newValue: 2 },
                 { id: '3', type: TransactionType.ADD, newValue: 3 },
                 { id: '1', type: TransactionType.UPDATE, newValue: 4 },
@@ -46,7 +45,7 @@ describe('IgxTransaction', () => {
         it('Should throw an error when trying to add duplicate transaction', () => {
             const trans = new IgxTransactionService();
             const transactions: Transaction[] = [
-                { id: '1', type: TransactionType.ADD, newValue: 1},
+                { id: '1', type: TransactionType.ADD, newValue: 1 },
                 { id: '2', type: TransactionType.ADD, newValue: 2 },
                 { id: '3', type: TransactionType.ADD, newValue: 3 },
                 { id: '1', type: TransactionType.UPDATE, newValue: 4 },
@@ -68,7 +67,7 @@ describe('IgxTransaction', () => {
         it('Should throw an error when trying to update transaction with no recordRef', () => {
             const trans = new IgxTransactionService();
             const transactions: Transaction[] = [
-                { id: '1', type: TransactionType.ADD, newValue: 1},
+                { id: '1', type: TransactionType.ADD, newValue: 1 },
                 { id: '2', type: TransactionType.ADD, newValue: 2 },
                 { id: '3', type: TransactionType.ADD, newValue: 3 },
                 { id: '1', type: TransactionType.UPDATE, newValue: 4 },
@@ -490,7 +489,7 @@ describe('IgxTransaction', () => {
             transaction.add(addItem);
             expect(transaction.canRedo).toBeFalsy();
             expect(transaction.canUndo).toBeTruthy();
-            addItem = { id: 2, type: TransactionType.ADD, newValue: { Category: 'Something 2' }};
+            addItem = { id: 2, type: TransactionType.ADD, newValue: { Category: 'Something 2' } };
             transaction.add(addItem);
             expect(transaction.canRedo).toBeFalsy();
             expect(transaction.canUndo).toBeTruthy();
