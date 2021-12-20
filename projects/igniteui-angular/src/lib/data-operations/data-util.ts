@@ -148,12 +148,12 @@ export class DataUtil {
      * @param deleteRows Should delete rows with DELETE transaction type from data
      * @returns Provided data collections updated with all provided transactions
      */
-    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, deleteRows: boolean = false): T[] {
+    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy(), deleteRows: boolean = false): T[] {
         data.forEach((item: any, index: number) => {
             const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
             if (transaction && transaction.type === TransactionType.UPDATE) {
-                data[index] = transaction.newValue;
+                data[index] = mergeObjects(cloneStrategy.clone(data[index]), transaction.newValue);
             }
         });
 

@@ -255,7 +255,8 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                     return DataUtil.mergeTransactions(
                         flatDataClone,
                         aggregatedChanges,
-                        this.grid.primaryKey);
+                        this.grid.primaryKey,
+                        this.grid.dataCloneStrategy);
                 } else if (childDataKey) {
                     const hierarchicalDataClone = cloneHierarchicalArray(collection, childDataKey);
                     return DataUtil.mergeHierarchicalTransactions(
@@ -263,7 +264,7 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                         aggregatedChanges,
                         childDataKey,
                         this.grid.primaryKey,
-                        this.grid.transactions.cloneStrategy
+                        this.grid.dataCloneStrategy
                         );
                 }
             }
