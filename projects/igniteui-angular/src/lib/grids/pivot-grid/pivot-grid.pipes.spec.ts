@@ -1354,8 +1354,32 @@ describe('Pivot pipes #pivotGrid', () => {
             ]
         );
 
-        // TODO - check the rest of the 'All Periods' fields here once issue: https://github.com/IgniteUI/igniteui-angular/issues/10680 is resolved.
-
+        const allPeriods_clothing_records = prod_country_date_seller_discontinued.filter(x => x['AllPeriods'] === 'All Periods' && x['ProductCategory'] === 'Clothing');
+        expect(allPeriods_clothing_records).toEqual([
+            { AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Stanley', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Elisa', Discontinued: 'true' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Larry', Discontinued: 'true' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Walter', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Clothing', Country: 'Bulgaria', SellerName: 'Stanley', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Clothing', Country: 'Bulgaria', SellerName: 'Walter', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Clothing', Country: 'USA', SellerName: 'Elisa', Discontinued: 'true' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Clothing', Country: 'Uruguay', SellerName: 'Larry', Discontinued: 'true' }
+        ]);
+        const allPeriods_accessories_records = prod_country_date_seller_discontinued.filter(x => x['AllPeriods'] === 'All Periods' && x['ProductCategory'] === 'Accessories');
+        expect(allPeriods_accessories_records).toEqual([
+            { AllPeriods: 'All Periods', ProductCategory: 'Accessories', AllCountries: 'All Countries', SellerName: 'David', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Accessories', Country: 'USA', SellerName: 'David', Discontinued: 'false' }
+        ]);
+        const allPeriods_components_records = prod_country_date_seller_discontinued.filter(x => x['AllPeriods'] === 'All Periods' && x['ProductCategory'] === 'Components');
+        expect(allPeriods_components_records).toEqual([
+            { AllPeriods: 'All Periods', ProductCategory: 'Components', AllCountries: 'All Countries', SellerName: 'John', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Components', Country: 'USA', SellerName: 'John', Discontinued: 'false' }
+        ]);
+        const allPeriods_bikes_records = prod_country_date_seller_discontinued.filter(x => x['AllPeriods'] === 'All Periods' && x['ProductCategory'] === 'Bikes');
+        expect(allPeriods_bikes_records).toEqual([
+            { AllPeriods: 'All Periods', ProductCategory: 'Bikes', AllCountries: 'All Countries', SellerName: 'Lydia', Discontinued: 'true' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Bikes', Country: 'Uruguay', SellerName: 'Lydia', Discontinued: 'true' }
+        ])
         // Discontinued, Date, Product, Country, Seller
         pivotConfig.rows = [
             dims[4],
@@ -1452,7 +1476,7 @@ describe('Pivot pipes #pivotGrid', () => {
         rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-        expect(rowStatePipeResult.length).toBe(73);
+        expect(rowStatePipeResult.length).toBe(75);
         const date_prod_disc_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
 
         const date_allPeriods_allProducts_records = date_prod_disc_seller.filter(x => x['AllPeriods'] === 'All Periods' && x['AllProduct'] === 'All Products');
