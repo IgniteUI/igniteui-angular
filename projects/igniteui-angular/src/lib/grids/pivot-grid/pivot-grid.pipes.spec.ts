@@ -1331,7 +1331,7 @@ describe('Pivot pipes #pivotGrid', () => {
         let rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         let columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         let rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-        expect(rowStatePipeResult.length).toBe(77);
+        expect(rowStatePipeResult.length).toBe(84);
         const prod_country_date_seller_discontinued = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
         const allPeriods_allProducts_records = prod_country_date_seller_discontinued.filter(x => x['AllPeriods'] === 'All Periods' &&
             x['AllProduct'] === 'All Products');
@@ -1379,7 +1379,33 @@ describe('Pivot pipes #pivotGrid', () => {
         expect(allPeriods_bikes_records).toEqual([
             { AllPeriods: 'All Periods', ProductCategory: 'Bikes', AllCountries: 'All Countries', SellerName: 'Lydia', Discontinued: 'true' },
             { AllPeriods: 'All Periods', ProductCategory: 'Bikes', Country: 'Uruguay', SellerName: 'Lydia', Discontinued: 'true' }
-        ])
+        ]);
+
+        // 2021
+        const year_2021_records = prod_country_date_seller_discontinued.filter(x => x['Years'] === '2021');
+        expect(year_2021_records).toEqual([
+            { Years: '2021', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Stanley', Discontinued: 'false' },
+            { Years: '2021', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'David', Discontinued: 'false' },
+            { Years: '2021', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'John', Discontinued: 'false' },
+            { Years: '2021', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Stanley', Discontinued: 'false' },
+            { Years: '2021', AllProduct: 'All Products', Country: 'USA', SellerName: 'David', Discontinued: 'false' },
+            { Years: '2021', AllProduct: 'All Products', Country: 'USA', SellerName: 'John', Discontinued: 'false' },
+            { Years: '2021', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Stanley', Discontinued: 'false' },
+            { Years: '2021', ProductCategory: 'Clothing', Country: 'Bulgaria', SellerName: 'Stanley', Discontinued: 'false' },
+            { Years: '2021', ProductCategory: 'Accessories', AllCountries: 'All Countries', SellerName: 'David', Discontinued: 'false' },
+            { Years: '2021', ProductCategory: 'Accessories', Country: 'USA', SellerName: 'David', Discontinued: 'false' },
+            { Years: '2021', ProductCategory: 'Components', AllCountries: 'All Countries', SellerName: 'John', Discontinued: 'false' },
+            { Years: '2021', ProductCategory: 'Components', Country: 'USA', SellerName: 'John', Discontinued: 'false' },
+        ]);
+
+        // 01/01/2021
+        const date_2021_clothing_records = prod_country_date_seller_discontinued.filter(x => x['Date'] === '01/01/2021');
+        expect(date_2021_clothing_records).toEqual([
+            { Date: '01/01/2021', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Stanley', Discontinued: 'false' },
+            { Date: '01/01/2021', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Stanley', Discontinued: 'false' },
+            { Date: '01/01/2021', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Stanley', Discontinued: 'false' },
+            { Date: '01/01/2021', ProductCategory: 'Clothing', Country: 'Bulgaria', SellerName: 'Stanley', Discontinued: 'false' }
+        ]);
         // Discontinued, Date, Product, Country, Seller
         pivotConfig.rows = [
             dims[4],
@@ -1392,12 +1418,12 @@ describe('Pivot pipes #pivotGrid', () => {
         rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-        expect(rowStatePipeResult.length).toBe(77);
+        expect(rowStatePipeResult.length).toBe(84);
         const discontinued_prod_country_date_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
         const ongoing_records = discontinued_prod_country_date_seller.filter(x => x['Discontinued'] === 'false');
         const discontinued_records = discontinued_prod_country_date_seller.filter(x => x['Discontinued'] === 'true');
-        expect(discontinued_records.length).toBe(33);
-        expect(ongoing_records.length).toBe(44);
+        expect(discontinued_records.length).toBe(36);
+        expect(ongoing_records.length).toBe(48);
         const ongoing_allPeriods = ongoing_records.filter(x => x['AllPeriods'] === 'All Periods');
         expect(ongoing_allPeriods).toEqual([
             { Discontinued: 'false', AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Stanley' },
@@ -1476,7 +1502,7 @@ describe('Pivot pipes #pivotGrid', () => {
         rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-        expect(rowStatePipeResult.length).toBe(75);
+        expect(rowStatePipeResult.length).toBe(84);
         const date_prod_disc_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
 
         const date_allPeriods_allProducts_records = date_prod_disc_seller.filter(x => x['AllPeriods'] === 'All Periods' && x['AllProduct'] === 'All Products');

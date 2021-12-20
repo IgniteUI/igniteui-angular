@@ -285,7 +285,7 @@ export class PivotUtil {
                         // otherwise overwrite direct child collection
                         child[row.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.records] = siblingData2;
                     }
-                    const sibs = prevRowDims.filter(x => !x.childLevel && x.memberName !== prevRowField);
+                    const sibs = prevRowDims.filter(x => x.memberName !== prevRowField);
                     if (sibs.length > 0) {
                         // Process sibling dimensions in depth
                         this.processSubGroups(row, [...sibs], [child], pivotKeys, lvl);
