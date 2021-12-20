@@ -23,7 +23,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
             if (id !== undefined) {
                 transactions = transactions.filter(t => t.id === id);
             }
-            DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKeyOrId, true);
+            DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKeyOrId, this.cloneStrategy, true);
             this.clear(id);
         } else {
             super.commit(data, primaryKeyOrId);

@@ -6203,14 +6203,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         //  if there is a row in ADD or UPDATE state change it's state to DELETE
         if (index !== -1) {
             if (this.transactions.enabled) {
-                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null, cloneStrategy : this.dataCloneStrategy };
+                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
                 this.transactions.add(transaction, this.data[index]);
             } else {
                 this.data.splice(index, 1);
             }
         } else {
             const state: State = this.transactions.getState(rowID);
-            this.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null, cloneStrategy : this.dataCloneStrategy }, state && state.recordRef);
+            this.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
         }
     }
 

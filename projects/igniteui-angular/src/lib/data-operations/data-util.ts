@@ -21,6 +21,7 @@ import {
     IgxSorting,
     IgxGrouping
 } from '../grids/common/strategy';
+import { DefaultDataCloneStrategy, IDataCloneStrategy } from 'igniteui-angular';
 
 /**
  * @hidden
@@ -189,6 +190,7 @@ export class DataUtil {
         transactions: HierarchicalTransaction[],
         childDataKey: any,
         primaryKey?: any,
+        cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy(),
         deleteRows: boolean = false): any[] {
         for (const transaction of transactions) {
             if (transaction.path) {
@@ -205,7 +207,7 @@ export class DataUtil {
                     case TransactionType.UPDATE:
                         const updateIndex = collection.findIndex(x => x[primaryKey] === transaction.id);
                         if (updateIndex !== -1) {
-                            collection[updateIndex] = mergeObjects(transaction.cloneStrategy.clone(collection[updateIndex]), transaction.newValue);
+                            collection[updateIndex] = mergeObjects(cloneStrategy.clone(collection[updateIndex]), transaction.newValue);
                         }
                         break;
                     case TransactionType.DELETE:

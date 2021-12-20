@@ -19,7 +19,6 @@ export interface Transaction {
     id: any;
     type: TransactionType;
     newValue: any;
-    cloneStrategy?: IDataCloneStrategy;
 }
 
 /**

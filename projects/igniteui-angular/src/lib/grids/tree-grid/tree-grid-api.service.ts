@@ -275,7 +275,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
                 id: rowID,
                 type: TransactionType.UPDATE,
                 newValue: rowNewValue,
-                cloneStrategy: grid.transactions.cloneStrategy,
                 path
             };
             grid.transactions.add(transaction, rowCurrentValue);
