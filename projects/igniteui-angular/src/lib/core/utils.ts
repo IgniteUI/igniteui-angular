@@ -166,7 +166,7 @@ export const uniqueDates = (columnValues: any[]) => columnValues.reduce((a, c) =
  * @returns true if provided variable is Object
  * @hidden
  */
-export const isObject = (value: any): boolean => value && value.toString() === '[object Object]';
+ export const isObject = (value: any): boolean => !!(value && value.toString() === '[object Object]');
 
 /**
  * Checks if provided variable is Date

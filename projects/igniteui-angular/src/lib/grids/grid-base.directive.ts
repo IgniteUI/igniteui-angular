@@ -448,10 +448,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      }
 
      public set dataCloneStrategy(strategy: IDataCloneStrategy) {
-         this._dataCloneStrategy = strategy;
-         if (this._batchEditing) {
-             this.switchTransactionService(this._batchEditing);
-         }
+        if (strategy) {
+            this._dataCloneStrategy = strategy;
+            this._transactions.cloneStrategy = strategy;
+        }
      }
 
     /**
@@ -3230,7 +3230,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.decimalPipe = new DecimalPipe(this.locale);
         this.currencyPipe = new CurrencyPipe(this.locale);
         this.percentPipe = new PercentPipe(this.locale);
-        this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None, this.dataCloneStrategy);
+        this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+        this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
     }
 
@@ -6181,9 +6182,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected switchTransactionService(val: boolean) {
         if (val) {
-            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base, this.dataCloneStrategy);
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base);
         } else {
-            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None, this.dataCloneStrategy);
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+        }
+        if (this.dataCloneStrategy) {
+            this._transactions.cloneStrategy = this.dataCloneStrategy;
         }
     }
 
