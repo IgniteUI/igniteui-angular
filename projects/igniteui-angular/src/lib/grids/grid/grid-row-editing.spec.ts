@@ -2766,7 +2766,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ id: 100, type: 'add', newValue: addRowData, cloneStrategy: trans.cloneStrategy });
+            expect(trans.add).toHaveBeenCalledWith({ id: 100, type: 'add', newValue: addRowData});
             expect(grid.data.length).toBe(10);
         });
 
@@ -2788,7 +2788,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ id: 3, type: 'update', newValue: { ProductName: 'Updated Cell' }, cloneStrategy: trans.cloneStrategy }, grid.data[2]);
+            expect(trans.add).toHaveBeenCalledWith({ id: 3, type: 'update', newValue: { ProductName: 'Updated Cell' }}, grid.data[2]);
             expect(grid.data.length).toBe(10);
         });
 

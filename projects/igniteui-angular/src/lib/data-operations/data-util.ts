@@ -153,7 +153,7 @@ export class DataUtil {
             const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
             if (transaction && transaction.type === TransactionType.UPDATE) {
-                data[index] = mergeObjects(data[index], transaction.newValue);
+                data[index] = transaction.newValue;
             }
         });
 
