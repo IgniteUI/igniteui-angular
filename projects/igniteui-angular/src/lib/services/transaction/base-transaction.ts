@@ -12,7 +12,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     }
 
      public set cloneStrategy(strategy: IDataCloneStrategy) {
-        this._cloneStrategy = strategy || new DefaultDataCloneStrategy();
+        this._cloneStrategy = strategy;
     }
 
     /**
@@ -44,7 +44,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     protected _isPending = false;
     protected _pendingTransactions: T[] = [];
     protected _pendingStates: Map<any, S> = new Map();
-    private _cloneStrategy : IDataCloneStrategy;
+    private _cloneStrategy : IDataCloneStrategy = new DefaultDataCloneStrategy();
 
     /**
      * @inheritdoc
