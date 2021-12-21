@@ -4,7 +4,7 @@ import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IRowD
 import { IgxRowDirective } from '../row.directive';
 import { GridType } from './grid.interface';
 import { Subject } from 'rxjs';
-import { copyDescriptors, isEqual } from '../../core/utils';
+import { copyDescriptors, isEqual} from '../../core/utils';
 
 export class IgxEditRow {
     public transactionState: any;
