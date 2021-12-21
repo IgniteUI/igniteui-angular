@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, ContentChildren, EventEmitter,
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter,
     HostBinding, Input, OnDestroy, Output, QueryList } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -113,7 +113,16 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      * ```
      */
     @Input()
-    public singleBranchExpand = false;
+    public get singleBranchExpand(): boolean {
+        return this._singleBranchExpand;
+    }
+
+    public set singleBranchExpand(val: boolean) {
+        this._singleBranchExpand = val;
+        if (val) {
+            this.collapseAllExceptLast();
+        }
+    }
 
     /**
      * Emitted before a panel is expanded.
@@ -200,12 +209,16 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     private _destroy$ = new Subject<void>();
     private _unsubChildren$ = new Subject<void>();
     private _enabledPanels!: IgxExpansionPanelComponent[];
+    private _singleBranchExpand = false;
 
-    constructor() { }
+    constructor(private cdr: ChangeDetectorRef) { }
 
     /** @hidden @internal **/
     public ngAfterContentInit(): void {
         this.updatePanelsAnimation();
+        if (this.singleBranchExpand) {
+            this.collapseAllExceptLast();
+        }
     }
 
     /** @hidden @internal **/
@@ -254,6 +267,16 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      */
     public collapseAll(): void {
         this.panels.forEach(panel => panel.collapse());
+    }
+
+    private collapseAllExceptLast(): void {
+        const lastExpanded = this.panels?.filter(p => !p.collapsed && !p.header.disabled).pop();
+        this.panels?.forEach((p: IgxExpansionPanelComponent) => {
+            if (p !== lastExpanded && !p.header.disabled) {
+                p.collapsed = true;
+            }
+        });
+        this.cdr.detectChanges();
     }
 
     private handleKeydown(event: KeyboardEvent, panel: IgxExpansionPanelComponent): void {
