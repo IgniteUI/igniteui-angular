@@ -2,7 +2,7 @@ import { fakeAsync, TestBed, tick, flush, waitForAsync } from '@angular/core/tes
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective } from './';
-import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent } from '../../test-utils/tooltip-components.spec';
+import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
@@ -21,7 +21,8 @@ describe('IgxTooltip', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTooltipSingleTargetComponent,
-                IgxTooltipMultipleTargetsComponent
+                IgxTooltipMultipleTargetsComponent,
+                IgxTooltipPlainStringComponent
             ],
             imports: [NoopAnimationsModule, IgxTooltipModule]
         }).compileComponents();
@@ -77,6 +78,14 @@ describe('IgxTooltip', () => {
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+        }));
+
+        it('show target tooltip when hovering its target and ignore [tooltip] input', fakeAsync(() => {
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+            expect(tooltipNativeElement.textContent.trim()).toEqual('Hello, I am a tooltip!');
         }));
 
         it('verify tooltip default position', fakeAsync(() => {
@@ -259,6 +268,33 @@ describe('IgxTooltip', () => {
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
+
+        describe('Plain string toopltip input', () => {
+            // configureTestSuite();
+            beforeEach(waitForAsync(() => {
+                fix = TestBed.createComponent(IgxTooltipPlainStringComponent);
+                fix.detectChanges();
+                button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
+                tooltipTarget = fix.componentInstance.tooltipTarget;
+                tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
+            }));
+
+            it('IgxTooltip is initially hidden', () => {
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+            });
+    
+            it('IgxTooltip is shown/hidden when hovering/unhovering its target', fakeAsync(() => {
+                hoverElement(button);
+                flush();
+    
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+    
+                unhoverElement(button);
+                flush();
+    
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+            }));
+        });
 
         describe('Tooltip events', () => {
         // configureTestSuite();
