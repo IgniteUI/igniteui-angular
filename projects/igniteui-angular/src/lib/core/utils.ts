@@ -86,6 +86,7 @@ export const cloneHierarchicalArray = (array: any[], childDataKey: any): any[] =
 /**
  * Creates an object with prototype from provided source and copies
  * all properties descriptors from provided source
+ *
  * @param obj Source to copy prototype and descriptors from
  * @returns New object with cloned prototype and property descriptors
  */
@@ -96,7 +97,7 @@ export const copyDescriptors = (obj) => {
             Object.getOwnPropertyDescriptors(obj)
             );
     }
-}
+};
 
 
 /**
