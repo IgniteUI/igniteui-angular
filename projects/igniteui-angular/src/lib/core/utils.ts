@@ -84,6 +84,21 @@ export const cloneHierarchicalArray = (array: any[], childDataKey: any): any[] =
 };
 
 /**
+ * Creates an object with prototype from provided source and copies
+ * all properties descriptors from provided source
+ * @param obj Source to copy prototype and descriptors from
+ * @returns New object with cloned prototype and property descriptors
+ */
+ export const copyDescriptors = (obj) => {
+    if (obj) {
+        return Object.create(
+            Object.getPrototypeOf(obj),
+            Object.getOwnPropertyDescriptors(obj)
+            );
+    }
+}
+
+/**
  * Deep clones all first level keys of Obj2 and merges them to Obj1
  *
  * @param obj1 Object to merge into
