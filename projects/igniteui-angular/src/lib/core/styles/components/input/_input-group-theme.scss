@@ -1719,6 +1719,10 @@
         }
     }
 
+    %form-group-bundle {
+        padding: rem(16px);
+    }
+
     %form-group-helper {
         @include igx-type-style($type-scale, $helper-text) {
             margin: 0;
