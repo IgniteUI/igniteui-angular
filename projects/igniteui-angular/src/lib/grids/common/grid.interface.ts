@@ -142,6 +142,7 @@ export interface ColumnType {
     resizable: boolean;
     searchable: boolean;
     columnGroup: boolean;
+    /** @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.*/
     movable: boolean;
     groupable: boolean;
     sortable: boolean;

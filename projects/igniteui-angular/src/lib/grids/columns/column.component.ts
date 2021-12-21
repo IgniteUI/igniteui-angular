@@ -425,8 +425,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Sets/gets whether the column is movable.
      * Default value is `false`.
      *
-     * @deprecated
-     * Use `IgxGridComponent.moving` instead.
+     * @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.
      *
      * ```typescript
      * let isMovable = this.column.movable;
