@@ -517,6 +517,7 @@ const testMerging = () => {
         });
 
         it('Should merge delete transactions correctly', () => {
+            const cloneStrategy = new DefaultDataCloneStrategy();
             const data = SampleTestData.personIDNameData();
             const secondRow = data[1];
             const transactions: Transaction[] = [
@@ -524,7 +525,7 @@ const testMerging = () => {
                 { id: 3, newValue: null, type: TransactionType.DELETE },
             ];
 
-            DataUtil.mergeTransactions(data, transactions, 'ID', true);
+            DataUtil.mergeTransactions(data, transactions, 'ID', cloneStrategy, true);
             expect(data.length).toBe(1);
             expect(data[0]).toEqual(secondRow);
         });
