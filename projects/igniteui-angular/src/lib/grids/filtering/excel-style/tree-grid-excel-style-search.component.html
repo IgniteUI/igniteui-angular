@@ -1,0 +1,80 @@
+<igx-input-group
+            type="box"
+            [displayDensity]="esf.displayDensity">
+    <igx-icon igxPrefix>search</igx-icon>
+    <input
+        #input
+        igxInput
+        tabindex="0"
+        [(ngModel)]="searchValue"
+        (ngModelChange)="filterListData()"
+        (keydown)="onInputKeyDown($event)"
+        [placeholder]="esf.column?.grid.resourceStrings.igx_grid_excel_search_placeholder"
+        autocomplete="off"/>
+    <igx-icon
+        igxSuffix
+        *ngIf="searchValue || searchValue === 0"
+        (click)="clearInput()"
+        tabindex="0">
+        clear
+    </igx-icon>
+</igx-input-group>
+
+<igx-tree selection="Cascading">
+    <igx-tree-node *ngFor="let item of displayedListData">
+        <div>{{item.label}}</div>
+        <!-- <igx-tree-node *ngFor="let value of type.Children">
+            {{ value.Name }}
+        </igx-tree-node> -->
+    </igx-tree-node>
+</igx-tree>
+
+<!-- <igx-list #list [displayDensity]="esf.displayDensity" [isLoading]="isLoading">
+    <div style="overflow: hidden; position: relative;">
+        <igx-list-item
+        *igxFor="let item of displayedListData scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
+            <igx-checkbox
+                [value]="item"
+                [tabindex]="-1"
+                [checked]="item.isSelected"
+                [disableRipple]="true"
+                [indeterminate]="item.indeterminate"
+                [disableTransitions]="true"
+                (change)="onCheckboxChange($event)">
+                {{ item.label }}
+            </igx-checkbox>
+        </igx-list-item>
+    </div>
+
+    <ng-template igxDataLoading>
+        <div class="igx-excel-filter__loading">
+            <ng-container *ngTemplateOutlet="valuesLoadingTemplate">
+            </ng-container>
+        </div>
+    </ng-template>
+</igx-list> -->
+
+<ng-template #defaultExcelStyleLoadingValuesTemplate>
+    <igx-circular-bar [indeterminate]="true">
+    </igx-circular-bar>
+</ng-template>
+
+<footer class="igx-excel-filter__menu-footer">
+    <div class="igx-excel-filter__cancel">
+        <button
+            igxButton="flat"
+            [displayDensity]="esf.displayDensity"
+            (click)="esf.cancel()">
+                {{ esf.grid?.resourceStrings.igx_grid_excel_cancel }}
+        </button>
+    </div>
+    <div class="igx-excel-filter__apply">
+        <button
+            igxButton="raised"
+            [displayDensity]="esf.displayDensity"
+            [disabled]="applyButtonDisabled"
+            (click)="applyFilter()">
+                {{ esf.grid?.resourceStrings.igx_grid_excel_apply }}
+        </button>
+    </div>
+</footer>

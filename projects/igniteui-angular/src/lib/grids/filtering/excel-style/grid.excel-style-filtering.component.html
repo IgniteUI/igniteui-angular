@@ -29,8 +29,11 @@
     <igx-excel-style-conditional-filter>
     </igx-excel-style-conditional-filter>
 
-    <igx-excel-style-search>
+    <igx-excel-style-search *ngIf="!isTreeGrid()">
     </igx-excel-style-search>
+
+    <igx-tree-grid-excel-style-search *ngIf="isTreeGrid()">
+    </igx-tree-grid-excel-style-search>
 </ng-template>
 
 <article #mainDropdown

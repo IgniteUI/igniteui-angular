@@ -391,6 +391,13 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.cdr.detectChanges();
     }
 
+    /**
+     * @hidden @internal
+     */
+    public isTreeGrid() {
+        return this.grid.records !== undefined;
+    }
+
     private init() {
         this.expressionsList = new Array<ExpressionUI>();
         generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
@@ -485,6 +492,10 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         // TODO: Check why we access the API service through the column ??
         // const data = this.column.gridAPI.filterDataByExpressions(expressionsTree);
         const data = this.grid.gridAPI.filterDataByExpressions(expressionsTree);
+
+        if (this.grid.childDataKey !== undefined) {
+            // TODO: add property to FilterListItem (or create new class) and populate children (recursively) for data
+        }
 
         const shouldFormatValues = this.shouldFormatValues();
         const columnField = this.column.field;

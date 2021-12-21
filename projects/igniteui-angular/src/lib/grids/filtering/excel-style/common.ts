@@ -12,6 +12,7 @@ export class FilterListItem {
     public isFiltered: boolean;
     public isSpecial = false;
     public isBlanks = false;
+    public children?: Array<FilterListItem>;
 }
 
 /**
