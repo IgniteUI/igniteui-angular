@@ -295,14 +295,16 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                     return DataUtil.mergeTransactions(
                         flatDataClone,
                         aggregatedChanges,
-                        grid.primaryKey);
+                        grid.primaryKey,
+                        grid.dataCloneStrategy);
                 } else if (childDataKey) {
                     const hierarchicalDataClone = cloneHierarchicalArray(collection, childDataKey);
                     return DataUtil.mergeHierarchicalTransactions(
                         hierarchicalDataClone,
                         aggregatedChanges,
                         childDataKey,
-                        grid.primaryKey);
+                        grid.primaryKey,
+                        grid.dataCloneStrategy);
                 }
             }
         }

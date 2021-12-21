@@ -34,6 +34,7 @@ export * from './lib/directives/date-time-editor/public_api';
 /**
  * Data operations
  */
+ export * from './lib/data-operations/data-clone-strategy';
 export * from './lib/data-operations/filtering-expression.interface';
 export * from './lib/data-operations/filtering-expressions-tree';
 export * from './lib/data-operations/filtering-condition';

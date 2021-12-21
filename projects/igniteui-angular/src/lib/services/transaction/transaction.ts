@@ -1,4 +1,5 @@
 import { EventEmitter } from '@angular/core';
+import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 export enum TransactionType {
     ADD = 'add',
@@ -57,6 +58,11 @@ export interface TransactionService<T extends Transaction, S extends State> {
      * Returns whether transaction is enabled for this service
      */
     readonly enabled: boolean;
+
+    /**
+     * Gets/Sets the data clone strategy used to clone data
+     */
+     cloneStrategy: IDataCloneStrategy;
 
     /**
      * Event fired when transaction state has changed - add transaction, commit all transactions, undo and redo
