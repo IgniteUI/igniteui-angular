@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import {
     IgxTooltipTargetDirective, IgxTooltipDirective,
     ITooltipShowEventArgs, ITooltipHideEventArgs
-} from '../directives/tooltip/tooltip.directive';
+} from '../directives/tooltip';
 
 @Component({
     template: `

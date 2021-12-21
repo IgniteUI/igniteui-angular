@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed, tick, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective } from './tooltip.directive';
+import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective } from './';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
