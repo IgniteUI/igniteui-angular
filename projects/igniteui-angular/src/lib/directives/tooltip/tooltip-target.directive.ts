@@ -1,9 +1,13 @@
 import { useAnimation } from '@angular/animations';
 import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter } from '@angular/core';
-import { IgxToggleActionDirective, IgxNavigationService, PositionSettings, HorizontalAlignment, scaleInCenter, fadeOut, AutoPositionStrategy } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { fadeOut } from '../../animations/fade';
+import { scaleInCenter } from '../../animations/scale';
+import { IgxNavigationService } from '../../core/navigation';
 import { IBaseEventArgs } from '../../core/utils';
+import { AutoPositionStrategy, HorizontalAlignment, PositionSettings } from '../../services/public_api';
+import { IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
 
