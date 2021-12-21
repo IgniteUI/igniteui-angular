@@ -1,7 +1,7 @@
 import { Transaction, State, TransactionType, StateUpdateEvent, TransactionEventOrigin, Action } from './transaction';
 import { IgxBaseTransactionService } from './base-transaction';
 import { EventEmitter } from '@angular/core';
-import { isObject, mergeObjects, cloneValue } from '../../core/utils';
+import { isObject, mergeObjects } from '../../core/utils';
 
 export class IgxTransactionService<T extends Transaction, S extends State> extends IgxBaseTransactionService<T, S> {
     /**
@@ -272,14 +272,14 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                             state.value = this.mergeValues(state.value, transaction.newValue);
                         }
                         if (state.type === TransactionType.UPDATE) {
-                            mergeObjects(state.value, transaction.newValue);
+                                mergeObjects(state.value, transaction.newValue);
                         }
                     } else {
                         state.value = transaction.newValue;
                     }
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef, type: transaction.type } as S;
+            state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
 
