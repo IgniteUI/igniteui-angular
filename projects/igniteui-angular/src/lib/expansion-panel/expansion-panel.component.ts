@@ -225,7 +225,8 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      * ```
      */
     public collapse(evt?: Event) {
-        if (this.collapsed) { // If expansion panel is already collapsed, do nothing
+        // If expansion panel is already collapsed or is collapsing, do nothing
+        if (this.collapsed || this.closeAnimationPlayer) {
             return;
         }
         const args = { event: evt, panel: this, owner: this, cancel: false };
