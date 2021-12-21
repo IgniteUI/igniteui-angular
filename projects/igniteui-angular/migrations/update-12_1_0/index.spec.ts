@@ -32,17 +32,15 @@ describe(`Update to ${version}`, () => {
 
     // IgxOverlayService
     it('should update overlay events subscriptions', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
-            '/testSrc/appPrefix/service/test.component.ts', `
-import { Component, OnInit } from '@angular/core';
-import { IgxOverlayService } from 'igniteui-angular';
-export class SimpleComponent implements OnInit {
-    constructor(@Inject(IgxOverlayService) protected overlayService: IgxOverlayService){}
+            '/testSrc/appPrefix/service/test.component.ts',
+`import { IgxOverlayService } from '../../../dist/igniteui-angular';
+export class SimpleComponent {
+    public overlayService: IgxOverlayService);
 
-    public ngOnInit() {
+    public myFunction() {
         this.overlayService.onOpening.subscribe();
-        this.overlayService.opened.subscribe();
+        this.overlayService.onOpened.subscribe();
         this.overlayService.onClosing.subscribe();
         this.overlayService.onClosed.subscribe();
         this.overlayService.onAppended.subscribe();
@@ -53,13 +51,12 @@ export class SimpleComponent implements OnInit {
             .toPromise();
 
         expect(tree.readContent('/testSrc/appPrefix/service/test.component.ts'))
-            .toEqual(`
-import { Component, OnInit } from '@angular/core';
-import { IgxOverlayService } from 'igniteui-angular';
-export class SimpleComponent implements OnInit {
-    constructor(@Inject(IgxOverlayService) protected overlayService: IgxOverlayService){}
+            .toEqual(
+`import { IgxOverlayService } from '../../../dist/igniteui-angular';
+export class SimpleComponent {
+    public overlayService: IgxOverlayService);
 
-    public ngOnInit() {
+    public myFunction() {
         this.overlayService.opening.subscribe();
         this.overlayService.opened.subscribe();
         this.overlayService.closing.subscribe();
@@ -71,16 +68,13 @@ export class SimpleComponent implements OnInit {
     });
 
     it('should update banner event subscriptions in .ts file', async () => {
-        pending('ts language service tests do not pass');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
-import { Component, OnInit } from '@angular/core';
-import { IgxBannerComponent } from 'igniteui-angular';
-export class TestComponent implements OnInit {
-    @ViewChild(IgxBannerComponent)
-    public banner: IgxBannerComponent
+import { IgxBannerComponent } from '../../../dist/igniteui-angular';
+export class TestComponent {
+    public banner: IgxBannerComponent;
 
-    public ngOnInit() {
+    public myFunction() {
         this.banner.onOpening.subscribe();
         this.banner.onOpened.subscribe();
         this.banner.onClosing.subscribe();
@@ -92,13 +86,11 @@ export class TestComponent implements OnInit {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(`
-import { Component, OnInit } from '@angular/core';
-import { IgxBannerComponent } from 'igniteui-angular';
-export class TestComponent implements OnInit {
-    @ViewChild(IgxBannerComponent)
-    public banner: IgxBannerComponent
+import { IgxBannerComponent } from '../../../dist/igniteui-angular';
+export class TestComponent {
+    public banner: IgxBannerComponent;
 
-    public ngOnInit() {
+    public myFunction() {
         this.banner.opening.subscribe();
         this.banner.opened.subscribe();
         this.banner.closing.subscribe();
@@ -134,19 +126,15 @@ export class TestComponent implements OnInit {
     });
 
     it('should update expansion panel event subscriptions in .ts file', async () => {
-        pending('ts language service tests do not pass');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
-import { Component, OnInit } from '@angular/core';
-import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from 'igniteui-angular';
-export class TestComponent implements OnInit {
-    @ViewChild(IgxExpansionPanelComponent)
-    public panel: IgxExpansionPanelComponent
+import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from '../../../dist/igniteui-angular';
 
-    @ViewChild(IgxExpansionPanelHeaderComponent)
+export class TestComponent {
+    public panel: IgxExpansionPanelComponent
     public header: IgxExpansionPanelHeaderComponent
 
-    public ngOnInit() {
+    public myFunction() {
         this.panel.onExpanded.subscribe();
         this.panel.onCollapsed.subscribe();
         this.header.onInteraction.subscribe();
@@ -157,16 +145,13 @@ export class TestComponent implements OnInit {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(`
-import { Component, OnInit } from '@angular/core';
-import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from 'igniteui-angular';
-export class TestComponent implements OnInit {
-    @ViewChild(IgxExpansionPanelComponent)
-    public panel: IgxExpansionPanelComponent
+import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from '../../../dist/igniteui-angular';
 
-    @ViewChild(IgxExpansionPanelHeaderComponent)
+export class TestComponent {
+    public panel: IgxExpansionPanelComponent
     public header: IgxExpansionPanelHeaderComponent
 
-    public ngOnInit() {
+    public myFunction() {
         this.panel.contentExpanded.subscribe();
         this.panel.contentCollapsed.subscribe();
         this.header.interaction.subscribe();
@@ -187,16 +172,13 @@ export class TestComponent implements OnInit {
     });
 
     it('should update mask event subscriptions .ts file', async () => {
-        pending('ts language service tests do not pass');
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts', `
-import { Component, OnInit } from '@angular/core';
-import { IgxMaskDirective } from 'igniteui-angular';
-export class TestComponent implements OnInit {
-    @ViewChild(IgxMaskDirective)
-    public mask: IgxMaskDirective
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+`import { IgxMaskDirective } from '../../../dist/igniteui-angular';
 
-    public ngOnInit() {
+export class TestComponent {
+    public mask: IgxMaskDirective;
+
+    public myFunction() {
         this.mask.onValueChange.subscribe();
     }
 }`);
@@ -204,15 +186,14 @@ export class TestComponent implements OnInit {
             .toPromise();
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
-            .toEqual(`
-import { Component, OnInit } from '@angular/core';
-import { IgxMaskDirective } from 'igniteui-angular';
-export class TestComponent implements OnInit {
-    @ViewChild(IgxMaskDirective)
-    public mask: IgxMaskDirective
+            .toEqual(
+`import { IgxMaskDirective } from '../../../dist/igniteui-angular';
 
-    public ngOnInit() {
-        this.mask.valueChanged;
+export class TestComponent {
+    public mask: IgxMaskDirective;
+
+    public myFunction() {
+        this.mask.valueChanged.subscribe();
     }
 }`);
     });
@@ -238,46 +219,40 @@ export class TestComponent implements OnInit {
 </igx-expansion-panel>`);
     });
 
-it('Should remove references to deprecated `banner` property of `BannerEventArgs`', async () => {
-    pending('set up tests for migrations through lang service');
+    it('Should remove references to deprecated `banner` property of `BannerEventArgs`', async () => {
     appTree.create(
         '/testSrc/appPrefix/component/expansion-test.component.ts',
-        `import { Component, ViewChild } from '@angular/core';
-import { IgxBanner } from 'igniteui-angular';
-
+`import { Component, ViewChild } from '@angular/core';
+import { IgxBannerComponent } from '../../../dist/igniteui-angular';
 @Component({
 selector: 'app-banner-test',
 templateUrl: './banner-test.component.html',
 styleUrls: ['./banner-test.component.scss']
 })
 export class BannerTestComponent {
-
 @ViewChild(IgxBannerComponent, { static: true })
 public panel: IgxBannerComponent;
-
 public onBannerOpened(event: BannerEventArgs) {
-    console.log(event.banner);
+console.log(event.banner);
 }
 }`
     );
     const tree = await schematicRunner
         .runSchematicAsync('migration-17', {}, appTree)
         .toPromise();
-    const expectedContent =  `import { Component, ViewChild } from '@angular/core';
-import { IgxBanner } from 'igniteui-angular';
-
+    const expectedContent =
+`import { Component, ViewChild } from '@angular/core';
+import { IgxBannerComponent } from '../../../dist/igniteui-angular';
 @Component({
 selector: 'app-banner-test',
 templateUrl: './banner-test.component.html',
 styleUrls: ['./banner-test.component.scss']
 })
 export class BannerTestComponent {
-
 @ViewChild(IgxBannerComponent, { static: true })
 public panel: IgxBannerComponent;
-
 public onBannerOpened(event: BannerEventArgs) {
-    console.log(event.owner);
+console.log(event.owner);
 }
 }`;
     expect(
@@ -462,8 +437,39 @@ public onBannerOpened(event: BannerEventArgs) {
     });
 
     // IgxDropDown
-    it('should update IgxDropDown event subscriptions', () => {
-        pending('ts language service tests do not pass');
+    it('should update IgxDropDown event subscriptions', async () => {
+        appTree.create(
+            'testSrc/appPrefix/component/test.component.ts',
+`import { IgxDropDownComponent } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public dropdown: IgxDropDownComponent;
+
+    public myFunction() {
+        this.dropdown.onOpening.subscribe();
+        this.dropdown.onOpened.subscribe();
+        this.dropdown.onClosing.subscribe();
+        this.dropdown.onClosed.subscribe();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+                .toEqual(
+
+`import { IgxDropDownComponent } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public dropdown: IgxDropDownComponent;
+
+    public myFunction() {
+        this.dropdown.opening.subscribe();
+        this.dropdown.opened.subscribe();
+        this.dropdown.closing.subscribe();
+        this.dropdown.closed.subscribe();
+    }
+}`);
     });
 
     it('should update dropdown event subscriptions in .html file', async () => {
@@ -494,8 +500,40 @@ public onBannerOpened(event: BannerEventArgs) {
     });
 
     // IgxToggleDirective
-    it('should update IgxToggleDirective event subscriptions', () => {
-        pending('ts language service tests do not pass');
+    it('should update IgxToggleDirective event subscriptions', async () => {
+        appTree.create(
+            'testSrc/appPrefix/component/test.component.ts',
+`import { IgxToggleDirective } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public toggle: IgxToggleDirective;
+
+    public myFunction() {
+        this.toggle.onOpening.subscribe();
+        this.toggle.onOpen.subscribe();
+        this.toggle.onClosing.subscribe();
+        this.toggle.onClosed.subscribe();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+                .toEqual(
+
+`import { IgxToggleDirective } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public toggle: IgxToggleDirective;
+
+    public myFunction() {
+        this.toggle.opening.subscribe();
+        this.toggle.open.subscribe();
+        this.toggle.closing.subscribe();
+        this.toggle.closed.subscribe();
+    }
+}`);
+
     });
 
     it('should update dropdown event subscriptions in .html file', async () => {
@@ -527,8 +565,46 @@ public onBannerOpened(event: BannerEventArgs) {
     });
 
     // IgxCombo
-    it('should update IgxCombo event subscriptions', () => {
-        pending('ts language service tests do not pass');
+    it('should update IgxCombo event subscriptions', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts',
+`import { IgxComboComponent } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public combo: IgxComboComponent;
+
+    public myFunction() {
+        this.combo.onSelectionChange.subscribe();
+        this.combo.onSearchInput.subscribe();
+        this.combo.onAddition.subscribe();
+        this.combo.onDataPreLoad.subscribe();
+        this.combo.onOpening.subscribe();
+        this.combo.onOpened.subscribe();
+        this.combo.onClosing.subscribe();
+        this.combo.onClosed.subscribe();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            .toEqual(
+`import { IgxComboComponent } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public combo: IgxComboComponent;
+
+    public myFunction() {
+        this.combo.selectionChanging.subscribe();
+        this.combo.searchInputUpdate.subscribe();
+        this.combo.addition.subscribe();
+        this.combo.dataPreLoad.subscribe();
+        this.combo.opening.subscribe();
+        this.combo.opened.subscribe();
+        this.combo.closing.subscribe();
+        this.combo.closed.subscribe();
+    }
+}`);
     });
 
     it('should update combo event subscriptions in .html file', async () => {
@@ -564,8 +640,42 @@ public onBannerOpened(event: BannerEventArgs) {
     });
 
     // IgxSelect
-    it('should update IgxSelect event subscriptions', () => {
-        pending('ts language service tests do not pass');
+    it('should update IgxSelect event subscriptions', async () => {
+        appTree.create(
+            'testSrc/appPrefix/component/test.component.ts',
+`import { IgxSelectComponent } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public select: IgxSelectComponent;
+
+    public myFunction() {
+        this.select.onOpening.subscribe();
+        this.select.onOpened.subscribe();
+        this.select.onClosing.subscribe();
+        this.select.onClosed.subscribe();
+        this.select.onSelection.subscribe();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+                .toEqual(
+
+`import { IgxSelectComponent } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public select: IgxSelectComponent;
+
+    public myFunction() {
+        this.select.opening.subscribe();
+        this.select.opened.subscribe();
+        this.select.closing.subscribe();
+        this.select.closed.subscribe();
+        this.select.selectionChanging.subscribe();
+    }
+}`);
+
     });
 
     it('should update select event subscriptions in .html file', async () => {
@@ -595,8 +705,32 @@ public onBannerOpened(event: BannerEventArgs) {
     });
 
     // IgxAutocomplete
-    it('should update IgxAutocomplete event subscriptions', () => {
-        pending('ts language service tests do not pass');
+    it('should update IgxAutocomplete event subscriptions', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts',
+`import { IgxAutocompleteDirective } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public autocomplete: IgxAutocompleteDirective
+
+    public myFunction() {
+        this.autocomplete.onItemSelected.subscribe();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            .toEqual(
+`import { IgxAutocompleteDirective } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public autocomplete: IgxAutocompleteDirective
+
+    public myFunction() {
+        this.autocomplete.selectionChanging.subscribe();
+    }
+}`);
     });
 
     it('should update autocomplete event subscriptions in .html file', async () => {
@@ -620,8 +754,43 @@ public onBannerOpened(event: BannerEventArgs) {
     });
 
     // IgxDialog
-    it('should update IgxDialog event subscriptions', () => {
-        pending('ts language service tests do not pass');
+    it('should update IgxDialog event subscriptions', async () => {
+        appTree.create(
+            'testSrc/appPrefix/component/test.component.ts',
+`import { IgxDialogComponent } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public dialog: IgxDialogComponent;
+
+    public myFunction() {
+        this.dialog.onOpen.subscribe();
+        this.dialog.onOpened.subscribe();
+        this.dialog.onClose.subscribe();
+        this.dialog.onClosed.subscribe();
+        this.dialog.onLeftButtonSelect.subscribe();
+        this.dialog.onRightButtonSelect.subscribe();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+                .toEqual(
+
+`import { IgxDialogComponent } from '../../../dist/igniteui-angular';
+
+export class TestComponent {
+    public dialog: IgxDialogComponent;
+
+    public myFunction() {
+        this.dialog.opening.subscribe();
+        this.dialog.opened.subscribe();
+        this.dialog.closing.subscribe();
+        this.dialog.closed.subscribe();
+        this.dialog.leftButtonSelect.subscribe();
+        this.dialog.rightButtonSelect.subscribe();
+    }
+}`);
     });
 
     it('should update dialog event subscriptions in .html file', async () => {

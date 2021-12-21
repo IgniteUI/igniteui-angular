@@ -57,62 +57,38 @@ describe('Update to 11.1.0', () => {
         ).toEqual('<igx-icon [active]="false">settings</igx-icon>');
     });
 
-    it('should migrate updated getter names', async () => {
-        pending('set up tests for migrations through lang service');
+    it('should migrate updated getter names in IgxIconName', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/icon-test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
-import { IgxIconModule, IgxIconComponent } from 'igniteui-angular';
+`import { IgxIconComponent } from '../../../dist/igniteui-angular';
 
-@Component({
-    selector: 'app-icon-test',
-    templateUrl: './icon-test.component.html',
-    styleUrls: ['./icon-test.component.scss']
-})
 export class IconTestComponent {
-    @ViewChild(IgxIconComponent, { static: true })
     private icon: IgxIconComponent;
 
-    constructor() {
+    public myFunction() {
         const name = this.icon.getIconName;
         const family = this.icon.getFontSet;
         const color = this.icon.getIconColor;
     }
 }
-@NgModule({
-    declarations: [IconTestComponent],
-    exports: [IconTestComponent],
-    imports: [IgxIconModule]
-});
 `);
 
         const tree = await runner
             .runSchematicAsync('migration-19', {}, appTree)
             .toPromise();
 
-        const expectedContent = `import { Component, ViewChild } from '@angular/core';
-import { IgxIconModule, IgxIconComponent } from 'igniteui-angular';
+        const expectedContent =
+`import { IgxIconComponent } from '../../../dist/igniteui-angular';
 
-@Component({
-    selector: 'app-icon-test',
-    templateUrl: './icon-test.component.html',
-    styleUrls: ['./icon-test.component.scss']
-})
 export class IconTestComponent {
-    @ViewChild(IgxIconComponent, { static: true })
     private icon: IgxIconComponent;
 
-    constructor() {
+    public myFunction() {
         const name = this.icon.getName;
         const family = this.icon.getFamily;
         const color = this.icon.getColor;
     }
 }
-@NgModule({
-    declarations: [IconTestComponent],
-    exports: [IconTestComponent],
-    imports: [IgxIconModule]
-});
 `;
         console.log(tree.readContent(
             '/testSrc/appPrefix/component/icon-test.component.ts'
@@ -125,56 +101,38 @@ export class IconTestComponent {
         ).toEqual(expectedContent);
     });
 
-    it('should migrate updated members names', async () => {
-        pending('set up tests for migrations through lang service');
+    it('should migrate updated members names for IgxIconService', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/icon-test.component.ts',
-            `import { Component } from '@angular/core';
-            import { IgxIconService } from 'igniteui-angular';
+`import { IgxIconService } from '../../../dist/igniteui-angular';
 
-@Component({
-    selector: 'app-icon-test',
-    templateUrl: './icon-test.component.html',
-    styleUrls: ['./icon-test.component.scss']
-})
 export class IconTestComponent {
-    constructor(private _iconService: IgxIconService) {
-        const font = this._iconService.defaultFontSet;
-        const className = this._iconService.fontSetClassName('material');
-        const alias = this._iconService.registerFontSetAlias('material', 'material-icons');
+    public iconService: IgxIconService;
+
+    public myFunction() {
+        const font = this.iconService.defaultFontSet;
+        const className = this.iconService.fontSetClassName('material');
+        const alias = this.iconService.registerFontSetAlias('material', 'material-icons');
     }
 }
-@NgModule({
-    declarations: [IconTestComponent],
-    exports: [IconTestComponent],
-    imports: [IgxIconModule]
-});
 `);
 
         const tree = await runner
             .runSchematicAsync('migration-19', {}, appTree)
             .toPromise();
 
-        const expectedContent = `import { Component } from '@angular/core';
-        import { IgxIconService } from 'igniteui-angular';
+        const expectedContent =
+`import { IgxIconService } from '../../../dist/igniteui-angular';
 
-@Component({
-    selector: 'app-icon-test',
-    templateUrl: './icon-test.component.html',
-    styleUrls: ['./icon-test.component.scss']
-})
 export class IconTestComponent {
-    constructor(private _iconService: IgxIconService) {
-        const font = this._iconService.defaultFamily;
-        const className = this._iconService.familyClassName('material');
-        const alias = this._iconService.registerFamilyAlias('material', 'material-icons');
+    public iconService: IgxIconService;
+
+    public myFunction() {
+        const font = this.iconService.defaultFamily;
+        const className = this.iconService.familyClassName('material');
+        const alias = this.iconService.registerFamilyAlias('material', 'material-icons');
     }
 }
-@NgModule({
-    declarations: [IconTestComponent],
-    exports: [IconTestComponent],
-    imports: [IgxIconModule]
-});
 `;
 
         expect(
@@ -333,28 +291,16 @@ export class IconTestComponent {
     });
 
     it('should update Excel exporter onExportEnded event name to exportEnded', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/excel-export.component.ts',
-`import { Component } from '@angular/core';
-import { IgxExcelExporterService } from "igniteui-angular";
+`import { IgxExcelExporterService } from "../../../dist/igniteui-angular";
 
-@Component({
-    selector: "app-excel-export",
-    styleUrls: ["./excel-export.component.scss"],
-    templateUrl: "./excel-export.component.html"
-})
 export class ExcelExportComponent {
-    constructor(private excelExportService: IgxExcelExporterService) {
-        this.excelExportService.onExportEnded.subscribe();
+    public excelService: IgxExcelExporterService;
+    public myFunction() {
+        this.excelService.onExportEnded.subscribe();
     }
 }
-@NgModule({
-    declarations: [ExcelExportComponent],
-    exports: [ExcelExportComponent],
-    imports: [],
-    providers: [IgxExcelExporterService]
-});
 `);
 
         const tree = await runner
@@ -362,25 +308,14 @@ export class ExcelExportComponent {
             .toPromise();
 
         const expectedContent =
-`import { Component } from '@angular/core';
-import { IgxExcelExporterService } from "igniteui-angular";
+`import { IgxExcelExporterService } from "../../../dist/igniteui-angular";
 
-@Component({
-    selector: "app-excel-export",
-    styleUrls: ["./excel-export.component.scss"],
-    templateUrl: "./excel-export.component.html"
-})
 export class ExcelExportComponent {
-    constructor(private excelExportService: IgxExcelExporterService) {
-        this.excelExportService.exportEnded.subscribe();
+    public excelService: IgxExcelExporterService;
+    public myFunction() {
+        this.excelService.exportEnded.subscribe();
     }
 }
-@NgModule({
-    declarations: [ExcelExportComponent],
-    exports: [ExcelExportComponent],
-    imports: [],
-    providers: [IgxExcelExporterService]
-});
 `;
 
         expect(
@@ -391,28 +326,17 @@ export class ExcelExportComponent {
     });
 
     it('should update CSV exporter onExportEnded event name to exportEnded', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/csv-export.component.ts',
-`import { Component } from '@angular/core';
-import { IgxCsvExporterService } from "igniteui-angular";
+`import { IgxCsvExporterService } from "../../../dist/igniteui-angular";
 
-@Component({
-    selector: "app-csv-export",
-    styleUrls: ["./csv-export.component.scss"],
-    templateUrl: "./csv-export.component.html"
-})
 export class CsvExportComponent {
-    constructor(private csvExportService: IgxCsvExporterService) {
-        this.csvExportService.onExportEnded.subscribe();
+    public csvES: IgxCsvExporterService;
+
+    public myFunction() {
+        this.csvES.onExportEnded.subscribe();
     }
 }
-@NgModule({
-    declarations: [CsvExportComponent],
-    exports: [CsvExportComponent],
-    imports: [],
-    providers: [IgxCsvExporterService]
-});
 `);
 
         const tree = await runner
@@ -420,25 +344,15 @@ export class CsvExportComponent {
             .toPromise();
 
         const expectedContent =
-`import { Component } from '@angular/core';
-import { IgxCsvExporterService } from "igniteui-angular";
+`import { IgxCsvExporterService } from "../../../dist/igniteui-angular";
 
-@Component({
-    selector: "app-csv-export",
-    styleUrls: ["./csv-export.component.scss"],
-    templateUrl: "./csv-export.component.html"
-})
 export class CsvExportComponent {
-    constructor(private csvExportService: IgxCsvExporterService) {
-        this.csvExportService.exportEnded.subscribe();
+    public csvES: IgxCsvExporterService;
+
+    public myFunction() {
+        this.csvES.exportEnded.subscribe();
     }
 }
-@NgModule({
-    declarations: [CsvExportComponent],
-    exports: [CsvExportComponent],
-    imports: [],
-    providers: [IgxCsvExporterService]
-});
 `;
         expect(
             tree.readContent(
@@ -632,29 +546,18 @@ export class CsvExportComponent {
     });
 
     it('should update Excel exporter onColumnExport and onRowExport event names to columnmExporting and rowExporting', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/excel-export.component.ts',
-`import { Component } from '@angular/core';
-import { IgxExcelExporterService } from "igniteui-angular";
+`import { IgxExcelExporterService } from "../../../dist/igniteui-angular";
 
-@Component({
-    selector: "app-excel-export",
-    styleUrls: ["./excel-export.component.scss"],
-    templateUrl: "./excel-export.component.html"
-})
 export class ExcelExportComponent {
-    constructor(private excelExportService: IgxExcelExporterService) {
-        this.excelExportService.onColumnExport.subscribe();
-        this.excelExportService.onRowExport.subscribe();
+    public excelES: IgxExcelExporterService;
+
+    public myFunction() {
+        this.excelES.onColumnExport.subscribe();
+        this.excelES.onRowExport.subscribe();
     }
 }
-@NgModule({
-    declarations: [ExcelExportComponent],
-    exports: [ExcelExportComponent],
-    imports: [],
-    providers: [IgxExcelExporterService]
-});
 `);
 
         const tree = await runner
@@ -662,26 +565,16 @@ export class ExcelExportComponent {
             .toPromise();
 
         const expectedContent =
-`import { Component } from '@angular/core';
-import { IgxExcelExporterService } from "igniteui-angular";
+`import { IgxExcelExporterService } from "../../../dist/igniteui-angular";
 
-@Component({
-    selector: "app-excel-export",
-    styleUrls: ["./excel-export.component.scss"],
-    templateUrl: "./excel-export.component.html"
-})
 export class ExcelExportComponent {
-    constructor(private excelExportService: IgxExcelExporterService) {
-        this.excelExportService.columnExporting.subscribe();
-        this.excelExportService.rowExporting.subscribe();
+    public excelES: IgxExcelExporterService;
+
+    public myFunction() {
+        this.excelES.columnExporting.subscribe();
+        this.excelES.rowExporting.subscribe();
     }
 }
-@NgModule({
-    declarations: [ExcelExportComponent],
-    exports: [ExcelExportComponent],
-    imports: [],
-    providers: [IgxExcelExporterService]
-});
 `;
 
         expect(
@@ -692,29 +585,18 @@ export class ExcelExportComponent {
     });
 
     it('should update CSV exporter onColumnExport and onRowExport event names to columnmExporting and rowExporting', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/csv-export.component.ts',
-`import { Component } from '@angular/core';
-import { IgxCsvExporterService } from "igniteui-angular";
+`import { IgxCsvExporterService } from "../../../dist/igniteui-angular";
 
-@Component({
-    selector: "app-csv-export",
-    styleUrls: ["./csv-export.component.scss"],
-    templateUrl: "./csv-export.component.html"
-})
 export class CsvExportComponent {
-    constructor(private csvExportService: IgxCsvExporterService) {
-        this.csvExportService.onColumnExport.subscribe();
-        this.csvExportService.onRowExport.subscribe();
+    public csvES: IgxCsvExporterService;
+
+    public myFunction() {
+        this.csvES.onColumnExport.subscribe();
+        this.csvES.onRowExport.subscribe();
     }
 }
-@NgModule({
-    declarations: [CsvExportComponent],
-    exports: [CsvExportComponent],
-    imports: [],
-    providers: [IgxCsvExporterService]
-});
 `);
 
         const tree = await runner
@@ -722,26 +604,16 @@ export class CsvExportComponent {
             .toPromise();
 
         const expectedContent =
-`import { Component } from '@angular/core';
-import { IgxCsvExporterService } from "igniteui-angular";
+`import { IgxCsvExporterService } from "../../../dist/igniteui-angular";
 
-@Component({
-    selector: "app-csv-export",
-    styleUrls: ["./csv-export.component.scss"],
-    templateUrl: "./csv-export.component.html"
-})
 export class CsvExportComponent {
-    constructor(private csvExportService: IgxCsvExporterService) {
-        this.csvExportService.columnExporting.subscribe();
-        this.csvExportService.rowExporting.subscribe();
+    public csvES: IgxCsvExporterService;
+
+    public myFunction() {
+        this.csvES.columnExporting.subscribe();
+        this.csvES.rowExporting.subscribe();
     }
 }
-@NgModule({
-    declarations: [CsvExportComponent],
-    exports: [CsvExportComponent],
-    imports: [],
-    providers: [IgxCsvExporterService]
-});
 `;
         expect(
             tree.readContent(
@@ -751,21 +623,17 @@ export class CsvExportComponent {
     });
 
     it('should update GridPagingMode enum from lowerCase to TitleCase', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/paging-test.component.ts',
-`import { Component } from '@angular/core';
-import { GridPagingMode } from "igniteui-angular";
+`import { GridPagingMode } from "../../../dist/igniteui-angular";
 
-@Component({
-    selector: "app-paging-test",
-    styleUrls: ["./paging-test.component.scss"],
-    templateUrl: "./paging-test.component.html"
-})
 export class PagingComponent {
-    public pagingLocal: GridPagingMode = GridPagingMode.Local;
-    public pagingRemote: GridPagingMode = GridPagingMode.Remote;
-    constructor(){}
+    public gridPM: GridPagingMode;
+
+    public myFunction() {
+        public pagingLocal = this.gridPM.local;
+        public pagingRemote = this.gridPM.remote;
+    }
 }
 `);
 
@@ -774,18 +642,15 @@ export class PagingComponent {
             .toPromise();
 
         const expectedContent =
-`import { Component } from '@angular/core';
-import { GridPagingMode } from "igniteui-angular";
+`import { GridPagingMode } from "../../../dist/igniteui-angular";
 
-@Component({
-    selector: "app-paging-test",
-    styleUrls: ["./paging-test.component.scss"],
-    templateUrl: "./paging-test.component.html"
-})
 export class PagingComponent {
-    public pagingLocal: GridPagingMode = GridPagingMode.local;
-    public pagingRemote: GridPagingMode = GridPagingMode.remote;
-    constructor(){}
+    public gridPM: GridPagingMode;
+
+    public myFunction() {
+        public pagingLocal = this.gridPM.Local;
+        public pagingRemote = this.gridPM.Remote;
+    }
 }
 `;
         expect(

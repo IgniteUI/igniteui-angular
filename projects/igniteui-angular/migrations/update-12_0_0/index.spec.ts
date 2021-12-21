@@ -1599,16 +1599,14 @@ export class HGridMultiRowDragComponent {
     });
 
     it('Should update toast output subscriptions', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
-            '/testSrc/appPrefix/component/toast.component.ts', `
-import { IgxToastComponent } from 'igniteui-angular';
-import { Component, OnInit, ViewChild } from '@angular/core';
+            '/testSrc/appPrefix/component/toast.component.ts',
+`import { IgxToastComponent } from '../../../dist/igniteui-angular';
+
 export class SimpleComponent {
-    @ViewChild('toast', { static: true })
     public toast: IgxToastComponent;
 
-    public ngOnInit() {
+    public myFunction() {
         this.toast.showing.subscribe();
         this.toast.shown.subscribe();
         this.toast.hiding.subscribe();
@@ -1621,14 +1619,13 @@ export class SimpleComponent {
             .toPromise();
 
         expect(tree.readContent('/testSrc/appPrefix/component/toast.component.ts'))
-            .toEqual(`
-import { IgxToastComponent } from 'igniteui-angular';
-import { Component, OnInit, ViewChild } from '@angular/core';
+            .toEqual(
+`import { IgxToastComponent } from '../../../dist/igniteui-angular';
+
 export class SimpleComponent {
-    @ViewChild('toast', { static: true })
     public toast: IgxToastComponent;
 
-    public ngOnInit() {
+    public myFunction() {
         this.toast.onOpening.subscribe();
         this.toast.onOpened.subscribe();
         this.toast.onClosing.subscribe();

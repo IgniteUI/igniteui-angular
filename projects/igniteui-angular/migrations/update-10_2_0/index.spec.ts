@@ -48,24 +48,58 @@ describe('Update 10.2.0', () => {
     });
 
     it('should replace selectedRows() with selectedRows in ts files', async () => {
-        pending('set up tests for migrations through lang service');
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+`import {
+    IgxGridComponent,
+    IgxTreeGridComponent,
+    IgxHierarchicalGridComponent
+} from '../../../dist/igniteui-angular';
+
+export class MyClass {
+    public grid: IgxGridComponent;
+    public tgrid: IgxTreeGridComponent;
+    public hgrid: IgxHierarchicalGridComponent;
+
+    public myFunction() {
+        const selectedRowData = this.grid.selectedRows();
+        const selectedRowData2 = this.tgrid.selectedRows();
+        const selectedRowData3 = this.hgrid.selectedRows();
+    }
+}`);
+
+        const tree = await schematicRunner
+            .runSchematicAsync('migration-17', {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+`import {
+    IgxGridComponent,
+    IgxTreeGridComponent,
+    IgxHierarchicalGridComponent
+} from '../../../dist/igniteui-angular';
+
+export class MyClass {
+    public grid: IgxGridComponent;
+    public tgrid: IgxTreeGridComponent;
+    public hgrid: IgxHierarchicalGridComponent;
+
+    public myFunction() {
+        const selectedRowData = this.grid.selectedRows;
+        const selectedRowData2 = this.tgrid.selectedRows;
+        const selectedRowData3 = this.hgrid.selectedRows;
+    }
+}`);
+
     });
 
-    it('Should remove references to deprecated `pane` property of `IExpansionPanelEventArgs`', async () => {
-        pending('set up tests for migrations through lang service');
+    it('Should remove references to deprecated `panel` property of `IExpansionPanelEventArgs`', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/expansion-test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
-import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from 'igniteui-angular';
+`import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from '../../../dist/igniteui-angular';
 
-@Component({
-    selector: 'app-expansion-test',
-    templateUrl: './expansion-test.component.html',
-    styleUrls: ['./expansion-test.component.scss']
-})
 export class ExpansionTestComponent {
-
-    @ViewChild(IgxExpansionPanelComponent, { static: true })
     public panel: IgxExpansionPanelComponent;
 
     public onPanelOpened(event: IExpansionPanelEventArgs) {
@@ -76,17 +110,10 @@ export class ExpansionTestComponent {
         const tree = await schematicRunner
             .runSchematicAsync('migration-17', {}, appTree)
             .toPromise();
-        const expectedContent =  `import { Component, ViewChild } from '@angular/core';
-import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from 'igniteui-angular';
+        const expectedContent =
+`import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from '../../../dist/igniteui-angular';
 
-@Component({
-    selector: 'app-expansion-test',
-    templateUrl: './expansion-test.component.html',
-    styleUrls: ['./expansion-test.component.scss']
-})
 export class ExpansionTestComponent {
-
-    @ViewChild(IgxExpansionPanelComponent, { static: true })
     public panel: IgxExpansionPanelComponent;
 
     public onPanelOpened(event: IExpansionPanelEventArgs) {
