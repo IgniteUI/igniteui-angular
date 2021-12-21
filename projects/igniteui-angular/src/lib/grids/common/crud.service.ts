@@ -405,6 +405,9 @@ export class IgxRowCrudState extends IgxCellCrudState {
 
 
         if (rowInEditMode && row.id === rowInEditMode.id) {
+            // TODO: old version used spread operator to copy state over the row.data
+            // however this strips off the property descriptors. Using mergeObjects retain
+            // property descriptors but breaks some tests, as copy is not shallow
             row.data = mergeObjects(row.data, rowInEditMode.transactionState);
             // TODO: Workaround for updating a row in edit mode through the API
         } else if (this.grid.transactions.enabled) {
