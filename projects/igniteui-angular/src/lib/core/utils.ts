@@ -25,6 +25,18 @@ import {
     swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
 } from '../animations/main';
 import { setImmediate } from './setImmediate';
+import { isDevMode } from '@angular/core';
+
+/**
+ * @hidden
+ */
+export const showMessage = (message: string, isMessageShown: boolean): boolean => {
+    if (!isMessageShown && isDevMode()) {
+        console.warn(message);
+    }
+
+    return true;
+};
 
 export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
 
