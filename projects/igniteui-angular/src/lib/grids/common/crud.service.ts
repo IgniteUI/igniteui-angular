@@ -3,7 +3,7 @@ import { first } from 'rxjs/operators';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataEventArgs } from '../common/events';
 import { GridType, RowType } from './grid.interface';
 import { Subject } from 'rxjs';
-import { isEqual } from '../../core/utils';
+import { isEqual, mergeObjects } from '../../core/utils';
 
 export class IgxEditRow {
     public transactionState: any;
@@ -405,7 +405,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
 
 
         if (rowInEditMode && row.id === rowInEditMode.id) {
-            row.data = { ...row.data, ...rowInEditMode.transactionState };
+            row.data = mergeObjects(row.data, rowInEditMode.transactionState);
             // TODO: Workaround for updating a row in edit mode through the API
         } else if (this.grid.transactions.enabled) {
             const state = grid.transactions.getState(row.id);
