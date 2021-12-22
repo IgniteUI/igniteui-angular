@@ -482,7 +482,6 @@ describe('IgxTransaction', () => {
         it('Should properly confirm the length of the undo/redo stacks', () => {
             const transaction = new IgxTransactionService();
             expect(transaction).toBeDefined();
-
             // Stacks are clear by default
             expect(transaction.canRedo).toBeFalsy();
             expect(transaction.canUndo).toBeFalsy();
