@@ -1436,10 +1436,14 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * @internal
      */
     public get sizesCache(): number[] {
-        if (this.syncService.isMaster(this)) {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            if (this.syncService.isMaster(this)) {
+                return this._sizesCache;
+            }
+            return this.syncService.sizesCache(this.igxForScrollOrientation);
+        } else {
             return this._sizesCache;
         }
-        return this.syncService.sizesCache(this.igxForScrollOrientation);
     }
     /**
      * @hidden
@@ -1744,10 +1748,15 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * @hidden
      */
     protected _calcMaxChunkSize(): number {
-        if (this.syncService.isMaster(this)) {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            if (this.syncService.isMaster(this)) {
+                return super._calcMaxChunkSize();
+            }
+            return this.syncService.chunkSize(this.igxForScrollOrientation);
+        } else {
             return super._calcMaxChunkSize();
         }
-        return this.syncService.chunkSize(this.igxForScrollOrientation);
+
     }
 }
 

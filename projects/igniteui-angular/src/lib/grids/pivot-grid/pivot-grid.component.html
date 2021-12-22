@@ -26,9 +26,9 @@
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             #verticalRowDimScrollContainer>
-        <igx-pivot-row-dimension-content  role='row' class="igx-grid-thead" [grid]="this" [hasMRL]="hasColumnLayouts"
+        <igx-pivot-row-dimension-content  role='row' class="igx-grid-thead" [grid]="this"
             [rowIndex]='rowIndex' [rowData]='rowData'
-            [density]="displayDensity" [activeDescendant]="activeDescendant" [width]="pivotRowWidths">
+            [density]="displayDensity" [width]="pivotRowWidths">
         </igx-pivot-row-dimension-content>
         </ng-template>
     </div>

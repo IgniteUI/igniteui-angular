@@ -62,6 +62,7 @@ import { IFilteringExpressionsTree } from '../../data-operations/filtering-expre
 import { IgxGridTransaction } from '../common/types';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -1028,6 +1029,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected get hasMultipleValues() {
         return this.values.length > 1;
+    }
+
+    /**
+ * @hidden @internal
+ */
+    @ViewChild('verticalRowDimScrollContainer', { read: IgxGridForOfDirective, static: true })
+    public verticalRowDimScrollContainer: IgxGridForOfDirective<any>;
+
+    protected verticalScrollHandler(event) {
+        this.verticalRowDimScrollContainer.onScroll(event);
+        super.verticalScrollHandler(event);
+
     }
 
     /**

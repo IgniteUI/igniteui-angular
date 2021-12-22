@@ -2931,7 +2931,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
         protected transactionFactory: IgxFlatTransactionFactory,
         private elementRef: ElementRef<HTMLElement>,
-        private zone: NgZone,
+        protected zone: NgZone,
         @Inject(DOCUMENT) public document: any,
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
@@ -6945,7 +6945,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.markForCheck();
     }
 
-    private verticalScrollHandler(event) {
+    protected verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
 
