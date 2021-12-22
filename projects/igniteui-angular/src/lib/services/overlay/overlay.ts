@@ -331,6 +331,7 @@ export class IgxOverlayService implements OnDestroy {
         settings = Object.assign({}, this._defaultSettings, settings);
         info.settings = settings;
         this._overlayInfos.push(info);
+        info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
         info.initialSize = { width: elementRect.width, height: elementRect.height };
         this.moveElementToOverlay(info);
@@ -576,6 +577,17 @@ export class IgxOverlayService implements OnDestroy {
         return info;
     }
 
+    private placeElementHook(element: HTMLElement): HTMLElement {
+        if (!element.parentElement) {
+            return null;
+        }
+
+        const hook = this._document.createElement('div');
+        hook.style.display = 'none';
+        element.parentElement.insertBefore(hook, element);
+        return hook;
+    }
+
     private moveElementToOverlay(info: OverlayInfo) {
         info.wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
@@ -662,6 +674,11 @@ export class IgxOverlayService implements OnDestroy {
             this._appRef.detachView(info.componentRef.hostView);
             info.componentRef.destroy();
             delete info.componentRef;
+        }
+        if (info.hook) {
+            info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
+            info.hook.parentElement.removeChild(info.hook);
+            delete info.hook;
         }
 
         const index = this._overlayInfos.indexOf(info);
