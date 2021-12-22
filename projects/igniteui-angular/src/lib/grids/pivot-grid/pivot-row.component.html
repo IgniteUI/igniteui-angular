@@ -1,12 +1,3 @@
-<!-- Row Dimension -->
-<div #rowDimensionContainer>
-    <igx-pivot-row-dimension-content class="igx-grid-thead" [grid]="grid" [hasMRL]="grid.hasColumnLayouts"
-        [density]="grid.displayDensity" [activeDescendant]="grid.activeDescendant" [width]="grid.pivotRowWidths"
-        [unpinnedColumnCollection]="rowDimension" (scroll)="grid.preventHeaderScroll($event)" [intRow]="this">
-    </igx-pivot-row-dimension-content>
-</div>
-
-
 <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
     <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-template>
 </ng-container>
@@ -65,21 +56,3 @@
     </igx-grid-cell>
 </ng-template>
 
-<ng-template #headerTemplate let-column>
-    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel(column)}}'
-        (click)="this.selectPivotRow(column, $event)">
-        <igx-icon [attr.draggable]=" false" (click)="grid.toggleRow(getRowDimensionKey(column))">
-            {{ getExpandState(column) ? 'expand_more' : 'chevron_right'}}</igx-icon>
-        {{column.header}}
-    </div>
-</ng-template>
-
-<ng-template #headerDefaultTemplate let-column>
-
-    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel(column)}}'
-        (click)="this.selectPivotRow(column, $event)">
-        <igx-icon style='flex-shrink: 0;' [attr.draggable]=" false">
-        </igx-icon>
-        {{column.header}}
-    </div>
-</ng-template>

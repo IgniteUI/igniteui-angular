@@ -19,6 +19,19 @@
 </igx-pivot-header-row>
 
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
+    <div #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension'>
+        <ng-template igxGridFor let-rowData [igxGridForOf]="dataView
+        | pivotGridMRL:pivotConfiguration:pivotKeys:pipeTrigger"
+            let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
+            [igxForContainerSize]='calcHeight'
+            [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
+            #verticalRowDimScrollContainer>
+        <igx-pivot-row-dimension-content  role='row' class="igx-grid-thead" [grid]="this" [hasMRL]="hasColumnLayouts"
+            [rowIndex]='rowIndex' [rowData]='rowData'
+            [density]="displayDensity" [activeDescendant]="activeDescendant" [width]="pivotRowWidths">
+        </igx-pivot-row-dimension-content>
+        </ng-template>
+    </div>
     <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"

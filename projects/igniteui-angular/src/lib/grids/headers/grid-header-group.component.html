@@ -1,4 +1,4 @@
-<ng-container *ngIf="grid.hasColumnLayouts && column.columnGroup">
+<ng-container *ngIf="(grid.hasColumnLayouts || grid.isPivot) && column.columnLayout">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-left"></span>
     <div class="igx-grid-thead__group igx-grid__mrl-block"
      [ngClass]="{
@@ -32,7 +32,7 @@
             {{column.expanded ? 'expand_more' : 'chevron_right'}} </igx-icon>
 </ng-template>
 
-<ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
+<ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup && !column.columnLayout">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-left"></span>
     <div class="igx-grid-thead__title"
         role="columnheader"

@@ -3,7 +3,7 @@ import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotKeys } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
 import {
     DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
@@ -15,6 +15,8 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IGridSortingStrategy } from '../common/strategy';
+import { IGroupByResult } from '../../data-operations/grouping-result.interface';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 
 /**
  * @hidden
@@ -93,6 +95,43 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
                 }
             });
         });
+    }
+}
+
+/**
+ * @hidden
+ */
+@Pipe({
+    name: 'pivotGridMRL',
+    pure: true
+})
+export class IgxPivotRowMRLPipe implements PipeTransform {
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
+    public transform(
+        collection: any[],
+        config: IPivotConfiguration,
+        pivotKeys: IPivotKeys,
+        _pipeTrigger?: number
+    ): any[] {
+        if (collection.length === 0 || config.rows.length === 0) return collection;
+        let data = [];
+        let groupData = [];
+        let prev;
+        const dim = config.rows[0];
+        for (let rec of collection) {
+            const dimData = PivotUtil.getDimensionLevel(dim, rec, pivotKeys);
+            const val = rec[dimData.dimension.memberName];
+            if (prev !== val && groupData.length > 0) {
+                groupData[0][dim.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.children] = groupData;
+                if (data.indexOf(groupData[0]) === -1) {
+                    data.push(groupData[0]);
+                }
+                groupData = [];
+            }
+            groupData.push(rec);
+            prev = val;
+        }
+        return data;
     }
 }
 

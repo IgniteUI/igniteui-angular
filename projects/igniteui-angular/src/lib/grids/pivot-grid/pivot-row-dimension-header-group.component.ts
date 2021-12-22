@@ -32,11 +32,11 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      * @internal
      */
     @Input()
-    public intRow: IgxRowDirective;
+    public rowIndex: number;
 
     @HostBinding('attr.id')
     public get headerID() {
-        return `${this.grid.id}_-2_${this.intRow.index}_${this.visibleIndex}`;
+        return `${this.grid.id}_-2_${this.rowIndex}_${this.visibleIndex}`;
     }
 
     /**
@@ -56,7 +56,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
         const node = nav.activeNode;
         return node && !this.column.columnGroup ?
             nav.isRowHeaderActive &&
-            node.row === this.intRow.index &&
+            node.row === this.rowIndex &&
             node.column === this.visibleIndex :
             false;
     }
@@ -64,13 +64,13 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     public get activeGroup() {
         const nav = this.grid.navigation;
         const node = nav.activeNode;
-        return node ? nav.isRowHeaderActive && node.row === this.intRow.index && node.column === this.visibleIndex : false;
+        return node ? nav.isRowHeaderActive && node.row === this.rowIndex && node.column === this.visibleIndex : false;
     }
 
     protected get activeNode() {
         this.grid.navigation.isRowHeaderActive = true;
         return {
-            row: this.intRow.index, column: this.visibleIndex, level: null,
+            row: this.rowIndex, column: this.visibleIndex, level: null,
             mchCache: null,
             layout: null
         };
