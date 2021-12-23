@@ -15,6 +15,12 @@ All notable changes for each version of this project will be documented in this 
     </igx-grid>
    ```
 
+## 13.0.5
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added `dataCloneStrategy` input, which allows users provide their own implementation of how data objects are cloned when row and/or batch editing is enabled. The custom strategy should implement the `IDataCloneStrategy` interface.
+
 ## 13.0.1
 
 ### New Features

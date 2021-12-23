@@ -25,6 +25,7 @@ import { DropPosition } from '../moving/moving.service';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxGridTransaction } from '../common/types';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
