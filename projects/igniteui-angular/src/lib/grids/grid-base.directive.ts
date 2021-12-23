@@ -154,6 +154,7 @@ import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
+import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -432,6 +433,26 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public get headerGroups() {
         return this.theadRow.groups;
     }
+
+    /**
+     * Gets/Sets the data clone strategy of the grid when in edit mode.
+     *
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [dataCloneStrategy]="customCloneStrategy"></igx-grid>
+     * ```
+     */
+     @Input()
+     public get dataCloneStrategy(): IDataCloneStrategy {
+         return this._dataCloneStrategy;
+     }
+
+     public set dataCloneStrategy(strategy: IDataCloneStrategy) {
+        if (strategy) {
+            this._dataCloneStrategy = strategy;
+            this._transactions.cloneStrategy = strategy;
+        }
+     }
 
     /**
      * Emitted when a cell is clicked.
@@ -3052,6 +3073,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: this.rowEditPositioningStrategy
     };
 
+    private _dataCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
     private transactionChange$ = new Subject<void>();
     private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
@@ -3209,6 +3231,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.currencyPipe = new CurrencyPipe(this.locale);
         this.percentPipe = new PercentPipe(this.locale);
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+        this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
     }
 
@@ -6162,6 +6185,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base);
         } else {
             this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+        }
+        if (this.dataCloneStrategy) {
+            this._transactions.cloneStrategy = this.dataCloneStrategy;
         }
     }
 

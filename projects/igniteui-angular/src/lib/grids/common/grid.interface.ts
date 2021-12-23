@@ -9,6 +9,7 @@ import { TransactionService, Transaction, State } from '../../services/public_ap
 import { ITreeGridRecord } from '../tree-grid/public_api';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
+import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 export interface IGridDataBindable {
     data: any[] | null;
@@ -34,6 +35,7 @@ export interface GridType extends IGridDataBindable {
     hasColumnLayouts: boolean;
 
     filterMode: FilterMode;
+    dataCloneStrategy: IDataCloneStrategy;
 
     selectionService: any;
     navigation: any;
