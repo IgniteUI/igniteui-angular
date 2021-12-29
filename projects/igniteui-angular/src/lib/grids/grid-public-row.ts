@@ -5,7 +5,6 @@ import { IgxGridCell } from './grid-public-cell';
 import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import mergeWith from 'lodash.mergewith';
-import { cloneValue } from '../core/utils';
 import { CellType, GridServiceType, GridType, RowType } from './common/grid.interface';
 
 abstract class BaseRow implements RowType {
@@ -48,7 +47,7 @@ abstract class BaseRow implements RowType {
      */
     public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(cloneValue(this._data ?? this.grid.dataView[this.index]),
+            return mergeWith(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
                 this.grid.transactions.getAggregatedValue(this.key, false),
                 (objValue, srcValue) => {
                     if (Array.isArray(srcValue)) {
@@ -352,7 +351,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      */
     public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(cloneValue(this._data ?? this.grid.dataView[this.index]),
+            return mergeWith(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
                 this.grid.transactions.getAggregatedValue(this.key, false),
                 (objValue, srcValue) => {
                     if (Array.isArray(srcValue)) {

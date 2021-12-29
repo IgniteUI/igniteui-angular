@@ -92,7 +92,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         }
 
         if (!unsupportedKey) {
-            itemsArray[newIndex].headerComponent.nativeElement.focus();
+            itemsArray[newIndex].headerComponent.nativeElement.focus({preventScroll:true});
             if (this.tab.panelComponent) {
                 this.tabs.selectedIndex = newIndex;
             }
