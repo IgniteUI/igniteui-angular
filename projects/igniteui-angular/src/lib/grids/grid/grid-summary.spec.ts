@@ -615,9 +615,9 @@ describe('IgxGrid - Summaries #grid', () => {
             }));
 
             it('Moving: should move summaries when move column', () => {
+                grid.moving = true;
                 const colUnitsInStock = grid.getColumnByName('UnitsInStock');
                 const colProductID = grid.getColumnByName('ProductID');
-                colUnitsInStock.movable = true;
                 fix.detectChanges();
 
                 grid.moveColumn(colUnitsInStock, colProductID, DropPosition.BeforeDropTarget);

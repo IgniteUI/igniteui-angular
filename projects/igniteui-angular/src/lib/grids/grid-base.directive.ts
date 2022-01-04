@@ -190,6 +190,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public autoGenerate = false;
 
     /**
+     * Controls whether columns moving is enabled in the grid.
+     *
+     */
+    @Input()
+    public moving = false;
+
+    /**
      * Gets/Sets a custom template when empty.
      *
      * @example
@@ -4879,13 +4886,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Returns if the `IgxGridComponent` has moveable columns.
      *
+     * @deprecated
+     * Use `IgxGridComponent.moving` instead.
+     *
      * @example
      * ```typescript
      * const movableGrid = this.grid.hasMovableColumns;
      * ```
      */
     public get hasMovableColumns(): boolean {
-        return this.columnList && this.columnList.some((col) => col.movable);
+        return this.moving;
     }
 
     /**

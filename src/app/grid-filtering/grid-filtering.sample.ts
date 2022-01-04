@@ -48,19 +48,19 @@ export class GridFilteringComponent implements OnInit {
         ];
         this.selectionMode = GridSelectionMode.multiple;
         this.columns = [
-            { field: 'ID', width: 80, resizable: true, movable: true, type: 'string' },
-            { field: 'CompanyName', header: 'Company Name', width: 175, resizable: true, movable: true, type: 'string'},
-            { field: 'ContactName', header: 'Contact Name', width: 175, resizable: true, movable: true, type: 'string' },
-            { field: 'Employees', width: 150, resizable: true, movable: true, type: 'number' },
-            { field: 'ContactTitle', header: 'Contact Title', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'DateCreated', header: 'Date Created', width: 150, resizable: true, movable: true, type: 'date' },
-            { field: 'Address', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'City', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Region', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'PostalCode', header: 'Postal Code', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Phone', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Fax', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Contract', width: 150, resizable: true, movable: true, type: 'boolean' }
+            { field: 'ID', width: 80, resizable: true, type: 'string' },
+            { field: 'CompanyName', header: 'Company Name', width: 175, resizable: true, type: 'string'},
+            { field: 'ContactName', header: 'Contact Name', width: 175, resizable: true, type: 'string' },
+            { field: 'Employees', width: 150, resizable: true, type: 'number' },
+            { field: 'ContactTitle', header: 'Contact Title', width: 150, resizable: true, type: 'string' },
+            { field: 'DateCreated', header: 'Date Created', width: 150, resizable: true, type: 'date' },
+            { field: 'Address', width: 150, resizable: true, type: 'string' },
+            { field: 'City', width: 150, resizable: true, type: 'string' },
+            { field: 'Region', width: 150, resizable: true, type: 'string' },
+            { field: 'PostalCode', header: 'Postal Code', width: 150, resizable: true, type: 'string' },
+            { field: 'Phone', width: 150, resizable: true, type: 'string' },
+            { field: 'Fax', width: 150, resizable: true, type: 'string' },
+            { field: 'Contract', width: 150, resizable: true, type: 'boolean' }
         ];
         this.data = [
             {

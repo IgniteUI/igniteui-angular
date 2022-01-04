@@ -6,6 +6,19 @@ All notable changes for each version of this project will be documented in this 
 ### RTL Support
 - `IgxTabs` have full right-to-left (RTL) support.
 
+## 13.1.0
+
+### General
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    -  **Breaking Change** - `movable` property of `IgxColumnComponent` is now deprecated and will be removed in future version. Instead, use the newly exposed `moving` property on grid-level:
+    ```html
+    <igx-grid [data]="data" [moving]="true">
+        <igx-column field="Name"></igx-column>
+        <igx-column field="Age"></igx-column>
+    </igx-grid>
+   ```
+
 ## 13.0.5
 
 ### New Features
