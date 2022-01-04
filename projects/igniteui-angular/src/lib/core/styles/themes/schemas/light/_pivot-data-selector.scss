@@ -13,6 +13,10 @@ $light-pivot-data-selector: (
     background: (
         igx-color: 'surface',
     ),
+
+    header-color: (
+        igx-color: ('grays', 100)
+    )
 );
 
 /// Generates a fluent pivot data selector schema.

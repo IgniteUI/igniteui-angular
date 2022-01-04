@@ -49,7 +49,7 @@
     %selector-base {
         display: flex;
         flex-direction: column;
-        width: 100%;
+        max-width: rem(280px);
         background: var-get($theme, 'background');
 
         > igx-input-group {
@@ -60,6 +60,46 @@
             display: flex;
             flex-direction: column;
         }
+
+        > igx-list {
+            igx-display-container {
+                padding: rem(4px);
+            }
+
+            igx-list-item {
+                display: flex;
+                min-height: rem(28px);
+            }
+
+            .igx-checkbox__label {
+                font-size: rem(13px);
+            }
+        }
+
+        igx-expansion-panel-body {
+            min-height: rem(128px);
+            font-size: rem(14px);
+            padding: rem(4px);
+        }
+
+        .igx-expansion-panel__header-inner {
+            background: var-get($theme, 'header-color');
+            padding: rem(4px);
+        }
+
+        .igx-expansion-panel__header-icon--start {
+            margin-#{$right}: rem(8px);
+        }
+
+        igx-icon {
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
+        }
+
+        %selector-header > * {
+            font-size: rem(12px);
+        }
     }
 
     %selector-header,
@@ -68,9 +108,33 @@
         align-items: center;
     }
 
+    %selector-header-extra {
+        igx-icon {
+            padding: 0 rem(8px);
+            box-sizing: content-box;
+        }
+
+        .igx-chip__item {
+            height: rem(22px);
+        }
+
+        .igx-chip__content {
+            padding: 0 rem(2px);
+        }
+    }
+
     %selector-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        min-height: rem(32px);
+    }
+
+    %selector-item-actions {
+        display: flex;
+
+        igx-icon + igx-icon {
+            margin-#{$left}: rem(8px);
+        }
     }
 }
