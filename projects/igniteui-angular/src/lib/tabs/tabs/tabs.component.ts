@@ -242,7 +242,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
                     break;
                 }
             } else {
-                if (element.offsetWidth + this.getElementOffset(element) >= this.offset) {
+                if (this.getElementOffset(element) >= this.offset) {
                     this.scrollElement(tabsArray[index - 1].headerComponent.nativeElement, scrollNext);
                     break;
                 }
