@@ -167,6 +167,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`resourceStrings`| IGridResourceStrings | Resource strings of the grid. |
 |`autoGenerate`|boolean|Autogenerate grid's columns, default value is _false_|
 |`batchEditing`|boolean|Toggles batch editing in the grid, default is _false_|
+|`moving`|boolean|Enables the columns moving feature. Defaults to _false_|
 |`paging`|boolean|Enables the paging feature. Defaults to _false_.|
 |`page`| number | The current page index.|
 |`perPage`|number|Visible items per page, default is 15|
@@ -333,7 +334,6 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`hasSummary`| boolean  |Sets whether or not the specific column has summaries enabled.|
 |`summaries`| IgxSummaryOperand |Set custom summary for the specific column|
 |`hidden`|boolean|Visibility of the column|
-|`movable`|boolean|Set column to be movable|
 |`resizable`|boolean|Set column to be resizable|
 |`selectable`|boolean|Set column to be selectable|
 |`selected`|boolean|Set column to be selected|

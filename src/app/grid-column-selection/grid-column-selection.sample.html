@@ -15,7 +15,7 @@
                 <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
             <igx-grid #grid1 [data]="data" [displayDensity]="density" [columnSelection]="'multiple'" [allowFiltering]="true"
-                [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'" [width]="'900px'"
+                [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'" [moving]="true" [width]="'900px'"
                 [height]="'800px'" (columnSelectionChanging)="onColumnSelection($event)">
                 <igx-grid-toolbar [displayDensity]="grid.displayDensity">
                     <igx-grid-toolbar-actions>
@@ -51,7 +51,7 @@
                         </div>
                     </igx-drop-down>
                 </igx-grid-toolbar>
-                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [movable]="c.movable"
+                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field"
                     [groupable]="c.groupable" [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable"
                     [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="true"
                     [selectable]="c.selectable" [dataType]="c.type">

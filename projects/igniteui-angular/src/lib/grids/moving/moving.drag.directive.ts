@@ -16,7 +16,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     public column: ColumnType;
 
     public get draggable(): boolean {
-        return this.column && (this.column.movable || (this.column.groupable && !this.column.columnGroup));
+        return this.column && (this.column.grid.moving || (this.column.groupable && !this.column.columnGroup));
     }
 
     public get icon(): HTMLElement {

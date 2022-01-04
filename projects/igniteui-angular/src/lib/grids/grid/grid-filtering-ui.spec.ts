@@ -3085,7 +3085,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move column left/right when clicking buttons.', fakeAsync(() => {
-            grid.columnList.get(2).movable = true;
+            grid.moving = true;
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -3126,7 +3126,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.pinnedColumns.length).toBe(1);
 
             const columnToMove = grid.unpinnedColumns[grid.unpinnedColumns.length - 1];
-            columnToMove.movable = true;
+            grid.moving = true;
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, columnToMove.field);
 
@@ -3584,11 +3584,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move pinned column correctly by using move buttons', fakeAsync(() => {
+            grid.moving = true;
             const productNameCol = grid.getColumnByName('ProductName');
             const idCol = grid.getColumnByName('ID');
-            productNameCol.movable = true;
             productNameCol.pinned = true;
-            idCol.movable = true;
             idCol.pinned = true;
             fix.detectChanges();
 
@@ -3629,11 +3628,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move unpinned column correctly by using move buttons', fakeAsync(() => {
+            grid.moving = true;
             const productNameCol = grid.getColumnByName('ProductName');
             const downloadsCol = grid.getColumnByName('Downloads');
-            productNameCol.movable = true;
             productNameCol.pinned = true;
-            downloadsCol.movable = true;
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 2).innerText).toBe('Downloads');
@@ -3728,7 +3726,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
             const column = grid.columnList.find((c) => c.field === 'ProductName');
             column.sortable = true;
-            column.movable = true;
+            grid.moving = true;
             fix.detectChanges();
 
             // Open excel style filtering component and verify its display density
@@ -3792,7 +3790,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('display density is properly applied on the excel style custom filtering dialog', fakeAsync(() => {
             const column = grid.columnList.find((c) => c.field === 'ProductName');
             column.sortable = true;
-            column.movable = true;
+            grid.moving = true;
             fix.detectChanges();
 
             // Open excel style custom filtering dialog and verify its display density
@@ -5602,7 +5600,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move column left/right when clicking buttons from template', fakeAsync(() => {
-            grid.columnList.get(2).movable = true;
+            grid.moving = true;
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -6067,8 +6065,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             });
             fix.detectChanges();
             // Make 'AnotherField' column movable.
-            const column = grid.columnList.find((c) => c.field === 'AnotherField');
-            column.movable = true;
+            const column = grid.columns.find((c) => c.field === 'AnotherField');
+            grid.moving = true;
             fix.detectChanges();
 
             // Pin the 'General Information' group by pinning its child 'ProductName' column.
