@@ -572,6 +572,7 @@ export class IgxOverlayService implements OnDestroy {
         }
 
         const hook = this._document.createElement('div');
+        hook.style.display = 'none';
         element.parentElement.insertBefore(hook, element);
         return hook;
     }
