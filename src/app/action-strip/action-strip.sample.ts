@@ -1,5 +1,45 @@
 import { Component, OnInit } from '@angular/core';
-import { DisplayDensity } from 'igniteui-angular';
+import { DisplayDensity, IDataCloneStrategy } from 'igniteui-angular';
+
+
+class MyClone implements IDataCloneStrategy {
+
+    public clone(data: any) {
+        if (data) {
+            return Object.create(Object.getPrototypeOf(data), Object.getOwnPropertyDescriptors(data));
+        }
+    }
+}
+
+class User {
+    protected id: number;
+    protected name: string;
+    protected age: number;
+
+    public get Name(): string {
+        return this.name;
+    }
+
+    public set Name(v: string) {
+        this.name = v;
+    }
+
+    public get Id(): number {
+        return this.id;
+    }
+
+    public set Id(v: number) {
+        this.id = v;
+    }
+
+    public get Age(): number {
+        return this.age;
+    }
+
+    public set Age(v: number) {
+        this.age = v;
+    }
+}
 
 @Component({
     selector: 'app-action-strip-sample',
@@ -16,6 +56,8 @@ export class ActionStripSampleComponent implements OnInit {
     public displayDensity: DisplayDensity = this.comfortable;
     public data: any[];
     public columns: any[];
+    public userData: User[] = [];
+    public myClone = new MyClone();
 
     private counter = 0;
 
@@ -62,6 +104,14 @@ export class ActionStripSampleComponent implements OnInit {
             { field: 'Phone', width: '200px' },
             { field: 'Fax', width: '200px' }
         ];
+
+        for (let i = 0; i < 50; i++) {
+            const user = new User();
+            user.Id = i;
+            user.Age = i + 10;
+            user.Name = `User ${i}`;
+            this.userData.push(user);
+        }
 
         this.data = [
             /* eslint-disable max-len */

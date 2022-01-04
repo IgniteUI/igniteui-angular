@@ -185,7 +185,8 @@ export class IgxGridSummaryService {
             data = DataUtil.mergeTransactions(
                 cloneArray(this.grid.data),
                 this.grid.transactions.getAggregatedChanges(true),
-                this.grid.primaryKey
+                this.grid.primaryKey,
+                this.grid.dataCloneStrategy
             );
         }
         const rowData = this.grid.primaryKey ? data.find(rec => rec[this.grid.primaryKey] === rowID) : rowID;
