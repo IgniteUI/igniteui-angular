@@ -424,11 +424,10 @@ describe('IgxGrid - Cell component #grid', () => {
 });
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" [width]="'900px'" [height]="'500px'" rowSelection = "multiple">
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" [width]="'900px'" [height]="'500px'" rowSelection = "multiple" [moving]="true">
         <igx-column *ngFor="let c of columns" [field]="c.field"
                                               [header]="c.field"
-                                              [width]="c.width"
-                                              [movable]="true"
+                                              [width]="c.width"                                             
                                               [groupable]="true"
                                               [resizable]="true"
                                               [sortable]="true"

@@ -31,7 +31,7 @@ export class WorksheetData {
     }
 
     public get isEmpty(): boolean {
-        return !this.rowCount || !this.columnCount;
+        return !this.rowCount || !this.columnCount || this.owner.columns.every(c => c.skip);
     }
 
     public get isSpecialData(): boolean {

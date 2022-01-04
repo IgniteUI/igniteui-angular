@@ -27,7 +27,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public get isDropTarget(): boolean {
-        return this.column && this.column.grid.hasMovableColumns && this.cms.column?.movable &&
+        return this.column && this.column.grid.moving &&
             ((!this.column.pinned && this.cms.column?.disablePinning) || !this.cms.column?.disablePinning);
     }
 
