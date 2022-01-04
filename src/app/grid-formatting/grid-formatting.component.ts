@@ -48,17 +48,17 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
     public ngOnInit() {
         this.remoteData = this.remoteService.remoteData;
         this.treeGridColumns = [
-            { field: 'ID', width: 150, resizable: true, movable: true, pinned: true },
-            { field: 'CompanyName', width: 150, resizable: true, movable: true },
-            { field: 'ContactName', width: 150, resizable: true, movable: true },
-            { field: 'OrderDate', dataType: 'date', width: 150, groupable: true, movable: true },
-            { field: 'ContactTitle', width: 150, resizable: true, movable: true },
-            { field: 'Address', width: 150, resizable: true, movable: true },
-            { field: 'City', width: 150, resizable: true, movable: true },
-            { field: 'Region', width: 150, resizable: true, movable: true },
-            { field: 'PostalCode', width: 150, resizable: true, movable: true },
-            { field: 'Phone', width: 150, resizable: true, movable: true },
-            { field: 'Fax', width: 150, resizable: true, movable: true }
+            { field: 'ID', width: 150, resizable: true, pinned: true },
+            { field: 'CompanyName', width: 150, resizable: true },
+            { field: 'ContactName', width: 150, resizable: true },
+            { field: 'OrderDate', dataType: 'date', width: 150, groupable: true },
+            { field: 'ContactTitle', width: 150, resizable: true },
+            { field: 'Address', width: 150, resizable: true },
+            { field: 'City', width: 150, resizable: true },
+            { field: 'Region', width: 150, resizable: true },
+            { field: 'PostalCode', width: 150, resizable: true },
+            { field: 'Phone', width: 150, resizable: true },
+            { field: 'Fax', width: 150, resizable: true }
         ];
         this.treeData = HIERARCHICAL_SAMPLE_DATA.slice(0).map((el, index) => {
             const obj = el as any;
