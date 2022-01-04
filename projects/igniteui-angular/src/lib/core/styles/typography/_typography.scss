@@ -90,12 +90,60 @@
     @include igx-tree-typography($type-scale);
 
     // Add theme type-scale specific quirks
-    @if ($_variant == 'material' or $_variant == 'fluent') {
+    @if ($_variant == 'material') {
         @include igx-calendar-typography($type-scale);
         @include igx-card-typography($type-scale);
         @include igx-dialog-typography($type-scale);
         @include igx-drop-down-typography($type-scale);
         @include igx-list-typography($type-scale);
+    }
+
+    @if ($_variant == 'material' or $_variant == 'fluent') {
+        @include igx-calendar-typography($type-scale);
+        @include igx-dialog-typography($type-scale);
+        @include igx-drop-down-typography($type-scale);
+    }
+
+    @if ($_variant == 'fluent') {
+        @include igx-checkbox-typography($type-scale, $categories: (
+            label: 'body-2'
+        ));
+
+        @include igx-radio-typography($type-scale, $categories: (
+            label: 'body-2'
+        ));
+
+        @include igx-switch-typography($type-scale, $categories: (
+            label: 'body-2'
+        ));
+
+        @include igx-input-group-typography($type-scale, $categories: (
+            input-text: 'body-2'
+        ));
+
+        @include igx-navdrawer-typography($type-scale, $categories: (
+            item: 'body-2',
+            header: 'caption'
+        ));
+
+        @include igx-card-typography($type-scale, $categories: (
+            title: 'subtitle-1',
+            subtitle: 'body-2',
+        ));
+
+        @include igx-list-typography($type-scale, $categories: (
+            item: 'body-1',
+            title: 'caption',
+        ));
+
+        @include igx-chip-typography($type-scale, $categories: (
+            text: 'subtitle-2'
+        ));
+
+        @include igx-expansion-panel-typography($type-scale, $categories: (
+            title: 'h6',
+            description: 'body-2'
+        ));
     }
 
     @if ($_variant == 'bootstrap') {
