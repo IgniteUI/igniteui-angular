@@ -115,16 +115,19 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
     ): any[] {
         if (collection.length === 0 || config.rows.length === 0) return collection;
         const data = collection ? cloneArray(collection, true) : [];
-        let groupData = [];
-        let prev;
-        let prevDim;
-        let prevDimRoot;
+
         const enabledRows = config.rows.filter(x => x.enabled);
+        let prev;
         for (let dim of enabledRows) {
+            let groupData = [];
+            let prevValue;
+            let prevDim;
+            let prevDimRoot;
             for (let rec of data) {
                 const dimData = PivotUtil.getDimensionLevel(dim, rec, pivotKeys);
                 const val = rec[dimData.dimension.memberName];
-                if (prev !== val && groupData.length > 0) {
+                const sameSiblingDim = prev ? rec[prev.memberName] : true;
+                if (prevValue !== val && groupData.length > 0 && sameSiblingDim) {
                     groupData.forEach((gr, ind) => {
                         if (ind === 0) {
                             gr[prevDim.dimension.memberName + pivotKeys.rowDimensionSeparator + 'first'] = true;
@@ -134,13 +137,15 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
                         }
                         gr[prevDim.dimension.memberName + pivotKeys.rowDimensionSeparator + 'rowSpan'] = groupData.length;
                     });
+                    groupData[groupData.length - 1][prevDim.dimension.memberName + pivotKeys.rowDimensionSeparator + 'last'] = true;
                     groupData = [];
                 }
                 groupData.push(rec);
-                prev = val;
+                prevValue = val;
                 prevDim = dimData;
                 prevDimRoot = dim;
             }
+            prev = dim;
         }
         return data;
     }

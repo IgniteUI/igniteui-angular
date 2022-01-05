@@ -145,8 +145,12 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
 
     protected extractFromDimensions() {
         const dimData = PivotUtil.getDimensionLevel(this.dimension, this.rowData, this.grid.pivotKeys);
-        const col = this.extractFromDimension(dimData, this.rowData);
         const prevDims = this.getPrevDims(this.dimension);
+        let lvl = 0;
+        prevDims.forEach(prev => {
+            lvl += prev.level;
+        });
+        const col = this.extractFromDimension(dimData, this.rowData, lvl);
         this.rowDimensionData = {
             column: col,
             dimension: dimData.dimension,
@@ -157,7 +161,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     protected getPrevDims(currDim) {
         const ind = this.grid.rowDimensions.indexOf(currDim);
         const prevDims = [];
-        for (let i = 0; i < ind - 1; i++) {
+        for (let i = 0; i < ind; i++) {
             const prevDim = this.grid.rowDimensions[i];
             const dimData = PivotUtil.getDimensionLevel(prevDim, this.rowData, this.grid.pivotKeys);
             prevDims.push(dimData.dimension);
@@ -165,10 +169,10 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         return prevDims;
     }
 
-    protected extractFromDimension(dimData, rowData: any[]) {
+    protected extractFromDimension(dimData, rowData: any[], lvl) {
         const field = dimData.dimension.memberName;
         const header = rowData[field];
-        const col = this._createColComponent(field, header, dimData.dimension, dimData.level);
+        const col = this._createColComponent(field, header, dimData.dimension, lvl);
         return col;
     }
 
