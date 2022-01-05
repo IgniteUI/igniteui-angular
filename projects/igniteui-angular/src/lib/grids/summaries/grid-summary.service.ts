@@ -135,6 +135,7 @@ export class IgxGridSummaryService {
         if (this.grid.rootSummariesEnabled) {
             (this.grid as any).summariesHeight = 0;
             this.retriggerRootPipe++;
+            Promise.resolve().then(() => this.grid.notifyChanges(true));
         }
     }
 
