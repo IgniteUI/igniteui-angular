@@ -46,6 +46,15 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
+    $chip-height-material: (
+        comfortable: rem(22px),
+        cosy: rem(20px),
+        compact: rem(18px)
+    );
+
+    $chip-item-padding: 0 rem(2px);
+    $panel-padding: em(4px, 16px);
+
     %selector-base {
         display: flex;
         flex-direction: column;
@@ -71,23 +80,23 @@
                 min-height: rem(28px);
             }
 
-            .igx-checkbox__label {
+            %cbx-label {
                 font-size: rem(13px);
             }
         }
 
-        igx-expansion-panel-body {
+        %igx-expansion-panel__body {
             min-height: rem(128px);
             font-size: rem(14px);
-            padding: rem(4px);
+            padding: $panel-padding;
         }
 
-        .igx-expansion-panel__header-inner {
+        %igx-expansion-panel__header-inner {
             background: var-get($theme, 'header-color');
-            padding: rem(4px);
+            padding: $panel-padding;
         }
 
-        .igx-expansion-panel__header-icon--start {
+        %igx-expansion-panel__header-icon--start {
             margin-#{$right}: rem(8px);
         }
 
@@ -97,7 +106,7 @@
             font-size: rem(18px);
         }
 
-        %selector-header > * {
+        %igx-expansion-panel__header-title > h6 {
             font-size: rem(12px);
         }
     }
@@ -114,12 +123,20 @@
             box-sizing: content-box;
         }
 
-        .igx-chip__item {
-            height: rem(22px);
+        %igx-chip__item {
+            height: map.get($chip-height-material, 'comfortable');
         }
 
-        .igx-chip__content {
-            padding: 0 rem(2px);
+        %igx-chip__item--cosy {
+            height: map.get($chip-height-material, 'cosy');
+        }
+
+        %igx-chip__item--compact {
+            height: map.get($chip-height-material, 'compact');
+        }
+
+        %igx-chip__content {
+            padding: $chip-item-padding;
         }
     }
 
