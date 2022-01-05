@@ -2,6 +2,10 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+
 - script: npm ci
   displayName: 'Install dependencies'
   env:
