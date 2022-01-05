@@ -91,8 +91,11 @@ export class PivotGridSampleComponent {
             this.dimensions[0]
         ],
         rows: [
-            this.dimensions[1],
-            this.dimensions[2]
+            this.dimensions[2],
+            {
+                memberName: 'City',
+                enabled: true,
+            },
         ],
         values: [
             {
@@ -139,7 +142,15 @@ export class PivotGridSampleComponent {
                 },
             }
         ],
-        filters: null
+        filters: [{
+            memberName: 'ProductCategory',
+            enabled:true,
+        },
+        this.dimensions[3],
+    {
+        memberName: 'City',
+        enabled: true
+    }]
     };
 
     public origData = [
