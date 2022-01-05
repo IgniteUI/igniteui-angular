@@ -210,7 +210,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         }
     }
 
-    public onFiltersAreaDropdownClick(event, dimension, shouldReattach = true) {
+    public onFiltersAreaDropdownClick(event, dimension?, shouldReattach = true) {
         let dim = dimension || this.grid.filterDimensions[0];
         let col;
         while (dim) {
