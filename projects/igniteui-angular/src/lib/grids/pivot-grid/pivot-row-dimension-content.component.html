@@ -1,15 +1,13 @@
-<div role="rowgroup" class="igx-grid-thead__wrapper" [style.width.px]="width"
+<div  role="rowgroup" class="igx-grid-thead__wrapper" [style.width.px]="width"
     [class.igx-grid__tr--mrl]="hasMRL">
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
-        <ng-template ngFor #headerVirtualContainer let-column
-            [ngForOf]="rowDimension">
-            <igx-pivot-row-dimension-header-group [ngClass]="column.headerGroupClasses"
-                [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
-                [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                [rowIndex]="rowIndex">
+            <igx-pivot-row-dimension-header-group *ngIf='isFirst' [ngClass]="rowDimensionColumn.headerGroupClasses"
+                [ngStyle]="rowDimensionColumn.headerGroupStyles |igxHeaderGroupStyle:rowDimensionColumn:grid.pipeTrigger" [column]="rowDimensionColumn"
+                [style.min-width]="rowDimensionColumn.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.flex-basis]="rowDimensionColumn.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [rowIndex]="rowIndex"
+                [style.min-height.px]='headerHeight'>
             </igx-pivot-row-dimension-header-group>
-        </ng-template>
     </div>
 </div>
 

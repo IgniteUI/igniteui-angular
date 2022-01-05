@@ -414,7 +414,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         if (this.igxForScrollOrientation === 'vertical') {
             this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
-            this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance;
+            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation) || vc.createComponent(VirtualHelperComponent).instance;
             this._maxHeight = this._calcMaxBrowserHeight();
             this.scrollComponent.size = this.igxForOf ? this._calcHeight() : 0;
             this.syncScrollService.setScrollMaster(this.igxForScrollOrientation, this.scrollComponent);
@@ -1115,20 +1115,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected initSizesCache(items: any[]): number {
         let totalSize = 0;
         let size = 0;
-        const dimension = this.igxForScrollOrientation === 'horizontal' ?
-            this.igxForSizePropName : 'height';
+        const dimension = this.igxForSizePropName || 'height';
         let i = 0;
         this.sizesCache = [];
         this.heightCache = [];
         this.sizesCache.push(0);
         const count = this.isRemote ? this.totalItemCount : items.length;
         for (i; i < count; i++) {
+            size = this._getItemSize(items[i], dimension);
             if (dimension === 'height') {
-                // cols[i][dimension] = parseInt(this.igxForItemSize, 10) || 0;
-                size = parseInt(this.igxForItemSize, 10) || 0;
                 this.heightCache.push(size);
-            } else {
-                size = this._getItemSize(items[i], dimension);
             }
             totalSize += size;
             this.sizesCache.push(totalSize);

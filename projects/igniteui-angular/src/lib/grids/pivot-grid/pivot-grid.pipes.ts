@@ -102,10 +102,10 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
  * @hidden
  */
 @Pipe({
-    name: 'pivotGridMRL',
+    name: 'pivotGridCellMerging',
     pure: true
 })
-export class IgxPivotRowMRLPipe implements PipeTransform {
+export class IgxPivotCellMergingPipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
     public transform(
         collection: any[],
@@ -114,22 +114,30 @@ export class IgxPivotRowMRLPipe implements PipeTransform {
         _pipeTrigger?: number
     ): any[] {
         if (collection.length === 0 || config.rows.length === 0) return collection;
-        let data = [];
+        const data = collection ? cloneArray(collection, true) : [];
         let groupData = [];
         let prev;
-        const dim = config.rows[0];
-        for (let rec of collection) {
-            const dimData = PivotUtil.getDimensionLevel(dim, rec, pivotKeys);
-            const val = rec[dimData.dimension.memberName];
-            if (prev !== val && groupData.length > 0) {
-                groupData[0][dim.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.children] = groupData;
-                if (data.indexOf(groupData[0]) === -1) {
-                    data.push(groupData[0]);
+        let prevDim;
+        let prevDimRoot;
+        const enabledRows = config.rows.filter(x => x.enabled);
+        for (let dim of enabledRows) {
+            for (let rec of data) {
+                const dimData = PivotUtil.getDimensionLevel(dim, rec, pivotKeys);
+                const val = rec[dimData.dimension.memberName];
+                if (prev !== val && groupData.length > 0) {
+                    groupData.forEach((gr, ind) => {
+                        if (ind === 0) {
+                            gr[prevDim.dimension.memberName + pivotKeys.rowDimensionSeparator + 'first'] = true;
+                        }
+                        gr[prevDim.dimension.memberName + pivotKeys.rowDimensionSeparator + 'rowSpan'] = groupData.length;
+                    });
+                    groupData = [];
                 }
-                groupData = [];
+                groupData.push(rec);
+                prev = val;
+                prevDim = dimData;
+                prevDimRoot = dim;
             }
-            groupData.push(rec);
-            prev = val;
         }
         return data;
     }
