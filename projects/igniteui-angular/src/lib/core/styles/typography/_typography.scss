@@ -126,6 +126,10 @@
             header: 'caption'
         ));
 
+        @include igx-navbar-typography($type-scale, $categories: (
+            title: 'subtitle-2'
+        ));
+
         @include igx-card-typography($type-scale, $categories: (
             title: 'subtitle-1',
             subtitle: 'body-2',
@@ -141,8 +145,20 @@
         ));
 
         @include igx-expansion-panel-typography($type-scale, $categories: (
-            title: 'h6',
+            title: 'subtitle-1',
             description: 'body-2'
+        ));
+
+        @include igx-snackbar-typography($type-scale, $categories: (
+            text: 'caption'
+        ));
+
+        @include igx-toast-typography($type-scale, $categories: (
+            text: 'caption'
+        ));
+
+        @include igx-banner-typography($type-scale, $categories: (
+            message: 'caption'
         ));
     }
 
