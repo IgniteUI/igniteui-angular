@@ -254,7 +254,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
 
         this.offset = (scrollNext) ? element.offsetWidth + this.getElementOffset(element) - viewPortWidth : this.getElementOffset(element);
-        this.viewPort.nativeElement.scrollLeft = this.getDirection(this.offset);
+        this.viewPort.nativeElement.scrollLeft = this.getOffset(this.offset);
         this.updateScrollButtons();
     }
 
@@ -326,7 +326,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         return itemsContainerWidth;
     }
 
-    private getDirection(offset: number): number {
+    private getOffset(offset: number): number {
         return this.dir.rtl ? -offset : offset;
     }
 
