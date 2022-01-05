@@ -5,7 +5,7 @@
             <div class="sample-buttons">
                 <button igxButton="raised" (click)="moveColumn()">Move Column API</button>
                 <igx-input-group>
-                    <input igxInput name="newIndex" type="number" [(ngModel)]="newIndex"/>
+                    <input igxInput name="newIndex" type="number" [(ngModel)]="newIndex" />
                     <label igxLabel for="newIndex">New index</label>
                 </igx-input-group>
             </div>
@@ -13,21 +13,10 @@
                 <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
             <button (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
-            <igx-grid
-                #grid1
-                [columnSelection]="'single'"
-                [data]="data"
-                [displayDensity]="density"
-                [allowFiltering]="true"
-                (columnMovingStart)="columnMovingStart()"
-                (columnMoving)="columnMoving()"
-                (columnMovingEnd)="columnMovingEnd()"
-                [rowSelection] ="'multiple'"
-                [filterMode]="'excelStyleFilter'"
-                [rowEditable]="true"
-                [width]="'900px'"
-                [primaryKey]="'ID'"
-                >
+            <igx-grid #grid1 [columnSelection]="'single'" [data]="data" [displayDensity]="density"
+                [allowFiltering]="true" (columnMovingStart)="columnMovingStart()" (columnMoving)="columnMoving()"
+                (columnMovingEnd)="columnMovingEnd()" [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'"
+                [rowEditable]="true" [width]="'900px'" [primaryKey]="'ID'" [moving]="true">
                 <igx-grid-toolbar [displayDensity]="'compact'">
                     <igx-grid-toolbar-actions>
                         <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -35,20 +24,11 @@
                         <igx-grid-toolbar-advanced-filtering>
                         </igx-grid-toolbar-advanced-filtering>
                     </igx-grid-toolbar-actions>
-                  </igx-grid-toolbar>
-                <igx-column *ngFor="let c of columns" [field]="c.field"
-                                                    [header]="c.field"
-                                                    [movable]="c.movable"
-                                                    [groupable]="c.groupable"
-                                                    [resizable]="c.resizable"
-                                                    [width]="c.width"
-                                                    [sortable]="c.sortable"
-                                                    [filterable]="c.filterable"
-                                                    [editable]="true"
-                                                    [hidden]="c.hidden"
-                                                    [pinned]="c.pinned"
-                                                    [hasSummary]="c.summary"
-                                                    [dataType]="c.type">
+                </igx-grid-toolbar>
+                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [groupable]="c.groupable"
+                    [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable" [filterable]="c.filterable"
+                    [editable]="true" [hidden]="c.hidden" [pinned]="c.pinned" [hasSummary]="c.summary"
+                    [dataType]="c.type">
                 </igx-column>
                 <igx-paginator *ngIf="pagingEnabled">
                 </igx-paginator>
@@ -56,29 +36,34 @@
             Drag mode: {{ grid1.selectionService.dragMode }}
             <div class="sample-buttons">
                 <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-                <button igxButton (click)="grid1.selectRange({rowStart: 0, rowEnd: 10, columnStart: 'CompanyName', columnEnd: 'Region'})">Select 💯 cells</button>
+                <button igxButton
+                    (click)="grid1.selectRange({rowStart: 0, rowEnd: 10, columnStart: 'CompanyName', columnEnd: 'Region'})">Select
+                    💯 cells</button>
                 <button igxButton="raised" (click)="grid1.clearCellSelection()">Clear Selection</button>
                 <button igxButton="raised" (click)="grid1.getSelectedData()">Get Selected Data</button>
                 <button igxButton="raised" (click)="grid1.getSelectedRanges()">Get Selected Ranges</button>
             </div>
 
             <span>Grid with MCH</span>
-            <div  class="sample-wrapper">
+            <div class="sample-wrapper">
                 <app-page-header title="Grid Column Groups"></app-page-header>
                 <section style="height: 800px" class="sample-content">
                     <div class="sample-buttons">
                         <button igxButton="raised" (click)="moveColumnMCH()">Move Column API</button>
                         <igx-input-group>
-                            <input igxInput name="newIndex" type="number" [(ngModel)]="gridMCHNewIndex"/>
+                            <input igxInput name="newIndex" type="number" [(ngModel)]="gridMCHNewIndex" />
                             <label igxLabel for="newIndex">New index</label>
                         </igx-input-group>
                     </div>
-                    <igx-grid [columnSelection]="'single'" [allowFiltering]="true" #grid [data]="mchData" displayDensity="compact">
-                        <igx-column-group [movable]="true" header="General Information" title="General Company Information" [collapsible]="true" [expanded]="true" [hidden]="true">
+                    <igx-grid [columnSelection]="'single'" [allowFiltering]="true" [moving]="true" #grid
+                        [data]="mchData" displayDensity="compact">
+                        <igx-column-group header="General Information" title="General Company Information"
+                            [collapsible]="true" [expanded]="true" [hidden]="true">
                             <ng-template igxHeader let-column>
                                 {{ column.header }} {{ column.visibleIndex }}
                             </ng-template>
-                            <igx-column [movable]="true" [filterable]="false" [hidden]="true" [sortable]="true" [resizable]="true" field="CompanyName" title="Company Name" width="200px" [visibleWhenCollapsed]="false">
+                            <igx-column [filterable]="false" [hidden]="true" [sortable]="true" [resizable]="true"
+                                field="CompanyName" title="Company Name" width="200px" [visibleWhenCollapsed]="false">
                                 <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template>
@@ -88,64 +73,81 @@
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template>
                             </igx-column>
-                            <igx-column-group [movable]="true" header="Person Details" [collapsible]="true" [expanded]="false" [visibleWhenCollapsed]="true">
+                            <igx-column-group header="Person Details" [collapsible]="true" [expanded]="false"
+                                [visibleWhenCollapsed]="true">
                                 <ng-template igxHeader let-column>
                                     {{ column.header }} {{ column.visibleIndex }}
                                 </ng-template>
-                                <igx-column [movable]="true" [visibleWhenCollapsed]="false" [hidden]="true" [filterable]="true" [sortable]="true" [resizable]="true" field="ContactName">
+                                <igx-column [visibleWhenCollapsed]="false" [hidden]="true" [filterable]="true"
+                                    [sortable]="true" [resizable]="true" field="ContactName">
                                     <ng-template igxHeader let-column>
                                         {{ column.field }} {{ column.visibleIndex }}
                                     </ng-template>
                                 </igx-column>
-                                <igx-column [movable]="true" [visibleWhenCollapsed]="false"  [filterable]="true" [sortable]="true" [resizable]="true" field="ContactTitle">
+                                <igx-column [visibleWhenCollapsed]="false" [filterable]="true" [sortable]="true"
+                                    [resizable]="true" field="ContactTitle">
                                     <ng-template igxHeader let-column>
                                         {{ column.field }} {{ column.visibleIndex }}
                                     </ng-template>
                                 </igx-column>
                             </igx-column-group>
-                            <ng-template igxCollapsibleIndicator let-column="column" #ind >
+                            <ng-template igxCollapsibleIndicator let-column="column" #ind>
                                 <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
                             </ng-template>
                         </igx-column-group>
-                        <igx-column [movable]="true" [resizable]="true" field="ID" [editable]="true">
+                        <igx-column [resizable]="true" field="ID" [editable]="true">
                             <ng-template igxHeader let-column>
                                 {{ column.field }} {{ column.visibleIndex }}
                             </ng-template>
                         </igx-column>
-                        <igx-column-group header="Address Information" [movable]="true">
+                        <igx-column-group header="Address Information">
                             <ng-template igxHeader let-column>
                                 {{ column.header }} {{ column.visibleIndex }}
                             </ng-template>
-                            <igx-column [filterable]="true" [sortable]="true" [movable]="true" field="PostalCode">                <ng-template igxHeader let-column>
-                                {{ column.field }} {{ column.visibleIndex }}
-                            </ng-template></igx-column>
-                            <igx-column-group header="Location" [movable]="true">
+                            <igx-column [filterable]="true" [sortable]="true" field="PostalCode">
                                 <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template>
-                                <igx-column [filterable]="true" [movable]="true" [resizable]="true" field="Country">                <ng-template igxHeader let-column>
+                            </igx-column>
+                            <igx-column-group header="Location">
+                                <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
-                                </ng-template></igx-column>
-                                <igx-column [filterable]="true" [movable]="true" [resizable]="true" field="Region">                <ng-template igxHeader let-column>
-                                    {{ column.field }} {{ column.visibleIndex }}
-                                </ng-template></igx-column>
-                                <igx-column [filterable]="true" [movable]="true" [resizable]="true" field="City">                <ng-template igxHeader let-column>
-                                    {{ column.field }} {{ column.visibleIndex }}
-                                </ng-template></igx-column>
-                                <igx-column [filterable]="true" [movable]="true" [resizable]="true" field="Address">                <ng-template igxHeader let-column>
-                                    {{ column.field }} {{ column.visibleIndex }}
-                                </ng-template></igx-column>
+                                </ng-template>
+                                <igx-column [filterable]="true" [resizable]="true" field="Country">
+                                    <ng-template igxHeader let-column>
+                                        {{ column.field }} {{ column.visibleIndex }}
+                                    </ng-template>
+                                </igx-column>
+                                <igx-column [filterable]="true" [resizable]="true" field="Region">
+                                    <ng-template igxHeader let-column>
+                                        {{ column.field }} {{ column.visibleIndex }}
+                                    </ng-template>
+                                </igx-column>
+                                <igx-column [filterable]="true" [resizable]="true" field="City">
+                                    <ng-template igxHeader let-column>
+                                        {{ column.field }} {{ column.visibleIndex }}
+                                    </ng-template>
+                                </igx-column>
+                                <igx-column [filterable]="true" [resizable]="true" field="Address">
+                                    <ng-template igxHeader let-column>
+                                        {{ column.field }} {{ column.visibleIndex }}
+                                    </ng-template>
+                                </igx-column>
                             </igx-column-group>
                             <igx-column-group header="Contact Information">
                                 <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template>
-                                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Phone">                <ng-template igxHeader let-column>
-                                    {{ column.field }} {{ column.visibleIndex }}
-                                </ng-template></igx-column>
-                                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Fax">                <ng-template igxHeader let-column>
-                                    {{ column.field }} {{ column.visibleIndex }}
-                                </ng-template></igx-column>
+                                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Phone">
+                                    <ng-template igxHeader let-column>
+                                        {{ column.field }} {{ column.visibleIndex }}
+                                    </ng-template>
+                                </igx-column>
+                                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Fax">
+                                    <ng-template igxHeader let-column>
+                                        {{ column.field }} {{ column.visibleIndex }}
+                                    </ng-template>
+                                </igx-column>
                             </igx-column-group>
                         </igx-column-group>
                     </igx-grid>

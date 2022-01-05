@@ -23,6 +23,7 @@ export interface IGridState {
     filtering?: IFilteringExpressionsTree;
     advancedFiltering?: IFilteringExpressionsTree;
     paging?: IPagingState;
+    moving?: boolean;
     sorting?: ISortingExpression[];
     groupBy?: IGroupingState;
     cellSelection?: GridSelectionRange[];
@@ -55,6 +56,7 @@ export interface IGridStateOptions {
     pinningConfig?: boolean;
     expansion?: boolean;
     rowIslands?: boolean;
+    moving?: boolean;
 }
 
 export interface IColumnState {
@@ -86,7 +88,7 @@ export type GridFeatures = keyof IGridStateOptions;
 
 interface Feature {
     getFeatureState: (context: IgxGridStateDirective) => IGridState;
-    restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[] | IPagingState | ISortingExpression[] |
+    restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[] | IPagingState | boolean | ISortingExpression[] |
         IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | any[]) => void;
 }
 
@@ -111,6 +113,7 @@ export class IgxGridStateDirective {
         columnSelection: true,
         rowPinning: true,
         expansion: true,
+        moving: true,
         rowIslands: true
     };
     private FEATURES = {
@@ -263,6 +266,14 @@ export class IgxGridStateDirective {
                     context.currGrid.cdr.detectChanges();
                 }
                 context.currGrid.paginator.page = state.index;
+            }
+        },
+        moving: {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
+                return { moving: context.currGrid.moving };
+            },
+            restoreFeatureState: (context: IgxGridStateDirective, state: boolean): void => {
+                context.currGrid.moving = state;
             }
         },
         rowSelection: {
@@ -496,7 +507,7 @@ export class IgxGridStateDirective {
         this.featureKeys.forEach(f => {
             if (this.options[f]) {
                 const featureState = state[f];
-                if (featureState) {
+                if (f === 'moving' || featureState) {
                     const feature = this.getFeature(f);
                     feature.restoreFeatureState(this, featureState);
                 }
