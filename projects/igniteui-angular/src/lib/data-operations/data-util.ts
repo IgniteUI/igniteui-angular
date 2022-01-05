@@ -8,7 +8,7 @@ import { IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { FilteringStrategy } from './filtering-strategy';
-import { cloneValue, mergeObjects, mkenum } from '../core/utils';
+import { mergeObjects, mkenum } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
@@ -21,6 +21,7 @@ import {
     IgxSorting,
     IgxGrouping
 } from '../grids/common/strategy';
+import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 
 /**
  * @hidden
@@ -147,12 +148,12 @@ export class DataUtil {
      * @param deleteRows Should delete rows with DELETE transaction type from data
      * @returns Provided data collections updated with all provided transactions
      */
-    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, deleteRows: boolean = false): T[] {
+    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy(), deleteRows: boolean = false): T[] {
         data.forEach((item: any, index: number) => {
             const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
             if (transaction && transaction.type === TransactionType.UPDATE) {
-                data[index] = transaction.newValue;
+                data[index] = mergeObjects(cloneStrategy.clone(data[index]), transaction.newValue);
             }
         });
 
@@ -189,6 +190,7 @@ export class DataUtil {
         transactions: HierarchicalTransaction[],
         childDataKey: any,
         primaryKey?: any,
+        cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy(),
         deleteRows: boolean = false): any[] {
         for (const transaction of transactions) {
             if (transaction.path) {
@@ -205,7 +207,7 @@ export class DataUtil {
                     case TransactionType.UPDATE:
                         const updateIndex = collection.findIndex(x => x[primaryKey] === transaction.id);
                         if (updateIndex !== -1) {
-                            collection[updateIndex] = mergeObjects(cloneValue(collection[updateIndex]), transaction.newValue);
+                            collection[updateIndex] = mergeObjects(cloneStrategy.clone(collection[updateIndex]), transaction.newValue);
                         }
                         break;
                     case TransactionType.DELETE:
