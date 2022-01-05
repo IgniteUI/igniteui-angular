@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
     Component, HostBinding, OnDestroy, OnInit,
     Input, Output, EventEmitter, ContentChildren, QueryList, ElementRef,
-    NgModule, OnChanges, SimpleChanges, TemplateRef, ContentChild, AfterContentInit
+    NgModule, OnChanges, SimpleChanges, TemplateRef, ContentChild, AfterContentInit, ChangeDetectorRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -331,10 +331,11 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     private readonly _defaultAnimationDuration = 350;
 
     constructor(
+        cdr: ChangeDetectorRef,
         private animBuilder: AnimationBuilder,
         private stepperService: IgxStepperService,
         private element: ElementRef<HTMLElement>) {
-        super(animBuilder);
+        super(animBuilder, cdr);
         this.stepperService.stepper = this;
     }
 

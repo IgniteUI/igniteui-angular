@@ -143,7 +143,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     }
 
     public valueRemoved(event: IBaseChipEventArgs) {
-        const value = this.grid.pivotConfiguration.values.find(x => x.member === event.owner.id);
+        const value = this.grid.pivotConfiguration.values.find(x => x.member === event.owner.id || x.displayName === event.owner.id);
         value.enabled = false;
         this.grid.setupColumns();
         this.grid.pipeTrigger++;
@@ -260,8 +260,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     }
 
     public onDimDragOver(event, dimension?: PivotDimensionType) {
-        const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id) :
-            !this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id);
+        const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id
+            || x.displayName === event.dragChip.id) :
+            !this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id || x.displayName === event.dragChip.id);
         if (typeMismatch) {
             // cannot drag between dimensions and value
             return;
@@ -295,8 +296,8 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
     public onAreaDragEnter(event, area, dimension?: PivotDimensionType) {
         const dragId = event.detail.owner.element.nativeElement.parentElement.id;
-        const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === dragId) :
-            !this.grid.pivotConfiguration.values.find(x => x.member === dragId);
+        const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === dragId || x.displayName === dragId) :
+            !this.grid.pivotConfiguration.values.find(x => x.member === dragId || x.displayName === dragId);
         if (typeMismatch) {
             // cannot drag between dimensions and value
             return;
@@ -324,12 +325,13 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         const currentDim = this.grid.pivotConfiguration.values;
         const dragId = event.dragChip?.id || event.dragData?.chip.id;
         const chipsArray = area.chipsList.toArray();
-        const chipIndex = chipsArray.indexOf(event.owner) !== -1 ? chipsArray.indexOf(event.owner) : chipsArray.length;
-        const newDim = currentDim.find(x => x.member === dragId);
+        let chipIndex = chipsArray.indexOf(event.owner) !== -1 ? chipsArray.indexOf(event.owner) : chipsArray.length;
+        chipIndex = this._dropPos === DropPosition.AfterDropTarget ? chipIndex + 1 : chipIndex;
+        const newDim = currentDim.find(x => x.member === dragId || x.displayName === dragId);
         if (newDim) {
             const dragChipIndex = chipsArray.indexOf(event.dragChip || event.dragData.chip);
             currentDim.splice(dragChipIndex, 1);
-            currentDim.splice(dragChipIndex > chipIndex ? chipIndex : chipIndex - 1, 0, newDim);
+            currentDim.splice(dragChipIndex >= chipIndex ? chipIndex : chipIndex - 1, 0, newDim);
             this.grid.setupColumns();
             this.grid.valuesChange.emit({ values: this.grid.pivotConfiguration.values });
         }

@@ -57,9 +57,11 @@
 
                 <!-- Value area -->
                 <igx-chips-area #valueArea droppable='true'>
-                    <igx-chip #currChip *ngFor="let value of grid.values" [draggable]="true" [id]="value.member"
-                        [displayDensity]="grid.displayDensity" [removable]="true" (remove)="valueRemoved($event)"
-                        (dragLeave)="onDimDragLeave($event)" (dragOver)="onDimDragOver($event)"
+                    <igx-chip #currChip *ngFor="let value of grid.values" [draggable]="true" [id]="value.displayName || value.member"
+                        [displayDensity]="grid.displayDensity"
+                        [removable]="true" (remove)="valueRemoved($event)"
+                        (dragLeave)="onDimDragLeave($event)"
+                        (dragOver)="onDimDragOver($event)"
                         (dragDrop)="onValueDrop($event, valueArea)">
                         <div class="igx-grid__tr-pivot-toggle-icons" igxPrefix
                             (click)='onSummaryClick($event, value, dropdown, currChip)'

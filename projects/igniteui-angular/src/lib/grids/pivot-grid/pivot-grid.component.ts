@@ -1026,6 +1026,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected calcGridHeadRow() {
     }
 
+    protected buildDataView(data: any[]) {
+        this._dataView = data;
+    }
+
     /**
      * @hidden @internal
      */
