@@ -119,11 +119,11 @@ export class IgxTooltipDirective extends IgxToggleDirective {
      */
     protected forceOpen(overlaySettings?: OverlaySettings) {
         const info = this.overlayService.getOverlayById(this._overlayId);
-        const hasOpenAnimation = info ? info.openAnimationPlayer : false;
+        const hasOpenAnimation = info ? info.igxOpenAnimationPlayer : false;
         if (hasOpenAnimation) {
-            info.openAnimationPlayer.finish();
-            info.openAnimationPlayer.reset();
-            info.openAnimationPlayer = null;
+            info.igxOpenAnimationPlayer.finish();
+            info.igxOpenAnimationPlayer.reset();
+            info.igxOpenAnimationPlayer = null;
         } else if (this.collapsed) {
             const animation = overlaySettings.positionStrategy.settings.openAnimation;
             overlaySettings.positionStrategy.settings.openAnimation = null;
@@ -140,12 +140,12 @@ export class IgxTooltipDirective extends IgxToggleDirective {
      */
     protected forceClose(overlaySettings?: OverlaySettings) {
         const info = this.overlayService.getOverlayById(this._overlayId);
-        const hasCloseAnimation = info ? info.closeAnimationPlayer : false;
+        const hasCloseAnimation = info ? info.igxCloseAnimationPlayer : false;
 
         if (hasCloseAnimation) {
-            info.closeAnimationPlayer.finish();
-            info.closeAnimationPlayer.reset();
-            info.closeAnimationPlayer = null;
+            info.igxCloseAnimationPlayer.finish();
+            info.igxCloseAnimationPlayer.reset();
+            info.igxCloseAnimationPlayer = null;
         } else if (!this.collapsed) {
             const animation = overlaySettings.positionStrategy.settings.closeAnimation;
             overlaySettings.positionStrategy.settings.closeAnimation = null;
