@@ -23,6 +23,7 @@ import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../da
 import { IgxCalendarComponent } from '../calendar/public_api';
 import { Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { IgxAnimationService } from '../services/animation/animation';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -55,6 +56,7 @@ describe('IgxDateRangePicker', () => {
         let ngModuleRef: any;
         let mockCalendar: IgxCalendarComponent;
         let mockDaysView: any;
+        let mockAnimationService: IgxAnimationService;
         const elementRef = { nativeElement: null };
         const platform = {} as any;
         const mockNgControl = jasmine.createSpyObj('NgControl',
@@ -136,9 +138,9 @@ describe('IgxDateRangePicker', () => {
             };
             mockNgZone = {};
             mockPlatformUtil = { isIOS: false };
-
+            mockAnimationService = new IgxAnimationService(mockAnimationBuilder);
             overlay = new IgxOverlayService(
-                mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil);
+                mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
             mockCalendar = new IgxCalendarComponent(platform);
             mockDaysView = {
                 focusActiveDate: jasmine.createSpy()
