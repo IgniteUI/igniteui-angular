@@ -109,10 +109,10 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
             if (isHierarchicalGrid) {
                 columnCount = data
-                    .map(a => this._ownersMap.get(a.owner).columns.length + a.level)
+                    .map(a => this._ownersMap.get(a.owner).columns.filter(c => !c.skip).length + a.level)
                     .sort((a,b) => b - a)[0];
 
-                rootKeys = this._ownersMap.get(firstDataElement.owner).columns.map(c => c.field);
+                rootKeys = this._ownersMap.get(firstDataElement.owner).columns.filter(c => !c.skip).map(c => c.field);
                 defaultOwner = this._ownersMap.get(firstDataElement.owner);
             } else {
                 defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
