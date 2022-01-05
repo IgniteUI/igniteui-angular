@@ -1233,4 +1233,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
         return cols;
     }
+
+    public getPropName(dim: IPivotDimension) {
+        return dim.memberName + this.pivotKeys.rowDimensionSeparator + 'height';
+    }
 }

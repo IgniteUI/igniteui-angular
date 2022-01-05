@@ -1581,7 +1581,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
             this.igxForSizePropName : 'height';
         if (dimension === 'height') {
-            size = parseInt(this.igxForItemSize, 10) || 0;
+            size = item[this.igxForSizePropName] || parseInt(this.igxForItemSize, 10) || 0;
             if (item && item.summaries) {
                 size = item.max;
             } else if (item && item.groups && item.height) {

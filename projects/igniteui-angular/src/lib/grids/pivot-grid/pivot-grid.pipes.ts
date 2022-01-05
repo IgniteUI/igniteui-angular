@@ -128,6 +128,9 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
                     groupData.forEach((gr, ind) => {
                         if (ind === 0) {
                             gr[prevDim.dimension.memberName + pivotKeys.rowDimensionSeparator + 'first'] = true;
+                            gr[prevDimRoot.memberName + pivotKeys.rowDimensionSeparator + 'height'] = groupData.length * this.grid.renderedRowHeight;
+                        } else {
+                            gr[prevDimRoot.memberName + pivotKeys.rowDimensionSeparator + 'height'] = 1;
                         }
                         gr[prevDim.dimension.memberName + pivotKeys.rowDimensionSeparator + 'rowSpan'] = groupData.length;
                     });

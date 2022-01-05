@@ -25,6 +25,7 @@
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="renderedRowHeight"
+            [igxForSizePropName]='getPropName(dim)'
             #verticalRowDimScrollContainer>
         <igx-pivot-row-dimension-content  role='row' class="igx-grid-thead" [grid]="this"
             [dimension]='dim'
