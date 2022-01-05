@@ -1718,6 +1718,56 @@ export class SampleTestData {
         }
     ]);
 
+    public static employeeTreeDataCaseSensitive = () => ([
+        {
+            ID: 147,
+            ParentID: -1,
+            Name: 'John Winchester',
+            HireDate: new Date(2008, 3, 20),
+            Age: 55,
+            OnPTO: false,
+            JobTitle: 'Director'
+        },
+        {
+            ID: 475,
+            ParentID: 147,
+            Name: 'Michael Langdon',
+            HireDate: new Date(2011, 6, 3),
+            Age: 43,
+            OnPTO: false,
+            Employees: null,
+            JobTitle: 'Software Developer'
+        },
+        {
+            ID: 957,
+            ParentID: 147,
+            Name: 'Thomas Hardy',
+            HireDate: new Date(2009, 6, 19),
+            Age: 29,
+            OnPTO: true,
+            Employees: undefined,
+            JobTitle: 'Software developer'
+        },
+        {
+            ID: 317,
+            ParentID: 147,
+            Name: 'Monica Reyes',
+            HireDate: new Date(2014, 8, 18),
+            Age: 31,
+            OnPTO: false,
+            JobTitle: 'Software Developer'
+        },
+        {
+            ID: 19,
+            ParentID: -1,
+            Name: 'Victoria Lincoln',
+            HireDate: new Date(2014, 1, 22),
+            Age: 49,
+            OnPTO: false,
+            JobTitle: 'Director'
+        }
+    ]);
+
     public static employeeGroupByData = () => ([
         {
             ID: 475,
