@@ -2,12 +2,12 @@ import { Component, ViewChild } from '@angular/core';
 import {
     IgxTooltipTargetDirective, IgxTooltipDirective,
     ITooltipShowEventArgs, ITooltipHideEventArgs
-} from '../directives/tooltip/tooltip.directive';
+} from '../directives/tooltip';
 
 @Component({
     template: `
         <div class="dummyDiv">dummy div for touch tests</div>
-        <button [igxTooltipTarget]="tooltipRef"
+        <button [igxTooltipTarget]="tooltipRef" [tooltip]="'Infragistics Inc. HQ'"
                 (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)"
                 style="margin: 200px">
             Hover me
@@ -55,4 +55,16 @@ export class IgxTooltipMultipleTargetsComponent {
     @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipDirective;
     @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true }) public targetTwo: IgxTooltipTargetDirective;
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
+}
+
+
+@Component({
+    template: `
+        <button igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">
+                info
+        </button>
+        `
+})
+export class IgxTooltipPlainStringComponent {
+    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
 }

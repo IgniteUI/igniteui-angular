@@ -200,7 +200,8 @@ export class IgxGridTransactionPipe implements PipeTransform {
             const result = DataUtil.mergeTransactions(
                 cloneArray(collection),
                 this.grid.transactions.getAggregatedChanges(true),
-                this.grid.primaryKey);
+                this.grid.primaryKey,
+                this.grid.dataCloneStrategy);
             return result;
         }
         return collection;

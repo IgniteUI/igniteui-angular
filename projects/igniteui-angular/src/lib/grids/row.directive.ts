@@ -23,7 +23,6 @@ import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxAddRow, IgxEditRow } from './common/crud.service';
 import { ColumnType, GridType, IGX_GRID_BASE } from './common/grid.interface';
 import mergeWith from 'lodash.mergewith';
-import { cloneValue } from '../core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -52,7 +51,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     @Input()
     public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(cloneValue(this._data), this.grid.transactions.getAggregatedValue(this.key, false),
+            return mergeWith(this.grid.dataCloneStrategy.clone(this._data), this.grid.transactions.getAggregatedValue(this.key, false),
                 (objValue, srcValue) => {
                     if (Array.isArray(srcValue)) {
                         return objValue = srcValue;
