@@ -1,6 +1,7 @@
 import { AnimationBuilder } from '@angular/animations';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { getResizeObserver, mkenum } from '../../core/utils';
+import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
 
@@ -98,19 +99,19 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     public selectedIndicator: ElementRef<HTMLElement>;
 
     /** @hidden */
-    @ViewChild('leftButton')
-    public leftButton: ElementRef<HTMLElement>;
+    @ViewChild('scrollPrevButton')
+    public scrollPrevButton: ElementRef<HTMLElement>;
 
     /** @hidden */
-    @ViewChild('rightButton')
-    public rightButton: ElementRef<HTMLElement>;
+    @ViewChild('scrollNextButton')
+    public scrollNextButton: ElementRef<HTMLElement>;
 
     /** @hidden */
     @HostBinding('class.igx-tabs')
     public defaultClass = true;
 
     /**  @hidden */
-     public offset = 0;
+    public offset = 0;
 
     /** @hidden */
     protected componentName = 'igx-tabs';
@@ -118,8 +119,8 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver: ResizeObserver;
 
-    constructor(builder: AnimationBuilder, cdr: ChangeDetectorRef, private ngZone: NgZone) {
-        super(builder, cdr);
+    constructor(builder: AnimationBuilder, cdr: ChangeDetectorRef, private ngZone: NgZone, public dir: IgxDirectionality) {
+        super(builder, cdr, dir);
     }
 
 
@@ -147,18 +148,18 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     }
 
     /** @hidden */
-    public scrollLeft() {
+    public scrollPrev() {
         this.scroll(false);
     }
 
     /** @hidden */
-    public scrollRight() {
+    public scrollNext() {
         this.scroll(true);
     }
 
     /** @hidden */
     public realignSelectedIndicator() {
-        if (this.selectedIndex >=0 && this.selectedIndex < this.items.length) {
+        if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
             const header = this.items.get(this.selectedIndex).headerComponent.nativeElement;
             this.alignSelectedIndicator(header, 0);
         }
@@ -181,13 +182,13 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             const tabHeaderNativeElement = tabItems[this.selectedIndex].headerComponent.nativeElement;
 
             // Scroll left if there is need
-            if (tabHeaderNativeElement.offsetLeft < this.offset) {
+            if (this.getElementOffset(tabHeaderNativeElement) < this.offset) {
                 this.scrollElement(tabHeaderNativeElement, false);
             }
 
             // Scroll right if there is need
             const viewPortOffsetWidth = this.viewPort.nativeElement.offsetWidth;
-            const delta = (tabHeaderNativeElement.offsetLeft + tabHeaderNativeElement.offsetWidth) - (viewPortOffsetWidth + this.offset);
+            const delta = (this.getElementOffset(tabHeaderNativeElement) + tabHeaderNativeElement.offsetWidth) - (viewPortOffsetWidth + this.offset);
 
             // Fix for IE 11, a difference is accumulated from the widths calculations
             if (delta > 1) {
@@ -229,43 +230,42 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         }
     }
 
-    private scroll(scrollRight: boolean): void {
+    private scroll(scrollNext: boolean): void {
         const tabsArray = this.items.toArray();
 
         for (let index = 0; index < tabsArray.length; index++) {
             const tab = tabsArray[index];
             const element = tab.headerComponent.nativeElement;
-
-            if (scrollRight) {
-                if (element.offsetWidth + element.offsetLeft > this.viewPort.nativeElement.offsetWidth + this.offset) {
-                    this.scrollElement(element, scrollRight);
+            if (scrollNext) {
+                if (element.offsetWidth + this.getElementOffset(element) > this.viewPort.nativeElement.offsetWidth + this.offset) {
+                    this.scrollElement(element, scrollNext);
                     break;
                 }
             } else {
-                if (element.offsetLeft >= this.offset) {
-                    this.scrollElement(tabsArray[index - 1].headerComponent.nativeElement, scrollRight);
+                if (this.getElementOffset(element) >= this.offset) {
+                    this.scrollElement(tabsArray[index - 1].headerComponent.nativeElement, scrollNext);
                     break;
                 }
             }
         }
     }
 
-    private scrollElement(element: any, scrollRight: boolean): void {
+    private scrollElement(element: any, scrollNext: boolean): void {
         const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
 
-        this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
-        this.viewPort.nativeElement.scrollLeft = this.offset;
+        this.offset = (scrollNext) ? element.offsetWidth + this.getElementOffset(element) - viewPortWidth : this.getElementOffset(element);
+        this.viewPort.nativeElement.scrollLeft = this.getOffset(this.offset);
         this.updateScrollButtons();
     }
 
     private updateScrollButtons() {
         const itemsContainerWidth = this.getTabItemsContainerWidth();
 
-        const leftButtonStyle = this.resolveLeftScrollButtonStyle(itemsContainerWidth);
-        this.setScrollButtonStyle(this.leftButton.nativeElement, leftButtonStyle);
+        const scrollPrevButtonStyle = this.resolveLeftScrollButtonStyle(itemsContainerWidth);
+        this.setScrollButtonStyle(this.scrollPrevButton.nativeElement, scrollPrevButtonStyle);
 
-        const rightButtonStyle = this.resolveRightScrollButtonStyle(itemsContainerWidth);
-        this.setScrollButtonStyle(this.rightButton.nativeElement, rightButtonStyle);
+        const scrollNextButtonStyle = this.resolveRightScrollButtonStyle(itemsContainerWidth);
+        this.setScrollButtonStyle(this.scrollNextButton.nativeElement, scrollNextButtonStyle);
     }
 
     private setScrollButtonStyle(button: HTMLElement, buttonStyle: TabScrollButtonStyle) {
@@ -320,10 +320,18 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
         if (itemsContainerChildrenCount > 1) {
             const lastTab = this.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 1] as HTMLElement;
-            itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
+            itemsContainerWidth = this.getElementOffset(lastTab) + lastTab.offsetWidth;
         }
 
         return itemsContainerWidth;
+    }
+
+    private getOffset(offset: number): number {
+        return this.dir.rtl ? -offset : offset;
+    }
+
+    private getElementOffset(element: HTMLElement): number {
+        return this.dir.rtl ? this.itemsWrapper.nativeElement.offsetWidth - element.offsetLeft - element.offsetWidth : element.offsetLeft;
     }
 }
 
