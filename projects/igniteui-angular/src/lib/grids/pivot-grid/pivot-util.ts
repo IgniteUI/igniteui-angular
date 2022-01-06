@@ -97,7 +97,7 @@ export class PivotUtil {
                 expansionStates.get(expansionRowKey);
             if (rec[field + pivotKeys.rowDimensionSeparator + pivotKeys.records] &&
                 rec[field + pivotKeys.rowDimensionSeparator + pivotKeys.records].length > 0 &&
-                ((isExpanded && lvl > 0)  || (maxDimLvl == currDimLvl))) {
+                ((isExpanded && lvl > 0) || (maxDimLvl == currDimLvl))) {
                 let dimData = rec[field + pivotKeys.rowDimensionSeparator + pivotKeys.records];
                 if (dim.childLevel) {
                     if (PivotUtil.getDimensionDepth(dim) > 1) {
@@ -284,6 +284,11 @@ export class PivotUtil {
                     } else {
                         // otherwise overwrite direct child collection
                         child[row.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.records] = siblingData2;
+                    }
+                    const sibs = prevRowDims.filter(x => x.memberName !== prevRowField);
+                    if (sibs.length > 0) {
+                        // Process sibling dimensions in depth
+                        this.processSubGroups(row, [...sibs], [child], pivotKeys, lvl);
                     }
                     PivotUtil.processSiblingProperties(child, siblingData2, keys);
                 }
