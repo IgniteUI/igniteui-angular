@@ -94,6 +94,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         this.grid.filteringService.clearFilter(col.memberName);
         this.grid.pipeTrigger++;
         this.grid.dimensionsChange.emit({dimensions: this.grid.pivotConfiguration.columns, dimensionCollectionType: PivotDimensionType.Row});
+        this.grid.reflow();
     }
 
     public valueRemoved(event: IBaseChipEventArgs) {
