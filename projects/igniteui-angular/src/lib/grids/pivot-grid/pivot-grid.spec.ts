@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxPivotDateDimension, IgxPivotGridModule } from 'igniteui-angular';
+import { IgxChipComponent, IgxChipsAreaComponent, IgxPivotDateDimension, IgxPivotGridModule } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
@@ -177,7 +177,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
 
     describe('IgxPivotGrid Features #pivotGrid', () => {
         it('should show excel style filtering via dimension chip.', () => {
-            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fixture, 'igx-pivot-grid');
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             const rowChip = headerRow.querySelector('igx-chip[id="All"]');
             const filterIcon = rowChip.querySelectorAll('igx-icon')[2];
@@ -204,7 +204,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             filterIcon.click();
             fixture.detectChanges();
 
-            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fixture, 'igx-pivot-grid');
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
 
             // uncheck Accessories
@@ -234,7 +234,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const filterIcon = rowChip.querySelectorAll('igx-icon')[2];
             filterIcon.click();
             fixture.detectChanges();
-            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fixture, 'igx-pivot-grid');
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
 
             // uncheck Bulgaria
@@ -254,6 +254,137 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
             const expected = ['USA'];
             expect(colHeaders).toEqual(expected);
+        });
+
+        it('should show filters chips', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration.filters = [{
+                memberName: 'SellerName',
+                enabled: true
+            }];
+            pivotGrid.pipeTrigger++;
+            pivotGrid.setupColumns();
+            fixture.detectChanges();
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const filtersChip = headerRow.querySelector('igx-chip[id="SellerName"]');
+            const filterIcon = filtersChip.querySelectorAll('igx-icon')[1];
+
+            expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
+            filterIcon.click();
+            fixture.detectChanges();
+            const esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
+            const checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
+            // should show and should display correct checkboxes.
+            expect(excelMenu.parentElement.parentElement.attributes.hidden).toBeUndefined();
+            expect((checkBoxes[0].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Select All');
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('David');
+            expect((checkBoxes[2].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Elisa');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('John');
+            expect((checkBoxes[4].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Larry');
+        });
+
+        it('should show filters in chips dropdown button', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration.filters = [
+                {
+                    memberName: 'SellerName',
+                    enabled: true
+                },
+                {
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            pivotGrid.setupColumns();
+            fixture.detectChanges();
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[0];
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[0];
+
+            expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
+            dropdownIcon.click();
+            fixture.detectChanges();
+
+            const chips = excelMenu.querySelectorAll('igx-chip');
+            expect(chips[0].id).toBe('SellerName');
+            expect(chips[0].attributes.getNamedItem('ng-reflect-selected').nodeValue).toEqual('true');
+            expect(chips[1].id).toBe('ProductCategory');
+            expect(chips[1].attributes.getNamedItem('ng-reflect-selected').nodeValue).toEqual('false');
+
+            let esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
+            let checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
+            // should show and should display correct checkboxes.
+            expect(excelMenu.parentElement.parentElement.attributes.hidden).toBeUndefined();
+            expect((checkBoxes[0].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Select All');
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('David');
+            expect((checkBoxes[2].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Elisa');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('John');
+            expect((checkBoxes[4].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Larry');
+
+            // switch to the `ProductCategory` filters
+            const chipAreaElement = fixture.debugElement.queryAll(By.directive(IgxChipsAreaComponent))[3];
+            const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
+            chipComponents[1].triggerEventHandler('chipClick', {
+                owner: {
+                    id: chips[1].id
+                }
+            });
+            fixture.detectChanges();
+
+            esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
+            checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
+            expect((checkBoxes[0].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Select All');
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Accessories');
+            expect((checkBoxes[2].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Bikes');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Clothing');
+            expect((checkBoxes[4].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Components');
+        });
+
+        it('should be able to filter from chips dropdown button', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration.filters = [
+                {
+                    memberName: 'SellerName',
+                    enabled: true
+                },
+                {
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            pivotGrid.setupColumns();
+            fixture.detectChanges();
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[0];
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[0];
+
+            expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
+            dropdownIcon.click();
+            fixture.detectChanges();
+
+            const checkBoxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
+
+            // uncheck David
+            checkBoxes[1].click();
+            fixture.detectChanges();
+
+            // uncheck Elisa
+            checkBoxes[5].click();
+            fixture.detectChanges();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleFiltering(fixture, excelMenu, 'igx-pivot-grid');
+            fixture.detectChanges();
+
+            // check rows
+            const rows = pivotGrid.rowList.toArray();
+            expect(rows.length).toBe(3);
+            const expectedHeaders = ['All', 'Clothing', 'Components'];
+            const rowDimensionHeaders = rows.map(x => x.rowDimension).flat().map(x => x.header);
+            expect(rowDimensionHeaders).toEqual(expectedHeaders);
         });
 
         it('should apply sorting for dimension via row chip', () => {
