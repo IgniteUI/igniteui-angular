@@ -1,5 +1,7 @@
 import { cloneValue } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
@@ -401,6 +403,21 @@ export class PivotUtil {
         });
 
         return flatData;
+    }
+
+    public static buildExpressionTree(config: IPivotConfiguration) {
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
+        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+
+        const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        // add expression trees from all filters
+        PivotUtil.flatten(enabledDimensions).forEach((x: IPivotDimension) => {
+            if (x.filter && x.filter.filteringOperands) {
+                expressionsTree.filteringOperands.push(...x.filter.filteringOperands);
+            }
+        });
+
+        return expressionsTree;
     }
 
     private static collectRecords(children, pivotKeys: IPivotKeys) {
