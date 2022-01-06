@@ -2,6 +2,28 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.1.0
+
+### New Features
+- `igxTooltipTarget` directive now allows specifying a plain text tooltip without adding an additional DOM element decorated with the `igxTooltip` directive. This is achieved via the newly introduced `tooltip` string input.
+    ```html
+    <button igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">
+       info
+    </button>
+    ```
+- `IgxTabs` have full right-to-left (RTL) support.
+
+### General
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    -  **Breaking Change** - `movable` property of `IgxColumnComponent` is now deprecated and will be removed in future version. Instead, use the newly exposed `moving` property on grid-level:
+    ```html
+    <igx-grid [data]="data" [moving]="true">
+        <igx-column field="Name"></igx-column>
+        <igx-column field="Age"></igx-column>
+    </igx-grid>
+   ```
+
 ## 13.0.5
 
 ### New Features

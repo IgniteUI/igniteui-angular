@@ -58,11 +58,11 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
         ];
 
         this.columns = [
-            // { field: 'employeeID', label: 'ID', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: false },
-            { field: 'firstName', label: 'First Name', width: 300, resizable: true, movable: true, dataType: 'string', hasSummary: false },
-            { field: 'lastName', label: 'Last Name', width: 150, resizable: true, movable: true, dataType: 'string', hasSummary: false },
-            { field: 'Title', label: 'Title', width: 200, resizable: true, movable: true, dataType: 'string', hasSummary: true },
-            { field: 'Salary', label: 'Salary', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: false }
+            // { field: 'employeeID', label: 'ID', width: 200, resizable: true, dataType: 'number', hasSummary: false },
+            { field: 'firstName', label: 'First Name', width: 300, resizable: true, dataType: 'string', hasSummary: false },
+            { field: 'lastName', label: 'Last Name', width: 150, resizable: true, dataType: 'string', hasSummary: false },
+            { field: 'Title', label: 'Title', width: 200, resizable: true, dataType: 'string', hasSummary: true },
+            { field: 'Salary', label: 'Salary', width: 200, resizable: true, dataType: 'number', hasSummary: false }
         ];
         this.data1 = [];
         this.data2 = [];
