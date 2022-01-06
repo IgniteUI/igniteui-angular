@@ -138,7 +138,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             scrollDeltaY = this.calcAxisCoords(deltaScaledY, -1, 1);
         }
 
-        if (this.didChildScroll(evt, scrollDeltaX, scrollDeltaY)) {
+        if (evt.composedPath && this.didChildScroll(evt, scrollDeltaX, scrollDeltaY)) {
             return;
         }
 
