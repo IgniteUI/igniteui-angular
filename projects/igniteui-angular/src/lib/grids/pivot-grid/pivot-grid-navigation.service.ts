@@ -38,6 +38,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastRowDimensionsIndex) {
                 newActiveNode.column = ctrl || key === 'end' ? this.lastRowDimensionsIndex : this.activeNode.column + 1;
             }
+            const verticalContainer = this.grid.verticalRowDimScrollContainers.toArray()[newActiveNode.column];
             if ((key.includes('up')) && this.activeNode.row > 0) {
                 newActiveNode.row = ctrl ? 0 : this.activeNode.row - 1;
             }
@@ -45,7 +46,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 newActiveNode.row = ctrl ? this.findLastDataRowIndex() : this.activeNode.row + 1;
             }
             this.setActiveNode(newActiveNode);
-            this.grid.navigateTo(newActiveNode.row);
+            verticalContainer.scrollTo(newActiveNode.row);
         } else {
             super.handleNavigation(event);
         }
