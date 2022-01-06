@@ -1588,7 +1588,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         const displayKey = this.displayKey;
         const matchFn = (e) => {
             const value = displayKey ? e[displayKey] : e;
-            
+
             return value?.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
         };
         const itemMatch = this.filteredData.some(matchFn);
