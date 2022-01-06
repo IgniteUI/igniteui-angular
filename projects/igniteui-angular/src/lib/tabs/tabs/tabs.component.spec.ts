@@ -8,22 +8,26 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { AddingSelectedTabComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
-    TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component,
+import {
+    AddingSelectedTabComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
+    TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component,
     TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
-    TemplatedTabsTestComponent } from '../../test-utils/tabs-components.spec';
+    TemplatedTabsTestComponent
+} from '../../test-utils/tabs-components.spec';
 import { IgxTabsModule } from './tabs.module';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './tab-content.component';
 import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
-import { RoutingView1Component,
+import {
+    RoutingView1Component,
     RoutingView2Component,
     RoutingView3Component,
     RoutingView4Component,
     RoutingView5Component,
-    RoutingViewComponentsModule } from '../../test-utils/routing-view-components.spec';
+    RoutingViewComponentsModule
+} from '../../test-utils/routing-view-components.spec';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
@@ -58,7 +62,7 @@ describe('IgxTabs', () => {
             declarations: [TabsTestHtmlAttributesComponent, TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
                 TabsRoutingDisabledTestComponent, TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component,
                 TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent,
-                TabsRoutingGuardTestComponent, TabsWithPrefixSuffixTestComponent, TabsContactsComponent, AddingSelectedTabComponent],
+                TabsRoutingGuardTestComponent, TabsWithPrefixSuffixTestComponent, TabsContactsComponent, AddingSelectedTabComponent, TabsRtlComponent],
             imports: [IgxTabsModule, BrowserAnimationsModule, IgxButtonModule, IgxIconModule, IgxDropDownModule, IgxToggleModule,
                 RoutingViewComponentsModule, IgxPrefixModule, IgxSuffixModule, RouterTestingModule.withRoutes(testRoutes)],
             providers: [RoutingTestGuard, PlatformUtil]
@@ -280,7 +284,7 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabs.offset).toBeGreaterThan(0);
 
-            tabs.scrollLeft(null);
+            tabs.scrollPrev(null);
 
             tick(100);
             fixture.detectChanges();
@@ -700,14 +704,14 @@ describe('IgxTabs', () => {
             headerElements = tabItems.map(item => item.headerComponent.nativeElement);
 
             fixture.ngZone.run(() => {
- router.initialNavigation();
-});
+                router.initialNavigation();
+            });
             tick();
             expect(location.path()).toBe('/');
 
             fixture.ngZone.run(() => {
- UIInteractions.simulateClickAndSelectEvent(headerElements[0]);
-});
+                UIInteractions.simulateClickAndSelectEvent(headerElements[0]);
+            });
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
@@ -716,8 +720,8 @@ describe('IgxTabs', () => {
             expect(tabItems[1].selected).toBe(false);
 
             fixture.ngZone.run(() => {
- UIInteractions.simulateClickAndSelectEvent(headerElements[1]);
-});
+                UIInteractions.simulateClickAndSelectEvent(headerElements[1]);
+            });
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
@@ -1048,7 +1052,7 @@ describe('IgxTabs', () => {
                     expect(indexChangingSpy).toHaveBeenCalledTimes(2);
                     expect(indexChangeSpy).toHaveBeenCalledTimes(2);
                     expect(itemChangeSpy).toHaveBeenCalledTimes(2);
-            }));
+                }));
 
             it('Validate the events are not fired when navigating between tabs with home/end before pressing enter/space key.',
                 fakeAsync(() => {
@@ -1112,7 +1116,7 @@ describe('IgxTabs', () => {
                     expect(indexChangingSpy).toHaveBeenCalledTimes(2);
                     expect(indexChangeSpy).toHaveBeenCalledTimes(2);
                     expect(itemChangeSpy).toHaveBeenCalledTimes(2);
-            }));
+                }));
 
         });
     });
@@ -1290,4 +1294,63 @@ describe('IgxTabs', () => {
 
         expect(rightScrollButton.clientWidth).toBeFalsy();
     });
+
+    describe('IgxTabs RTL', () => {
+        let fix;
+        let tabs;
+        let tabItems;
+        let headers;
+
+        beforeEach(() => {
+            document.body.dir = 'rtl';
+            fix = TestBed.createComponent(TabsRtlComponent);
+            tabs = fix.componentInstance.tabs;
+            fix.detectChanges();
+            tabItems = tabs.items.toArray();
+            headers = tabItems.map(item => item.headerComponent.nativeElement);
+        });
+
+        it('should position scroll buttons properly', () => {
+            fix.componentInstance.wrapperDiv.nativeElement.style.width = '300px';
+            fix.detectChanges();
+
+            const scrollNextButton = fix.componentInstance.tabs.scrollNextButton;
+            const scrollPrevButton = fix.componentInstance.tabs.scrollPrevButton;
+            expect(scrollNextButton.nativeElement.offsetLeft).toBeLessThan(scrollPrevButton.nativeElement.offsetLeft);
+        });
+
+        it('should select next tab when left arrow is pressed and previous tab when right arrow is pressed', fakeAsync(() => {
+            tick(100);
+            fix.detectChanges();
+            headers = tabs.items.map(item => item.headerComponent.nativeElement);
+
+            headers[0].focus();
+            headers[0].dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fix.detectChanges();
+            expect(tabs.selectedIndex).toBe(1);
+
+            headers[1].dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fix.detectChanges();
+            expect(tabs.selectedIndex).toBe(2);
+
+            headers[2].dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fix.detectChanges();
+            expect(tabs.selectedIndex).toBe(3);
+
+            headers[0].dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fix.detectChanges();
+            expect(tabs.selectedIndex).toBe(8);
+
+            headers[8].dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fix.detectChanges();
+            expect(tabs.selectedIndex).toBe(7);
+        }));
+    });
 });
+
+

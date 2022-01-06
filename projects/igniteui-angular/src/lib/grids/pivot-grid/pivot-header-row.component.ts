@@ -4,10 +4,13 @@ import {
     Component,
     ElementRef,
     Inject,
-    Renderer2
+    QueryList,
+    Renderer2,
+    ViewChildren
 } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
+import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
@@ -37,8 +40,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
     public value: IPivotValue;
     private _dropPos = DropPosition.AfterDropTarget;
-    private _dropLeftIndicatorClass = 'igx-pivot-grid__drop-indicator--left';
-    private _dropRightIndicatorClass = 'igx-pivot-grid__drop-indicator--right';
     private valueData: Map<string, IPivotAggregator[]>;
     private _subMenuPositionSettings: PositionSettings = {
         verticalStartPoint: VerticalAlignment.Bottom,
@@ -58,6 +59,32 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         protected renderer: Renderer2,
     ) {
         super(ref, cdr);
+    }
+
+    @ViewChildren('notifyChip')
+    public notificationChips: QueryList<IgxChipComponent>;
+
+    public onDimDragStart(event, area) {
+        this.cdr.detectChanges();
+        for (let chip of this.notificationChips) {
+            if (area.chipsList.toArray().indexOf(chip) === -1 &&
+             chip.nativeElement.parentElement.children.length > 0 &&
+             chip.nativeElement.parentElement.children.item(0).id !== 'empty' ) {
+                chip.nativeElement.hidden = false;
+                chip.nativeElement.scrollIntoView();
+            }
+        }
+    }
+
+    public onDimDragEnd() {
+        for (let chip of this.notificationChips) {
+            chip.nativeElement.hidden = true;
+        }
+    }
+
+    public getAreaHeight(area: IgxChipsAreaComponent) {
+        const chips =  area.chipsList;
+        return chips && chips.length > 0 ? chips.first.nativeElement.clientHeight : 0;
     }
 
     public getAggregateList(val: IPivotValue): IPivotAggregator[] {
@@ -190,49 +217,27 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
         this._dropPos = event.originalEvent.offsetX > pos ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
         if (this._dropPos === DropPosition.AfterDropTarget) {
-            event.owner.nativeElement.style.borderRight = '1px solid red';
-            event.owner.nativeElement.style.borderLeft = '';
-            this.renderer.removeClass(event.owner.nativeElement, this._dropLeftIndicatorClass);
-            this.renderer.addClass(event.owner.nativeElement, this._dropRightIndicatorClass);
+            event.owner.nativeElement.previousElementSibling.style.visibility = 'hidden';
+            event.owner.nativeElement.nextElementSibling.style.visibility = '';
         } else {
-            event.owner.nativeElement.style.borderRight = '';
-            event.owner.nativeElement.style.borderLeft = '1px solid red';
-            this.renderer.addClass(event.owner.nativeElement, this._dropLeftIndicatorClass);
-            this.renderer.removeClass(event.owner.nativeElement, this._dropRightIndicatorClass);
+            event.owner.nativeElement.nextElementSibling.style.visibility = 'hidden';
+            event.owner.nativeElement.previousElementSibling.style.visibility = '';
         }
     }
 
     public onDimDragLeave(event) {
-        this.renderer.removeClass(event.owner.nativeElement, this._dropLeftIndicatorClass);
-        this.renderer.removeClass(event.owner.nativeElement, this._dropRightIndicatorClass);
-        event.owner.nativeElement.style.borderLeft = '';
-        event.owner.nativeElement.style.borderRight = '';
+        event.owner.nativeElement.previousElementSibling.style.visibility = 'hidden';
+        event.owner.nativeElement.nextElementSibling.style.visibility = 'hidden';
         this._dropPos = DropPosition.AfterDropTarget;
     }
 
-    public onAreaDragEnter(event, area, dimension?: PivotDimensionType) {
-        const dragId = event.detail.owner.element.nativeElement.parentElement.id;
-        const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === dragId || x.displayName === dragId) :
-            !this.grid.pivotConfiguration.values.find(x => x.member === dragId || x.displayName === dragId);
-        if (typeMismatch) {
-            // cannot drag between dimensions and value
-            return;
-        }
-        const lastElem = area.chipsList.last?.nativeElement;
-        if (lastElem) {
-            const targetElem = event.detail.originalEvent.target;
-            const targetOwner = event.detail.owner.element.nativeElement.parentElement;
-            if (targetOwner !== lastElem && targetElem.getBoundingClientRect().x >= lastElem.getBoundingClientRect().x) {
-                this.renderer.addClass(area.chipsList.last.nativeElement, this._dropRightIndicatorClass);
-                // TODO- remove once classes are added.
-                area.chipsList.last.nativeElement.style.borderRight = '1px solid red';
-            }
-        }
-    }
     public onAreaDragLeave(event, area) {
-        area.chipsList.toArray().forEach(element => {
-            this.renderer.removeClass(element.nativeElement, this._dropRightIndicatorClass);
-            element.nativeElement.style.borderRight = '';
+        const dataChips = area.chipsList.toArray().filter(x => this.notificationChips.toArray().indexOf(x) === -1);
+        dataChips.forEach(element => {
+            element.nativeElement.previousElementSibling.style.visibility = 'hidden';
+            if (element.nativeElement.nextElementSibling) {
+                element.nativeElement.nextElementSibling.style.visibility = 'hidden';
+            }
         });
     }
 
@@ -259,6 +264,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         const chipsArray = area.chipsList.toArray();
         const chip = chipsArray.find(x => x.id === dragId);
         const isNewChip = chip === undefined;
+        const isReorder = event.owner.id !== undefined;
         //const chipIndex = chipsArray.indexOf(event.owner) !== -1 ? chipsArray.indexOf(event.owner) : chipsArray.length;
         const chipIndex = currentDim.findIndex(x => x.memberName === event.owner.id) !== -1 ?
             currentDim.findIndex(x => x.memberName === event.owner.id) : currentDim.length;
@@ -286,14 +292,14 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             } else {
                 const newDim = Object.assign({}, dims[0]);
                 newDim.enabled = true;
-                currentDim.splice(chipIndex, 0, newDim);
+                currentDim.splice(targetIndex, 0, newDim);
             }
             const isDraggedFromColumn = !!this.grid.pivotConfiguration.columns?.find(x => x && x.memberName === dragId);
             if (isDraggedFromColumn) {
                 // columns have changed.
                 this.grid.setupColumns();
             }
-        } else {
+        } else if (isReorder) {
             // chip from same collection, reordered.
             const newDim = currentDim.find(x => x.memberName === dragId);
             //const dragChipIndex = chipsArray.indexOf(event.dragChip || event.dragData.chip);
@@ -307,6 +313,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         }
         this.grid.pipeTrigger++;
         this.grid.dimensionsChange.emit({ dimensions: currentDim, dimensionCollectionType: dimension });
+        // clean states
+        this.onDimDragEnd();
+        this.onAreaDragLeave(event, area);
     }
 
     protected getDimensionsByType(dimension: PivotDimensionType) {

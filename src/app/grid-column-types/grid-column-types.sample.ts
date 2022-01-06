@@ -31,11 +31,11 @@ export class GridColumnTypesSampleComponent implements OnInit {
         this.data = SAMPLE_DATA;
 
         this.columns = [
-            { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true,
+            { field: 'ID', width: 150, resizable: true, sortable: false, filterable: true, groupable: true,
                 summary: true, type: 'string', pinned: false },
-            { field: 'CompanyName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+            { field: 'CompanyName', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string'},
-            { field: 'Employees', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+            { field: 'Employees', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: false, type: 'number' },
             { field: 'DateCreated', width: 150, resizable: true, pinned: false, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'dateTime' },
@@ -43,17 +43,17 @@ export class GridColumnTypesSampleComponent implements OnInit {
                 summary: true, type: 'time' },
             { field: 'Discount', width: 150, resizable: true, pinned: false, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'percent' },
-            { field: 'Contract', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+            { field: 'Contract', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'boolean' },
-            { field: 'ContactName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+            { field: 'ContactName', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string' },
-            { field: 'ContactTitle', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+            { field: 'ContactTitle', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string' },
-            { field: 'Address', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+            { field: 'Address', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string' },
-            { field: 'City', width: 150, resizable: true, movable: true, sortable: false, filterable: false, groupable: true,
+            { field: 'City', width: 150, resizable: true, sortable: false, filterable: false, groupable: true,
                 summary: true, type: 'string' },
-            { field: 'Phone', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+            { field: 'Phone', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string', pinned: false }
         ];
     }
