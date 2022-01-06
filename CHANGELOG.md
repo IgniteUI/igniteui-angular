@@ -3,6 +3,7 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 13.1.0
+
 ### New Features
 - `igxTooltipTarget` directive now allows specifying a plain text tooltip without adding an additional DOM element decorated with the `igxTooltip` directive. This is achieved via the newly introduced `tooltip` string input.
     ```html
@@ -10,6 +11,8 @@ All notable changes for each version of this project will be documented in this 
        info
     </button>
     ```
+- `IgxTabs` have full right-to-left (RTL) support.
+
 ### General
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
