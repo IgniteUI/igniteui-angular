@@ -1091,8 +1091,6 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
 
         it('Moving: Verify that when move a column, it stays selected', () => {
-            colProductID.movable = true;
-            colProductName.movable = true;
             colProductID.selected = true;
             fix.detectChanges();
 

@@ -1,5 +1,5 @@
 import { AnimationBuilder } from '@angular/animations';
-import { AfterViewInit, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { getResizeObserver, mkenum } from '../../core/utils';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
@@ -118,8 +118,8 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver: ResizeObserver;
 
-    constructor(builder: AnimationBuilder, private ngZone: NgZone) {
-        super(builder);
+    constructor(builder: AnimationBuilder, cdr: ChangeDetectorRef, private ngZone: NgZone) {
+        super(builder, cdr);
     }
 
 
@@ -231,16 +231,19 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     private scroll(scrollRight: boolean): void {
         const tabsArray = this.items.toArray();
-        for (const tab of tabsArray) {
+
+        for (let index = 0; index < tabsArray.length; index++) {
+            const tab = tabsArray[index];
             const element = tab.headerComponent.nativeElement;
+
             if (scrollRight) {
                 if (element.offsetWidth + element.offsetLeft > this.viewPort.nativeElement.offsetWidth + this.offset) {
                     this.scrollElement(element, scrollRight);
                     break;
                 }
             } else {
-                if (element.offsetWidth + element.offsetLeft >= this.offset) {
-                    this.scrollElement(element, scrollRight);
+                if (element.offsetLeft >= this.offset) {
+                    this.scrollElement(tabsArray[index - 1].headerComponent.nativeElement, scrollRight);
                     break;
                 }
             }
@@ -251,7 +254,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
 
         this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
-        this.itemsWrapper.nativeElement.style.transform = `translate(${-this.offset}px)`;
+        this.viewPort.nativeElement.scrollLeft = this.offset;
         this.updateScrollButtons();
     }
 

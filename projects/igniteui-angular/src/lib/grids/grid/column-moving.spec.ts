@@ -48,6 +48,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture = TestBed.createComponent(MovableColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            grid.moving = true;
         }));
 
         it('Should be able to reorder columns.', (() => {
@@ -262,33 +263,6 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(0, 'ID').selected).toBeTruthy();
-        }));
-
-
-
-        it('Should reorder only movable columns when dropping the ghost image on an interactive area.', (async () => {
-            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-
-            expect(grid.columnList.get(0).movable).toBeTruthy();
-            expect(grid.columnList.get(2).movable).toBeFalsy();
-
-            // step 1 - verify columns are not reordered when
-            // moving a column that is not movable
-            const header = headers[2].nativeElement;
-            UIInteractions.simulatePointerEvent('pointerdown', header, 450, 75);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointermove', header, 455, 81);
-            await wait(50);
-            UIInteractions.simulatePointerEvent('pointermove', header, 100, 75);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointerup', header, 100, 75);
-            await wait();
-            fixture.detectChanges();
-
-            const columnsList = grid.columnList;
-            expect(columnsList.get(0).field).toEqual('ID');
-            expect(columnsList.get(1).field).toEqual('Name');
-            expect(columnsList.get(2).field).toEqual('LastName');
         }));
 
         it('Should not reorder columns when dropping the ghost image on a non-interactive area.', (async () => {
@@ -735,6 +709,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture = TestBed.createComponent(MovableTemplatedColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            grid.moving = true;
         }));
 
         it('Should reorder movable columns with templated headers.', (async () => {
@@ -771,6 +746,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture = TestBed.createComponent(MovableColumnsLargeComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            grid.moving = true;
         }));
 
         it('Should be able to scroll forwards to reorder columns that are out of view.', (async () => {
@@ -1304,7 +1280,6 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('Pinning - Should not be able to pin a column programmaticaly if disablePinning is enabled for that column', (async () => {
-            const columnsList = grid.columnList;
 
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
@@ -1398,6 +1373,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            grid.moving = true;
         }));
 
         it('MCH - should reorder only columns on the same level (top level simple column).', (async () => {

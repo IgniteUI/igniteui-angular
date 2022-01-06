@@ -2,6 +2,31 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.1.0
+### New Features
+- `igxTooltipTarget` directive now allows specifying a plain text tooltip without adding an additional DOM element decorated with the `igxTooltip` directive. This is achieved via the newly introduced `tooltip` string input.
+    ```html
+    <button igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">
+       info
+    </button>
+    ```
+### General
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    -  **Breaking Change** - `movable` property of `IgxColumnComponent` is now deprecated and will be removed in future version. Instead, use the newly exposed `moving` property on grid-level:
+    ```html
+    <igx-grid [data]="data" [moving]="true">
+        <igx-column field="Name"></igx-column>
+        <igx-column field="Age"></igx-column>
+    </igx-grid>
+   ```
+
+## 13.0.5
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added `dataCloneStrategy` input, which allows users provide their own implementation of how data objects are cloned when row and/or batch editing is enabled. The custom strategy should implement the `IDataCloneStrategy` interface.
+
 ## 13.0.1
 
 ### New Features
