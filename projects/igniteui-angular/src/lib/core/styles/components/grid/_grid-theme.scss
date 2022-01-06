@@ -2962,6 +2962,14 @@
     %igx-grid__tr-pivot-toggle-icons {
         display: inline-flex !important;
     }
+
+    %igx-grid__tr-header-row {
+        igx-pivot-row-dimension-header-group {
+            igx-grid-header {
+                align-items: center;
+            }
+        }
+    }
     // Pivot grid END
 }
 

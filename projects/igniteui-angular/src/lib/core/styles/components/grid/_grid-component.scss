@@ -565,6 +565,10 @@
             @extend %igx-grid__tr-pivot-group !optional
         }
 
+        @include e(tr-header-row) {
+            @extend %igx-grid__tr-header-row !optional;
+        }
+
         @include e(tr-pivot-toggle-icons) {
             @extend %igx-grid__tr-pivot-toggle-icons !optional;
         }
