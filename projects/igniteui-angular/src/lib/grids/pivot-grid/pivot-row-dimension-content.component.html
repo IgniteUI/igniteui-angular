@@ -1,12 +1,12 @@
 <div  role="rowgroup" class="igx-grid-thead__wrapper" [style.width.px]="width"
     [class.igx-grid__tr--mrl]="hasMRL">
     <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="width">
-            <igx-pivot-row-dimension-header-group *ngIf='isFirst' [ngClass]="rowDimensionColumn.headerGroupClasses"
+            <igx-pivot-row-dimension-header-group [ngClass]="rowDimensionColumn.headerGroupClasses"
                 [ngStyle]="rowDimensionColumn.headerGroupStyles |igxHeaderGroupStyle:rowDimensionColumn:grid.pipeTrigger" [column]="rowDimensionColumn"
                 [style.min-width]="rowDimensionColumn.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [style.flex-basis]="rowDimensionColumn.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [rowIndex]="rowIndex"
-                [style.min-height.px]='headerHeight'>
+                [style.min-height.px]='rowSpan > 1 ? headerHeight : undefined'>
             </igx-pivot-row-dimension-header-group>
     </div>
 </div>

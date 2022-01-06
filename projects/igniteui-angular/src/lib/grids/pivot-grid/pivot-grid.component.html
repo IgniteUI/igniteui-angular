@@ -21,7 +21,7 @@
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
     <div *ngFor='let dim of rowDimensions' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension'>
         <ng-template igxGridFor let-rowData [igxGridForOf]="dataView
-        | pivotGridCellMerging:pivotConfiguration:pivotKeys:pipeTrigger"
+        | pivotGridCellMerging:pivotConfiguration:dim:pivotKeys:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="renderedRowHeight"
