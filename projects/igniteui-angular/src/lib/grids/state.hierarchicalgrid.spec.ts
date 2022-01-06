@@ -438,7 +438,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(initialState);
 
         state.setState(newColumnsState);
-        await wait();
+        await wait(30);
         fix.detectChanges();
 
         gridState = state.getState(false, ['columns', 'rowIslands']) as IGridState;
