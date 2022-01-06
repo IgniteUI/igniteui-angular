@@ -39,6 +39,11 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
         return `${this.grid.id}_-2_${this.rowIndex}_${this.visibleIndex}`;
     }
 
+    @HostBinding('attr.title')
+    public get title() {
+        return this.column.header;
+    }
+
     /**
      * @hidden
      * @internal
