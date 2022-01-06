@@ -122,15 +122,13 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
 
         const prevDims = enabledRows.filter((d, ind) => ind < enabledRows.indexOf(dim));
         let groupData = [];
-        let prevValue;
         let prevDim;
         let prevDimRoot;
         let prevId;
         for (let rec of data) {
             const dimData = PivotUtil.getDimensionLevel(dim, rec, pivotKeys);
-            const val = rec[dimData.dimension.memberName];
             const id = PivotUtil.getRecordKey(rec, dimData.dimension, prevDims, pivotKeys);
-            if (prevValue !== val && groupData.length > 0 && prevId !== id) {
+            if (groupData.length > 0 && prevId !== id) {
                 const h = groupData.length > 1 ? groupData.length * this.grid.renderedRowHeight : undefined;
                 groupData[0][prevDimRoot.memberName + pivotKeys.rowDimensionSeparator + 'height'] = h;
                 groupData[0][prevDim.dimension.memberName + pivotKeys.rowDimensionSeparator + 'rowSpan'] = groupData.length;
@@ -138,7 +136,6 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
                 groupData = [];
             }
             groupData.push(rec);
-            prevValue = val;
             prevDim = dimData;
             prevDimRoot = dim;
             prevId = id;
