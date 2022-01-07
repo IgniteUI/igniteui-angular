@@ -544,7 +544,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.autoGenerate = true;
         this.uniqueColumnValuesStrategy = this.uniqueColumnValuesStrategy || this.uniqueDimensionValuesStrategy;
         const config = this.pivotConfiguration;
-        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(config);;
+        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(config);
         super.ngOnInit();
     }
 
