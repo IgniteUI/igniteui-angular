@@ -246,7 +246,8 @@ export class WorksheetFile implements IExcelFile {
 
                     if (record.type === ExportRecordType.HeaderRecord) {
                         const recordOwner = worksheetData.owners.get(record.owner);
-                        const hasMultiColumnHeaders = recordOwner.columns.some(c => !c.skip && c.headerType === HeaderType.MultiColumnHeader);
+                        const hasMultiColumnHeaders =
+                            recordOwner.columns.some(c => !c.skip && c.headerType === HeaderType.MultiColumnHeader);
 
                         if (hasMultiColumnHeaders) {
                             this.hGridPrintMultiColHeaders(worksheetData, rowDataArr, record, recordOwner);
