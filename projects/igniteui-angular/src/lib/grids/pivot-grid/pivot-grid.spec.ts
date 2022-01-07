@@ -805,7 +805,6 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const filterChip = filterChipArea.chipsList.first;
              // start drag in filter chip area.
              headerRow.onDimDragStart({}, filterChipArea);
-            //  pivotGrid.pipeTrigger++;
              fixture.detectChanges();
 
              // check drop here chips are displayed in other areas
@@ -820,7 +819,6 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
                  dragChip: filterChip,
                  owner: dropHereRowChip
              }, rowChipArea, PivotDimensionType.Row);
-            //  pivotGrid.pipeTrigger++;
              fixture.detectChanges();
              pivotGrid.cdr.detectChanges();
 
@@ -832,7 +830,6 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
              const colChip = colChipArea.chipsList.first;
              // start drag in row chip area.
              headerRow.onDimDragStart({}, rowChipArea);
-            //  pivotGrid.pipeTrigger++;
              fixture.detectChanges();
 
              // drag Seller from row dimension as first chip in columns
@@ -843,7 +840,6 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
                     offsetX: 0
                 }
             }, PivotDimensionType.Column);
-            // pivotGrid.pipeTrigger++;
             fixture.detectChanges();
             //check drop indicator between chips
             expect((colChip.nativeElement.previousElementSibling as any).style.visibility).toBe('');
@@ -854,7 +850,6 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
                 dragChip: rowSellerChip,
                 owner: colChip
             }, colChipArea, PivotDimensionType.Column);
-            // pivotGrid.pipeTrigger++;
             pivotGrid.cdr.detectChanges();
             fixture.detectChanges();
 
