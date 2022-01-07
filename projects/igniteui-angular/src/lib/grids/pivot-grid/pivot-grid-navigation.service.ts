@@ -2,9 +2,6 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { Injectable } from '@angular/core';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { HEADER_KEYS } from '../../core/utils';
-import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
-import { first } from 'rxjs/operators';
-import { ComboSampleComponent } from 'src/app/combo/combo.sample';
 
 @Injectable()
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {
