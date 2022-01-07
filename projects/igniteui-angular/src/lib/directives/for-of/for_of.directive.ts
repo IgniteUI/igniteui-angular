@@ -1638,7 +1638,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         const count = this.isRemote ? this.totalItemCount : items.length;
         for (i; i < count; i++) {
             size = this.getItemSize(items[i]);
-            if (this.itemsDimension === 'height') {
+            if (this.igxForScrollOrientation === 'vertical') {
                 this.heightCache.push(size);
             }
             totalSize += size;
