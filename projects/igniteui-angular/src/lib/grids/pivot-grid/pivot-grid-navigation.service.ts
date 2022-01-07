@@ -2,6 +2,9 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { Injectable } from '@angular/core';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { HEADER_KEYS } from '../../core/utils';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { first } from 'rxjs/operators';
+import { ComboSampleComponent } from 'src/app/combo/combo.sample';
 
 @Injectable()
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {
@@ -43,7 +46,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 newActiveNode.row = ctrl ? 0 : this.activeNode.row - 1;
             }
             if ((key.includes('down')) && this.activeNode.row < this.findLastDataRowIndex()) {
-                newActiveNode.row = ctrl ? this.findLastDataRowIndex() : this.activeNode.row + 1;
+                newActiveNode.row = ctrl ? verticalContainer.igxForOf.length - 1 : Math.min(this.activeNode.row + 1, verticalContainer.igxForOf.length - 1);
             }
 
             if (key.includes('left') || key.includes('right')) {
@@ -59,7 +62,9 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 };
             }
             this.setActiveNode(newActiveNode);
-            verticalContainer.scrollTo(newActiveNode.row);
+            if (verticalContainer.isIndexOutsideView(newActiveNode.row)) {
+                verticalContainer.scrollTo(newActiveNode.row);
+            }
         } else {
             super.handleNavigation(event);
         }

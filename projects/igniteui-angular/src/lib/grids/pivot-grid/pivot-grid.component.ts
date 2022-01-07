@@ -1039,7 +1039,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected verticalScrollHandler(event) {
         super.verticalScrollHandler(event);
-        this.verticalRowDimScrollContainers.forEach(x => x.onScroll(event));
+        this.verticalRowDimScrollContainers.forEach(x => { 
+            x.onScroll(event);
+            x.cdr.detectChanges();
+        });
     }
 
     /**

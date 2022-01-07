@@ -721,16 +721,33 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return scroll;
     }
 
-    
     /**
      * Returns the index of the element at the specified offset.
      * ```typescript
      * this.parentVirtDir.getIndexAtScroll(100);
      * ```
      */
-     public getIndexAtScroll(scrollOffset: number) {
+    public getIndexAtScroll(scrollOffset: number) {
         return this.getIndexAt(scrollOffset, this.sizesCache);
     }
+    /**
+     * Returns whether the target index is outside the view.
+     * ```typescript
+     * this.parentVirtDir.isIndexOutsideView(10);
+     * ```
+     */
+    public isIndexOutsideView(index: number) {
+        const targetNode = index >= this.state.startIndex && index <= this.state.startIndex + this.state.chunkSize ?
+        this._embeddedViews.map(view =>
+            view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling)[index - this.state.startIndex] : null;
+        const rowHeight = this.getSizeAt(index);
+        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const containerOffset = -(this.scrollPosition - this.sizesCache[this.state.startIndex]);
+        const endTopOffset = targetNode ? targetNode.offsetTop + rowHeight + containerOffset : containerSize + rowHeight;
+        return !targetNode || targetNode.offsetTop < Math.abs(containerOffset)
+            || containerSize && endTopOffset - containerSize > 5;
+    }
+
 
     /**
      * @hidden
