@@ -88,6 +88,11 @@
             $item-border-color: transparent,
             $item-selected-border-color: transparent
         ));
+
+        igx-chips-area  {
+            padding: rem(16px) rem(16px) 0 rem(16px);
+            gap: rem(8px);
+        }
     }
 
     %grid-excel-menu__header {
@@ -119,7 +124,6 @@
     %grid-excel-menu__footer {
         display: flex;
         justify-content: space-between;
-        padding: rem(8px) rem(16px);
 
         %grid-excel-filter__apply,
         %grid-excel-filter__cancel {
@@ -241,12 +245,15 @@
         flex-direction: column;
         flex-grow: 1;
         overflow: hidden;
-        padding: 0 rem(16px);
+        padding: rem(16px);
+        gap: rem(16px);
+
 
         igx-list {
             flex-grow: 1;
             overflow: hidden;
-            margin: rem(8px) -#{rem(16px)} 0;
+            margin-left:  -#{rem(16px)};
+            margin-right:  -#{rem(16px)};
             border: 0;
             border-top: 1px dashed igx-color($palette, 'grays', 300);
             border-bottom: 1px dashed igx-color($palette, 'grays', 300);
@@ -254,6 +261,10 @@
     }
 
     %grid-excel-menu--cosy {
+        igx-chips-area  {
+            padding: rem(8px) rem(8px) 0 rem(8px);
+        }
+
         %grid-excel-menu__header {
             justify-content: space-between;
             padding: rem(8px);
@@ -276,19 +287,22 @@
         }
 
         %grid-excel-main {
-            padding: 0 rem(8px);
+            padding: rem(8px);
+            gap: rem(8px);
         }
 
         igx-list {
-            margin: rem(8px) -#{rem(8px)} 0;
-        }
-
-        %grid-excel-menu__footer {
-            padding: rem(8px);
+            margin-left:  -#{rem(8px)};
+            margin-right:  -#{rem(8px)};
         }
     }
 
     %grid-excel-menu--compact {
+        igx-chips-area  {
+            padding: rem(4px) rem(4px) 0 rem(4px);
+            gap: rem(4px);
+        }
+
         %grid-excel-menu__header {
             justify-content: space-between;
             padding: rem(4px);
@@ -319,15 +333,13 @@
         }
 
         %grid-excel-main {
-            padding: 0 rem(4px);
+            padding: rem(4px);
+            gap: rem(4px);
         }
 
         igx-list {
-            margin: rem(8px) -#{rem(4px)} 0;
-        }
-
-        %grid-excel-menu__footer {
-            padding: rem(8px) rem(4px);
+            margin-left:  -#{rem(4px)};
+            margin-right:  -#{rem(4px)};
         }
     }
 
