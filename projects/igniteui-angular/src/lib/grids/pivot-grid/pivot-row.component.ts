@@ -30,15 +30,6 @@ const MINIMUM_COLUMN_WIDTH = 200;
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }]
 })
 export class IgxPivotRowComponent extends IgxRowDirective {
-
-    @Input()
-    public pivotRowWidths: number;
-    public rowDimensionData: IPivotDimensionData[] = [];
-
-    public get rowDimension() {
-        return this.rowDimensionData?.map(x => x.column);
-    }
-
     /**
      * @hidden
      */
@@ -46,12 +37,15 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     @HostBinding('attr.aria-selected')
     public get selected(): boolean {
         let isSelected = false;
-        this.rowDimensionData.forEach(x => {
-            const key = this.getRowDimensionKey(x.column as IgxColumnComponent);
+        let prevDims = [];
+        for (let rowDim of this.grid.rowDimensions) {
+            const dimData = PivotUtil.getDimensionLevel(rowDim, this.data, this.grid.pivotKeys);
+            const key = PivotUtil.getRecordKey(this.data, dimData.dimension, prevDims, this.grid.pivotKeys);
             if (this.selectionService.isPivotRowSelected(key)) {
                 isSelected = true;
             }
-        });
+            prevDims.push(dimData.dimension);
+        }
         return isSelected;
     }
 
@@ -71,16 +65,6 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      */
     public get viewIndex(): number {
         return this.index;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public getRowDimensionKey(col: IgxColumnComponent) {
-            const dimData = this.rowDimensionData.find(x => x.column.field === col.field);
-            const key =  PivotUtil.getRecordKey(this.data, dimData.dimension, dimData.prevDimensions, this.grid.pivotKeys);
-            return key;
     }
 
     public getCellClass(col: IgxColumnComponent) {
