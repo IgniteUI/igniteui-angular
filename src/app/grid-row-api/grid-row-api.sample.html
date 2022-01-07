@@ -26,13 +26,14 @@
         </div>
         <div style="margin-right: 5px;">
             <input name="index" type="number" [(ngModel)]="index" />
-            <br/>
+            <br />
             <input name="key" [(ngModel)]="key" />
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-grid #grid [rowDraggable]="true" (rowDragStart)="onRowDragStart()" (onRowDragEnd)="onRowDragEnd($event)" [data]="data" [pinning]="pinningConfig" [rowEditable]="true" [allowFiltering]='true' [primaryKey]='"ID"' [width]="'800px'" [height]="'600px'"
-            [rowSelection]="'multiple'">
+        <igx-grid #grid [rowDraggable]="true" (rowDragStart)="onRowDragStart()" (onRowDragEnd)="onRowDragEnd($event)"
+            [data]="data" [pinning]="pinningConfig" [rowEditable]="true" [allowFiltering]='true' [primaryKey]='"ID"'
+            [width]="'800px'" [height]="'600px'" [rowSelection]="'multiple'">
             <ng-template igxGridDetail let-dataItem>
                 <div>
                     <div><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
@@ -40,7 +41,9 @@
                     <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
                 </div>
             </ng-template>
-            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden' [editable]='true' [hasSummary]='true'>
+            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+                [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden' [editable]='true'
+                [hasSummary]='true'>
             </igx-column>
             <ng-template let-data igxRowDragGhost>
                 <div class="allow-drop">
@@ -68,7 +71,7 @@
             </button>
         </div>
     </div>
-    <br/>
+    <br />
 </div>
 
 <div class="sample-column">
@@ -99,25 +102,28 @@
         </div>
         <div style="margin-right: 5px;">
             <input name="tHIndex" type="number" [(ngModel)]="tHIndex" />
-            <br/>
+            <br />
             <input name="tHKey" [(ngModel)]="tHKey" />
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-tree-grid #treeGridHier id="testTreeGrid" [pinning]="pinningConfig" [width]="'900px'" [height]="'500px'" [data]="treeGridHierData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" [rowSelection]="'multiple'">
-            <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
-                [hasSummary]="c.summary" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+        <igx-tree-grid #treeGridHier id="testTreeGrid" [pinning]="pinningConfig" [width]="'900px'" [height]="'500px'"
+            [data]="treeGridHierData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1"
+            [rowSelection]="'multiple'" [moving]="true">
+            <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
+                [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true"
+                [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="c.minWidth"
+                [maxWidth]="c.maxWidth">
             </igx-column>
-            <<<<<<< HEAD <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                 </igx-grid-toolbar-actions>
-                </igx-grid-toolbar>
-                =======
+            </igx-grid-toolbar>
+            =======
 
-                <igx-paginator [perPage]="5"></igx-paginator>
-                >>>>>>> cd5c7d39bc2332a9430668d37fa597000039943c
+            <igx-paginator [perPage]="5"></igx-paginator>
         </igx-tree-grid>
     </div>
     <div class="log-wrapper">
@@ -160,14 +166,17 @@
         </div>
         <div style="margin-right: 5px;">
             <input name="tIndex" type="number" [(ngModel)]="tIndex" />
-            <br/>
+            <br />
             <input name="tKey" [(ngModel)]="tKey" />
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-tree-grid #treeGrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="'multiple'" [width]="'900px'" [height]="'800px'">
-            <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
-                [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth" [hasSummary]="true">
+        <igx-tree-grid #treeGrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID"
+            [rowSelection]="'multiple'" [width]="'900px'" [height]="'800px'">
+            <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
+                [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true"
+                [filterable]="true" [editable]="true" [hidden]="c.hidden" [minWidth]="c.minWidth"
+                [maxWidth]="c.maxWidth" [hasSummary]="true">
             </igx-column>
 
             <igx-grid-toolbar [displayDensity]="grid.displayDensity">
@@ -213,16 +222,20 @@
         </div>
         <div style="margin-right: 5px;">
             <input name="hIndex" type="number" [(ngModel)]="hIndex" />
-            <br/>
+            <br />
             <input name="hKey" [(ngModel)]="hKey" />
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [primaryKey]='"ID"' [allowFiltering]='true' [showExpandAll]='true' [data]="hierarchicalData" [rowSelection]="'multiple'">
-            <igx-column *ngFor="let c of hColumns" [hasSummary]='true' [editable]="true" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'>
+        <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [primaryKey]='"ID"' [allowFiltering]='true'
+            [showExpandAll]='true' [data]="hierarchicalData" [rowSelection]="'multiple'">
+            <igx-column *ngFor="let c of hColumns" [hasSummary]='true' [editable]="true" [sortable]="true"
+                [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'>
             </igx-column>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]="'multiple'" [allowFiltering]='true'>
-                <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]="'multiple'" [allowFiltering]='true'>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]="'multiple'"
+                [allowFiltering]='true'>
+                <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]="'multiple'"
+                    [allowFiltering]='true'>
                     <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
                 </igx-row-island>
                 <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>

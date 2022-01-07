@@ -142,7 +142,15 @@ const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_aggregate_date_latest: 'Latest Date',
     igx_grid_pivot_aggregate_date_earliest: 'Earliest Date',
     igx_grid_pivot_aggregate_time_latest: 'Latest Time',
-    igx_grid_pivot_aggregate_time_earliest: 'Earliest Time'
+    igx_grid_pivot_aggregate_time_earliest: 'Earliest Time',
+    igx_grid_pivot_empty_row_drop_area: 'Drop Row Fields here.',
+    igx_grid_pivot_empty_column_drop_area: 'Drop Column Fields here.',
+    igx_grid_pivot_empty_filter_drop_area: 'Drop Filter Fields here.',
+    igx_grid_pivot_empty_value_drop_area: 'Drop Value Fields here.',
+    igx_grid_pivot_row_drop_chip: 'Drop here to use as row',
+    igx_grid_pivot_column_drop_chip: 'Drop here to use as column',
+    igx_grid_pivot_filter_drop_chip: 'Drop here to use as filter',
+    igx_grid_pivot_value_drop_chip: 'Drop here to use as value'
 };
 
 /**

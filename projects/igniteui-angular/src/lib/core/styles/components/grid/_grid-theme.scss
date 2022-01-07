@@ -2907,9 +2907,10 @@
 
         igx-chips-area {
             flex-wrap: nowrap;
+            width: auto;
 
             > * {
-                margin-#{$right}: rem(8px);
+                margin-#{$right}: rem(4px);
             }
 
             &:last-child {
@@ -2933,6 +2934,20 @@
 
         border-#{$left}: 0;
         border-bottom: 0;
+    }
+
+    %igx-grid__tr-pivot--filter-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    %igx-grid__tr-pivot--chip_drop_indicator {
+        width: 2px;
+        background: var-get($theme, 'resize-line-color');
+    }
+
+    %igx-grid__tr-pivot--drop-row-area {
+        flex-grow: 1;
     }
 
     %igx-grid__tr-pivot--filter {

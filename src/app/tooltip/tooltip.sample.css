@@ -73,3 +73,8 @@
     width: 230px;
     font-size: 13px;
 }
+
+.sample-tooltip-input {
+    display: flex;
+    flex-direction: column;
+}

@@ -18,7 +18,8 @@ import {
     TemplateRef,
     ViewChild,
     ContentChild,
-    Injectable
+    Injectable,
+    ChangeDetectorRef
 } from '@angular/core';
 import { IgxIconModule } from '../icon/public_api';
 import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
@@ -534,9 +535,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.restartInterval();
     }
 
-    constructor(private element: ElementRef, private iterableDiffers: IterableDiffers,
+    constructor(cdr: ChangeDetectorRef, private element: ElementRef, private iterableDiffers: IterableDiffers,
         builder: AnimationBuilder, private platformUtil: PlatformUtil) {
-        super(builder);
+        super(builder, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 

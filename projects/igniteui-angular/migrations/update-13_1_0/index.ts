@@ -1,0 +1,72 @@
+import { Element } from '@angular/compiler';
+import {
+  Rule,
+  SchematicContext,
+  Tree
+} from '@angular-devkit/schematics';
+import { UpdateChanges } from '../common/UpdateChanges';
+import { nativeImport } from '../common/import-helper.js';
+import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
+
+const version = '13.1.0';
+
+export default (): Rule => async (host: Tree, context: SchematicContext) => {
+  context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
+  const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
+
+  const update = new UpdateChanges(__dirname, host, context);
+  const GRID_TAGS = ['igx-grid', 'igx-tree-grid', 'igx-hierarchical-grid', 'igx-row-island'];
+  const prop = ['[movable]'];
+  const changes = new Map<string, FileChange[]>();
+
+  const gridsToMigrate = new Set<any>();
+
+  const applyChanges = () => {
+    for (const [path, change] of changes.entries()) {
+      let buffer = host.read(path).toString();
+
+      change.sort((c, c1) => c.position - c1.position)
+        .reverse()
+        .forEach(c => buffer = c.apply(buffer));
+
+      host.overwrite(path, buffer);
+    }
+  };
+
+  const addChange = (path: string, change: FileChange) => {
+    if (changes.has(path)) {
+      changes.get(path).push(change);
+    } else {
+      changes.set(path, [change]);
+    }
+  };
+
+  // migrate movable on column-level to moving on grid-level for grid, tree grid, hierarchical grid and row island
+  for (const path of update.templateFiles) {
+    const grids = findElementNodes(parseFile(new HtmlParser(), host, path), GRID_TAGS);
+    grids.forEach(grid => {
+      const grid_elem = grid as Element;
+      const columns = grid_elem.children.filter(column => (column as Element).name === 'igx-column' && hasAttribute(column as Element, prop));
+      columns.map(node => getSourceOffset(node as Element))
+        .forEach(offset => {
+          const { startTag, file, node } = offset;
+          const { name, value } = getAttribute(node, prop)[0];
+          if (value === 'true') {
+            gridsToMigrate.add(grid_elem);
+          }
+          const repTxt = file.content.substring(startTag.start, startTag.end);
+          const property = `${name}="${value}"`;
+          const removePropTxt = repTxt.replace(property, '');
+          addChange(file.url, new FileChange(startTag.start, removePropTxt, repTxt, 'replace'));
+        });
+    });
+
+    Array.from(gridsToMigrate).map(node => getSourceOffset(node as Element)).forEach(offset => {
+      const { startTag, file } = offset;
+      addChange(file.url, new FileChange(startTag.end - 1, ' [moving]="true"'));
+    });
+  }
+
+  applyChanges();
+  changes.clear();
+};

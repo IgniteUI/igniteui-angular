@@ -101,20 +101,4 @@ export class IgxPivotRowComponent extends IgxRowDirective {
             super.isCellActive(visibleColumnIndex) :
             false;
     }
-
-    /**
-     * @hidden @internal
-     */
-    public selectPivotRow(col: any, event?: any) {
-        if (this.grid.rowSelection === 'none') {
-            return;
-        }
-        event?.stopPropagation();
-        const key = this.getRowDimensionKey(col);
-        if (this.grid.selectionService.isRowSelected(key)) {
-            this.grid.selectionService.deselectRow(key, event);
-        } else {
-            this.grid.selectionService.selectRowById(key, true, event);
-        }
-    }
 }

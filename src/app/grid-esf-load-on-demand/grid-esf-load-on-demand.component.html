@@ -4,7 +4,7 @@
       <div class="density-chooser">
         <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
       </div>
-      <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'800px'" [displayDensity]="density"
+      <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'800px'" [displayDensity]="density" [moving]="true"
                 [allowFiltering]="true" [rowSelection]="selectionMode" [filterMode]="'excelStyleFilter'"
                 [uniqueColumnValuesStrategy]="columnValuesStrategy">
         <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
@@ -13,11 +13,11 @@
               <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
           </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-column [field]="'ID'" [filterable]="true" [sortable]="true" [movable]="true" [dataType]="'string'"></igx-column>
-        <igx-column [field]="'CompanyName'" [filterable]="true" [sortable]="true" [movable]="true" [dataType]="'string'"></igx-column>
-        <igx-column [field]="'Employees'" [filterable]="true" [sortable]="true" [movable]="true" [dataType]="'number'"></igx-column>
-        <igx-column [field]="'Contract'" [filterable]="true" [sortable]="true" [movable]="true" [dataType]="'boolean'"></igx-column>
-        <igx-column [field]="'DateCreated'" [filterable]="true" [sortable]="true" [movable]="true" [dataType]="'date'"></igx-column>
+        <igx-column [field]="'ID'" [filterable]="true" [sortable]="true" [dataType]="'string'"></igx-column>
+        <igx-column [field]="'CompanyName'" [filterable]="true" [sortable]="true" [dataType]="'string'"></igx-column>
+        <igx-column [field]="'Employees'" [filterable]="true" [sortable]="true" [dataType]="'number'"></igx-column>
+        <igx-column [field]="'Contract'" [filterable]="true" [sortable]="true" [dataType]="'boolean'"></igx-column>
+        <igx-column [field]="'DateCreated'" [filterable]="true" [sortable]="true" [dataType]="'date'"></igx-column>
 
         <!-- <ng-template igxExcelStyleLoading>
           Loading ...

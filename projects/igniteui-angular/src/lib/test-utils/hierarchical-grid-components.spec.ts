@@ -12,16 +12,16 @@ import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
-     [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'">
-        <igx-column field="ID" [groupable]="true" [movable]='true'></igx-column>
+     [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'" [moving]="true">
+        <igx-column field="ID" [groupable]="true"></igx-column>
         <igx-column-group header="Information">
-                <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true" [movable]='true'></igx-column>
-                <igx-column field="ProductName" [groupable]="true" [hasSummary]='true' [movable]='true'></igx-column>
+                <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true"></igx-column>
+                <igx-column field="ProductName" [groupable]="true" [hasSummary]='true'></igx-column>
         </igx-column-group>
         <igx-paginator *ngIf="paging"></igx-paginator>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
             <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
-            <igx-column field="ID" [groupable]="true" [hasSummary]='true' [movable]='true'>
+            <igx-column field="ID" [groupable]="true" [hasSummary]='true'>
                 <ng-template igxHeader let-columnRef="column">
                     <div>
                         <span>ID</span>
@@ -74,16 +74,16 @@ export class IgxHierarchicalGridTestBaseComponent {
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
-     [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'">
-        <igx-column field="ID" [groupable]="true" [movable]='true'></igx-column>
+     [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'" [moving]="true">
+        <igx-column field="ID" [groupable]="true"></igx-column>
         <igx-column-group header="Information">
-                <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true" [movable]='true'></igx-column>
-                <igx-column field="ProductName" [groupable]="true" [hasSummary]='true' [movable]='true'></igx-column>
+                <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true"></igx-column>
+                <igx-column field="ProductName" [groupable]="true" [hasSummary]='true'></igx-column>
         </igx-column-group>
         <igx-paginator *ngIf="paging"></igx-paginator>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
             <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
-            <igx-column field="ID" [groupable]="true" [hasSummary]='true' [movable]='true'>
+            <igx-column field="ID" [groupable]="true" [hasSummary]='true'>
                 <ng-template igxHeader let-columnRef="column">
                     <div>
                         <span>ID</span>
@@ -415,21 +415,21 @@ export class IgxHierarchicalGridExportComponent {
 
 @Component({
     template: `
-    <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid>
-        <igx-column field="CustomerID" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-        <igx-column-group [movable]="true" [pinned]="false" header="General Information">
-            <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-            <igx-column-group [movable]="true" header="Personal Details">
-                <igx-column field="ContactName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                <igx-column field="ContactTitle" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+    <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid [moving]="true">
+        <igx-column field="CustomerID" [sortable]="true" [resizable]="true"></igx-column>
+        <igx-column-group [pinned]="false" header="General Information">
+            <igx-column field="CompanyName" [sortable]="true" [resizable]="true"></igx-column>
+            <igx-column-group header="Personal Details">
+                <igx-column field="ContactName" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column field="ContactTitle" [sortable]="true" [resizable]="true"></igx-column>
             </igx-column-group>
         </igx-column-group>
         <igx-column-group header="Address Information">
             <igx-column-group header="Location">
-                <igx-column field="Address" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                <igx-column field="City" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                <igx-column field="PostalCode" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                <igx-column field="Country" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column field="Address" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column field="City" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column field="PostalCode" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column field="Country" [sortable]="true" [resizable]="true"></igx-column>
             </igx-column-group>
             <igx-column-group header="Contact Information">
                 <igx-column field="Phone" [sortable]="true" [resizable]="true"></igx-column>
@@ -438,19 +438,19 @@ export class IgxHierarchicalGridExportComponent {
         </igx-column-group>
 
         <igx-row-island [key]="'ChildCompanies'" [autoGenerate]="false">
-            <igx-column-group [movable]="true" [pinned]="false" header="General Information">
-                <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                <igx-column-group [movable]="true" header="Personal Details">
-                    <igx-column field="ContactName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="ContactTitle" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+            <igx-column-group [pinned]="false" header="General Information">
+                <igx-column field="CompanyName" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column-group header="Personal Details">
+                    <igx-column field="ContactName" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="ContactTitle" [sortable]="true" [resizable]="true"></igx-column>
                 </igx-column-group>
             </igx-column-group>
             <igx-column-group header="Address Information">
                 <igx-column-group header="Location">
-                    <igx-column field="Address" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="City" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="PostalCode" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="Country" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Address" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="City" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="PostalCode" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Country" [sortable]="true" [resizable]="true"></igx-column>
                 </igx-column-group>
                 <igx-column-group header="Contact Information">
                     <igx-column field="Phone" [sortable]="true" [resizable]="true"></igx-column>

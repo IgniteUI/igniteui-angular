@@ -6,7 +6,7 @@
                 [style.min-width]="rowDimensionColumn.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [style.flex-basis]="rowDimensionColumn.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [rowIndex]="rowIndex"
-                [style.min-height.px]='rowSpan > 1 ? headerHeight : undefined'>
+                [style.min-height.px]='rowSpan > 1 ? headerHeight : undefined' [parent]='this'>
             </igx-pivot-row-dimension-header-group>
     </div>
 </div>

@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input } from '@angular/core';
-
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input } from '@angular/core';
 import { PlatformUtil } from '../../core/utils';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
@@ -14,7 +14,7 @@ import { IPivotDimension } from './pivot-grid.interface';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-header-group',
-    templateUrl: '../headers/grid-header-group.component.html'
+    templateUrl: './pivot-row-dimension-header-group.component.html'
 })
 export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroupComponent {
 
@@ -34,6 +34,13 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     @Input()
     public rowIndex: number;
 
+    /**
+    * @hidden
+    * @internal
+    */
+    @Input()
+    public parent: any;
+
     @HostBinding('attr.id')
     public get headerID() {
         return `${this.grid.id}_-2_${this.rowIndex}_${this.visibleIndex}`;
@@ -42,6 +49,23 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     @HostBinding('attr.title')
     public get title() {
         return this.column.header;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        if (this.grid.rowSelection === 'none') {
+            return;
+        }
+        event?.stopPropagation();
+        const key = this.parent.getRowDimensionKey(this.column as IgxColumnComponent);
+        if (this.grid.selectionService.isRowSelected(key)) {
+            this.grid.selectionService.deselectRow(key, event);
+        } else {
+            this.grid.selectionService.selectRowById(key, true, event);
+        }
     }
 
     /**

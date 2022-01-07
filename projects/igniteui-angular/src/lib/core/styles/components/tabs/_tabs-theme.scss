@@ -58,30 +58,23 @@
 @function igx-tabs-theme(
     $palette: null,
     $schema: $light-schema,
-
     $item-text-color: null,
     $item-background: null,
-
     $item-hover-background: null,
     $item-hover-color: null,
-
     $item-active-color: null,
     $item-active-icon-color: null,
     $item-active-background: null,
     $indicator-color: null,
-
     $button-color: null,
     $button-background: null,
     $button-hover-background: null,
     $button-hover-color: null,
-
     $tab-ripple-color: null,
     $button-ripple-color: null,
     $border-radius: null,
-
     $border-color: null,
     $border-color--hover: null,
-
     $disable-shadow: true
 ) {
     $name: 'igx-tabs';
@@ -280,12 +273,12 @@
     %tabs-header-content {
         flex: 1 1 auto;
         overflow: hidden;
+        scroll-behavior: smooth;
     }
 
     %tabs-header-wrapper {
         position: relative;
         flex-grow: 1;
-        transition: transform .2s $tabs-animation-function;
 
         @if $bootstrap-theme or $indigo-theme {
             &::after {
@@ -345,6 +338,10 @@
 
         &--none {
             display: none;
+        }
+
+        @include if-rtl() {
+            transform: scaleX(-1);
         }
 
         @include igx-ripple($button-ripple-theme);
@@ -594,5 +591,3 @@
         }
     }
 }
-
-

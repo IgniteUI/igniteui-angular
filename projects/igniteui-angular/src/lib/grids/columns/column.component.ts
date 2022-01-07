@@ -422,8 +422,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public disablePinning = false;
     /**
+     * @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.
+     * 
      * Sets/gets whether the column is movable.
      * Default value is `false`.
+     *
      * ```typescript
      * let isMovable = this.column.movable;
      * ```
@@ -433,8 +436,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    @WatchColumnChanges()
-    @notifyChanges()
     @Input()
     public movable = false;
     /**
