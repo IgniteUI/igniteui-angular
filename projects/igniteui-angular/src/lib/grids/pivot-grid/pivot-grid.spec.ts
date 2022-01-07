@@ -788,7 +788,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
              expect(pivotGrid.pivotConfiguration.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
 
         });
-        fit('should allow moving dimension between rows, columns and filters.', () => {
+        it('should allow moving dimension between rows, columns and filters.', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             pivotGrid.pivotConfiguration.filters = [{
                 memberName: 'SellerName',
