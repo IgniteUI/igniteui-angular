@@ -33,6 +33,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxHierarchicalGridExportComponent,
+         IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridModule,
@@ -61,7 +62,8 @@ describe('Excel Exporter', () => {
                 IgxHierarchicalGridExportComponent,
                 MultiColumnHeadersExportComponent,
                 IgxHierarchicalGridMultiColumnHeadersExportComponent,
-                ColumnsAddedOnInitComponent
+                ColumnsAddedOnInitComponent,
+                IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -856,6 +858,15 @@ describe('Excel Exporter', () => {
             const hGrid = fix.componentInstance.hGrid;
             options = createExportOptions('HierarchicalGridMCHExcelExport');
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithMultiColumnHeaders);
+        });
+
+        it('should export hierarchical grid with multi column headers only in the row island', async () => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridMCHExcelExport');
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithMultiColumnHeadersOnlyInIsland);
         });
 
         it('should export hierarchical grid with multi column headers and skipped column', async () => {
