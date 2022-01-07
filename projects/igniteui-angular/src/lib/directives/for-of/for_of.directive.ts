@@ -721,6 +721,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return scroll;
     }
 
+    
+    /**
+     * Returns the index of the element at the specified offset.
+     * ```typescript
+     * this.parentVirtDir.getIndexAtScroll(100);
+     * ```
+     */
+     public getIndexAtScroll(scrollOffset: number) {
+        return this.getIndexAt(scrollOffset, this.sizesCache);
+    }
+
     /**
      * @hidden
      * Function that recalculates and updates cache sizes.

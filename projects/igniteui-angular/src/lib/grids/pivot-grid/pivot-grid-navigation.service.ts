@@ -45,6 +45,19 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             if ((key.includes('down')) && this.activeNode.row < this.findLastDataRowIndex()) {
                 newActiveNode.row = ctrl ? this.findLastDataRowIndex() : this.activeNode.row + 1;
             }
+
+            if (key.includes('left') || key.includes('right')) {
+                const prevRIndex = this.activeNode.row;
+                const prevScrContainer = this.grid.verticalRowDimScrollContainers.toArray()[this.activeNode.column];
+                const src = prevScrContainer.getScrollForIndex(prevRIndex);
+                newActiveNode.row = this.activeNode.mchCache && this.activeNode.mchCache.level === newActiveNode.column ?
+                    this.activeNode.mchCache.visibleIndex :
+                    verticalContainer.getIndexAtScroll(src);
+                newActiveNode.mchCache = {
+                    visibleIndex: this.activeNode.row,
+                    level: this.activeNode.column
+                };
+            }
             this.setActiveNode(newActiveNode);
             verticalContainer.scrollTo(newActiveNode.row);
         } else {
