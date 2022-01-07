@@ -113,19 +113,13 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         return this.rowData[col.field + this.grid.pivotKeys.rowDimensionSeparator + this.grid.pivotKeys.level];
     }
 
-    get rowSpan() {
+    public get rowSpan() {
         return this.rowData[this.rowDimensionData.dimension.memberName + this.grid.pivotKeys.rowDimensionSeparator + 'rowSpan'] || 1;
     }
 
-    get headerHeight() {
+    public get headerHeight() {
         return this.rowSpan * this.grid.rowHeight + (this.rowSpan - 1);
     }
-
-    get isFirst() {
-        const hasRowSpan = this.rowSpan && this.rowSpan > 1;
-        return !hasRowSpan || this.rowData[this.rowDimensionData.dimension.memberName + this.grid.pivotKeys.rowDimensionSeparator + 'first'];
-    }
-
 
     /**
      * @hidden @internal
