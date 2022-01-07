@@ -788,12 +788,14 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
              expect(pivotGrid.pivotConfiguration.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
 
         });
-        it('should allow moving dimension between rows, columns and filters.', () => {
+        fit('should allow moving dimension between rows, columns and filters.', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             pivotGrid.pivotConfiguration.filters = [{
                 memberName: 'SellerName',
                 enabled: true
             }];
+            pivotGrid.pipeTrigger++;
+            pivotGrid.setupColumns();
             fixture.detectChanges();
             const headerRow: IgxPivotHeaderRowComponent = fixture.debugElement.query(By.directive(IgxPivotHeaderRowComponent)).componentInstance;
             const chipAreas = fixture.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
@@ -803,6 +805,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const filterChip = filterChipArea.chipsList.first;
              // start drag in filter chip area.
              headerRow.onDimDragStart({}, filterChipArea);
+            //  pivotGrid.pipeTrigger++;
              fixture.detectChanges();
 
              // check drop here chips are displayed in other areas
@@ -817,6 +820,8 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
                  dragChip: filterChip,
                  owner: dropHereRowChip
              }, rowChipArea, PivotDimensionType.Row);
+            //  pivotGrid.pipeTrigger++;
+             fixture.detectChanges();
              pivotGrid.cdr.detectChanges();
 
              // check dimensions
@@ -827,6 +832,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
              const colChip = colChipArea.chipsList.first;
              // start drag in row chip area.
              headerRow.onDimDragStart({}, rowChipArea);
+            //  pivotGrid.pipeTrigger++;
              fixture.detectChanges();
 
              // drag Seller from row dimension as first chip in columns
@@ -837,6 +843,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
                     offsetX: 0
                 }
             }, PivotDimensionType.Column);
+            // pivotGrid.pipeTrigger++;
             fixture.detectChanges();
             //check drop indicator between chips
             expect((colChip.nativeElement.previousElementSibling as any).style.visibility).toBe('');
@@ -847,7 +854,9 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
                 dragChip: rowSellerChip,
                 owner: colChip
             }, colChipArea, PivotDimensionType.Column);
+            // pivotGrid.pipeTrigger++;
             pivotGrid.cdr.detectChanges();
+            fixture.detectChanges();
 
              // check dimensions
              expect(pivotGrid.pivotConfiguration.filters.filter(x => x.enabled).length).toBe(0);
@@ -864,6 +873,8 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
                 owner: {}
             }, filterChipArea, PivotDimensionType.Filter);
             pivotGrid.cdr.detectChanges();
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
 
             expect(pivotGrid.pivotConfiguration.filters.filter(x => x.enabled).length).toBe(1);
             expect(pivotGrid.pivotConfiguration.rows.filter(x => x.enabled).length).toBe(1);
