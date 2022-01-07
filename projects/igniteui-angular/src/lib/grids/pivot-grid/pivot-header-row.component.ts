@@ -40,6 +40,8 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     public aggregateList: IPivotAggregator[] = [];
 
     public value: IPivotValue;
+    public filterDropdownDimensions: Set<any> = new Set<any>();
+    public filterAreaDimensions: Set<any> = new Set<any>();
     private _dropPos = DropPosition.AfterDropTarget;
     private valueData: Map<string, IPivotAggregator[]>;
     private _subMenuPositionSettings: PositionSettings = {
@@ -95,17 +97,26 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
      */
     public get isFiltersButton(): boolean {
         let chipsWidth = 0;
+        this.filterDropdownDimensions.clear();
+        this.filterAreaDimensions.clear();
         if (this.filterArea?.chipsList && this.filterArea.chipsList.length !== 0) {
-            this.filterArea.chipsList.forEach(chip => {
-                if (this.grid.filterDimensions.find(x => x.memberName === chip.id)) {
-                    // 8 px margin between chips
-                    chipsWidth += chip.nativeElement.getBoundingClientRect().width + 8;
-                }
-            });
             const styles = getComputedStyle(this.pivotFilterContainer.nativeElement);
             const containerPaddings = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
-            chipsWidth += containerPaddings;
-            return chipsWidth > this.grid.pivotRowWidths;
+            chipsWidth += containerPaddings + (this.filtersButton ? this.filtersButton.el.nativeElement.getBoundingClientRect().width : 0);
+            this.filterArea.chipsList.forEach(chip => {
+                const dim = this.grid.filterDimensions.find(x => x.memberName === chip.id);
+                if (dim) {
+                    // 8 px margin between chips
+                    const currentChipWidth = chip.nativeElement.getBoundingClientRect().width + 8;
+                    if (chipsWidth + currentChipWidth < this.grid.pivotRowWidths) {
+                        this.filterAreaDimensions.add(dim);
+                    } else {
+                        this.filterDropdownDimensions.add(dim);
+                    }
+                    chipsWidth += currentChipWidth;
+                }
+            });
+            return this.filterDropdownDimensions.size > 0;
         }
         return false;
     }
@@ -184,14 +195,26 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         this.grid.filteringService.clearFilter(filter.memberName);
         this.grid.pipeTrigger++;
         this.grid.dimensionsChange.emit({ dimensions: this.grid.pivotConfiguration.filters, dimensionCollectionType: PivotDimensionType.Filter });
-        if (this.isFiltersButton) {
+        if (this.isFiltersButton && this.filterDropdownDimensions.has(filter)) {
             const selectedChip = this.dropdownChips.chipsList.find(x => x.selected);
             if (!selectedChip || selectedChip.id === event.owner.id) {
                 this.dropdownChips.chipsList.first.selected = true;
             }
-            this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, undefined, false);
+            this.filterDropdownDimensions.delete(filter)
+            if (this.filterDropdownDimensions.size === 0) {
+                this.grid.filteringService.hideESF();
+            } else {
+                this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, undefined, false);
+            }
         } else {
-            this.grid.filteringService.hideESF();
+            if (this.filterAreaDimensions.has(filter))  {
+                this.filterAreaDimensions.delete(filter)
+                this.grid.filteringService.hideESF();
+            } else if (this.filterDropdownDimensions.size > 0) {
+                this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, undefined, false);
+            } else {
+                this.grid.filteringService.hideESF();
+            }
         }
     }
 
@@ -239,7 +262,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     }
 
     public onFiltersAreaDropdownClick(event, dimension?, shouldReattach = true) {
-        let dim = dimension || this.grid.filterDimensions[0];
+        let dim = dimension || this.filterDropdownDimensions.values().next().value;
         let col;
         while (dim) {
             col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);

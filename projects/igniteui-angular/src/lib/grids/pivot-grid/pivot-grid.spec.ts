@@ -305,7 +305,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[0];
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
-            const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[0];
+            const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[1];
 
             expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
             dropdownIcon.click();
@@ -328,8 +328,8 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             expect((checkBoxes[4].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Larry');
 
             // switch to the `ProductCategory` filters
-            const chipAreaElement = fixture.debugElement.queryAll(By.directive(IgxChipsAreaComponent))[3];
-            const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
+            const chipAreaElement = fixture.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+            const chipComponents = chipAreaElement[4].queryAll(By.directive(IgxChipComponent));
             chipComponents[1].triggerEventHandler('chipClick', {
                 owner: {
                     id: chips[1].id
@@ -363,7 +363,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[0];
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
-            const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[0];
+            const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[1];
 
             expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
             dropdownIcon.click();
@@ -389,6 +389,34 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const expectedHeaders = ['All', 'Clothing', 'Components'];
             const rowDimensionHeaders = rows.map(x => x.rowDimension).flat().map(x => x.header);
             expect(rowDimensionHeaders).toEqual(expectedHeaders);
+        });
+
+        it('should show chips and dropdown if enough space', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration.filters = [
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+            ];
+
+            pivotGrid.pivotConfiguration.rows = [{
+                memberName: 'SellerName',
+                enabled: true
+            }];
+            pivotGrid.pipeTrigger++;
+            pivotGrid.setupColumns();
+            fixture.detectChanges();
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[4];
+            expect(dropdownIcon).not.toBeUndefined();
+            expect(headerRow.querySelector('igx-badge').innerText).toBe('1');
+            const filtersChip = headerRow.querySelector('igx-chip[id="Date"]');
+            expect(filtersChip).not.toBeUndefined();
         });
 
         it('should apply sorting for dimension via row chip', () => {
