@@ -1151,7 +1151,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const count = this.isRemote ? this.totalItemCount : items.length;
         for (i; i < count; i++) {
             size = this._getItemSize(items[i], dimension);
-            if (dimension === 'height') {
+            if (this.igxForScrollOrientation === 'vertical') {
                 this.heightCache.push(size);
             }
             totalSize += size;
@@ -1405,7 +1405,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _getItemSize(item, dimension: string): number {
-        const dim = item[dimension];
+        const dim = item ? item[dimension] : null;
         return typeof dim === 'number' ? dim : parseInt(this.igxForItemSize, 10) || 0;
     }
 
@@ -1478,7 +1478,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     protected get itemsDimension() {
-        return this.igxForScrollOrientation === 'horizontal' ? this.igxForSizePropName : 'height';
+        return this.igxForSizePropName || 'height';
     }
 
     /**
