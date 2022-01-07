@@ -414,7 +414,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         if (this.igxForScrollOrientation === 'vertical') {
             this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
-            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation) || vc.createComponent(VirtualHelperComponent).instance;
+            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
+            if (!this.scrollComponent || !this.document.contains(this.scrollComponent.elementRef.nativeElement)) {
+                this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance
+            }
             this._maxHeight = this._calcMaxBrowserHeight();
             this.scrollComponent.size = this.igxForOf ? this._calcHeight() : 0;
             this.syncScrollService.setScrollMaster(this.igxForScrollOrientation, this.scrollComponent);
@@ -1383,6 +1386,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
     }
 
+    protected _getItemSize(item, dimension: string): number {
+        const dim = item ? item[dimension] : null;
+        return typeof dim === 'number' ? dim : parseInt(this.igxForItemSize, 10) || 0;
+    }
+
     private _updateVScrollOffset() {
         let scrollOffset = 0;
         let currentScrollTop = this.scrollPosition;
@@ -1404,10 +1412,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
     }
 
-    private _getItemSize(item, dimension: string): number {
-        const dim = item ? item[dimension] : null;
-        return typeof dim === 'number' ? dim : parseInt(this.igxForItemSize, 10) || 0;
-    }
 
     private _adjustScrollPositionAfterSizeChange(sizeDiff) {
         // if data has been changed while container is scrolled
@@ -1606,10 +1610,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     protected getItemSize(item) {
         let size = 0;
-        const dimension = this.igxForScrollOrientation === 'horizontal' ?
-            this.igxForSizePropName : 'height';
-        if (dimension === 'height') {
-            size = item[this.igxForSizePropName] || parseInt(this.igxForItemSize, 10) || 0;
+        const dimension = this.igxForSizePropName  || 'height';
+        if (this.igxForScrollOrientation === 'vertical') {
+            size =  this._getItemSize(item, dimension);
             if (item && item.summaries) {
                 size = item.max;
             } else if (item && item.groups && item.height) {
