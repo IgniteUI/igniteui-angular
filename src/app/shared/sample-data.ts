@@ -821,3 +821,185 @@ export const HIERARCHICAL_SAMPLE_DATA = [
         Fax: '011-4988261'
     }
 ];
+
+export const HIERARCHICAL_SAMPLE_DATA_SHORT = [
+    {
+        CompanyName: 'Alfreds Futterkiste',
+        ChildCompanies: [
+            {
+                ID: 'ANATR',
+                CompanyName: 'Ana Trujillo Emparedados y helados',
+                ContactName: 'Ana Trujillo',
+                ContactTitle: 'Owner',
+                Address: 'Avda. de la Constitución 2222',
+                City: 'México D.F.',
+                Region: null,
+                PostalCode: '05021',
+                Country: 'Mexico',
+                Phone: '(5) 555-4729',
+                Fax: '(5) 555-3745',
+                ChildCompanies: [
+                    {
+                        ID: 'AROUT',
+                        CompanyName: 'Around the Horn',
+                        ContactName: 'Thomas Hardy',
+                        ContactTitle: 'Sales Representative',
+                        Address: '120 Hanover Sq.',
+                        City: 'London',
+                        Region: null,
+                        PostalCode: 'WA1 1DP',
+                        Country: 'UK',
+                        Phone: '(171) 555-7788',
+                        Fax: '(171) 555-6750'
+                    },
+                    {
+                        ID: 'BERGS',
+                        CompanyName: 'Berglunds snabbköp',
+                        ContactName: 'Christina Berglund',
+                        ContactTitle: 'Order Administrator',
+                        Address: 'Berguvsvägen 8',
+                        City: 'Luleå',
+                        Region: null,
+                        PostalCode: 'S-958 22',
+                        Country: 'Sweden',
+                        Phone: '0921-12 34 65',
+                        Fax: '0921-12 34 67'
+                    },
+                    {
+                        ID: 'BLAUS',
+                        CompanyName: 'Blauer See Delikatessen',
+                        ContactName: 'Hanna Moos',
+                        ContactTitle: 'Sales Representative',
+                        Address: 'Forsterstr. 57',
+                        City: 'Mannheim',
+                        Region: null,
+                        PostalCode: '68306',
+                        Country: 'Germany',
+                        Phone: '0621-08460',
+                        Fax: '0621-08924'
+                    },
+                    {
+                        ID: 'BLONP',
+                        CompanyName: 'Blondesddsl père et fils',
+                        ContactName: 'Frédérique Citeaux',
+                        ContactTitle: 'Marketing Manager',
+                        Address: '24, place Kléber',
+                        City: 'Strasbourg',
+                        Region: null,
+                        PostalCode: '67000',
+                        Country: 'France',
+                        Phone: '88.60.15.31',
+                        Fax: '88.60.15.32'
+                    },
+                    {
+                        ID: 'BOLID',
+                        CompanyName: 'Bólido Comidas preparadas',
+                        ContactName: 'Martín Sommer',
+                        ContactTitle: 'Owner',
+                        Address: 'C/ Araquil, 67',
+                        City: 'Madrid',
+                        Region: null,
+                        PostalCode: '28023',
+                        Country: 'Spain',
+                        Phone: '(91) 555 22 82',
+                        Fax: '(91) 555 91 99'
+                    },
+                    {
+                        ID: 'BONAP',
+                        CompanyName: 'Bon app',
+                        ContactName: 'Laurence Lebihan',
+                        ContactTitle: 'Owner',
+                        Address: '12, rue des Bouchers',
+                        City: 'Marseille',
+                        Region: null,
+                        PostalCode: '13008',
+                        Country: 'France',
+                        Phone: '91.24.45.40',
+                        Fax: '91.24.45.41'
+                    },
+                    {
+                        ID: 'BOTTM',
+                        CompanyName: 'Bottom-Dollar Markets',
+                        ContactName: 'Elizabeth Lincoln',
+                        ContactTitle: 'Accounting Manager',
+                        Address: '23 Tsawassen Blvd.',
+                        City: 'Tsawassen',
+                        Region: 'BC',
+                        PostalCode: 'T2F 8M4',
+                        Country: 'Canada',
+                        Phone: '(604) 555-4729',
+                        Fax: '(604) 555-3745'
+                    },
+                    {
+                        ID: 'BSBEV',
+                        CompanyName: 'Beverages',
+                        ContactName: 'Victoria Ashworth',
+                        ContactTitle: 'Sales Representative',
+                        Address: 'Fauntleroy Circus',
+                        City: 'London',
+                        Region: null,
+                        PostalCode: 'EC2 5NT',
+                        Country: 'UK',
+                        Phone: '(171) 555-1212',
+                        Fax: null
+                    },
+                ]
+            },
+            {
+                ID: 'ANTON',
+                CompanyName: 'Antonio Moreno Taquería',
+                ContactName: 'Antonio Moreno',
+                ContactTitle: 'Owner',
+                Address: 'Mataderos 2312',
+                City: 'México D.F.',
+                Region: null,
+                PostalCode: '05023',
+                Country: 'Mexico',
+                Phone: '(5) 555-3932',
+                Fax: null,
+                ChildCompanies: [
+                    {
+                        ID: 'CACTU',
+                        CompanyName:
+                            'Cactus Comidas para llevar',
+                        ContactName: 'Patricio Simpson',
+                        ContactTitle: 'Sales Agent',
+                        Address: 'Cerrito 333',
+                        City: 'Buenos Aires',
+                        Region: null,
+                        PostalCode: '1010',
+                        Country: 'Argentina',
+                        Phone: '(1) 135-5555',
+                        Fax: '(1) 135-4892'
+                    },
+                    {
+                        ID: 'CENTC',
+                        CompanyName: 'Centro comercial Moctezuma',
+                        ContactName: 'Francisco Chang',
+                        ContactTitle: 'Marketing Manager',
+                        Address: 'Sierras de Granada 9993',
+                        City: 'México D.F.',
+                        Region: null,
+                        PostalCode: '05022',
+                        Country: 'Mexico',
+                        Phone: '(5) 555-3392',
+                        Fax: '(5) 555-7293'
+                    },
+                    {
+                        ID: 'CHOPS',
+                        CompanyName: 'Chop-suey Chinese',
+                        ContactName: 'Yang Wang',
+                        ContactTitle: 'Owner',
+                        Address: 'Hauptstr. 29',
+                        City: 'Bern',
+                        Region: null,
+                        PostalCode: '3012',
+                        Country: 'Switzerland',
+                        Phone: '0452-076545',
+                        Fax: null
+                    },
+                ]
+            },
+        ]
+    },
+];
