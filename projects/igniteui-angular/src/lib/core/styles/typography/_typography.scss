@@ -193,7 +193,7 @@
 
                     // Add CSS variables to .igx-typography class selector
                     @each $key, $value in $type-style {
-                        --#{$prefix}-#{$category}-#{$key}: #{$value};
+                        --igx-#{$category}-#{$key}: #{$value};
                     }
 
                     // Create a placeholder selector with styles for each
