@@ -23,6 +23,7 @@ export interface RowType {
     selected?: boolean;
     expanded?: boolean;
     deleted?: boolean;
+    addRowUI?: boolean;
     inEditMode?: boolean;
     children?: RowType[];
     parent?: RowType;
