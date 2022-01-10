@@ -1786,6 +1786,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
+                await waitForSelectionChange(fix.componentInstance.grid);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
