@@ -6,7 +6,7 @@ import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.com
 import { IPinningConfig } from '../grids/grid.common';
 import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
 import { IgxActionStripComponent } from '../action-strip/public_api';
-import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
+import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from 'src/app/shared/sample-data';
 import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-grid/hierarchical-grid-base.directive';
 
 @Component({
@@ -465,3 +465,38 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
     public data = HIERARCHICAL_SAMPLE_DATA;
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid>
+        <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+
+        <igx-row-island [key]="'ChildCompanies'" [autoGenerate]="false">
+            <igx-column-group [movable]="true" [pinned]="false" header="General Information">
+                <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column-group [movable]="true" header="Personal Details">
+                    <igx-column field="ContactName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="ContactTitle" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column-group header="Address Information">
+                <igx-column-group header="Location">
+                    <igx-column field="Address" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="City" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="PostalCode" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Country" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                </igx-column-group>
+                <igx-column-group header="Contact Information">
+                    <igx-column field="Phone" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Fax" [sortable]="true" [resizable]="true"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    `
+})
+export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    public data = HIERARCHICAL_SAMPLE_DATA_SHORT;
+}
+
