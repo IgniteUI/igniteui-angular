@@ -164,8 +164,8 @@
 @mixin typography(
     $font-family: $material-typeface,
     $type-scale: $material-type-scale,
-) {
-    @if(is-root()) {
+    $prefix: 'igx') {
+    @if (is-root()) {
         // Use the BEM notation to create a link
         // between the igx-typography class selector
         // and all typographic elements.
@@ -190,6 +190,11 @@
                     // Get the native element that uses typographic styles directly
                     // as mapped in the $category-element-map
                     $e: map.get($category-element-map, $category);
+
+                    // Add CSS variables to .igx-typography class selector
+                    @each $key, $value in $type-style {
+                        --#{$prefix}-#{$category}-#{$key}: #{$value};
+                    }
 
                     // Create a placeholder selector with styles for each
                     // typographic style to be able to easily extend it
@@ -218,3 +223,6 @@
     }
 }
 
+@mixin typography-to-wc($font-family: $material-typeface, $type-scale: $material-type-scale) {
+    @include typography($font-family: $material-typeface, $type-scale: $material-type-scale, $prefix: 'igc');
+}

@@ -250,7 +250,7 @@
 @mixin type-style($scale, $category) {
     $type-category: map.get($scale, $category);
     @each $key, $value in $type-category {
-        #{$key}: #{$value};
+        #{$key}: var(--igx-#{$category}-#{$key});
     }
     @content;
 }
