@@ -45,7 +45,7 @@ abstract class BaseRow implements RowType {
 
     /**
      * Gets if this represents add row UI
-     * 
+     *
      * ```typescript
      * let isAddRow = row.addRowUI;
      * ```
