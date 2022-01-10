@@ -5,7 +5,6 @@ import { WorksheetData } from './worksheet-data';
 import * as JSZip from 'jszip';
 import { yieldingLoop } from '../../core/utils';
 import { HeaderType, ExportRecordType, IExportRecord, IColumnList } from '../exporter-common/base-export-service';
-import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/hierarchical-grid.component';
 
 /**
  * @hidden
@@ -104,7 +103,7 @@ export class WorksheetFile implements IExcelFile {
             const hasUserSetIndex = owner.columns.some(col => col.exportIndex !== undefined);
 
             const height =  worksheetData.options.rowHeight;
-            const rowStyle = isHierarchicalGrid ? ' s="3"' : ''; //check to see if regular grid with MCH is styled
+            const rowStyle = isHierarchicalGrid || hasMultiColumnHeader ? ' s="3"' : '';
             this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
 
             sheetData += `<sheetData>`;
