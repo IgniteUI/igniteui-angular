@@ -19,7 +19,7 @@ import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive'
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/public_api';
-import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
+import { ColumnType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
@@ -92,6 +92,10 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
 
     public get maxContainerHeight() {
         return this.totalDepth * this.grid.renderedRowHeight;
+    }
+
+    public calcHeight(col: ColumnType) {
+        return !col.columnGroup && col.level < this.totalDepth ? (this.totalDepth - col.level) * this.grid.rowHeight : this.grid.rowHeight;
     }
 
 
