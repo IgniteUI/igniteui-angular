@@ -47,13 +47,23 @@ export class WorksheetData {
     }
 
     private initializeData() {
+        this._dataDictionary = new WorksheetDataDictionary(this.columnCount, this.options.columnWidth, this.columnWidths);
+
         if (!this._data || this._data.length === 0) {
+            this._hasMultiColumnHeader = this.owner.columns
+                .some(col => !col.skip && col.headerType === HeaderType.MultiColumnHeader);
+
+            const isHierarchicalGrid = !(typeof(Array.from(this.owners.keys())[0]) === 'string');
+
+            if (isHierarchicalGrid || (this._hasMultiColumnHeader && !this.options.ignoreMultiColumnHeaders)) {
+                this.options.exportAsTable = false;
+            }
+
             return;
         }
 
         this._hasMultiColumnHeader = Array.from(this.owners.values())
             .some(o => o.columns.some(col => !col.skip && col.headerType === HeaderType.MultiColumnHeader));
-
 
         const hasHierarchicalGridRecord = this._data[0].type === ExportRecordType.HierarchicalGridRecord;
 
@@ -63,6 +73,6 @@ export class WorksheetData {
 
         this._isSpecialData = ExportUtilities.isSpecialData(this._data[0].data);
         this._rowCount = this._data.length + 1;
-        this._dataDictionary = new WorksheetDataDictionary(this.columnCount, this.options.columnWidth, this.columnWidths);
+
     }
 }
