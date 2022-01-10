@@ -4,8 +4,10 @@ import {
     Component,
     ElementRef,
     Inject,
+    OnChanges,
     QueryList,
     Renderer2,
+    SimpleChanges,
     ViewChildren
 } from '@angular/core';
 import { first } from 'rxjs/operators';
@@ -38,7 +40,7 @@ import { PivotUtil } from './pivot-util';
     selector: 'igx-pivot-header-row',
     templateUrl: './pivot-header-row.component.html'
 })
-export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
+export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnChanges{
     public aggregateList: IPivotAggregator[] = [];
 
     public value: IPivotValue;
@@ -75,7 +77,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     @ViewChildren('notifyChip')
     public notificationChips: QueryList<IgxChipComponent>;
 
-    public get columnDimensionsByLevel() {
+   public columnDimensionsByLevel: any[];
+
+    public populateColumnDimensionsByLevel() {
         const res = [];
         const columnDimensions = this.grid.columnDimensions;
         const cols = this.unpinnedColumnCollection;
@@ -88,7 +92,13 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             const colsForLevel = cols.filter(x => x.level === lvl);
             res[i] = colsForLevel;
         }
-        return res;
+        this.columnDimensionsByLevel = res;
+    }
+
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.unpinnedColumnCollection) {
+            this.populateColumnDimensionsByLevel();
+        } 
     }
 
     public onDimDragStart(event, area) {
