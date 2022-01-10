@@ -165,7 +165,7 @@
     <div [style.max-height.px]='maxContainerHeight'>
         <div class="igx-grid-thead__group" *ngFor='let dimLevelColumns of columnDimensionsByLevel' [style.width.px]='grid.unpinnedWidth'>
             <ng-template igxGridFor #headerVirtualContainer let-column
-                [igxGridForOf]="dimLevelColumns" [igxForScrollContainer]="grid.parentVirtDir"
+                [igxGridForOf]="dimLevelColumns" [igxGridForOfUniqueSizeCache] = 'true' [igxForScrollContainer]="grid.parentVirtDir"
                 [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges"
                 [igxForSizePropName]="'calcPixelWidth'" [igxForScrollOrientation]="'horizontal'">
                 <igx-grid-header-group [ngClass]="column.headerGroupClasses"

@@ -1427,6 +1427,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.igxForOf = value;
     }
 
+    @Input()
+    public igxGridForOfUniqueSizeCache = false;
+
     public get igxGridForOf() {
         return this.igxForOf;
     }
@@ -1436,7 +1439,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * @internal
      */
     public get sizesCache(): number[] {
-        if (this.syncService.isMaster(this)) {
+        if (this.igxGridForOfUniqueSizeCache || this.syncService.isMaster(this)) {
             return this._sizesCache;
         }
         return this.syncService.sizesCache(this.igxForScrollOrientation);
