@@ -85,6 +85,23 @@
             }
         }
 
+        %form-group-input--box {
+            transform: none;
+        }
+
+        %form-group-prefix,
+        %form-group-prefix--cosy,
+        %form-group-prefix--compact {
+            padding-#{$right}: rem(16px) !important;
+            box-sizing: content-box;
+        }
+
+        %form-group-bundle-main--box,
+        %form-group-bundle-main--box-cosy,
+        %form-group-bundle-main--box-compact {
+            padding-top: 0 !important;
+        }
+
         %igx-expansion-panel__body {
             min-height: rem(128px);
             font-size: rem(14px);
