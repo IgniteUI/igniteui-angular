@@ -82,6 +82,10 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public populateColumnDimensionsByLevel() {
         const res = [];
         const columnDimensions = this.grid.columnDimensions;
+        if (columnDimensions.length === 0) {
+            this.columnDimensionsByLevel = res;
+            return;
+        }
         const cols = this.unpinnedColumnCollection;
         let totalDepth = columnDimensions.map(x => PivotUtil.getDimensionDepth(x)).reduce((acc, val) => acc + val) + 1;
         if (this.grid.hasMultipleValues) {

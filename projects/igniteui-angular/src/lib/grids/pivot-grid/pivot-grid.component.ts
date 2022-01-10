@@ -1030,6 +1030,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.values.length > 1;
     }
 
+    protected horizontalScrollHandler(event) {
+        const scrollLeft = event.target.scrollLeft;
+        this.theadRow.headerContainers.forEach(headerForOf => {
+            headerForOf.onHScroll(scrollLeft);
+        });
+        super.horizontalScrollHandler(event);
+    }
+
     /**
      * @hidden
      */

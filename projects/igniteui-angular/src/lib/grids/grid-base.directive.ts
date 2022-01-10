@@ -7007,7 +7007,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridScroll.emit(args);
     }
 
-    private horizontalScrollHandler(event) {
+    protected horizontalScrollHandler(event) {
         const scrollLeft = event.target.scrollLeft;
         this.headerContainer.onHScroll(scrollLeft);
         this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
