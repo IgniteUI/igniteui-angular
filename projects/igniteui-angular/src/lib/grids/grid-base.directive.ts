@@ -1183,7 +1183,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public footer: ElementRef;
 
     public get headerContainer() {
-        return this.theadRow?.headerContainer;
+        return this.theadRow?.headerForOf;
     }
 
     public get headerSelectorContainer() {

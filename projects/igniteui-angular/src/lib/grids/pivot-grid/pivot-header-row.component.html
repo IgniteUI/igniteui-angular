@@ -162,19 +162,21 @@
                 </igx-grid-header-group>
             </ng-container>
         </ng-container>
-
-        <!-- Unpinned columns collection -->
-        <ng-template igxGridFor #headerVirtualContainer let-column
-            [igxGridForOf]="unpinnedColumnCollection | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir"
-            [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges"
-            [igxForSizePropName]="'calcPixelWidth'" [igxForScrollOrientation]="'horizontal'">
-            <igx-grid-header-group [ngClass]="column.headerGroupClasses"
+    <div>
+        <div class="igx-grid-thead__group" *ngFor='let dimLevelColumns of columnDimensionsByLevel' [style.width.px]='grid.unpinnedWidth'>
+            <ng-template igxGridFor #headerVirtualContainer let-column
+                [igxGridForOf]="dimLevelColumns" [igxForScrollContainer]="grid.parentVirtDir"
+                [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges"
+                [igxForSizePropName]="'calcPixelWidth'" [igxForScrollOrientation]="'horizontal'">
+                <igx-grid-header-group [ngClass]="column.headerGroupClasses"
                 [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                 [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 (pointerdown)="grid.navigation.focusOutRowHeader($event)">
             </igx-grid-header-group>
-        </ng-template>
+            </ng-template>
+        </div>
+    </div>
 
         <!-- Pinned columns collection at the end -->
         <ng-container *ngIf="pinnedColumnCollection.length && !grid.isPinningToStart">

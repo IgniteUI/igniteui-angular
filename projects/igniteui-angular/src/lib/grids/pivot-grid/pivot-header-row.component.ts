@@ -13,14 +13,17 @@ import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/public_api';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
+import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
+import { PivotUtil } from './pivot-util';
 
 /**
  *
@@ -61,8 +64,32 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         super(ref, cdr);
     }
 
+   /** The virtualized part of the header row containing the unpinned header groups. */
+   @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective})
+   public headerContainers: QueryList<IgxGridForOfDirective<IgxGridHeaderGroupComponent>>;
+
+   public get headerForOf() {
+       return this.headerContainers.last;
+   }
+
     @ViewChildren('notifyChip')
     public notificationChips: QueryList<IgxChipComponent>;
+
+    public get columnDimensionsByLevel() {
+        const res = [];
+        const columnDimensions = this.grid.columnDimensions;
+        const cols = this.unpinnedColumnCollection;
+        let totalDepth = columnDimensions.map(x => PivotUtil.getDimensionDepth(x)).reduce((acc, val) => acc + val) + 1;
+        if (this.grid.hasMultipleValues) {
+            totalDepth += 1;
+        }
+        for (let i = 0; i < totalDepth; i++) {
+            const lvl = i;
+            const colsForLevel = cols.filter(x => x.level === lvl);
+            res[i] = colsForLevel;
+        }
+        return res;
+    }
 
     public onDimDragStart(event, area) {
         this.cdr.detectChanges();

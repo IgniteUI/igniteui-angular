@@ -638,6 +638,7 @@ export interface PivotGridType extends GridType {
     dimensionsChange: EventEmitter<IDimensionsChange>;
     valuesChange: EventEmitter<IValuesChange>;
     pivotKeys: IPivotKeys;
+    hasMultipleValues: boolean;
 }
 export interface GridSVGIcon {
     name: string;
