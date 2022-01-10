@@ -103,7 +103,7 @@ export class WorksheetFile implements IExcelFile {
             const hasUserSetIndex = owner.columns.some(col => col.exportIndex !== undefined);
 
             const height =  worksheetData.options.rowHeight;
-            const rowStyle = isHierarchicalGrid || hasMultiColumnHeader ? ' s="3"' : '';
+            const rowStyle = isHierarchicalGrid ? ' s="3"' : '';
             this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
 
             sheetData += `<sheetData>`;
