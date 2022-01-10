@@ -98,6 +98,14 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         return !col.columnGroup && col.level < this.totalDepth ? (this.totalDepth - col.level) * this.grid.rowHeight : this.grid.rowHeight;
     }
 
+    public getVisibility(col: ColumnType, collection: ColumnType[]) {
+        const lvl = this.columnDimensionsByLevel.indexOf(collection)
+        const parentCollection = lvl > 0 ? this.columnDimensionsByLevel[lvl - 1] : [];
+        const duplicate = parentCollection.indexOf(col) !== -1;
+
+        return duplicate ? 'hidden' : 'visible';
+    }
+
 
     public populateColumnDimensionsByLevel() {
         const res = [];
@@ -106,11 +114,15 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
             this.columnDimensionsByLevel = res;
             return;
         }
+        let prev = [];
         const cols = this.unpinnedColumnCollection;
         for (let i = 0; i < this.totalDepth; i++) {
             const lvl = i;
-            const colsForLevel = cols.filter(x => x.level === lvl);
+            let colsForLevel = cols.filter(x => x.level === lvl);
+            const prevChildless = prev.filter(x => !x.columnGroup);
+            colsForLevel = colsForLevel.concat(prevChildless);
             res[i] = colsForLevel;
+            prev = colsForLevel;
         }
         this.columnDimensionsByLevel = res;
     }
