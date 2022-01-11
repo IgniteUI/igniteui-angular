@@ -8,6 +8,7 @@ export class WorksheetData {
     private _rowCount: number;
     private _dataDictionary: WorksheetDataDictionary;
     private _isSpecialData: boolean;
+    private _hasMultiColumnHeader: boolean;
 
     constructor(private _data: IExportRecord[],
                 public options: IgxExcelExporterOptions,
@@ -30,7 +31,7 @@ export class WorksheetData {
     }
 
     public get isEmpty(): boolean {
-        return !this.rowCount || !this.columnCount;
+        return !this.rowCount || !this.columnCount || this.owner.columns.every(c => c.skip);
     }
 
     public get isSpecialData(): boolean {
@@ -41,15 +42,22 @@ export class WorksheetData {
         return this._dataDictionary;
     }
 
+    public get hasMultiColumnHeader(): boolean {
+        return this._hasMultiColumnHeader;
+    }
+
     private initializeData() {
         if (!this._data || this._data.length === 0) {
             return;
         }
 
-        const isMultiColumnHeader = this.owner.columns.some(col => !col.skip && col.headerType === HeaderType.MultiColumnHeader);
+        this._hasMultiColumnHeader = Array.from(this.owners.values())
+            .some(o => o.columns.some(col => !col.skip && col.headerType === HeaderType.MultiColumnHeader));
+
+
         const hasHierarchicalGridRecord = this._data[0].type === ExportRecordType.HierarchicalGridRecord;
 
-        if (hasHierarchicalGridRecord || (isMultiColumnHeader && !this.options.ignoreMultiColumnHeaders)) {
+        if (hasHierarchicalGridRecord || (this._hasMultiColumnHeader && !this.options.ignoreMultiColumnHeaders)) {
             this.options.exportAsTable = false;
         }
 

@@ -183,7 +183,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
 @Component({
     template: `<div>
     <igx-column-actions igxColumnHiding [grid]="grid" *ngIf="showInline"></igx-column-actions>
-    ${ GridTemplateStrings.declareGrid(' #grid [height]="height" [width]="width"', '', ColumnDefinitions.contactInfoGroupableColumns) }
+    ${ GridTemplateStrings.declareGrid(' #grid [height]="height" [width]="width" [moving]="true"', '', ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
@@ -250,7 +250,7 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
 @Component({
     template: `<div>
     <igx-column-actions igxColumnPinning [grid]="grid" *ngIf="showInline"></igx-column-actions>
-    ${ GridTemplateStrings.declareGrid(' #grid [height]="height" ', '', ColumnDefinitions.contactInfoGroupableColumns,
+    ${ GridTemplateStrings.declareGrid(' #grid [height]="height" [moving]="true"', '', ColumnDefinitions.contactInfoGroupableColumns,
         '<igx-grid-toolbar></igx-grid-toolbar>')}
     </div>`
 })

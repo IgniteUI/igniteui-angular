@@ -1884,7 +1884,7 @@ describe('IgxGrid Component Tests #grid', () => {
             prevCellCoords = grid.getPreviousCell(0, 2, (col) => col.editable);
             expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 2 });
             // when the filter function has no matching colums
-            prevCellCoords = grid.getPreviousCell(0, 3, (col) => col.movable);
+            prevCellCoords = grid.getPreviousCell(0, 3, (col) => col.pinned);
             expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 3 });
             // when grid has no data
             grid.filter('col0', 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
