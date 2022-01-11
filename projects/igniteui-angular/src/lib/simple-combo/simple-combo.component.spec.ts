@@ -53,7 +53,7 @@ const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-fdescribe('IgxSimpleCombo', () => {
+describe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxSimpleComboComponent;
     let input: DebugElement;
