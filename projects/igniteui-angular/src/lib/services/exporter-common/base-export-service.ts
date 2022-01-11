@@ -18,6 +18,7 @@ import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/hier
 import { IgxRowIslandComponent } from '../../grids/hierarchical-grid/row-island.component';
 import { IPathSegment } from './../../grids/hierarchical-grid/hierarchical-grid-base.directive';
 import { IgxColumnGroupComponent } from './../../grids/columns/column-group.component';
+import { ColumnType } from '../../grids/common/column.interface';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -60,6 +61,8 @@ export interface IColumnInfo {
     level?: number;
     exportIndex?: number;
     pinnedIndex?: number;
+    columnGroupParent?: ColumnType;
+    columnGroup?: ColumnType;
 }
 /**
  * rowExporting event arguments
@@ -313,8 +316,18 @@ export abstract class IgxBaseExporter {
                         shouldReorderColumns = true;
                     }
 
-                    if (column.skip && index <= indexOfLastPinnedColumn) {
-                        skippedPinnedColumnsCount++;
+                    if (column.skip) {
+                        if (index <= indexOfLastPinnedColumn) {
+                            skippedPinnedColumnsCount++;
+                        }
+
+                        this.calculateColumnSpans(column, mapRecord, column.columnSpan);
+
+                        const nonSkippedColumns = mapRecord.columns.filter(c => !c.skip);
+
+                        if (nonSkippedColumns.length > 0) {
+                            this._ownersMap.get(key).maxLevel = nonSkippedColumns.sort((a, b) => b.level - a.level)[0].level;
+                        }
                     }
 
                     if (this._sort && this._sort.fieldName === column.field) {
@@ -350,35 +363,72 @@ export abstract class IgxBaseExporter {
         });
     }
 
-    private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
-        if (!isSpecialData && record.type !== ExportRecordType.HeaderRecord) {
-            const owner = record.owner === undefined ? DEFAULT_OWNER : record.owner;
+    private calculateColumnSpans(column: IColumnInfo, mapRecord: IColumnList, span: number) {
+        if (column.headerType === HeaderType.MultiColumnHeader && column.skip) {
+            const columnGroupChildren = mapRecord.columns.filter(c => c.columnGroupParent === column.columnGroup);
 
-            const columns = this._ownersMap.get(owner).columns
-                .filter(c => c.headerType !== HeaderType.MultiColumnHeader)
-                .sort((a, b) => a.startIndex - b.startIndex)
-                .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
+            columnGroupChildren.forEach(cgc => {
+                if (cgc.headerType === HeaderType.MultiColumnHeader) {
+                    cgc.columnSpan = 0;
+                    cgc.columnGroupParent = null;
+                    cgc.skip = true;
 
-            record.data = columns.reduce((a, e) => {
-                if (!e.skip) {
-                    let rawValue = resolveNestedPath(record.data, e.field);
-
-                    const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
-
-                    if (e.dataType === 'date' &&
-                        !(rawValue instanceof Date) &&
-                        !shouldApplyFormatter &&
-                        rawValue !== undefined &&
-                        rawValue !== null) {
-                        rawValue = new Date(rawValue);
-                    } else if (e.dataType === 'string' && rawValue instanceof Date) {
-                        rawValue = rawValue.toString();
-                    }
-
-                    a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                    this.calculateColumnSpans(cgc, mapRecord, cgc.columnSpan);
+                } else {
+                    cgc.skip = true;
                 }
-                return a;
-            }, {});
+            });
+        }
+
+        const targetCol = mapRecord.columns.filter(c => column.columnGroupParent !== null && c.columnGroup === column.columnGroupParent)[0];
+        if (targetCol !== undefined) {
+            targetCol.columnSpan -= span;
+
+            if (targetCol.columnGroupParent !== null) {
+                this.calculateColumnSpans(targetCol, mapRecord, span);
+            }
+
+            if (targetCol.columnSpan === 0) {
+                targetCol.skip = true;
+            }
+        }
+    }
+
+    private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
+        if (!isSpecialData) {
+            const owner = record.owner === undefined ? DEFAULT_OWNER : record.owner;
+            const ownerCols = this._ownersMap.get(owner).columns;
+
+            if (record.type !== ExportRecordType.HeaderRecord) {
+                const columns = ownerCols
+                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
+                    .sort((a, b) => a.startIndex - b.startIndex)
+                    .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
+
+                record.data = columns.reduce((a, e) => {
+                    if (!e.skip) {
+                        let rawValue = resolveNestedPath(record.data, e.field);
+
+                        const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
+
+                        if (e.dataType === 'date' &&
+                            !(rawValue instanceof Date) &&
+                            !shouldApplyFormatter &&
+                            rawValue !== undefined &&
+                            rawValue !== null) {
+                            rawValue = new Date(rawValue);
+                        } else if (e.dataType === 'string' && rawValue instanceof Date) {
+                            rawValue = rawValue.toString();
+                        }
+
+                        a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                    }
+                    return a;
+                }, {});
+            } else {
+                const filteredHeaders = ownerCols.filter(c => c.skip).map(c => c.header ? c.header : c.field);
+                record.data = record.data.filter(d => filteredHeaders.indexOf(d) === -1);
+            }
         }
 
         const rowArgs = {
@@ -694,7 +744,7 @@ export abstract class IgxBaseExporter {
 
             if (hasGrouping && !this.options.ignoreGrouping) {
                 const groupsRecords = [];
-                DataUtil.group(cloneArray(gridData), groupedGridGroupingState, grid, groupsRecords);
+                DataUtil.group(cloneArray(gridData), groupedGridGroupingState, grid.groupStrategy, grid, groupsRecords);
                 gridData = groupsRecords;
             }
 
@@ -866,7 +916,9 @@ export abstract class IgxBaseExporter {
                     Number.MAX_VALUE :
                     !column.hidden ?
                         column.grid.pinnedColumns.indexOf(column)
-                        : NaN
+                        : NaN,
+                columnGroupParent: column.parent ? column.parent : null,
+                columnGroup: isMultiColHeader ? column : null
             };
 
             if (this.options.ignoreColumnsOrder) {

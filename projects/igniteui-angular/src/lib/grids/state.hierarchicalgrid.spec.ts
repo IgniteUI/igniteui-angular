@@ -14,7 +14,6 @@ import { IgxHierarchicalGridModule } from './hierarchical-grid/public_api';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { GridSelectionMode } from './common/enums';
-import { wait } from '../test-utils/ui-interactions.spec';
 
 /* eslint-disable max-len */
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
@@ -424,7 +423,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(expansionState);
     });
 
-    it('setState should correctly restore grid columns state from string', async () => {
+    it('setState should correctly restore grid columns state from string', fakeAsync(() => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
@@ -433,12 +432,12 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const initialState = HelperFunctions.buildStateString(grid, 'columns', rootGridColumns, childGridColumns);
         const newColumns = '[{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"363px","header":"Product Name","resizable":false,"searchable":true,"disableHiding":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"363px","header":"ID","resizable":false,"searchable":true,"disableHiding":true}]';
         const newColumnsState = HelperFunctions.buildStateString(grid, 'columns', newColumns, newColumns);
-
+        fix.detectChanges();
         let gridState = state.getState(true, ['columns', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(newColumnsState);
-        await wait();
+        tick();
         fix.detectChanges();
 
         gridState = state.getState(false, ['columns', 'rowIslands']) as IGridState;
@@ -449,7 +448,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         // });
         // gridState = state.getState(true, ['columns', 'rowIslands']);
         // expect(gridState).toBe(newColumnsState);
-    });
+    }));
 });
 
 class HelperFunctions {

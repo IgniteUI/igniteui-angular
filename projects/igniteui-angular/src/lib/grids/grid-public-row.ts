@@ -1,7 +1,6 @@
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { CellType } from './common/cell.interface';
-import { IgxEditRow } from './common/crud.service';
+import { IgxAddRow, IgxEditRow } from './common/crud.service';
 import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
 import { RowType } from './common/row.interface';
 import { IgxGridCell } from './grid-public-cell';
@@ -12,7 +11,6 @@ import { IgxSummaryResult } from './summaries/grid-summary';
 import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import mergeWith from 'lodash.mergewith';
-import { cloneValue } from '../core/utils';
 
 abstract class BaseRow implements RowType {
     public index: number;
@@ -46,6 +44,19 @@ abstract class BaseRow implements RowType {
     }
 
     /**
+     * Gets if this represents add row UI
+     *
+     * ```typescript
+     * let isAddRow = row.addRowUI;
+     * ```
+     */
+    public get addRowUI(): boolean {
+        return !!this.grid.crudService.row &&
+            this.grid.crudService.row.getClassName() === IgxAddRow.name &&
+            this.grid.crudService.row.id === this.key;
+    }
+
+    /**
      * The data record that populates the row.
      *
      * ```typescript
@@ -54,7 +65,7 @@ abstract class BaseRow implements RowType {
      */
     public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(cloneValue(this._data ?? this.grid.dataView[this.index]),
+            return mergeWith(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
                 this.grid.transactions.getAggregatedValue(this.key, false),
                 (objValue, srcValue) => {
                     if (Array.isArray(srcValue)) {
@@ -66,20 +77,17 @@ abstract class BaseRow implements RowType {
     }
 
     /**
-     * @deprecated Use 'data' instead.
+     * @deprecated Use 'data' instead
      *
      * The data record that populates the row
      */
-    @DeprecateProperty(`'rowData' property is deprecated. Use 'data' instead.`)
     public get rowData(): any {
         return this.data;
     }
 
     /**
-     * @deprecated Use 'key' instead.
-     *
+     * @deprecated Use 'key' instead
      */
-    @DeprecateProperty(`'rowID' property is deprecated. Use 'key' instead.`)
     public get rowID(): any {
         return this.key;
     }
@@ -373,7 +381,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      */
     public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(cloneValue(this._data ?? this.grid.dataView[this.index]),
+            return mergeWith(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
                 this.grid.transactions.getAggregatedValue(this.key, false),
                 (objValue, srcValue) => {
                     if (Array.isArray(srcValue)) {

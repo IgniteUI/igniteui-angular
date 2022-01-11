@@ -25,7 +25,6 @@ import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxAddRow, IgxEditRow } from './common/crud.service';
 import { GridType } from './common/grid.interface';
 import mergeWith from 'lodash.mergewith';
-import { cloneValue } from '../core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -56,7 +55,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @Input()
     public get rowData(): any {
         if (this.inEditMode) {
-            return mergeWith(cloneValue(this._rowData), this.grid.transactions.getAggregatedValue(this.rowID, false),
+            return mergeWith(this.grid.dataCloneStrategy.clone(this._rowData), this.grid.transactions.getAggregatedValue(this.rowID, false),
                 (objValue, srcValue) => {
                     if (Array.isArray(srcValue)) {
                         return objValue = srcValue;

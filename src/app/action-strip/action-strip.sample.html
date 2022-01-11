@@ -26,18 +26,18 @@
 
 <div class="sample-column">
     <h5>Grid Pinning Action</h5>
-    <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'"
-        [rowEditable]="true" [primaryKey]="'ID'" [displayDensity]="displayDensity"
-      >
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-        </igx-column>
+    <<igx-grid #grid1 [data]="userData" [width]="'800px'" [height]="'500px'" [dataCloneStrategy]="myClone" [batchEditing]="true"
+    [rowEditable]="true" [primaryKey]="'Id'" [displayDensity]="displayDensity">
+        <igx-column [sortable]="true" field="Id"></igx-column>
+        <igx-column [sortable]="true" field="Name"></igx-column>
+        <igx-column [sortable]="true" field="Age"></igx-column>
 
         <igx-action-strip #actionstrip1 [displayDensity]="displayDensity">
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
         </igx-action-strip>
     </igx-grid>
 </div>
+<button igxButton="outlined" (click)="this.grid1.transactions.commit(this.grid1.data)">Commit</button>
 
 <div class="sample-column">
     <h5>Grid Pinning and Editing Actions</h5>

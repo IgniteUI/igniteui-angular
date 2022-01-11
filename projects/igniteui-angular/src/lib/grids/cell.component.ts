@@ -19,7 +19,6 @@ import { GridBaseAPIService } from './api.service';
 import { PlatformUtil } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from './selection/selection.service';
-import { DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
@@ -663,19 +662,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         protected platformUtil: PlatformUtil) { }
 
     /**
-     * @deprecated
-     * Gets whether the cell is selected.
-     * ```typescript
-     * let isCellSelected = thid.cell.isCellSelected();
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    @DeprecateMethod(`'isCellSelected' is deprecated. Use 'selected' property instead.`)
-    public isCellSelected() {
-        return this.selectionService.selected(this.selectionNode);
-    }
-
-    /**
      * @hidden
      * @internal
      */
@@ -856,7 +842,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public pointerenter = (event: PointerEvent) => {
         const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
-        if (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID || this.grid.navigation.activeNode.gridID !== this.gridID)) {
+        if (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID || this.grid.navigation.activeNode.gridID !== this.gridID)) {
             return;
         }
         const dragMode = this.selectionService.pointerEnter(this.selectionNode, event);
@@ -874,7 +860,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public pointerup = (event: PointerEvent) => {
         const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
-        if (!this.platformUtil.isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID ||
+        if (!this.platformUtil.isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID ||
             this.grid.navigation.activeNode.gridID !== this.gridID))) {
             return;
         }

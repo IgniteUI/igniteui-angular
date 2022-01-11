@@ -34,6 +34,7 @@ export * from './lib/directives/date-time-editor/public_api';
 /**
  * Data operations
  */
+ export * from './lib/data-operations/data-clone-strategy';
 export * from './lib/data-operations/filtering-expression.interface';
 export * from './lib/data-operations/filtering-expressions-tree';
 export * from './lib/data-operations/filtering-condition';
@@ -64,6 +65,7 @@ export * from './lib/carousel/public_api';
 export * from './lib/checkbox/checkbox.component';
 export * from './lib/chips/public_api';
 export * from './lib/combo/public_api';
+export * from './lib/simple-combo/public_api';
 export * from './lib/date-picker/public_api';
 export * from './lib/dialog/dialog.component';
 export * from './lib/drop-down/public_api';
@@ -126,5 +128,6 @@ export { IListResourceStrings } from './lib/core/i18n/list-resources';
 export { ITreeResourceStrings } from './lib/core/i18n/tree-resources';
 export { IInputResourceStrings } from './lib/core/i18n/input-resources';
 export { IChipResourceStrings } from './lib/core/i18n/chip-resources';
+export { IActionStripResourceStrings } from './lib/core/i18n/action-strip-resources';
 export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';

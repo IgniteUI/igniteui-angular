@@ -20,6 +20,8 @@ import { FilteringLogic } from '../data-operations/filtering-expression.interfac
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { ISortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
+import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
+import { isObject } from '../core/utils';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -885,7 +887,7 @@ export class SummariesGroupByComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="600px"  width="900px" [batchEditing]="true" primaryKey="ID"`, '',
-    ColumnDefinitions.summariesGroupByTansColumns)
+        ColumnDefinitions.summariesGroupByTansColumns)
 })
 export class SummariesGroupByTransactionsComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
@@ -1090,6 +1092,12 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
         </igx-column>
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter">
+        </igx-column>
+        <igx-column width="100px" [field]="'ReleaseTime'" [header]="'Release Time'" [filterable]="filterable"
+            dataType="dateTime">
+        </igx-column>
+        <igx-column width="100px" [field]="'Revenue'" [header]="'Revenue'" [filterable]="filterable"
+            dataType="currency">
         </igx-column>
     </igx-grid>`
 })
@@ -1962,7 +1970,7 @@ export class CellEditingScrollTestComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` [width]="width" [height]="height" [paging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
-        '', ColumnDefinitions.productBasic, '', '<igx-paginator></igx-paginator>' )
+        '', ColumnDefinitions.productBasic, '', '<igx-paginator></igx-paginator>')
 })
 export class GridWithUndefinedDataComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true })
@@ -2464,4 +2472,18 @@ export class ColumnsAddedOnInitComponent extends BasicGridComponent implements O
         }
     }
 
+}
+export class ObjectCloneStrategy implements IDataCloneStrategy {
+    public clone(data: any): any {
+        const clonedData = {};
+        if (isObject(data)) {
+            const clone = Object.defineProperties({}, Object.getOwnPropertyDescriptors(data));
+            for (const key of Object.keys(clone)) {
+                clonedData[key] = clone[key];
+            }
+
+            clonedData['cloned'] = true;
+        }
+        return clonedData;
+    }
 }

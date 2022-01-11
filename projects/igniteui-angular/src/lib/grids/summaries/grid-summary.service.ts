@@ -133,7 +133,9 @@ export class IgxGridSummaryService {
         this.summaryHeight = 0;
         this.grid.summaryPipeTrigger++;
         if (this.grid.rootSummariesEnabled) {
+            (this.grid as any).summariesHeight = 0;
             this.retriggerRootPipe++;
+            Promise.resolve().then(() => this.grid.notifyChanges(true));
         }
     }
 
@@ -184,7 +186,8 @@ export class IgxGridSummaryService {
             data = DataUtil.mergeTransactions(
                 cloneArray(this.grid.data),
                 this.grid.transactions.getAggregatedChanges(true),
-                this.grid.primaryKey
+                this.grid.primaryKey,
+                this.grid.dataCloneStrategy
             );
         }
         const rowData = this.grid.primaryKey ? data.find(rec => rec[this.grid.primaryKey] === rowID) : rowID;

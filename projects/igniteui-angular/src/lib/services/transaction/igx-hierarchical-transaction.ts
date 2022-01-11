@@ -11,7 +11,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
     public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._states.forEach((state: S, key: any) => {
-            const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : cloneValue(state.value);
+            const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : this.cloneStrategy.clone(state.value);
             this.clearArraysFromObject(value);
             result.push({ id: key, path: state.path, newValue: value, type: state.type } as T);
         });
@@ -24,7 +24,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
             if (id !== undefined) {
                 transactions = transactions.filter(t => t.id === id);
             }
-            DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKeyOrId, true);
+            DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKeyOrId, this.cloneStrategy, true);
             this.clear(id);
         } else {
             super.commit(data, primaryKeyOrId);
