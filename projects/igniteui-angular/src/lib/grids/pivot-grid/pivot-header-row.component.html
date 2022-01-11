@@ -163,18 +163,19 @@
             </ng-container>
         </ng-container>
     <div [style.max-height.px]='maxContainerHeight'>
-        <div style='overflow:visible;' [style.height.px]='grid.rowHeight' class="igx-grid-thead__group" *ngFor='let dimLevelColumns of columnDimensionsByLevel' [style.width.px]='grid.unpinnedWidth'>
+        <div style='overflow:visible;' [style.height.px]='grid.rowHeight' class="igx-grid-thead__group" *ngFor='let dimLevelColumns of columnDimensionsByLevel; let i = index' [style.width.px]='grid.unpinnedWidth'>
             <ng-template igxGridFor #headerVirtualContainer let-column
                 [igxGridForOf]="dimLevelColumns" [igxGridForOfUniqueSizeCache] = 'true' [igxForScrollContainer]="grid.parentVirtDir"
                 [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges"
                 [igxForSizePropName]="'calcPixelWidth'" [igxForScrollOrientation]="'horizontal'">
                 <igx-grid-header-group [ngClass]="column.headerGroupClasses"
-                [style.height.px]='calcHeight(column)'
+                [style.height.px]='calcHeight(column, i)'
                 [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                 [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                (pointerdown)="grid.navigation.focusOutRowHeader($event)"
-                [style.visibility]='getVisibility(column, dimLevelColumns)'>
+                [class.igx-grid__tr-pivot--columnLeaf] = 'isDuplicateOfExistingParent(column, i)'
+                [class.igx-grid__tr-pivot--columnMultiRowSpan] = 'isMultiRow(column, i)'
+                >
             </igx-grid-header-group>
             </ng-template>
         </div>

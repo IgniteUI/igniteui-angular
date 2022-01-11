@@ -2977,6 +2977,17 @@
     %igx-grid__tr-pivot-toggle-icons {
         display: inline-flex !important;
     }
+
+    %igx-grid__tr-pivot--columnLeaf {
+        box-shadow: none !important;
+    }
+    %igx-grid__tr-pivot--columnMultiRowSpan {
+        igx-grid-header {
+            > * {
+                visibility: hidden;
+            }
+        }
+    }
     // Pivot grid END
 }
 

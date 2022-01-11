@@ -94,16 +94,20 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         return this.totalDepth * this.grid.renderedRowHeight;
     }
 
-    public calcHeight(col: ColumnType) {
-        return !col.columnGroup && col.level < this.totalDepth ? (this.totalDepth - col.level) * this.grid.rowHeight : this.grid.rowHeight;
+    public calcHeight(col: ColumnType, index: number) {
+        return !col.columnGroup && col.level < this.totalDepth && col.level === index ? (this.totalDepth - col.level) * this.grid.rowHeight : this.grid.rowHeight;
     }
 
-    public getVisibility(col: ColumnType, collection: ColumnType[]) {
-        const lvl = this.columnDimensionsByLevel.indexOf(collection)
+    public isDuplicateOfExistingParent(col: ColumnType, lvl: number) {
         const parentCollection = lvl > 0 ? this.columnDimensionsByLevel[lvl - 1] : [];
         const duplicate = parentCollection.indexOf(col) !== -1;
 
-        return duplicate ? 'hidden' : undefined;
+        return duplicate;
+    }
+    
+    public isMultiRow(col: ColumnType, lvl: number) {
+        const isLeaf = !col.columnGroup;
+        return isLeaf && lvl !== this.totalDepth - 1 ;
     }
 
 
