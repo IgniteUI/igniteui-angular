@@ -20,8 +20,7 @@ export class IgxPivotFilteringService extends IgxFilteringService {
         const dim = allDimensions.find(x => x.memberName === fieldName || x.member === fieldName);
         dim.filter = undefined;
         grid.filteringPipeTrigger++;
-        if (PivotUtil.flatten(config.columns).indexOf(dim) !== -1 ||
-            PivotUtil.flatten(config.filters).indexOf(dim) !== -1) {
+        if (allDimensions.indexOf(dim) !== -1) {
             // update columns
             (grid as any).setupColumns();
         }
@@ -43,8 +42,7 @@ export class IgxPivotFilteringService extends IgxFilteringService {
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         dim.filter = filteringTree;
         grid.filteringPipeTrigger++;
-        if (PivotUtil.flatten(config.columns).indexOf(dim) !== -1 ||
-            PivotUtil.flatten(config.filters).indexOf(dim) !== -1) {
+        if (allDimensions.indexOf(dim) !== -1) {
             // update columns
             (grid as any).setupColumns();
         }
