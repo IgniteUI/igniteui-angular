@@ -35,7 +35,7 @@ import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange } from '../pivot-grid/pivot-grid.interface';
-
+import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -97,7 +97,7 @@ export interface RowType {
     parent?: RowType;
     hasChildren?: boolean;
     treeRow? : ITreeGridRecord;
-    addRowUI?: any;
+    addRowUI?: boolean;
     focused?: boolean;
     grid: GridType;
     onRowSelectorClick?: (event: MouseEvent) => void;
@@ -144,6 +144,7 @@ export interface ColumnType {
     resizable: boolean;
     searchable: boolean;
     columnGroup: boolean;
+    /** @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.*/
     movable: boolean;
     groupable: boolean;
     sortable: boolean;
@@ -269,7 +270,9 @@ export interface GridType extends IGridDataBindable {
     summaryPipeTrigger: number;
     filteringPipeTrigger: number;
     hasColumnLayouts: boolean;
+    moving: boolean;
     isLoading: boolean;
+    dataCloneStrategy: IDataCloneStrategy;
 
     gridAPI: GridServiceType;
 
