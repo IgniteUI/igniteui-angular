@@ -32,7 +32,7 @@ import { RowType } from '../common/row.interface';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
 import { CellType } from '../common/cell.interface';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
+import { IGridGroupingStrategy } from '../../data-operations/grouping-strategy';
 
 let NEXT_ID = 0;
 
@@ -155,8 +155,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxGridDetailTemplateDirective, { read: TemplateRef, static: false })
-    public detailTemplate: TemplateRef<any> = null;
+    @ContentChildren(IgxGridDetailTemplateDirective, { read: TemplateRef })
+    public detailTemplate: QueryList<TemplateRef<any>> = new QueryList();
 
     /**
      * @hidden @internal
@@ -206,12 +206,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
     /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxGridDetailTemplateDirective, { read: IgxGridDetailTemplateDirective, static: false })
-    protected gridDetailsTemplate: IgxGridDetailTemplateDirective;
-
-    /**
      * @hidden
      * @internal
      */
@@ -247,6 +241,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Does not include children of collapsed group rows.
      */
     public groupingFlatResult: any[];
+
+    /** @hidden @internal */
+    public trackChanges: (index, rec) => any;
     /**
      * @hidden
      */
@@ -263,6 +260,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      */
     protected _groupAreaTemplate: TemplateRef<any>;
+    /**
+     * @hidden
+     */
+    protected _groupStrategy: IGridGroupingStrategy;
     /**
      * @hidden
      */
@@ -456,6 +457,25 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
+     * Gets/Sets the grouping strategy of the grid.
+     *
+     * @remarks The default IgxGrouping extends from IgxSorting and a custom one can be used as a `sortStrategy` as well.
+     *
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [groupStrategy]="groupStrategy"></igx-grid>
+     * ```
+     */
+    @Input()
+    public get groupStrategy(): IGridGroupingStrategy {
+        return this._groupStrategy;
+    }
+
+    public set groupStrategy(value: IGridGroupingStrategy) {
+        this._groupStrategy = value;
+    }
+
+    /**
      * Gets/Sets the message displayed inside the GroupBy drop area where columns can be dragged on.
      *
      * @remarks
@@ -478,7 +498,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * @deprecated
+     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
+     *
      * Returns a `CellType` object that matches the conditions.
      *
      * @example
@@ -488,7 +509,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param rowIndex
      * @param index
      */
-    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
@@ -540,16 +560,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public trackChanges(index, rec) {
-        if (rec.detailsData !== undefined) {
-            return rec.detailsData;
-        }
-        return rec;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public detailsViewFocused(container, rowIndex) {
         this.navigation.setActiveNode({ row: rowIndex });
     }
@@ -558,7 +568,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public get hasDetails() {
-        return !!this.gridDetailsTemplate;
+        return !!this.detailTemplate.length;
     }
 
     /**
@@ -919,6 +929,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (this.groupTemplate) {
             this._groupRowTemplate = this.groupTemplate.template;
         }
+
+        this.detailTemplate.changes.subscribe(() =>
+            this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec));
 
         if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);

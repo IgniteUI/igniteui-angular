@@ -25,6 +25,18 @@ import {
     swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
 } from '../animations/main';
 import { setImmediate } from './setImmediate';
+import { isDevMode } from '@angular/core';
+
+/**
+ * @hidden
+ */
+export const showMessage = (message: string, isMessageShown: boolean): boolean => {
+    if (!isMessageShown && isDevMode()) {
+        console.warn(message);
+    }
+
+    return true;
+};
 
 export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
 
@@ -69,6 +81,22 @@ export const cloneHierarchicalArray = (array: any[], childDataKey: any): any[] =
         result.push(clonedItem);
     }
     return result;
+};
+
+/**
+ * Creates an object with prototype from provided source and copies
+ * all properties descriptors from provided source
+ *
+ * @param obj Source to copy prototype and descriptors from
+ * @returns New object with cloned prototype and property descriptors
+ */
+ export const copyDescriptors = (obj) => {
+    if (obj) {
+        return Object.create(
+            Object.getPrototypeOf(obj),
+            Object.getOwnPropertyDescriptors(obj)
+            );
+    }
 };
 
 /**
@@ -154,7 +182,7 @@ export const uniqueDates = (columnValues: any[]) => columnValues.reduce((a, c) =
  * @returns true if provided variable is Object
  * @hidden
  */
-export const isObject = (value: any): boolean => value && value.toString() === '[object Object]';
+ export const isObject = (value: any): boolean => !!(value && value.toString() === '[object Object]');
 
 /**
  * Checks if provided variable is Date

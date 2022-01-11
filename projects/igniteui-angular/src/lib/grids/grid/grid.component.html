@@ -71,7 +71,7 @@
         | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
-        | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
+        | gridGroupBy:groupingExpressions:groupingExpansionState:groupStrategy:groupsExpanded:id:groupsRecords:pipeTrigger
         | gridPaging:paginator?.page:paginator?.perPage:id:pipeTrigger
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
         | gridDetails:hasDetails:expansionStates:pipeTrigger
@@ -124,7 +124,7 @@
                                 <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
                         </ng-container>
                         <ng-template
-                    [ngTemplateOutlet]='detailTemplate'
+                    [ngTemplateOutlet]='detailTemplate.first'
                     [ngTemplateOutletContext]='getDetailsContext(rowData, rowIndex)'>
                     </ng-template>
                 </div>

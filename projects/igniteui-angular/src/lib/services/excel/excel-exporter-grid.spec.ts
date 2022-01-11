@@ -33,6 +33,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxHierarchicalGridExportComponent,
+         IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridModule,
@@ -61,7 +62,8 @@ describe('Excel Exporter', () => {
                 IgxHierarchicalGridExportComponent,
                 MultiColumnHeadersExportComponent,
                 IgxHierarchicalGridMultiColumnHeadersExportComponent,
-                ColumnsAddedOnInitComponent
+                ColumnsAddedOnInitComponent,
+                IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -830,6 +832,22 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithFrozenHeaders);
         });
+
+        it('should export hierarchical grid with skipped columns', async () => {
+            exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
+                if (args.header === 'Debut' ||
+                    args.header === 'Billboard Review' ||
+                    args.header === 'Album' ||
+                    args.header === 'Tickets Sold' ||
+                    args.header === 'Released') {
+                    args.cancel = true;
+                  }
+            });
+
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithSkippedColumns);
+        });
     });
 
     describe('', () => {
@@ -840,6 +858,66 @@ describe('Excel Exporter', () => {
             const hGrid = fix.componentInstance.hGrid;
             options = createExportOptions('HierarchicalGridMCHExcelExport');
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithMultiColumnHeaders);
+        });
+
+        it('should export hierarchical grid with multi column headers only in the row island', async () => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridMCHExcelExport');
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithMultiColumnHeadersOnlyInIsland);
+        });
+
+        it('should export hierarchical grid with multi column headers and skipped column', async () => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridMCHExcelExport');
+
+            exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
+                if (args.field === 'ContactTitle') {
+                    args.cancel = true;
+                }
+            });
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportMultiColumnHeadersDataWithSkippedColumn);
+        });
+
+        it('should export hierarchical grid with multi column headers and skipped parent multi column header', async () => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridMCHExcelExport');
+
+            exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
+                if (args.header === 'Address Information') {
+                    args.cancel = true;
+                }
+            });
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportMultiColumnHeadersDataWithSkippedParentMCH);
+        });
+
+        it('should export empty file when all parent multi column headers are skipped', async () => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridMCHExcelExport');
+
+            exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
+                if (args.header === 'General Information' || args.header === 'Address Information' || args.field === 'CustomerID') {
+                    args.cancel = true;
+                }
+            });
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportMultiColumnHeadersDataWithAllParentsSkipped);
         });
     });
 

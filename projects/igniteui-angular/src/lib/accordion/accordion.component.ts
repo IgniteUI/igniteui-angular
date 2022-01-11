@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, ContentChildren, EventEmitter,
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter,
     HostBinding, Input, OnDestroy, Output, QueryList } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -113,7 +113,16 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      * ```
      */
     @Input()
-    public singleBranchExpand = false;
+    public get singleBranchExpand(): boolean {
+        return this._singleBranchExpand;
+    }
+
+    public set singleBranchExpand(val: boolean) {
+        this._singleBranchExpand = val;
+        if (val) {
+            this.collapseAllExceptLast();
+        }
+    }
 
     /**
      * Emitted before a panel is expanded.
@@ -196,20 +205,26 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     private _panels!: QueryList<IgxExpansionPanelComponent>;
     private _animationSettings!: ToggleAnimationSettings;
     private _expandedPanels!: Set<IgxExpansionPanelComponent>;
+    private _expandingPanels!: Set<IgxExpansionPanelComponent>;
     private _destroy$ = new Subject<void>();
     private _unsubChildren$ = new Subject<void>();
     private _enabledPanels!: IgxExpansionPanelComponent[];
+    private _singleBranchExpand = false;
 
-    constructor() { }
+    constructor(private cdr: ChangeDetectorRef) { }
 
     /** @hidden @internal **/
     public ngAfterContentInit(): void {
         this.updatePanelsAnimation();
+        if (this.singleBranchExpand) {
+            this.collapseAllExceptLast();
+        }
     }
 
     /** @hidden @internal **/
     public ngAfterViewInit(): void {
         this._expandedPanels = new Set<IgxExpansionPanelComponent>(this._panels.filter(panel => !panel.collapsed));
+        this._expandingPanels = new Set<IgxExpansionPanelComponent>();
         this._panels.changes.pipe(takeUntil(this._destroy$)).subscribe(() => {
             this.subToChanges();
         });
@@ -252,6 +267,16 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      */
     public collapseAll(): void {
         this.panels.forEach(panel => panel.collapse());
+    }
+
+    private collapseAllExceptLast(): void {
+        const lastExpanded = this.panels?.filter(p => !p.collapsed && !p.header.disabled).pop();
+        this.panels?.forEach((p: IgxExpansionPanelComponent) => {
+            if (p !== lastExpanded && !p.header.disabled) {
+                p.collapsed = true;
+            }
+        });
+		this.cdr.detectChanges();
     }
 
     private handleKeydown(event: KeyboardEvent, panel: IgxExpansionPanelComponent): void {
@@ -320,11 +345,18 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         this._panels.forEach(panel => {
             panel.contentExpanded.pipe(takeUntil(this._unsubChildren$)).subscribe((args: IExpansionPanelEventArgs) => {
                 this._expandedPanels.add(args.owner);
+                this._expandingPanels.delete(args.owner);
                 const evArgs: IAccordionEventArgs = { ...args, owner: this, panel: args.owner };
                 this.panelExpanded.emit(evArgs);
             });
             panel.contentExpanding.pipe(takeUntil(this._unsubChildren$)).subscribe((args: IExpansionPanelCancelableEventArgs) => {
                 if (args.cancel) {
+                    return;
+                }
+                const evArgs: IAccordionCancelableEventArgs = { ...args, owner: this, panel: args.owner };
+                this.panelExpanding.emit(evArgs);
+                if (evArgs.cancel) {
+                    args.cancel = true;
                     return;
                 }
                 if (this.singleBranchExpand) {
@@ -333,15 +365,23 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
                             p.collapse();
                         }
                     });
-                }
-                const evArgs: IAccordionCancelableEventArgs = { ...args, owner: this, panel: args.owner };
-                this.panelExpanding.emit(evArgs);
-                if (evArgs.cancel) {
-                    args.cancel = true;
+                    this._expandingPanels.forEach(p => {
+                        if (!p.header.disabled) {
+                            if (!p.animationSettings.closeAnimation) {
+                                p.openAnimationPlayer?.reset();
+                            }
+                            if (!p.animationSettings.openAnimation) {
+                                p.closeAnimationPlayer?.reset();
+                            }
+                            p.collapse();
+                        }
+                    });
+                    this._expandingPanels.add(args.owner);
                 }
             });
             panel.contentCollapsed.pipe(takeUntil(this._unsubChildren$)).subscribe((args: IExpansionPanelEventArgs) => {
                 this._expandedPanels.delete(args.owner);
+                this._expandingPanels.delete(args.owner);
                 const evArgs: IAccordionEventArgs = { ...args, owner: this, panel: args.owner };
                 this.panelCollapsed.emit(evArgs);
             });

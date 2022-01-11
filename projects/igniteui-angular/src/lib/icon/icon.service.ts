@@ -3,6 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
+import { PlatformUtil } from '../core/utils';
 
 /**
  * Event emitted when a SVG icon is loaded through
@@ -48,14 +49,19 @@ export class IgxIconService {
     private _familyAliases = new Map<string, string>();
     private _cachedSvgIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
-    private _domParser = new DOMParser();
+    private _domParser: DOMParser;
 
     constructor(
         @Optional() private _sanitizer: DomSanitizer,
         @Optional() private _httpClient: HttpClient,
-        @Optional() @Inject(DOCUMENT) private _document: any
+        @Optional() private _platformUtil: PlatformUtil,
+        @Optional() @Inject(DOCUMENT) private _document: any,
     ) {
         this.iconLoaded = this._iconLoaded.asObservable();
+
+        if(this._platformUtil?.isBrowser) {
+            this._domParser = new DOMParser();
+        }
     }
 
     /**
@@ -188,7 +194,7 @@ export class IgxIconService {
     private cacheSvgIcon(name: string, value: string, family = this._family, stripMeta: boolean) {
         family = !!family ? family : this._family;
 
-        if (name && value) {
+        if (this._platformUtil?.isBrowser && name && value) {
             const doc = this._domParser.parseFromString(value, 'image/svg+xml');
             const svg = doc.querySelector('svg') as SVGElement;
 

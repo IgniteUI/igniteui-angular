@@ -104,6 +104,7 @@ describe('Rendering Tests', () => {
 
             expect(accordion.panelCollapsed.emit).toHaveBeenCalledTimes(3);
 
+            accordion.panels[0].expand();
             accordion.panels[1].expand();
             tick();
             fix.detectChanges();
@@ -164,6 +165,29 @@ describe('Rendering Tests', () => {
             expect(accordion.panels.filter(panel => panel.collapsed).length).toEqual(4);
             expect(accordion.panelCollapsed.emit).toHaveBeenCalledTimes(5);
         }));
+
+        it(`Should collapse all expanded and not disabled panels except for the last one when setting singleBranchExpand to true`, () => {
+            expect(accordion.panels[0].collapsed).toBeTrue();
+            expect(accordion.panels[1].collapsed).toBeTrue();
+            expect(accordion.panels[2].collapsed).toBeFalse();
+            expect(accordion.panels[3].collapsed).toBeFalse();
+
+            accordion.panels[1].collapsed = false;
+            fix.detectChanges();
+
+            expect(accordion.panels[0].collapsed).toBeTrue();
+            expect(accordion.panels[1].collapsed).toBeFalse();
+            expect(accordion.panels[2].collapsed).toBeFalse();
+            expect(accordion.panels[3].collapsed).toBeFalse();
+
+            accordion.singleBranchExpand = true;
+            fix.detectChanges();
+
+            expect(accordion.panels[0].collapsed).toBeTrue();
+            expect(accordion.panels[1].collapsed).toBeTrue();
+            expect(accordion.panels[2].collapsed).toBeFalse();
+            expect(accordion.panels[3].collapsed).toBeFalse();
+        });
 
         it('Should emit ing and ed events when expand panel state is toggled', fakeAsync(() => {
             spyOn(accordion.panelExpanded, 'emit').and.callThrough();

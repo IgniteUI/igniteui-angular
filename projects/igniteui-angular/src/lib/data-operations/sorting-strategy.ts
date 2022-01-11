@@ -11,6 +11,7 @@ import { GridType } from '../grids/common/grid.interface';
 const DATE_TYPE = 'date';
 const TIME_TYPE = 'time';
 const DATE_TIME_TYPE = 'dateTime';
+const STRING_TYPE = 'string';
 export interface ISortingStrategy {
     sort: (data: any[],
            fieldName: string,
@@ -113,7 +114,8 @@ export class IgxSorting implements IGridSortingStrategy {
             const column = grid ? grid.getColumnByName(expressions[level].fieldName) : null;
             const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
             const isTime = column?.dataType === TIME_TYPE;
-            const group = this.groupedRecordsByExpression(data, i, expressions[level], isDate);
+            const isString = column?.dataType === STRING_TYPE;
+            const group = this.groupedRecordsByExpression(data, i, expressions[level], isDate, isString);
             const groupRow: IGroupByRecord = {
                 expression: expressions[level],
                 level,
@@ -150,8 +152,20 @@ export class IgxSorting implements IGridSortingStrategy {
                     fullResult.data.push(groupItem);
                 }
                 if (expanded) {
-                    metadata.push(...fullResult.metadata.slice(fullResult.metadata.length - group.length));
-                    result.push(...fullResult.data.slice(fullResult.data.length - group.length));
+                    // Replaced object destructing as in a single big group scenario
+                    // it hits the max number of arguments for a function the underlying JS engine
+                    // supports.
+                    let j = fullResult.metadata.length - group.length;
+
+                    for (; j < fullResult.metadata.length; j++) {
+                        metadata.push(fullResult.metadata[j]);
+                    }
+
+                    j = fullResult.data.length - group.length;
+
+                    for (; j < fullResult.data.length; j++) {
+                        result.push(fullResult.data[j]);
+                    }
                 }
             }
             i += group.length;
@@ -173,16 +187,23 @@ export class IgxSorting implements IGridSortingStrategy {
     private groupedRecordsByExpression(data: any[],
             index: number,
             expression: IGroupingExpression,
-            isDate: boolean = false): any[] {
+            isDate: boolean = false,
+            isString: boolean): any[] {
         const res = [];
         const key = expression.fieldName;
         const len = data.length;
-        const groupval = this.getFieldValue(data[index], key, isDate);
+        let groupval = this.getFieldValue(data[index], key, isDate);
         res.push(data[index]);
         index++;
         const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
         for (let i = index; i < len; i++) {
-            if (comparer(this.getFieldValue(data[i], key, isDate), groupval) === 0) {
+            let fieldValue = this.getFieldValue(data[i], key, isDate);
+            if (expression.ignoreCase && isString) {
+                // when column's dataType is string but the value is number
+                fieldValue = fieldValue?.toString().toLowerCase();
+                groupval = groupval?.toString().toLowerCase();
+            }
+            if (comparer(fieldValue, groupval) === 0) {
                 res.push(data[i]);
             } else {
                 break;
@@ -212,13 +233,14 @@ export class IgxSorting implements IGridSortingStrategy {
         const column = grid?.getColumnByName(expr.fieldName);
         const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
         const isTime = column?.dataType === TIME_TYPE;
+        const isString = column?.dataType === STRING_TYPE;
         data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate, isTime);
         if (expressionIndex === exprsLen - 1) {
             return data;
         }
         // in case of multiple sorting
         for (i = 0; i < dataLen; i++) {
-            gbData = this.groupedRecordsByExpression(data, i, expr, isDate);
+            gbData = this.groupedRecordsByExpression(data, i, expr, isDate, isString);
             gbDataLen = gbData.length;
             if (gbDataLen > 1) {
                 gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, grid);

@@ -214,7 +214,8 @@ export class IgxGridTransactionPipe implements PipeTransform {
             const result = DataUtil.mergeTransactions(
                 cloneArray(collection),
                 grid.transactions.getAggregatedChanges(true),
-                grid.primaryKey);
+                grid.primaryKey,
+                grid.dataCloneStrategy);
             return result;
         }
         return collection;
@@ -253,6 +254,7 @@ export class IgxHasVisibleColumnsPipe implements PipeTransform {
 
 }
 
+
 /**
  * @hidden
  */
@@ -267,20 +269,25 @@ export class IgxGridRowPinningPipe implements PipeTransform {
     public transform(collection: any[], id: string, isPinned = false, _pipeTrigger: number) {
         const grid = this.gridAPI.grid;
 
-        if (grid.hasPinnedRecords && isPinned) {
-            const result = collection.filter(rec => !grid.isSummaryRow(rec) && grid.isRecordPinned(rec));
-            result.sort((rec1, rec2) => grid.getInitialPinnedIndex(rec1) - grid.getInitialPinnedIndex(rec2));
-            return result;
-        }
+        const inner = () => {
+            if (grid.hasPinnedRecords && isPinned) {
+                const result = collection.filter(rec => !grid.isSummaryRow(rec) && grid.isRecordPinned(rec));
+                result.sort((rec1, rec2) => grid.getInitialPinnedIndex(rec1) - grid.getInitialPinnedIndex(rec2));
+                return result;
+            }
 
-        grid.unpinnedRecords = collection;
-        if (!grid.hasPinnedRecords) {
-            grid.pinnedRecords = [];
-            return isPinned ? [] : collection;
-        }
+            grid.unpinnedRecords = collection;
+            if (!grid.hasPinnedRecords) {
+                grid.pinnedRecords = [];
+                return isPinned ? [] : collection;
+            }
 
-        return collection.map((rec) => !grid.isSummaryRow(rec) &&
-            grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true } : rec);
+            return collection.map((rec) => !grid.isSummaryRow(rec) &&
+                grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true } : rec);
+        };
+        const r = inner();
+        (grid as any).buildDataView();
+        return r;
     }
 }
 
