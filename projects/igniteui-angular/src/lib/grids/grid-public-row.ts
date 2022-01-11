@@ -1,6 +1,6 @@
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { CellType } from './common/cell.interface';
-import { IgxEditRow } from './common/crud.service';
+import { IgxAddRow, IgxEditRow } from './common/crud.service';
 import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
 import { RowType } from './common/row.interface';
 import { IgxGridCell } from './grid-public-cell';
@@ -41,6 +41,19 @@ abstract class BaseRow implements RowType {
         const data = this._data ?? this.grid.dataView[this.index];
         const primaryKey = this.grid.primaryKey;
         return primaryKey ? data[primaryKey] : data;
+    }
+
+    /**
+     * Gets if this represents add row UI
+     *
+     * ```typescript
+     * let isAddRow = row.addRowUI;
+     * ```
+     */
+    public get addRowUI(): boolean {
+        return !!this.grid.crudService.row &&
+            this.grid.crudService.row.getClassName() === IgxAddRow.name &&
+            this.grid.crudService.row.id === this.key;
     }
 
     /**
