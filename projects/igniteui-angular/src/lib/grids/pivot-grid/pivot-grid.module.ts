@@ -10,6 +10,7 @@ import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-cont
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { IgxPivotDataSelectorComponent } from './pivot-data-selector.component';
 import { IgxExpansionPanelModule } from '../../expansion-panel/expansion-panel.module';
+import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 
 /**
  * @hidden
@@ -20,6 +21,7 @@ import { IgxExpansionPanelModule } from '../../expansion-panel/expansion-panel.m
     IgxPivotRowComponent,
     IgxPivotHeaderRowComponent,
     IgxPivotRowDimensionContentComponent,
+    IgxPivotRowDimensionHeaderComponent,
     IgxPivotRowDimensionHeaderGroupComponent,
     IgxPivotRowPipe,
     IgxPivotRowExpansionPipe,
@@ -35,6 +37,7 @@ import { IgxExpansionPanelModule } from '../../expansion-panel/expansion-panel.m
     IgxPivotRowComponent,
     IgxPivotHeaderRowComponent,
     IgxPivotRowDimensionContentComponent,
+    IgxPivotRowDimensionHeaderComponent,
     IgxPivotRowDimensionHeaderGroupComponent,
     IgxPivotRowExpansionPipe,
     IgxPivotRowPipe,

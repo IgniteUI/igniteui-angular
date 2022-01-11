@@ -500,7 +500,7 @@
         $warn: igx-color($palette, 'warn'),
         $error: igx-color($palette, 'error'),
         $surface: if($surface != #fff, $surface, #fff),
-        $grays: if($grays != rgba(0, 0, 0, .38), $grays, #000),
+        $grays: if($grays != #9e9e9e, $grays, #000),
     );
 
     @include igx-theme(
@@ -532,7 +532,7 @@
         $warn: igx-color($palette, 'warn'),
         $error: igx-color($palette, 'error'),
         $surface: if($surface != #fff, $surface, #222),
-        $grays: if($grays != rgba(0, 0, 0, .38), $grays, #fff),
+        $grays: if($grays != #9e9e9e, $grays, #fff),
     );
 
     @include igx-theme(
@@ -643,7 +643,7 @@
         $palette: igx-palette(
             $primary,
             $secondary,
-            $surface: if($surface != #f8f9fa, $surface, #222),
+            $surface: if($surface != white, $surface, #222),
             $grays: #fff
         ),
         $schema: $dark-bootstrap-schema,
@@ -697,7 +697,7 @@
         $palette: igx-palette(
             $primary,
             $secondary,
-            $surface: if($surface != #2a2b2f, $surface, #2a2b2f),
+            $surface: if($surface != white, $surface, #2a2b2f),
             $grays: #fff
         ),
         $schema: $dark-indigo-schema,

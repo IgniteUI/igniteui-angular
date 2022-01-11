@@ -76,16 +76,16 @@ export class GridCellAPISampleComponent implements OnInit {
         ];
 
         this.treeGridHierColumns = [
-            { field: 'ID', width: 200, resizable: true, movable: true, pinned: true },
-            { field: 'CompanyName', width: 150, resizable: true, movable: true },
-            { field: 'ContactName', width: 150, resizable: true, movable: true },
-            { field: 'ContactTitle', width: 150, resizable: true, movable: true },
-            { field: 'Address', width: 150, resizable: true, movable: true },
-            { field: 'City', width: 150, resizable: true, movable: true, summary: true },
-            { field: 'Region', width: 150, resizable: true, movable: true },
-            { field: 'PostalCode', width: 150, resizable: true, movable: true },
-            { field: 'Phone', width: 150, resizable: true, movable: true },
-            { field: 'Fax', width: 150, resizable: true, movable: true }
+            { field: 'ID', width: 200, resizable: true, pinned: true },
+            { field: 'CompanyName', width: 150, resizable: true },
+            { field: 'ContactName', width: 150, resizable: true },
+            { field: 'ContactTitle', width: 150, resizable: true },
+            { field: 'Address', width: 150, resizable: true},
+            { field: 'City', width: 150, resizable: true, summary: true },
+            { field: 'Region', width: 150, resizable: true },
+            { field: 'PostalCode', width: 150, resizable: true },
+            { field: 'Phone', width: 150, resizable: true },
+            { field: 'Fax', width: 150, resizable: true }
         ];
         this.treeGridHierData = HIERARCHICAL_SAMPLE_DATA.slice(0);
 
@@ -123,11 +123,11 @@ export class GridCellAPISampleComponent implements OnInit {
 
         // treegrid cols and data
         this.treeColumns = [
-            { field: 'employeeID', label: 'ID', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: false },
-            { field: 'Salary', label: 'Salary', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: true },
-            { field: 'firstName', label: 'First Name', width: 300, resizable: true, movable: true, dataType: 'string', hasSummary: false },
-            { field: 'lastName', label: 'Last Name', width: 150, resizable: true, movable: true, dataType: 'string', hasSummary: false },
-            { field: 'Title', label: 'Title', width: 200, resizable: true, movable: true, dataType: 'string', hasSummary: true }
+            { field: 'employeeID', label: 'ID', width: 200, resizable: true, dataType: 'number', hasSummary: false },
+            { field: 'Salary', label: 'Salary', width: 200, resizable: true, dataType: 'number', hasSummary: true },
+            { field: 'firstName', label: 'First Name', width: 300, resizable: true, dataType: 'string', hasSummary: false },
+            { field: 'lastName', label: 'Last Name', width: 150, resizable: true, dataType: 'string', hasSummary: false },
+            { field: 'Title', label: 'Title', width: 200, resizable: true, dataType: 'string', hasSummary: true }
         ];
         this.treeData = [
             { Salary: 2500, employeeID: 0, PID: -1, firstName: 'Andrew', lastName: 'Fuller', Title: 'Vice President, Sales' },
