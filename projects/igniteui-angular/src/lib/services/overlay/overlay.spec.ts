@@ -3175,7 +3175,7 @@ describe('igxOverlay', () => {
             document.body.removeChild(dummy);
         });
 
-        it('Should retain the component state when scrolling and block scroll strategy is used.', () => {
+        it('Should retain the component state when scrolling and block scroll strategy is used.', fakeAsync(() => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button { position: absolute, bottom: -2000px; } `]
@@ -3199,10 +3199,13 @@ describe('igxOverlay', () => {
 
             document.documentElement.scrollTop += 25;
             document.dispatchEvent(new Event('scroll'));
+            tick();
+
             expect(document.documentElement.scrollTop).toEqual(0);
 
             document.documentElement.scrollTop += 1000;
             document.dispatchEvent(new Event('scroll'));
+            tick();
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
@@ -3211,7 +3214,7 @@ describe('igxOverlay', () => {
             expect(document.documentElement.scrollTop).toEqual(0);
 
             overlay.detach(overlayId);
-        });
+        }));
 
         it(`Should show the component, AutoPositionStrategy, inside of the viewport if it would normally be outside of bounds,
             TOP + LEFT.`, () => {
