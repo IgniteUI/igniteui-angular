@@ -20,15 +20,22 @@
     </igx-icon>
 </igx-input-group>
 
-<igx-tree selection="Cascading">
-    <igx-tree-node *ngFor="let item of displayedListData">
+<igx-tree [displayDensity]="esf.displayDensity" selection="Cascading">
+    <igx-tree-node *ngFor="let item of displayedListData" [selected]="item.isSelected">
         <div>{{item.label}}</div>
-        <!-- <igx-tree-node *ngFor="let value of type.Children">
-            {{ value.Name }}
-        </igx-tree-node> -->
+        <igx-tree-node *ngFor="let childLevel1 of item.children" [selected]="childLevel1.isSelected">
+            <div>{{childLevel1.label}}</div>
+            <igx-tree-node *ngFor="let childLevel2 of childLevel1.children" [selected]="childLevel2.isSelected">
+                <div>{{childLevel2.label}}</div>
+                <igx-tree-node *ngFor="let childLevel3 of childLevel2.children" [selected]="childLevel3.isSelected">
+                    <div>{{childLevel3.label}}</div>
+                </igx-tree-node>
+            </igx-tree-node>
+        </igx-tree-node>
     </igx-tree-node>
 </igx-tree>
 
+<!-- valuesLoadingTemplate -->
 <!-- <igx-list #list [displayDensity]="esf.displayDensity" [isLoading]="isLoading">
     <div style="overflow: hidden; position: relative;">
         <igx-list-item

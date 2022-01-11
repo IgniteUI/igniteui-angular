@@ -16,7 +16,7 @@ export class TreeGridSampleComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
     public selectionMode;
-    public density: DisplayDensity = 'comfortable';
+    public density: DisplayDensity = 'compact';
     public displayDensities;
     public selectionModes: GridSelectionMode[] = ['none', 'single', 'multiple', 'multipleCascade'];
 

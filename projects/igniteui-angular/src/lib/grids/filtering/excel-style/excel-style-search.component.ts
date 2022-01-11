@@ -152,7 +152,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             });
         });
         esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.virtDir.resetScrollPosition();
+            this.virtDir?.resetScrollPosition();
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -179,10 +179,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public refreshSize = () => {
-        this.virtDir.igxForContainerSize = this.containerSize;
-        this.virtDir.igxForItemSize = this.itemSize;
-        this.virtDir.recalcUpdateSizes();
-        this.cdr.detectChanges();
+        if (this.virtDir) {
+            this.virtDir.igxForContainerSize = this.containerSize;
+            this.virtDir.igxForItemSize = this.itemSize;
+            this.virtDir.recalcUpdateSizes();
+            this.cdr.detectChanges();
+        }
     }
 
     /**
@@ -249,6 +251,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         if (this.esf.listData.length) {
             return this.list.element.nativeElement.offsetHeight;
         }
+
+        console.log('containerSize()');
 
         // GE Nov 1st, 2021 #10355 Return a numeric value, so the chunk size is calculated properly.
         // If we skip this branch, on applying the filter the _calculateChunkSize() method off the ForOfDirective receives
