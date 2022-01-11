@@ -315,6 +315,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public dragRowID = null;
 
+    /**
+    * @hidden @internal
+    */
+    public get rootSummariesEnabled(): boolean {
+        return false;
+    }
+
     protected _defaultExpandState = false;
     private _data;
     private _filteredData;
