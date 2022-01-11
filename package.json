@@ -91,6 +91,7 @@
     "@typescript-eslint/eslint-plugin": "5.3.0",
     "@typescript-eslint/parser": "5.3.0",
     "browser-sync": "^2.27.7",
+    "del": "^6.0.0",
     "eslint": "^8.2.0",
     "eslint-plugin-import": "2.25.2",
     "eslint-plugin-jsdoc": "30.7.6",
