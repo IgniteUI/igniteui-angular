@@ -83,7 +83,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         if (columnDimensions.length === 0) {
             return 1;
         }
-        let totalDepth = columnDimensions.map(x => PivotUtil.getDimensionDepth(x)).reduce((acc, val) => acc + val) + 1;
+        let totalDepth = columnDimensions.map(x => PivotUtil.getDimensionDepth(x) + 1).reduce((acc, val) => acc + val);
         if (this.grid.hasMultipleValues) {
             totalDepth += 1;
         }
@@ -103,7 +103,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         const parentCollection = lvl > 0 ? this.columnDimensionsByLevel[lvl - 1] : [];
         const duplicate = parentCollection.indexOf(col) !== -1;
 
-        return duplicate ? 'hidden' : 'visible';
+        return duplicate ? 'hidden' : undefined;
     }
 
 
@@ -114,17 +114,27 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
             this.columnDimensionsByLevel = res;
             return;
         }
-        let prev = [];
-        const cols = this.unpinnedColumnCollection;
         for (let i = 0; i < this.totalDepth; i++) {
-            const lvl = i;
-            let colsForLevel = cols.filter(x => x.level === lvl);
-            const prevChildless = prev.filter(x => !x.columnGroup);
-            colsForLevel = colsForLevel.concat(prevChildless);
-            res[i] = colsForLevel;
-            prev = colsForLevel;
+            res[i] = [];
         }
+        const cols = this.unpinnedColumnCollection;
+        // populate column dimension matrix recursively
+        this.populateDimensionRecursively(cols.filter(x => x.level === 0), 0, res);
         this.columnDimensionsByLevel = res;
+    }
+
+    protected populateDimensionRecursively(currentLevelColumns: ColumnType[], level = 0, res: any[]) {
+        currentLevelColumns.forEach(col => {
+            res[level].push(col);
+            if (col.columnGroup && col.children.length > 0) {
+                const visibleColumns = col.children.toArray().filter(x => !x.hidden);
+                this.populateDimensionRecursively(visibleColumns, level + 1, res);
+            } else if (level < this.totalDepth - 1) {
+                for (let i = level + 1; i <= this.totalDepth - 1; i++) {
+                    res[i].push(col);
+                }
+            }
+        });
     }
 
     public ngOnChanges(changes: SimpleChanges) {
