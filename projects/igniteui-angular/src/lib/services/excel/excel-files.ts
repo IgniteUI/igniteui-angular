@@ -187,7 +187,7 @@ export class WorksheetFile implements IExcelFile {
                 const indexOfLastPinnedColumn = worksheetData.indexOfLastPinnedColumn;
                 const frozenColumnCount = indexOfLastPinnedColumn + 1;
                 let firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + freezeHeaders;
-                if (indexOfLastPinnedColumn && indexOfLastPinnedColumn !== -1 &&
+                if (indexOfLastPinnedColumn !== undefined && indexOfLastPinnedColumn !== -1 &&
                     !worksheetData.options.ignorePinning &&
                     !worksheetData.options.ignoreColumnsOrder) {
                     this.freezePane =
