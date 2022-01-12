@@ -127,6 +127,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             const ownersKeys = Array.from(this._ownersMap.keys());
 
             defaultOwner = this._ownersMap.get(ownersKeys[0]);
+            columnWidths = defaultOwner.columnWidths;
             columnCount = defaultOwner.columns.filter(col => !col.skip && col.headerType === HeaderType.ColumnHeader).length;
         }
 
