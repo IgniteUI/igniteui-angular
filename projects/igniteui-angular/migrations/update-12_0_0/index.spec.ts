@@ -1504,7 +1504,7 @@ igx-bottom-nav-header {
         );
     });
 
-    fit('should rename InteractionMode to PickerInteractionMode', async () => {
+    it('should rename InteractionMode to PickerInteractionMode', async () => {
         appTree.create(
             '/src/appPrefix/component/test.component.ts',
 `import { InteractionMode } from '../../../dist/igniteui-angular';
