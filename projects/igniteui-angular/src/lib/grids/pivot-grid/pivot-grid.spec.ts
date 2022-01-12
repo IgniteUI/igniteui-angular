@@ -161,9 +161,9 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         pivotGrid.notifyDimensionChange(true);
         fixture.detectChanges();
         expect(pivotGrid.columnGroupStates.size).toBe(0);
-        const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
-        const header = headerRow.querySelector('igx-grid-header-group');
-        const expander = header.querySelectorAll('igx-icon')[0];
+        let headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        let header = headerRow.querySelector('igx-grid-header-group');
+        let expander = header.querySelectorAll('igx-icon')[0];
         expander.click();
         fixture.detectChanges();
         expect(pivotGrid.columnGroupStates.size).toBe(1);
@@ -171,6 +171,9 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(value[0]).toEqual('All Countries');
         expect(value[1]).toBeTrue();
 
+        headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        header = headerRow.querySelector('igx-grid-header-group');
+        expander = header.querySelectorAll('igx-icon')[0];
         expander.click();
         fixture.detectChanges();
         value = pivotGrid.columnGroupStates.entries().next().value;
@@ -867,6 +870,8 @@ describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
     it('should select/deselect the correct column group', () => {
         fixture.detectChanges();
         const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.width = '1500px';
+        fixture.detectChanges();
         const group = GridFunctions.getColGroup(pivotGrid, 'Bulgaria');
         const unitsSold = pivotGrid.getColumnByName('Bulgaria-UnitsSold');
         const amountOfSale = pivotGrid.getColumnByName('Bulgaria-AmountOfSale');
