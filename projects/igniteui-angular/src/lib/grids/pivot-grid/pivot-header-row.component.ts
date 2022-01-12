@@ -129,13 +129,15 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
 
     protected populateDimensionRecursively(currentLevelColumns: ColumnType[], level = 0, res: any[]) {
         currentLevelColumns.forEach(col => {
-            res[level].push(col);
-            if (col.columnGroup && col.children.length > 0) {
-                const visibleColumns = col.children.toArray().filter(x => !x.hidden);
-                this.populateDimensionRecursively(visibleColumns, level + 1, res);
-            } else if (level < this.totalDepth - 1) {
-                for (let i = level + 1; i <= this.totalDepth - 1; i++) {
-                    res[i].push(col);
+            if (res[level]) {
+                res[level].push(col);
+                if (col.columnGroup && col.children.length > 0) {
+                    const visibleColumns = col.children.toArray().filter(x => !x.hidden);
+                    this.populateDimensionRecursively(visibleColumns, level + 1, res);
+                } else if (level < this.totalDepth - 1) {
+                    for (let i = level + 1; i <= this.totalDepth - 1; i++) {
+                        res[i].push(col);
+                    }
                 }
             }
         });

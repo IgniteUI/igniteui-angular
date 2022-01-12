@@ -303,7 +303,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
 
         it('should sort on column for single row dimension.', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
-            const headerCell = GridFunctions.getColumnHeader('USA-UnitsSold', fixture);
+            let headerCell = GridFunctions.getColumnHeader('USA-UnitsSold', fixture);
 
             // sort asc
             GridFunctions.clickHeaderSortIcon(headerCell);
@@ -313,6 +313,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             let columnValues = pivotGrid.dataView.map(x => x['USA-UnitsSold']);
             expect(columnValues).toEqual(expectedOrder);
 
+            headerCell = GridFunctions.getColumnHeader('USA-UnitsSold', fixture);
             // sort desc
             GridFunctions.clickHeaderSortIcon(headerCell);
             fixture.detectChanges();
@@ -322,6 +323,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             expect(columnValues).toEqual(expectedOrder);
 
             // remove sort
+            headerCell = GridFunctions.getColumnHeader('USA-UnitsSold', fixture);
             GridFunctions.clickHeaderSortIcon(headerCell);
             fixture.detectChanges();
             expect(pivotGrid.sortingExpressions.length).toBe(0);

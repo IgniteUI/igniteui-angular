@@ -112,27 +112,35 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
     });
 
     it('should allow navigating between column headers', () => {
-        const [firstHeader, secondHeader] = fixture.debugElement.queryAll(
-            By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`));
+        let firstHeader = fixture.debugElement.queryAll(
+            By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`))[0];
         UIInteractions.simulateClickAndSelectEvent(firstHeader);
         fixture.detectChanges();
 
+        firstHeader = fixture.debugElement.queryAll(
+            By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`))[0];
         GridFunctions.verifyHeaderIsFocused(firstHeader.parent);
         let  activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', firstHeader.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', pivotGrid.theadRow.nativeElement);
         fixture.detectChanges();
+        
+        const secondHeader = fixture.debugElement.queryAll(
+            By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`))[1];
         GridFunctions.verifyHeaderIsFocused(secondHeader.parent);
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
     });
 
     it('should allow navigating from first to last column headers', async () => {
-        const [firstHeader] = fixture.debugElement.queryAll(
-            By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`));
+        let firstHeader = fixture.debugElement.queryAll(
+            By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`))[0];
         UIInteractions.simulateClickAndSelectEvent(firstHeader);
         fixture.detectChanges();
+
+        firstHeader = fixture.debugElement.queryAll(
+            By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`))[0];
 
         GridFunctions.verifyHeaderIsFocused(firstHeader.parent);
         let activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
