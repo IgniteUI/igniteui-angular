@@ -12,13 +12,33 @@ describe(`Update to ${version}`, () => {
         defaultProject: 'testProj',
         projects: {
             testProj: {
-                sourceRoot: '/testSrc'
+                root: '',
+                sourceRoot: '/src',
             }
         },
         schematics: {
             '@schematics/angular:component': {
                 prefix: 'appPrefix'
             }
+        }
+    };
+
+    const TSConfig = {
+        compilerOptions: {
+            baseUrl: "./",
+            importHelpers: true,
+            module: "es2020",
+            outDir: "./dist/out-tsc",
+            sourceMap: true,
+            moduleResolution: "node",
+            target: "es2015",
+            rootDir: "."
+        },
+        angularCompilerOptions: {
+            generateDeepReexports: true,
+            strictTemplates: true,
+            fullTemplateTypeCheck: true,
+            strictInjectionParameters: true
         }
     };
 
@@ -29,11 +49,13 @@ describe(`Update to ${version}`, () => {
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
         appTree.create('/angular.json', JSON.stringify(configJson));
+        appTree.create('/tsconfig.json', JSON.stringify(TSConfig));
+        appTree.create('/src/main.ts', "");
     });
 
     it('should update avatar theme args', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.scss`,
+            `/src/appPrefix/component/test.component.scss`,
             `
 $theme: igx-avatar-theme(
     $initials-background: white,
@@ -52,7 +74,7 @@ $theme: igx-avatar-theme(
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
+            tree.readContent('/src/appPrefix/component/test.component.scss')
         ).toEqual(
             `
 $theme: igx-avatar-theme(
@@ -66,7 +88,7 @@ $theme: igx-avatar-theme(
 
     it('should update onColumnChange', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
 <igx-grid>
   <igx-column (onColumnChange)="columnChanged()"></igx-column>
@@ -79,7 +101,7 @@ $theme: igx-avatar-theme(
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
 <igx-grid>
@@ -91,7 +113,7 @@ $theme: igx-avatar-theme(
 
     it('should replace onValueChange and onValueChanged with valueChange and dragFinished in igx-slider', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/slider.component.html`,
+            `/src/appPrefix/component/slider.component.html`,
             `<igx-slider
             (onValueChange)="someHandler($event)"
             (onValueChanged)="someHandler($event)"
@@ -100,7 +122,7 @@ $theme: igx-avatar-theme(
 
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree).toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/slider.component.html')).toEqual(
+        expect(tree.readContent('/src/appPrefix/component/slider.component.html')).toEqual(
             `<igx-slider
             (valueChange)="someHandler($event)"
             (dragFinished)="someHandler($event)"
@@ -110,26 +132,26 @@ $theme: igx-avatar-theme(
 
     it('should replace onProgressChanged with progressChanged in igx-linear-bar', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/linear.component.html`,
+            `/src/appPrefix/component/linear.component.html`,
             `<igx-linear-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-linear-bar>`
         );
 
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree).toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/linear.component.html')).toEqual(
+        expect(tree.readContent('/src/appPrefix/component/linear.component.html')).toEqual(
             `<igx-linear-bar [value]="currentValue" (progressChanged)="progressChange($event)"></igx-linear-bar>`
         );
     });
 
     it('should replace onProgressChanged with progressChanged in igx-circular-bar', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/circular.component.html`,
+            `/src/appPrefix/component/circular.component.html`,
             `<igx-circular-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-circular-bar>`
         );
 
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree).toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/circular.component.html')).toEqual(
+        expect(tree.readContent('/src/appPrefix/component/circular.component.html')).toEqual(
             `<igx-circular-bar [value]="currentValue" (progressChanged)="progressChange($event)"></igx-circular-bar>`
         );
     });
@@ -137,7 +159,7 @@ $theme: igx-avatar-theme(
     // IgxTabs
     it('Should update igx-tab-group to igx-tab-item', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html', `
+            '/src/appPrefix/component/custom.component.html', `
 <igx-tabs type="contentFit" [selectedIndex]="0">
 <igx-tabs-group label="Tab1" icon="home" class="tabgroup">
     <div>Some Content</div>
@@ -146,7 +168,7 @@ $theme: igx-avatar-theme(
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/custom.component.html'))
             .toEqual(`
 ${noteText}
 <igx-tabs [selectedIndex]="0" tabAlignment="start">
@@ -164,7 +186,7 @@ ${noteText}
 
     it('Should insert routerLink to igx-tab-header', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html', `
+            '/src/appPrefix/component/custom.component.html', `
 <igx-tabs type="fixed">
 <igx-tab-item routerLink="view1" [isSelected]="true" label="Tab1" icon="home" class="tabitem">
 <ng-template igxTab>
@@ -178,7 +200,7 @@ ${noteText}
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/custom.component.html'))
             .toEqual(`
 ${noteText}
 <igx-tabs tabAlignment="justify">
@@ -195,7 +217,7 @@ ${noteText}
 
     it('Should not create igx-[tab|botton-nav]-content if it\'s already present', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html', `
+            '/src/appPrefix/component/custom.component.html', `
 <igx-tabs #tabs1>
 <igx-tab-item>
 <igx-tab-header>
@@ -222,7 +244,7 @@ ${noteText}
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/custom.component.html'))
             .toEqual(`
 <igx-tabs #tabs1>
 <igx-tab-item>
@@ -251,7 +273,7 @@ ${noteText}
 
     it('Should insert ng-template content into igx-tab-header', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html', `
+            '/src/appPrefix/component/custom.component.html', `
 <igx-tabs type="fixed">
 <igx-tabs-group>
 <ng-template igxTab>
@@ -263,7 +285,7 @@ ${noteText}
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/custom.component.html'))
             .toEqual(`
 ${noteText}
 <igx-tabs tabAlignment="justify">
@@ -281,7 +303,7 @@ ${noteText}
     // IgxBottomNav
     it('Should update igx-tab-panel to igx-bottom-nav-item', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html', `
+            '/src/appPrefix/component/custom.component.html', `
 <igx-bottom-nav>
 <igx-tab-panel label="Tab1" icon="folder" [isSelected]="true" class="tabpanel">
 Some Content
@@ -290,7 +312,7 @@ Some Content
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/custom.component.html'))
             .toEqual(`
 ${noteText}
 <igx-bottom-nav>
@@ -308,7 +330,7 @@ Some Content
 
     it('Should insert routerLink to igx-bottom-nav-header', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html', `
+            '/src/appPrefix/component/custom.component.html', `
 <igx-bottom-nav>
 <igx-tab label="Tab1" icon="folder" routerLink="view1" class="igxtab" label="Tab1" icon="home">
 <ng-template igxTab>
@@ -319,7 +341,7 @@ Some Content
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/custom.component.html'))
             .toEqual(`
 ${noteText}
 <igx-bottom-nav>
@@ -333,7 +355,7 @@ ${noteText}
 
     it('Should insert ng-template content into igx-bottom-nav-header', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html', `
+            '/src/appPrefix/component/custom.component.html', `
 <igx-bottom-nav>
 <igx-tab-panel>
 <ng-template igxTab>
@@ -345,7 +367,7 @@ ${noteText}
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/custom.component.html'))
             .toEqual(`
 ${noteText}
 <igx-bottom-nav>
@@ -361,7 +383,7 @@ ${noteText}
     });
 
     it('Should update the css selectors', async () => {
-        appTree.create('/testSrc/appPrefix/component/custom.component.scss', `
+        appTree.create('/src/appPrefix/component/custom.component.scss', `
 igx-tabs-group {
     padding: 8px;
 }
@@ -378,7 +400,7 @@ igx-tab {
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.scss'))
+        expect(tree.readContent('/src/appPrefix/component/custom.component.scss'))
             .toEqual(`
 igx-tab-content {
     padding: 8px;
@@ -398,7 +420,7 @@ igx-bottom-nav-header {
     // IgxDateTimeEditor
     it('should update isSpinLoop', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <input igxDateTimeEditorDirective [isSpinLoop]="true"/>
     `
@@ -409,7 +431,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <input igxDateTimeEditorDirective [spinLoop]="true"/>
@@ -419,7 +441,7 @@ igx-bottom-nav-header {
 
     it('should update onValueChange', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <input igxDateTimeEditorDirective (onValueChange)="change()" mode="dialog"/>
     `
@@ -430,7 +452,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <input igxDateTimeEditorDirective (valueChange)="change()" mode="dialog"/>
@@ -441,7 +463,7 @@ igx-bottom-nav-header {
     // IgxDatePicker
     it('should update onSelection', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker (onSelection)="change()" mode="dialog" labelVisibility="false"></igx-date-picker>
     `
@@ -452,7 +474,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker (valueChange)="change()" mode="dialog"></igx-date-picker>
@@ -462,7 +484,7 @@ igx-bottom-nav-header {
 
     it('should update onClosing', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker (onClosing)="close()" mode="dialog" labelVisibility="false"></igx-date-picker>
     `
@@ -473,7 +495,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker (closing)="close()" mode="dialog"></igx-date-picker>
@@ -483,7 +505,7 @@ igx-bottom-nav-header {
 
     it('should update onClosed', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker (onClosed)="close()" mode="dialog" labelVisibility="false"></igx-date-picker>
     `
@@ -494,7 +516,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker (closed)="close()" mode="dialog"></igx-date-picker>
@@ -504,7 +526,7 @@ igx-bottom-nav-header {
 
     it('should update onOpening', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker (onOpening)="open()" mode="dialog" labelVisibility="false"></igx-date-picker>
     `
@@ -515,7 +537,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker (opening)="open()" mode="dialog"></igx-date-picker>
@@ -525,7 +547,7 @@ igx-bottom-nav-header {
 
     it('should update onOpened', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker (onOpened)="open()" mode="dialog" labelVisibility="false"></igx-date-picker>
     `
@@ -536,7 +558,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker (opened)="open()" mode="dialog"></igx-date-picker>
@@ -546,7 +568,7 @@ igx-bottom-nav-header {
 
     it('should update onValidationFailed', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker (onValidationFailed)="fail()" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -557,7 +579,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker (validationFailed)="fail()" mode="dialog"></igx-date-picker>
@@ -567,7 +589,7 @@ igx-bottom-nav-header {
 
     it('should remove onDisabledDate', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker (onDisabledDate)="disable()" labelVisibility='false'></igx-date-picker>
     `
@@ -578,7 +600,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker mode="dialog"></igx-date-picker>
@@ -588,7 +610,7 @@ igx-bottom-nav-header {
 
     it('should update editorTabIndex', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [editorTabIndex]="1" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -599,7 +621,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker [tabIndex]="1" mode="dialog"></igx-date-picker>
@@ -609,7 +631,7 @@ igx-bottom-nav-header {
 
     it('should remove labelVisibility', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [labelVisibility]="true" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -620,7 +642,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker mode="dialog"></igx-date-picker>
@@ -630,7 +652,7 @@ igx-bottom-nav-header {
 
     it('should update mask', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [mask]="string" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -641,7 +663,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker [inputFormat]="string" mode="dialog"></igx-date-picker>
@@ -651,7 +673,7 @@ igx-bottom-nav-header {
 
     it('should update format', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [format]="string" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -662,7 +684,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker [displayFormat]="string" mode="dialog"></igx-date-picker>
@@ -672,7 +694,7 @@ igx-bottom-nav-header {
 
     it('should update displayData', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [displayData]="string" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -683,7 +705,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker [displayFormat]="string" mode="dialog"></igx-date-picker>
@@ -693,7 +715,7 @@ igx-bottom-nav-header {
 
     it('should update monthsViewNumber', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [monthsViewNumber]="3" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -704,7 +726,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker [displayMonthsCount]="3" mode="dialog"></igx-date-picker>
@@ -714,7 +736,7 @@ igx-bottom-nav-header {
 
     it('should update vertical', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [vertical]="true" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -725,7 +747,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker [headerOrientation]="true" mode="dialog"></igx-date-picker>
@@ -735,7 +757,7 @@ igx-bottom-nav-header {
 
     it('should update dropDownOverlaySettings', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [dropDownOverlaySettings]="settings" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -746,7 +768,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker [overlaySettings]="settings" mode="dialog"></igx-date-picker>
@@ -756,7 +778,7 @@ igx-bottom-nav-header {
 
     it('should update modalOverlaySettings', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [modalOverlaySettings]="settings" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -767,7 +789,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker [overlaySettings]="settings" mode="dialog"></igx-date-picker>
@@ -778,7 +800,7 @@ igx-bottom-nav-header {
     // IgxTimePicker
     it('should update onValueChanged', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker (onValueChanged)="change()" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
@@ -789,7 +811,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker (valueChange)="change()" mode="dialog"></igx-time-picker>
@@ -799,7 +821,7 @@ igx-bottom-nav-header {
 
     it('should update onClosing', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker (onClosing)="close()" mode="dialog" labelVisibility="false"></igx-time-picker>
     `
@@ -810,7 +832,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker (closing)="close()" mode="dialog"></igx-time-picker>
@@ -820,7 +842,7 @@ igx-bottom-nav-header {
 
     it('should update onClosed', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker (onClosed)="close()" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
@@ -831,7 +853,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker (closed)="close()" mode="dialog"></igx-time-picker>
@@ -841,7 +863,7 @@ igx-bottom-nav-header {
 
     it('should update onOpening', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker (onOpening)="open()" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
@@ -852,7 +874,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker (opening)="open()" mode="dialog"></igx-time-picker>
@@ -862,7 +884,7 @@ igx-bottom-nav-header {
 
     it('should update onOpened', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker (onOpened)="open()" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
@@ -873,7 +895,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker (opened)="open()" mode="dialog"></igx-time-picker>
@@ -883,7 +905,7 @@ igx-bottom-nav-header {
 
     it('should update onValidationFailed', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker (onValidationFailed)="fail()" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
@@ -894,7 +916,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker (validationFailed)="fail()" mode="dialog"></igx-time-picker>
@@ -904,7 +926,7 @@ igx-bottom-nav-header {
 
     it('should update isSpinLoop', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker [isSpinLoop]="true" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
@@ -915,7 +937,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker [spinLoop]="true" mode="dialog"></igx-time-picker>
@@ -925,7 +947,7 @@ igx-bottom-nav-header {
 
     it('should update vertical', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker [vertical]="true" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
@@ -936,7 +958,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker [headerOrientation]="true" mode="dialog"></igx-time-picker>
@@ -946,7 +968,7 @@ igx-bottom-nav-header {
 
     it('should update format', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker [format]="string" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
@@ -957,7 +979,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker [inputFormat]="string" mode="dialog"></igx-time-picker>
@@ -968,7 +990,7 @@ igx-bottom-nav-header {
     // IgxDateRangePicker
     it('should update rangeSelected', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-range-picker (rangeSelected)="change()" mode="dialog"></igx-date-range-picker>
     `
@@ -979,7 +1001,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-range-picker (valueChange)="change()" mode="dialog"></igx-date-range-picker>
@@ -989,7 +1011,7 @@ igx-bottom-nav-header {
 
     it('should update onClosing', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-range-picker (onClosing)="close()" mode="dialog"></igx-date-range-picker>
     `
@@ -1000,7 +1022,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-range-picker (closing)="close()" mode="dialog"></igx-date-range-picker>
@@ -1010,7 +1032,7 @@ igx-bottom-nav-header {
 
     it('should update onClosed', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-range-picker (onClosed)="close()" mode="dialog"></igx-date-range-picker>
     `
@@ -1021,7 +1043,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-range-picker (closed)="close()" mode="dialog"></igx-date-range-picker>
@@ -1031,7 +1053,7 @@ igx-bottom-nav-header {
 
     it('should update onOpening', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-range-picker (onOpening)="open()" mode="dialog"></igx-date-range-picker>
     `
@@ -1042,7 +1064,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-range-picker (opening)="open()" mode="dialog"></igx-date-range-picker>
@@ -1052,7 +1074,7 @@ igx-bottom-nav-header {
 
     it('should update onOpened', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-range-picker (onOpened)="open()" mode="dialog"></igx-date-range-picker>
     `
@@ -1063,7 +1085,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-range-picker (opened)="open()" mode="dialog"></igx-date-range-picker>
@@ -1073,7 +1095,7 @@ igx-bottom-nav-header {
 
     it('should update monthsViewNumber', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-range-picker [monthsViewNumber]="3"></igx-date-range-picker>
     `
@@ -1084,7 +1106,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-range-picker [displayMonthsCount]="3"></igx-date-range-picker>
@@ -1097,7 +1119,7 @@ igx-bottom-nav-header {
     // igxDatePicker
     it('should remove [mode]=dropdown and add default date label', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [mode]="'dropdown'"></igx-date-picker>
     `
@@ -1108,7 +1130,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker >
@@ -1119,7 +1141,7 @@ igx-bottom-nav-header {
 
     it('should remove mode=dropdown', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker mode="dropdown" labelVisibility='false'></igx-date-picker>
     `
@@ -1130,7 +1152,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker></igx-date-picker>
@@ -1140,7 +1162,7 @@ igx-bottom-nav-header {
 
     it('should not remove [mode]=dialog', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [mode]="'dialog'" labelVisibility='false'></igx-date-picker>
     `
@@ -1151,7 +1173,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker [mode]="'dialog'"></igx-date-picker>
@@ -1161,7 +1183,7 @@ igx-bottom-nav-header {
 
     it('should remove mode=dialog', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker mode="dialog" labelVisibility='false'></igx-date-picker>
     `
@@ -1172,7 +1194,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker mode="dialog"></igx-date-picker>
@@ -1182,7 +1204,7 @@ igx-bottom-nav-header {
 
     it('should add mode=dialog', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker labelVisibility='false'></igx-date-picker>
     `
@@ -1193,7 +1215,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker mode="dialog"></igx-date-picker>
@@ -1203,7 +1225,7 @@ igx-bottom-nav-header {
 
     it('should remove label property and add it as a child elem', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker label="toRemove" mode="dialog"></igx-date-picker>
     `
@@ -1214,7 +1236,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker  mode="dialog">
@@ -1225,7 +1247,7 @@ igx-bottom-nav-header {
 
     it('should remove label property and add it as a child elem (interpolation)', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [label]="boundLabel" mode="dialog"></igx-date-picker>
     `
@@ -1236,7 +1258,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker  mode="dialog">
@@ -1247,7 +1269,7 @@ igx-bottom-nav-header {
 
     it('should remove label and labelVisibility properties and add it as a child elem (interpolation) with ngIf', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker [label]="boundLabel" mode="dialog" [labelVisibility]="labelVisibility"></igx-date-picker>
     `
@@ -1258,7 +1280,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker  mode="dialog">
@@ -1269,7 +1291,7 @@ igx-bottom-nav-header {
 
     it('should not add default label if there is already such', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-date-picker mode="dialog"><label igxLabel>text</label></igx-date-picker>
     `
@@ -1280,7 +1302,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-date-picker mode="dialog"><label igxLabel>text</label></igx-date-picker>
@@ -1291,7 +1313,7 @@ igx-bottom-nav-header {
     // igxTimePicker
     it('should remove [mode]=dropdown and add default time label', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker [mode]="'dropdown'"></igx-time-picker>
     `
@@ -1302,7 +1324,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker >
@@ -1313,7 +1335,7 @@ igx-bottom-nav-header {
 
     it('should remove mode=dropdown', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker mode="dropdown" labelVisibility="false"></igx-time-picker>
     `
@@ -1324,7 +1346,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker></igx-time-picker>
@@ -1334,7 +1356,7 @@ igx-bottom-nav-header {
 
     it('should not remove [mode]=dialog', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker [mode]="'dialog'" labelVisibility="false"></igx-time-picker>
     `
@@ -1345,7 +1367,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker [mode]="'dialog'"></igx-time-picker>
@@ -1355,7 +1377,7 @@ igx-bottom-nav-header {
 
     it('should remove mode=dialog', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker mode="dialog" labelVisibility="false"></igx-time-picker>
     `
@@ -1366,7 +1388,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker mode="dialog"></igx-time-picker>
@@ -1376,7 +1398,7 @@ igx-bottom-nav-header {
 
     it('should add mode=dialog', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker labelVisibility="true"></igx-time-picker>
     `
@@ -1387,7 +1409,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker mode="dialog"></igx-time-picker>
@@ -1397,7 +1419,7 @@ igx-bottom-nav-header {
 
     it('should remove label property and add it as a child elem', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker mode="dialog" label="toRemove"></igx-time-picker>
     `
@@ -1408,7 +1430,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker mode="dialog" >
@@ -1419,7 +1441,7 @@ igx-bottom-nav-header {
 
     it('should remove label property and add it as a child elem (interpolation)', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker [label]="boundLabel" mode="dialog"></igx-time-picker>
     `
@@ -1430,7 +1452,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker  mode="dialog">
@@ -1441,7 +1463,7 @@ igx-bottom-nav-header {
 
     it('should remove label and labelVisibility properties and add it as a child elem (interpolation) with ngIf', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker [label]="boundLabel" mode="dialog" [labelVisibility]="labelVisibility"></igx-time-picker>
     `
@@ -1452,7 +1474,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker  mode="dialog">
@@ -1463,7 +1485,7 @@ igx-bottom-nav-header {
 
     it('should not add default label if there is already such', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-time-picker mode="dialog"><label igxLabel>text</label></igx-time-picker>
     `
@@ -1474,7 +1496,7 @@ igx-bottom-nav-header {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-time-picker mode="dialog"><label igxLabel>text</label></igx-time-picker>
@@ -1482,21 +1504,11 @@ igx-bottom-nav-header {
         );
     });
 
-    it('should rename InteractionMode to PickerInteractionMode', async () => {
-        pending('set up tests for migrations through lang service');
+    fit('should rename InteractionMode to PickerInteractionMode', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
-import { InteractionMode, IgxIconComponent } from 'igniteui-angular';
-import { InteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, InteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, InteractionMode, IgxIconComponent } from 'igniteui-angular';
+            '/src/appPrefix/component/test.component.ts',
+`import { InteractionMode } from '../../../dist/igniteui-angular';
 
-@Component({
-    selector: 'pickers-mode',
-    templateUrl: './test.component.html',
-    styleUrls: ['./test.component.scss']
-})
 export class PickerModeComponent {
     public mode: InteractionMode = InteractionMode.DropDown;
 }
@@ -1506,17 +1518,9 @@ export class PickerModeComponent {
             .runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        const expectedContent = `import { Component, ViewChild } from '@angular/core';
-import { PickerInteractionMode, IgxIconComponent } from 'igniteui-angular';
-import { PickerInteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, PickerInteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, PickerInteractionMode, IgxIconComponent } from 'igniteui-angular';
+        const expectedContent =
+`import { PickerInteractionMode } from '../../../dist/igniteui-angular';
 
-@Component({
-    selector: 'pickers-mode',
-    templateUrl: './test.component.html',
-    styleUrls: ['./test.component.scss']
-})
 export class PickerModeComponent {
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
 }
@@ -1524,14 +1528,14 @@ export class PickerModeComponent {
 
         expect(
             tree.readContent(
-                '/testSrc/appPrefix/component/test.component.ts'
+                '/src/appPrefix/component/test.component.ts'
             )
         ).toEqual(expectedContent);
     });
 
     it('Should update row component types with RowType', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/rows.component.ts', `
+            '/src/appPrefix/component/rows.component.ts', `
 import { IgxGridComponent, IgxGridRowComponent, IgxHierarchicalRowComponent,
     IgxTreeGridRowComponent, IgxGridGroupByRowComponent, RowPinningPosition } from 'igniteui-angular';
 export class HGridMultiRowDragComponent {
@@ -1554,7 +1558,7 @@ export class HGridMultiRowDragComponent {
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/rows.component.ts'))
+        expect(tree.readContent('/src/appPrefix/component/rows.component.ts'))
             .toEqual(`
 import { IgxGridComponent, RowType,
     RowPinningPosition } from 'igniteui-angular';
@@ -1579,7 +1583,7 @@ export class HGridMultiRowDragComponent {
 
     it('should replace output names in toast', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-toast (showing)="method()" (shown)="method()" (hiding)="method()" (hidden)="method()"></igx-toast>
     `
@@ -1590,7 +1594,7 @@ export class HGridMultiRowDragComponent {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-toast (onOpening)="method()" (onOpened)="method()" (onClosing)="method()" (onClosed)="method()"></igx-toast>
@@ -1600,7 +1604,7 @@ export class HGridMultiRowDragComponent {
 
     it('Should update toast output subscriptions', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/toast.component.ts',
+            '/src/appPrefix/component/toast.component.ts',
 `import { IgxToastComponent } from '../../../dist/igniteui-angular';
 
 export class SimpleComponent {
@@ -1618,7 +1622,7 @@ export class SimpleComponent {
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/toast.component.ts'))
+        expect(tree.readContent('/src/appPrefix/component/toast.component.ts'))
             .toEqual(
 `import { IgxToastComponent } from '../../../dist/igniteui-angular';
 
@@ -1638,7 +1642,7 @@ export class SimpleComponent {
 
     it('should rename DataType to GridColumnDataType', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
+            '/src/appPrefix/component/test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
         import { IgxColumnComponent, DataType } from 'igniteui-angular';
 
@@ -1670,14 +1674,14 @@ export class SimpleComponent {
 
         expect(
             tree.readContent(
-                '/testSrc/appPrefix/component/test.component.ts'
+                '/src/appPrefix/component/test.component.ts'
             )
         ).toEqual(expectedContent);
     });
 
     it('Should move input-group disabled property to input child', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-input-group [disabled]="true">
         <input igxInput [(ngModel)]="name">
@@ -1690,7 +1694,7 @@ export class SimpleComponent {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-input-group>
@@ -1702,7 +1706,7 @@ export class SimpleComponent {
 
     it('Should move input-group disabled property to input child', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-input-group [disabled]="true">
         <input igxInput [(ngModel)]="name">
@@ -1715,7 +1719,7 @@ export class SimpleComponent {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-input-group>
@@ -1727,7 +1731,7 @@ export class SimpleComponent {
 
     it('Should move input group disabled property w/ XHTML syntax closing', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-input-group [disabled]="true">
         <input igxInput [(ngModel)]="name"/>
@@ -1740,7 +1744,7 @@ export class SimpleComponent {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-input-group>
@@ -1752,7 +1756,7 @@ export class SimpleComponent {
 
     it('Should only move input-group disabled to igxInput directive', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-input-group [disabled]="true">
         <input [(ngModel)]="name">
@@ -1765,7 +1769,7 @@ export class SimpleComponent {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-input-group>
@@ -1777,7 +1781,7 @@ export class SimpleComponent {
 
     it('Should move input-group disabled string values to underlying igxInput', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-input-group disabled="true">
         <input igxInput [(ngModel)]="name">
@@ -1790,7 +1794,7 @@ export class SimpleComponent {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-input-group>
@@ -1802,7 +1806,7 @@ export class SimpleComponent {
 
     it('Should move disabled attribute w/ no value to igxInput', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-input-group disabled>
         <input igxInput [(ngModel)]="name">
@@ -1816,7 +1820,7 @@ export class SimpleComponent {
 // this is the expected output
 // putting just the disabled attribute on an igx-input-group is an invalid scenario
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-input-group disabled>
@@ -1828,7 +1832,7 @@ export class SimpleComponent {
 
     it('Should not add duplicate disabled to igxInput when moving the property from input-group', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-input-group [disabled]="true">
         <input igxInput [(ngModel)]="name" disabled>
@@ -1842,7 +1846,7 @@ export class SimpleComponent {
 // this is the expected output
 // putting just the disabled attribute on an igx-input-group is an invalid scenario
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-input-group>
@@ -1854,7 +1858,7 @@ export class SimpleComponent {
 
     it('Should move disabled input group to textarea w/ igxInput', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
+            `/src/appPrefix/component/test.component.html`,
             `
     <igx-input-group [disabled]="true">
         <textarea igxInput [(ngModel)]="name">Some Text</textarea>
@@ -1868,7 +1872,7 @@ export class SimpleComponent {
 // this is the expected output
 // putting just the disabled attribute on an igx-input-group is an invalid scenario
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            tree.readContent('/src/appPrefix/component/test.component.html')
         ).toEqual(
             `
     <igx-input-group>
@@ -1879,7 +1883,7 @@ export class SimpleComponent {
     });
 
     it('Should properly rename InteractionMode to PickerInteractionMode',  async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        appTree.create('/src/appPrefix/component/test.component.ts',
         `
         import { InteractionMode } from 'igniteui-angular';
         export class MyClass {
@@ -1892,7 +1896,7 @@ export class SimpleComponent {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+            tree.readContent('/src/appPrefix/component/test.component.ts')
         ).toEqual(
         `
         import { PickerInteractionMode } from 'igniteui-angular';

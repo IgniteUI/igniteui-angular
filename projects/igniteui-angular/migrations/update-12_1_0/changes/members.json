@@ -308,6 +308,13 @@
             "definedIn": [
                 "IgxMaskDirective"
             ]
+        },
+        {
+            "member": "banner",
+            "replaceWith": "owner",
+            "definedIn": [
+                "BannerEventArgs"
+            ]
         }
     ]
 }

@@ -6,7 +6,7 @@ import {
     UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 
-fdescribe('Update 10.2.0', () => {
+describe('Update 10.2.0', () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner(
         'ig-migrate',

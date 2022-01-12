@@ -12,7 +12,8 @@ describe(`Update to ${version}`, () => {
         defaultProject: 'testProj',
         projects: {
             testProj: {
-                sourceRoot: '/testSrc'
+                root: '',
+                sourceRoot: '/src',
             }
         },
         schematics: {
@@ -22,18 +23,39 @@ describe(`Update to ${version}`, () => {
         }
     };
 
+    const TSConfig = {
+        compilerOptions: {
+            baseUrl: "./",
+            importHelpers: true,
+            module: "es2020",
+            outDir: "./dist/out-tsc",
+            sourceMap: true,
+            moduleResolution: "node",
+            target: "es2015",
+            rootDir: "."
+        },
+        angularCompilerOptions: {
+            generateDeepReexports: true,
+            strictTemplates: true,
+            fullTemplateTypeCheck: true,
+            strictInjectionParameters: true
+        }
+    };
+
     const migrationName = 'migration-21';
     const lineBreaksAndSpaceRegex = /\s/g;
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
         appTree.create('/angular.json', JSON.stringify(configJson));
+        appTree.create('/tsconfig.json', JSON.stringify(TSConfig));
+        appTree.create('/src/main.ts', "");
     });
 
     // IgxOverlayService
     it('should update overlay events subscriptions', async () => {
         appTree.create(
-            '/testSrc/appPrefix/service/test.component.ts',
+            '/src/appPrefix/service/test.component.ts',
 `import { IgxOverlayService } from '../../../dist/igniteui-angular';
 export class SimpleComponent {
     public overlayService: IgxOverlayService);
@@ -50,7 +72,7 @@ export class SimpleComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/service/test.component.ts'))
+        expect(tree.readContent('/src/appPrefix/service/test.component.ts'))
             .toEqual(
 `import { IgxOverlayService } from '../../../dist/igniteui-angular';
 export class SimpleComponent {
@@ -69,7 +91,7 @@ export class SimpleComponent {
 
     it('should update banner event subscriptions in .ts file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts', `
+            '/src/appPrefix/component/test.component.ts', `
 import { IgxBannerComponent } from '../../../dist/igniteui-angular';
 export class TestComponent {
     public banner: IgxBannerComponent;
@@ -84,7 +106,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+        expect(tree.readContent('/src/appPrefix/component/test.component.ts'))
             .toEqual(`
 import { IgxBannerComponent } from '../../../dist/igniteui-angular';
 export class TestComponent {
@@ -101,7 +123,7 @@ export class TestComponent {
 
     it('should update banner event subscriptions in .html file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
 <igx-banner
     (onOpening)="handleEvent($event, 'opening')"
     (onOpened)="handleEvent($event, 'opened')"
@@ -113,7 +135,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/test.component.html'))
             .toEqual(`
 <igx-banner
     (opening)="handleEvent($event, 'opening')"
@@ -127,7 +149,7 @@ export class TestComponent {
 
     it('should update expansion panel event subscriptions in .ts file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts', `
+            '/src/appPrefix/component/test.component.ts', `
 import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from '../../../dist/igniteui-angular';
 
 export class TestComponent {
@@ -143,7 +165,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+        expect(tree.readContent('/src/appPrefix/component/test.component.ts'))
             .toEqual(`
 import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from '../../../dist/igniteui-angular';
 
@@ -161,18 +183,18 @@ export class TestComponent {
 
     it('should update mask event subscriptions in .html file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
 <input igxInput type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" (onValueChange)="handleEvent()" />`);
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/test.component.html'))
             .toEqual(`
 <input igxInput type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" (valueChanged)="handleEvent()" />`);
     });
 
     it('should update mask event subscriptions .ts file', async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        appTree.create('/src/appPrefix/component/test.component.ts',
 `import { IgxMaskDirective } from '../../../dist/igniteui-angular';
 
 export class TestComponent {
@@ -185,7 +207,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+        expect(tree.readContent('/src/appPrefix/component/test.component.ts'))
             .toEqual(
 `import { IgxMaskDirective } from '../../../dist/igniteui-angular';
 
@@ -201,7 +223,7 @@ export class TestComponent {
 
     it('should update expansion panel event subscriptions in .html file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
 <igx-expansion-panel (onExpanded)="handleExpanded($event)" (onCollapsed)="handleCollapsed($event)">
     <igx-expansion-panel-header (onInteraction)="handleInteraction($event)">
         Trigger something onInteraction and onExpanded and onCollapsed
@@ -210,7 +232,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/test.component.html'))
             .toEqual(`
 <igx-expansion-panel (contentExpanded)="handleExpanded($event)" (contentCollapsed)="handleCollapsed($event)">
     <igx-expansion-panel-header (interaction)="handleInteraction($event)">
@@ -221,7 +243,7 @@ export class TestComponent {
 
     it('Should remove references to deprecated `banner` property of `BannerEventArgs`', async () => {
     appTree.create(
-        '/testSrc/appPrefix/component/test.component.ts',
+        '/src/appPrefix/component/test.component.ts',
 `import { BannerEventArgs } from '../../../dist/igniteui-angular';
 
 export class BannerTestComponent {
@@ -244,12 +266,12 @@ export class BannerTestComponent {
     }
 }`;
     expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+            tree.readContent('/src/appPrefix/component/test.component.ts')
         ).toEqual(expectedContent);
 });
     it('should remove paging property and define a igx-paginator component instead', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
         <igx-grid #grid1 [data]="data" [paging]="someVal" [perPage]="10" height="300px" width="300px">
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
@@ -258,7 +280,7 @@ export class BannerTestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/test.component.html'))
             .toEqual(`
         <igx-grid #grid1 [data]="data" [perPage]="10" height="300px" width="300px">
 <igx-paginator *ngIf="someVal"></igx-paginator>
@@ -270,7 +292,7 @@ export class BannerTestComponent {
 
     it('should remove paging and paginationTemplate property and define a igx-paginator component with custom content', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
 <igx-grid #grid1 [data]="data" [paging]="true" [paginationTemplate]="customPager" height="300px" width="300px">
     <igx-column field="Name" header="Athlete"></igx-column>
     <igx-column field="TrackProgress" header="Track Progress"></igx-column>
@@ -287,7 +309,7 @@ export class BannerTestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
+        expect(tree.readContent('/src/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
             .toEqual(`
 <igx-grid #grid1 [data]="data" height="300px" width="300px">
 <igx-paginator>
@@ -313,7 +335,7 @@ export class BannerTestComponent {
 
     it('should remove paging property and define a igx-paginator component instead in hGrid', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
 <igx-hierarchical-grid [paging]="parentPaging">
     <igx-column></igx-column>
     <igx-row-island [paging]="childPaging">
@@ -323,7 +345,7 @@ export class BannerTestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        expect(tree.readContent('/src/appPrefix/component/test.component.html'))
             .toEqual(`
 <igx-hierarchical-grid>
 <igx-paginator *ngIf="parentPaging"></igx-paginator>
@@ -337,7 +359,7 @@ export class BannerTestComponent {
 
     it('should remove paging property and paginationTemplate in hGrid', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
 <igx-hierarchical-grid [paging]="parentPaging" [paginationTemplate]="myTemplate">
     <igx-column></igx-column>
     <igx-row-island [paging]="childPaging" [paginationTemplate]="childTemplate">
@@ -359,7 +381,7 @@ export class BannerTestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
+        expect(tree.readContent('/src/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
             .toEqual(`
 <igx-hierarchical-grid>
 <igx-paginator *ngIf="parentPaging">
@@ -397,7 +419,7 @@ export class BannerTestComponent {
 
     it('should define correctly paginator when using the component inside custom template', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
 <igx-grid #grid1 [data]="data" [paging]="true" [paginationTemplate]="customPager" height="300px" width="300px">
     <igx-column field="Name" header="Athlete"></igx-column>
     <igx-column field="TrackProgress" header="Track Progress"></igx-column>
@@ -411,7 +433,7 @@ export class BannerTestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
+        expect(tree.readContent('/src/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
             .toEqual(`
 <igx-grid #grid1 [data]="data" height="300px" width="300px">
 <igx-paginator #paginator [(page)]="grid.page" [totalRecords]="grid.totalRecords" [(perPage)]="grid.perPage"
@@ -427,7 +449,7 @@ export class BannerTestComponent {
     // IgxDropDown
     it('should update IgxDropDown event subscriptions', async () => {
         appTree.create(
-            'testSrc/appPrefix/component/test.component.ts',
+            'src/appPrefix/component/test.component.ts',
 `import { IgxDropDownComponent } from '../../../dist/igniteui-angular';
 
 export class TestComponent {
@@ -443,7 +465,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-            expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            expect(tree.readContent('/src/appPrefix/component/test.component.ts'))
                 .toEqual(
 
 `import { IgxDropDownComponent } from '../../../dist/igniteui-angular';
@@ -462,7 +484,7 @@ export class TestComponent {
 
     it('should update dropdown event subscriptions in .html file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
         <igx-drop-down
             (onOpening)="handleEvent($event, 'opening')"
             (onOpened)="handleEvent($event, 'opened')"
@@ -474,7 +496,7 @@ export class TestComponent {
         </igx-drop-down>`);
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
                 .toPromise();
-            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            expect(tree.readContent('/src/appPrefix/component/test.component.html'))
                 .toEqual(`
         <igx-drop-down
             (opening)="handleEvent($event, 'opening')"
@@ -490,7 +512,7 @@ export class TestComponent {
     // IgxToggleDirective
     it('should update IgxToggleDirective event subscriptions', async () => {
         appTree.create(
-            'testSrc/appPrefix/component/test.component.ts',
+            'src/appPrefix/component/test.component.ts',
 `import { IgxToggleDirective } from '../../../dist/igniteui-angular';
 
 export class TestComponent {
@@ -506,7 +528,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-            expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            expect(tree.readContent('/src/appPrefix/component/test.component.ts'))
                 .toEqual(
 
 `import { IgxToggleDirective } from '../../../dist/igniteui-angular';
@@ -526,7 +548,7 @@ export class TestComponent {
 
     it('should update dropdown event subscriptions in .html file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
             <div igxToggle
                 (onOpening)="eventHandler($event)"
                 (onAppended)="eventHandler($event)"
@@ -539,7 +561,7 @@ export class TestComponent {
                 const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
                     .toPromise();
 
-                expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                expect(tree.readContent('/src/appPrefix/component/test.component.html'))
                     .toEqual(`
             <div igxToggle
                 (opening)="eventHandler($event)"
@@ -555,7 +577,7 @@ export class TestComponent {
     // IgxCombo
     it('should update IgxCombo event subscriptions', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
+            '/src/appPrefix/component/test.component.ts',
 `import { IgxComboComponent } from '../../../dist/igniteui-angular';
 
 export class TestComponent {
@@ -575,7 +597,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+        expect(tree.readContent('/src/appPrefix/component/test.component.ts'))
             .toEqual(
 `import { IgxComboComponent } from '../../../dist/igniteui-angular';
 
@@ -597,7 +619,7 @@ export class TestComponent {
 
     it('should update combo event subscriptions in .html file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
                 <igx-combo
                     (onSelectionChange)="eventHandler($event)"
                     (onSearchInput)="eventHandler($event)"
@@ -612,7 +634,7 @@ export class TestComponent {
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            expect(tree.readContent('/src/appPrefix/component/test.component.html'))
                 .toEqual(`
                 <igx-combo
                     (selectionChanging)="eventHandler($event)"
@@ -630,7 +652,7 @@ export class TestComponent {
     // IgxSelect
     it('should update IgxSelect event subscriptions', async () => {
         appTree.create(
-            'testSrc/appPrefix/component/test.component.ts',
+            'src/appPrefix/component/test.component.ts',
 `import { IgxSelectComponent } from '../../../dist/igniteui-angular';
 
 export class TestComponent {
@@ -647,7 +669,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-            expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            expect(tree.readContent('/src/appPrefix/component/test.component.ts'))
                 .toEqual(
 
 `import { IgxSelectComponent } from '../../../dist/igniteui-angular';
@@ -668,7 +690,7 @@ export class TestComponent {
 
     it('should update select event subscriptions in .html file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
                 <igx-select
                     (onOpening)="eventHandler($event)"
                     (onOpened)="eventHandler($event)"
@@ -680,7 +702,7 @@ export class TestComponent {
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            expect(tree.readContent('/src/appPrefix/component/test.component.html'))
                 .toEqual(`
                 <igx-select
                     (opening)="eventHandler($event)"
@@ -695,7 +717,7 @@ export class TestComponent {
     // IgxAutocomplete
     it('should update IgxAutocomplete event subscriptions', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
+            '/src/appPrefix/component/test.component.ts',
 `import { IgxAutocompleteDirective } from '../../../dist/igniteui-angular';
 
 export class TestComponent {
@@ -708,7 +730,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+        expect(tree.readContent('/src/appPrefix/component/test.component.ts'))
             .toEqual(
 `import { IgxAutocompleteDirective } from '../../../dist/igniteui-angular';
 
@@ -723,7 +745,7 @@ export class TestComponent {
 
     it('should update autocomplete event subscriptions in .html file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
             <input
                 igxInput
                 [igxAutocomplete]="townsPanel"
@@ -732,7 +754,7 @@ export class TestComponent {
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            expect(tree.readContent('/src/appPrefix/component/test.component.html'))
                 .toEqual(`
             <input
                 igxInput
@@ -744,7 +766,7 @@ export class TestComponent {
     // IgxDialog
     it('should update IgxDialog event subscriptions', async () => {
         appTree.create(
-            'testSrc/appPrefix/component/test.component.ts',
+            'src/appPrefix/component/test.component.ts',
 `import { IgxDialogComponent } from '../../../dist/igniteui-angular';
 
 export class TestComponent {
@@ -762,7 +784,7 @@ export class TestComponent {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-            expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            expect(tree.readContent('/src/appPrefix/component/test.component.ts'))
                 .toEqual(
 
 `import { IgxDialogComponent } from '../../../dist/igniteui-angular';
@@ -783,7 +805,7 @@ export class TestComponent {
 
     it('should update dialog event subscriptions in .html file', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+            '/src/appPrefix/component/test.component.html', `
         <igx-dialog
             (onOpen)="eventHandler($event)"
             (onOpened)="eventHandler($event)"
@@ -796,7 +818,7 @@ export class TestComponent {
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            expect(tree.readContent('/src/appPrefix/component/test.component.html'))
                 .toEqual(`
         <igx-dialog
             (opening)="eventHandler($event)"
@@ -812,7 +834,7 @@ export class TestComponent {
     // CellType
     it('Should update cell component types with CellType', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/cells.component.ts', `
+            '/src/appPrefix/component/cells.component.ts', `
         import { IgxGridComponent, IgxGridCellComponent, IgxHierarchicalGridCellComponent,
             IgxTreeGridCellComponent, IgxGridExpandableCellComponent } from 'igniteui-angular';
         export class HGridMultiRowDragComponent {
@@ -835,7 +857,7 @@ export class TestComponent {
     const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-            expect(tree.readContent('/testSrc/appPrefix/component/cells.component.ts'))
+            expect(tree.readContent('/src/appPrefix/component/cells.component.ts'))
                 .toEqual(`
         import { IgxGridComponent, CellType } from 'igniteui-angular';
         export class HGridMultiRowDragComponent {
@@ -860,7 +882,7 @@ export class TestComponent {
     // Transaction providers
     it('Should add a comment for the deprecated IgxGridTransactionToken', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/transaction.component.ts', `
+            '/src/appPrefix/component/transaction.component.ts', `
         import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
         @Component({
             template: '',
@@ -873,7 +895,7 @@ export class TestComponent {
     const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/transaction.component.ts'))
+        expect(tree.readContent('/src/appPrefix/component/transaction.component.ts'))
             .toEqual(`
         import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
         @Component({
@@ -889,7 +911,7 @@ export class TestComponent {
 
     it('Should add a comment for the deprecated IgxGridTransactionToken, multiple providers', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/transaction.component.ts', `
+            '/src/appPrefix/component/transaction.component.ts', `
         import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
         @Component({
             template: '',
@@ -906,7 +928,7 @@ export class TestComponent {
     const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/transaction.component.ts'))
+        expect(tree.readContent('/src/appPrefix/component/transaction.component.ts'))
             .toEqual(`
         import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
         @Component({
@@ -925,7 +947,7 @@ export class TestComponent {
     });
 
     it('Should properly rename IComboSelectionChangeEventArgs to IComboSelectionChangingEventArgs',  async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        appTree.create('/src/appPrefix/component/test.component.ts',
         `
         import { IComboSelectionChangeEventArgs } from 'igniteui-angular';
         export class MyClass {
@@ -938,7 +960,7 @@ export class TestComponent {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+            tree.readContent('/src/appPrefix/component/test.component.ts')
         ).toEqual(
         `
         import { IComboSelectionChangingEventArgs } from 'igniteui-angular';
@@ -950,7 +972,7 @@ export class TestComponent {
     });
 
     it('Should properly rename AutocompleteItemSelectionEventArgs to AutocompleteSelectionChangingEventArgs',  async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        appTree.create('/src/appPrefix/component/test.component.ts',
         `
         import { AutocompleteItemSelectionEventArgs } from 'igniteui-angular';
         export class MyClass {
@@ -963,7 +985,7 @@ export class TestComponent {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+            tree.readContent('/src/appPrefix/component/test.component.ts')
         ).toEqual(
         `
         import { AutocompleteSelectionChangingEventArgs } from 'igniteui-angular';

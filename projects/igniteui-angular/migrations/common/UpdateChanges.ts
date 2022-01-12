@@ -491,7 +491,6 @@ export class UpdateChanges {
         // use the absolute path for ALL LS operations
         // do not overwrite the entryPath, as Tree operations require relative paths
         const changes = new Set<{ change; position }>();
-        // let langServ: tss.LanguageService;
         for (const change of memberChanges.changes) {
             if (!content.includes(change.member)) {
                 continue;
