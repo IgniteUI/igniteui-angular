@@ -984,6 +984,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         super.setupColumns();
     }
 
+    /**
+    * @hidden
+    */
+    public get hasMultipleValues() {
+        return this.values.length > 1;
+    }
+
     protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
         groupColumn.hidden = state;
         this.columnGroupStates.set(groupColumn.field, state);
@@ -1024,10 +1031,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected getDataBasedBodyHeight(): number {
         const dvl = this.dataView?.length || 0;
         return dvl < this._defaultTargetRecordNumber ? 0 : this.defaultTargetBodyHeight;
-    }
-
-    protected get hasMultipleValues() {
-        return this.values.length > 1;
     }
 
     protected horizontalScrollHandler(event) {

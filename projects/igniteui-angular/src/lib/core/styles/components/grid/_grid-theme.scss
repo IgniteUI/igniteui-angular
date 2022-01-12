@@ -2978,8 +2978,11 @@
         display: inline-flex !important;
     }
 
-    %igx-grid__tr-pivot--columnLeaf {
-        box-shadow: none !important;
+    %igx-grid__tr-pivot--columnDimensionLeaf {
+        box-shadow: none;
+        igx-grid-header {
+            border: none;
+        }
     }
     %igx-grid__tr-pivot--columnMultiRowSpan {
         igx-grid-header {
