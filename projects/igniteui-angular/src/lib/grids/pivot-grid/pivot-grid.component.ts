@@ -7,7 +7,6 @@ import {
     EventEmitter,
     ComponentFactoryResolver,
     ElementRef,
-    forwardRef,
     HostBinding,
     Inject,
     Input,
@@ -30,10 +29,10 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IPivotConfiguration, IPivotDimension, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -551,6 +550,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         // pivot grid always generates columns automatically.
         this.autoGenerate = true;
         this.uniqueColumnValuesStrategy = this.uniqueColumnValuesStrategy || this.uniqueDimensionValuesStrategy;
+        const config = this.pivotConfiguration;
+        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(config);
         super.ngOnInit();
     }
 
@@ -1042,7 +1043,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     protected autogenerateColumns() {
         let columns = [];
-        const data = this.gridAPI.get_data();
+        const data = this.gridAPI.filterDataByExpressions(this.filteringExpressionsTree);
         this.dimensionDataColumns = this.generateDimensionColumns();
         let fieldsMap;
         if (this.pivotConfiguration.columnStrategy && this.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy) {
@@ -1122,9 +1123,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
         currentFields.forEach((value, key) => {
             let shouldGenerate = true;
-            if (value.dimension && value.dimension.filters) {
+            if (value.dimension && value.dimension.filter) {
                 const state = {
-                    expressionsTree: value.dimension.filters.filteringOperands[0],
+                    expressionsTree: value.dimension.filter.filteringOperands[0],
                     strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
                     advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
                 };

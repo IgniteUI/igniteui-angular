@@ -3,7 +3,7 @@ import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotKeys } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotKeys } from './pivot-grid.interface';
 import {
     DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
@@ -138,16 +138,8 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
         advancedExpressionsTree: IFilteringExpressionsTree,
         _filterPipeTrigger: number,
         _pipeTrigger: number): any[] {
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
-        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+        const expressionsTree = PivotUtil.buildExpressionTree(config);
 
-        const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
-        // add expression trees from all filters
-        PivotUtil.flatten(enabledDimensions).forEach(x => {
-            if (x.filters) {
-                expressionsTree.filteringOperands.push(x.filters);
-            }
-        });
         const state = {
             expressionsTree,
             strategy: filterStrategy || new DimensionValuesFilteringStrategy(),
