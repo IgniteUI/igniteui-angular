@@ -221,42 +221,30 @@ export class TestComponent {
 
     it('Should remove references to deprecated `banner` property of `BannerEventArgs`', async () => {
     appTree.create(
-        '/testSrc/appPrefix/component/expansion-test.component.ts',
-`import { Component, ViewChild } from '@angular/core';
-import { IgxBannerComponent } from '../../../dist/igniteui-angular';
-@Component({
-selector: 'app-banner-test',
-templateUrl: './banner-test.component.html',
-styleUrls: ['./banner-test.component.scss']
-})
+        '/testSrc/appPrefix/component/test.component.ts',
+`import { BannerEventArgs } from '../../../dist/igniteui-angular';
+
 export class BannerTestComponent {
-@ViewChild(IgxBannerComponent, { static: true })
-public panel: IgxBannerComponent;
-public onBannerOpened(event: BannerEventArgs) {
-console.log(event.banner);
-}
-}`
-    );
+
+    public onBannerOpened(event: BannerEventArgs) {
+        console.log(event.banner);
+    }
+}`);
+
     const tree = await schematicRunner
-        .runSchematicAsync('migration-17', {}, appTree)
+        .runSchematicAsync(migrationName, {}, appTree)
         .toPromise();
     const expectedContent =
-`import { Component, ViewChild } from '@angular/core';
-import { IgxBannerComponent } from '../../../dist/igniteui-angular';
-@Component({
-selector: 'app-banner-test',
-templateUrl: './banner-test.component.html',
-styleUrls: ['./banner-test.component.scss']
-})
+`import { BannerEventArgs } from '../../../dist/igniteui-angular';
+
 export class BannerTestComponent {
-@ViewChild(IgxBannerComponent, { static: true })
-public panel: IgxBannerComponent;
-public onBannerOpened(event: BannerEventArgs) {
-console.log(event.owner);
-}
+
+    public onBannerOpened(event: BannerEventArgs) {
+        console.log(event.owner);
+    }
 }`;
     expect(
-            tree.readContent('/testSrc/appPrefix/component/expansion-test.component.ts')
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(expectedContent);
 });
     it('should remove paging property and define a igx-paginator component instead', async () => {

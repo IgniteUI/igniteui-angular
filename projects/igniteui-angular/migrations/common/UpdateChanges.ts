@@ -491,13 +491,12 @@ export class UpdateChanges {
         // use the absolute path for ALL LS operations
         // do not overwrite the entryPath, as Tree operations require relative paths
         const changes = new Set<{ change; position }>();
-        let langServ: tss.LanguageService;
+        // let langServ: tss.LanguageService;
         for (const change of memberChanges.changes) {
             if (!content.includes(change.member)) {
                 continue;
             }
-
-            langServ = langServ || this.getDefaultLanguageService(absPath);
+            const langServ = this.getDefaultLanguageService(absPath);
             let matches: number[];
             if (entryPath.endsWith('.ts')) {
                 const source = langServ.getProgram().getSourceFile(absPath);
@@ -701,7 +700,7 @@ export class UpdateChanges {
 
     private updateMembers() {
         if (this.membersChanges && this.membersChanges.changes.length) {
-            const dirs = [...this.templateFiles, ...this.tsFiles];
+            const dirs = [...this.tsFiles, ...this.templateFiles];
             for (const entryPath of dirs) {
                 this.updateClassMembers(entryPath, this.membersChanges);
             }
@@ -709,10 +708,16 @@ export class UpdateChanges {
     }
 
     private getDefaultProjectForFile(entryPath: string): tss.server.Project {
+        let project;
         const scriptInfo = this.projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.asNormalizedPath(entryPath), false);
-        this.projectService.openClientFile(scriptInfo.fileName);
-        const project = this.projectService.findProject(scriptInfo.containingProjects[0].projectName);
+        if (this.projectService.configuredProjects.size > 0) {
+            // 0 is path, 1 is configured project
+            project = this.projectService.configuredProjects.entries().next().value[1];
+        } else {
+            project = this.projectService.findProject(scriptInfo.containingProjects[0].projectName);
+        }
         project.addMissingFileRoot(scriptInfo.fileName);
+        this.projectService.openClientFile(scriptInfo.fileName);
         return project;
     }
 }

@@ -3,6 +3,7 @@ import * as path from 'path';
 import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
+
 const version = '13.0.0';
 
 describe(`Update to ${version}`, () => {
@@ -12,7 +13,8 @@ describe(`Update to ${version}`, () => {
         defaultProject: 'testProj',
         projects: {
             testProj: {
-                sourceRoot: '/testSrc'
+                root: '',
+                sourceRoot: '/src',
             }
         },
         schematics: {
@@ -21,10 +23,30 @@ describe(`Update to ${version}`, () => {
             }
         }
     };
+    const TSConfig = {
+        compilerOptions: {
+            baseUrl: "./",
+            importHelpers: true,
+            module: "es2020",
+            outDir: "./dist/out-tsc",
+            sourceMap: true,
+            moduleResolution: "node",
+            target: "es2015",
+            rootDir: "."
+        },
+        angularCompilerOptions: {
+            generateDeepReexports: true,
+            strictTemplates: true,
+            fullTemplateTypeCheck: true,
+            strictInjectionParameters: true
+        }
+    };
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
         appTree.create('/angular.json', JSON.stringify(configJson));
+        appTree.create('/tsconfig.json', JSON.stringify(TSConfig));
+        appTree.create('/src/main.ts', "");
     });
 
     const migrationName = 'migration-22';
@@ -32,146 +54,229 @@ describe(`Update to ${version}`, () => {
 
     it('should rename CarouselAnimationType to HorizontalAnimationType', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
-        import { CarouselAnimationType } from 'igniteui-angular';
+            '/src/appPrefix/component/test.component.ts',
+`import { CarouselAnimationType } from '../../../dist/igniteui-angular';
 
-        @Component({
-            selector: 'animationType',
-            templateUrl: './test.component.html',
-            styleUrls: ['./test.component.scss']
-        })
-        export class AnimationType {
-            public animationType: CarouselAnimationType = CarouselAnimationType.slide;
-        }
-        `);
+export class AnimationType {
+    public animationType: CarouselAnimationType = CarouselAnimationType.slide;
+}
+`);
         const tree = await schematicRunner
             .runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        const expectedContent = `import { Component, ViewChild } from '@angular/core';
-        import { HorizontalAnimationType } from 'igniteui-angular';
+        const expectedContent =
+`import { HorizontalAnimationType } from '../../../dist/igniteui-angular';
 
-        @Component({
-            selector: 'animationType',
-            templateUrl: './test.component.html',
-            styleUrls: ['./test.component.scss']
-        })
-        export class AnimationType {
-            public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
-        }
-        `;
+export class AnimationType {
+    public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
+}
+`;
 
         expect(
             tree.readContent(
-                '/testSrc/appPrefix/component/test.component.ts'
+                '/src/appPrefix/component/test.component.ts'
             )
         ).toEqual(expectedContent);
     });
 
     it('should rename IgxComboComponent selectItems to select', async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
-            `
-            import { IgxComboComponent } from '../../../dist/igniteui-angular';
+        appTree.create('/src/appPrefix/component/test.component.ts',
+`import { IgxComboComponent, IgxComboModule } from '../../../dist/igniteui-angular';
+import { Component, NgModule } from '@angular/core';
 
-            export class MyCombo {
-                public combo1: IgxComboComponent;
-                public selectFavorites() {
-                    this.combo1.selectItems(['UK01', 'BG01', 'JP01', 'DE01']);
-                }
-            }
-            `)
-            const tree = await schematicRunner
-                .runSchematicAsync(migrationName, {}, appTree)
-                .toPromise();
+@Component({
+    templateUrl: './test.component.html'
+})
+export class MyCombo {
+    public combo1: IgxComboComponent;
+    public selectFavorites() {
+        this.combo1.selectItems(['UK01', 'BG01', 'JP01', 'DE01']);
+    }
+}
+@NgModule({
+    declarations: [MyCombo],
+    exports: [MyCombo],
+    imports: [IgxComboModule]
+})
+export class MyComboModule { }
+`)
 
-            const expectedContent =
-            `
-            import { IgxComboComponent } from '../../../dist/igniteui-angular';
+appTree.create('/src/appPrefix/component/test.component.html',
+`<igx-combo #combo></igx-combo> <button (click)="combo.selectItems">Select items</button>`);
 
-            export class MyCombo {
-                public combo1: IgxComboComponent;
-                public selectFavorites() {
-                    this.combo1.select(['UK01', 'BG01', 'JP01', 'DE01']);
-                }
-            }
-            `;
+const tree = await schematicRunner
+    .runSchematicAsync(migrationName, {}, appTree)
+    .toPromise();
+
+const expectedTSContent =
+`import { IgxComboComponent, IgxComboModule } from '../../../dist/igniteui-angular';
+import { Component, NgModule } from '@angular/core';
+
+@Component({
+    templateUrl: './test.component.html'
+})
+export class MyCombo {
+    public combo1: IgxComboComponent;
+    public selectFavorites() {
+        this.combo1.select(['UK01', 'BG01', 'JP01', 'DE01']);
+    }
+}
+@NgModule({
+    declarations: [MyCombo],
+    exports: [MyCombo],
+    imports: [IgxComboModule]
+})
+export class MyComboModule { }
+`;
+
+const expectedHTMLContent =
+`<igx-combo #combo></igx-combo> <button (click)="combo.select">Select items</button>`;
 
             expect(
                 tree.readContent(
-                    'testSrc/appPrefix/component/test.component.ts'
+                    'src/appPrefix/component/test.component.ts'
                 )
-            ).toEqual(expectedContent);
+            ).toEqual(expectedTSContent);
+
+            expect(
+                tree.readContent(
+                    'src/appPrefix/component/test.component.html'
+                )
+            ).toEqual(expectedHTMLContent);
     });
 
     it('should rename IgxComboComponent deselectItems to deselect', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
-            `
-            import { IgxComboComponent } from '../../../dist/igniteui-angular';
+            '/src/appPrefix/component/test.component.ts',
+`import { IgxComboComponent, IgxComboModule } from '../../../dist/igniteui-angular';
+import { Component, NgModule } from '@angular/core';
 
-            export class MyComboClass {
-                public combo1: IgxComboComponent;
-                public deselectFavorites() {
-                    this.combo1.deselectItems(["New York", "New Jersey"]);
-                }
-            }
-            `)
-            const tree = await schematicRunner
-                .runSchematicAsync(migrationName, {}, appTree)
-                .toPromise();
+@Component({
+    templateUrl: './test.component.html'
+})
+export class MyComboClass {
+    public combo1: IgxComboComponent;
+    public deselectFavorites() {
+        this.combo1.deselectItems(["New York", "New Jersey"]);
+    }
+}
+@NgModule({
+    declarations: [MyComboClass],
+    exports: [MyComboClass],
+    imports: [IgxComboModule]
+})
+export class MyComboModule { }
+`)
 
-            const expectedContent =
-            `
-            import { IgxComboComponent } from '../../../dist/igniteui-angular';
+appTree.create('/src/appPrefix/component/test.component.html',
+`<igx-combo #combo></igx-combo> <button (click)="combo.deselectItems">Deselect items</button>`);
 
-            export class MyComboClass {
-                public combo1: IgxComboComponent;
-                public deselectFavorites() {
-                    this.combo1.deselect(["New York", "New Jersey"]);
-                }
-            }
-            `;
+    const tree = await schematicRunner
+        .runSchematicAsync(migrationName, {}, appTree)
+        .toPromise();
 
+    const expectedTSContent =
+`import { IgxComboComponent, IgxComboModule } from '../../../dist/igniteui-angular';
+import { Component, NgModule } from '@angular/core';
+
+@Component({
+    templateUrl: './test.component.html'
+})
+export class MyComboClass {
+    public combo1: IgxComboComponent;
+    public deselectFavorites() {
+        this.combo1.deselect(["New York", "New Jersey"]);
+    }
+}
+@NgModule({
+    declarations: [MyComboClass],
+    exports: [MyComboClass],
+    imports: [IgxComboModule]
+})
+export class MyComboModule { }
+`;
+
+    const expectedHTMLContent =
+    `<igx-combo #combo></igx-combo> <button (click)="combo.deselect">Deselect items</button>`;
             expect(
                 tree.readContent(
-                    'testSrc/appPrefix/component/test.component.ts'
+                    'src/appPrefix/component/test.component.ts'
                 )
-            ).toEqual(expectedContent);
+            ).toEqual(expectedTSContent);
+            expect(
+                tree.readContent(
+                    'src/appPrefix/component/test.component.html'
+                )
+            ).toEqual(expectedHTMLContent);
     });
 
     it('should rename IgxComboComponent selectedItems() to selection', async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
-`import { IgxComboComponent } from '../../../dist/igniteui-angular';
+        appTree.create('/src/appPrefix/component/test.component.ts',
+`import { IgxComboComponent, IgxComboModule } from '../../../dist/igniteui-angular';
+import { Component, NgModule } from '@angular/core';
 
+@Component({
+    templateUrl: './test.component.html'
+})
 export class MyComboClass {
     public combo1: IgxComboComponent;
 
     public myFunction() {
         const selection = this.combo1.selectedItems();
     }
-}`)
+}
+@NgModule({
+    declarations: [MyComboClass],
+    exports: [MyComboClass],
+    imports: [IgxComboModule]
+})
+export class MyComboModule { }
+`);
+
+appTree.create('/src/appPrefix/component/test.component.html',
+`<igx-combo #combo></igx-combo> <button (click)="combo.selectedItems()">Hello!</button>`);
 
 const tree = await schematicRunner
     .runSchematicAsync(migrationName, {}, appTree)
     .toPromise();
 
-const expectedContent =
-`import { IgxComboComponent } from '../../../dist/igniteui-angular';
+const expectedTSContent =
+`import { IgxComboComponent, IgxComboModule } from '../../../dist/igniteui-angular';
+import { Component, NgModule } from '@angular/core';
 
+@Component({
+    templateUrl: './test.component.html'
+})
 export class MyComboClass {
     public combo1: IgxComboComponent;
 
     public myFunction() {
         const selection = this.combo1.selection;
     }
-}`;
+}
+@NgModule({
+    declarations: [MyComboClass],
+    exports: [MyComboClass],
+    imports: [IgxComboModule]
+})
+export class MyComboModule { }
+`;
+
+const expectedHTMLContent =
+`<igx-combo #combo></igx-combo> <button (click)="combo.selection">Hello!</button>`;
 
             expect(
                 tree.readContent(
-                    'testSrc/appPrefix/component/test.component.ts'
+                    'src/appPrefix/component/test.component.ts'
                 )
-            ).toEqual(expectedContent);
+            ).toEqual(expectedTSContent);
+
+            expect(
+                tree.readContent(
+                    'src/appPrefix/component/test.component.html'
+                )
+            ).toEqual(expectedHTMLContent);
 
     });
 
@@ -217,7 +322,7 @@ export class MyComboClass {
     });
 
     it('should insert a comment when exporter services are present in module.ts files', async () => {
-        appTree.create('/testSrc/appPrefix/component/app.module.ts',
+        appTree.create('/src/appPrefix/component/app.module.ts',
 `import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
@@ -252,7 +357,7 @@ export class AppModule {}
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/app.module.ts')
+            tree.readContent('/src/appPrefix/component/app.module.ts')
         ).toEqual(
 `// IgxCsvExporterService and IgxExcelExporterService no longer need to be manually provided and can be safely removed.
 import { NgModule } from "@angular/core";
@@ -286,11 +391,11 @@ export class AppModule {}
     });
 
     it('Should properly rename rowData property to data',  async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        appTree.create('/src/appPrefix/component/test.component.ts',
 `import {
     IgxGridComponent,
     IgxTreeGridComponent,
-    IgxHierarchicalGridComponent
+    IgxHierarchicalGridComponent,
 } from '../../../dist/igniteui-angular';
 
 export class MyClass {
@@ -315,19 +420,18 @@ export class MyClass {
         const rowID6 = this.hgrid.rowList.first.rowID;
         const treeRowID = this.tgrid.getRowByIndex(0).treeRow.rowID;
     }
-}`);
+}
+`);
 
         const tree = await schematicRunner
             .runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
-        ).toEqual(
+        const expectedTSContent =
 `import {
     IgxGridComponent,
     IgxTreeGridComponent,
-    IgxHierarchicalGridComponent
+    IgxHierarchicalGridComponent,
 } from '../../../dist/igniteui-angular';
 
 export class MyClass {
@@ -352,81 +456,68 @@ export class MyClass {
         const rowID6 = this.hgrid.rowList.first.key;
         const treeRowID = this.tgrid.getRowByIndex(0).treeRow.key;
     }
-}`);
+}
+`
+
+        expect(
+            tree.readContent('/src/appPrefix/component/test.component.ts')
+        ).toEqual(expectedTSContent);
     });
 
-    it('Should properly rename columnsCollection property to columns',  async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
-        `
-        import { IgxGridComponent } from '../../../dist/igniteui-angular';
+    it('Should properly rename columnsCollection property to columns in grid, tree grid and hierarchical grid',  async () => {
+        appTree.create('/src/appPrefix/component/test.component.ts',
+`import {
+    IgxGridComponent,
+    IgxTreeGridComponent,
+    IgxHierarchicalGridComponent
+ } from '../../../dist/igniteui-angular';
 
-        export class MyClass {
-            public grid1: IgxGridComponent;
-            const columns = this.grid1.columnsCollection;
+export class MyClass {
+    public grid: IgxGridComponent;
+    public tgrid: IgxTreeGridComponent;
+    public hgrid: IgxHierarchicalGridComponent
+    const columnsGrid = this.grid.columnsCollection;
+    const columnsTGrid = this.tgrid.columnsCollection;
+    const columnsHGrid = this.hgrid.columnsCollection;
 
-            public soSth() {
-                const editableColumns = this.grid1.columnsCollection.filter(c => e.editable);
-            }
-        }
-        `);
+    public soSth() {
+        const editableColumnsGrid = this.grid.columnsCollection.filter(c => e.editable);
+        const editableColumnsTGrid = this.tgrid.columnsCollection.filter(c => e.editable);
+        const editableColumnsHGrid = this.hgrid.columnsCollection.filter(c => e.editable);
+    }
+}
+`);
 
         const tree = await schematicRunner
             .runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
+
+        const expectedTSContent =
+`import {
+    IgxGridComponent,
+    IgxTreeGridComponent,
+    IgxHierarchicalGridComponent
+ } from '../../../dist/igniteui-angular';
+
+export class MyClass {
+    public grid: IgxGridComponent;
+    public tgrid: IgxTreeGridComponent;
+    public hgrid: IgxHierarchicalGridComponent
+    const columnsGrid = this.grid.columns;
+    const columnsTGrid = this.tgrid.columns;
+    const columnsHGrid = this.hgrid.columns;
+
+    public soSth() {
+        const editableColumnsGrid = this.grid.columns.filter(c => e.editable);
+        const editableColumnsTGrid = this.tgrid.columns.filter(c => e.editable);
+        const editableColumnsHGrid = this.hgrid.columns.filter(c => e.editable);
+    }
+}
+`
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
-        ).toEqual(
-        `
-        import { IgxGridComponent } from '../../../dist/igniteui-angular';
+            tree.readContent('/src/appPrefix/component/test.component.ts')
+        ).toEqual(expectedTSContent);
 
-        export class MyClass {
-            public grid1: IgxGridComponent;
-            const columns = this.grid1.columns;
-
-            public soSth() {
-                const editableColumns = this.grid1.columns.filter(c => e.editable);
-            }
-        }
-        `
-        );
-    });
-
-    it('Should properly rename columnsCollection property to columns - treeGrid',  async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
-        `
-        import { IgxTreeGridComponent } from '../../../dist/igniteui-angular';
-
-        export class MyClass {
-            public tGrid1: IgxTreeGridComponent;
-            const columns = this.tGrid1.columnsCollection;
-
-            public soSth() {
-                const editableColumns = this.tGrid1.columnsCollection.filter(c => e.editable);
-            }
-        }
-        `);
-
-        const expectedContent =
-        `
-        import { IgxTreeGridComponent } from '../../../dist/igniteui-angular';
-
-        export class MyClass {
-            public tGrid1: IgxTreeGridComponent;
-            const columns = this.tGrid1.columns;
-
-            public soSth() {
-                const editableColumns = this.tGrid1.columns.filter(c => e.editable);
-            }
-        }
-        `
-
-        const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
-
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
-        ).toEqual(expectedContent);
     });
 });
