@@ -252,8 +252,8 @@
         igx-list {
             flex-grow: 1;
             overflow: hidden;
-            margin-left:  -#{rem(16px)};
-            margin-right:  -#{rem(16px)};
+            margin-left: -#{rem(16px)};
+            margin-right: -#{rem(16px)};
             border: 0;
             border-top: 1px dashed igx-color($palette, 'grays', 300);
             border-bottom: 1px dashed igx-color($palette, 'grays', 300);
@@ -292,8 +292,8 @@
         }
 
         igx-list {
-            margin-left:  -#{rem(8px)};
-            margin-right:  -#{rem(8px)};
+            margin-left: -#{rem(8px)};
+            margin-right: -#{rem(8px)};
         }
     }
 
@@ -338,8 +338,8 @@
         }
 
         igx-list {
-            margin-left:  -#{rem(4px)};
-            margin-right:  -#{rem(4px)};
+            margin-left: -#{rem(4px)};
+            margin-right: -#{rem(4px)};
         }
     }
 

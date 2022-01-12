@@ -370,6 +370,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
 
     public onDimDrop(event, area, dimension: PivotDimensionType) {
         const dragId = event.dragChip?.id || event.dragData?.chip.id;
+        const isFromFiltering = this.grid.filterDimensions.find(x => x.memberName === dragId);
         const currentDim = this.getDimensionsByType(dimension);
         const chipsArray = area.chipsList.toArray();
         const chip = chipsArray.find(x => x.id === dragId);
@@ -420,6 +421,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         if (dimension === PivotDimensionType.Column) {
             // if columns have changed need to regenerate columns.
             this.grid.setupColumns();
+        }
+        if (isFromFiltering) {
+            this.grid.reflow();
         }
         this.grid.pipeTrigger++;
         this.grid.dimensionsChange.emit({ dimensions: currentDim, dimensionCollectionType: dimension });
