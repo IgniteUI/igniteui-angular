@@ -2984,19 +2984,14 @@
         igx-grid-header {
             border: none;
         }
-
     }
 
     %igx-grid__tr-pivot--columnMultiRowSpan {
-
         igx-grid-header {
-
             > * {
                 visibility: hidden;
             }
-
         }
-
     }
     // Pivot grid END
 }
