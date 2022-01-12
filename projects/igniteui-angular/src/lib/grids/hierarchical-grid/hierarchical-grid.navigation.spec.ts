@@ -790,16 +790,16 @@ describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
         });
     }));
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
         baseHGridContent = GridFunctions.getGridContent(fixture);
         GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
-    }));
+    });
 
-    it('should allow navigating up between sibling child grids.', (async () => {
+    it('should allow navigating up between sibling child grids.', async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
@@ -819,8 +819,8 @@ describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
         expect(lastCellPrevRI.active).toBe(true);
         expect(lastCellPrevRI.selected).toBe(true);
         expect(lastCellPrevRI.rowIndex).toBe(9);
-    }));
-    it('should allow navigating down between sibling child grids.', (async () => {
+    });
+    it('should allow navigating down between sibling child grids.', async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
@@ -841,9 +841,9 @@ describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
         fixture.detectChanges();
         expect(child2Cell.selected).toBe(true);
         expect(child2Cell.active).toBe(true);
-    }));
+    });
 
-    it('should navigate up from parent row to the correct child sibling.', (async () => {
+    it('should navigate up from parent row to the correct child sibling.', async () => {
         const parentCell = hierarchicalGrid.dataRowList.toArray()[1].cells.toArray()[0];
         GridFunctions.focusCell(fixture, parentCell);
         await wait(DEBOUNCE_TIME);
@@ -860,8 +860,8 @@ describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
         expect(child2Cell.selected).toBe(true);
         expect(child2Cell.active).toBe(true);
         expect(child2Cell.rowIndex).toBe(9);
-    }));
-    it('should navigate down from parent row to the correct child sibling.', (async () => {
+    });
+    it('should navigate down from parent row to the correct child sibling.', async () => {
         const parentCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
         GridFunctions.focusCell(fixture, parentCell);
         await wait(DEBOUNCE_TIME);
@@ -877,9 +877,9 @@ describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
         expect(child1Cell.selected).toBe(true);
         expect(child1Cell.active).toBe(true);
         expect(child1Cell.rowIndex).toBe(0);
-    }));
+    });
 
-    it('should navigate to last cell in previous child using Arrow Up from last cell of sibling with more columns', (async () => {
+    it('should navigate to last cell in previous child using Arrow Up from last cell of sibling with more columns', async () => {
         const childGrid2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[5];
 
         childGrid2.dataRowList.toArray()[0].virtDirRow.scrollTo(7);
@@ -901,7 +901,7 @@ describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
         const childLastCell = childGrid.gridAPI.get_cell_by_index(9, 'childData');
         expect(childLastCell.selected).toBeTruthy();
         expect(childLastCell.active).toBeTruthy();
-    }));
+    });
 });
 
 describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
@@ -915,19 +915,20 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
                 IgxHierarchicalGridSmallerChildComponent
             ],
             imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule]
+                NoopAnimationsModule, IgxHierarchicalGridModule
+            ]
         }).compileComponents();
     }));
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridSmallerChildComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
         baseHGridContent = GridFunctions.getGridContent(fixture);
         GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
-    }));
+    });
 
-    it('should navigate to last cell in next row for child grid using Arrow Down from last cell of parent with more columns', (async () => {
+    it('should navigate to last cell in next row for child grid using Arrow Down from last cell of parent with more columns', async () => {
         const parentCell = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'Col2');
         GridFunctions.focusCell(fixture, parentCell);
 
@@ -945,9 +946,9 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
 
         expect(childLastCell.selected).toBe(true);
         expect(childLastCell.active).toBe(true);
-    }));
+    });
 
-    it('should navigate to last cell in next row for child grid using Arrow Up from last cell of parent with more columns', (async () => {
+    it('should navigate to last cell in next row for child grid using Arrow Up from last cell of parent with more columns', async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
@@ -970,9 +971,9 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
 
         expect(childLastCell.selected).toBe(true);
         expect(childLastCell.active).toBe(true);
-    }));
+    });
 
-    it('should navigate to last cell in next child using Arrow Down from last cell of previous child with more columns', (async () => {
+    it('should navigate to last cell in next child using Arrow Down from last cell of previous child with more columns', async () => {
         const childGrids =  fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
         const firstChildGrid = childGrids[0].query(By.directive(IgxHierarchicalGridComponent)).componentInstance;
         const secondChildGrid = childGrids[1].query(By.directive(IgxHierarchicalGridComponent)).componentInstance;
@@ -995,7 +996,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
         const secondChildCell =  secondChildGrid.gridAPI.get_cell_by_index(0, 'ProductName');
         expect(secondChildCell.selected).toBe(true);
         expect(secondChildCell.active).toBe(true);
-    }));
+    });
 });
 
 @Component({
