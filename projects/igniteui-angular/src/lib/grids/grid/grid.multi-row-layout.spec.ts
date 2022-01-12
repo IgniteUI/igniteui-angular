@@ -1164,10 +1164,10 @@ export class ColumnLayoutTestComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px">
+    <igx-grid #grid [data]="data" height="500px" [moving]="true">
         <igx-column-group header="General Information">
         <igx-column field="CompanyName"></igx-column>
-            <igx-column-group [movable]="true" header="Person Details">
+            <igx-column-group header="Person Details">
                 <igx-column field="ContactName"></igx-column>
                 <igx-column field="ContactTitle"></igx-column>
             </igx-column-group>

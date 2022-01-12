@@ -30,12 +30,13 @@ export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';
 export * from './lib/directives/template-outlet/template_outlet.directive';
 export * from './lib/directives/toggle/toggle.directive';
-export * from './lib/directives/tooltip/tooltip.directive';
+export * from './lib/directives/tooltip';
 export * from './lib/directives/date-time-editor/public_api';
 
 /**
  * Data operations
  */
+export * from './lib/data-operations/data-clone-strategy';
 export * from './lib/data-operations/filtering-expression.interface';
 export * from './lib/data-operations/filtering-expressions-tree';
 export * from './lib/data-operations/filtering-condition';

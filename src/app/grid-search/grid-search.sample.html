@@ -5,15 +5,8 @@
                 <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
 
-            <igx-grid
-                #grid1
-                [data]="data"
-                [displayDensity]="density"
-                [allowFiltering]="true"
-                [allowAdvancedFiltering]="true"
-                [rowSelection]="selectionMode"
-                [width]="'980px'"
-                [height]="'600px'">
+            <igx-grid #grid1 [moving]="true" [data]="data" [displayDensity]="density" [allowFiltering]="true" [moving]="true"
+                [allowAdvancedFiltering]="true" [rowSelection]="selectionMode" [width]="'980px'" [height]="'600px'">
                 <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
                     <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
                     <igx-grid-toolbar-actions>
@@ -26,19 +19,9 @@
                         </igx-grid-toolbar-exporter>
                     </igx-grid-toolbar-actions>
                 </igx-grid-toolbar>
-                <igx-column *ngFor="let c of columns" [field]="c.field"
-                                                    [header]="c.field"
-                                                    [movable]="c.movable"
-                                                    [groupable]="true"
-                                                    [resizable]="c.resizable"
-                                                    [width]="c.width"
-                                                    [sortable]="true"
-                                                    [filterable]="true"
-                                                    [editable]="true"
-                                                    [hidden]="c.hidden"
-                                                    [minWidth]="c.minWidth"
-                                                    [maxWidth]="c.maxWidth"
-                                                    [dataType]="c.type">
+                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [groupable]="true"
+                    [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
+                    [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth" [dataType]="c.type">
                 </igx-column>
             </igx-grid>
             <div class="sample-buttons">

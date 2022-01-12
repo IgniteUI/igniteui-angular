@@ -19,6 +19,7 @@ import { FilteringLogic } from '../data-operations/filtering-expression.interfac
 import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { ExpressionUI } from '../grids/filtering/excel-style/common';
+import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -122,10 +123,9 @@ export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
 
 @Component({
     template: `
-        <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'600px'">
+        <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'600px'" [moving]="true">
             <igx-column *ngFor="let c of columns" [field]="c.field"
                 [header]="c.field"
-                [movable]="c.movable"
                 [width]="c.width"
                 [editable]="true"
                 [pinned]="c.pinned"
@@ -139,11 +139,11 @@ export class GridAddColumnComponent extends BasicGridComponent implements OnInit
     public data = SampleTestData.contactInfoDataFull();
     public ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: 150, movable: true, type: 'string', pinned: true },
-            { field: 'CompanyName', width: 150, movable: true, type: 'string' },
-            { field: 'ContactName', width: 150, movable: true, type: 'string' },
-            { field: 'ContactTitle', width: 150, movable: true, type: 'string' },
-            { field: 'Address', width: 150, movable: true, type: 'string' }];
+            { field: 'ID', width: 150, type: 'string', pinned: true },
+            { field: 'CompanyName', width: 150, type: 'string' },
+            { field: 'ContactName', width: 150, type: 'string' },
+            { field: 'ContactTitle', width: 150, type: 'string' },
+            { field: 'Address', width: 150, type: 'string' }];
     }
 }
 
@@ -761,7 +761,7 @@ export class GridHireDateComponent extends BasicGridComponent {
 @Component({
     template: `<div style="margin: 50px;">
             ${GridTemplateStrings.declareGrid(
-        '[height]="height" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"',
+        '[height]="height" [moving]="true" [width]="width" [moving]="true" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"',
         EventSubscriptions.columnMovingStart + EventSubscriptions.columnMoving + EventSubscriptions.columnMovingEnd,
         ColumnDefinitions.movableColumns)}</div>`
 })
@@ -810,7 +810,7 @@ export class MovableColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="300px" width="500px"`, '', ColumnDefinitions.movableColumns)
+    template: GridTemplateStrings.declareGrid(`[moving]="true" height="300px" width="500px"`, '', ColumnDefinitions.movableColumns)
 })
 export class MovableTemplatedColumnsComponent extends BasicGridComponent {
     public data = SampleTestData.personIDNameRegionData();
@@ -820,7 +820,7 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate" [paging]="paging"`,
+    template: GridTemplateStrings.declareGrid(`height="300px" width="500px" [moving]="true" [autoGenerate]="autoGenerate" [paging]="paging"`,
         EventSubscriptions.columnInit, '')
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
@@ -832,7 +832,6 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
     public paging = false;
 
     public columnInit(column: IgxColumnComponent) {
-        column.movable = true;
         column.sortable = true;
         column.width = '100px';
     }
@@ -852,7 +851,7 @@ export class MultiColumnHeadersComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="800px"  width="500px"`, '',
+    template: GridTemplateStrings.declareGrid(`[moving]="true" height="800px"  width="500px"`, '',
         ColumnDefinitions.multiColHeadersWithGroupingColumns)
 })
 export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent {
@@ -1223,20 +1222,20 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [moving]="true">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
-            [filterable]="false" [resizable]="resizable" [sortable]="'true'" [movable]="'true'"></igx-column>
+            [filterable]="false" [resizable]="resizable" [sortable]="'true'"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"
-            [sortable]="'true'" [movable]="'true'"></igx-column>
+            [sortable]="'true'"></igx-column>
         <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"
-            [sortable]="'true'" [movable]="'true'"></igx-column>
+            [sortable]="'true'"></igx-column>
         <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"
-            [sortable]="'true'" [movable]="'true'"></igx-column>
+            [sortable]="'true'"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
-            [filterable]="filterable" [resizable]="resizable" dataType="date" [sortable]="'true'" [movable]="'true'">
+            [filterable]="filterable" [resizable]="resizable" dataType="date" [sortable]="'true'">
         </igx-column>
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
-            dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
+            dataType="string" [filters]="customFilter" [sortable]="'true'">
         </igx-column>
 
         <igx-grid-excel-style-filtering [minHeight]="'0px'" [maxHeight]="'500px'">
@@ -1253,20 +1252,20 @@ export class IgxGridFilteringESFEmptyTemplatesComponent extends BasicGridCompone
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [moving]="true">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
-            [filterable]="false" [resizable]="resizable" [sortable]="'true'" [movable]="'true'"></igx-column>
+            [filterable]="false" [resizable]="resizable" [sortable]="'true'"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"
-            [sortable]="'true'" [movable]="'true'"></igx-column>
+            [sortable]="'true'"></igx-column>
         <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"
-            [sortable]="'true'" [movable]="'true'"></igx-column>
+            [sortable]="'true'"></igx-column>
         <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"
-            [sortable]="'true'" [movable]="'true'"></igx-column>
+            [sortable]="'true'"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
-            [filterable]="filterable" [resizable]="resizable" dataType="date" [sortable]="'true'" [movable]="'true'">
+            [filterable]="filterable" [resizable]="resizable" dataType="date" [sortable]="'true'">
         </igx-column>
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
-            dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
+            dataType="string" [filters]="customFilter" [sortable]="'true'">
         </igx-column>
 
         <ng-template igxExcelStyleHeaderIcon>
@@ -1659,7 +1658,7 @@ export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridC
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [primaryKey]="'ID'" width="700px" height="400px" [rowEditable]="true">
+    <igx-grid #grid [data]="data" [primaryKey]="'ID'" width="700px" height="400px" [rowEditable]="true" [moving]="true">
         <igx-column
         field="Downloads" header="Downloads" [dataType]="'number'" [pinned]="pinnedFlag" [editable]="true">
         </igx-column>
@@ -1670,7 +1669,7 @@ export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridC
         </igx-column>
         <igx-column field="ReleaseDate" header="Release Date" [dataType]="'date'" [editable]="true" [hidden]="hiddenFlag" width="150px">
         </igx-column>
-        <igx-column-group [movable]="true" header="Column Group 1" *ngIf="columnGroupingFlag">
+        <igx-column-group header="Column Group 1" *ngIf="columnGroupingFlag">
             <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
             </igx-column>
             <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="false" [hidden]="hiddenFlag" width="150px">
@@ -2350,9 +2349,9 @@ export class MRLTestComponent {
 @Component({
     template: `
 <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'" [allowFiltering]="true">
+    [rowEditable]="true" [primaryKey]="'ID'" [allowFiltering]="true" [moving]="true">
     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [movable]='true' [resizable]='true'>
+        [width]="c.width" [resizable]='true'>
     </igx-column>
     <igx-paginator *ngIf="paging"></igx-paginator>
 
@@ -2427,7 +2426,7 @@ export class GridExportGroupedDataComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` height="1000px"`, '', ColumnDefinitions.multiColHeadersExportColumns)
+    template: GridTemplateStrings.declareGrid(`[moving]="true" height="1000px"`, '', ColumnDefinitions.multiColHeadersExportColumns)
 })
 export class MultiColumnHeadersExportComponent extends BasicGridComponent {
     public data = SampleTestData.contactInfoDataFull();
@@ -2475,5 +2474,20 @@ export class ColumnsAddedOnInitComponent extends BasicGridComponent implements O
             ); //add random quantity to each customer for each period in the horizon
         }
     }
+}
 
+export class ObjectCloneStrategy implements IDataCloneStrategy {
+    public clone(data: any): any {
+        let clonedData = {};
+        if (data) {
+            let clone = Object.defineProperties({}, Object.getOwnPropertyDescriptors(data));
+            for (let key in clone) {
+                clonedData[key] = clone[key]
+            }
+
+            clonedData['cloned'] = true;
+        }
+
+        return clonedData;
+    }
 }
