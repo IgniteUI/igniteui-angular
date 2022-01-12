@@ -21,6 +21,8 @@ All notable changes for each version of this project will be documented in this 
        info
     </button>
     ```
+- `IgxTabs` have full right-to-left (RTL) support.
+
 ### General
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`

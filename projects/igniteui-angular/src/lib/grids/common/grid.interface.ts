@@ -97,7 +97,7 @@ export interface RowType {
     parent?: RowType;
     hasChildren?: boolean;
     treeRow? : ITreeGridRecord;
-    addRowUI?: any;
+    addRowUI?: boolean;
     focused?: boolean;
     grid: GridType;
     onRowSelectorClick?: (event: MouseEvent) => void;

@@ -121,16 +121,20 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                 ? formatDate(record[key], column.pipeArgs.format, this.grid.locale)
                 : record[key];
 
+            let valueCase = value;
             let groupByRecord: GroupByRecord;
 
-            if (map.has(value)) {
-                groupByRecord = map.get(value);
+            if (groupingExpression.ignoreCase) {
+                valueCase = value?.toString().toLowerCase();
+            }
+            if (map.has(valueCase)) {
+                groupByRecord = map.get(valueCase);
             } else {
                 groupByRecord = new GroupByRecord();
                 groupByRecord.key = key;
                 groupByRecord.value = value;
                 groupByRecord.records = [];
-                map.set(value, groupByRecord);
+                map.set(valueCase, groupByRecord);
             }
 
             groupByRecord.records.push(record);

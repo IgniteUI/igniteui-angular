@@ -947,7 +947,8 @@ describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         const pivotGrid = fixture.componentInstance.pivotGrid;
         const pivotRows = GridFunctions.getPivotRows(fixture);
         const row = pivotRows[2].componentInstance;
-        row.selectPivotRow(row.rowDimensionData[1].column);
+        const headers = row.nativeElement.querySelectorAll('igx-pivot-row-dimension-header-group');
+        headers[1].click();
         fixture.detectChanges();
         expect(row.selected).toBeTrue();
         expect(pivotGrid.selectedRows).not.toBeNull();
@@ -963,7 +964,7 @@ describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         expect(pivotGrid.selectedRows[0]).toEqual(expected);
 
         //deselect
-        row.selectPivotRow(row.rowDimensionData[1].column);
+        headers[1].click();
         fixture.detectChanges();
         expect(row.selected).toBeFalse();
         expect(pivotGrid.selectedRows.length).toBe(0);
@@ -974,7 +975,8 @@ describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         const pivotGrid = fixture.componentInstance.pivotGrid;
         const pivotRows = GridFunctions.getPivotRows(fixture);
         const row = pivotRows[2].componentInstance;
-        row.selectPivotRow(row.rowDimensionData[0].column);
+        const headers = row.nativeElement.querySelectorAll('igx-pivot-row-dimension-header-group');
+        headers[0].click();
         fixture.detectChanges();
         for (let i = 0; i < 5; ++i) {
             expect(pivotRows[i].componentInstance.selected).toBeTrue();

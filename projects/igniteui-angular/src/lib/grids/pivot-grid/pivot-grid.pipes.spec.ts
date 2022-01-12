@@ -6,6 +6,7 @@ import { IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
+import { DATA } from 'src/app/shared/pivot-data';
 
 describe('Pivot pipes #pivotGrid', () => {
     let rowPipe: IgxPivotRowPipe;
@@ -1531,5 +1532,118 @@ describe('Pivot pipes #pivotGrid', () => {
             { Years: '2021', AllProduct: 'All Products', Discontinued: 'false', Country: 'USA', SellerName: 'David' },
             { Years: '2021', AllProduct: 'All Products', Discontinued: 'false', Country: 'USA', SellerName: 'John' }
         ]);
+    });
+    // automation for https://github.com/IgniteUI/igniteui-angular/issues/10545
+    it('should generate last dimension values for all records.', () => {
+        data = [
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Bulgaria', City: 'Sofia', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+                Country: 'USA', City: 'New York', Date: '01/05/2019', UnitsSold: 296
+            },
+            {
+                ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
+                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2020', UnitsSold: 68
+            },
+            {
+                ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
+                Country: 'USA', City: 'New York', Date: '04/07/2021', UnitsSold: 293
+            },
+            {
+                ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
+                Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+                Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+                Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
+            }];
+        pivotConfig.columns = [{
+            memberName: 'Country',
+            enabled: true
+        }];
+        pivotConfig.rows = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            ),
+            {
+                memberName: 'City',
+                enabled: true
+            },
+            {
+                memberFunction: () => 'All',
+                memberName: 'AllProducts',
+                enabled: true,
+                childLevel: {
+                    memberFunction: (recData) => recData.ProductCategory,
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+            },
+            {
+                memberName: 'SellerName',
+                enabled: true
+            }
+        ];
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
+        const sellers = rowStatePipeResult.map(x => x.SellerName);
+        // there should be no empty values.
+        expect(sellers.filter(x => x === undefined).length).toBe(0);
+    });
+
+    // automation for https://github.com/IgniteUI/igniteui-angular/issues/10662
+    it('should retain processed values for last dimension when bound to complex object.', () => {
+        data = DATA;
+        pivotConfig.rows = [
+            {
+                memberName: 'Date',
+                enabled: true,
+            },
+            {
+                memberName: 'AllProduct',
+                memberFunction: () => 'All Products',
+                enabled: true,
+                childLevel:
+                {
+
+                    memberName: 'Product',
+                    memberFunction: (recData) => recData.Product.Name,
+                    enabled: true
+                }
+            },
+            {
+                memberName: 'AllSeller',
+                memberFunction: () => 'All Sellers',
+                enabled: true,
+                childLevel:
+                {
+                    memberName: 'Seller',
+                    memberFunction: (recData) => recData.Seller.Name,
+                    enabled: true,
+                },
+            },
+        ];
+
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
+
+        const res = rowStatePipeResult.filter(x => x.AllSeller === undefined).map(x => x.Seller);
+        // all values should be strings as the result of the processed member function is string.
+        expect(res.filter(x => typeof x !== 'string').length).toBe(0);
     });
 });
