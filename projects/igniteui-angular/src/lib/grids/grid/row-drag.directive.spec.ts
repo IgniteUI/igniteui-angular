@@ -12,6 +12,7 @@ import { Point } from '../../services/public_api';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
+import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -473,7 +474,7 @@ describe('Row Drag Tests #grid', () => {
                 ]
             });
         }));
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
             dragGrid = fixture.componentInstance.dragGrid;
             dropGrid = fixture.componentInstance.dropGrid;
@@ -482,7 +483,7 @@ describe('Row Drag Tests #grid', () => {
             dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
             dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
-        });
+        }));
         const verifyDragAndDropRowCellValues = (dragRowIndex: number, dropRowIndex: number) => {
             const dragRow = dragGrid.gridAPI.get_row_by_index(dragRowIndex);
             const dragRowCells = (dragRow.cells as QueryList<CellType>).toArray();

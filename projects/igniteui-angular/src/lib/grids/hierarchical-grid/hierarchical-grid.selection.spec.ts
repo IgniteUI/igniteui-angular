@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -37,19 +37,18 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 NoopAnimationsModule,
                 IgxHierarchicalGridModule,
                 IgxIconModule,
-                IgxGridSelectionModule
-            ]
+                IgxGridSelectionModule]
         });
     }));
 
     describe('Cell selection', () => {
-        beforeEach(() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fix.detectChanges();
             hierarchicalGrid = fix.componentInstance.hgrid;
             rowIsland1 = fix.componentInstance.rowIsland;
             rowIsland2 = fix.componentInstance.rowIsland2;
-        });
+        }));
 
         it('should allow only one cell to be selected in the whole hierarchical grid.', fakeAsync(() => {
             hierarchicalGrid.height = '500px';
@@ -170,7 +169,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 2, 2, 0, 1);
         }));
 
-        it('should allow to select multiple cells in the same grid on mouse drag', async () => {
+        it('should allow to select multiple cells in the same grid on mouse drag', (async () => {
             hierarchicalGrid.displayDensity = 'compact';
             fix.detectChanges();
 
@@ -217,7 +216,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 5, 0, 2);
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 5, 0, 2);
-        });
+        }));
 
         it('should NOT allow to select multiple cells in multiple grids on mouse drag', fakeAsync(() => {
             hierarchicalGrid.displayDensity = 'compact';
@@ -334,7 +333,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(childGridLevel1, 1, 3, 1, 2);
         }));
 
-        it('should be able to select range with shift + mouse click and skip the child grid', async () => {
+        it('should be able to select range with shift + mouse click and skip the child grid', (async () => {
             hierarchicalGrid.displayDensity = 'compact';
             fix.detectChanges();
 
@@ -364,9 +363,9 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(cell.active).toBeTrue();
             GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 5, 1, 2);
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 5, 1, 2);
-        });
+        }));
 
-        it('should be able to select multiple ranges holding ctrl key', async () => {
+        it('should be able to select multiple ranges holding ctrl key', (async () => {
             hierarchicalGrid.displayDensity = 'compact';
             fix.detectChanges();
 
@@ -403,7 +402,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 5, 1, 2, 0, 2);
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 5, 5, 0, 0, 1, 2);
-        });
+        }));
 
         it('should NOT be able to create multiple ranges in multiple grids holding ctrl key', fakeAsync(() => {
             hierarchicalGrid.displayDensity = 'compact';
@@ -505,13 +504,13 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     });
 
     describe('Row Selection', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxHierarchicalGridRowSelectionComponent);
             fix.detectChanges();
             hierarchicalGrid = fix.componentInstance.hgrid;
             rowIsland1 = fix.componentInstance.rowIsland;
             rowIsland2 = fix.componentInstance.rowIsland2;
-        });
+        }));
 
         it('should have checkboxes on each row', fakeAsync(() => {
             hierarchicalGrid.expandChildren = true;
@@ -1305,13 +1304,13 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     });
 
     describe('Row Selection CRUD', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxHierarchicalGridRowSelectionNoTransactionsComponent);
             fix.detectChanges();
             hierarchicalGrid = fix.componentInstance.hgrid;
             rowIsland1 = fix.componentInstance.rowIsland;
             rowIsland2 = fix.componentInstance.rowIsland2;
-        });
+        }));
 
         it('should deselect deleted row', () => {
             hierarchicalGrid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
