@@ -42,14 +42,20 @@ describe('IgxToast', () => {
         expect(toast.element.id).toContain('customToast');
     });
 
-    it('should properly toggle', fakeAsync(() => {
-        //spyOn(toast.isVisibleChange, 'emit').and.callThrough();
+    it('should properly toggle and emit isVisibleChange', fakeAsync(() => {
+        spyOn(toast.isVisibleChange, 'emit').and.callThrough();
         expect(toast.isVisible).toBe(false);
+        expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(0);
+
         toast.toggle();
         expect(toast.isVisible).toBe(true);
+        flushMicrotasks();
+        expect(toast.isVisibleChange.emit).toHaveBeenCalledOnceWith({ owner: toast, id: '0' });
+
         toast.toggle();
         flushMicrotasks();
         expect(toast.isVisible).toBe(false);
+        expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(2);
     }));
 });
 
