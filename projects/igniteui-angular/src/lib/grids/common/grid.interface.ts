@@ -34,6 +34,7 @@ import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
+import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -95,7 +96,7 @@ export interface RowType {
     parent?: RowType;
     hasChildren?: boolean;
     treeRow? : ITreeGridRecord;
-    addRowUI?: any;
+    addRowUI?: boolean;
     focused?: boolean;
     grid: GridType;
     onRowSelectorClick?: (event: MouseEvent) => void;
@@ -267,6 +268,7 @@ export interface GridType extends IGridDataBindable {
     summaryPipeTrigger: number;
     hasColumnLayouts: boolean;
     isLoading: boolean;
+    dataCloneStrategy: IDataCloneStrategy;
 
     gridAPI: GridServiceType;
 
