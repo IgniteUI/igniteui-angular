@@ -13,7 +13,7 @@ import {
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular';
 
-fdescribe('IgxToast', () => {
+describe('IgxToast', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
