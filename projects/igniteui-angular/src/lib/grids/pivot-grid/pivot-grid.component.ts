@@ -1021,40 +1021,22 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @ViewChildren(IgxPivotRowDimensionContentComponent)
     protected rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
 
-    protected getElementContentWidth(element: HTMLElement): any {
-        const range = this.document.createRange();
-        const headerWidth = this.platform.getNodeSizeViaRange(range,
-            element,
-            element.parentElement);
-
-        const headerStyle = this.document.defaultView.getComputedStyle(element);
-        const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
-            parseFloat(headerStyle.borderRightWidth);
-
-        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding) };
-    }
-
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
         return PivotUtil.flatten(this.rowDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
             PivotUtil.flatten(this.columnDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Column : PivotDimensionType.Filter;
     }
 
     protected getLargesContentWidth(contents: ElementRef[]): string {
-        const range = this.document.createRange();
         const largest = new Map<number, number>();
-
         if (contents.length > 0) {
             const cellsContentWidths = [];
-            contents.forEach((elem) => cellsContentWidths.push(this.getElementContentWidth(elem.nativeElement).width));
-
+            contents.forEach((elem) => cellsContentWidths.push(this.getHeaderCellWidth(elem.nativeElement).width));
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
             const cellStyle = this.document.defaultView.getComputedStyle(contents[index].nativeElement);
             const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
                 parseFloat(cellStyle.borderLeftWidth) + parseFloat(cellStyle.borderRightWidth);
-
             largest.set(Math.max(...cellsContentWidths), cellPadding);
         }
-
         const largestCell = Math.max(...Array.from(largest.keys()));
         const width = Math.ceil(largestCell + largest.get(largestCell));
 
