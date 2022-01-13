@@ -423,7 +423,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             // if columns have changed need to regenerate columns.
             this.grid.setupColumns();
         }
-        if (isFromFiltering) {
+        if (isFromFiltering || dimension === PivotDimensionType.Filter) {
             this.grid.reflow();
         }
         this.grid.pipeTrigger++;
