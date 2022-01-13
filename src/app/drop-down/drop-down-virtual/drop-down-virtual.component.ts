@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { RemoteService } from 'src/app/shared/remote.service';
 import { Observable } from 'rxjs';
-import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxForOfDirective, DisplayDensity } from 'igniteui-angular';
+import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxForOfDirective, DisplayDensity, VerticalAlignment } from 'igniteui-angular';
 
 interface DataItem {
   name: string;
@@ -63,7 +63,7 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
     if (this.prevRequest) {
         this.prevRequest.unsubscribe();
     }
-    this.loadingToast.position = 'middle';
+    this.loadingToast.positionSettings.verticalDirection = VerticalAlignment.Middle;
     this.loadingToast.autoHide = false;
     this.loadingToast.open('Loading Remote Data...');
     this.cdr.detectChanges();
