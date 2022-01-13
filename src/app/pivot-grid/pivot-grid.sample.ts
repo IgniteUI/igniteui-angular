@@ -8,7 +8,10 @@ import {
     IgxPivotDateDimension,
     IPivotDimension,
     IDimensionsChange,
-    DisplayDensity
+    DisplayDensity,
+    FilteringExpressionsTree,
+    FilteringLogic,
+    IgxStringFilteringOperand
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -48,6 +51,18 @@ export class PivotGridSampleComponent {
     public comfortable: DisplayDensity = DisplayDensity.comfortable;
     public cosy: DisplayDensity = DisplayDensity.cosy;
     public compact: DisplayDensity = DisplayDensity.compact;
+
+    public filterExpTree = new FilteringExpressionsTree(FilteringLogic.And);
+
+    constructor() {
+        this.filterExpTree.filteringOperands = [
+            {
+                condition: IgxStringFilteringOperand.instance().condition('equals'),
+                fieldName: 'SellerName',
+                searchVal: 'Stanley'
+            }
+        ];
+    }
 
     public dimensions: IPivotDimension[] = [
         {
@@ -142,15 +157,13 @@ export class PivotGridSampleComponent {
                 },
             }
         ],
-        filters: [{
-            memberName: 'ProductCategory',
-            enabled:true,
-        },
-        this.dimensions[3],
-    {
-        memberName: 'City',
-        enabled: true
-    }]
+        filters: [
+            {
+                memberName: 'SellerName',
+                enabled: true,
+                filter: this.filterExpTree
+            }
+        ]
     };
 
     public origData = [
