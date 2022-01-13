@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild } from '@angular/core';
@@ -25,16 +25,15 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
                 IgxHierarchicalGridTestBaseComponent
             ],
             imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule
-            ]
+                NoopAnimationsModule, IgxHierarchicalGridModule]
         });
     }));
 
-    beforeEach(() => {
+    beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
-    });
+    }));
 
     it('should retain expansion state when scrolling.', async () => {
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
@@ -345,7 +344,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         expect(childRowComponent.index).toBe(4);
     });
 
-    it('should update scrollbar when expanding a row with data loaded after initial view initialization',  async () => {
+    it('should update scrollbar when expanding a row with data loaded after initial view initialization',  async (done) => {
         fixture.componentInstance.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
 
@@ -356,6 +355,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
                 fixture.detectChanges();
 
                 expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(958);
+                done();
             }
         );
 
@@ -405,8 +405,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
                 IgxHierarchicalGridNoScrollTestComponent
             ],
             imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule
-            ]
+                NoopAnimationsModule, IgxHierarchicalGridModule]
         });
     }));
 
