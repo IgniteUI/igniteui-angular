@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxPivotDateDimension, IgxPivotGridModule } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IgxPivotDateDimension, IgxPivotGridModule, IgxStringFilteringOperand } from 'igniteui-angular';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
@@ -107,6 +107,37 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(pivotGrid.pivotConfiguration.values[0].enabled).toBeFalse();
         expect(pivotGrid.values.length).toBe(1);
         expect(pivotGrid.columns.length).not.toBe(9);
+    });
+
+    it('should remove filter dimension from chip', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+
+        const filteringExpressionTree = new FilteringExpressionsTree(FilteringLogic.And);
+        filteringExpressionTree.filteringOperands = [
+            {
+                condition: IgxStringFilteringOperand.instance().condition('equals'),
+                fieldName: 'SellerName',
+                searchVal: 'Stanley'
+            }
+        ];
+        const filterDimension = {
+            memberName: 'SellerName',
+            enabled: true,
+            filter: filteringExpressionTree
+        };
+        pivotGrid.pivotConfiguration.filters = [filterDimension];
+        pivotGrid.pipeTrigger++;
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.filters[0].enabled).toBeTrue();
+        expect(pivotGrid.rowList.length).toBe(2);
+
+        const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        const rowChip = headerRow.querySelector('igx-chip[id="SellerName"]');
+        const removeIcon = rowChip.querySelectorAll('igx-icon')[2];
+        removeIcon.click();
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.filters[0].enabled).toBeFalse();
+        expect(pivotGrid.rowList.length).toBe(5);
     });
 
     it('should collapse column with 1 value dimension', () => {
@@ -478,6 +509,29 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Bulgaria').value).toBe(3612.42);
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'USA').value).toBe(0);
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Uruguay').value).toBe(242.08);
+        });
+        it('should show one aggregations drop-down at a time', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.width = '1500px';
+            fixture.detectChanges();
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const valueChipUnitsSold = headerRow.querySelector('igx-chip[id="UnitsSold"]');
+
+            const aggregatesIconUnitsSold = valueChipUnitsSold.querySelectorAll('igx-icon')[1];
+            aggregatesIconUnitsSold.click();
+            fixture.detectChanges();
+
+            let dropDown = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_LIST}`));
+            expect(dropDown.length).toBe(1);
+
+            const valueChipUnitPrice = headerRow.querySelector('igx-chip[id="UnitPrice"]');
+
+            const aggregatesIconUnitPrice = valueChipUnitPrice.querySelectorAll('igx-icon')[1];
+            aggregatesIconUnitPrice.click();
+            fixture.detectChanges();
+
+            dropDown = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_LIST}`));
+            expect(dropDown.length).toBe(1);
         });
 
         it('should allow reorder in row chip area.', () => {
