@@ -906,14 +906,13 @@ describe('Excel Exporter', () => {
             await exportAndVerify(hGrid, options, actualData.exportMultiColumnHeadersDataWithSkippedParentMCH);
         });
 
-        it('should export empty file when all parent multi column headers are skipped and alwaysExportHeaders is false', async () => {
+        fit('should export empty file when all parent multi column headers are skipped and alwaysExportHeaders is false', async () => {
             const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
-            options.alwaysExportHeaders = false;
-
             fix.detectChanges();
 
             const hGrid = fix.componentInstance.hGrid;
             options = createExportOptions('HierarchicalGridMCHExcelExport');
+            options.alwaysExportHeaders = false;
 
             exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
                 if (args.header === 'General Information' || args.header === 'Address Information' || args.field === 'CustomerID') {
