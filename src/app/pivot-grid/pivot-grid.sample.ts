@@ -222,4 +222,8 @@ export class PivotGridSampleComponent {
     public setDensity(density: DisplayDensity) {
         this.grid1.displayDensity = density;
     }
+
+    public autoSizeRow(ind) {
+        this.grid1.autoSizeRowDimension(this.pivotConfigHierarchy.rows[ind]);
+    }
 }
