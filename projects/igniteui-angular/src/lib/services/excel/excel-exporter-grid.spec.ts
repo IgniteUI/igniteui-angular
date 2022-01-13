@@ -389,6 +389,8 @@ describe('Excel Exporter', () => {
 
         it('should not export columns when \'columnExporting\' is canceled.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            options.alwaysExportHeaders = false;
+
             fix.detectChanges();
             await wait();
 
@@ -477,6 +479,8 @@ describe('Excel Exporter', () => {
 
         it('should not export rows when \'rowExporting\' is canceled.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            options.alwaysExportHeaders = false;
+
             fix.detectChanges();
             await wait();
 
@@ -902,8 +906,10 @@ describe('Excel Exporter', () => {
             await exportAndVerify(hGrid, options, actualData.exportMultiColumnHeadersDataWithSkippedParentMCH);
         });
 
-        it('should export empty file when all parent multi column headers are skipped', async () => {
+        it('should export empty file when all parent multi column headers are skipped and alwaysExportHeaders is false', async () => {
             const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
+            options.alwaysExportHeaders = false;
+
             fix.detectChanges();
 
             const hGrid = fix.componentInstance.hGrid;
