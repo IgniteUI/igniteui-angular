@@ -43,7 +43,7 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxSummaryOperand, ISummaryExpression } from './summaries/grid-summary';
+import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxRowDirective } from './row.directive';
