@@ -1,11 +1,14 @@
 import { Component, HostBinding, Input } from "@angular/core";
+import { IDropDroppedEventArgs, IgxAppendDropStrategy, IPivotConfiguration, PivotDimensionType } from "igniteui-angular";
 import { DisplayDensity } from "../../core/displayDensity";
 import { PivotGridType } from "../common/grid.interface";
-import { IgxPivotDateDimension } from "./pivot-grid-dimensions";
+// import { IgxPivotDateDimension } from "./pivot-grid-dimensions";
 import { IPivotDimension } from "./pivot-grid.interface";
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 interface IDataSelectorPanel {
     name: string;
+    type?: PivotDimensionType;
     dataKey: string;
     icon: string;
     actions: { icon: string }[];
@@ -21,40 +24,8 @@ export class IgxPivotDataSelectorComponent {
     public cssClass = "igx-pivot-data-selector";
 
     private _grid: PivotGridType;
-    public dimensions: IPivotDimension[] = [
-        {
-            memberName: "Country",
-            enabled: true,
-        },
-        new IgxPivotDateDimension(
-            {
-                memberName: "Date",
-                enabled: true,
-            },
-            {
-                months: false,
-            }
-        ),
-        {
-            memberFunction: () => "All",
-            memberName: "AllProducts",
-            enabled: true,
-            childLevel: {
-                memberFunction: (data) => data.ProductCategory,
-                memberName: "ProductCategory",
-                enabled: true,
-            },
-        },
-        {
-            memberName: "AllSeller",
-            memberFunction: () => "All Sellers",
-            enabled: true,
-            childLevel: {
-                enabled: true,
-                memberName: "SellerName",
-            },
-        },
-    ];
+    public dimensions: IPivotDimension[];
+    public dropStrategy = IgxAppendDropStrategy;
 
     /**
      * @hidden @internal
@@ -62,19 +33,20 @@ export class IgxPivotDataSelectorComponent {
     public _panels: IDataSelectorPanel[] = [
         {
             name: "Filters",
+            type: PivotDimensionType.Filter,
             dataKey: "filterDimensions",
             icon: "filter_list",
-            actions: [],
+            actions: [{
+                icon: "drag_handle"
+            }],
             itemKey: "memberName",
         },
         {
             name: "Columns",
+            type: PivotDimensionType.Column,
             dataKey: "columnDimensions",
             icon: "view_column",
             actions: [
-                {
-                    icon: "arrow_downward",
-                },
                 {
                     icon: "drag_handle",
                 },
@@ -83,12 +55,10 @@ export class IgxPivotDataSelectorComponent {
         },
         {
             name: "Rows",
+            type: PivotDimensionType.Row,
             dataKey: "rowDimensions",
             icon: "table_rows",
             actions: [
-                {
-                    icon: "arrow_downward",
-                },
                 {
                     icon: "drag_handle",
                 },
@@ -131,5 +101,79 @@ export class IgxPivotDataSelectorComponent {
      */
     public get grid(): PivotGridType {
         return this._grid;
+    }
+
+    public onItemSort(_: Event, dimension: IPivotDimension, dimensionType: PivotDimensionType) {
+        if (!dimension.sortDirection) {
+            dimension.sortDirection = SortingDirection.None;
+        }
+
+        dimension.sortDirection = dimension.sortDirection + 1 > SortingDirection.Desc ?
+            SortingDirection.None : dimension.sortDirection + 1;
+        // apply same sort direction to children.
+        let dim = dimension;
+
+        while (dim.childLevel) {
+            dim.childLevel.sortDirection = dimension.sortDirection;
+            dim = dim.childLevel;
+        }
+
+        this.grid.pipeTrigger++;
+
+        if (dimensionType === PivotDimensionType.Column) {
+            this.grid.setupColumns();
+        }
+    }
+
+    protected getDimensionsByType(dimension: PivotDimensionType) {
+        switch (dimension) {
+            case PivotDimensionType.Row:
+                if (!this.grid.pivotConfiguration.rows) {
+                    this.grid.pivotConfiguration.rows = [];
+                }
+                return this.grid.pivotConfiguration.rows;
+            case PivotDimensionType.Column:
+                if (!this.grid.pivotConfiguration.columns) {
+                    this.grid.pivotConfiguration.columns = [];
+                }
+                return this.grid.pivotConfiguration.columns;
+            case PivotDimensionType.Filter:
+                if (!this.grid.pivotConfiguration.filters) {
+                    this.grid.pivotConfiguration.filters = [];
+                }
+                return this.grid.pivotConfiguration.filters;
+            default:
+                return null;
+        }
+    }
+
+    public onItemDropped(event: IDropDroppedEventArgs, dimensionType: PivotDimensionType) {
+        const targetDimension = this.getDimensionsByType(dimensionType);
+        const itemId = event.drag.element.nativeElement.id;
+
+        const allDims = this.grid.pivotConfiguration.rows
+            .concat(this.grid.pivotConfiguration.columns)
+            .concat(this.grid.pivotConfiguration.filters);
+
+        const dims = allDims.filter(x => x && x.memberName === itemId);
+        if (dims.length === 0) {
+            return;
+        }
+
+        dims.forEach(dim => {
+            dim.enabled = false;
+        });
+
+        const targetDimensionItem = targetDimension.find(x => x && x.memberName === itemId);
+        if (targetDimensionItem) {
+            targetDimensionItem.enabled = true;
+        } else {
+            const newDim = Object.assign({}, dims[0]);
+            newDim.enabled = true;
+            targetDimension.push(newDim);
+        }
+
+        this.grid.pipeTrigger++;
+        this.grid.dimensionsChange.emit({ dimensions: targetDimension, dimensionCollectionType: dimensionType });
     }
 }

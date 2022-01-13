@@ -30,5 +30,13 @@
         @include e(item-actions) {
             @extend %selector-item-actions !optional;
         }
+
+        @include e(action-sort) {
+            @extend %selector-action-sort !optional;
+        }
+
+        @include e(action-move) {
+            @extend %selector-action-move !optional;
+        }
     }
 }

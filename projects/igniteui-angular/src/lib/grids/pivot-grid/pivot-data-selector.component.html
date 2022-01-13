@@ -26,7 +26,12 @@
 </igx-list>
 <igx-accordion>
     <igx-expansion-panel [collapsed]="false" *ngFor="let panel of _panels">
-        <igx-expansion-panel-header iconPosition="left" [disabled]="false">
+        <igx-expansion-panel-header
+            iconPosition="left"
+            [disabled]="false"
+            igxDrop
+            (dropped)="onItemDropped($event, panel.type)"
+        >
             <igx-expansion-panel-title class="igx-pivot-data-selector__header">
                 <h6 class="igx-pivot-data-selector__header-title">
                     {{ panel.name }}
@@ -37,25 +42,47 @@
                 </div>
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
-        <igx-expansion-panel-body>
+        <igx-expansion-panel-body
+            igxDrop
+            (dropped)="onItemDropped($event, panel.type)"
+        >
             <igx-list
-                [displayDensity]="displayDensity"
                 *ngIf="this.grid[panel.dataKey].length > 0"
+                [displayDensity]="displayDensity"
             >
                 <igx-list-item
+                    igxDrag
                     *igxFor="
                         let item of this.grid[panel.dataKey];
                         scrollOrientation: 'vertical'
                     "
+                    [id]="item[panel.itemKey]"
                 >
                     <div class="igx-pivot-data-selector__item">
-                        <div class="igx-pivot-data-selector__item-text">
+                        <div
+                            class="igx-pivot-data-selector__item-text"
+                            (click)="onItemSort($event, item, 1)"
+                        >
                             {{ item[panel.itemKey] }}
                         </div>
                         <div class="igx-pivot-data-selector__item-actions">
-                            <igx-icon *ngFor="let action of panel.actions">{{
-                                action.icon
-                            }}</igx-icon>
+                            <igx-icon
+                                class="igx-pivot-data-selector__action-sort"
+                                *ngIf="item.sortDirection"
+                                (click)="onItemSort($event, item, 1)"
+                            >
+                                {{
+                                    item.sortDirection < 2
+                                        ? "arrow_upward"
+                                        : "arrow_downward"
+                                }}
+                            </igx-icon>
+                            <igx-icon
+                                igxDragHandle
+                                class="igx-pivot-data-selector__action-move"
+                                *ngFor="let action of panel.actions"
+                                >{{ action.icon }}</igx-icon
+                            >
                         </div>
                     </div>
                 </igx-list-item>

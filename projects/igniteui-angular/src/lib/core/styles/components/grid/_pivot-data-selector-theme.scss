@@ -164,6 +164,21 @@
         min-height: rem(32px);
     }
 
+    %selector-item-text,
+    %selector-action-sort,
+    %selector-action-move {
+        user-select: none;
+    }
+
+    %selector-item-text,
+    %selector-action-sort {
+        cursor: pointer;
+    }
+
+    %selector-action-move {
+        cursor: grab;
+    }
+
     %selector-item-actions {
         display: flex;
 
