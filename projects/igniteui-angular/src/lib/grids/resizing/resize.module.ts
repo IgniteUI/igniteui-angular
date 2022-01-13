@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IgxColumnResizingService } from './resizing.service';
-import { IgxGridColumnResizerComponent } from './resizer.component';
-import { IgxResizeHandleDirective } from './resize-handle.directive';
+import { IgxColumnResizingService, IgxPivotColumnResizingService } from './resizing.service';
+import { IgxGridColumnResizerComponent, IgxPivotGridColumnResizerComponent } from './resizer.component';
+import { IgxPivotResizeHandleDirective, IgxResizeHandleDirective } from './resize-handle.directive';
 import { IgxColumnResizerDirective } from './resizer.directive';
 
 export { IgxGridColumnResizerComponent } from './resizer.component';
@@ -13,7 +13,9 @@ export { IgxColumnResizerDirective } from './resizer.directive';
     declarations: [
         IgxGridColumnResizerComponent,
         IgxResizeHandleDirective,
-        IgxColumnResizerDirective
+        IgxColumnResizerDirective,
+        IgxPivotGridColumnResizerComponent,
+        IgxPivotResizeHandleDirective
     ],
     imports: [
         CommonModule
@@ -21,10 +23,13 @@ export { IgxColumnResizerDirective } from './resizer.directive';
     exports: [
         IgxGridColumnResizerComponent,
         IgxResizeHandleDirective,
-        IgxColumnResizerDirective
+        IgxColumnResizerDirective,
+        IgxPivotGridColumnResizerComponent,
+        IgxPivotResizeHandleDirective
     ],
     providers: [
-        IgxColumnResizingService
+        IgxColumnResizingService,
+        IgxPivotColumnResizingService
     ]
 })
 export class IgxGridResizingModule {}

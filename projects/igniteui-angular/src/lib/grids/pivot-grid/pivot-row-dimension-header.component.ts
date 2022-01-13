@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Host
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
-import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxPivotColumnResizingService } from '../resizing/resizing.service';
 
 /**
  * @hidden
@@ -17,7 +17,7 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,
-        public colResizingService: IgxColumnResizingService,
+        public colResizingService: IgxPivotColumnResizingService,
         public cdr: ChangeDetectorRef,
         private refInstance: ElementRef<HTMLElement>
     ) {

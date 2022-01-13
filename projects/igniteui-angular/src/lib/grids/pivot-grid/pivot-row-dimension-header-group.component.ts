@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, ViewChild } from '@angular/core';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxPivotColumnResizingService } from '../resizing/resizing.service';
 import { IgxRowDirective } from '../row.directive';
 import { IPivotDimension } from './pivot-grid.interface';
+import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 
 /**
  * @hidden
@@ -18,10 +19,16 @@ import { IPivotDimension } from './pivot-grid.interface';
 })
 export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroupComponent {
 
+    /**
+     * @hidden
+     */
+    @ViewChild(IgxPivotRowDimensionHeaderComponent)
+    public header: IgxPivotRowDimensionHeaderComponent;
+
     constructor(private cdRef: ChangeDetectorRef,
         @Inject(IGX_GRID_BASE) public grid: PivotGridType,
         private elementRef: ElementRef<HTMLElement>,
-        public colResizingService: IgxColumnResizingService,
+        public colResizingService: IgxPivotColumnResizingService,
         public filteringService: IgxFilteringService,
         protected platform: PlatformUtil) {
         super(cdRef, grid, elementRef, colResizingService, filteringService, platform);

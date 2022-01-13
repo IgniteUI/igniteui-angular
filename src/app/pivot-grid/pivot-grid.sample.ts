@@ -8,10 +8,7 @@ import {
     IgxPivotDateDimension,
     IPivotDimension,
     IDimensionsChange,
-    DisplayDensity,
-    FilteringExpressionsTree,
-    FilteringLogic,
-    IgxStringFilteringOperand
+    DisplayDensity
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -51,18 +48,6 @@ export class PivotGridSampleComponent {
     public comfortable: DisplayDensity = DisplayDensity.comfortable;
     public cosy: DisplayDensity = DisplayDensity.cosy;
     public compact: DisplayDensity = DisplayDensity.compact;
-
-    public filterExpTree = new FilteringExpressionsTree(FilteringLogic.And);
-
-    constructor() {
-        this.filterExpTree.filteringOperands = [
-            {
-                condition: IgxStringFilteringOperand.instance().condition('equals'),
-                fieldName: 'SellerName',
-                searchVal: 'Stanley'
-            }
-        ];
-    }
 
     public dimensions: IPivotDimension[] = [
         {
@@ -106,8 +91,29 @@ export class PivotGridSampleComponent {
             this.dimensions[0]
         ],
         rows: [
-            this.dimensions[1],
-            this.dimensions[2]
+            {
+                memberName: 'AllProduct',
+                memberFunction: () => 'All Products',
+                enabled: true,
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+            },
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false,
+                    total: true
+                }
+            ),
+            {
+                memberName: 'SellerName',
+                enabled: true
+            },
         ],
         values: [
             {
@@ -154,13 +160,7 @@ export class PivotGridSampleComponent {
                 },
             }
         ],
-        filters: [
-            {
-                memberName: 'SellerName',
-                enabled: true,
-                filter: this.filterExpTree
-            }
-        ]
+        filters: null
     };
 
     public origData = [
@@ -221,5 +221,12 @@ export class PivotGridSampleComponent {
 
     public setDensity(density: DisplayDensity) {
         this.grid1.displayDensity = density;
+    }
+
+    public setRowDimWidth(rowDimIndex, widthValue) {
+        const newPivotConfig = {...this.pivotConfigHierarchy};
+        newPivotConfig.rows[rowDimIndex].width = widthValue;
+
+        this.grid1.pivotConfiguration = newPivotConfig;
     }
 }

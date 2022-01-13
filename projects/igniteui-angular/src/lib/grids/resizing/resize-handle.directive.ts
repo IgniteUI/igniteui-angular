@@ -8,9 +8,10 @@ import {
     OnDestroy
 } from '@angular/core';
 import { Subject, fromEvent } from 'rxjs';
-import { debounceTime, takeUntil} from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { ColumnType } from '../common/grid.interface';
-import { IgxColumnResizingService } from './resizing.service';
+import { IgxPivotRowDimensionHeaderGroupComponent } from '../pivot-grid/pivot-row-dimension-header-group.component';
+import { IgxColumnResizingService, IgxPivotColumnResizingService } from './resizing.service';
 
 
 /**
@@ -38,9 +39,9 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
 
     private readonly DEBOUNCE_TIME = 200;
 
-    constructor(private zone: NgZone,
-               private element: ElementRef,
-               public colResizingService: IgxColumnResizingService) { }
+    constructor(protected zone: NgZone,
+        protected element: ElementRef,
+        public colResizingService: IgxColumnResizingService) { }
 
     /**
      * @hidden
@@ -56,7 +57,7 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
     @HostListener('dblclick')
     public onDoubleClick() {
         this._dblClick = true;
-        this.colResizingService.column = this.column;
+        this.initResizeService();
         this.colResizingService.autosizeColumnOnDblClick();
     }
 
@@ -106,12 +107,61 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
      * @hidden
      */
     private _onResizeAreaMouseDown(event) {
-        this.colResizingService.column = this.column;
-        this.colResizingService.isColumnResizing = true;
-        this.colResizingService.startResizePos = event.clientX;
+        this.initResizeService(event);
 
         this.colResizingService.showResizer = true;
         this.column.grid.cdr.detectChanges();
     }
+
+    /**
+     * @hidden
+     */
+    protected initResizeService(event = null) {
+        this.colResizingService.column = this.column;
+
+        if (event) {
+            this.colResizingService.isColumnResizing = true;
+            this.colResizingService.startResizePos = event.clientX;
+        }
+    }
 }
 
+/**
+ * @hidden
+ * @internal
+ */
+@Directive({ selector: '[igxPivotResizeHandle]' })
+export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
+
+    /**
+     * @hidden
+     */
+    @Input('igxPivotResizeHandle')
+    public set pivotColumn(value: ColumnType) {
+        this.column = value;
+    };
+
+    public get pivotColumn() {
+        return this.column;
+    }
+
+    /**
+     * @hidden
+     */
+    @Input('igxPivotResizeHandleHeader')
+    public rowHeaderGroup: IgxPivotRowDimensionHeaderGroupComponent;
+
+    constructor(protected zone: NgZone,
+        protected element: ElementRef,
+        public colResizingService: IgxPivotColumnResizingService) {
+        super(zone, element, colResizingService);
+    }
+
+    /**
+     * @hidden
+     */
+    protected initResizeService(event = null) {
+        super.initResizeService(event);
+        this.colResizingService.rowHeaderGroup = this.rowHeaderGroup;
+    }
+}
