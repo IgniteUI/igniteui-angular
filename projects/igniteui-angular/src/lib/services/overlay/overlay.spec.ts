@@ -3196,13 +3196,11 @@ describe('igxOverlay', () => {
             const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
             expect(document.documentElement.scrollTop).toEqual(0);
-            document.dispatchEvent(new Event('scroll'));
-            tick();
-            expect(document.documentElement.scrollTop).toEqual(0);
 
             document.documentElement.scrollTop += 25;
             document.dispatchEvent(new Event('scroll'));
             tick();
+
             expect(document.documentElement.scrollTop).toEqual(0);
 
             document.documentElement.scrollTop += 1000;
