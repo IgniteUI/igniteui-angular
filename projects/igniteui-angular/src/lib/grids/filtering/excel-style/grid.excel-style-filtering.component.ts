@@ -394,8 +394,9 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     /**
      * @hidden @internal
      */
-    public isTreeGrid() {
-        return this.grid.records !== undefined;
+    public isHierarchical() {
+        return this.grid.filterStrategy.hasOwnProperty('hierarchicalFilterFields')
+            && this.grid.filterStrategy['hierarchicalFilterFields'].indexOf(this.column.field) >= 0;
     }
 
     private init() {
@@ -500,7 +501,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const columnField = this.column.field;
         let columnValues;
         
-        if (this.grid.childDataKey !== undefined) {
+        if (this.isHierarchical()) {
             // TODO: add check for DATE
             columnValues = data.map(record => {
                 if (this.processedData.indexOf(record) < 0) {
@@ -546,14 +547,14 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 }
             });
         } else {
-            // TODO: uniqueValues
+            // TODO: unique values on last level
         }
 
         return childrenValues;
     }
 
     private renderValues(columnValues: any[]) {
-        if (this.grid.childDataKey !== undefined) {
+        if (this.isHierarchical()) {
             this.uniqueValues = columnValues;
         } else {
             this.uniqueValues = this.generateUniqueValues(columnValues);
@@ -796,7 +797,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private getFilterItemLabel(element: any, applyFormatter: boolean = true, data?: any) {
-        if (this.grid.childDataKey !== undefined) {
+        if (this.isHierarchical()) {
             element = element.value;
         }
 
@@ -831,7 +832,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private getFilterItemValue(element: any) {
-        if (this.grid.childDataKey !== undefined) {
+        if (this.isHierarchical()) {
             element = element.value;
         }
 

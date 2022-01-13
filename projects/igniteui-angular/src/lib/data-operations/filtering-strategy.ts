@@ -139,3 +139,9 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
         return value;
     }
 }
+
+export class HierarchicalFilteringStrategy extends FilteringStrategy {
+    constructor(public hierarchicalFilterFields: string[]) {
+        super();
+    }
+}
