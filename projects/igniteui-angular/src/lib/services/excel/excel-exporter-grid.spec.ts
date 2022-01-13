@@ -919,14 +919,13 @@ describe('Excel Exporter', () => {
             await exportAndVerify(hGrid, options, actualData.exportMultiColumnHeadersDataWithAllParentsSkipped);
         });
 
-        it('should honor exportHeaders option on empty hierarchical grid with multi column headers', async () => {
+        it('should export headers when exporting empty hierarchical grid with multi column headers', async () => {
             const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
             fix.detectChanges();
 
             const hGrid = fix.componentInstance.hGrid;
             fix.componentInstance.data = [];
             options = createExportOptions('HierarchicalGridMCHExcelExport');
-            options.exportHeaders = true;
 
             fix.detectChanges();
 
@@ -1109,9 +1108,8 @@ describe('Excel Exporter', () => {
             await exportAndVerify(treeGrid, options, actualData.treeGridWithAdvancedFilters);
         });
 
-        it('should honor exportHeaders when exporting empty tree grid.', async () => {
+        it('should export headers when exporting empty tree grid.', async () => {
             fix.componentInstance.data = [];
-            options.exportHeaders = true;
             fix.detectChanges();
 
             await exportAndVerify(treeGrid, options, actualData.emptyTreeGridWithExportedHeaders, false);
@@ -1183,9 +1181,8 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportFrozenMultiColumnHeadersData, false);
         });
 
-        it('should honor exportHeaders when exporting empty grid with multi column headers', async () => {
+        it('should export headers when exporting empty grid with multi column headers', async () => {
             fix.componentInstance.data = [];
-            options.exportHeaders = true;
 
             fix.detectChanges();
 

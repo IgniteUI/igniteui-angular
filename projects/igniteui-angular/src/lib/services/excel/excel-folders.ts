@@ -70,7 +70,7 @@ export class XLExcelFolder implements IExcelFolder {
             ExcelFileTypes.WorkbookFile
         ];
 
-        if (!data.isEmpty || (data.isEmpty && data.options.exportHeaders)) {
+        if (!data.isEmpty || (data.isEmpty && data.options.alwaysExportHeaders)) {
             retVal.push(ExcelFileTypes.SharedStringsFile);
         }
 

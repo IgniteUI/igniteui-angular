@@ -38,7 +38,7 @@ export class CoreFile implements IExcelFile {
  */
 export class WorkbookRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.exportHeaders;
+        const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
         folder.file('workbook.xml.rels', ExcelStrings.getWorkbookRels(hasSharedStrings));
     }
 }
@@ -72,7 +72,7 @@ export class WorksheetFile implements IExcelFile {
         return new Promise<void>(resolve => {
             this.prepareDataAsync(worksheetData, (cols, rows) => {
                 const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
-                const exportHeaders = worksheetData.isEmpty && worksheetData.options.exportHeaders;
+                const exportHeaders = worksheetData.isEmpty && worksheetData.options.alwaysExportHeaders;
 
                 const isHierarchicalGrid = worksheetData.data[0]?.type === ExportRecordType.HierarchicalGridRecord
                     || !(typeof(Array.from(worksheetData.owners.keys())[0]) === 'string');;
@@ -90,7 +90,7 @@ export class WorksheetFile implements IExcelFile {
         const dictionary = worksheetData.dataDictionary;
         this.rowIndex = 0;
 
-        if (worksheetData.isEmpty && (!worksheetData.options.exportHeaders || worksheetData.owner.columns.length === 0)) {
+        if (worksheetData.isEmpty && (!worksheetData.options.alwaysExportHeaders || worksheetData.owner.columns.length === 0)) {
             sheetData += '<sheetData/>';
             this.dimension = 'A1';
             done('', sheetData);
@@ -420,7 +420,7 @@ export class WorkbookFile implements IExcelFile {
  */
 export class ContentTypesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        const hasSharedStrings = !worksheetData.isEmpty || (worksheetData.isEmpty && worksheetData.options.exportHeaders);
+        const hasSharedStrings = !worksheetData.isEmpty || (worksheetData.isEmpty && worksheetData.options.alwaysExportHeaders);
         folder.file('[Content_Types].xml', ExcelStrings.getContentTypesXML(hasSharedStrings, worksheetData.options.exportAsTable));
     }
 }
