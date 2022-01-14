@@ -158,7 +158,7 @@ export class PivotGridSampleComponent {
             {
                 memberName: 'SellerName',
                 enabled: true,
-                filter: this.filterExpTree
+                //filter: this.filterExpTree
             }
         ]
     };

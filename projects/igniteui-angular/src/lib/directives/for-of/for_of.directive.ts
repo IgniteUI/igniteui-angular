@@ -1625,7 +1625,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     protected initSizesCache(items: any[]): number {
-        if (!this.syncService.isMaster(this)) {
+        if (!this.syncService.isMaster(this) && this.igxForScrollOrientation === 'horizontal') {
             const masterSizesCache = this.syncService.sizesCache(this.igxForScrollOrientation);
             return masterSizesCache[masterSizesCache.length - 1];
         }
