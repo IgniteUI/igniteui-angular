@@ -2881,6 +2881,15 @@
         flex-direction: column;
     }
 
+    %grid-thead--virtualizationWrapper {
+        height: 100%;
+    }
+
+    %grid-thead--virtualizationContainer {
+        overflow: visible;
+        height: 100%;
+    }
+
     %igx-grid__tr-pivot {
         display: flex;
         align-items: center;
