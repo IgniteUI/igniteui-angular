@@ -275,15 +275,12 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
                 .concat(this.grid.pivotConfiguration.columns)
                 .concat(this.grid.pivotConfiguration.filters);
             // chip moved from external collection
-            const dims = allDims.filter(x => x && x.memberName === dragId);
-            if (dims.length === 0) {
+            const dim = allDims.find(x => x && x.memberName === dragId);
+            if (!dim) {
                 // you have dragged something that is not a dimension
                 return;
             }
-            dims.forEach(element => {
-                element.enabled = false;
-            });
-
+            const dimType = this.getDimensionsType(dim);
             const currentDimChild = currentDim.find(x => x && x.memberName === dragId);
             if (currentDimChild) {
                 currentDimChild.enabled = true;
@@ -291,9 +288,10 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
                 currentDim.splice(dragChipIndex, 1);
                 currentDim.splice(dragChipIndex > chipIndex ? targetIndex : targetIndex - 1, 0, currentDimChild);
             } else {
-                const newDim = Object.assign({}, dims[0]);
-                newDim.enabled = true;
-                currentDim.splice(targetIndex, 0, newDim);
+                const prevDimensionCollection = this.getDimensionsByType(dimType);
+                // delete from previous dimension collection and add to current.
+                prevDimensionCollection.splice(prevDimensionCollection.indexOf(dim), 1);
+                currentDim.splice(targetIndex, 0, dim);
             }
             const isDraggedFromColumn = !!this.grid.pivotConfiguration.columns?.find(x => x && x.memberName === dragId);
             if (isDraggedFromColumn) {
@@ -339,6 +337,12 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
             default:
                 return null;
         }
+    }
+
+    protected getDimensionsType(dimension: IPivotDimension) {
+        const isColumn = !!this.grid.pivotConfiguration.columns?.find(x => x && x.memberName === dimension.memberName);
+        const isRow = !!this.grid.pivotConfiguration.rows?.find(x => x && x.memberName === dimension.memberName);
+        return isColumn ? PivotDimensionType.Column : isRow ? PivotDimensionType.Row : PivotDimensionType.Filter;
     }
 
     protected getAggregatorsForValue(value: IPivotValue): IPivotAggregator[] {
