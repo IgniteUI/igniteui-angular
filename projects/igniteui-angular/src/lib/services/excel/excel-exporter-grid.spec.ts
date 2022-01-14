@@ -1173,7 +1173,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportCollapsedAndExpandedMultiColumnHeadersData, false);
         });
 
-        fit('should respect ignoreMultiColumnHeaders when set to true', async () => {
+        it('should respect ignoreMultiColumnHeaders when set to true', async () => {
             options.ignoreMultiColumnHeaders = true;
             fix.detectChanges();
 
