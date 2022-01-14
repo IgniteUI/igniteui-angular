@@ -74,11 +74,8 @@ export class WorksheetFile implements IExcelFile {
                 const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
                 const exportHeaders = worksheetData.isEmpty && worksheetData.options.alwaysExportHeaders;
 
-                const isHierarchicalGrid = worksheetData.data[0]?.type === ExportRecordType.HierarchicalGridRecord
-                    || !(typeof(Array.from(worksheetData.owners.keys())[0]) === 'string');;
-
                 folder.file('sheet1.xml', ExcelStrings.getSheetXML(
-                    this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, isHierarchicalGrid, exportHeaders));
+                    this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, worksheetData.isHierarchical, exportHeaders));
                 resolve();
             });
         });
@@ -95,11 +92,10 @@ export class WorksheetFile implements IExcelFile {
             this.dimension = 'A1';
             done('', sheetData);
         } else {
-            const ownersKeys = Array.from(worksheetData.owners.keys());
             const owner = worksheetData.owner;
-            const isHierarchicalGrid = worksheetData.data[0]?.type === ExportRecordType.HierarchicalGridRecord ||
-                !(typeof(ownersKeys[0]) === 'string');
+            const isHierarchicalGrid = worksheetData.isHierarchical;
             const hasMultiColumnHeader = worksheetData.hasMultiColumnHeader;
+
             const hasUserSetIndex = owner.columns.some(col => col.exportIndex !== undefined);
 
             const height =  worksheetData.options.rowHeight;
@@ -210,27 +206,16 @@ export class WorksheetFile implements IExcelFile {
                 }
             }
 
-            if (worksheetData.isEmpty) {
+            this.processDataRecordsAsync(worksheetData, (rows) => {
+                sheetData += rows;
                 sheetData += '</sheetData>';
 
-                if (hasMultiColumnHeader) {
+                if (hasMultiColumnHeader && this.mergeCellsCounter > 0) {
                     sheetData += `<mergeCells count="${this.mergeCellsCounter}">${this.mergeCellStr}</mergeCells>`;
                 }
 
                 done(cols, sheetData);
-            } else {
-                this.processDataRecordsAsync(worksheetData, (rows) => {
-                    sheetData += rows;
-                    sheetData += '</sheetData>';
-
-                    if (hasMultiColumnHeader) {
-                        sheetData += `<mergeCells count="${this.mergeCellsCounter}">${this.mergeCellStr}</mergeCells>`;
-                    }
-
-                    done(cols, sheetData);
-                });
-            }
-
+            });
         }
     }
 
@@ -239,8 +224,7 @@ export class WorksheetFile implements IExcelFile {
         const height =  worksheetData.options.rowHeight;
         this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
 
-        const isHierarchicalGrid =
-            worksheetData.data.some(r => r.type === ExportRecordType.HeaderRecord || r.type === ExportRecordType.HierarchicalGridRecord);
+        const isHierarchicalGrid = worksheetData.isHierarchical;
         const hasUserSetIndex = worksheetData.owner.columns.some(c => c.exportIndex !== undefined);
 
         let recordHeaders = [];

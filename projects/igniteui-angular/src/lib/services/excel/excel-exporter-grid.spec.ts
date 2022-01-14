@@ -906,7 +906,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(hGrid, options, actualData.exportMultiColumnHeadersDataWithSkippedParentMCH);
         });
 
-        fit('should export empty file when all parent multi column headers are skipped and alwaysExportHeaders is false', async () => {
+        it('should export empty file when all parent multi column headers are skipped and alwaysExportHeaders is false', async () => {
             const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
             fix.detectChanges();
 
@@ -1173,7 +1173,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportCollapsedAndExpandedMultiColumnHeadersData, false);
         });
 
-        it('should respect ignoreMultiColumnHeaders when set to true', async () => {
+        fit('should respect ignoreMultiColumnHeaders when set to true', async () => {
             options.ignoreMultiColumnHeaders = true;
             fix.detectChanges();
 
