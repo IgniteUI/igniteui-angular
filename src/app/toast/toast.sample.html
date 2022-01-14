@@ -5,7 +5,7 @@
             <button
                 igxButton="raised"
                 igxRipple="white"
-                (click)="showToast(toast, 'bottom')"
+                (click)="showToast(toast, position.Bottom)"
                 [disabled]="toast.isVisible"
             >
                 Show Toast
@@ -27,7 +27,7 @@
             <button
                 igxButton="raised"
                 igxRipple="white"
-                (click)="showToast(toast, 'middle')"
+                (click)="showToast(toast, position.Middle)"
                 [disabled]="toast.isVisible"
             >
                 Show Toast
@@ -49,7 +49,7 @@
             <button
                 igxButton="raised"
                 igxRipple="white"
-                (click)="showToast(toast, 'top')"
+                (click)="showToast(toast, position.Top)"
                 [disabled]="toast.isVisible"
             >
                 Show Toast
