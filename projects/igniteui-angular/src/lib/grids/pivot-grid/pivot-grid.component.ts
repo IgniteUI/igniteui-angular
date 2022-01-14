@@ -1015,6 +1015,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             const autoWidth = this.getLargesContentWidth(headers);
             dimension.width = autoWidth;
             this.pipeTrigger++;
+            this.cdr.detectChanges();
         }
     }
 
