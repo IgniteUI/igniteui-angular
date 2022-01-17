@@ -1023,6 +1023,7 @@
         border-bottom: 1px solid var-get($theme, 'row-border-color');
         outline-style: none;
         position: relative;
+        background-clip: content-box !important;
 
         &:hover {
             background: var-get($theme, 'row-hover-background');
@@ -1064,6 +1065,7 @@
         z-index: 4;
         cursor: move;
         border-#{$right}: 1px solid transparent;
+        background-clip: border-box;
 
         igx-icon {
             width: $drag-icon-size;
@@ -1323,6 +1325,7 @@
         line-height: $grid-cell-lh;
         color: inherit;
         text-align: #{$left};
+        background-clip: border-box !important;
     }
 
     %igx-grid__td--tree-cell {
@@ -2143,6 +2146,7 @@
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
         background: inherit;
         z-index: 1;
+        background-clip: border-box;
 
         &::after {
             content: '';
