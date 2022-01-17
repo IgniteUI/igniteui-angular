@@ -72,7 +72,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
             PivotUtil.flattenHierarchy(data, config, row, expansionStates, defaultExpand, pivotKeys, totalLlv, prevDims, 0, lvl);
             prevDims.push(row);
         }
-        const finalData = config.columnStrategy ? data : data.filter(x => x[pivotKeys.records]);
+        const finalData = config.columnStrategy ? data : enabledRows.length ? data.filter(x => x[pivotKeys.records]) : data;
         this.cleanState(finalData, pivotKeys);
 
         if (this.grid) {

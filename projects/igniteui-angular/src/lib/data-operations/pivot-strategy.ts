@@ -82,7 +82,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                 prevRowDims.push(row);
             }
         }
-        return data;
+        return data || collection;
     }
 }
 
@@ -136,6 +136,8 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                         hierarchy[property] = flatCols[property];
                     }
                 }
+                result.push(hierarchy);
+            } else {
                 result.push(hierarchy);
             }
         });
