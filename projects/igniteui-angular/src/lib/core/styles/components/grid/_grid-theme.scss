@@ -1023,7 +1023,6 @@
         border-bottom: 1px solid var-get($theme, 'row-border-color');
         outline-style: none;
         position: relative;
-        background-clip: content-box !important;
 
         &:hover {
             background: var-get($theme, 'row-hover-background');
@@ -1324,7 +1323,6 @@
         line-height: $grid-cell-lh;
         color: inherit;
         text-align: #{$left};
-        background-clip: border-box !important;
     }
 
     %igx-grid__td--tree-cell {
