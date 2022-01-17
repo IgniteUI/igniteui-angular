@@ -75,7 +75,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
         protected viewRef: ViewContainerRef
-    ){
+    ) {
         super(grid, selectionService, element, cdr);
     }
     /**
@@ -91,9 +91,9 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
      * @internal
      */
     public getRowDimensionKey(col: IgxColumnComponent) {
-            const dimData = this.rowDimensionData.find(x => x.column.field === col.field);
-            const key =  PivotUtil.getRecordKey(this.data, dimData.dimension, dimData.prevDimensions, this.grid.pivotKeys);
-            return key;
+        const dimData = this.rowDimensionData.find(x => x.column.field === col.field);
+        const key = PivotUtil.getRecordKey(this.data, dimData.dimension, dimData.prevDimensions, this.grid.pivotKeys);
+        return key;
     }
 
     public getExpandState(col: IgxColumnComponent) {
@@ -162,6 +162,20 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
             });
             prev.push(dimData.dimension);
         }
+
+        if (!rowDimConfig.length) {
+            const ref = this.viewRef.createComponent(IgxColumnComponent);
+            ref.instance.field = '';
+            ref.instance.header = '';
+            (ref as any).instance._vIndex = this.grid.columns.length + 0 + this.index * this.grid.pivotConfiguration.rows.length;
+            ref.instance.headerTemplate = this.headerTemplateDefault;
+            const column = ref.instance;
+            this.rowDimensionData.push({
+                column,
+                dimension: undefined,
+                prevDimensions: []
+            });
+        }
     }
 
     protected extractFromDimension(dim: IPivotDimension, index: number = 0, lvl = 0, rootDim: IPivotDimension) {
@@ -172,7 +186,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
     }
 
     protected _createColComponent(field: string, header: string, index: number = 0,
-         dim: IPivotDimension, lvl = 0, rootDim: IPivotDimension) {
+        dim: IPivotDimension, lvl = 0, rootDim: IPivotDimension) {
         const ref = this.viewRef.createComponent(IgxColumnComponent);
         ref.instance.field = field;
         ref.instance.header = header;
