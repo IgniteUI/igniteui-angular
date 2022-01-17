@@ -50,7 +50,7 @@ import { DropPosition } from '../moving/moving.service';
 import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
-import { IgxPivotColumnResizingService } from '../resizing/resizing.service';
+import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
@@ -61,7 +61,7 @@ import { IFilteringExpressionsTree } from '../../data-operations/filtering-expre
 import { IgxGridTransaction } from '../common/types';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
-import { IgxPivotGridColumnResizerComponent } from '../resizing/resizer.component';
+import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -335,6 +335,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public get rootSummariesEnabled(): boolean {
         return false;
     }
+
+    /**
+     * @hidden @internal
+     */
+    public rowDimensionResizing = true;
 
     protected _defaultExpandState = false;
     private _data;

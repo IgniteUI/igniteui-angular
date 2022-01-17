@@ -627,6 +627,7 @@ export interface PivotGridType extends GridType {
     showPivotConfigurationUI: boolean;
     columnDimensions: IPivotDimension[];
     rowDimensions: IPivotDimension[];
+    rowDimensionResizing: boolean;
     values: IPivotValue[];
     filterDimensions: IPivotDimension[];
     dimensionDataColumns: ColumnType[];

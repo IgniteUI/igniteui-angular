@@ -47,7 +47,7 @@
             </ng-template>
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>
-            <igx-pivot-row [pivotRowWidths]='pivotRowWidths' [gridID]="id" [index]="rowIndex" [data]="rowData" 
+            <igx-pivot-row [pivotRowWidths]='pivotRowWidths' [resizing]="rowDimensionResizing" [gridID]="id" [index]="rowIndex" [data]="rowData" 
             [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
             [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-pivot-row>
@@ -111,7 +111,7 @@
         </igx-circular-bar>
     </div>
 </ng-template>
-<igx-pivot-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-pivot-grid-column-resizer>
+<igx-pivot-grid-column-resizer [restrictResizerTop]="theadRow.nativeElement.clientHeight" *ngIf="colResizingService.showResizer"></igx-pivot-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 

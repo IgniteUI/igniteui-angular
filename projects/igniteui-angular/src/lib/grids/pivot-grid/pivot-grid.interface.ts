@@ -2,6 +2,7 @@ import { GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { ColumnType } from '../common/grid.interface';
+import { IgxRowDirective } from '../row.directive';
 
 export const DEFAULT_PIVOT_KEYS = {
     aggregations: 'aggregations', records: 'records', children: 'children', level: 'level',
@@ -117,4 +118,9 @@ export interface IPivotDimensionData {
     column: ColumnType;
     dimension: IPivotDimension;
     prevDimensions: IPivotDimension[];
+}
+
+export interface PivotRowHeaderGroupType {
+    intRow: IgxRowDirective;
+    header: any;
 }

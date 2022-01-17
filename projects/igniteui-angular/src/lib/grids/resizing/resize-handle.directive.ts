@@ -10,8 +10,9 @@ import {
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { ColumnType } from '../common/grid.interface';
-import { IgxPivotRowDimensionHeaderGroupComponent } from '../pivot-grid/pivot-row-dimension-header-group.component';
-import { IgxColumnResizingService, IgxPivotColumnResizingService } from './resizing.service';
+import { PivotRowHeaderGroupType } from '../pivot-grid/pivot-grid.interface';
+import { IgxColumnResizingService } from './resizing.service';
+import { IgxPivotColumnResizingService } from './pivot-grid/pivot-resizing.service'
 
 
 /**
@@ -123,45 +124,5 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
             this.colResizingService.isColumnResizing = true;
             this.colResizingService.startResizePos = event.clientX;
         }
-    }
-}
-
-/**
- * @hidden
- * @internal
- */
-@Directive({ selector: '[igxPivotResizeHandle]' })
-export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
-
-    /**
-     * @hidden
-     */
-    @Input('igxPivotResizeHandle')
-    public set pivotColumn(value: ColumnType) {
-        this.column = value;
-    };
-
-    public get pivotColumn() {
-        return this.column;
-    }
-
-    /**
-     * @hidden
-     */
-    @Input('igxPivotResizeHandleHeader')
-    public rowHeaderGroup: IgxPivotRowDimensionHeaderGroupComponent;
-
-    constructor(protected zone: NgZone,
-        protected element: ElementRef,
-        public colResizingService: IgxPivotColumnResizingService) {
-        super(zone, element, colResizingService);
-    }
-
-    /**
-     * @hidden
-     */
-    protected initResizeService(event = null) {
-        super.initResizeService(event);
-        this.colResizingService.rowHeaderGroup = this.rowHeaderGroup;
     }
 }

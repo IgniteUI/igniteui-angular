@@ -78,6 +78,15 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
     ){
         super(grid, selectionService, element, cdr);
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get resizing() {
+        return this.grid.rowDimensionResizing;
+    }
+
     /**
      * @hidden
      * @internal
@@ -177,7 +186,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
         ref.instance.field = field;
         ref.instance.header = header;
         ref.instance.width = this.grid.resolveRowDimensionWidth(rootDim) + 'px';
-        ref.instance.resizable = true;
+        ref.instance.resizable = this.resizing;
         (ref as any).instance._vIndex = this.grid.columns.length + index + this.index * this.grid.pivotConfiguration.rows.length;
         if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.data, this.grid.pivotKeys)) {
             ref.instance.headerTemplate = this.headerTemplate;

@@ -1,7 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
-import { IgxPivotRowComponent } from 'igniteui-angular';
 import { ColumnType } from '../common/grid.interface';
-import { IgxPivotRowDimensionHeaderGroupComponent } from '../pivot-grid/pivot-row-dimension-header-group.component';
+import { PivotRowHeaderGroupType } from '../pivot-grid/pivot-grid.interface';
 
 /**
  * @hidden
@@ -229,37 +228,5 @@ export class IgxColumnResizingService {
                 this._handlePixelResize(resizeScaled, col.target);
             }
         });
-    }
-}
-
-/**
- * @hidden
- * @internal
- */
-@Injectable()
-export class IgxPivotColumnResizingService extends IgxColumnResizingService {
-    /**
-     * @hidden
-     */
-    public rowHeaderGroup: IgxPivotRowDimensionHeaderGroupComponent;
-
-    /**
-     * @hidden
-     */
-    public getColumnHeaderRenderedWidth() {
-        return this.rowHeaderGroup.header.nativeElement.getBoundingClientRect().width;
-    }
-
-    /**
-     * Resizes the column regaridng to the column minWidth and maxWidth. Update dimension.
-     */
-    public resizeColumn(event: MouseEvent) {
-        super.resizeColumn(event);
-
-        const pivotRow = this.rowHeaderGroup.intRow as IgxPivotRowComponent;
-        const rowDimIndex = pivotRow.rowDimensionData.findIndex(x => x.column === this.column);
-        if (rowDimIndex != 0-1) {
-            pivotRow.grid.pivotConfiguration.rows[rowDimIndex].width = this.getColumnHeaderRenderedWidth() + 'px';
-        }
     }
 }
