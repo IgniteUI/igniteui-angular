@@ -1223,9 +1223,9 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
-                position: absolute,
-                bottom: 200%;
-            }`]
+                        position: absolute;
+                        bottom: -200px;
+                    }`]
                 }
             });
             await TestBed.compileComponents();
@@ -1264,9 +1264,9 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
-                position: absolute,
-                bottom: 200%;
-            }`]
+                        position: absolute;
+                        bottom: -200px;
+                    }`]
                 }
             });
             await TestBed.compileComponents();
@@ -1304,9 +1304,9 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
-                position: absolute,
-                bottom: 200%;
-            }`]
+                        position: absolute;
+                        bottom: -200px;
+                    }`]
                 }
             });
             await TestBed.compileComponents();
@@ -1347,9 +1347,9 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
-                position: absolute,
-                bottom: 200%;
-            }`]
+                        position: absolute;
+                        bottom: -200px;
+                    }`]
                 }
             });
             await TestBed.compileComponents();
@@ -1934,7 +1934,7 @@ describe('igxOverlay', () => {
             contentElement.classList.add('contentWrapper');
             contentElement.appendChild(componentElement);
             const wrapperElement = document.createElement('div');
-            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0');
+            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0;');
             wrapperElement.appendChild(contentElement);
             document.body.appendChild(wrapperElement);
 
@@ -1984,7 +1984,7 @@ describe('igxOverlay', () => {
             contentElement.classList.add('contentWrapper');
             contentElement.appendChild(componentElement);
             const wrapperElement = document.createElement('div');
-            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0');
+            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0;');
             wrapperElement.appendChild(contentElement);
             document.body.appendChild(wrapperElement);
 
@@ -3360,12 +3360,12 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
-            position: absolute;
-            top: 850px;
-            left: -30px;
-            width: 100px;
-            height: 60px;
-        } `]
+                        position: absolute;
+                        top: 850px;
+                        left: -30px;
+                        width: 100px;
+                        height: 60px;
+                    } `]
                 }
             });
             await TestBed.compileComponents();
@@ -3457,15 +3457,15 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            width: 84px;
-            height: 84px;
-            padding: 0px;
-            margin: 0px;
-            border: 0px;
-        } `]
+                        position: absolute;
+                        top: 16px;
+                        left: 16px;
+                        width: 84px;
+                        height: 84px;
+                        padding: 0px;
+                        margin: 0px;
+                        border: 0px;
+                    } `]
                 }
             });
             await TestBed.compileComponents();
@@ -3511,15 +3511,15 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 84px;
-            height: 84px;
-            padding: 0px;
-            margin: 0px;
-            border: 0px;
-        } `]
+                        position: absolute;
+                        top: 16px;
+                        right: 16px;
+                        width: 84px;
+                        height: 84px;
+                        padding: 0px;
+                        margin: 0px;
+                        border: 0px;
+                    } `]
                 }
             });
             await TestBed.compileComponents();
@@ -3565,15 +3565,15 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 84px;
-            height: 84px;
-            padding: 0px;
-            margin: 0px;
-            border: 0px;
-        } `]
+                        position: absolute;
+                        top: 16px;
+                        right: 16px;
+                        width: 84px;
+                        height: 84px;
+                        padding: 0px;
+                        margin: 0px;
+                        border: 0px;
+                    } `]
                 }
             });
             await TestBed.compileComponents();
@@ -3617,15 +3617,15 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
-            position: absolute;
-            bottom: 16px;
-            left: 16px;
-            width: 84px;
-            height: 84px;
-            padding: 0px;
-            margin: 0px;
-            border: 0px;
-        } `]
+                        position: absolute;
+                        bottom: 16px;
+                        left: 16px;
+                        width: 84px;
+                        height: 84px;
+                        padding: 0px;
+                        margin: 0px;
+                        border: 0px;
+                    } `]
                 }
             });
             await TestBed.compileComponents();
@@ -3671,15 +3671,15 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            width: 84px;
-            height: 84px;
-            padding: 0px;
-            margin: 0px;
-            border: 0px;
-        } `]
+                        position: absolute;
+                        top: 16px;
+                        left: 16px;
+                        width: 84px;
+                        height: 84px;
+                        padding: 0px;
+                        margin: 0px;
+                        border: 0px;
+                    } `]
                 }
             });
             await TestBed.compileComponents();
@@ -3717,15 +3717,15 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 84px;
-            height: 84px;
-            padding: 0px;
-            margin: 0px;
-            border: 0px;
-        } `]
+                        position: absolute;
+                        top: 16px;
+                        right: 16px;
+                        width: 84px;
+                        height: 84px;
+                        padding: 0px;
+                        margin: 0px;
+                        border: 0px;
+                    } `]
                 }
             });
             await TestBed.compileComponents();
@@ -3765,15 +3765,15 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
-            position: absolute;
-            bottom: 16px;
-            left: 16px;
-            width: 84px;
-            height: 84px;
-            padding: 0px;
-            margin: 0px;
-            border: 0px;
-        } `]
+                        position: absolute;
+                        bottom: 16px;
+                        left: 16px;
+                        width: 84px;
+                        height: 84px;
+                        padding: 0px;
+                        margin: 0px;
+                        border: 0px;
+                    } `]
                 }
             });
             await TestBed.compileComponents();
@@ -3812,10 +3812,10 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
-            position: absolute;
-            top: 120%;
-            left: 120%;
-        } `]
+                        position: absolute;
+                        top: 120%;
+                        left: 120%;
+                    } `]
                 }
             });
             await TestBed.compileComponents();
@@ -3851,10 +3851,10 @@ describe('igxOverlay', () => {
                 TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
                         styles: [`button {
-            position: absolute;
-            top: 120%;
-            left: 120%;
-        } `]
+                            position: absolute;
+                            top: 120%;
+                            left: 120%;
+                        } `]
                     }
                 });
                 await TestBed.compileComponents();
@@ -3892,7 +3892,7 @@ describe('igxOverlay', () => {
                 TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
                         styles: [
-                            'button { position: absolute; top: 100%; left: 90% }'
+                            'button { position: absolute; top: 100%; left: 90%; }'
                         ]
                     }
                 });
@@ -3940,7 +3940,7 @@ describe('igxOverlay', () => {
                 TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
                         styles: [
-                            'button { position: absolute; top: 200%; left: 90% }'
+                            'button { position: absolute; top: 200%; left: 90%; }'
                         ]
                     }
                 });
@@ -3980,7 +3980,7 @@ describe('igxOverlay', () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [
-                        'button { position: absolute; top: 100%; left: 90% }'
+                        'button { position: absolute; top: 100%; left: 90%; }'
                     ]
                 }
             });
@@ -4281,7 +4281,7 @@ describe('igxOverlay', () => {
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: `simple - dynamic - component`,
-    template: `<div style='width:100px; height: 100px; background-color: red'></div>`
+    template: `<div style='width:100px; height: 100px; background-color: red;'></div>`
 })
 export class SimpleDynamicComponent {
     @HostBinding('style.display')
@@ -4292,7 +4292,7 @@ export class SimpleDynamicComponent {
 }
 
 @Component({
-    template: `<div #item class="simpleRef" style='position: absolute; width:100px; height: 100px; background-color: red'></div>`
+    template: `<div #item class="simpleRef" style='position: absolute; width:100px; height: 100px; background-color: red;'></div>`
 })
 export class SimpleRefComponent {
     @ViewChild('item', { static: true })
@@ -4302,7 +4302,7 @@ export class SimpleRefComponent {
 }
 
 @Component({
-    template: `<div style='width:3000px; height: 1000px; background-color: red'></div>`
+    template: `<div style='width:3000px; height: 1000px; background-color: red;'></div>`
 })
 export class SimpleBigSizeComponent {
     @HostBinding('style.display')
@@ -4510,7 +4510,7 @@ export class WidthTestOverlayComponent {
         @Inject(ElementRef) public elementRef: ElementRef
     ) { }
 
-    public click() {
+    public click(_event: any) {
         this.overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
         this.overlaySettings.scrollStrategy = new NoOpScrollStrategy();
         this.overlaySettings.closeOnOutsideClick = true;
