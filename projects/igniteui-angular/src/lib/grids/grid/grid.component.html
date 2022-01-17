@@ -144,7 +144,7 @@
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             [igxForTrackBy]='trackChanges'
-            #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+            #verticalScrollContainer (onChunkPreload)="dataLoading($event)" (onDataChanging)="dataRebinding($event)" (onDataChanged)="dataRebound($event)">
             <ng-template
                 [igxTemplateOutlet]='getRowTemplate(rowData)'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex)'

@@ -132,7 +132,7 @@
         | gridAddRow:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
-            #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+            #verticalScrollContainer (onChunkPreload)="dataLoading($event)" (onDataChanging)="dataRebinding($event)" (onDataChanged)="dataRebound($event)">
             <ng-template
                 [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) ? child_record_template : hierarchical_record_template))'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)' (onViewCreated)='viewCreatedHandler($event)'
