@@ -973,7 +973,11 @@ export class FileContentData {
         this._sharedStringsData =
         `count="5" uniqueCount="5"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si>`;
 
+        this._tableData = `ref="A1:E2" totalsRowShown="0">
+        <autoFilter ref="A1:E1"/><tableColumns count="5"><tableColumn id="1" name="ID"/><tableColumn id="2" name="ParentID"/><tableColumn id="3" name="Name"/><tableColumn id="4" name="JobTitle"/><tableColumn id="5" name="Age"/></tableColumns>`;
+
         this._worksheetData = `
+        <dimension ref="A1:E1"/>
         <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
         <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
         <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/><col min="4" max="4" width="50" customWidth="1"/><col min="5" max="5" width="50" customWidth="1"/></cols>
@@ -1389,7 +1393,8 @@ export class FileContentData {
             `count="12" uniqueCount="12"><si><t>ID</t></si><si><t>General Information</t></si><si><t>Address Information</t></si><si><t>Personal Details</t></si><si><t>Location</t></si><si><t>Contact Information</t></si><si><t>ContactName</t></si><si><t>ContactTitle</t></si><si><t>Country</t></si><si><t>Phone</t></si><si><t>Fax</t></si><si><t>PostalCode</t></si>`;
 
         this._worksheetData =
-            `<sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+            `<dimension ref="A1:G5"/>
+            <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
             <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
             <cols><col min="1" max="7" width="15" customWidth="1"/></cols>
             <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" /><c r="D1" t="s"><v>2</v></c><c r="E1" /><c r="F1" /><c r="G1" /></row><row r="2"><c r="B2" t="s"><v>3</v></c><c r="C2" /><c r="D2" t="s"><v>4</v></c><c r="E2" t="s"><v>5</v></c><c r="F2" /><c r="G2" /></row><row r="3"><c r="B3" t="s"><v>6</v></c><c r="C3" t="s"><v>7</v></c><c r="D3" t="s"><v>8</v></c><c r="E3" t="s"><v>9</v></c><c r="F3" t="s"><v>10</v></c><c r="G3" t="s"><v>11</v></c></row></sheetData><mergeCells count="6"> <mergeCell ref="A1:A3" /> <mergeCell ref="B1:C1" /> <mergeCell ref="D1:G1" /> <mergeCell ref="B2:C2" /> <mergeCell ref="D2:D2" /> <mergeCell ref="E2:G2" /></mergeCells>`;

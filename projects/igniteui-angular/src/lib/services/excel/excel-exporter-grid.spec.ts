@@ -1117,7 +1117,7 @@ describe('Excel Exporter', () => {
             fix.componentInstance.data = [];
             fix.detectChanges();
 
-            await exportAndVerify(treeGrid, options, actualData.emptyTreeGridWithExportedHeaders, false);
+            await exportAndVerify(treeGrid, options, actualData.emptyTreeGridWithExportedHeaders);
         });
     });
 

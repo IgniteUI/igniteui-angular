@@ -84,7 +84,7 @@ export class XLExcelFolder implements IExcelFolder {
             ExcelFolderTypes.WorksheetsExcelFolder
         ];
 
-        if (!data.isEmpty && data.options.exportAsTable) {
+        if ((!data.isEmpty || data.options.alwaysExportHeaders) && data.options.exportAsTable) {
             retVal.push(ExcelFolderTypes.TablesExcelFolder);
         }
 
@@ -133,7 +133,7 @@ export class WorksheetsExcelFolder implements IExcelFolder {
     }
 
     public childFolders(data: WorksheetData) {
-        return data.isEmpty || !data.options.exportAsTable ? [] : [ExcelFolderTypes.WorksheetsRelsExcelFolder];
+        return (data.isEmpty && !data.options.alwaysExportHeaders) || !data.options.exportAsTable ? [] : [ExcelFolderTypes.WorksheetsRelsExcelFolder];
     }
 }
 

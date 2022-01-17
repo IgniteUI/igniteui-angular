@@ -32,7 +32,10 @@ export class WorksheetData {
     }
 
     public get isEmpty(): boolean {
-        return !this.rowCount || !this.columnCount || this.owner.columns.every(c => c.skip);
+        return !this.rowCount
+            || this.rowCount === this.owner.maxLevel + 1
+            || !this.columnCount
+            || this.owner.columns.every(c => c.skip);
     }
 
     public get isSpecialData(): boolean {
@@ -60,15 +63,17 @@ export class WorksheetData {
         this._isHierarchical = this.data[0]?.type === ExportRecordType.HierarchicalGridRecord
             || !(typeof(Array.from(this.owners.keys())[0]) === 'string');
 
-
         if (this._isHierarchical || (this._hasMultiColumnHeader && !this.options.ignoreMultiColumnHeaders)) {
             this.options.exportAsTable = false;
         }
 
         if (!this._data || this._data.length === 0) {
+            if (!this._isHierarchical) {
+                this._rowCount = this.owner.maxLevel + 1;
+            }
+
             return;
         }
-
 
         this._isSpecialData = ExportUtilities.isSpecialData(this._data[0].data);
         this._rowCount = this._data.length + 1;
