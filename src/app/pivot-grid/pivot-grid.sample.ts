@@ -158,7 +158,7 @@ export class PivotGridSampleComponent {
             {
                 memberName: 'SellerName',
                 enabled: true,
-                filter: this.filterExpTree
+                //filter: this.filterExpTree
             }
         ]
     };
@@ -221,5 +221,9 @@ export class PivotGridSampleComponent {
 
     public setDensity(density: DisplayDensity) {
         this.grid1.displayDensity = density;
+    }
+
+    public autoSizeRow(ind) {
+        this.grid1.autoSizeRowDimension(this.pivotConfigHierarchy.rows[ind]);
     }
 }
