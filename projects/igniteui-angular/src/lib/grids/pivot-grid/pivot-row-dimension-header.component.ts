@@ -19,7 +19,7 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
         @Inject(IGX_GRID_BASE) public grid: GridType,
         public colResizingService: IgxPivotColumnResizingService,
         public cdr: ChangeDetectorRef,
-        private refInstance: ElementRef<HTMLElement>
+        public refInstance: ElementRef<HTMLElement>
     ) {
         super(grid, colResizingService, cdr, refInstance);
     }
