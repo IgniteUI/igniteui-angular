@@ -23,7 +23,8 @@ import {
     ViewContainerRef,
     Injector,
     NgModuleRef,
-    ApplicationRef
+    ApplicationRef,
+    ContentChildren
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -62,6 +63,8 @@ import { IgxGridTransaction } from '../common/types';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
+import { flatten } from '@angular/compiler';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -993,6 +996,58 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         super.setupColumns();
     }
 
+    /**
+     * Auto-sizes row dimension cells.
+     *
+     * @remarks
+     * Only sizes based on the dimension cells in view.
+     * @example
+     * ```typescript
+     * this.grid.autoSizeRowDimension(dimension);
+     * ```
+     * @param dimension The row dimension to size.
+     */
+    public autoSizeRowDimension(dimension: IPivotDimension) {
+        if (this.getDimensionType(dimension) === PivotDimensionType.Row) {
+            const relatedDims = PivotUtil.flatten([dimension]).map(x => x.memberName);
+            const content = this.rowDimensionContentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
+            const headers = flatten(content.map(x => x.headerGroups.toArray())).map(x => x.header.refInstance);
+            const autoWidth = this.getLargesContentWidth(headers);
+            dimension.width = autoWidth;
+            this.pipeTrigger++;
+            this.cdr.detectChanges();
+        }
+    }
+
+    @ViewChildren(IgxPivotRowDimensionContentComponent)
+    protected rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
+
+    protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
+        return PivotUtil.flatten(this.rowDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
+            PivotUtil.flatten(this.columnDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Column : PivotDimensionType.Filter;
+    }
+
+    protected getLargesContentWidth(contents: ElementRef[]): string {
+        const largest = new Map<number, number>();
+        if (contents.length > 0) {
+            const cellsContentWidths = [];
+            contents.forEach((elem) => cellsContentWidths.push(this.getHeaderCellWidth(elem.nativeElement).width));
+            const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
+            const cellStyle = this.document.defaultView.getComputedStyle(contents[index].nativeElement);
+            const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
+                parseFloat(cellStyle.borderLeftWidth) + parseFloat(cellStyle.borderRightWidth);
+            largest.set(Math.max(...cellsContentWidths), cellPadding);
+        }
+        const largestCell = Math.max(...Array.from(largest.keys()));
+        const width = Math.ceil(largestCell + largest.get(largestCell));
+
+        if (Number.isNaN(width)) {
+            return null;
+        } else {
+            return width + 'px';
+        }
+    }
+
     protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
         groupColumn.hidden = state;
         this.columnGroupStates.set(groupColumn.field, state);
@@ -1042,12 +1097,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
  * @hidden @internal
  */
-    @ViewChildren('verticalRowDimScrollContainer', { read: IgxGridForOfDirective})
+    @ViewChildren('verticalRowDimScrollContainer', { read: IgxGridForOfDirective })
     public verticalRowDimScrollContainers: QueryList<IgxGridForOfDirective<any>>;
 
     protected verticalScrollHandler(event) {
         super.verticalScrollHandler(event);
-        this.verticalRowDimScrollContainers.forEach(x => { 
+        this.verticalRowDimScrollContainers.forEach(x => {
             x.onScroll(event);
             x.cdr.detectChanges();
         });

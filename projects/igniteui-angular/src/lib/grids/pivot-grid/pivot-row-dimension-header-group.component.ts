@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, ViewChild, ViewChildren } from '@angular/core';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
@@ -7,6 +7,7 @@ import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.compon
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxRowDirective } from '../row.directive';
 import { IPivotDimension } from './pivot-grid.interface';
+import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 
 /**
  * @hidden
@@ -40,6 +41,9 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     */
     @Input()
     public parent: any;
+
+    @ViewChild(IgxPivotRowDimensionHeaderComponent)
+    public header: IgxPivotRowDimensionHeaderComponent;
 
     @HostBinding('attr.id')
     public get headerID() {

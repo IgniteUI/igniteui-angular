@@ -404,6 +404,7 @@ export interface GridType extends IGridDataBindable {
     hasColumnGroups: boolean;
     hasEditableColumns: boolean;
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
+    getHeaderCellWidth: (element: HTMLElement) => ISizeInfo;
 
     cdr: ChangeDetectorRef;
     document: Document;
@@ -642,4 +643,9 @@ export interface PivotGridType extends GridType {
 export interface GridSVGIcon {
     name: string;
     value: string;
+}
+
+export interface ISizeInfo {
+    width: number,
+    padding: number
 }

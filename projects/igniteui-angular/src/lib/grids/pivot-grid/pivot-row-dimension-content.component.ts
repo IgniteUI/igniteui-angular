@@ -3,12 +3,15 @@ import {
     ChangeDetectorRef,
     Component,
     ComponentFactoryResolver,
+    ContentChildren,
     ElementRef,
     Inject,
     Input,
+    QueryList,
     SimpleChanges,
     TemplateRef,
     ViewChild,
+    ViewChildren,
     ViewContainerRef
 } from '@angular/core';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
@@ -18,6 +21,7 @@ import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxRowDirective } from '../row.directive';
 import { IPivotDimension, IPivotDimensionData } from './pivot-grid.interface';
+import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { PivotUtil } from './pivot-util';
 
 /**
@@ -58,6 +62,9 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
      */
     @ViewChild('headerDefaultTemplate', { read: TemplateRef, static: true })
     public headerTemplateDefault: TemplateRef<any>;
+
+    @ViewChildren(IgxPivotRowDimensionHeaderGroupComponent)
+    public headerGroups: QueryList<IgxPivotRowDimensionHeaderGroupComponent>
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: PivotGridType,
