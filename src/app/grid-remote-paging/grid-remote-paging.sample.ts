@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { GridPagingMode, IgxGridComponent } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { Observable } from 'rxjs';
 
@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
+    public mode: GridPagingMode = GridPagingMode.Remote;
     public page = 0;
     public totalCount = 0;
     public pages = [];
