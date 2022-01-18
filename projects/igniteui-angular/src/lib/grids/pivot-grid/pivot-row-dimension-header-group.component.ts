@@ -25,12 +25,6 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     @HostBinding('style.user-select')
     public userSelect = 'none';
 
-    /**
-     * @hidden
-     */
-    @ViewChild(IgxPivotRowDimensionHeaderComponent)
-    public header: IgxPivotRowDimensionHeaderComponent;
-
     constructor(private cdRef: ChangeDetectorRef,
         @Inject(IGX_GRID_BASE) public grid: PivotGridType,
         private elementRef: ElementRef<HTMLElement>,

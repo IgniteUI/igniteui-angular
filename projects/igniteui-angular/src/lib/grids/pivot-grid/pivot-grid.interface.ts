@@ -122,6 +122,9 @@ export interface IPivotDimensionData {
 }
 
 export interface PivotRowHeaderGroupType {
-    intRow: IgxRowDirective;
+    rowIndex: number;
+    parent: any;
     header: any;
+    headerID: string;
+    grid: any;
 }

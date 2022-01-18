@@ -23,9 +23,7 @@ export class IgxPivotColumnResizingService extends IgxColumnResizingService {
     }
 
     protected _handlePixelResize(diff: number, column: ColumnType) {
-        const pivotRow = this.rowHeaderGroup.intRow as any;
-        const rowDimIndex = pivotRow.rowDimensionData.findIndex(x => x.column === this.column);
-        const rowDim = pivotRow.grid.pivotConfiguration.rows[rowDimIndex];
+        const rowDim = this.rowHeaderGroup.parent.dimension;
         if (!rowDim) return;
 
         const currentColWidth = parseFloat(column.width);
@@ -40,7 +38,8 @@ export class IgxPivotColumnResizingService extends IgxColumnResizingService {
         }
         
         // Notify the grid to reflow, to update if horizontal scrollbar needs to be rendered/removed.
-        this.column.grid.notifyChanges(true);
+        this.rowHeaderGroup.grid.pipeTrigger++;
+        this.rowHeaderGroup.grid.notifyChanges(true);
     }
 
     protected _handlePercentageResize(diff: number, column: ColumnType) { }

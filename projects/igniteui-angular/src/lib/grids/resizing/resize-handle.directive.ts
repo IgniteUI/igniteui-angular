@@ -31,7 +31,7 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    private _dblClick = false;
+    protected _dblClick = false;
 
     /**
      * @hidden

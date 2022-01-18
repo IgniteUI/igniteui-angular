@@ -1,6 +1,7 @@
 import {
     Directive,
     ElementRef,
+    HostListener,
     Input,
     NgZone
 } from '@angular/core';
@@ -38,6 +39,15 @@ export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
         protected element: ElementRef,
         public colResizingService: IgxPivotColumnResizingService) {
         super(zone, element, colResizingService);
+    }
+
+    /**
+     * @hidden
+     */
+    public onDoubleClick() {
+        this._dblClick = true;
+        this.initResizeService();
+        this.rowHeaderGroup.grid.autoSizeRowDimension(this.rowHeaderGroup.parent.dimension);
     }
 
     /**
