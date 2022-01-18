@@ -406,7 +406,7 @@ export class WorkbookFile implements IExcelFile {
  */
 export class ContentTypesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        const hasSharedStrings = !worksheetData.isEmpty || (worksheetData.isEmpty && worksheetData.options.alwaysExportHeaders);
+        const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
         folder.file('[Content_Types].xml', ExcelStrings.getContentTypesXML(hasSharedStrings, worksheetData.options.exportAsTable));
     }
 }
