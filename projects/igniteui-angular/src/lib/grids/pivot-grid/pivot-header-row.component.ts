@@ -281,18 +281,13 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
                 return;
             }
             const dimType = this.getDimensionsType(dim);
-            const currentDimChild = currentDim.find(x => x && x.memberName === dragId);
-            if (currentDimChild) {
-                currentDimChild.enabled = true;
-                const dragChipIndex = currentDim.indexOf(currentDimChild);
-                currentDim.splice(dragChipIndex, 1);
-                currentDim.splice(dragChipIndex > chipIndex ? targetIndex : targetIndex - 1, 0, currentDimChild);
-            } else {
-                const prevDimensionCollection = this.getDimensionsByType(dimType);
-                // delete from previous dimension collection and add to current.
-                prevDimensionCollection.splice(prevDimensionCollection.indexOf(dim), 1);
-                currentDim.splice(targetIndex, 0, dim);
-            }
+
+            // Dragged chip from a different dimension to the current one.
+            const prevDimensionCollection = this.getDimensionsByType(dimType);
+            // delete from previous dimension collection and add to current.
+            prevDimensionCollection.splice(prevDimensionCollection.indexOf(dim), 1);
+            currentDim.splice(targetIndex, 0, dim);
+
             const isDraggedFromColumn = !!this.grid.pivotConfiguration.columns?.find(x => x && x.memberName === dragId);
             if (isDraggedFromColumn) {
                 // columns have changed.
