@@ -419,10 +419,11 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
 
             // check rows
-            const rows = pivotGrid.rowList.toArray();
-            expect(rows.length).toBe(3);
             const expectedHeaders = ['All', 'Clothing', 'Components'];
-            const rowDimensionHeaders = rows.map(x => x.rowDimension).flat().map(x => x.header);
+            const rowHeaders = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionHeaderComponent));
+            const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
+            expect(rowHeaders.length).toBe(3);
             expect(rowDimensionHeaders).toEqual(expectedHeaders);
         });
 
