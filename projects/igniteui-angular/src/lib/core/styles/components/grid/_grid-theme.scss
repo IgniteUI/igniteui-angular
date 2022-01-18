@@ -1784,6 +1784,7 @@
         align-items: center;
         background: inherit;
         z-index: 4;
+        background-clip: border-box;
     }
 
     %cbx-padding {
@@ -2724,6 +2725,7 @@
         cursor: pointer;
         z-index: 3;
         color: var-get($theme, 'expand-icon-color');
+        background-clip: border-box;
 
         &:focus {
             outline: none;
@@ -2769,6 +2771,7 @@
         background: inherit;
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
         z-index: 3;
+        background-clip: border-box;
 
         igx-icon {
             display: flex;
