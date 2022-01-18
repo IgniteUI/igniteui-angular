@@ -64,6 +64,8 @@ const CSS_CLASS_INPUT_COSY = 'igx-input-group--cosy';
 const CSS_CLASS_INPUT_COMPACT = 'igx-input-group--compact';
 const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
 const CSS_CLASS_EMPTY = 'igx-combo__empty';
+const CSS_CLASS_ITEM_CHECKBOX = 'igx-combo__checkbox';
+const CSS_CLASS_ITME_CHECKBOX_CHECKED = 'igx-checkbox--checked';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
@@ -1926,10 +1928,17 @@ describe('igxCombo', () => {
             combo = fixture.componentInstance.combo;
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
         });
-        const simulateComboItemCheckboxClick = (itemIndex: number, isHeader = false) => {
+        const simulateComboItemClick = (itemIndex: number, isHeader = false) => {
             const itemClass = isHeader ? CSS_CLASS_HEADERITEM : CSS_CLASS_DROPDOWNLISTITEM;
             const dropdownItem = fixture.debugElement.queryAll(By.css('.' + itemClass))[itemIndex];
             dropdownItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+        };
+        const simulateComboItemCheckboxClick = (itemIndex: number, isHeader = false) => {
+            const itemClass = isHeader ? CSS_CLASS_HEADERITEM : CSS_CLASS_DROPDOWNLISTITEM;
+            const dropdownItem = fixture.debugElement.queryAll(By.css('.' + itemClass))[itemIndex];
+            const itemCheckbox = dropdownItem.query(By.css('.' + CSS_CLASS_ITEM_CHECKBOX));
+            itemCheckbox.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
         };
         it('should append/remove selected items to the input in their selection order', () => {
@@ -2027,7 +2036,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
 
             const selectedItem_1 = dropdown.items[1];
-            simulateComboItemCheckboxClick(1);
+            simulateComboItemClick(1);
             expect(combo.selectedItems()[0]).toEqual(selectedItem_1.value.field);
             expect(selectedItem_1.selected).toBeTruthy();
             expect(selectedItem_1.element.nativeElement.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
@@ -2045,7 +2054,7 @@ describe('igxCombo', () => {
                 });
 
             const selectedItem_2 = dropdown.items[5];
-            simulateComboItemCheckboxClick(5);
+            simulateComboItemClick(5);
             expect(combo.selectedItems()[1]).toEqual(selectedItem_2.value.field);
             expect(selectedItem_2.selected).toBeTruthy();
             expect(selectedItem_2.element.nativeElement.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
@@ -2064,7 +2073,7 @@ describe('igxCombo', () => {
 
             // Unselecting an item
             const unselectedItem = dropdown.items[1];
-            simulateComboItemCheckboxClick(1);
+            simulateComboItemClick(1);
             expect(combo.selectedItems().length).toEqual(1);
             expect(unselectedItem.selected).toBeFalsy();
             expect(unselectedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
@@ -2086,9 +2095,25 @@ describe('igxCombo', () => {
             combo.toggle();
             fixture.detectChanges();
 
-            simulateComboItemCheckboxClick(0, true);
+            simulateComboItemClick(0, true);
             expect(combo.selectedItems().length).toEqual(0);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(0);
+        });
+        it('should prevent selection when selectionChanging is cancelled', () => {
+            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
+            combo.toggle();
+            fixture.detectChanges();
+
+            const dropdownFirstItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[0].nativeElement;
+            const itemCheckbox = dropdownFirstItem.querySelectorAll(`.${CSS_CLASS_ITEM_CHECKBOX}`);
+
+            simulateComboItemCheckboxClick(0);
+            expect(combo.selectedItems.length).toEqual(0);
+            expect(itemCheckbox[0].classList.contains(CSS_CLASS_ITME_CHECKBOX_CHECKED)).toBeFalsy();
+
+            simulateComboItemClick(0);
+            expect(combo.selectedItems.length).toEqual(0);
+            expect(itemCheckbox[0].classList.contains(CSS_CLASS_ITME_CHECKBOX_CHECKED)).toBeFalsy();
         });
     });
     describe('Grouping tests: ', () => {
