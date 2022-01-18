@@ -122,6 +122,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         this.grid.pipeTrigger++;
         this.grid.dimensionsChange.emit({dimensions: this.grid.pivotConfiguration.columns, dimensionCollectionType: PivotDimensionType.Row});
         this.grid.reflow();
+        this.grid.headerContainer.resetScrollPosition();
     }
 
     public valueRemoved(event: IBaseChipEventArgs) {
