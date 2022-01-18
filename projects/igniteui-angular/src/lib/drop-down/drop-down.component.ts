@@ -242,8 +242,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * this.dropdown.close();
      * ```
      */
-    public close() {
-        this.toggleDirective.close();
+    public close(event?: Event) {
+        this.toggleDirective.close(event);
     }
 
     /**
@@ -438,7 +438,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /** Keydown Handler */
     public onItemActionKey(key: DropDownActionKey, event?: Event) {
         super.onItemActionKey(key, event);
-        this.close();
+        this.close(event);
     }
 
     /**
@@ -527,7 +527,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                     }
                 }
                 if (event) {
-                    this.toggleDirective.close();
+                    this.toggleDirective.close(event);
                 }
             } else {
                 throw new Error('Please provide a valid drop-down item for the selection!');
