@@ -51,6 +51,16 @@ describe('IgxSelection', () => {
     });
 
     it('Shouldn\'t make a selection when the state is set to false', async () => {
+        const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
+        fix.detectChanges();
+
+        const input = fix.debugElement.query(By.css('input'));
+        const inputType = (input.nativeElement as HTMLInputElement).type;
+        let inputList = ["email", "number", "password", "tel", "text", "url"];
+        expect(inputList.indexOf(inputType));
+    });
+
+    fit('Should check if the input type is adequate for text selection', async () => {
         const fix = TestBed.createComponent(TriggerTextSelectionFalseOnClickComponent);
         fix.detectChanges();
 
