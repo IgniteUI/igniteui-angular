@@ -2881,6 +2881,15 @@
         flex-direction: column;
     }
 
+    %grid-thead--virtualizationWrapper {
+        height: 100%;
+    }
+
+    %grid-thead--virtualizationContainer {
+        overflow: visible;
+        height: 100%;
+    }
+
     %igx-grid__tr-pivot {
         display: flex;
         align-items: center;
@@ -3002,6 +3011,22 @@
 
     %igx-grid__tr-pivot-toggle-icons {
         display: inline-flex !important;
+    }
+
+    %igx-grid__tr-pivot--columnDimensionLeaf {
+        box-shadow: none;
+
+        igx-grid-header {
+            border: none;
+        }
+    }
+
+    %igx-grid__tr-pivot--columnMultiRowSpan {
+        igx-grid-header {
+            > * {
+                visibility: hidden;
+            }
+        }
     }
 
     %igx-grid__tr-header-row {

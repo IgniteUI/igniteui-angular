@@ -1183,7 +1183,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public footer: ElementRef;
 
     public get headerContainer() {
-        return this.theadRow?.headerContainer;
+        return this.theadRow?.headerForOf;
     }
 
     public get headerSelectorContainer() {
@@ -6758,7 +6758,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator && source === this.filteredSortedData ? row + (this.paginator.perPage * this.paginator.page) : row;
+            row = this.paginator && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ? row + (this.paginator.perPage * this.paginator.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -7027,7 +7027,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridScroll.emit(args);
     }
 
-    private horizontalScrollHandler(event) {
+    protected horizontalScrollHandler(event) {
         const scrollLeft = event.target.scrollLeft;
         this.headerContainer.onHScroll(scrollLeft);
         this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
