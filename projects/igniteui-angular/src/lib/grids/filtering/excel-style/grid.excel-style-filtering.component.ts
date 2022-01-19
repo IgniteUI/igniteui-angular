@@ -19,12 +19,12 @@ import {
     ViewRef
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { resolveNestedPath, parseDate, uniqueDates, PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
+import { parseDate, uniqueDates, PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
-import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
+import { BaseFilteringStrategy, FormattedValuesFilteringStrategy, IHierarchicalItem } from '../../../data-operations/filtering-strategy';
 import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
@@ -391,14 +391,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.cdr.detectChanges();
     }
 
-    /**
-     * @hidden @internal
-     */
-    public isHierarchical() {
-        return this.grid.filterStrategy.hasOwnProperty('hierarchicalFilterFields')
-            && this.grid.filterStrategy['hierarchicalFilterFields'].indexOf(this.column.field) >= 0;
-    }
-
     private init() {
         this.expressionsList = new Array<ExpressionUI>();
         generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
@@ -466,6 +458,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
         const prevColumn = this.column;
         this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (colVals: any[]) => {
+            // check for 'value' property - if 'value' then item is IHierarchicalItem
+
             if (!this.column || this.column !== prevColumn) {
                 return;
             }
@@ -488,72 +482,28 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             this.grid.filterStrategy.shouldApplyFormatter(this.column.field);
     }
 
-    private processedData: any[];
-
     private renderColumnValuesFromData() {
         const expressionsTree = this.getColumnFilterExpressionsTree();
-        // TODO: Check why we access the API service through the column ??
-        // const data = this.column.gridAPI.filterDataByExpressions(expressionsTree);
-        const data = this.grid.gridAPI.filterDataByExpressions(expressionsTree);
-        this.processedData = [];
-
-        const shouldFormatValues = this.shouldFormatValues();
-        const columnField = this.column.field;
-        let columnValues;
         
-        if (this.isHierarchical()) {
-            // TODO: add check for DATE
-            columnValues = data.map(record => {
-                if (this.processedData.indexOf(record) < 0) {
-                    let value = resolveNestedPath(record, columnField);
-                    if (shouldFormatValues) {
-                        value = this.column.formatter(value, record);
-                    }
-                    const childrenValues = this.getChildrenColumnValues(record, columnField)
-                    return { value, childrenValues };
-                }
+        if (this.grid.filterStrategy instanceof BaseFilteringStrategy) {
+            this.grid.filterStrategy.getColumnValues(this.column, expressionsTree, (colVals: any[]) => {
+                const columnValues = (this.column.dataType === GridColumnDataType.Date) ?
+                    colVals.map(value => {
+                        const label = this.getFilterItemLabel(value);
+                        return { label, value };
+                    }) : colVals; // TODO: should formatter go here?
+    
+                this.renderValues(columnValues);
             });
-
-            columnValues = columnValues.filter(function(el) {
-                return el !== undefined
-            });
-        } else {
-            columnValues = (this.column.dataType === GridColumnDataType.Date) ?
-                data.map(record => {
-                    const value = (resolveNestedPath(record, columnField));
-                    const label = this.getFilterItemLabel(value, true, record);
-                    return { label, value };
-                }) : data.map(record => {
-                    const value = resolveNestedPath(record, columnField);
-                    return shouldFormatValues ? this.column.formatter(value, record) : value;
-                });
         }
-
-        this.renderValues(columnValues);
     }
 
-    private getChildrenColumnValues(record: any, columnField: string) {
-        this.processedData.push(record);
-        let childrenValues = [];
-        const children = record[this.grid.childDataKey];
-        if (children) {
-            children.forEach(child => {
-                if (this.processedData.indexOf(child) < 0) {
-                    let value = resolveNestedPath(child, columnField);
-                    // if (shouldFormatValues) {
-                    //     value = this.column.formatter(value, record);
-                    // }
-                    childrenValues.push({ value, childrenValues: this.getChildrenColumnValues(child, columnField) });
-                }
-            });
-        } else {
-            // TODO: unique values on last level
-        }
-
-        return childrenValues;
+    private isHierarchical() {
+        return this.grid.filterStrategy.hasOwnProperty('hierarchicalFilterFields')
+            && this.grid.filterStrategy['hierarchicalFilterFields'].indexOf(this.column.field) >= 0;
     }
 
-    private renderValues(columnValues: any[]) {
+    private renderValues(columnValues: any[] | IHierarchicalItem[]) {
         if (this.isHierarchical()) {
             this.uniqueValues = columnValues;
         } else {
@@ -753,7 +703,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 filterListItem.value = this.getFilterItemValue(element);
                 filterListItem.label = this.getFilterItemLabel(element, applyFormatter);
                 filterListItem.indeterminate = false;
-                filterListItem.children = this.generateFilterListItems(element.childrenValues, shouldUpdateSelection);
+                filterListItem.children = this.generateFilterListItems(element.children, shouldUpdateSelection);
                 filterListItems.push(filterListItem);
             }
         });
@@ -797,7 +747,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private getFilterItemLabel(element: any, applyFormatter: boolean = true, data?: any) {
-        if (this.isHierarchical()) {
+        if (element.value) {
             element = element.value;
         }
 

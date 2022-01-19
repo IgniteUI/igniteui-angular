@@ -249,10 +249,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public get containerSize() {
         if (this.esf.listData.length) {
-            return this.list.element.nativeElement.offsetHeight;
+            return this.list?.element.nativeElement.offsetHeight;
         }
-
-        console.log('containerSize()');
 
         // GE Nov 1st, 2021 #10355 Return a numeric value, so the chunk size is calculated properly.
         // If we skip this branch, on applying the filter the _calculateChunkSize() method off the ForOfDirective receives
@@ -413,6 +411,14 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
 
         this.esf.closeDropdown();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isHierarchical() {
+        return this.esf.grid.filterStrategy?.hasOwnProperty('hierarchicalFilterFields')
+            && this.esf.grid.filterStrategy['hierarchicalFilterFields'].indexOf(this.esf.column.field) >= 0;
     }
 
     private createCondition(conditionName: string) {

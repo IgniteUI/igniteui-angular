@@ -20,7 +20,7 @@
     </igx-icon>
 </igx-input-group>
 
-<igx-list #list [displayDensity]="esf.displayDensity" [isLoading]="isLoading">
+<igx-list #list [displayDensity]="esf.displayDensity" [isLoading]="isLoading" *ngIf="!isHierarchical()">
     <div style="overflow: hidden; position: relative;">
         <igx-list-item
         *igxFor="let item of displayedListData scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
@@ -44,6 +44,27 @@
         </div>
     </ng-template>
 </igx-list>
+
+<igx-tree [displayDensity]="esf.displayDensity" selection="Cascading" *ngIf="isHierarchical()">
+    <igx-tree-node *ngFor="let item of displayedListData" [selected]="item.isSelected">
+        <div>{{item.label}}</div>
+        <igx-tree-node *ngFor="let childLevel1 of item.children" [selected]="childLevel1.isSelected">
+            <div>{{childLevel1.label}}</div>
+            <igx-tree-node *ngFor="let childLevel2 of childLevel1.children" [selected]="childLevel2.isSelected">
+                <div>{{childLevel2.label}}</div>
+                <igx-tree-node *ngFor="let childLevel3 of childLevel2.children" [selected]="childLevel3.isSelected">
+                    <div>{{childLevel3.label}}</div>
+                    <igx-tree-node *ngFor="let childLevel4 of childLevel3.children" [selected]="childLevel4.isSelected">
+                        <div>{{childLevel4.label}}</div>
+                        <igx-tree-node *ngFor="let childLevel5 of childLevel4.children" [selected]="childLevel5.isSelected">
+                            <div>{{childLevel5.label}}</div>
+                        </igx-tree-node>
+                    </igx-tree-node>
+                </igx-tree-node>
+            </igx-tree-node>
+        </igx-tree-node>
+    </igx-tree-node>
+</igx-tree>
 
 <ng-template #defaultExcelStyleLoadingValuesTemplate>
     <igx-circular-bar [indeterminate]="true">
