@@ -1,5 +1,7 @@
 import { cloneValue } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
@@ -307,6 +309,7 @@ export class PivotUtil {
         const flatData = [];
         hierarchies.forEach((h, key) => {
             const field = h.dimension.memberName;
+            const keys = Object.assign({}, pivotKeys) as any;
             let obj = {};
             obj[field] = key;
             if (h[pivotKeys.records]) {
@@ -322,16 +325,15 @@ export class PivotUtil {
                 for (const nested of nestedData) {
                     if (nested[pivotKeys.records] && nested[pivotKeys.records].length === 1) {
                         // only 1 child record, apply same props to parent.
-                        const keys = Object.assign({}, pivotKeys) as any;
                         const memberName = h[pivotKeys.children].entries().next().value[1].dimension.memberName;
-                        keys[memberName] = nested[memberName];
+                        keys[memberName] = memberName;
                         PivotUtil.processSiblingProperties(nested[pivotKeys.records][0], [nested], keys);
                     }
                 }
                 obj[pivotKeys.records] = this.getDirectLeafs(nestedData, pivotKeys);
                 obj[field + pivotKeys.rowDimensionSeparator + pivotKeys.records] = nestedData;
                 if (!rootData) {
-                    PivotUtil.processSiblingProperties(rec, obj[field + pivotKeys.rowDimensionSeparator + pivotKeys.records], pivotKeys);
+                    PivotUtil.processSiblingProperties(rec, obj[field + pivotKeys.rowDimensionSeparator + pivotKeys.records], keys);
                 }
             }
         });
@@ -405,6 +407,21 @@ export class PivotUtil {
         });
 
         return flatData;
+    }
+
+    public static buildExpressionTree(config: IPivotConfiguration) {
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
+        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+
+        const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        // add expression trees from all filters
+        PivotUtil.flatten(enabledDimensions).forEach((x: IPivotDimension) => {
+            if (x.filter && x.filter.filteringOperands) {
+                expressionsTree.filteringOperands.push(...x.filter.filteringOperands);
+            }
+        });
+
+        return expressionsTree;
     }
 
     private static collectRecords(children, pivotKeys: IPivotKeys) {

@@ -117,4 +117,5 @@ export interface IPivotDimensionData {
     column: ColumnType;
     dimension: IPivotDimension;
     prevDimensions: IPivotDimension[];
+    isChild?: boolean;
 }

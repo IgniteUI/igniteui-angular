@@ -3002,6 +3002,14 @@
             }
         }
     }
+
+    %igx-grid__tr-header-row {
+        igx-pivot-row-dimension-header-group {
+            igx-pivot-row-dimension-header {
+                align-items: center;
+            }
+        }
+    }
     // Pivot grid END
 }
 

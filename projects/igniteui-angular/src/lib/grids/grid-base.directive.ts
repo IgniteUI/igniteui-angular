@@ -43,7 +43,7 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxSummaryOperand, ISummaryExpression } from './summaries/grid-summary';
+import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxRowDirective } from './row.directive';
@@ -123,7 +123,7 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { ColumnType, GridServiceType, GridType, IGX_GRID_SERVICE_BASE, RowType } from './common/grid.interface';
+import { ColumnType, GridServiceType, GridType, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
@@ -2960,7 +2960,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
         protected transactionFactory: IgxFlatTransactionFactory,
         private elementRef: ElementRef<HTMLElement>,
-        private zone: NgZone,
+        protected zone: NgZone,
         @Inject(DOCUMENT) public document: any,
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
@@ -3881,6 +3881,26 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public get isHorizontalScrollHidden() {
         const diff = this.unpinnedWidth - this.totalWidth;
         return this.width === null || diff >= 0;
+    }
+
+    /**
+     * @hidden @internal
+     * Gets the header cell inner width for auto-sizing.
+     */
+    public getHeaderCellWidth(element: HTMLElement): ISizeInfo {
+        const range = this.document.createRange();
+        const headerWidth = this.platform.getNodeSizeViaRange(range,
+            element,
+            element.parentElement);
+
+        const headerStyle = this.document.defaultView.getComputedStyle(element);
+        const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
+            parseFloat(headerStyle.borderRightWidth);
+
+        // Take into consideration the header group element, since column pinning applies borders to it if its not a columnGroup.
+        const headerGroupStyle = this.document.defaultView.getComputedStyle(element.parentElement);
+        const borderSize = parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth);
+        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize) };
     }
 
     /**
@@ -6738,7 +6758,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator && source === this.filteredSortedData ? row + (this.paginator.perPage * this.paginator.page) : row;
+            row = this.paginator && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ? row + (this.paginator.perPage * this.paginator.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -6980,7 +7000,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.markForCheck();
     }
 
-    private verticalScrollHandler(event) {
+    protected verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
 
