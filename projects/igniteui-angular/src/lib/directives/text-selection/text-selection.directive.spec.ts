@@ -60,7 +60,7 @@ describe('IgxSelection', () => {
         expect(inputList.indexOf(inputType));
     });
 
-    fit('Should check if the input type is adequate for text selection', async () => {
+    it('Should check if the input type is adequate for text selection', async () => {
         const fix = TestBed.createComponent(TriggerTextSelectionFalseOnClickComponent);
         fix.detectChanges();
 
