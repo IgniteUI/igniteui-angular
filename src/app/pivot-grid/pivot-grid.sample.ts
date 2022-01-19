@@ -103,10 +103,10 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-            this.dimensions[0]
+            this.dimensions[1]
         ],
         rows: [
-            this.dimensions[1],
+            this.dimensions[0],
             this.dimensions[2]
         ],
         values: [
