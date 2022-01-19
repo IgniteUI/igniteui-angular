@@ -3407,7 +3407,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public dataRebinding(event: IForOfDataChangingEventArgs) {
-        this.dataChanging.emit(event)
+        this.dataChanging.emit(event);
     }
 
     /**
