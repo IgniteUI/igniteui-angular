@@ -64,14 +64,6 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      * @hidden
      * @internal
      */
-    public get resizing() {
-        return this.grid.rowDimensionResizing;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     public get viewIndex(): number {
         return this.index;
     }
