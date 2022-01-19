@@ -533,10 +533,15 @@
     }
 
     %form-group-bundle--border {
-        padding: 0 rem(16px, map.get($base-scale-size, 'comfortable'));
+        padding: 0 0 0 rem(16px, map.get($base-scale-size, 'comfortable'));
         box-shadow: inset 0 0 0 1px var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-border-radius');
         background: var-get($theme, 'border-background');
+
+        igx-suffix,
+        [igxSuffix] {
+            padding-right: rem(16px, map.get($base-scale-size, 'comfortable'));
+        }
     }
 
     %form-group-bundle--border-cosy {
@@ -1717,10 +1722,6 @@
         @include igx-type-style($type-scale, $input-text) {
             margin: 0;
         }
-    }
-
-    %form-group-bundle {
-        padding: rem(16px);
     }
 
     %form-group-helper {
