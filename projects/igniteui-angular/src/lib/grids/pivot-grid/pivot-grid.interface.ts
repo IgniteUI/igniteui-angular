@@ -175,3 +175,11 @@ export interface IPivotDimensionData {
     /** Whether this a child dimension. */
     isChild?: boolean;
 }
+
+export interface PivotRowHeaderGroupType {
+    rowIndex: number;
+    parent: any;
+    header: any;
+    headerID: string;
+    grid: any;
+}

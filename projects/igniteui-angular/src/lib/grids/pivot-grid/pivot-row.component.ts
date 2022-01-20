@@ -59,6 +59,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     ){
         super(grid, selectionService, element, cdr);
     }
+
     /**
      * @hidden
      * @internal

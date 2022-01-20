@@ -51,7 +51,7 @@ import { DropPosition } from '../moving/moving.service';
 import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
-import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
@@ -65,6 +65,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { flatten } from '@angular/compiler';
+import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -81,6 +82,7 @@ const MINIMUM_COLUMN_WIDTH = 200;
         { provide: IGX_GRID_BASE, useExisting: IgxPivotGridComponent },
         { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
         IgxPivotGridNavigationService,
+        IgxPivotColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
     ]
@@ -131,7 +133,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * <igx-pivot-grid [pivotConfiguration]="config"></igx-pivot-grid>
      * ```
      */
-    public pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
+    public set pivotConfiguration(value :IPivotConfiguration) {
+        this._pivotConfiguration = value;
+        this.notifyChanges(true);
+    }
+    
+    public get pivotConfiguration() {
+        return this._pivotConfiguration;
+    }
 
     @Input()
     /**
@@ -162,6 +171,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @ViewChild('headerTemplate', { read: TemplateRef, static: true })
     public headerTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild(IgxPivotGridColumnResizerComponent)
+    public resizeLine: IgxPivotGridColumnResizerComponent;
 
     /**
      * @hidden @interal
@@ -325,9 +340,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return false;
     }
 
+    /**
+     * @hidden @internal
+     */
+    public rowDimensionResizing = true;
+
     protected _defaultExpandState = false;
     private _data;
     private _filteredData;
+    private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
 
 
@@ -500,7 +521,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     constructor(
         public selectionService: IgxGridSelectionService,
-        public colResizingService: IgxColumnResizingService,
+        public colResizingService: IgxPivotColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         protected transactionFactory: IgxFlatTransactionFactory,
         elementRef: ElementRef<HTMLElement>,

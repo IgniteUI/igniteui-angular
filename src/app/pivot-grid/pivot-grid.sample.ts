@@ -226,4 +226,11 @@ export class PivotGridSampleComponent {
     public autoSizeRow(ind) {
         this.grid1.autoSizeRowDimension(this.pivotConfigHierarchy.rows[ind]);
     }
+
+    public setRowDimWidth(rowDimIndex, widthValue) {
+        const newPivotConfig = {...this.pivotConfigHierarchy};
+        newPivotConfig.rows[rowDimIndex].width = widthValue;
+
+        this.grid1.pivotConfiguration = newPivotConfig;
+    }
 }
