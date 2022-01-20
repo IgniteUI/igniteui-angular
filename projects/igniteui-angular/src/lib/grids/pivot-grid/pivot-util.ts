@@ -97,10 +97,10 @@ export class PivotUtil {
             const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
                 defaultExpandState :
                 expansionStates.get(expansionRowKey);
-            if (rec[field + pivotKeys.rowDimensionSeparator + pivotKeys.records] &&
-                rec[field + pivotKeys.rowDimensionSeparator + pivotKeys.records].length > 0 &&
+            const recordsData = rec[field + pivotKeys.rowDimensionSeparator + pivotKeys.records];
+            if (recordsData && recordsData.length > 0 &&
                 ((isExpanded && lvl > 0) || (maxDimLvl == currDimLvl))) {
-                let dimData = rec[field + pivotKeys.rowDimensionSeparator + pivotKeys.records];
+                let dimData = recordsData;
                 if (dim.childLevel) {
                     if (PivotUtil.getDimensionDepth(dim) > 1) {
                         dimData = this.flattenHierarchy(dimData, config, dim.childLevel,
@@ -265,7 +265,8 @@ export class PivotUtil {
                     if (!child[pivotKeys.records]) {
                         continue;
                     }
-                    child[row.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.records] = [];
+                    const recordsAccessKey = row.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.records;
+                    child[recordsAccessKey] = [];
                     const keys = Object.assign({}, pivotKeys) as any;
                     keys[row.memberName] = row.memberName;
                     const hierarchyFields2 = PivotUtil
@@ -276,16 +277,14 @@ export class PivotUtil {
                         child[row.memberName] = sibling[row.memberName];
                         // add children to current level if dimensions have same depth
                         for (const sib of siblingData2) {
-                            if (sib[row.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.records]) {
-                                child[row.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.records] =
-                                    child[row.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.records]
-                                        .concat(sib[row.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.records]);
+                            if (sib[recordsAccessKey]) {
+                                child[recordsAccessKey] = child[recordsAccessKey].concat(sib[recordsAccessKey]);
                                 child[row.memberName] = sib[row.memberName];
                             }
                         }
                     } else {
                         // otherwise overwrite direct child collection
-                        child[row.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.records] = siblingData2;
+                        child[recordsAccessKey] = siblingData2;
                     }
                     const sibs = prevRowDims.filter(x => x.memberName !== prevRowField);
                     if (sibs.length > 0) {
