@@ -4,8 +4,10 @@ import {
     Component,
     ElementRef,
     Inject,
+    OnChanges,
     QueryList,
     Renderer2,
+    SimpleChanges,
     ViewChildren
 } from '@angular/core';
 import { first } from 'rxjs/operators';
@@ -13,14 +15,17 @@ import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/public_api';
-import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
+import { ColumnType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
+import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
+import { PivotUtil } from './pivot-util';
 
 /**
  *
@@ -35,7 +40,7 @@ import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType } fr
     selector: 'igx-pivot-header-row',
     templateUrl: './pivot-header-row.component.html'
 })
-export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
+export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnChanges {
     public aggregateList: IPivotAggregator[] = [];
 
     public value: IPivotValue;
@@ -61,23 +66,95 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
         super(ref, cdr);
     }
 
-    /**
-    * @hidden
-    * @internal
-    */
+    /** The virtualized part of the header row containing the unpinned header groups. */
+    @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective })
+    public headerContainers: QueryList<IgxGridForOfDirective<IgxGridHeaderGroupComponent>>;
+
+    public get headerForOf() {
+        return this.headerContainers.last;
+    }
+
     @ViewChildren('notifyChip')
     public notificationChips: QueryList<IgxChipComponent>;
 
-    /**
-    * @hidden
-    * @internal
-    */
+    public columnDimensionsByLevel: any[] = [];
+    public get totalDepth() {
+        const columnDimensions = this.grid.columnDimensions;
+        if (columnDimensions.length === 0) {
+            return 1;
+        }
+        let totalDepth = columnDimensions.map(x => PivotUtil.getDimensionDepth(x) + 1).reduce((acc, val) => acc + val);
+        if (this.grid.hasMultipleValues) {
+            totalDepth += 1;
+        }
+        return totalDepth;
+    }
+
+    public get maxContainerHeight() {
+        return this.totalDepth > 1 ? this.totalDepth * this.grid.renderedRowHeight : undefined;
+    }
+
+    public calcHeight(col: ColumnType, index: number) {
+        return !col.columnGroup && col.level < this.totalDepth && col.level === index ? (this.totalDepth - col.level) * this.grid.rowHeight : this.grid.rowHeight;
+    }
+
+    public isDuplicateOfExistingParent(col: ColumnType, lvl: number) {
+        const parentCollection = lvl > 0 ? this.columnDimensionsByLevel[lvl - 1] : [];
+        const duplicate = parentCollection.indexOf(col) !== -1;
+
+        return duplicate;
+    }
+    
+    public isMultiRow(col: ColumnType, lvl: number) {
+        const isLeaf = !col.columnGroup;
+        return isLeaf && lvl !== this.totalDepth - 1 ;
+    }
+
+
+    public populateColumnDimensionsByLevel() {
+        const res = [];
+        const columnDimensions = this.grid.columnDimensions;
+        if (columnDimensions.length === 0) {
+            this.columnDimensionsByLevel = res;
+            return;
+        }
+        for (let i = 0; i < this.totalDepth; i++) {
+            res[i] = [];
+        }
+        const cols = this.unpinnedColumnCollection;
+        // populate column dimension matrix recursively
+        this.populateDimensionRecursively(cols.filter(x => x.level === 0), 0, res);
+        this.columnDimensionsByLevel = res;
+    }
+
+    protected populateDimensionRecursively(currentLevelColumns: ColumnType[], level = 0, res: any[]) {
+        currentLevelColumns.forEach(col => {
+            if (res[level]) {
+                res[level].push(col);
+                if (col.columnGroup && col.children.length > 0) {
+                    const visibleColumns = col.children.toArray().filter(x => !x.hidden);
+                    this.populateDimensionRecursively(visibleColumns, level + 1, res);
+                } else if (level < this.totalDepth - 1) {
+                    for (let i = level + 1; i <= this.totalDepth - 1; i++) {
+                        res[i].push(col);
+                    }
+                }
+            }
+        });
+    }
+
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.unpinnedColumnCollection && this.unpinnedColumnCollection.length > 0) {
+            this.populateColumnDimensionsByLevel();
+        }
+    }
+
     public onDimDragStart(event, area) {
         this.cdr.detectChanges();
         for (let chip of this.notificationChips) {
             if (area.chipsList.toArray().indexOf(chip) === -1 &&
-             chip.nativeElement.parentElement.children.length > 0 &&
-             chip.nativeElement.parentElement.children.item(0).id !== 'empty' ) {
+                chip.nativeElement.parentElement.children.length > 0 &&
+                chip.nativeElement.parentElement.children.item(0).id !== 'empty') {
                 chip.nativeElement.hidden = false;
                 chip.nativeElement.scrollIntoView();
             }
@@ -99,7 +176,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent {
     * @internal
     */
     public getAreaHeight(area: IgxChipsAreaComponent) {
-        const chips =  area.chipsList;
+        const chips = area.chipsList;
         return chips && chips.length > 0 ? chips.first.nativeElement.clientHeight : 0;
     }
 
