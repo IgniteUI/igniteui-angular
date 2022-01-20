@@ -356,7 +356,7 @@ export class PivotUtil {
 
     public static getRecordKey(rec, currentDim: IPivotDimension, prevDims: IPivotDimension[], pivotKeys: IPivotKeys) {
         const parentFields = [];
-        const field = currentDim.memberName;
+        const field = currentDim?.memberName || 'placeholder';
         const value = rec[field];
         for (const prev of prevDims) {
             const dimData = PivotUtil.getDimensionLevel(prev, rec, pivotKeys);

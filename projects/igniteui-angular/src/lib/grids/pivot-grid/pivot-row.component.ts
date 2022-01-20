@@ -167,6 +167,7 @@ export class IgxPivotRowComponent extends IgxRowDirective implements OnChanges {
             const ref = this.viewRef.createComponent(IgxColumnComponent);
             ref.instance.field = '';
             ref.instance.header = '';
+            ref.instance.width = this.grid.resolveRowDimensionWidth({} as IPivotDimension) + 'px';
             (ref as any).instance._vIndex = this.grid.columns.length + 0 + this.index * this.grid.pivotConfiguration.rows.length;
             ref.instance.headerTemplate = this.headerTemplateDefault;
             const column = ref.instance;

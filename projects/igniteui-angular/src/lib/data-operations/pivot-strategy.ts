@@ -146,10 +146,11 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
 
     private groupColumns(hierarchy, columns, values, pivotKeys) {
         const children = hierarchy[pivotKeys.children];
+        const hierarchyRecords = hierarchy[pivotKeys.records] ? hierarchy[pivotKeys.records] : [hierarchy];
         if (children) {
             this.groupColumns(children, columns, values, pivotKeys);
-        } else if (hierarchy[pivotKeys.records]) {
-            const leafRecords = this.getLeafs(hierarchy[pivotKeys.records], pivotKeys);
+        } else if (hierarchyRecords) {
+            const leafRecords = this.getLeafs(hierarchyRecords, pivotKeys);
             hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, PivotDimensionType.Column, pivotKeys);
             PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
         }

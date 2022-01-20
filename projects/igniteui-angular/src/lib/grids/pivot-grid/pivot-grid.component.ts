@@ -712,7 +712,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get pivotRowWidths() {
-        return this.rowDimensions.reduce((accumulator, dim) => accumulator + this.resolveRowDimensionWidth(dim), 0);
+        return this.rowDimensions.length ? this.rowDimensions.reduce((accumulator, dim) => accumulator + this.resolveRowDimensionWidth(dim), 0) :
+            this.resolveRowDimensionWidth({} as IPivotDimension);
     }
 
     public resolveRowDimensionWidth(dim: IPivotDimension): number {
