@@ -159,7 +159,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * <igx-pivot-grid [superCompactMode]="true"></igx-pivot-grid>
      * ```
      */
-@HostBinding('class.igx-grid__pivot--super-compact')
+    @HostBinding('class.igx-grid__pivot--super-compact')
     @Input()
     public superCompactMode = false;
 
