@@ -120,8 +120,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @ViewChild(IgxPivotHeaderRowComponent, { static: true })
     public theadRow: IgxPivotHeaderRowComponent;
 
-
-
     @Input()
     /**
      * Gets/Sets the pivot configuration with all related dimensions and values.
@@ -150,6 +148,20 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @HostBinding('attr.role')
     public role = 'grid';
+
+
+    /**
+     * Enables a super compact theme for the component.
+     * @remarks
+     * Overrides the displayDensity option is one is set.
+     * @example
+     * ```html
+     * <igx-pivot-grid [superCompactMode]="true"></igx-pivot-grid>
+     * ```
+     */
+    @HostBinding('class.igx-grid__pivot---superCompact')
+    @Input()
+    public superCompactMode = false;
 
     /**
      * @hidden @internal
@@ -496,6 +508,21 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
 
         return selectedRowIds;
+    }
+
+    /**
+     * Gets the default row height.
+     *
+     * @example
+     * ```typescript
+     * const rowHeigh = this.grid.defaultRowHeight;
+     * ```
+     */
+    public get defaultRowHeight(): number {
+        if (this.superCompactMode) {
+            return 24;
+        }
+        return super.defaultRowHeight;
     }
 
     constructor(
