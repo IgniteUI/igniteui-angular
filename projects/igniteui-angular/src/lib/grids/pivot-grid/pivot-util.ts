@@ -433,41 +433,45 @@ export class PivotUtil {
         const recordsKey = pivotKeys.records;
         const childKey = pivotKeys.children;
         const childCollection = val[childKey];
-        if (Array.isArray(hierarchy.get(val.value)[childKey])) {
-            hierarchy.get(val.value)[childKey] = new Map<string, any>();
+        const hierarchyValue = hierarchy.get(val.value);
+        if (Array.isArray(hierarchyValue[childKey])) {
+            hierarchyValue[childKey] = new Map<string, any>();
         }
         if (!childCollection || childCollection.size === 0) {
-            const dim = hierarchy.get(val.value).dimension;
+            const dim = hierarchyValue.dimension;
             const isValid = this.extractValueFromDimension(dim, rec) === val.value;
             if (isValid) {
-                if (hierarchy.get(val.value)[recordsKey]) {
-                    hierarchy.get(val.value)[recordsKey].push(rec);
+                if (hierarchyValue[recordsKey]) {
+                    hierarchyValue[recordsKey].push(rec);
                 } else {
-                    hierarchy.get(val.value)[recordsKey] = [rec];
+                    hierarchyValue[recordsKey] = [rec];
                 }
             }
         } else {
+            const hierarchyChild =  hierarchyValue[childKey];
             for (const [key, child] of childCollection) {
-                if (!hierarchy.get(val.value)[childKey].get(child.value)) {
-                    hierarchy.get(val.value)[childKey].set(child.value, child);
+                let hierarchyChildValue = hierarchyChild.get(child.value);
+                if (!hierarchyChildValue) {
+                    hierarchyChild.set(child.value, child);
+                    hierarchyChildValue = child;
                 }
 
-                if (hierarchy.get(val.value)[childKey].get(child.value)[recordsKey]) {
+                if (hierarchyChildValue[recordsKey]) {
                     const copy = Object.assign({}, rec);
                     if (rec[recordsKey]) {
                         // not all nested children are valid
-                        const nestedValue = hierarchy.get(val.value)[childKey].get(child.value).value;
-                        const dimension = hierarchy.get(val.value)[childKey].get(child.value).dimension;
+                        const nestedValue = hierarchyChildValue.value;
+                        const dimension = hierarchyChildValue.dimension;
                         const validRecs = rec[recordsKey].filter(x => this.extractValueFromDimension(dimension, x) === nestedValue);
                         copy[recordsKey] = validRecs;
                     }
-                    hierarchy.get(val.value)[childKey].get(child.value)[recordsKey].push(copy);
+                    hierarchyChildValue[recordsKey].push(copy);
                 } else {
-                    hierarchy.get(val.value)[childKey].get(child.value)[recordsKey] = [rec];
+                    hierarchyChildValue[recordsKey] = [rec];
                 }
 
                 if (child[childKey] && child[childKey].size > 0) {
-                    this.applyHierarchyChildren(hierarchy.get(val.value)[childKey], child, rec, pivotKeys);
+                    this.applyHierarchyChildren(hierarchyChild, child, rec, pivotKeys);
                 }
             }
         }
