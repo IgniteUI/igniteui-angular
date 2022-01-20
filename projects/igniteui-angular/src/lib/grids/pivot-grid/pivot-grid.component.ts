@@ -68,7 +68,7 @@ import { flatten } from '@angular/compiler';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
-const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 88;
+const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
