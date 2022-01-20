@@ -68,6 +68,7 @@ import { flatten } from '@angular/compiler';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
+const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 88;
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -1238,7 +1239,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
                 ref.instance.field = key;
                 ref.instance.parent = parent;
-                ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
+                ref.instance.width = this.resolveColumnDimensionWidth(value.dimension);
                 ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
                 ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
                 ref.instance.sortable = true;
@@ -1274,7 +1275,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                         refSibling.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
                         refSibling.instance.field = key;
                         refSibling.instance.parent = parent;
-                        ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
+                        ref.instance.width = this.resolveColumnDimensionWidth(value.dimension);
                         ref.instance.sortable = true;
                         refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
                         refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
@@ -1293,7 +1294,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                         refSibling.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
                         refSibling.instance.field = key;
                         refSibling.instance.parent = parent;
-                        ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
+                        ref.instance.width = this.resolveColumnDimensionWidth(value.dimension);
                         ref.instance.sortable = true;
                         refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
                         refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
@@ -1306,10 +1307,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return columns;
     }
 
+    protected resolveColumnDimensionWidth(dim: IPivotDimension) {
+        if (dim.width) {
+            return dim.width;
+        }
+        return this.superCompactMode ? MINIMUM_COLUMN_WIDTH_SUPER_COMPACT + 'px' : MINIMUM_COLUMN_WIDTH + 'px';
+    }
+
     protected getMeasureChildren(colFactory, data, parent, hidden, parentWidth) {
         const cols = [];
         const count = this.values.length;
-        const width = parentWidth ? parseInt(parentWidth, 10) / count : MINIMUM_COLUMN_WIDTH;
+        const width = parentWidth ? parseInt(parentWidth, 10) / count :
+         this.superCompactMode ? MINIMUM_COLUMN_WIDTH_SUPER_COMPACT : MINIMUM_COLUMN_WIDTH;
         const isPercent = parentWidth && parentWidth.indexOf('%') !== -1;
         this.values.forEach(val => {
             const ref = colFactory.create(this.viewRef.injector);
