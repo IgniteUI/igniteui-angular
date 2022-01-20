@@ -66,7 +66,10 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         super(ref, cdr);
     }
 
-    /** The virtualized part of the header row containing the unpinned header groups. */
+    /**
+    * @hidden
+    * @internal
+    * The virtualized part of the header row containing the unpinned header groups. */
     @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective })
     public headerContainers: QueryList<IgxGridForOfDirective<IgxGridHeaderGroupComponent>>;
 
@@ -74,10 +77,23 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         return this.headerContainers.last;
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
     @ViewChildren('notifyChip')
     public notificationChips: QueryList<IgxChipComponent>;
 
+    /**
+    * @hidden
+    * @internal
+    */
     public columnDimensionsByLevel: any[] = [];
+
+    /**
+    * @hidden
+    * @internal
+    */
     public get totalDepth() {
         const columnDimensions = this.grid.columnDimensions;
         if (columnDimensions.length === 0) {
@@ -90,27 +106,46 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         return totalDepth;
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
     public get maxContainerHeight() {
         return this.totalDepth > 1 ? this.totalDepth * this.grid.renderedRowHeight : undefined;
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
     public calcHeight(col: ColumnType, index: number) {
         return !col.columnGroup && col.level < this.totalDepth && col.level === index ? (this.totalDepth - col.level) * this.grid.rowHeight : this.grid.rowHeight;
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
     public isDuplicateOfExistingParent(col: ColumnType, lvl: number) {
         const parentCollection = lvl > 0 ? this.columnDimensionsByLevel[lvl - 1] : [];
         const duplicate = parentCollection.indexOf(col) !== -1;
 
         return duplicate;
     }
-    
+
+    /**
+    * @hidden
+    * @internal
+    */
     public isMultiRow(col: ColumnType, lvl: number) {
         const isLeaf = !col.columnGroup;
-        return isLeaf && lvl !== this.totalDepth - 1 ;
+        return isLeaf && lvl !== this.totalDepth - 1;
     }
 
-
+    /**
+    * @hidden
+    * @internal
+    */
     public populateColumnDimensionsByLevel() {
         const res = [];
         const columnDimensions = this.grid.columnDimensions;
@@ -143,12 +178,20 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         });
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.unpinnedColumnCollection && this.unpinnedColumnCollection.length > 0) {
             this.populateColumnDimensionsByLevel();
         }
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
     public onDimDragStart(event, area) {
         this.cdr.detectChanges();
         for (let chip of this.notificationChips) {
@@ -225,7 +268,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         this.grid.setupColumns();
         this.grid.filteringService.clearFilter(col.memberName);
         this.grid.pipeTrigger++;
-        this.grid.dimensionsChange.emit({dimensions: this.grid.pivotConfiguration.columns, dimensionCollectionType: PivotDimensionType.Row});
+        this.grid.dimensionsChange.emit({ dimensions: this.grid.pivotConfiguration.columns, dimensionCollectionType: PivotDimensionType.Row });
         this.grid.reflow();
     }
 
