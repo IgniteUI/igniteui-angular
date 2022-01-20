@@ -3,8 +3,7 @@
     <!-- Column headers area -->
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
         <!-- Unpinned columns collection -->
-        <ng-template ngFor #headerVirtualContainer let-column
-            [ngForOf]="unpinnedColumnCollection | igxTopLevel">
+        <ng-template ngFor #headerVirtualContainer let-column [ngForOf]="unpinnedColumnCollection | igxTopLevel">
             <igx-pivot-row-dimension-header-group [ngClass]="column.headerGroupClasses"
                 [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                 [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
