@@ -82,8 +82,7 @@ export function notifyChanges(repaint = false) {
             if (originalSetter) {
                 originalSetter.call(this, newValue);
                 if (this.grid) {
-                    const shouldRepaint = this.grid.isPivot ? false : repaint;
-                    this.grid.notifyChanges(shouldRepaint);
+                    this.grid.notifyChanges(repaint && !this.grid.isPivot);
                 }
             } else {
                 if (newValue === this[key]) {
@@ -91,8 +90,7 @@ export function notifyChanges(repaint = false) {
                 }
                 this[privateKey] = newValue;
                 if (this.grid) {
-                    const shouldRepaint = this.grid.isPivot ? false : repaint;
-                    this.grid.notifyChanges(shouldRepaint);
+                    this.grid.notifyChanges(repaint && !this.grid.isPivot);
                 }
             }
         };
