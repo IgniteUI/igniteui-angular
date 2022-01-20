@@ -2,8 +2,13 @@ import { parseDate, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { BaseFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { GridType } from '../common/grid.interface';
+import { ColumnType, GridType } from '../common/grid.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
+
+export interface IHierarchicalItem {
+    value: any;
+    children?: IHierarchicalItem[];
+}
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
@@ -115,5 +120,69 @@ export class TreeGridMatchingRecordsOnlyFilteringStrategy extends TreeGridFilter
             });
         }
         return rec;
+    }
+}
+
+export class HierarchicalFilteringStrategy extends TreeGridFilteringStrategy {
+    private processedData: IHierarchicalItem[];
+    private childDataKey;
+
+    constructor(public hierarchicalFilterFields: string[]) {
+        super();
+    }
+
+    public override getColumnValues(
+            column: ColumnType,
+            tree: FilteringExpressionsTree,
+            done: (values: any[] | IHierarchicalItem[]) => void): void {
+
+        if (this.hierarchicalFilterFields.indexOf(column.field) < 0) {
+            return super.getColumnValues(column, tree, done);
+        }
+
+        this.processedData = [];
+        this.childDataKey = column.grid.childDataKey;
+        const data = column.grid.gridAPI.filterDataByExpressions(tree);
+        const columnField = column.field;
+        let columnValues = [];
+        columnValues = data.map(record => {
+            if (this.processedData.indexOf(record) < 0) { // TODO: add check for DATE
+                let hierarchicalItem: IHierarchicalItem;
+                hierarchicalItem = { value: resolveNestedPath(record, columnField) };
+                // if (shouldFormatValues) {
+                //     value = this.column.formatter(value, record);
+                // }
+                hierarchicalItem.children = this.getChildren(record, columnField)
+                return hierarchicalItem;
+            }
+        });
+        columnValues = columnValues.filter(function(el) {
+            return el !== undefined
+        });
+
+        done(columnValues);
+    }
+
+    private getChildren(record: any, columnField: string) {
+        this.processedData.push(record);
+        let childrenValues = [];
+        const children = record[this.childDataKey];
+        if (children) {
+            children.forEach(child => {
+                if (this.processedData.indexOf(child) < 0) {
+                    let hierarchicalItem: IHierarchicalItem;
+                    hierarchicalItem = { value: resolveNestedPath(child, columnField) };
+                    // if (shouldFormatValues) {
+                    //     value = this.column.formatter(value, record);
+                    // }
+                    hierarchicalItem.children = this.getChildren(child, columnField)
+                    childrenValues.push(hierarchicalItem);
+                }
+            });
+        } else {
+            // TODO: unique values on last level
+        }
+
+        return childrenValues;
     }
 }
