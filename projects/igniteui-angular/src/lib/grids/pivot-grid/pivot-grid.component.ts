@@ -54,7 +54,7 @@ import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
+import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
 import { cloneArray, PlatformUtil } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';
@@ -1172,7 +1172,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected getComponentDensityClass(baseStyleClass: string): string {
         if (this.superCompactMode) {
-            return `igx-grid__pivot--super-compact`;
+            return `${baseStyleClass}--${DisplayDensity.compact} igx-grid__pivot--super-compact`;
         }
        return super.getComponentDensityClass(baseStyleClass);
     }
