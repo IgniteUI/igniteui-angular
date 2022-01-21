@@ -38,7 +38,7 @@ export class CoreFile implements IExcelFile {
  */
 export class WorkbookRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        const hasSharedStrings = worksheetData.isEmpty === false;
+        const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
         folder.file('workbook.xml.rels', ExcelStrings.getWorkbookRels(hasSharedStrings));
     }
 }
@@ -71,11 +71,11 @@ export class WorksheetFile implements IExcelFile {
     public async writeElementAsync(folder: JSZip, worksheetData: WorksheetData) {
         return new Promise<void>(resolve => {
             this.prepareDataAsync(worksheetData, (cols, rows) => {
-                const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
-                const isHierarchicalGrid = worksheetData.data[0]?.type === ExportRecordType.HierarchicalGridRecord;
+                const hasTable = (!worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders)
+                    && worksheetData.options.exportAsTable;
 
                 folder.file('sheet1.xml', ExcelStrings.getSheetXML(
-                    this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, isHierarchicalGrid));
+                    this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, worksheetData.isHierarchical));
                 resolve();
             });
         });
@@ -87,14 +87,15 @@ export class WorksheetFile implements IExcelFile {
         const dictionary = worksheetData.dataDictionary;
         this.rowIndex = 0;
 
-        if (worksheetData.isEmpty) {
+        if (worksheetData.isEmpty && (!worksheetData.options.alwaysExportHeaders || worksheetData.owner.columns.length === 0)) {
             sheetData += '<sheetData/>';
             this.dimension = 'A1';
             done('', sheetData);
         } else {
             const owner = worksheetData.owner;
-            const isHierarchicalGrid = worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord;
+            const isHierarchicalGrid = worksheetData.isHierarchical;
             const hasMultiColumnHeader = worksheetData.hasMultiColumnHeader;
+
             const hasUserSetIndex = owner.columns.some(col => col.exportIndex !== undefined);
 
             const height =  worksheetData.options.rowHeight;
@@ -182,7 +183,7 @@ export class WorksheetFile implements IExcelFile {
                 const indexOfLastPinnedColumn = worksheetData.indexOfLastPinnedColumn;
                 const frozenColumnCount = indexOfLastPinnedColumn + 1;
                 let firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + freezeHeaders;
-                if (indexOfLastPinnedColumn !== -1 &&
+                if (indexOfLastPinnedColumn !== undefined && indexOfLastPinnedColumn !== -1 &&
                     !worksheetData.options.ignorePinning &&
                     !worksheetData.options.ignoreColumnsOrder) {
                     this.freezePane =
@@ -209,7 +210,7 @@ export class WorksheetFile implements IExcelFile {
                 sheetData += rows;
                 sheetData += '</sheetData>';
 
-                if (hasMultiColumnHeader) {
+                if (hasMultiColumnHeader && this.mergeCellsCounter > 0) {
                     sheetData += `<mergeCells count="${this.mergeCellsCounter}">${this.mergeCellStr}</mergeCells>`;
                 }
 
@@ -223,40 +224,41 @@ export class WorksheetFile implements IExcelFile {
         const height =  worksheetData.options.rowHeight;
         this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
 
-        const isHierarchicalGrid =
-            worksheetData.data.some(r => r.type === ExportRecordType.HeaderRecord || r.type === ExportRecordType.HierarchicalGridRecord);
+        const isHierarchicalGrid = worksheetData.isHierarchical;
         const hasUserSetIndex = worksheetData.owner.columns.some(c => c.exportIndex !== undefined);
 
         let recordHeaders = [];
 
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
-                if (!isHierarchicalGrid) {
-                    if (hasUserSetIndex) {
-                        recordHeaders = worksheetData.rootKeys;
-                    } else {
-                        recordHeaders = worksheetData.owner.columns
-                            .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
-                            .sort((a, b) => a.startIndex-b.startIndex)
-                            .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
-                            .map(c => c.field);
-                    }
-                } else {
-                    const record = worksheetData.data[i];
-
-                    if (record.type === ExportRecordType.HeaderRecord) {
-                        const recordOwner = worksheetData.owners.get(record.owner);
-                        const hasMultiColumnHeaders = recordOwner.columns.some(c => !c.skip && c.headerType === HeaderType.MultiColumnHeader);
-
-                        if (hasMultiColumnHeaders) {
-                            this.hGridPrintMultiColHeaders(worksheetData, rowDataArr, record, recordOwner);
+                if (!worksheetData.isEmpty){
+                    if (!isHierarchicalGrid) {
+                        if (hasUserSetIndex) {
+                            recordHeaders = worksheetData.rootKeys;
+                        } else {
+                            recordHeaders = worksheetData.owner.columns
+                                .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
+                                .sort((a, b) => a.startIndex-b.startIndex)
+                                .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
+                                .map(c => c.field);
                         }
+                    } else {
+                        const record = worksheetData.data[i];
+
+                        if (record.type === ExportRecordType.HeaderRecord) {
+                            const recordOwner = worksheetData.owners.get(record.owner);
+                            const hasMultiColumnHeaders = recordOwner.columns.some(c => !c.skip && c.headerType === HeaderType.MultiColumnHeader);
+
+                            if (hasMultiColumnHeaders) {
+                                this.hGridPrintMultiColHeaders(worksheetData, rowDataArr, record, recordOwner);
+                            }
+                        }
+
+                        recordHeaders = Object.keys(worksheetData.data[i].data);
                     }
 
-                    recordHeaders = Object.keys(worksheetData.data[i].data);
+                    rowDataArr.push(this.processRow(worksheetData, i, recordHeaders, isHierarchicalGrid));
                 }
-
-                rowDataArr.push(this.processRow(worksheetData, i, recordHeaders, isHierarchicalGrid));
             },
             () => {
                 done(rowDataArr.join(''));
@@ -404,7 +406,8 @@ export class WorkbookFile implements IExcelFile {
  */
 export class ContentTypesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file('[Content_Types].xml', ExcelStrings.getContentTypesXML(!worksheetData.isEmpty, worksheetData.options.exportAsTable));
+        const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
+        folder.file('[Content_Types].xml', ExcelStrings.getContentTypesXML(hasSharedStrings, worksheetData.options.exportAsTable));
     }
 }
 
@@ -436,7 +439,10 @@ export class TablesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
-        const dimension = 'A1:' + lastColumn;
+        const autoFilterDimension = 'A1:' + lastColumn;
+        const tableDimension = worksheetData.isEmpty
+            ? 'A1:' + ExcelStrings.getExcelColumn(columnCount - 1) + (worksheetData.rowCount + 1)
+            : autoFilterDimension;
         const hasUserSetIndex = worksheetData.owner.columns.some(c => c.exportIndex !== undefined);
         const values = hasUserSetIndex
             ? worksheetData.rootKeys
@@ -463,7 +469,7 @@ export class TablesFile implements IExcelFile {
             sortString = `<sortState ref="A2:${lastColumn}"><sortCondition descending="${dir}" ref="${sc}1:${sc}15"/></sortState>`;
         }
 
-        folder.file('table1.xml', ExcelStrings.getTablesXML(dimension, tableColumns, sortString));
+        folder.file('table1.xml', ExcelStrings.getTablesXML(autoFilterDimension, tableDimension, tableColumns, sortString));
     }
 }
 
