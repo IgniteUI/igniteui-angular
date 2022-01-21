@@ -40,6 +40,16 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         let prevDimTopRecords = [];
         const currRows = cloneArray(rows, true);
         PivotUtil.assignLevels(currRows);
+
+        if (currRows.length === 0) {
+            for (const row of collection) {
+                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
+                // generate flat data from the hierarchies
+                data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
+                prevRowDims.push(row);
+            }
+        }
+
         for (const row of currRows) {
             if (!data) {
                 // build hierarchies - groups and subgroups
@@ -82,7 +92,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                 prevRowDims.push(row);
             }
         }
-        return data || collection;
+        return data;
     }
 }
 
