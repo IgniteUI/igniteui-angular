@@ -549,6 +549,10 @@
         }
 
         // Pivot start
+        @include e(pivot, $m: 'super-compact') {
+            @extend %igx-grid__pivot--super-compact !optional
+        }
+
         @include e(tr-pivot) {
             @extend %igx-grid__tr-pivot !optional
         }
