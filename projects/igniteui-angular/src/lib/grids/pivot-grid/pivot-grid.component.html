@@ -27,10 +27,24 @@
             [igxForItemSize]="renderedRowHeight"
             [igxForSizePropName]='getPropName(dim)'
             #verticalRowDimScrollContainer>
-        <igx-pivot-row-dimension-content  role='row' class="igx-grid-thead" [grid]="this"
-            [dimension]='dim'
+            <igx-pivot-row-dimension-content role='row' class="igx-grid-thead" [grid]="this"
+                [dimension]='dim'
+                [rowIndex]='rowIndex' [rowData]='rowData'
+                [density]="displayDensity" [width]="resolveRowDimensionWidth(dim)">
+            </igx-pivot-row-dimension-content>
+        </ng-template>
+    </div>
+    <div tabindex="0" *ngIf='rowDimensions.length === 0' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension' (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+        <ng-template igxGridFor let-rowData [igxGridForOf]="dataView"
+            let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
+            [igxForContainerSize]='calcHeight'
+            [igxForItemSize]="renderedRowHeight"
+            [igxForSizePropName]='getPropName(undefined)'
+            #verticalRowDimScrollContainer>
+        <igx-pivot-row-dimension-content role='row' class="igx-grid-thead" [grid]="this"
+            [dimension]='undefined'
             [rowIndex]='rowIndex' [rowData]='rowData'
-            [density]="displayDensity" [width]="resolveRowDimensionWidth(dim)">
+            [density]="displayDensity" [width]="resolveRowDimensionWidth(undefined)">
         </igx-pivot-row-dimension-content>
         </ng-template>
     </div>
@@ -63,8 +77,8 @@
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>
             <igx-pivot-row [pivotRowWidths]='pivotRowWidths' [gridID]="id" [index]="rowIndex" [data]="rowData" 
-            [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
-            [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
+                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-pivot-row>
         </ng-template>
 

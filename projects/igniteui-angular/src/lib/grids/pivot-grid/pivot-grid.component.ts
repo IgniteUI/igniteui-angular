@@ -742,7 +742,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public resolveRowDimensionWidth(dim: IPivotDimension): number {
-        if (!dim.width) {
+        if (!dim || !dim.width) {
             return MINIMUM_COLUMN_WIDTH;
         }
         const isPercent = dim.width && dim.width.indexOf('%') !== -1;
@@ -1334,6 +1334,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public getPropName(dim: IPivotDimension) {
-        return dim.memberName + this.pivotKeys.rowDimensionSeparator + 'height';
+        return !!dim ?? dim.memberName + this.pivotKeys.rowDimensionSeparator + 'height';
     }
 }
