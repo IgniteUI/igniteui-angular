@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, NgZone, ViewChild, ViewChildren } from '@angular/core';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
@@ -30,7 +30,8 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
         private elementRef: ElementRef<HTMLElement>,
         public colResizingService: IgxPivotColumnResizingService,
         public filteringService: IgxFilteringService,
-        protected platform: PlatformUtil) {
+        protected platform: PlatformUtil,
+        protected zone: NgZone) {
         super(cdRef, grid, elementRef, colResizingService, filteringService, platform);
     }
 
@@ -76,6 +77,8 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
         } else {
             this.grid.selectionService.selectRowById(key, true, event);
         }
+
+        this.zone.run(() => {});
     }
 
     /**
