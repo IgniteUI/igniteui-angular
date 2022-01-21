@@ -151,7 +151,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     protected extractFromDimensions() {
         let lvl = 0;
         let dimData;
-        let prevDims;
+        let prevDims = [];
 
         if (this.dimension) {
             dimData = PivotUtil.getDimensionLevel(this.dimension, this.rowData, this.grid.pivotKeys);
