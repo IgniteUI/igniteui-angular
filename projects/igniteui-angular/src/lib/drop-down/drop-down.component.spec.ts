@@ -8,7 +8,7 @@ import { IgxDropDownComponent, IgxDropDownModule } from './public_api';
 import { ISelectionEventArgs } from './drop-down.common';
 import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs/public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { CancelableEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
@@ -523,6 +523,47 @@ describe('IgxDropDown ', () => {
                     cancel: true
                 };
                 expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(canceledSelectionArgs);
+            }));
+            it('should provide correct event argument when closing through keyboard', fakeAsync(() => {
+                spyOn(dropdown.closing, 'emit').and.callThrough();
+                const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
+    
+                dropdown.toggle();
+                tick();
+                fixture.detectChanges();
+                let focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
+                expect(focusedItem).toBeDefined();
+    
+                let eventArgs: IBaseCancelableBrowserEventArgs;
+                dropdown.closing.pipe(take(1)).subscribe((args: IBaseCancelableBrowserEventArgs) => {
+                    eventArgs = args;
+                });
+    
+                UIInteractions.triggerEventHandlerKeyDown('escape', dropdownElement);
+                tick();
+                fixture.detectChanges();
+                expect(dropdown.closing.emit).toHaveBeenCalledTimes(1);
+                expect(eventArgs.event).toBeDefined();
+                expect((eventArgs.event as KeyboardEvent).type).toEqual('keydown');
+                expect((eventArgs.event as KeyboardEvent).key).toEqual('escape');
+    
+                dropdown.toggle();
+                tick();
+                fixture.detectChanges();
+                focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
+                expect(focusedItem).toBeDefined();
+    
+                dropdown.closing.pipe(take(1)).subscribe((args: IBaseCancelableBrowserEventArgs) => {
+                    eventArgs = args;
+                });
+    
+                UIInteractions.triggerEventHandlerKeyDown('enter', dropdownElement);
+                tick();
+                fixture.detectChanges();
+                expect(dropdown.closing.emit).toHaveBeenCalledTimes(2);
+                expect(eventArgs.event).toBeDefined();
+                expect((eventArgs.event as KeyboardEvent).type).toEqual('keydown');
+                expect((eventArgs.event as KeyboardEvent).key).toEqual('enter');
             }));
             it('should be able to change selection when manipulating ISelectionEventArgs', fakeAsync(() => {
                 expect(dropdown.selectedItem).toEqual(null);
