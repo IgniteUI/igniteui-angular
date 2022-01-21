@@ -123,6 +123,14 @@ export class IgxTreeSelectionService {
         });
     }
 
+    public setIndeterminate(node: IgxTreeNode<any>, shouldBeIndeterminate: boolean) {
+        if (shouldBeIndeterminate) {
+            this.nodesToBeIndeterminate.add(node);
+        } else {
+            this.nodesToBeIndeterminate.delete(node);
+        }
+    }
+
     /** Retriggers a node's selection state */
     private retriggerNodeState(node: IgxTreeNode<any>): void {
         if (node.selected) {

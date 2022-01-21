@@ -25,6 +25,7 @@ import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem } from './common';
+import { IgxTreeComponent, ITreeNodeSelectionEvent } from '../../../tree/public_api';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -60,6 +61,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     @ViewChild('list', { read: IgxListComponent, static: true })
     public list: IgxListComponent;
+
+    /**
+     * @hidden @internal
+     */
+     @ViewChild('tree', { read: IgxTreeComponent, static: true })
+     public tree: IgxTreeComponent;
 
     /**
      * @hidden @internal
@@ -229,6 +236,55 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             }
         }
         eventArgs.checkbox.nativeCheckbox.nativeElement.blur();
+    }
+
+    
+    /**
+     * @hidden @internal
+     */
+     public onNodeSelectionChange(eventArgs: ITreeNodeSelectionEvent) {
+        const selectAllBtn = this.displayedListData[0];
+        if (eventArgs.removed.length === 1 && eventArgs.removed[0].data === selectAllBtn) {
+            this.displayedListData.forEach(element => {
+                if (element === this.addToCurrentFilter) {
+                    return;
+                }
+                element.isSelected = false;
+            });
+            selectAllBtn.indeterminate = false;
+        } else if (eventArgs.added.length === 1 && eventArgs.added[0].data === selectAllBtn) {
+            this.displayedListData.forEach(element => {
+                if (element === this.addToCurrentFilter) {
+                    return;
+                }
+                element.isSelected = true;
+            });
+            selectAllBtn.indeterminate = false;
+        } else {
+            eventArgs.added.forEach(node => {
+                (node.data as FilterListItem).isSelected = true;
+            });
+            eventArgs.removed.forEach(node => {
+                (node.data as FilterListItem).isSelected = false;
+            });
+
+            const indexToStartSlicing = this.displayedListData.indexOf(this.addToCurrentFilter) > -1 ? 2 : 1;
+
+            const slicedArray =
+                this.displayedListData.slice(indexToStartSlicing, this.displayedListData.length);
+
+            if (!slicedArray.find(el => el.isSelected === false)) {
+                selectAllBtn.indeterminate = false;
+                selectAllBtn.isSelected = true;
+            } else if (!slicedArray.find(el => el.isSelected === true)) {
+                selectAllBtn.indeterminate = false;
+                selectAllBtn.isSelected = false;
+            } else {
+                selectAllBtn.indeterminate = true;
+            }
+        }
+
+        eventArgs.owner.nodes.first.indeterminate = selectAllBtn.indeterminate;
     }
 
     /**

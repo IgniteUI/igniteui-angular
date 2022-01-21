@@ -403,6 +403,13 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         return this.selectionService.isNodeIndeterminate(this);
     }
 
+    /**
+     * @hidden @internal
+     */
+    public set indeterminate(state: boolean) {
+        this.selectionService.setIndeterminate(this, state);
+    }
+
     /** The depth of the node, relative to the root
      *
      * ```html
