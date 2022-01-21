@@ -1170,6 +1170,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
+    protected getComponentDensityClass(baseStyleClass: string): string {
+        if (this.superCompactMode) {
+            return `igx-grid__pivot--super-compact`;
+        }
+       return super.getComponentDensityClass(baseStyleClass);
+    }
+
     protected generateDimensionColumns(): IgxColumnComponent[] {
         const config = this.pivotConfiguration;
         const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
