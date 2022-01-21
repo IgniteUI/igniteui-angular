@@ -481,6 +481,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
                 return;
             }
             const dimType = this.getDimensionsType(dim);
+            const isDraggedFromColumn = !!this.grid.pivotConfiguration.columns?.find(x => x && x.memberName === dragId);
 
             // Dragged chip from a different dimension to the current one.
             const prevDimensionCollection = this.getDimensionsByType(dimType);
@@ -488,7 +489,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
             prevDimensionCollection.splice(prevDimensionCollection.indexOf(dim), 1);
             currentDim.splice(targetIndex, 0, dim);
 
-            const isDraggedFromColumn = !!this.grid.pivotConfiguration.columns?.find(x => x && x.memberName === dragId);
             if (isDraggedFromColumn) {
                 // columns have changed.
                 this.grid.setupColumns();
