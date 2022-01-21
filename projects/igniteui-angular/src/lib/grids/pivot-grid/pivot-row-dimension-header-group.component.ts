@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, ViewChild, ViewChildren } from '@angular/core';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxRowDirective } from '../row.directive';
-import { IPivotDimension } from './pivot-grid.interface';
+import { IPivotDimension, PivotRowHeaderGroupType } from './pivot-grid.interface';
+import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 
 /**
  * @hidden
@@ -16,12 +17,18 @@ import { IPivotDimension } from './pivot-grid.interface';
     selector: 'igx-pivot-row-dimension-header-group',
     templateUrl: './pivot-row-dimension-header-group.component.html'
 })
-export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroupComponent {
+export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {
+
+    /**
+     * @hidden
+     */
+    @HostBinding('style.user-select')
+    public userSelect = 'none';
 
     constructor(private cdRef: ChangeDetectorRef,
         @Inject(IGX_GRID_BASE) public grid: PivotGridType,
         private elementRef: ElementRef<HTMLElement>,
-        public colResizingService: IgxColumnResizingService,
+        public colResizingService: IgxPivotColumnResizingService,
         public filteringService: IgxFilteringService,
         protected platform: PlatformUtil) {
         super(cdRef, grid, elementRef, colResizingService, filteringService, platform);
@@ -32,11 +39,26 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      * @internal
      */
     @Input()
-    public intRow: IgxRowDirective;
+    public rowIndex: number;
+
+    /**
+    * @hidden
+    * @internal
+    */
+    @Input()
+    public parent: any;
+
+    @ViewChild(IgxPivotRowDimensionHeaderComponent)
+    public header: IgxPivotRowDimensionHeaderComponent;
 
     @HostBinding('attr.id')
     public get headerID() {
-        return `${this.grid.id}_-2_${this.intRow.index}_${this.visibleIndex}`;
+        return `${this.grid.id}_-2_${this.rowIndex}_${this.visibleIndex}`;
+    }
+
+    @HostBinding('attr.title')
+    public get title() {
+        return this.column.header;
     }
 
     /**
@@ -48,8 +70,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
             return;
         }
         event?.stopPropagation();
-        const row = this.grid.rowList.find(r => r.key === this.intRow.key);
-        const key = row.getRowDimensionKey(this.column as IgxColumnComponent);
+        const key = this.parent.getRowDimensionKey(this.column as IgxColumnComponent);
         if (this.grid.selectionService.isRowSelected(key)) {
             this.grid.selectionService.deselectRow(key, event);
         } else {
@@ -74,7 +95,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
         const node = nav.activeNode;
         return node && !this.column.columnGroup ?
             nav.isRowHeaderActive &&
-            node.row === this.intRow.index &&
+            node.row === this.rowIndex &&
             node.column === this.visibleIndex :
             false;
     }
@@ -82,13 +103,13 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     public get activeGroup() {
         const nav = this.grid.navigation;
         const node = nav.activeNode;
-        return node ? nav.isRowHeaderActive && node.row === this.intRow.index && node.column === this.visibleIndex : false;
+        return node ? nav.isRowHeaderActive && node.row === this.rowIndex && node.column === this.visibleIndex : false;
     }
 
     protected get activeNode() {
         this.grid.navigation.isRowHeaderActive = true;
         return {
-            row: this.intRow.index, column: this.visibleIndex, level: null,
+            row: this.rowIndex, column: this.visibleIndex, level: null,
             mchCache: null,
             layout: null
         };

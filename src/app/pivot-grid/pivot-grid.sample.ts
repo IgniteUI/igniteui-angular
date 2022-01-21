@@ -103,10 +103,10 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-            this.dimensions[0]
+            this.dimensions[1]
         ],
         rows: [
-            this.dimensions[1],
+            this.dimensions[0],
             this.dimensions[2]
         ],
         values: [
@@ -158,7 +158,7 @@ export class PivotGridSampleComponent {
             {
                 memberName: 'SellerName',
                 enabled: true,
-                filter: this.filterExpTree
+                //filter: this.filterExpTree
             }
         ]
     };
@@ -221,5 +221,16 @@ export class PivotGridSampleComponent {
 
     public setDensity(density: DisplayDensity) {
         this.grid1.displayDensity = density;
+    }
+
+    public autoSizeRow(ind) {
+        this.grid1.autoSizeRowDimension(this.pivotConfigHierarchy.rows[ind]);
+    }
+
+    public setRowDimWidth(rowDimIndex, widthValue) {
+        const newPivotConfig = {...this.pivotConfigHierarchy};
+        newPivotConfig.rows[rowDimIndex].width = widthValue;
+
+        this.grid1.pivotConfiguration = newPivotConfig;
     }
 }

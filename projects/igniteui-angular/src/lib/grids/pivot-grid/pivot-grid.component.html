@@ -19,6 +19,21 @@
 </igx-pivot-header-row>
 
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
+    <div tabindex="0" *ngFor='let dim of rowDimensions' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension' (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+        <ng-template igxGridFor let-rowData [igxGridForOf]="dataView
+        | pivotGridCellMerging:pivotConfiguration:dim:pivotKeys:pipeTrigger"
+            let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
+            [igxForContainerSize]='calcHeight'
+            [igxForItemSize]="renderedRowHeight"
+            [igxForSizePropName]='getPropName(dim)'
+            #verticalRowDimScrollContainer>
+        <igx-pivot-row-dimension-content  role='row' class="igx-grid-thead" [grid]="this"
+            [dimension]='dim'
+            [rowIndex]='rowIndex' [rowData]='rowData'
+            [density]="displayDensity" [width]="resolveRowDimensionWidth(dim)">
+        </igx-pivot-row-dimension-content>
+        </ng-template>
+    </div>
     <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
@@ -111,7 +126,7 @@
         </igx-circular-bar>
     </div>
 </ng-template>
-<igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
+<igx-pivot-grid-column-resizer [restrictResizerTop]="theadRow.nativeElement.clientHeight" *ngIf="colResizingService.showResizer"></igx-pivot-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 

@@ -577,6 +577,18 @@
             @extend %igx-grid__tr-pivot-group !optional
         }
 
+        @include e(tr-header-row) {
+            @extend %igx-grid__tr-header-row !optional;
+        }
+
+        @include e(tr-pivot, $m: 'columnDimensionLeaf') {
+            @extend %igx-grid__tr-pivot--columnDimensionLeaf !optional
+        }
+
+        @include e(tr-pivot, $m: 'columnMultiRowSpan') {
+            @extend %igx-grid__tr-pivot--columnMultiRowSpan !optional
+        }
+
         @include e(tr-pivot-toggle-icons) {
             @extend %igx-grid__tr-pivot-toggle-icons !optional;
         }
