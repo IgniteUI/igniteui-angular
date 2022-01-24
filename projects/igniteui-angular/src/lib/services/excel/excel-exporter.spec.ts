@@ -25,6 +25,8 @@ describe('Excel Exporter', () => {
 
     /* ExportData() tests */
     it('should not fail when data is empty.', async () => {
+        options.alwaysExportHeaders = false;
+
         const wrapper = await getExportedData([], options);
 
         wrapper.verifyStructure();
@@ -32,6 +34,7 @@ describe('Excel Exporter', () => {
     });
 
     it('should export empty objects successfully.', async () => {
+        options.alwaysExportHeaders = false;
         const wrapper = await getExportedData(SampleTestData.emptyObjectData(), options);
 
         wrapper.verifyStructure();
