@@ -2,6 +2,8 @@ import { FilteringLogic, IFilteringExpression } from './filtering-expression.int
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
+import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
+import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
@@ -137,5 +139,25 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
             column.formatter(value, rec) : value && (isDate || isTime) ? parseDate(value) : value;
 
         return value;
+    }
+}
+
+export class PivotFilteringStrategy extends FilteringStrategy {
+
+    constructor() {
+        super();
+    }
+
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
+        let value = resolveNestedPath(rec, fieldName);
+        if (value && !(value instanceof Object)) {
+            value = value && (isDate || isTime) ? parseDate(value) : value;
+            return value;
+        }
+        const config = (grid as IgxPivotGridComponent).pivotConfiguration;
+        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
+        const flattenedDims = PivotUtil.flatten(allDimensions, 0);
+        const dimension = flattenedDims.find(x => x.memberName === fieldName);
+        return dimension.memberFunction ? dimension.memberFunction(rec) : value;
     }
 }

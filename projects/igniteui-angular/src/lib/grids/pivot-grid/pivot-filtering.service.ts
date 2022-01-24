@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { PivotFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { PivotUtil } from './pivot-util';
@@ -42,6 +43,7 @@ export class IgxPivotFilteringService extends IgxFilteringService {
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         dim.filter = filteringTree;
         grid.filteringPipeTrigger++;
+        grid.filterStrategy = new PivotFilteringStrategy();
         if (allDimensions.indexOf(dim) !== -1) {
             // update columns
             (grid as any).setupColumns();
