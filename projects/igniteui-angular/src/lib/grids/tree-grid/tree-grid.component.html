@@ -110,7 +110,8 @@
         | gridRowPinning:id:false:pipeTrigger
         | gridAddRow:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
-            [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer>
+            [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
+            (onDataChanging)="dataRebinding($event)" (onDataChanged)="dataRebound($event)">
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)'
                 (onCachedViewLoaded)='cachedViewLoaded($event)'>
