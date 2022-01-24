@@ -1,8 +1,7 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate } from '../core/utils';
-import { GridType } from '../grids/common/grid.interface';
-import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
+import { GridType, PivotGridType } from '../grids/common/grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 
 const DateType = 'date';
@@ -154,7 +153,7 @@ export class PivotFilteringStrategy extends FilteringStrategy {
             value = value && (isDate || isTime) ? parseDate(value) : value;
             return value;
         }
-        const config = (grid as IgxPivotGridComponent).pivotConfiguration;
+        const config = (grid as PivotGridType).pivotConfiguration;
         const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
         const flattenedDims = PivotUtil.flatten(allDimensions, 0);
         const dimension = flattenedDims.find(x => x.memberName === fieldName);
