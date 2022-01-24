@@ -98,7 +98,7 @@ export abstract class BaseProgressDirective {
         newVal: 0
     };
 
-    constructor() { }
+    constructor(public element: ElementRef) { }
 
     /**
      * Returns the value which update the progress indicator of the `progress bar`.
@@ -208,20 +208,6 @@ export abstract class BaseProgressDirective {
     }
 
     /**
-     * Sets the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
-     * ```typescript
-     *  @ViewChild("MyProgressBar")
-     * public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
-     *     public setValue(event){
-     *     this.progressBar.valueInPercent = 56;
-     * }
-     * ```
-     */
-    public set valueInPercent(value: number) {
-        this.value = toValue(value, this.max);
-    }
-
-    /**
      * Returns the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
      * ```typescript
      *  @ViewChild("MyProgressBar")
@@ -233,7 +219,7 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public get valueInPercent(): number {
-        const val = this.max <= 0 ? 0 : toPercent(this._value, this._max);
+        const val = toPercent(this._value, this._max);
         return val;
     }
 
@@ -602,8 +588,8 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
         strokeOpacity: 1
     };
 
-    constructor(private renderer: Renderer2, private _directionality: IgxDirectionality) {
-        super();
+    constructor(private renderer: Renderer2, private _directionality: IgxDirectionality, element: ElementRef) {
+        super(element);
     }
 
     public ngAfterContentInit() {

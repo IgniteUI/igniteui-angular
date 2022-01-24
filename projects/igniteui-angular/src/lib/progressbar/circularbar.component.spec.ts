@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxCircularProgressBarComponent, IgxProgressBarModule } from './progressbar.component';
-import { Common } from './common.spec';
+import { IgxCircularProgressBarComponent, IgxProgressBarModule, toPercent } from './progressbar.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
@@ -242,11 +241,16 @@ describe('IgCircularBar', () => {
 
         fix.detectChanges();
 
-        const percentValue = Common.calcPercentage(value, max);
+        const percentValue = toPercent(value, max);
         expect(bar.value).toBe(value);
         expect(bar.step).toBe(step);
         expect(bar.max).toBe(max);
         expect(bar.valueInPercent).toBe(percentValue);
+
+        // Should not set a step larger than max value
+        bar.step = 20;
+        expect(bar.step).toBe(step);
+        expect(bar.max).toBe(max);
     });
 
     it(`when step value is not divisble to passed value the result returned from the
@@ -257,7 +261,7 @@ describe('IgCircularBar', () => {
         const bar = fix.componentInstance.circularBar;
         const step = 3.734;
         let value = 30;
-        let valueInPercent = Common.calcPercentage(value, bar.max);
+        let valueInPercent = toPercent(value, bar.max);
         bar.step = step;
         bar.value = value;
 
@@ -267,7 +271,7 @@ describe('IgCircularBar', () => {
         expect(bar.valueInPercent).toBe(valueInPercent);
 
         value = 10;
-        valueInPercent = Common.calcPercentage(value, bar.max);
+        valueInPercent = toPercent(value, bar.max);
         bar.value = value;
         fix.detectChanges();
 
@@ -381,7 +385,7 @@ describe('IgCircularBar', () => {
             tick(tickTime);
             fix.detectChanges();
 
-            const progressRepresentation = Common.calcPercentage(val, maxVal);
+            const progressRepresentation = toPercent(val, maxVal);
             const progressBarElem = fix.debugElement.query(By.css('svg'));
             const valueInPercent = progressBarElem.query(By.css(`.${CIRCULAR_TEXT_CLASS}`)).nativeElement;
             expect(valueInPercent.textContent.trim()).toBe(`${progressRepresentation}%`);
