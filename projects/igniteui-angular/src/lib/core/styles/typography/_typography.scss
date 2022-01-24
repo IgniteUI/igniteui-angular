@@ -138,11 +138,26 @@
     @if ($_variant == 'indigo') {
         @include igx-calendar-typography($type-scale);
 
-        @include igx-card-typography($type-scale, $categories: (
-            title: 'h5',
-            title-small: 'subtitle-2',
-            subtitle: 'subtitle-2',
-            content: 'body-2',
+        @include igx-checkbox-typography($type-scale, $categories: (
+            label: 'body-1',
+        ));
+
+        @include igx-input-group-typography($type-scale, $categories: (
+            input-text: 'body-1'
+        ));
+
+        @include igx-calendar-typography($type-scale, $categories: (
+            header-year: 'overline',
+        ));
+
+        @include igx-list-typography($type-scale, $categories: (
+            header: 'overline',
+            subtitle: 'body-2'
+        ));
+
+
+        @include igx-expansion-panel-typography($type-scale, $categories: (
+            body: 'body-1'
         ));
 
         @include igx-dialog-typography($type-scale);
