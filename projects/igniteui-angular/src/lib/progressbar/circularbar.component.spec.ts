@@ -10,7 +10,7 @@ const CIRCULAR_OUTER_CLASS = 'igx-circular-bar__outer';
 const CIRCULAR_TEXT_CLASS = 'igx-circular-bar__text';
 const CIRCULAR_INDETERMINATE_CLASS = 'igx-circular-bar--indeterminate';
 
-fdescribe('IgxCircularBar', () => {
+describe('IgxCircularBar', () => {
     configureTestSuite();
 
     describe('Unit Tests', () => {
