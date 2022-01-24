@@ -162,7 +162,11 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         } else if (hierarchyRecords) {
             const leafRecords = this.getLeafs(hierarchyRecords, pivotKeys);
             hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, PivotDimensionType.Column, pivotKeys);
-            PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
+            if (hierarchy[pivotKeys.children].size) {
+                PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
+            } else {
+                PivotUtil.applyAggregations(leafRecords, values, pivotKeys);
+            }
         }
     }
 
