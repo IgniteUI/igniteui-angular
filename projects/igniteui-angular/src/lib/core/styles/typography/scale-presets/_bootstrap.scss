@@ -59,6 +59,7 @@ $bootstrap_body-1: igx-type-style(
     $font-size: rem(16px),
     $font-weight: 400,
     $line-height: rem(24px),
+    $letter-spacing: rem(.44px),
     $text-transform: none,
     $margin-top: 0,
     $margin-bottom: 0
@@ -68,6 +69,7 @@ $bootstrap_body-2: igx-type-style(
     $font-size: rem(14.4px),
     $font-weight: 400,
     $line-height: rem(24px),
+    $letter-spacing: rem(.25px),
     $text-transform: none,
     $margin-top: 0,
     $margin-bottom: 0
@@ -77,6 +79,7 @@ $bootstrap_subtitle-1: igx-type-style(
     $font-size: rem(14px),
     $font-weight: 400,
     $line-height: rem(24px),
+    $letter-spacing: rem(.15px),
     $text-transform: none,
     $margin-top: 0,
     $margin-bottom: 0
@@ -86,6 +89,7 @@ $bootstrap_subtitle-2: igx-type-style(
     $font-size: rem(14.4px),
     $font-weight: 400,
     $line-height: rem(21.6px),
+    $letter-spacing: rem(.1px),
     $text-transform: none,
     $margin-top: 0,
     $margin-bottom: 0
@@ -95,6 +99,7 @@ $bootstrap_button: igx-type-style(
     $font-size: rem(16px),
     $font-weight: 500,
     $line-height: rem(24px),
+    $letter-spacing: rem(.86px),
     $text-transform: capitalize,
     $margin-top: 0,
     $margin-bottom: 0
