@@ -56,7 +56,6 @@ export class IgxCalendarContainerComponent {
 /** @hidden */
 @NgModule({
     declarations: [IgxCalendarContainerComponent],
-    entryComponents: [IgxCalendarContainerComponent],
     imports: [
         CommonModule,
         IgxButtonModule,

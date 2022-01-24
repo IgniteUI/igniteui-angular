@@ -31,9 +31,6 @@ module.exports = function (config) {
       tagPrefix: '#',
       skipTags: 'perf'
     },
-    preprocessors: {
-      'projects/igniteui-angular/**/*.js': ['coverage']
-    },
     coverageReporter: {
       dir: require('path').join(__dirname, '../../coverage'),
       subdir: '.',
@@ -42,7 +39,7 @@ module.exports = function (config) {
         { type: 'lcov' },
       ]
     },
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

@@ -389,6 +389,8 @@ describe('Excel Exporter', () => {
 
         it('should not export columns when \'columnExporting\' is canceled.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            options.alwaysExportHeaders = false;
+
             fix.detectChanges();
             await wait();
 
@@ -477,6 +479,8 @@ describe('Excel Exporter', () => {
 
         it('should not export rows when \'rowExporting\' is canceled.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            options.alwaysExportHeaders = false;
+
             fix.detectChanges();
             await wait();
 
@@ -902,12 +906,13 @@ describe('Excel Exporter', () => {
             await exportAndVerify(hGrid, options, actualData.exportMultiColumnHeadersDataWithSkippedParentMCH);
         });
 
-        it('should export empty file when all parent multi column headers are skipped', async () => {
+        it('should export empty file when all parent multi column headers are skipped and alwaysExportHeaders is false', async () => {
             const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
             fix.detectChanges();
 
             const hGrid = fix.componentInstance.hGrid;
             options = createExportOptions('HierarchicalGridMCHExcelExport');
+            options.alwaysExportHeaders = false;
 
             exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
                 if (args.header === 'General Information' || args.header === 'Address Information' || args.field === 'CustomerID') {
@@ -917,6 +922,19 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             await exportAndVerify(hGrid, options, actualData.exportMultiColumnHeadersDataWithAllParentsSkipped);
+        });
+
+        it('should export headers when exporting empty hierarchical grid with multi column headers', async () => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            fix.componentInstance.data = [];
+            options = createExportOptions('HierarchicalGridMCHExcelExport');
+
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportEmptyMultiColumnHeadersDataWithExportedHeaders);
         });
     });
 
@@ -1094,6 +1112,13 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(treeGrid, options, actualData.treeGridWithAdvancedFilters);
         });
+
+        it('should export headers when exporting empty tree grid.', async () => {
+            fix.componentInstance.data = [];
+            fix.detectChanges();
+
+            await exportAndVerify(treeGrid, options, actualData.emptyTreeGridWithExportedHeaders);
+        });
     });
 
     describe('', () => {
@@ -1159,6 +1184,14 @@ describe('Excel Exporter', () => {
             options.freezeHeaders = true;
             fix.detectChanges();
             await exportAndVerify(grid, options, actualData.exportFrozenMultiColumnHeadersData, false);
+        });
+
+        it('should export headers when exporting empty grid with multi column headers', async () => {
+            fix.componentInstance.data = [];
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportEmptyGridWithMultiColumnHeadersData, false);
         });
     });
 
