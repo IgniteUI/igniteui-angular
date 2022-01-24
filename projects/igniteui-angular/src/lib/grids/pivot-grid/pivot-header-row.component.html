@@ -11,7 +11,7 @@
                     <span id='empty' igxDrop (dropped)="onDimDrop($event, filterArea, 2)"
                           *ngIf="grid.filterDimensions.length === 0"
                           class='igx-pivot__emptyChipArea'>{{grid.resourceStrings.igx_grid_pivot_empty_filter_drop_area}}</span>
-                        <ng-container *ngFor="let filter of grid.filterDimensions; let last = last;">
+                        <ng-container *ngFor="let filter of this.filterAreaDimensions; let last = last;">
                         <span [style.visibility]='"hidden"' class="igx-grid__tr-pivot--chip_drop_indicator"
                               [style.height.px]='getAreaHeight(filterArea)'></span>
                             <igx-chip [id]="filter.memberName" [draggable]="true" [displayDensity]="grid.displayDensity"

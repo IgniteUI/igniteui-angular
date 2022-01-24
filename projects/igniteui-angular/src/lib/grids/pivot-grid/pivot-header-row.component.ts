@@ -129,7 +129,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         if (this.filterArea?.chipsList && this.filterArea.chipsList.length !== 0) {
             const styles = getComputedStyle(this.pivotFilterContainer.nativeElement);
             const containerPaddings = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
-            chipsWidth += containerPaddings + (this.filtersButton ? this.filtersButton.el.nativeElement.getBoundingClientRect().width : 0);
+            chipsWidth += containerPaddings + (this.filtersButton && this.filterArea?.chipsList.length > 1 ? this.filtersButton.el.nativeElement.getBoundingClientRect().width : 0);
             this.filterArea.chipsList.forEach(chip => {
                 const dim = this.grid.filterDimensions.find(x => x.memberName === chip.id);
                 if (dim) {
