@@ -226,6 +226,8 @@ export class PivotUtil {
                 hierarchy[pivotKeys.aggregations] = this.aggregate(childRecords, values);
             } else if (hierarchy[pivotKeys.records]) {
                 hierarchy[pivotKeys.aggregations] = this.aggregate(hierarchy[pivotKeys.records], values);
+            } else {
+                hierarchy[pivotKeys.aggregations] = this.aggregate([hierarchy], values);
             }
         });
     }

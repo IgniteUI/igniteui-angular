@@ -133,11 +133,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * <igx-pivot-grid [pivotConfiguration]="config"></igx-pivot-grid>
      * ```
      */
-    public set pivotConfiguration(value :IPivotConfiguration) {
+    public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
         this.notifyChanges(true);
     }
-    
+
     public get pivotConfiguration() {
         return this._pivotConfiguration;
     }
@@ -1215,6 +1215,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         let columns = [];
         if (fields.size === 0) {
+            this.values.forEach((value) => {
+                const ref = factoryColumn.create(this.viewRef.injector);
+                ref.instance.header = 'AllProducts';
+                ref.instance.field = value.member;
+                ref.instance.parent = parent;
+                ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
+                ref.instance.sortable = true;
+                ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0]);
+                ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
+                columns.push(ref.instance);
+            });
             return columns;
         }
         const first = fields.keys().next().value;
