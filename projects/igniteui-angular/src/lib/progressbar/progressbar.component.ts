@@ -184,10 +184,6 @@ export abstract class BaseProgressDirective {
 
         this._internalState.newVal = Math.round(toValue(toPercent(this.value, maxNum), maxNum));
         this._value = this._internalState.oldVal = Math.round(toValue(this.valueInPercent, maxNum));
-        if (maxNum < this._value) {
-            this._value = maxNum;
-        }
-
         this._max = maxNum;
         this.triggerProgressTransition(this._internalState.oldVal, this._internalState.newVal, true);
     }
@@ -260,9 +256,6 @@ export abstract class BaseProgressDirective {
         if (this._contentInit) {
             this.triggerProgressTransition(this._value, valInRange);
         } else {
-            if (this._initValue > this.max) {
-                this._initValue = this.max;
-            }
             this._initValue = valInRange;
         }
     }
@@ -283,8 +276,7 @@ export abstract class BaseProgressDirective {
             const oldToPercent = toPercent(oldVal, this.max);
             const duration = this.animationDuration / Math.abs(newToPercent - oldToPercent) / (this._step ? this._step : 1);
             this.runAnimation(newVal);
-            this._interval = setInterval(() =>
-                this.increase(newVal, stepDirection), duration);
+            this._interval = setInterval(() => this.increase(newVal, stepDirection), duration);
         } else {
             this.updateProgress(newVal);
         }
