@@ -4,9 +4,9 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxRowDirective } from '../row.directive';
-import { IPivotDimension } from './pivot-grid.interface';
+import { IPivotDimension, PivotRowHeaderGroupType } from './pivot-grid.interface';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 
 /**
@@ -17,12 +17,18 @@ import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-heade
     selector: 'igx-pivot-row-dimension-header-group',
     templateUrl: './pivot-row-dimension-header-group.component.html'
 })
-export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroupComponent {
+export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {
+
+    /**
+     * @hidden
+     */
+    @HostBinding('style.user-select')
+    public userSelect = 'none';
 
     constructor(private cdRef: ChangeDetectorRef,
         @Inject(IGX_GRID_BASE) public grid: PivotGridType,
         private elementRef: ElementRef<HTMLElement>,
-        public colResizingService: IgxColumnResizingService,
+        public colResizingService: IgxPivotColumnResizingService,
         public filteringService: IgxFilteringService,
         protected platform: PlatformUtil) {
         super(cdRef, grid, elementRef, colResizingService, filteringService, platform);

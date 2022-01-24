@@ -1,8 +1,8 @@
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxChipComponent } from '../../chips/chip.component';
-import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IgxPivotGridComponent, IgxPivotRowDimensionHeaderGroupComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
@@ -1132,4 +1132,111 @@ describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         GridSelectionFunctions.verifyColumnSelected(amountOfSale, false);
         GridSelectionFunctions.verifyColumnGroupSelected(fixture, group, false);
     });
+});
+
+describe('IgxPivotGrid Resizing #pivotGrid', () => {
+    let fixture: ComponentFixture<any>;
+    let pivotGrid: IgxPivotGridComponent;
+
+    configureTestSuite((() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxPivotGridTestComplexHierarchyComponent
+            ],
+            imports: [
+                NoopAnimationsModule,
+                IgxPivotGridModule
+            ]
+        });
+    }));
+
+    beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+        fixture.detectChanges();
+
+        pivotGrid = fixture.componentInstance.pivotGrid;
+    }));
+
+    it('should define grid with resizable columns.', fakeAsync(() => {
+        let dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+
+        let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        expect(rowHeaders[0].componentInstance.column.resizable).toBeTrue();
+        expect(rowHeaders[3].componentInstance.column.resizable).toBeTrue();
+
+        rowHeaders = dimensionContents[1].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        expect(rowHeaders[0].componentInstance.column.resizable).toBeTrue();
+        expect(rowHeaders[1].componentInstance.column.resizable).toBeTrue();
+        expect(rowHeaders[5].componentInstance.column.resizable).toBeTrue();
+        expect(rowHeaders[7].componentInstance.column.resizable).toBeTrue();
+    }));
+
+    it('should update grid after resizing a top dimension header to be bigger.', fakeAsync(() => {
+        let dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+
+        let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        expect(rowHeaders[0].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[3].componentInstance.column.width).toEqual('200px');
+
+        rowHeaders = dimensionContents[1].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        expect(rowHeaders[0].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[1].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[5].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[7].componentInstance.column.width).toEqual('200px');
+
+        rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[0]).nativeElement;
+
+        // Resize first column
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
+        tick(200);
+        fixture.detectChanges();
+
+        const resizer = GridFunctions.getResizer(fixture).nativeElement;
+        expect(resizer).toBeDefined();
+        UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
+        UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+        fixture.detectChanges();
+
+        rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        expect(rowHeaders[0].componentInstance.column.width).toEqual('400px');
+        expect(rowHeaders[3].componentInstance.column.width).toEqual('400px');
+
+        rowHeaders = dimensionContents[1].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        expect(rowHeaders[0].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[1].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[5].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[7].componentInstance.column.width).toEqual('200px');
+    }));
+
+    it('should update grid after resizing a child dimension header to be bigger.', fakeAsync(() => {
+        let dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+
+        let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        expect(rowHeaders[0].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[3].componentInstance.column.width).toEqual('200px');
+
+        const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[3]).nativeElement;
+
+        // Resize first column
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
+        tick(200);
+        fixture.detectChanges();
+
+        const resizer = GridFunctions.getResizer(fixture).nativeElement;
+        expect(resizer).toBeDefined();
+        UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
+        UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+        fixture.detectChanges();
+
+        rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        expect(rowHeaders[0].componentInstance.column.width).toEqual('400px');
+        expect(rowHeaders[3].componentInstance.column.width).toEqual('400px');
+
+        rowHeaders = dimensionContents[1].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        expect(rowHeaders[0].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[1].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[5].componentInstance.column.width).toEqual('200px');
+        expect(rowHeaders[7].componentInstance.column.width).toEqual('200px');
+    }));
 });

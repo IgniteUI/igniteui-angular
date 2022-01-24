@@ -2878,7 +2878,11 @@
 
     // Pivot grid
     %grid-thead--pivot {
-        flex-direction: column;
+        display: flex;
+
+        %grid-thead--virtualizationWrapper {
+            border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        }
     }
 
     %grid-thead--virtualizationWrapper {
@@ -2911,7 +2915,6 @@
         padding: map.get($grid-header-padding, 'comfortable');
         background-clip: border-box !important;
         border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
-        border-#{$right}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 
         igx-chips-area {
