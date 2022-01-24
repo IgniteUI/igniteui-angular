@@ -146,10 +146,6 @@
             input-text: 'body-1'
         ));
 
-        @include igx-calendar-typography($type-scale, $categories: (
-            header-year: 'overline',
-        ));
-
         @include igx-list-typography($type-scale, $categories: (
             header: 'overline',
             title: 'subtitle-1',
