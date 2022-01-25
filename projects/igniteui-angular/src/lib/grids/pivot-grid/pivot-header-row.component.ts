@@ -282,6 +282,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         this.grid.setupColumns();
         this.grid.pipeTrigger++;
         this.grid.valuesChange.emit({ values: this.grid.pivotConfiguration.values });
+        this.grid.reflow();
     }
 
     /**
