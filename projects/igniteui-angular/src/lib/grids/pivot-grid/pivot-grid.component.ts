@@ -1217,7 +1217,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (fields.size === 0) {
             this.values.forEach((value) => {
                 const ref = factoryColumn.create(this.viewRef.injector);
-                ref.instance.header = 'AllProducts';
+                ref.instance.header = value.displayName;
                 ref.instance.field = value.member;
                 ref.instance.parent = parent;
                 ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
