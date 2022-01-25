@@ -30,6 +30,7 @@
             iconPosition="left"
             [disabled]="false"
             igxDrop
+            [dropChannel]="panel.name"
             (dropped)="onItemDropped($event, panel.type)"
         >
             <igx-expansion-panel-title class="igx-pivot-data-selector__header">
@@ -44,6 +45,7 @@
         </igx-expansion-panel-header>
         <igx-expansion-panel-body
             igxDrop
+            [dropChannel]="panel.name"
             (dropped)="onItemDropped($event, panel.type)"
         >
             <igx-list
@@ -52,24 +54,27 @@
             >
                 <igx-list-item
                     igxDrag
-                    *igxFor="
+                    (dragMove)="onItemDragMove($event)"
+                    [dragChannel]="panel.dragChannels"
+                    *ngFor="
                         let item of this.grid[panel.dataKey];
-                        scrollOrientation: 'vertical'
+                        scrollOrientation: 'vertical'; let index
                     "
                     [id]="item[panel.itemKey]"
                 >
                     <div class="igx-pivot-data-selector__item">
                         <div
                             class="igx-pivot-data-selector__item-text"
-                            (click)="onItemSort($event, item, 1)"
+                            [class.igx-pivot-data-selector__action-sort]="panel.sortable"
+                            (click)="onItemSort($event, item, panel.type)"
                         >
                             {{ item[panel.itemKey] }}
                         </div>
                         <div class="igx-pivot-data-selector__item-actions">
                             <igx-icon
                                 class="igx-pivot-data-selector__action-sort"
-                                *ngIf="item.sortDirection"
-                                (click)="onItemSort($event, item, 1)"
+                                *ngIf="panel.sortable && item.sortDirection"
+                                (click)="onItemSort($event, item, panel.type)"
                             >
                                 {{
                                     item.sortDirection < 2
@@ -80,8 +85,8 @@
                             <igx-icon
                                 igxDragHandle
                                 class="igx-pivot-data-selector__action-move"
-                                *ngFor="let action of panel.actions"
-                                >{{ action.icon }}</igx-icon
+                                *ngIf="panel.dragChannels.length > 0"
+                                >drag_handle</igx-icon
                             >
                         </div>
                     </div>

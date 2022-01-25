@@ -1,8 +1,7 @@
 import { Component, HostBinding, Input } from "@angular/core";
-import { IDropDroppedEventArgs, IgxAppendDropStrategy, IPivotConfiguration, PivotDimensionType } from "igniteui-angular";
+import { IDragBaseEventArgs, IDropDroppedEventArgs, PivotDimensionType } from "igniteui-angular";
 import { DisplayDensity } from "../../core/displayDensity";
 import { PivotGridType } from "../common/grid.interface";
-// import { IgxPivotDateDimension } from "./pivot-grid-dimensions";
 import { IPivotDimension } from "./pivot-grid.interface";
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 
@@ -11,8 +10,9 @@ interface IDataSelectorPanel {
     type?: PivotDimensionType;
     dataKey: string;
     icon: string;
-    actions: { icon: string }[];
     itemKey: string;
+    sortable: boolean;
+    dragChannels: string[];
 }
 
 @Component({
@@ -20,12 +20,12 @@ interface IDataSelectorPanel {
     templateUrl: "./pivot-data-selector.component.html",
 })
 export class IgxPivotDataSelectorComponent {
+    private _grid: PivotGridType;
+    private _dropDelta = 0;
+
     @HostBinding("class.igx-pivot-data-selector")
     public cssClass = "igx-pivot-data-selector";
-
-    private _grid: PivotGridType;
     public dimensions: IPivotDimension[];
-    public dropStrategy = IgxAppendDropStrategy;
 
     /**
      * @hidden @internal
@@ -36,48 +36,35 @@ export class IgxPivotDataSelectorComponent {
             type: PivotDimensionType.Filter,
             dataKey: "filterDimensions",
             icon: "filter_list",
-            actions: [{
-                icon: "drag_handle"
-            }],
             itemKey: "memberName",
+            sortable: false,
+            dragChannels: ["Filters", "Columns", "Rows"]
         },
         {
             name: "Columns",
             type: PivotDimensionType.Column,
             dataKey: "columnDimensions",
             icon: "view_column",
-            actions: [
-                {
-                    icon: "drag_handle",
-                },
-            ],
             itemKey: "memberName",
+            sortable: true,
+            dragChannels: ["Filters", "Columns", "Rows"]
         },
         {
             name: "Rows",
             type: PivotDimensionType.Row,
             dataKey: "rowDimensions",
             icon: "table_rows",
-            actions: [
-                {
-                    icon: "drag_handle",
-                },
-            ],
             itemKey: "memberName",
+            sortable: true,
+            dragChannels: ["Filters", "Columns", "Rows"]
         },
         {
             name: "Values",
             dataKey: "values",
             icon: "functions",
-            actions: [
-                {
-                    icon: "functions",
-                },
-                {
-                    icon: "drag_handle",
-                },
-            ],
             itemKey: "member",
+            sortable: false,
+            dragChannels: ["Values"]
         },
     ];
 
@@ -104,6 +91,8 @@ export class IgxPivotDataSelectorComponent {
     }
 
     public onItemSort(_: Event, dimension: IPivotDimension, dimensionType: PivotDimensionType) {
+        if(!this._panels.find((panel: IDataSelectorPanel) => panel.type === dimensionType).sortable) return;
+
         if (!dimension.sortDirection) {
             dimension.sortDirection = SortingDirection.None;
         }
@@ -125,8 +114,8 @@ export class IgxPivotDataSelectorComponent {
         }
     }
 
-    protected getDimensionsByType(dimension: PivotDimensionType) {
-        switch (dimension) {
+    protected getDimensionsByType(dimensionType: PivotDimensionType) {
+        switch (dimensionType) {
             case PivotDimensionType.Row:
                 if (!this.grid.pivotConfiguration.rows) {
                     this.grid.pivotConfiguration.rows = [];
@@ -147,33 +136,58 @@ export class IgxPivotDataSelectorComponent {
         }
     }
 
+    protected getDimensionState(dimensionType: PivotDimensionType) {
+        switch (dimensionType) {
+            case PivotDimensionType.Row:
+                return this.grid.rowDimensions;
+            case PivotDimensionType.Column:
+                return this.grid.columnDimensions;
+            case PivotDimensionType.Filter:
+                return this.grid.filterDimensions;
+            default:
+                return null;
+        }
+    }
+
+    public onItemDragMove(event: IDragBaseEventArgs) {
+        const clientRect = event.owner.element.nativeElement.getBoundingClientRect();
+        this._dropDelta =  Math.round((event.pageY - event.startY) / clientRect.height);
+    }
+
     public onItemDropped(event: IDropDroppedEventArgs, dimensionType: PivotDimensionType) {
-        const targetDimension = this.getDimensionsByType(dimensionType);
+        const dimension = this.getDimensionsByType(dimensionType);
+        const dimensionState = this.getDimensionState(dimensionType);
         const itemId = event.drag.element.nativeElement.id;
-
-        const allDims = this.grid.pivotConfiguration.rows
+        const dimensionItem = dimension.find(x => x.memberName === itemId);
+        const itemIndex = dimension?.findIndex(x => x?.memberName === itemId) !== -1 ?
+            dimension?.findIndex(x => x.memberName === itemId) : dimension?.length;
+        const dimensions = this.grid.pivotConfiguration.rows
             .concat(this.grid.pivotConfiguration.columns)
-            .concat(this.grid.pivotConfiguration.filters);
+            .concat(this.grid.pivotConfiguration.filters)
+            .filter(x => x && x.memberName === itemId);
 
-        const dims = allDims.filter(x => x && x.memberName === itemId);
-        if (dims.length === 0) {
-            return;
+        const reorder = dimensionState.findIndex(item => item.memberName === itemId) !== -1;;
+        let targetIndex = dimension.length;
+
+        if(reorder) {
+            targetIndex = itemIndex + this._dropDelta < 0 ? 0 : itemIndex + this._dropDelta;
         }
 
-        dims.forEach(dim => {
-            dim.enabled = false;
+        dimensions.forEach(item => {
+            item.enabled = false;
         });
 
-        const targetDimensionItem = targetDimension.find(x => x && x.memberName === itemId);
-        if (targetDimensionItem) {
-            targetDimensionItem.enabled = true;
+        if (dimensionItem) {
+            dimensionItem.enabled = true;
+            dimension.splice(itemIndex, 1);
+            dimension.splice(targetIndex , 0, dimensionItem);
         } else {
-            const newDim = Object.assign({}, dims[0]);
+            const newDim = Object.assign({}, dimensions[0]);
             newDim.enabled = true;
-            targetDimension.push(newDim);
+            dimension.splice(targetIndex, 0, newDim);
         }
 
         this.grid.pipeTrigger++;
-        this.grid.dimensionsChange.emit({ dimensions: targetDimension, dimensionCollectionType: dimensionType });
+        this.grid.dimensionsChange.emit({ dimensions: dimension, dimensionCollectionType: dimensionType });
     }
 }
