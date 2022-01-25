@@ -149,6 +149,15 @@
         @include igx-toast-typography($type-scale, $categories: (
             text: 'body-1'
         ));
+
+        @include igx-drop-down-typography($type-scale, $categories: (
+            header: 'body-2',
+            select-item: 'body-2'
+        ));
+
+        @include igx-expansion-panel-typography($type-scale, $categories: (
+            description: 'body-2',
+        ));
     }
 
     @if ($_variant == 'indigo') {
