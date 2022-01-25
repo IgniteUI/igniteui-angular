@@ -1418,7 +1418,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         // should update scroll top/left according to change so that same startIndex is in view
         if (Math.abs(sizeDiff) > 0 && this.scrollPosition > 0) {
             this.recalcUpdateSizes();
-            const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const offset = this.igxForScrollOrientation === 'horizontal' ?
+             parseInt(this.dc.instance._viewContainer.element.nativeElement.style.left, 10) :
+             parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const newSize = this.sizesCache[this.state.startIndex] - offset;
             this.scrollPosition = newSize;
             if (this.scrollPosition !== newSize) {
@@ -1658,8 +1660,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     protected _updateSizeCache(changes: IterableChanges<T> = null) {
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.initSizesCache(this.igxForOf);
-            return;
+            const oldSize = this.sizesCache[this.sizesCache.length - 1];
+            const newSize = this.initSizesCache(this.igxForOf);
+            const diff = oldSize - newSize;
+            return diff;
         }
 
         const oldHeight = this.heightCache.length > 0 ? this.heightCache.reduce((acc, val) => acc + val) : 0;
