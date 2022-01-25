@@ -45,7 +45,7 @@ describe('IgxSelection', () => {
             .toEqual(inputNativeElem.value);
     });
 
-    fit('Should check if the value is selected if based on input type', () => {
+    it('Should check if the value is selected if based on input type', () => {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
         const selectableTypes: Types[] = [
             { "text" : "Some Values!" },
