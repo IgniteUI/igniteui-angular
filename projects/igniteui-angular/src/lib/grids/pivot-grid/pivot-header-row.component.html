@@ -115,7 +115,7 @@
         <!-- Column headers area -->
         <div class="igx-grid__tr" role="row" [style.width.px]="width">
             <div #pivotContainer class="igx-grid__tr-pivot igx-grid__tr-pivot--row-area"
-                 [style.min-width.px]="grid.pivotRowWidths - 1" (igxDragLeave)="onAreaDragLeave($event, rowArea)" igxDrop
+                 [style.width.px]="grid.pivotRowWidths - 1" (igxDragLeave)="onAreaDragLeave($event, rowArea)" igxDrop
                  (dropped)="onDimDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()">
                 <!-- Row area -->
                 <igx-chips-area #rowArea droppable='true'>
