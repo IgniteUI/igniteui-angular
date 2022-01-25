@@ -165,6 +165,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
             if (hierarchy[pivotKeys.children].size) {
                 PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
             } else {
+                hierarchy[pivotKeys.children].set('Root', leafRecords);
                 const aggrResult = PivotUtil.aggregate(leafRecords, values);
                 const keys = Object.keys(aggrResult);
                 keys.forEach(key => {
