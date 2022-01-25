@@ -13,6 +13,9 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IgxTabs` have full right-to-left (RTL) support.
 
+- `IgxExcelExporterService`
+    - Added support for exporting the grids' headers by default when the data is empty. This behavior can be controlled by the `alwaysExportHeaders` option of the IgxExcelExporterOptions object.
+
 ### General
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -23,6 +26,7 @@ All notable changes for each version of this project will be documented in this 
         <igx-column field="Age"></igx-column>
     </igx-grid>
    ```
+   - Exposed `dataChanging` and `dataChanged` events for the three grids that are re-emits of the corresponding `IgxForOf` events. These indicate the beginning and end of the input change triggering the actual data re-rendering which happens each time the data view changes. This happens after changes in either the data the grid is bound or the state affecting the operations which alter this data (e.g. sorting, filtering, group-by).
    - Scrolling with the mouse wheel over cells with templates that include scrollable containers now correctly scroll these inner containers before the grid body scrolls.
 
 ## 13.0.5
