@@ -118,7 +118,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         collection.forEach(hierarchy => {
             // apply aggregations based on the created groups and generate column fields based on the hierarchies
             this.groupColumns(hierarchy, columns, values, pivotKeys);
-            if (hierarchy[pivotKeys.children]) {
+            if (hierarchy[pivotKeys.children] && hierarchy[pivotKeys.children].size) {
                 let flatCols = {};
                 PivotUtil.flattenColumnHierarchy(hierarchy[pivotKeys.children], values, pivotKeys).forEach(o => {
                     delete o[pivotKeys.records];
@@ -165,7 +165,11 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
             if (hierarchy[pivotKeys.children].size) {
                 PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
             } else {
-                PivotUtil.applyAggregations(leafRecords, values, pivotKeys);
+                const aggrResult = PivotUtil.aggregate(leafRecords, values);
+                const keys = Object.keys(aggrResult);
+                keys.forEach(key => {
+                    hierarchy[key] = aggrResult[key];
+                });
             }
         }
     }
