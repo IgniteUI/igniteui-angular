@@ -227,7 +227,11 @@ export class PivotUtil {
             } else if (hierarchy[pivotKeys.records]) {
                 hierarchy[pivotKeys.aggregations] = this.aggregate(hierarchy[pivotKeys.records], values);
             } else {
-                hierarchy[pivotKeys.aggregations] = this.aggregate([hierarchy], values);
+                const aggregationResult = this.aggregate([hierarchy], values);
+                const keys = Object.keys(aggregationResult);
+                keys.forEach(key => {
+                    hierarchy[key] = aggregationResult[key];
+                });
             }
         });
     }
@@ -450,7 +454,7 @@ export class PivotUtil {
                 }
             }
         } else {
-            const hierarchyChild =  hierarchyValue[childKey];
+            const hierarchyChild = hierarchyValue[childKey];
             for (const [key, child] of childCollection) {
                 let hierarchyChildValue = hierarchyChild.get(child.value);
                 if (!hierarchyChildValue) {
