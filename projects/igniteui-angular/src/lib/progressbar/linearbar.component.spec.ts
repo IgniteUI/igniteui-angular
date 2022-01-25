@@ -62,6 +62,7 @@ describe('IgxLinearBar', () => {
         expect(progress.striped).toBe(newStriped);
         expect(progress.type).toBe(newType);
         expect(progress.value).toBe(defaultValue);
+        expect(progress.animate).toBe(false);
     });
 
     it('should set value to 0 for negative values', () => {

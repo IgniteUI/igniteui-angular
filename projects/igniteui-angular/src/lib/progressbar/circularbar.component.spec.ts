@@ -280,7 +280,8 @@ describe('IgxCircularBar', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    CircularBarTemplateComponent
+                    CircularBarTemplateComponent,
+                    CircularBarTemplateGradientComponent
                 ],
                 imports: [
                     IgxProgressBarModule
@@ -312,6 +313,29 @@ describe('IgxCircularBar', () => {
             // Text is not rendered
             expect(fixture.debugElement.query(By.css('text'))).toEqual(null);
         });
+
+        it('should apply its gradient template correctly', () => {
+            const fixture = TestBed.createComponent(CircularBarTemplateGradientComponent);
+            fixture.detectChanges();
+
+            const componentInstance = fixture.componentInstance;
+            const progressBarElem = fixture.debugElement.query(By.css('svg')).nativeElement;
+            const textElement = fixture.debugElement.query(By.css('text')).nativeElement;
+
+            fixture.detectChanges();
+            expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe('20');
+
+            expect(progressBarElem.children[0]).toHaveClass(CIRCULAR_INNER_CLASS);
+            expect(progressBarElem.children[1]).toHaveClass(CIRCULAR_OUTER_CLASS);
+
+            expect(textElement.children[0].textContent.trim()).toBe('20%');
+
+            componentInstance.progressbar.textVisibility = false;
+            fixture.detectChanges();
+
+            // Text is not rendered
+            expect(fixture.debugElement.query(By.css('text'))).toEqual(null);
+        });
     });
 });
 
@@ -325,5 +349,21 @@ describe('IgxCircularBar', () => {
         </igx-circular-bar>`
 })
 class CircularBarTemplateComponent {
+    @ViewChild(IgxCircularProgressBarComponent, { static: true }) public progressbar: IgxCircularProgressBarComponent;
+}
+
+@Component({
+    template: `
+        <igx-circular-bar [value]="20" [animate]="false" [max]="100" [textVisibility]="true">
+            <ng-template igxProgressBarGradient let-id>
+                <svg:linearGradient [id]="id" gradientTransform="rotate(90)">
+                    <stop offset="0%" stop-color="#ff9a40" />
+                    <stop offset="50%" stop-color="#1eccd4" />
+                    <stop offset="100%" stop-color="#ff0079" />
+                </svg:linearGradient>
+            </ng-template>
+        </igx-circular-bar>`
+})
+class CircularBarTemplateGradientComponent {
     @ViewChild(IgxCircularProgressBarComponent, { static: true }) public progressbar: IgxCircularProgressBarComponent;
 }
