@@ -108,9 +108,7 @@ export class IgxTextSelectionDirective {
 
     public trigger() {
         if (this.selected && this.nativeElement.value.length) {
-            requestAnimationFrame(() => {
                 this.nativeElement.select();
-            })
         }
     }
 }
