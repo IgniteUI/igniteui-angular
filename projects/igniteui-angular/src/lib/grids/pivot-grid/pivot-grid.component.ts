@@ -1222,8 +1222,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.parent = parent;
                 ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
                 ref.instance.sortable = true;
-                ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0]);
-                ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
+                ref.instance.dataType = value.dataType || this.resolveDataTypes(data[0]);
+                ref.instance.formatter = value.formatter;
                 columns.push(ref.instance);
             });
             return columns;
