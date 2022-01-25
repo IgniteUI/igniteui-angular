@@ -24,7 +24,8 @@ export class IgxTotalSaleAggregate {
         if (data.length === 1) {
             min = data[0].UnitPrice * data[0].UnitsSold;
         } else if (data.length > 1) {
-            min = data.reduce((a, b) => Math.min(a.UnitPrice * a.UnitsSold, b.UnitPrice * b.UnitsSold));
+            const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
+            min = mappedData.reduce((a, b) => Math.min(a, b));
         }
         return min;
     };
@@ -34,7 +35,8 @@ export class IgxTotalSaleAggregate {
         if (data.length === 1) {
             max = data[0].UnitPrice * data[0].UnitsSold;
         } else if (data.length > 1) {
-            max = data.reduce((a, b) => Math.max(a.UnitPrice * a.UnitsSold, b.UnitPrice * b.UnitsSold));
+            const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
+            max = mappedData.reduce((a, b) => Math.max(a,b));
         }
         return max;
     };
