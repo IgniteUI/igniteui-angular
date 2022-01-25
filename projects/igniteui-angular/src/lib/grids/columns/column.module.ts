@@ -25,11 +25,6 @@ import {
         IgxColumnGroupComponent,
         IgxColumnLayoutComponent
     ],
-    entryComponents: [
-        IgxColumnComponent,
-        IgxColumnGroupComponent,
-        IgxColumnLayoutComponent
-    ],
     exports: [
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
