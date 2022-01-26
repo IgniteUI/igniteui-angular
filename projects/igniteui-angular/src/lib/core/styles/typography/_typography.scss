@@ -146,10 +146,6 @@
             title: 'h5'
         ));
 
-        @include igx-toast-typography($type-scale, $categories: (
-            text: 'body-1'
-        ));
-
         @include igx-drop-down-typography($type-scale, $categories: (
             header: 'body-2',
             select-item: 'body-2'
