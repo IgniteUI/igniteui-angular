@@ -997,7 +997,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *
      * @returns Array of selected items
      * ```typescript
-     * let selectedItems = this.combo.selectedItems();
+     * let mySelection = this.combo.selection;
      * ```
      */
     public get selection() {
@@ -1183,7 +1183,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
-        return value.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
+
+        return value?.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
     };
 
     protected manageRequiredAsterisk(): void {

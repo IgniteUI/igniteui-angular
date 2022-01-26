@@ -2,6 +2,30 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.0.5
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added `dataCloneStrategy` input, which allows users provide their own implementation of how data objects are cloned when row and/or batch editing is enabled. The custom strategy should implement the `IDataCloneStrategy` interface.
+
+## 13.0.1
+
+### New Features
+- Add `igxSummary` directive in order to re-template the default summary cell layout.
+    - Expose `summaryTemplate` input in order to bind the column summary template through API.
+    - Expose `summaryRowHeight` property which overrides the default hight of the summary row.
+    - Code example below:
+
+    ```html
+    <igx-column ... [hasSummary]="true">
+        <ng-template igxSummary let-summaryResult>
+            <span> My custom summary template</span>
+            <span>{{ summaryResult[0].label }} - {{ summaryResult[0].summaryResult }}</span>
+        </ng-template>
+    </igx-column>
+    ```
+    - Please, refer to the [Summaries](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/summaries#summary-template) topic for more information.
+
 ## 13.0.0
 
 ### New Features
@@ -54,6 +78,8 @@ All notable changes for each version of this project will be documented in this 
     - Exposed a `groupStrategy` input that functions similarly to `sortStrategy`, allowing customization of the grouping behavior of the grid. Please, refer to the [Group By ](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby) topic for more information.
 - `IgxDialog`
     - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
+- `IgxProgressBar`
+    - Exposed new animationDuration input - sets the duration of the progress animation. 
 
 ### General
 

@@ -200,7 +200,8 @@ export class IgxGridTransactionPipe implements PipeTransform {
             const result = DataUtil.mergeTransactions(
                 cloneArray(collection),
                 this.grid.transactions.getAggregatedChanges(true),
-                this.grid.primaryKey);
+                this.grid.primaryKey,
+                this.grid.dataCloneStrategy);
             return result;
         }
         return collection;
@@ -233,6 +234,19 @@ export class IgxHasVisibleColumnsPipe implements PipeTransform {
 
 }
 
+/** @hidden @internal */
+function buildDataView(): MethodDecorator {
+    return function (_target: unknown, _propertyKey: string, descriptor: PropertyDescriptor) {
+        const original = descriptor.value;
+        descriptor.value = function (...args: unknown[]) {
+            const result = original.apply(this, args);
+            this.grid.buildDataView();
+            return result;
+        }
+        return descriptor;
+    }
+}
+
 /**
  * @hidden
  */
@@ -241,6 +255,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
+    @buildDataView()
     public transform(collection: any[], id: string, isPinned = false, _pipeTrigger: number) {
 
         if (this.grid.hasPinnedRecords && isPinned) {
