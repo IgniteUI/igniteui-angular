@@ -1,5 +1,5 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTextSelectionModule } from './text-selection.directive';
 
@@ -45,7 +45,7 @@ describe('IgxSelection', () => {
             .toEqual(inputNativeElem.value);
     });
 
-    it('Should check if the value is selected if based on input type', () => {
+    it('Should check if the value is selected if based on input type', fakeAsync(() => {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
         const selectableTypes: Types[] = [
             { "text" : "Some Values!" },
@@ -82,7 +82,7 @@ describe('IgxSelection', () => {
             inputElem.click();
             fix.detectChanges();
 
-            if(type !== 'number' && type !== 'tel'){
+            if(type !== 'number'){
                 expect(inputNativeElem.selectionEnd).toEqual(inputNativeElem.value.length);
                 expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd))
                     .toEqual(val);
@@ -90,11 +90,8 @@ describe('IgxSelection', () => {
 
             if(type === 'number'){
                 let selection = document.getSelection().toString();
-                console.log(selection);
-                console.log(val)
-                fix.componentInstance.waitForOneSecond().then(() => {
-                    expect(val.toString().lenght).toBe(selection.length);
-                });
+                tick(1000);
+                expect((String(val)).length).toBe(selection.length);
             }
         });
 
@@ -109,7 +106,7 @@ describe('IgxSelection', () => {
             fix.detectChanges();
             expect(inputNativeElem.selectionStart).toEqual(inputNativeElem.selectionEnd);
         });
-    });
+    }));
 
 
 
