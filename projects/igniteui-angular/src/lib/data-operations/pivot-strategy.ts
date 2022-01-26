@@ -42,12 +42,10 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         PivotUtil.assignLevels(currRows);
 
         if (currRows.length === 0) {
-            for (const row of collection) {
-                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
-                // generate flat data from the hierarchies
-                data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
-                prevRowDims.push(row);
-            }
+            hierarchies = PivotUtil.getFieldsHierarchy(collection, [{ memberName: '', enabled: true }], PivotDimensionType.Row, pivotKeys);
+            // generate flat data from the hierarchies
+            data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
+            return data;
         }
 
         for (const row of currRows) {

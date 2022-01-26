@@ -345,6 +345,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public rowDimensionResizing = true;
 
+    /**
+     * @hidden @internal
+     */
+    private _emptyRowDimension: IPivotDimension;
+    public get emptyRowDimension(): IPivotDimension {
+        if (!!this._emptyRowDimension) {
+            return this._emptyRowDimension;
+        }
+        return {} as IPivotDimension;
+    }
+
+    public set emptyRowDimension(dim: IPivotDimension) {
+        if (!this._emptyRowDimension) {
+            this._emptyRowDimension = {} as IPivotDimension;
+        }
+    }
+
     protected _defaultExpandState = false;
     private _data;
     private _filteredData;
