@@ -319,7 +319,6 @@ const components = [
         IgxTextSelectionModule,
         SharedModule,
         routing,
-        HammerModule,
         IgxDateTimeEditorModule,
         IgxButtonModule
     ],
