@@ -404,6 +404,7 @@ export interface GridType extends IGridDataBindable {
     hasColumnGroups: boolean;
     hasEditableColumns: boolean;
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
+    getHeaderCellWidth: (element: HTMLElement) => ISizeInfo;
 
     cdr: ChangeDetectorRef;
     document: Document;
@@ -627,6 +628,7 @@ export interface PivotGridType extends GridType {
     showPivotConfigurationUI: boolean;
     columnDimensions: IPivotDimension[];
     rowDimensions: IPivotDimension[];
+    rowDimensionResizing: boolean;
     values: IPivotValue[];
     filterDimensions: IPivotDimension[];
     dimensionDataColumns: ColumnType[];
@@ -638,8 +640,14 @@ export interface PivotGridType extends GridType {
     dimensionsChange: EventEmitter<IDimensionsChange>;
     valuesChange: EventEmitter<IValuesChange>;
     pivotKeys: IPivotKeys;
+    hasMultipleValues: boolean;
 }
 export interface GridSVGIcon {
     name: string;
     value: string;
+}
+
+export interface ISizeInfo {
+    width: number,
+    padding: number
 }

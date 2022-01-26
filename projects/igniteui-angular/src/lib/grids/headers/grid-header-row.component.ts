@@ -122,6 +122,10 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     @ViewChild('headerVirtualContainer', { read: IgxGridForOfDirective, static: true })
     public headerContainer: IgxGridForOfDirective<IgxGridHeaderGroupComponent>;
 
+    public get headerForOf() {
+        return this.headerContainer;
+    }
+
     @ViewChild('headerDragContainer')
     public headerDragContainer: ElementRef<HTMLElement>;
 

@@ -2878,7 +2878,20 @@
 
     // Pivot grid
     %grid-thead--pivot {
-        flex-direction: column;
+        display: flex;
+
+        %grid-thead--virtualizationWrapper {
+            border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        }
+    }
+
+    %grid-thead--virtualizationWrapper {
+        height: 100%;
+    }
+
+    %grid-thead--virtualizationContainer {
+        overflow: visible;
+        height: 100%;
     }
 
     %igx-grid__tr-pivot {
@@ -2902,7 +2915,6 @@
         padding: map.get($grid-header-padding, 'comfortable');
         background-clip: border-box !important;
         border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
-        border-#{$right}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 
         igx-chips-area {
@@ -2976,6 +2988,30 @@
 
     %igx-grid__tr-pivot-toggle-icons {
         display: inline-flex !important;
+    }
+
+    %igx-grid__tr-pivot--columnDimensionLeaf {
+        box-shadow: none;
+
+        igx-grid-header {
+            border: none;
+        }
+    }
+
+    %igx-grid__tr-pivot--columnMultiRowSpan {
+        igx-grid-header {
+            > * {
+                visibility: hidden;
+            }
+        }
+    }
+
+    %igx-grid__tr-header-row {
+        igx-pivot-row-dimension-header-group {
+            igx-pivot-row-dimension-header {
+                align-items: center;
+            }
+        }
     }
     // Pivot grid END
 }
