@@ -147,8 +147,9 @@
         ));
 
         @include igx-drop-down-typography($type-scale, $categories: (
-            header: 'body-2',
-            select-item: 'body-2'
+            header: 'body-1',
+            item: 'body-1',
+            select-item: 'body-1'
         ));
 
         @include igx-expansion-panel-typography($type-scale, $categories: (
