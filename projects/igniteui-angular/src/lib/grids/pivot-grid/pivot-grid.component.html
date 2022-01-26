@@ -30,7 +30,7 @@
         <igx-pivot-row-dimension-content  role='row' class="igx-grid-thead" [grid]="this"
             [dimension]='dim'
             [rowIndex]='rowIndex' [rowData]='rowData'
-            [density]="displayDensity" [width]="resolveRowDimensionWidth(dim)">
+            [density]="displayDensity" [width]="rowDimensionWidthToPixels(dim)">
         </igx-pivot-row-dimension-content>
         </ng-template>
     </div>
