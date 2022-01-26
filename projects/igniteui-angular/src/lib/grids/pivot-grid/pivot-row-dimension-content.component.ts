@@ -191,14 +191,6 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         ref.instance.field = field;
         ref.instance.header = header;
         ref.instance.resizable = this.grid.rowDimensionResizing;
-
-        if (!dim) {
-            ref.instance.width = this.grid.resolveRowDimensionWidth({} as IPivotDimension) + 'px';
-            (ref as any).instance._vIndex = this.grid.columns.length + 0 + this.rowIndex * this.grid.pivotConfiguration.rows.length;
-            ref.instance.headerTemplate = this.headerTemplateDefault;
-            return ref.instance;
-        }
-
         ref.instance.width = this.grid.resolveRowDimensionWidth(this.dimension) + 'px';
         (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows.length;
         if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.rowData, this.grid.pivotKeys)) {

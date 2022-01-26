@@ -348,18 +348,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    private _emptyRowDimension: IPivotDimension;
+    private _emptyRowDimension: IPivotDimension = { memberName: '', enabled: true };
     public get emptyRowDimension(): IPivotDimension {
-        if (!!this._emptyRowDimension) {
-            return this._emptyRowDimension;
-        }
-        return {} as IPivotDimension;
-    }
-
-    public set emptyRowDimension(dim: IPivotDimension) {
-        if (!this._emptyRowDimension) {
-            this._emptyRowDimension = {} as IPivotDimension;
-        }
+        return this._emptyRowDimension;
     }
 
     protected _defaultExpandState = false;
@@ -759,7 +750,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public resolveRowDimensionWidth(dim: IPivotDimension): number {
-        if (!dim || !dim.width) {
+        if (!dim.width) {
             return MINIMUM_COLUMN_WIDTH;
         }
         const isPercent = dim.width && dim.width.indexOf('%') !== -1;
