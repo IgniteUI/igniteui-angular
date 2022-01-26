@@ -33,7 +33,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IPivotConfiguration, IPivotDimension, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -133,11 +133,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * <igx-pivot-grid [pivotConfiguration]="config"></igx-pivot-grid>
      * ```
      */
-    public set pivotConfiguration(value :IPivotConfiguration) {
+    public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
         this.notifyChanges(true);
     }
-    
+
     public get pivotConfiguration() {
         return this._pivotConfiguration;
     }
@@ -1039,6 +1039,91 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.cdr.detectChanges();
         }
     }
+
+    public insertDimensionAt(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number) {
+        const targetCollection = this.getDimensionsByType(targetCollectionType);
+        if (index !== undefined) {
+            targetCollection.splice(index, 0, dimension);
+        } else {
+            targetCollection.push(dimension);
+        }
+        if (targetCollectionType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
+        this.pipeTrigger++;
+        this.dimensionsChange.emit({ dimensions: targetCollection, dimensionCollectionType: targetCollectionType });
+    }
+
+    public moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number) {
+        // remove from old collection
+        this.removeDimension(dimension);
+        // add to target
+        this.insertDimensionAt(dimension, targetCollectionType, index);
+    }
+
+    public removeDimension(dimension: IPivotDimension) {
+        const prevCollectionType = this.getDimensionType(dimension);
+        const prevCollection = this.getDimensionsByType(prevCollectionType);
+        const currentIndex = prevCollection.indexOf(dimension);
+        prevCollection.splice(currentIndex, 1);
+        if (prevCollectionType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
+        this.pipeTrigger++;
+    }
+
+    public toggleDimension(dimension: IPivotDimension) {
+        const dimType = this.getDimensionType(dimension);
+        const collection = this.getDimensionsByType(dimType);
+        dimension.enabled = !dimension.enabled;
+        if (dimType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
+        if(!dimension.enabled) {
+            this.filteringService.clearFilter(dimension.memberName);
+        }
+        this.pipeTrigger++;
+        this.dimensionsChange.emit({ dimensions: collection, dimensionCollectionType: dimType });
+    }
+
+    public insertValueAt(value: IPivotValue, index?: number) {
+
+    }
+
+    public moveValue(dimension: IPivotValue, index?: number) {
+
+    }
+
+    public removeValue(value: IPivotValue,) {
+
+    }
+
+    public toggleValue(value: IPivotValue) {
+
+    }
+
+    public getDimensionsByType(dimension: PivotDimensionType) {
+        switch (dimension) {
+            case PivotDimensionType.Row:
+                if (!this.pivotConfiguration.rows) {
+                    this.pivotConfiguration.rows = [];
+                }
+                return this.pivotConfiguration.rows;
+            case PivotDimensionType.Column:
+                if (!this.pivotConfiguration.columns) {
+                    this.pivotConfiguration.columns = [];
+                }
+                return this.pivotConfiguration.columns;
+            case PivotDimensionType.Filter:
+                if (!this.pivotConfiguration.filters) {
+                    this.pivotConfiguration.filters = [];
+                }
+                return this.pivotConfiguration.filters;
+            default:
+                return null;
+        }
+    }
+
 
     @ViewChildren(IgxPivotRowDimensionContentComponent)
     protected rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
