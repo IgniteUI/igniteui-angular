@@ -103,6 +103,7 @@
         }
 
         %igx-expansion-panel__body {
+            position: relative;
             min-height: rem(128px);
             font-size: rem(14px);
             padding: $panel-padding;
@@ -125,6 +126,30 @@
 
         %igx-expansion-panel__header-title > h6 {
             font-size: rem(12px);
+        }
+    }
+
+    %selector-filter {
+        display: flex;
+        flex-direction: column;
+
+        igx-list {
+            display: flex;
+            flex-direction: column;
+            padding-top: rem(8px);
+            padding-bottom: rem(8px);
+            max-height: 200px;
+            height: 50%;
+            overflow: auto;
+        }
+
+        igx-list-item {
+            display: flex;
+            align-items: center;
+        }
+
+        igx-checkbox + span {
+            margin-#{$left}: rem(8px);
         }
     }
 
@@ -164,13 +189,35 @@
         min-height: rem(32px);
     }
 
+    %selector-item-ghost {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: rem(14px);
+        background: igx-color($color: 'surface');
+        min-height: rem(32px);
+        padding: 0 rem(2px) 0 rem(4px);
+        cursor: grabbing;
+        box-shadow: igx-elevation($igx-elevations, 24);
+        border: 1px solid igx-color($color: 'grays', $variant: 100);
+        border-radius: rem(2px);
+
+        igx-icon {
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
+        }
+    }
+
     %selector-item-text,
     %selector-action-sort,
-    %selector-action-move {
+    %selector-action-move,
+    %selector-action-summary {
         user-select: none;
     }
 
-    %selector-action-sort {
+    %selector-action-sort,
+    %selector-action-summary {
         cursor: pointer;
     }
 
@@ -183,6 +230,25 @@
 
         igx-icon + igx-icon {
             margin-#{$left}: rem(8px);
+        }
+    }
+
+    %no-drop-overlay {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: igx-color($color: grays, $variant: 100);
+        color: igx-contrast-color($color: grays, $variant: 100);
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        igx-icon {
+            width: rem(48px);
+            height: rem(48px);
+            font-size: rem(48px);
         }
     }
 }

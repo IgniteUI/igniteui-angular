@@ -19,8 +19,16 @@
             @extend %selector-header-extra !optional;
         }
 
+        @include e(filter) {
+            @extend %selector-filter !optional;
+        }
+
         @include e(item) {
             @extend %selector-item !optional;
+        }
+
+        @include e(item-ghost) {
+            @extend %selector-item-ghost !optional;
         }
 
         @include e(item-text) {
@@ -37,6 +45,14 @@
 
         @include e(action-move) {
             @extend %selector-action-move !optional;
+        }
+
+        @include e(action-summary) {
+            @extend %selector-action-summary !optional;
+        }
+
+        @include e(no-drop-overlay) {
+            @extend %no-drop-overlay !optional;
         }
     }
 }
