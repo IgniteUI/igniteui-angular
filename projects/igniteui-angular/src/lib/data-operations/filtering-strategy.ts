@@ -140,23 +140,3 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
         return value;
     }
 }
-
-export class PivotFilteringStrategy extends FilteringStrategy {
-
-    constructor() {
-        super();
-    }
-
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
-        let value = resolveNestedPath(rec, fieldName);
-        if (value && !(value instanceof Object)) {
-            value = value && (isDate || isTime) ? parseDate(value) : value;
-            return value;
-        }
-        const config = (grid as PivotGridType).pivotConfiguration;
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
-        const flattenedDims = PivotUtil.flatten(allDimensions, 0);
-        const dimension = flattenedDims.find(x => x.memberName === fieldName);
-        return dimension.memberFunction ? dimension.memberFunction(rec) : value;
-    }
-}
