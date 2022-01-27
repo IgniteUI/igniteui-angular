@@ -182,7 +182,6 @@
 
         @include igx-dialog-typography($type-scale, $categories: (
             title: 'h5',
-            content: 'body-1',
         ));
 
         @include igx-drop-down-typography($type-scale, $categories: (
@@ -196,6 +195,29 @@
             title: 'body-1',
             subtitle: 'subtitle-1',
             header: 'overline',
+        ));
+
+        @include igx-checkbox-typography($type-scale, $categories: (
+            label: 'body-2',
+        ));
+
+        @include igx-input-group-typography($type-scale, $categories: (
+            helper-text: 'body-2',
+            input-text: 'body-1'
+        ));
+
+        @include igx-navbar-typography($type-scale, $categories: (
+            title: 'h5'
+        ));
+
+        @include igx-drop-down-typography($type-scale, $categories: (
+            header: 'body-1',
+            item: 'body-1',
+            select-item: 'body-1'
+        ));
+
+        @include igx-expansion-panel-typography($type-scale, $categories: (
+            description: 'body-1',
         ));
     }
 
