@@ -1,7 +1,6 @@
 import { AnimationBuilder } from '@angular/animations';
 import {
-    AfterViewInit, ContentChildren, Directive, EventEmitter,
-    HostBinding,
+    AfterViewInit, ChangeDetectorRef, ContentChildren, Directive, EventEmitter,
     Input, OnDestroy, Output, QueryList
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -120,8 +119,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     private _itemChanges$: Subscription;
 
     /** @hidden */
-    constructor(builder: AnimationBuilder) {
-        super(builder);
+    constructor(builder: AnimationBuilder, cdr: ChangeDetectorRef) {
+        super(builder, cdr);
     }
 
     /** @hidden */

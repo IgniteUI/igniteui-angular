@@ -13,7 +13,7 @@ import {
 
 import { IgxColumnComponent } from './column.component';
 import { flatten } from '../../core/utils';
-import { CellType } from '../common/cell.interface';
+import { CellType } from '../common/grid.interface';
 
 
 @Component({
@@ -371,10 +371,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             });
         }
     }
-    // constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & IGridDataBindable>, public cdr: ChangeDetectorRef) {
-    //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-    //     super(gridAPI, cdr);
-    // }
 
     /**
      * @hidden

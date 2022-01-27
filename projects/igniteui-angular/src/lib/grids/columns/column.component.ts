@@ -12,6 +12,7 @@ import {
     Output,
     EventEmitter,
     OnDestroy,
+    Inject,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
@@ -27,32 +28,28 @@ import {
 } from '../../data-operations/filtering-condition';
 import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { DisplayDensity } from '../../core/displayDensity';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { IgxGridCellComponent } from '../cell.component';
 import { IgxRowDirective } from '../row.directive';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { GridBaseAPIService } from '../api.service';
-import { GridType } from '../common/grid.interface';
+import { CellType, ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import {
     IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
-    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult, IgxTimeSummaryOperand
+    IgxSummaryResult, IgxTimeSummaryOperand
 } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCollapsibleIndicatorTemplateDirective,
-    IgxFilterCellTemplateDirective
+    IgxFilterCellTemplateDirective,
+    IgxSummaryTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
-import { IgxColumnGroupComponent } from './column-group.component';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { isConstructor, PlatformUtil } from '../../core/utils';
-import { CellType } from '../common/cell.interface';
 import { IgxGridCell } from '../grid-public-cell';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
@@ -73,7 +70,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
     selector: 'igx-column',
     template: ``
 })
-export class IgxColumnComponent implements AfterContentInit, OnDestroy {
+export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnType {
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -840,6 +837,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
+    @ContentChild(IgxSummaryTemplateDirective, { read: IgxSummaryTemplateDirective })
+    protected summaryTemplateDirective: IgxSummaryTemplateDirective;
+    /**
+     * @hidden
+     */
     @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;
     /**
@@ -857,7 +859,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
     protected collapseIndicatorTemplate: IgxCollapsibleIndicatorTemplateDirective;
-
     /**
      * @hidden
      */
@@ -940,7 +941,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     public get index(): number {
-        return this.grid.columns.indexOf(this);
+        return (this.grid as any)._columns.indexOf(this);
     }
 
     /**
@@ -1114,15 +1115,37 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
     }
     /**
-     * The reference to the `igx-grid` owner.
+     * Returns a reference to the `summaryTemplate`.
      * ```typescript
-     * let gridComponent = this.column.grid;
+     * let summaryTemplate = this.column.summaryTemplate;
      * ```
      *
      * @memberof IgxColumnComponent
      */
-    public get grid(): IgxGridBaseDirective {
-        return this.gridAPI.grid;
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public get summaryTemplate(): TemplateRef<any> {
+        return this._summaryTemplate;
+    }
+    /**
+     * Sets the summary template.
+     * ```html
+     * <ng-template #summaryTemplate igxSummary let-summaryResults>
+     *    <p>{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</p>
+     *    <p>{{ summaryResults[1].label }}: {{ summaryResults[1].summaryResult }}</p>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'summaryTemplate'", {read: TemplateRef })
+     * public summaryTemplate: TemplateRef<any>;
+     * this.column.summaryTemplate = this.summaryTemplate;
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    public set summaryTemplate(template: TemplateRef<any>) {
+        this._summaryTemplate = template;
     }
     /**
      * Returns a reference to the `bodyTemplate`.
@@ -1261,7 +1284,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * Gets the cells of the column.
      * ```typescript
-     * let columnCells = this.column._cells;
+     * let columnCells = this.column.cells;
      * ```
      *
      */
@@ -1281,7 +1304,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public get _cells(): IgxGridCellComponent[] {
+    public get _cells(): CellType[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowDirective)
             .map((row) => {
                 if (row._cells) {
@@ -1583,6 +1606,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
+    protected _summaryTemplate: TemplateRef<any>;
+    /**
+     * @hidden
+     */
     protected _inlineEditorTemplate: TemplateRef<any>;
     /**
      * @hidden
@@ -1660,7 +1687,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
 
     constructor(
-        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Inject(IGX_GRID_BASE) public grid: GridType,
         public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
     ) { }
@@ -1687,6 +1714,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @hidden
      */
     public ngAfterContentInit(): void {
+        if (this.summaryTemplateDirective) {
+            this._summaryTemplate = this.summaryTemplateDirective.template;
+        }
         if (this.cellTemplate) {
             this._bodyTemplate = this.cellTemplate.template;
         }
@@ -1711,6 +1741,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     this.summaries = IgxSummaryOperand;
                     break;
                 case GridColumnDataType.Number:
+                case GridColumnDataType.Currency:
+                case GridColumnDataType.Percent:
                     this.summaries = IgxNumberSummaryOperand;
                     break;
                 case GridColumnDataType.Date:
@@ -1719,12 +1751,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     break;
                 case GridColumnDataType.Time:
                     this.summaries = IgxTimeSummaryOperand;
-                    break;
-                case GridColumnDataType.Currency:
-                    this.summaries = IgxCurrencySummaryOperand;
-                    break;
-                case GridColumnDataType.Percent:
-                    this.summaries = IgxPercentSummaryOperand;
                     break;
                 default:
                     this.summaries = IgxSummaryOperand;
@@ -1761,12 +1787,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    public getGridTemplate(isRow: boolean, isIE: boolean): string {
+    public getGridTemplate(isRow: boolean): string {
         if (isRow) {
             const rowsCount = this.grid.multiRowLayoutRowSize;
-            return isIE ?
-                `(1fr)[${rowsCount}]` :
-                `repeat(${rowsCount},1fr)`;
+            return `repeat(${rowsCount},1fr)`;
         } else {
             return this.getColumnSizesString(this.children);
         }
@@ -2011,7 +2035,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         grid.resetCaches();
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columnList.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
         const eventArgs: IPinColumnEventArgs = { column: this, insertAtIndex: index, isPinned: true };
@@ -2090,7 +2114,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columnList.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
 
@@ -2112,8 +2136,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     public move(index: number) {
         let target;
-        const grid = (this.grid as IgxGridBaseDirective);
-        let columns: Array<IgxColumnComponent | IgxColumnGroupComponent> = grid.columnList.filter(c => c.visibleIndex > -1);
+        let columns = (this.grid.columnList as QueryList<IgxColumnComponent>).filter(c => c.visibleIndex > -1);
         // grid last visible index
         const li = columns.map(c => c.visibleIndex).reduce((a, b) => Math.max(a, b));
         const parent = this.parent;
@@ -2144,7 +2167,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
 
         const pos = isPreceding ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
-        grid.moveColumn(this, target as IgxColumnComponent, pos);
+        this.grid.moveColumn(this, target as IgxColumnComponent, pos);
     }
 
     /**
@@ -2246,7 +2269,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    public getAutoSize(byHeader = false) {
+    public getAutoSize(byHeader = false): string {
         const size = !byHeader ? this.getLargestCellWidth() :
             (Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b) + 'px');
         const isPercentageWidth = this.width && typeof this.width === 'string' && this.width.indexOf('%') !== -1;
@@ -2388,14 +2411,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @internal
      */
     protected cacheCalcWidth(): any {
-        const grid = this.gridAPI.grid;
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         if (isPercentageWidth) {
-            this._calcWidth = parseFloat(colWidth) / 100 * grid.calcWidth;
+            this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
         } else if (!colWidth) {
             // no width
-            this._calcWidth = this.defaultWidth || grid.getPossibleColumnWidth();
+            this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
             this._calcWidth = this.width;
         }

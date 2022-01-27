@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { IgxColumnComponent } from '../columns/column.component';
+import { ColumnType } from '../common/grid.interface';
 
 /**
  * @hidden
@@ -27,7 +27,7 @@ export class IgxColumnResizingService {
     /**
      * The column being resized.
      */
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     constructor(private zone: NgZone) { }
 
@@ -126,7 +126,7 @@ export class IgxColumnResizingService {
         this.isColumnResizing = false;
     }
 
-    protected _handlePixelResize(diff: number, column: IgxColumnComponent) {
+    protected _handlePixelResize(diff: number, column: ColumnType) {
         const currentColWidth = parseFloat(column.width);
         const colMinWidth = column.minWidthPx;
         const colMaxWidth = column.maxWidthPx;
@@ -139,7 +139,7 @@ export class IgxColumnResizingService {
         }
     }
 
-    protected _handlePercentageResize(diff: number, column: IgxColumnComponent) {
+    protected _handlePercentageResize(diff: number, column: ColumnType) {
         const currentPercentWidth = parseFloat(column.width);
         const gridAvailableSize = column.grid.calcWidth;
 
@@ -156,7 +156,7 @@ export class IgxColumnResizingService {
         }
     }
 
-    protected getColMinWidth(column: IgxColumnComponent) {
+    protected getColMinWidth(column: ColumnType) {
         let currentColWidth = parseFloat(column.width);
         const actualWidth = column.headerCell.nativeElement.getBoundingClientRect().width;
         currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
@@ -165,7 +165,7 @@ export class IgxColumnResizingService {
         return actualMinWidth < currentColWidth ? actualMinWidth : currentColWidth;
     }
 
-    protected resizeColumnLayoutFor(column: IgxColumnComponent, diff: number) {
+    protected resizeColumnLayoutFor(column: ColumnType, diff: number) {
         const relativeColumns = column.getResizableColUnderEnd();
         const combinedSpan = relativeColumns.reduce((acc, col) =>  acc + col.spanUsed, 0);
 

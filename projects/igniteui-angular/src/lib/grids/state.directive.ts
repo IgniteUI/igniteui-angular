@@ -1,5 +1,4 @@
-import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
-import { ISortingExpression } from '../data-operations/sorting-expression.interface';
+import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef, Inject } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -9,14 +8,15 @@ import { IPagingState } from '../data-operations/paging-state.interface';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand, IFilteringOperation} from '../data-operations/filtering-condition';
-import { GridSelectionRange } from './selection/selection.service';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
-import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IPinningConfig } from './grid.common';
 import { delay, take } from 'rxjs/operators';
+import { GridSelectionRange } from './common/types';
+import { ISortingExpression } from '../data-operations/sorting-strategy';
+import { GridType, IGX_GRID_BASE } from './common/grid.interface';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -79,6 +79,7 @@ export interface IColumnState {
     searchable: boolean;
     columnGroup: boolean;
     parent: any;
+    disableHiding: boolean;
 }
 
 export type GridFeatures = keyof IGridStateOptions;
@@ -97,7 +98,7 @@ export class IgxGridStateDirective {
 
     private featureKeys: GridFeatures[] = [];
     private state: IGridState;
-    private currGrid: IgxGridBaseDirective;
+    private currGrid: GridType;
     private _options: IGridStateOptions = {
         columns: true,
         filtering: true,
@@ -164,7 +165,7 @@ export class IgxGridStateDirective {
         },
         columns: {
             getFeatureState: (context: IgxGridStateDirective): IGridState => {
-                const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => ({
+                const gridColumns: IColumnState[] = context.currGrid.columnList.map((c) => ({
                     pinned: c.pinned,
                     sortable: c.sortable,
                     filterable: c.filterable,
@@ -186,7 +187,8 @@ export class IgxGridStateDirective {
                     searchable: c.searchable,
                     selectable: c.selectable,
                     parent: c.parent ? c.parent.header : null,
-                    columnGroup: c.columnGroup
+                    columnGroup: c.columnGroup,
+                    disableHiding: c.disableHiding
                 }));
                 return { columns: gridColumns };
             },
@@ -297,7 +299,7 @@ export class IgxGridStateDirective {
         },
         rowPinning: {
             getFeatureState: (context: IgxGridStateDirective): IGridState => {
-                const pinned = context.currGrid.pinnedRows.map(x => x.rowID);
+                const pinned = context.currGrid.pinnedRows.map(x => x.key);
                 return { rowPinning: pinned };
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: any[]): void => {
@@ -400,7 +402,7 @@ export class IgxGridStateDirective {
      * @hidden
      */
     constructor(
-        @Host() @Optional() public grid: IgxGridBaseDirective,
+        @Host() @Optional() @Inject(IGX_GRID_BASE) public grid: GridType,
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) { }
 
@@ -547,7 +549,7 @@ export class IgxGridStateDirective {
                 if (Array.isArray(expr.searchVal)) {
                     expr.searchVal = new Set(expr.searchVal);
                 } else {
-                    expr.searchVal = (dataType === 'date') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
+                    expr.searchVal = expr.searchVal && (dataType === 'date') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
                 }
                 expr.condition = this.generateFilteringCondition(dataType, expr.condition.name);
                 expressionsTree.filteringOperands.push(expr);

@@ -1,21 +1,21 @@
-import { Component, ViewChild, OnInit, DebugElement } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, QueryList } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait, waitForActiveNodeChange} from '../../test-utils/ui-interactions.spec';
-import { IgxGridModule } from './public_api';
+import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
+import { CellType, IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { GridSummaryCalculationMode, GridSummaryPosition, GridSelectionMode } from '../common/enums';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const DEBOUNCETIME = 30;
 const ROW_TAG = 'igx-grid-row';
@@ -42,7 +42,7 @@ describe('IgxGrid Master Detail #grid', () => {
     }));
 
     describe('Basic', () => {
-        beforeEach( fakeAsync(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -64,8 +64,8 @@ describe('IgxGrid Master Detail #grid', () => {
             const firstRowIconName = GridFunctions.getRowExpandIconName(grid.rowList.first);
             const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
             expect(grid.expansionStates.size).toEqual(1);
-            expect(grid.expansionStates.has(grid.rowList.first.rowID)).toBeTruthy();
-            expect(grid.expansionStates.get(grid.rowList.first.rowID)).toBeTruthy();
+            expect(grid.expansionStates.has(grid.rowList.first.key)).toBeTruthy();
+            expect(grid.expansionStates.get(grid.rowList.first.key)).toBeTruthy();
             expect(firstRowIconName).toEqual(EXPANDED_ICON_NAME);
             expect(getDetailAddressText(firstRowDetail)).toEqual('Obere Str. 57');
         });
@@ -107,7 +107,7 @@ describe('IgxGrid Master Detail #grid', () => {
             let checkboxElem = firstDetail.query(By.directive(IgxCheckboxComponent));
             let inputElem = firstDetail.query(By.directive(IgxInputGroupComponent));
 
-            expect(grid.rowList.first.rowID).toEqual('ALFKI');
+            expect(grid.rowList.first.key).toEqual('ALFKI');
             expect(checkboxElem.componentInstance.checked).toBeFalsy();
             expect(inputElem.componentInstance.input.value).toEqual('');
             expect(getDetailAddressText(firstDetail.nativeElement)).toEqual('Obere Str. 57');
@@ -135,7 +135,7 @@ describe('IgxGrid Master Detail #grid', () => {
             checkboxElem = firstDetail.query(By.directive(IgxCheckboxComponent));
             inputElem = firstDetail.query(By.directive(IgxInputGroupComponent));
 
-            expect(grid.rowList.first.rowID).toEqual('ALFKI');
+            expect(grid.rowList.first.key).toEqual('ALFKI');
             expect(checkboxElem.componentInstance.checked).toBeTruthy();
             expect(inputElem.componentInstance.input.value).toEqual('Test value');
             expect(getDetailAddressText(firstDetail.nativeElement)).toEqual('Obere Str. 57');
@@ -150,7 +150,7 @@ describe('IgxGrid Master Detail #grid', () => {
             let checkboxElem = firstRowDetail.query(By.directive(IgxCheckboxComponent)).componentInstance;
             let inputGroup = firstRowDetail.query(By.directive(IgxInputGroupComponent)).componentInstance;
 
-            expect(grid.rowList.first.rowID).toEqual('ALFKI');
+            expect(grid.rowList.first.key).toEqual('ALFKI');
             expect(checkboxElem.checked).toBeFalsy();
             expect(inputGroup.input.value).toEqual('');
             expect(getDetailAddressText(firstRowDetail.nativeElement)).toEqual('Obere Str. 57');
@@ -169,7 +169,7 @@ describe('IgxGrid Master Detail #grid', () => {
             checkboxElem = firstRowDetail.query(By.directive(IgxCheckboxComponent)).componentInstance;
             inputGroup = firstRowDetail.query(By.directive(IgxInputGroupComponent)).componentInstance;
 
-            expect(grid.rowList.first.rowID).toEqual('ALFKI');
+            expect(grid.rowList.first.key).toEqual('ALFKI');
             expect(checkboxElem.checked).toBeTruthy();
             expect(inputGroup.input.value).toEqual('Test value');
             expect(getDetailAddressText(firstRowDetail.nativeElement)).toEqual('Obere Str. 57');
@@ -195,8 +195,8 @@ describe('IgxGrid Master Detail #grid', () => {
 
             const lastRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.last);
             expect(grid.expansionStates.size).toEqual(1);
-            expect(grid.expansionStates.has(grid.rowList.last.rowID)).toBeTruthy();
-            expect(grid.expansionStates.get(grid.rowList.last.rowID)).toBeTruthy();
+            expect(grid.expansionStates.has(grid.rowList.last.key)).toBeTruthy();
+            expect(grid.expansionStates.get(grid.rowList.last.key)).toBeTruthy();
             expect(getDetailAddressText(lastRowDetail)).toEqual('Via Monte Bianco 34');
             expect(verticalSrollHeight + lastRowDetail.offsetHeight)
                 .toEqual((verticalScrollbar.firstElementChild as HTMLElement).offsetHeight);
@@ -258,7 +258,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const firstRow = grid.rowList.first;
             let firstRowIconName = GridFunctions.getRowExpandIconName(firstRow);
             expect(grid.expansionStates.size).toEqual(1);
-            expect(grid.expansionStates.has(firstRow.rowID)).toBeTruthy();
+            expect(grid.expansionStates.has(firstRow.key)).toBeTruthy();
             expect(firstRow.expanded).toBeTruthy();
             expect(firstRowIconName).toEqual(EXPANDED_ICON_NAME);
 
@@ -306,7 +306,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             expect(grid.expansionStates.size).toEqual(1);
-            expect(grid.expansionStates.has(grid.rowList.first.rowID)).toBeTruthy();
+            expect(grid.expansionStates.has(grid.rowList.first.key)).toBeTruthy();
             expect(grid.rowList.toArray()[0].expanded).toBeTruthy();
 
             grid.toggleRow(fix.componentInstance.data[0].ID);
@@ -449,7 +449,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
+            const detailRow = row.nativeElement.previousElementSibling as HTMLElement;
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
@@ -469,7 +469,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(2);
-            const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
+            const detailRow = row.nativeElement.previousElementSibling as HTMLElement;
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
@@ -587,7 +587,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
-            expect(lastRow.cells.last.active).toBeTruthy();
+            expect((lastRow.cells as QueryList<CellType>).last.active).toBeTruthy();
         });
 
         it('Should navigate to the first data cell in the grid using Ctrl + Home.', async () => {
@@ -607,7 +607,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const fRow = grid.gridAPI.get_row_by_index(0);
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
-            expect(fRow.cells.first.active).toBeTruthy();
+            expect((fRow.cells as QueryList<CellType>).first.active).toBeTruthy();
         });
 
         it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async () => {
@@ -625,7 +625,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
-            expect(lastRow.cells.first.active).toBeTruthy();
+            expect((lastRow.cells as QueryList<CellType>).first.active).toBeTruthy();
         });
 
         it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async () => {
@@ -645,7 +645,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const fRow = grid.gridAPI.get_row_by_index(0);
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
-            expect(fRow.cells.last.active).toBeTruthy();
+            expect((fRow.cells as QueryList<CellType>).last.active).toBeTruthy();
         });
 
         it(`Should navigate to the first/last row when using Ctrl+ArrowUp/ArrowDown
@@ -689,7 +689,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
     describe('Integration', () => {
         describe('Paging', () => {
-             it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
+            it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
@@ -859,6 +859,48 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
                 expect(grid.getSelectedData()).toEqual(expectedData);
             }));
+
+            it('getSelectedData should return correct values when there are master details and paging is enabled', fakeAsync(() => {
+                const range = { rowStart: 0, rowEnd: 5, columnStart: 'ContactName', columnEnd: 'ContactName' };
+                const expectedDataFromSecondPage = [
+                    { ContactName: 'Hanna Moos' },
+                    { ContactName: 'Frédérique Citeaux' },
+                    { ContactName: 'Martín Sommer' }
+                ];
+                fix.componentInstance.paging = true;
+                fix.detectChanges();
+                grid.paginator.perPage = 5;
+                fix.detectChanges();
+                tick(16);
+                grid.paginator.paginate(1);
+                fix.detectChanges();
+                tick(16);
+
+                grid.expandAll();
+                tick(100);
+                fix.detectChanges();
+
+                grid.selectRange(range);
+                fix.detectChanges();
+                expect(grid.getSelectedData()).toEqual(expectedDataFromSecondPage);
+
+                const expectedDataFromThirdPage = [
+                    { ContactName: 'Victoria Ashworth' },
+                    { ContactName: 'Patricio Simpson' },
+                    { ContactName: 'Francisco Chang' }
+                ];
+                grid.paginator.paginate(2);
+                fix.detectChanges();
+                tick(16);
+
+                grid.expandAll();
+                tick(100);
+                fix.detectChanges();
+
+                grid.selectRange(range);
+                fix.detectChanges();
+                expect(grid.getSelectedData()).toEqual(expectedDataFromThirdPage);
+            }));
         });
 
         describe('Row Selection', () => {
@@ -973,13 +1015,13 @@ describe('IgxGrid Master Detail #grid', () => {
                 let row = grid.rowList.first;
                 let detailRow = GridFunctions.getMasterRowDetail(row);
 
-                expect(row.rowData['ContactName']).toBe('Yang Wang');
-                expect(getDetailAddressText(detailRow)).toEqual(row.rowData['Address']);
+                expect(row.data['ContactName']).toBe('Yang Wang');
+                expect(getDetailAddressText(detailRow)).toEqual(row.data['Address']);
 
                 row = grid.rowList.toArray()[1];
                 detailRow = GridFunctions.getMasterRowDetail(row);
-                expect(row.rowData['ContactName']).toBe('Victoria Ashworth');
-                expect(getDetailAddressText(detailRow)).toEqual(row.rowData['Address']);
+                expect(row.data['ContactName']).toBe('Victoria Ashworth');
+                expect(getDetailAddressText(detailRow)).toEqual(row.data['Address']);
             });
         });
 

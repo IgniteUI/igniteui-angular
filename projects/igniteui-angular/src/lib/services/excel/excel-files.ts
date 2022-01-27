@@ -94,7 +94,7 @@ export class WorksheetFile implements IExcelFile {
         } else {
             const owner = worksheetData.owner;
             const isHierarchicalGrid = worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord;
-            const hasMultiColumnHeader = owner.columns.some(col => !col.skip && col.headerType === HeaderType.MultiColumnHeader);
+            const hasMultiColumnHeader = worksheetData.hasMultiColumnHeader;
             const hasUserSetIndex = owner.columns.some(col => col.exportIndex !== undefined);
 
             const height =  worksheetData.options.rowHeight;
@@ -246,7 +246,7 @@ export class WorksheetFile implements IExcelFile {
 
                     if (record.type === ExportRecordType.HeaderRecord) {
                         const recordOwner = worksheetData.owners.get(record.owner);
-                        const hasMultiColumnHeaders = recordOwner.columns.some(c => c.headerType === HeaderType.MultiColumnHeader);
+                        const hasMultiColumnHeaders = recordOwner.columns.some(c => !c.skip && c.headerType === HeaderType.MultiColumnHeader);
 
                         if (hasMultiColumnHeaders) {
                             this.hGridPrintMultiColHeaders(worksheetData, rowDataArr, record, recordOwner);
@@ -385,12 +385,8 @@ export class WorksheetFile implements IExcelFile {
  * @hidden
  */
 export class StyleFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        const hasNumberValues = worksheetData.dataDictionary && worksheetData.dataDictionary.hasNumberValues;
-        const hasDateValues = worksheetData.dataDictionary && worksheetData.dataDictionary.hasDateValues;
-        const isHierarchicalGrid = worksheetData.data[0]?.type === ExportRecordType.HierarchicalGridRecord;
-
-        folder.file('styles.xml', ExcelStrings.getStyles(hasNumberValues, hasDateValues, isHierarchicalGrid));
+    public writeElement(folder: JSZip) {
+        folder.file('styles.xml', ExcelStrings.getStyles());
     }
 }
 

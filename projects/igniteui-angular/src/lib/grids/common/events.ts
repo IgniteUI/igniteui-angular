@@ -1,16 +1,10 @@
 import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
-import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services/public_api';
 import { GridKeydownTargetType } from './enums';
-import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { GridType } from './grid.interface';
-import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { ColumnType } from './column.interface';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { CellType, ColumnType, GridType, RowType } from './grid.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { RowType } from './row.interface';
-import { CellType } from './cell.interface';
-export { GridSelectionRange } from '../selection/selection.service';
+import { IgxBaseExporter } from '../../services/exporter-common/base-export-service';
+import { IgxExporterOptionsBase } from '../../services/exporter-common/exporter-options-base';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
 
 export interface IGridClipboardEvent {
     data: any[];
@@ -34,7 +28,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     newValue?: any;
     event?: Event;
     column?: ColumnType;
-    owner?: IgxGridBaseDirective & GridType;
+    owner?: GridType;
     isAddRow?: boolean;
 }
 
@@ -47,7 +41,7 @@ export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEv
  * `isPinned` returns the actual pin state of the column after the operation completed.
  */
 export interface IPinColumnEventArgs extends IBaseEventArgs {
-    column: IgxColumnComponent;
+    column: ColumnType;
     /**
      * If pinned, specifies at which index in the pinned area the column is inserted.
      * If unpinned, specifies at which index in the unpinned area the column is inserted.
@@ -74,7 +68,7 @@ export interface IRowDataEventArgs extends IBaseEventArgs {
 }
 
 export interface IColumnResizeEventArgs extends IBaseEventArgs {
-    column: IgxColumnComponent;
+    column: ColumnType;
     prevWidth: string;
     newWidth: string;
 }
@@ -83,19 +77,19 @@ export interface IColumnResizingEventArgs extends IColumnResizeEventArgs, Cancel
 }
 
 export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    oldSelection: any[];
+    readonly oldSelection: any[];
     newSelection: any[];
-    added: any[];
-    removed: any[];
-    event?: Event;
+    readonly added: any[];
+    readonly removed: any[];
+    readonly event?: Event;
 }
 
 export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    oldSelection: string[];
+    readonly oldSelection: string[];
     newSelection: string[];
-    added: string[];
-    removed: string[];
-    event?: Event;
+    readonly added: string[];
+    readonly removed: string[];
+    readonly event?: Event;
 }
 
 export interface ISearchInfo {
@@ -107,24 +101,24 @@ export interface ISearchInfo {
 }
 
 export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
-    grid: IgxGridBaseDirective;
+    grid: GridType;
     exporter: IgxBaseExporter;
     options: IgxExporterOptionsBase;
     cancel: boolean;
 }
 
 export interface IColumnMovingStartEventArgs extends IBaseEventArgs {
-    source: IgxColumnComponent;
+    source: ColumnType;
 }
 
 export interface IColumnMovingEventArgs extends IBaseEventArgs {
-    source: IgxColumnComponent;
+    source: ColumnType;
     cancel: boolean;
 }
 
 export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
-    source: IgxColumnComponent;
-    target: IgxColumnComponent;
+    source: ColumnType;
+    target: ColumnType;
     cancel: boolean;
 }
 
@@ -141,14 +135,14 @@ export interface ICellPosition {
 }
 
 export interface IRowDragEndEventArgs extends IBaseEventArgs {
-    dragDirective: IgxDragDirective;
+    dragDirective: any;
     dragData: RowType;
     dragElement: HTMLElement;
     animation: boolean;
 }
 
 export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    dragDirective: IgxDragDirective;
+    dragDirective: any;
     dragData: RowType;
     dragElement: HTMLElement;
 }
@@ -163,7 +157,7 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
 /**
  * Event emitted when a row's pin state changes.
  */
-export interface IPinRowEventArgs extends IBaseEventArgs {
+export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
      * The ID of the row, that was pinned/unpinned.
      *   ID is either the primaryKey value or the data record instance.
@@ -172,7 +166,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs {
     row?: RowType;
     /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;
-    /** Whether or noy the row is pinned or unpinned. */
+    /** Whether or not the row is pinned or unpinned. */
     readonly isPinned: boolean;
 }
 
@@ -194,7 +188,7 @@ export interface IGridScrollEventArgs extends IBaseEventArgs {
  */
 export interface IColumnToggledEventArgs extends IBaseEventArgs {
     /** The column that is toggled. */
-    column: IgxColumnComponent;
+    column: ColumnType;
     /** The checked state after the action. */
     checked: boolean;
 }

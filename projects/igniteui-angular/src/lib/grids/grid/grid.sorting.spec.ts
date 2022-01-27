@@ -1,15 +1,15 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
-import { DefaultSortingStrategy, NoopSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { CellType } from '../common/cell.interface';
+import { CellType } from '../common/grid.interface';
+import { NoopSortingStrategy } from '../common/strategy';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
 
@@ -284,9 +284,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             grid.sortingExpressions = exprs;
 
             fixture.detectChanges();
-            expect(grid.getCellByColumn(0, secondColumn).value).toEqual('ALex');
-            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual('Smith');
-            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(5);
+            expect(grid.getCellByColumn(0, secondColumn).value).toEqual('Alex');
+            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual('Wilson');
+            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(4);
             expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual('Rick');
             expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual('BRown');
             expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
@@ -299,9 +299,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             grid.sort(exprs);
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, secondColumn).value).toEqual('ALex');
-            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual('Smith');
-            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(5);
+            expect(grid.getCellByColumn(0, secondColumn).value).toEqual('Alex');
+            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual('Wilson');
+            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(4);
             expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual('Rick');
             expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual('BRown');
             expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
@@ -549,5 +549,26 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
         }));
+
+        it('Should allow setting custom templates for header sorting none/ascending/descending icons.', () => {
+            fixture = TestBed.createComponent(SortByParityComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            const fieldName = 'Name';
+            const header = GridFunctions.getColumnHeader(fieldName, fixture, grid);
+            let icon = GridFunctions.getHeaderSortIcon(header);
+
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('unfold_more');
+
+            grid.sort({ fieldName, dir: SortingDirection.Asc, ignoreCase: false });
+            fixture.detectChanges();
+            icon = GridFunctions.getHeaderSortIcon(header);
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('expand_less');
+
+            grid.sort({ fieldName, dir: SortingDirection.Desc, ignoreCase: false });
+            fixture.detectChanges();
+            icon = GridFunctions.getHeaderSortIcon(header);
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('expand_more');
+        });
     });
 });

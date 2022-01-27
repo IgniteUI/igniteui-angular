@@ -18,7 +18,8 @@ import {
     TemplateRef,
     ViewChild,
     ContentChild,
-    Injectable
+    Injectable,
+    ChangeDetectorRef
 } from '@angular/core';
 import { IgxIconModule } from '../icon/public_api';
 import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
@@ -30,7 +31,7 @@ import { IgxSlideComponent } from './slide.component';
 import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import { CarouselAnimationType, Direction, IgxCarouselComponentBase } from './carousel-base';
+import { HorizontalAnimationType, Direction, IgxCarouselComponentBase } from './carousel-base';
 
 let NEXT_ID = 0;
 
@@ -227,7 +228,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public animationType = CarouselAnimationType.slide;
+    @Input() public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
@@ -534,9 +535,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.restartInterval();
     }
 
-    constructor(private element: ElementRef, private iterableDiffers: IterableDiffers,
+    constructor(cdr: ChangeDetectorRef, private element: ElementRef, private iterableDiffers: IterableDiffers,
         builder: AnimationBuilder, private platformUtil: PlatformUtil) {
-        super(builder);
+        super(builder, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 
@@ -647,18 +648,18 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 this.incomingSlide.direction = event.deltaX < 0 ? Direction.NEXT : Direction.PREV;
                 this.incomingSlide.previous = false;
 
-                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
+                this.animationPosition = this.animationType === HorizontalAnimationType.fade ?
                     deltaX / slideWidth : (slideWidth - deltaX) / slideWidth;
 
                 if (velocity > 1) {
-                    this.newDuration = this.animationDuration / velocity;
+                    this.newDuration = this.defaultAnimationDuration / velocity;
                 }
                 this.incomingSlide.active = true;
             } else {
                 this.currentItem.direction = event.deltaX > 0 ? Direction.NEXT : Direction.PREV;
                 this.previousItem = this.incomingSlide;
                 this.previousItem.previous = true;
-                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
+                this.animationPosition = this.animationType === HorizontalAnimationType.fade ?
                     Math.abs((slideWidth - deltaX) / slideWidth) : deltaX / slideWidth;
                 this.playAnimations();
             }
@@ -912,7 +913,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
         this.incomingSlide.previous = true;
 
-        if (this.animationType === CarouselAnimationType.fade) {
+        if (this.animationType === HorizontalAnimationType.fade) {
             this.currentItem.nativeElement.style.opacity = `${Math.abs(offset) / slideWidth}`;
         } else {
             this.currentItem.nativeElement.style.transform = `translateX(${deltaX}px)`;

@@ -61,7 +61,8 @@ export interface OutOfViewPort {
 
 export interface PositionSettings {
     /**
-     * @deprecated Set the target point/element in the overlay settings instead.
+     * @deprecated in version 10.2.0. Set the target point/element in the overlay settings instead
+     *
      * Attaching target for the component to show
      */
     target?: Point | HTMLElement;
@@ -147,8 +148,14 @@ export interface OverlayInfo {
     initialSize?: Size;
     hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
-    closeAnimationPlayer?: AnimationPlayer;
     openAnimationInnerPlayer?: any;
+    // calling animation.destroy in detach fires animation.done. This should not happen
+    // this is why we should trace if animation ever started
+    openAnimationDetaching?: boolean;
+    closeAnimationPlayer?: AnimationPlayer;
+    // calling animation.destroy in detach fires animation.done. This should not happen
+    // this is why we should trace if animation ever started
+    closeAnimationDetaching?: boolean;
     closeAnimationInnerPlayer?: any;
     ngZone: NgZone;
     transformX?: number;
@@ -159,9 +166,9 @@ export interface OverlayInfo {
 
 /** @hidden */
 export interface ConnectedFit {
-    contentElementRect?: ClientRect;
-    targetRect?: ClientRect;
-    viewPortRect?: ClientRect;
+    contentElementRect?: Partial<DOMRect>;
+    targetRect?: Partial<DOMRect>;
+    viewPortRect?: Partial<DOMRect>;
     fitHorizontal?: OutOfViewPort;
     fitVertical?: OutOfViewPort;
     left?: number;
@@ -180,8 +187,8 @@ export class Util {
      *
      * @param settings Overlay settings for which to calculate target rectangle
      */
-    public static getTargetRect(target?: Point | HTMLElement): ClientRect {
-        let targetRect: ClientRect = {
+    public static getTargetRect(target?: Point | HTMLElement): Partial<DOMRect> {
+        let targetRect: Partial<DOMRect> = {
             bottom: 0,
             height: 0,
             left: 0,
@@ -207,7 +214,7 @@ export class Util {
         return targetRect;
     }
 
-    public static getViewportRect(document: Document): ClientRect {
+    public static getViewportRect(document: Document): Partial<DOMRect> {
         const width = document.documentElement.clientWidth;
         const height = document.documentElement.clientHeight;
         const scrollPosition = Util.getViewportScrollPosition(document);

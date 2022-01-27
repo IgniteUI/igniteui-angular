@@ -16,6 +16,8 @@ import {
     AfterViewInit
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDropDownComponent } from '../drop-down/public_api';
 import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
 import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
@@ -115,6 +117,24 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public hostClass: string;
 
     /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses EN resources.
+     */
+    @Input()
+    public set resourceStrings(value: IActionStripResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    public get resourceStrings(): IActionStripResourceStrings {
+        if (!this._resourceStrings) {
+            this._resourceStrings = CurrentResourceStrings.ActionStripResourceStrings;
+        }
+        return this._resourceStrings;
+    }
+
+    /**
      * Reference to the menu
      *
      * @hidden
@@ -132,6 +152,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public menuOverlaySettings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
 
     private _hidden = false;
+    private _resourceStrings;
 
     constructor(
         private _viewContainer: ViewContainerRef,

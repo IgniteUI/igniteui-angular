@@ -2,23 +2,19 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray, reverseMapper, mergeObjects } from '../core/utils';
 import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxGridCellComponent } from './cell.component';
-import { IgxGridBaseDirective } from './grid-base.directive';
-import { IgxRowDirective } from './row.directive';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
-import { GridType } from './common/grid.interface';
-import { ColumnType } from './common/column.interface';
+import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 
 /**
  * @hidden
  */
 @Injectable()
-export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
+export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
 
     public grid: T;
@@ -26,7 +22,8 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
 
     constructor(
         public crudService: IgxGridCRUDService,
-        public cms: IgxColumnMovingService) { }
+        public cms: IgxColumnMovingService
+    ) { }
 
     public get_column_by_name(name: string): ColumnType {
         return this.grid.columnList.find((col: ColumnType) => col.field === name);
@@ -43,7 +40,8 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
                 data = DataUtil.mergeTransactions(
                     cloneArray(grid.data),
                     grid.transactions.getAggregatedChanges(true),
-                    grid.primaryKey
+                    grid.primaryKey,
+                    grid.dataCloneStrategy
                 );
                 const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === TransactionType.DELETE).map(t => t.id);
                 deletedRows.forEach(rowID => {
@@ -71,7 +69,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
     }
 
     public get_row_index_in_data(rowID: any, dataCollection?: any[]): number {
-        const grid = this.grid as IgxGridBaseDirective;
+        const grid = this.grid;
         if (!grid) {
             return -1;
         }
@@ -80,19 +78,19 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
             : record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
-    public get_row_by_key(rowSelector: any): IgxRowDirective<IgxGridBaseDirective & GridType> {
+    public get_row_by_key(rowSelector: any): RowType {
         if (!this.grid) {
             return null;
         }
         const primaryKey = this.grid.primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
-            return this.grid.dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
+            return this.grid.dataRowList.find((row) => row.data[primaryKey] === rowSelector);
         } else {
-            return this.grid.dataRowList.find((row) => row.rowData === rowSelector);
+            return this.grid.dataRowList.find((row) => row.data === rowSelector);
         }
     }
 
-    public get_row_by_index(rowIndex: number): IgxRowDirective<IgxGridBaseDirective & GridType> {
+    public get_row_by_index(rowIndex: number): RowType {
         return this.grid.rowList.find((row) => row.index === rowIndex);
     }
 
@@ -111,26 +109,26 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         return null;
     }
 
-    public get_cell_by_key(rowSelector: any, field: string): IgxGridCellComponent {
+    public get_cell_by_key(rowSelector: any, field: string): CellType {
         const row = this.get_row_by_key(rowSelector);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
         }
     }
 
-    public get_cell_by_index(rowIndex: number, columnID: number | string): IgxGridCellComponent {
+    public get_cell_by_index(rowIndex: number, columnID: number | string): CellType {
         const row = this.get_row_by_index(rowIndex);
         const hasCells = row && row.cells;
         if (hasCells && typeof columnID === 'number') {
             return row.cells.find((cell) => cell.column.index === columnID);
         }
-        if (hasCells && typeof columnID === 'string'){
+        if (hasCells && typeof columnID === 'string') {
             return row.cells.find((cell) => cell.column.field === columnID);
         }
 
     }
 
-    public get_cell_by_visible_index(rowIndex: number, columnIndex: number): IgxGridCellComponent {
+    public get_cell_by_visible_index(rowIndex: number, columnIndex: number): CellType {
         const row = this.get_row_by_index(rowIndex);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
@@ -268,7 +266,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         return this.grid.filteredData;
     }
 
-    public addRowToData(rowData: any, parentID?) {
+    public addRowToData(rowData: any, _parentID?: any) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;

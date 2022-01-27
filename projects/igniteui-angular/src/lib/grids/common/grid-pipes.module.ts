@@ -10,20 +10,16 @@ import {
     IgxGridPaginatorOptionsPipe,
     IgxHasVisibleColumnsPipe,
     IgxGridRowPinningPipe,
-    IgxColumnActionEnabledPipe,
-    IgxFilterActionColumnsPipe,
-    IgxSortActionColumnsPipe,
     IgxGridDataMapperPipe,
     IgxStringReplacePipe,
     IgxGridTransactionStatePipe,
     IgxColumnFormatterPipe,
     IgxSummaryFormatterPipe,
     IgxGridAddRowPipe,
-    IgxHeaderGroupWidthPipe,
     IgxGridRowClassesPipe,
     IgxGridRowStylesPipe,
-    IgxHeaderGroupStylePipe
 } from './pipes';
+export * from './pipes';
 
 @NgModule({
     declarations: [
@@ -36,19 +32,14 @@ import {
         IgxGridPaginatorOptionsPipe,
         IgxHasVisibleColumnsPipe,
         IgxGridRowPinningPipe,
-        IgxColumnActionEnabledPipe,
-        IgxFilterActionColumnsPipe,
-        IgxSortActionColumnsPipe,
         IgxGridDataMapperPipe,
         IgxStringReplacePipe,
         IgxGridTransactionStatePipe,
         IgxGridAddRowPipe,
         IgxColumnFormatterPipe,
         IgxSummaryFormatterPipe,
-        IgxHeaderGroupWidthPipe,
         IgxGridRowClassesPipe,
-        IgxGridRowStylesPipe,
-        IgxHeaderGroupStylePipe
+        IgxGridRowStylesPipe
     ],
     exports: [
         IgxGridFilterConditionPipe,
@@ -60,19 +51,14 @@ import {
         IgxGridPaginatorOptionsPipe,
         IgxHasVisibleColumnsPipe,
         IgxGridRowPinningPipe,
-        IgxColumnActionEnabledPipe,
-        IgxFilterActionColumnsPipe,
-        IgxSortActionColumnsPipe,
         IgxGridDataMapperPipe,
         IgxStringReplacePipe,
         IgxGridTransactionStatePipe,
         IgxGridAddRowPipe,
         IgxColumnFormatterPipe,
         IgxSummaryFormatterPipe,
-        IgxHeaderGroupWidthPipe,
         IgxGridRowClassesPipe,
-        IgxGridRowStylesPipe,
-        IgxHeaderGroupStylePipe
+        IgxGridRowStylesPipe
     ],
     imports: [
         CommonModule

@@ -1,4 +1,4 @@
-import { AnimationAnimateRefMetadata, AnimationBuilder, AnimationMetadataType, AnimationReferenceMetadata } from '@angular/animations';
+import { AnimationBuilder, AnimationReferenceMetadata } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import {
     ApplicationRef,
@@ -364,6 +364,7 @@ export class IgxOverlayService implements OnDestroy {
             console.warn('igxOverlay.detach was called with wrong id: ', id);
             return;
         }
+        info.detached = true;
         this.finishAnimations(info);
         info.settings.scrollStrategy.detach();
         this.removeOutsideClickListener(info);
@@ -456,6 +457,9 @@ export class IgxOverlayService implements OnDestroy {
         const overlayInfo = this.getOverlayById(id);
         if (!overlayInfo || !overlayInfo.settings) {
             console.error('Wrong id provided in overlay.reposition method. Id: ' + id);
+            return;
+        }
+        if (!overlayInfo.visible) {
             return;
         }
         const contentElement = overlayInfo.elementRef.nativeElement.parentElement;
@@ -555,6 +559,13 @@ export class IgxOverlayService implements OnDestroy {
 
             const injector = moduleRef ? moduleRef.injector : this._injector;
             const dynamicComponent: ComponentRef<any> = dynamicFactory.create(injector);
+            if (dynamicComponent.onDestroy) {
+                dynamicComponent.onDestroy(() => {
+                    if (!info.detached && this._overlayInfos.indexOf(info) !== -1) {
+                        this.detach(info.id);
+                    }
+                })
+            }
             this._appRef.attachView(dynamicComponent.hostView);
 
             // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
@@ -572,6 +583,7 @@ export class IgxOverlayService implements OnDestroy {
         }
 
         const hook = this._document.createElement('div');
+        hook.style.display = 'none';
         element.parentElement.insertBefore(hook, element);
         return hook;
     }
@@ -644,30 +656,31 @@ export class IgxOverlayService implements OnDestroy {
             // to eliminate flickering show the element just before animation start
             info.wrapperElement.style.visibility = 'hidden';
         }
-        this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
+        if (!info.closeAnimationDetaching) {
+            this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
+        }
         delete info.event;
     }
 
     private cleanUp(info: OverlayInfo) {
         const child: HTMLElement = info.elementRef.nativeElement;
         const outlet = this.getOverlayElement(info);
-        if (!outlet.contains(child)) {
-            console.warn(`Component with id: ${info.id} is already detached!`);
-            return;
+        // if same element is shown in other overlay outlet will not contain
+        // the element and we should not remove it form outlet
+        if (outlet.contains(child)) {
+            outlet.removeChild(child.parentNode.parentNode);
         }
-        outlet.removeChild(child.parentNode.parentNode);
         if (info.componentRef) {
             this._appRef.detachView(info.componentRef.hostView);
             info.componentRef.destroy();
+            delete info.componentRef;
         }
         if (info.hook) {
             info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
             info.hook.parentElement.removeChild(info.hook);
             delete info.hook;
         }
-        if (info.wrapperElement) {
-            delete info.wrapperElement;
-        }
+
         const index = this._overlayInfos.indexOf(info);
         this._overlayInfos.splice(index, 1);
 
@@ -679,6 +692,22 @@ export class IgxOverlayService implements OnDestroy {
             }
             this.removeCloseOnEscapeListener();
         }
+
+        // clean all the resources attached to info
+        delete info.elementRef;
+        delete info.settings;
+        delete info.initialSize;
+        info.openAnimationDetaching = true;
+        info.openAnimationPlayer?.destroy();
+        delete info.openAnimationPlayer;
+        delete info.openAnimationInnerPlayer;
+        info.closeAnimationDetaching = true;
+        info.closeAnimationPlayer?.destroy();
+        delete info.closeAnimationPlayer;
+        delete info.closeAnimationInnerPlayer;
+        delete info.ngZone;
+        delete info.wrapperElement;
+        info = null;
     }
 
     private playOpenAnimation(info: OverlayInfo) {
@@ -924,7 +953,9 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private openAnimationDone(info: OverlayInfo) {
-        this.opened.emit({ id: info.id, componentRef: info.componentRef });
+        if (!info.openAnimationDetaching) {
+            this.opened.emit({ id: info.id, componentRef: info.componentRef });
+        }
         if (info.openAnimationPlayer) {
             info.openAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
@@ -940,7 +971,6 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private closeAnimationDone(info: OverlayInfo) {
-        this.closeDone(info);
         if (info.closeAnimationPlayer) {
             info.closeAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
@@ -954,16 +984,17 @@ export class IgxOverlayService implements OnDestroy {
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.openAnimationPlayer as any)._started = false;
         }
+        this.closeDone(info);
     }
 
     private finishAnimations(info: OverlayInfo) {
         // TODO: should we emit here opened or closed events
-        if (info.openAnimationPlayer) {
+        if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
             info.openAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.openAnimationPlayer as any)._started = false;
         }
-        if (info.closeAnimationPlayer) {
+        if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
             info.closeAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.closeAnimationPlayer as any)._started = false;

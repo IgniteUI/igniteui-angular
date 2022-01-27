@@ -12,12 +12,11 @@ import {
     ROW_ADD_KEYS,
     PlatformUtil
 } from '../core/utils';
-import { IgxGridBaseDirective } from './grid-base.directive';
-import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
+import { IMultiRowLayoutNode } from './common/types';
+import { SortingDirection } from '../data-operations/sorting-strategy';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -34,7 +33,7 @@ export interface IActiveNode {
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
-    public grid: IgxGridBaseDirective & GridType;
+    public grid: GridType;
     public _activeNode: IActiveNode = {} as IActiveNode;
     public lastActiveNode: IActiveNode = {} as IActiveNode;
     protected pendingNavigation = false;
@@ -49,7 +48,7 @@ export class IgxGridNavigationService {
 
     constructor(protected platform: PlatformUtil) { }
 
-    handleNavigation(event: KeyboardEvent) {
+    public handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (NAVIGATION_KEYS.has(key)) {
             event.stopPropagation();
@@ -67,7 +66,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    dispatchEvent(event: KeyboardEvent) {
+    public dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
             !this.grid.crudService.rowEditingBlocked && !this.grid.crudService.rowInEditMode) {
@@ -102,13 +101,13 @@ export class IgxGridNavigationService {
         this.grid.cdr.detectChanges();
     }
 
-    summaryNav(event: KeyboardEvent) {
+    public summaryNav(event: KeyboardEvent) {
         if (this.grid.hasSummarizedColumns) {
             this.horizontalNav(event, event.key.toLowerCase(), this.grid.dataView.length, 'summaryCell');
         }
     }
 
-    headerNavigation(event: KeyboardEvent) {
+    public headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!HEADER_KEYS.has(key)) {
             return;
@@ -130,7 +129,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    focusTbody(event) {
+    public focusTbody(event) {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
         if (gridRows < 1) {
             this.activeNode = null; return;
@@ -155,7 +154,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    focusFirstCell(header = true) {
+    public focusFirstCell(header = true) {
         if ((header || this.grid.dataView.length) && this.activeNode &&
             (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length ||
             (!header && !this.grid.hasSummarizedColumns))) {
@@ -251,10 +250,16 @@ export class IgxGridNavigationService {
     }
 
     public isDataRow(rowIndex: number, includeSummary = false) {
+        let curRow: any;
+
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
-            return false;
+                curRow = this.grid.dataView[rowIndex - this.grid.virtualizationState.startIndex];
+            if (!curRow){
+                return false;
+            }
+        }else {
+            curRow = this.grid.dataView[rowIndex];
         }
-        const curRow = this.grid.dataView[rowIndex];
         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow)
             && !curRow.childGridsData && (includeSummary || !curRow.summaries);
     }
@@ -415,9 +420,9 @@ export class IgxGridNavigationService {
                 if (this.grid.isRowSelectable && rowObj) {
                     if (this.isDataRow(rowIndex)) {
                         if (rowObj.selected) {
-                            this.grid.selectionService.deselectRow(rowObj.rowID, event);
+                            this.grid.selectionService.deselectRow(rowObj.key, event);
                         } else {
-                            this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
+                            this.grid.selectionService.selectRowById(rowObj.key, false, event);
                         }
                     }
                     if (this.isGroupRow(rowIndex)) {
@@ -469,16 +474,16 @@ export class IgxGridNavigationService {
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
-    get lastColumnIndex() {
+    public get lastColumnIndex() {
         return Math.max(...this.grid.visibleColumns.map(col => col.visibleIndex));
     }
-    get displayContainerWidth() {
+    public get displayContainerWidth() {
         return Math.round(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth);
     }
-    get displayContainerScrollLeft() {
+    public get displayContainerScrollLeft() {
         return Math.ceil(this.grid.headerContainer.scrollPosition);
     }
-    get containerTopOffset() {
+    public get containerTopOffset() {
         return parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
     }
 
@@ -497,7 +502,7 @@ export class IgxGridNavigationService {
     protected handleAlt(key: string, event: KeyboardEvent) {
         event.preventDefault();
         // todo TODO ROW
-        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row) as any;
+        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
 
         if (!(this.isToggleKey(key) || this.isAddKey(key)) || !row) {
             return;
@@ -514,16 +519,18 @@ export class IgxGridNavigationService {
                 this.grid.crudService.enterAddRowMode(row, false, event);
             }
         } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
-            if (row.rowID === undefined) {
-                row.toggle();
+            if (row.key === undefined) {
+                // TODO use expanded row.expanded = !row.expanded;
+                (row as any).toggle();
             } else {
-                this.grid.gridAPI.set_row_expansion_state(row.rowID, true, event);
+                this.grid.gridAPI.set_row_expansion_state(row.key, true, event);
             }
         } else if (row.expanded && ROW_COLLAPSE_KEYS.has(key)) {
-            if (row.rowID === undefined) {
-                row.toggle();
+            if (row.key === undefined) {
+                // TODO use expanded row.expanded = !row.expanded;
+                (row as any).toggle();
             } else {
-                this.grid.gridAPI.set_row_expansion_state(row.rowID, false, event);
+                this.grid.gridAPI.set_row_expansion_state(row.key, false, event);
             }
         }
         this.grid.notifyChanges();

@@ -1,9 +1,8 @@
-import { Inject, Pipe, PipeTransform} from '@angular/core';
+import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
-import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
 import { IComboFilteringOptions } from './combo.component';
 
 
@@ -15,7 +14,7 @@ import { IComboFilteringOptions } from './combo.component';
 })
 export class IgxComboFilteringPipe implements PipeTransform {
     public transform(collection: any[], searchValue: any, displayKey: any,
-                    shouldFilter: boolean, filteringOptions: IComboFilteringOptions) {
+        filteringOptions: IComboFilteringOptions, shouldFilter = false) {
         if (!collection) {
             return [];
         }
@@ -25,10 +24,10 @@ export class IgxComboFilteringPipe implements PipeTransform {
             const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
             if (displayKey != null) {
                 return collection.filter(e => filteringOptions.caseSensitive ? e[displayKey].includes(searchTerm) :
-                                         e[displayKey].toString().toLowerCase().includes(searchTerm));
+                    e[displayKey].toString().toLowerCase().includes(searchTerm));
             } else {
                 return collection.filter(e => filteringOptions.caseSensitive ? e.includes(searchTerm) :
-                                         e.toLowerCase().includes(searchTerm));
+                    e.toString().toLowerCase().includes(searchTerm));
             }
         }
     }
@@ -37,21 +36,19 @@ export class IgxComboFilteringPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({
-    name: 'comboGrouping'
-})
+@Pipe({ name: 'comboGrouping' })
 export class IgxComboGroupingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
 
-    public transform(collection: any[], groupKey: any, valueKey: any) {
+    public transform(collection: any[], groupKey: any, valueKey: any, sortingDirection: SortingDirection) {
         this.combo.filteredData = collection;
         if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;
         }
         const sorted = DataUtil.sort(cloneArray(collection), [{
             fieldName: groupKey,
-            dir: SortingDirection.Asc,
+            dir: sortingDirection,
             ignoreCase: true,
             strategy: DefaultSortingStrategy.instance()
         }]);

@@ -1,9 +1,9 @@
 import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, Renderer2, ChangeDetectorRef } from '@angular/core';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { Subscription, fromEvent } from 'rxjs';
-import { IgxColumnComponent } from '../columns/column.component';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnMovingService } from './moving.service';
+import { ColumnType } from '../common/grid.interface';
 
 /**
  * @hidden
@@ -13,7 +13,7 @@ import { IgxColumnMovingService } from './moving.service';
 export class IgxColumnMovingDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrag')
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     public get draggable(): boolean {
         return this.column && (this.column.movable || (this.column.groupable && !this.column.columnGroup));
@@ -46,13 +46,13 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this._unsubscribe();
     }
 
-    public onEscape(event) {
+    public onEscape(event: Event) {
         this.cms.cancelDrop = true;
         this.onPointerUp(event);
     }
 
-    public onPointerDown(event) {
-        if (!this.draggable || event.target.getAttribute('draggable') === 'false') {
+    public onPointerDown(event: Event) {
+        if (!this.draggable || (event.target as HTMLElement).getAttribute('draggable') === 'false') {
             return;
         }
 
@@ -78,7 +78,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         });
     }
 
-    public onPointerMove(event) {
+    public onPointerMove(event: Event) {
         event.preventDefault();
         super.onPointerMove(event);
 
@@ -100,7 +100,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         }
     }
 
-    public onPointerUp(event) {
+    public onPointerUp(event: Event) {
         // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
         this.zone.run(() => {
             super.onPointerUp(event);

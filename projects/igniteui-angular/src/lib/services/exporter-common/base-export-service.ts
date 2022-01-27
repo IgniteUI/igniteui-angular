@@ -9,15 +9,9 @@ import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
-import { IgxColumnComponent, IgxGridBaseDirective } from '../../grids/public_api';
-import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
-import { IgxGridComponent } from '../../grids/grid/public_api';
 import { DatePipe } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/hierarchical-grid.component';
-import { IgxRowIslandComponent } from '../../grids/hierarchical-grid/row-island.component';
-import { IPathSegment } from './../../grids/hierarchical-grid/hierarchical-grid-base.directive';
-import { IgxColumnGroupComponent } from './../../grids/columns/column-group.component';
+import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -36,7 +30,7 @@ export interface IExportRecord {
     data: any;
     level: number;
     type: ExportRecordType;
-    owner?: string | IgxGridBaseDirective;
+    owner?: string | GridType;
     hidden?: boolean;
 }
 
@@ -60,6 +54,8 @@ export interface IColumnInfo {
     level?: number;
     exportIndex?: number;
     pinnedIndex?: number;
+    columnGroupParent?: ColumnType;
+    columnGroup?: ColumnType;
 }
 /**
  * rowExporting event arguments
@@ -121,7 +117,7 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
     /**
      * A reference to the grid owner.
      */
-    grid?: IgxGridBaseDirective;
+    grid?: GridType;
 }
 
 /**hidden
@@ -133,7 +129,7 @@ class IgxColumnExportingEventArgs implements IColumnExportingEventArgs {
     public field: string;
     public cancel: boolean;
     public skipFormatter: boolean;
-    public grid?: IgxGridBaseDirective;
+    public grid?: GridType;
     public owner?: any;
     public userSetIndex? = false;
 
@@ -223,7 +219,7 @@ export abstract class IgxBaseExporter {
         if (tagName === 'igx-hierarchical-grid') {
             this._ownersMap.set(grid, columnList);
 
-            const childLayoutList = (grid as IgxHierarchicalGridComponent).childLayoutList;
+            const childLayoutList = grid.childLayoutList;
 
             for (const island of childLayoutList) {
                 this.mapHierarchicalGridColumns(island, grid.data[0]);
@@ -264,7 +260,7 @@ export abstract class IgxBaseExporter {
         this.exportGridRecordsData(records);
     }
 
-    private exportGridRecordsData(records: IExportRecord[], grid?: IgxGridBaseDirective) {
+    private exportGridRecordsData(records: IExportRecord[], grid?: GridType) {
         if (this._ownersMap.size === 0) {
             const recordsData = records.map(r => r.data);
             const keys = ExportUtilities.getKeysFromData(recordsData);
@@ -313,8 +309,18 @@ export abstract class IgxBaseExporter {
                         shouldReorderColumns = true;
                     }
 
-                    if (column.skip && index <= indexOfLastPinnedColumn) {
-                        skippedPinnedColumnsCount++;
+                    if (column.skip) {
+                        if (index <= indexOfLastPinnedColumn) {
+                            skippedPinnedColumnsCount++;
+                        }
+
+                        this.calculateColumnSpans(column, mapRecord, column.columnSpan);
+
+                        const nonSkippedColumns = mapRecord.columns.filter(c => !c.skip);
+
+                        if (nonSkippedColumns.length > 0) {
+                            this._ownersMap.get(key).maxLevel = nonSkippedColumns.sort((a, b) => b.level - a.level)[0].level;
+                        }
                     }
 
                     if (this._sort && this._sort.fieldName === column.field) {
@@ -350,35 +356,72 @@ export abstract class IgxBaseExporter {
         });
     }
 
-    private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
-        if (!isSpecialData && record.type !== ExportRecordType.HeaderRecord) {
-            const owner = record.owner === undefined ? DEFAULT_OWNER : record.owner;
+    private calculateColumnSpans(column: IColumnInfo, mapRecord: IColumnList, span: number) {
+        if (column.headerType === HeaderType.MultiColumnHeader && column.skip) {
+            const columnGroupChildren = mapRecord.columns.filter(c => c.columnGroupParent === column.columnGroup);
 
-            const columns = this._ownersMap.get(owner).columns
-                .filter(c => c.headerType !== HeaderType.MultiColumnHeader)
-                .sort((a, b) => a.startIndex - b.startIndex)
-                .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
+            columnGroupChildren.forEach(cgc => {
+                if (cgc.headerType === HeaderType.MultiColumnHeader) {
+                    cgc.columnSpan = 0;
+                    cgc.columnGroupParent = null;
+                    cgc.skip = true;
 
-            record.data = columns.reduce((a, e) => {
-                if (!e.skip) {
-                    let rawValue = resolveNestedPath(record.data, e.field);
-
-                    const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
-
-                    if (e.dataType === 'date' &&
-                        !(rawValue instanceof Date) &&
-                        !shouldApplyFormatter &&
-                        rawValue !== undefined &&
-                        rawValue !== null) {
-                        rawValue = new Date(rawValue);
-                    } else if (e.dataType === 'string' && rawValue instanceof Date) {
-                        rawValue = rawValue.toString();
-                    }
-
-                    a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                    this.calculateColumnSpans(cgc, mapRecord, cgc.columnSpan);
+                } else {
+                    cgc.skip = true;
                 }
-                return a;
-            }, {});
+            });
+        }
+
+        const targetCol = mapRecord.columns.filter(c => column.columnGroupParent !== null && c.columnGroup === column.columnGroupParent)[0];
+        if (targetCol !== undefined) {
+            targetCol.columnSpan -= span;
+
+            if (targetCol.columnGroupParent !== null) {
+                this.calculateColumnSpans(targetCol, mapRecord, span);
+            }
+
+            if (targetCol.columnSpan === 0) {
+                targetCol.skip = true;
+            }
+        }
+    }
+
+    private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
+        if (!isSpecialData) {
+            const owner = record.owner === undefined ? DEFAULT_OWNER : record.owner;
+            const ownerCols = this._ownersMap.get(owner).columns;
+
+            if (record.type !== ExportRecordType.HeaderRecord) {
+                const columns = ownerCols
+                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
+                    .sort((a, b) => a.startIndex - b.startIndex)
+                    .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
+
+                record.data = columns.reduce((a, e) => {
+                    if (!e.skip) {
+                        let rawValue = resolveNestedPath(record.data, e.field);
+
+                        const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
+
+                        if (e.dataType === 'date' &&
+                            !(rawValue instanceof Date) &&
+                            !shouldApplyFormatter &&
+                            rawValue !== undefined &&
+                            rawValue !== null) {
+                            rawValue = new Date(rawValue);
+                        } else if (e.dataType === 'string' && rawValue instanceof Date) {
+                            rawValue = rawValue.toString();
+                        }
+
+                        a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                    }
+                    return a;
+                }, {});
+            } else {
+                const filteredHeaders = ownerCols.filter(c => c.skip).map(c => c.header ? c.header : c.field);
+                record.data = record.data.filter(d => filteredHeaders.indexOf(d) === -1);
+            }
         }
 
         const rowArgs = {
@@ -432,7 +475,7 @@ export abstract class IgxBaseExporter {
         return reorderedColumns;
     }
 
-    private prepareData(grid: IgxGridBaseDirective) {
+    private prepareData(grid: GridType) {
         this.flatRecords = [];
         const tagName = grid.nativeElement.tagName.toLowerCase();
 
@@ -444,21 +487,21 @@ export abstract class IgxBaseExporter {
 
         switch (tagName) {
             case 'igx-hierarchical-grid': {
-                this.prepareHierarchicalGridData(grid as IgxHierarchicalGridComponent, hasFiltering, hasSorting);
+                this.prepareHierarchicalGridData(grid, hasFiltering, hasSorting);
                 break;
             }
             case 'igx-tree-grid': {
-                this.prepareTreeGridData(grid as IgxTreeGridComponent, hasFiltering, hasSorting);
+                this.prepareTreeGridData(grid, hasFiltering, hasSorting);
                 break;
             }
             default: {
-                this.prepareGridData(grid as IgxGridComponent, hasFiltering, hasSorting);
+                this.prepareGridData(grid, hasFiltering, hasSorting);
                 break;
             }
         }
     }
 
-    private prepareHierarchicalGridData(grid: IgxHierarchicalGridComponent, hasFiltering: boolean, hasSorting: boolean) {
+    private prepareHierarchicalGridData(grid: GridType, hasFiltering: boolean, hasSorting: boolean) {
 
         const skipOperations =
             (!hasFiltering || !this.options.ignoreFiltering) &&
@@ -490,7 +533,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private addHierarchicalGridData(grid: IgxHierarchicalGridComponent, records: any[]) {
+    private addHierarchicalGridData(grid: GridType, records: any[]) {
         const childLayoutList = grid.childLayoutList;
         const columnFields = this._ownersMap.get(grid).columns.map(col => col.field);
 
@@ -527,7 +570,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private prepareIslandData(island: IgxRowIslandComponent, islandGrid: IgxHierarchicalGridComponent, data: any[]): any[] {
+    private prepareIslandData(island: any, islandGrid: GridType, data: any[]): any[] {
         if (islandGrid !== undefined) {
             const hasFiltering = (islandGrid.filteringExpressionsTree &&
                 islandGrid.filteringExpressionsTree.filteringOperands.length > 0) ||
@@ -595,8 +638,8 @@ export abstract class IgxBaseExporter {
         return data;
     }
 
-    private getAllChildColumnsAndData(island: IgxRowIslandComponent,
-        childData: any[], expansionStateVal: boolean, grid: IgxHierarchicalGridComponent) {
+    private getAllChildColumnsAndData(island: any,
+        childData: any[], expansionStateVal: boolean, grid: GridType) {
         const columnList = this._ownersMap.get(island).columns;
         const columnHeader = columnList
             .filter(col => col.headerType === HeaderType.ColumnHeader)
@@ -647,7 +690,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private prepareGridData(grid: IgxGridComponent, hasFiltering: boolean, hasSorting: boolean) {
+    private prepareGridData(grid: GridType, hasFiltering: boolean, hasSorting: boolean) {
         const groupedGridGroupingState: IGroupingState = {
             expressions: grid.groupingExpressions,
             expansion: grid.groupingExpansionState,
@@ -694,7 +737,7 @@ export abstract class IgxBaseExporter {
 
             if (hasGrouping && !this.options.ignoreGrouping) {
                 const groupsRecords = [];
-                DataUtil.group(cloneArray(gridData), groupedGridGroupingState, grid, groupsRecords);
+                DataUtil.group(cloneArray(gridData), groupedGridGroupingState, grid.groupStrategy, grid, groupsRecords);
                 gridData = groupsRecords;
             }
 
@@ -706,7 +749,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private prepareTreeGridData(grid: IgxTreeGridComponent, hasFiltering: boolean, hasSorting: boolean) {
+    private prepareTreeGridData(grid: GridType, hasFiltering: boolean, hasSorting: boolean) {
         const skipOperations =
             (!hasFiltering || !this.options.ignoreFiltering) &&
             (!hasSorting || !this.options.ignoreSorting);
@@ -769,7 +812,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private addGroupedData(grid: IgxGridComponent, records: IGroupByRecord[],
+    private addGroupedData(grid: GridType, records: IGroupByRecord[],
         groupingState: IGroupingState, parentExpanded: boolean = true) {
         if (!records) {
             return;
@@ -828,7 +871,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private getColumns(columns: IgxColumnComponent[]): IColumnList {
+    private getColumns(columns: ColumnType[]): IColumnList {
         const colList = [];
         const colWidthList = [];
         const hiddenColumns = [];
@@ -843,10 +886,10 @@ export abstract class IgxBaseExporter {
             const columnWidth = Number(column.width?.slice(0, -2)) || DEFAULT_COLUMN_WIDTH;
             const columnLevel = !this.options.ignoreMultiColumnHeaders ? column.level : 0;
 
-            const isMultiColHeader = column instanceof IgxColumnGroupComponent;
+            const isMultiColHeader = column.columnGroup;
             const colSpan = isMultiColHeader ?
                 column.allChildren
-                    .filter(ch => !(ch instanceof IgxColumnGroupComponent) && (!this.options.ignoreColumnsVisibility ? !ch.hidden : true))
+                    .filter(ch => !(ch.columnGroup) && (!this.options.ignoreColumnsVisibility ? !ch.hidden : true))
                     .length :
                 1;
 
@@ -866,7 +909,9 @@ export abstract class IgxBaseExporter {
                     Number.MAX_VALUE :
                     !column.hidden ?
                         column.grid.pinnedColumns.indexOf(column)
-                        : NaN
+                        : NaN,
+                columnGroupParent: column.parent ? column.parent : null,
+                columnGroup: isMultiColHeader ? column : null
             };
 
             if (this.options.ignoreColumnsOrder) {
@@ -908,7 +953,7 @@ export abstract class IgxBaseExporter {
         return result;
     }
 
-    private mapHierarchicalGridColumns(island: IgxRowIslandComponent, gridData: any) {
+    private mapHierarchicalGridColumns(island: any, gridData: any) {
         let columnList: IColumnList;
         let keyData;
 

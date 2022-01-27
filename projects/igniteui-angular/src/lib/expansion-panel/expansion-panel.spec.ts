@@ -196,6 +196,16 @@ describe('igxExpansionPanel', () => {
             expect(panel.collapsed).toBeFalsy();
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
+
+            // collapse when the panel has already started collapsing
+            header.onAction(mockEvent);
+            header.onAction(mockEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(panel.collapsed).toBeTruthy();
+            expect(header.interaction.emit).toHaveBeenCalledTimes(6);
+            expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(2);
         }));
 
         it('Should expand/collapse without animation when animationSettings === null', fakeAsync(() => {

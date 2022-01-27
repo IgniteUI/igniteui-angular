@@ -4,7 +4,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { BaseToolbarColumnActionsDirective } from '../toolbar/grid-toolbar.base';
 
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
@@ -61,12 +60,6 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             fixture.componentInstance.toolbarEnabled = false;
             fixture.detectChanges();
             expect($(TOOLBAR_TAG)).toBeNull();
-        });
-
-        it('default toolbar title is rendered', () => {
-            const titleEl = $(TOOLBAR_TITLE_TAG);
-            expect(titleEl).toBeInstanceOf(HTMLElement);
-            expect(titleEl.textContent).toMatch('');
         });
 
         it('toolbar title can be set through content projection', () => {
@@ -192,14 +185,14 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
     `
 })
 export class DefaultToolbarComponent {
-    toolbarEnabled = true;
-    toolbarTitle = 'Custom title';
-    toolbarTitleEnabled = false;
-    customContentEnabled = false;
-    customContent = 'Custom Content';
-    toolbarActionsEnabled = false;
-    showProgress = false;
-    data = [];
+    public toolbarEnabled = true;
+    public toolbarTitle = 'Custom title';
+    public toolbarTitleEnabled = false;
+    public customContentEnabled = false;
+    public customContent = 'Custom Content';
+    public toolbarActionsEnabled = false;
+    public showProgress = false;
+    public data = [];
 
     constructor() {
         this.data = [...DATA];

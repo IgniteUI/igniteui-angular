@@ -1,21 +1,15 @@
-import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
+import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef } from '@angular/core';
 import {
-    IgxCurrencySummaryOperand,
-    IgxDateSummaryOperand,
-    IgxNumberSummaryOperand,
-    IgxPercentSummaryOperand,
     IgxSummaryOperand,
-    IgxSummaryResult,
-    IgxTimeSummaryOperand
+    IgxSummaryResult
 } from './grid-summary';
-import { IgxColumnComponent } from '../columns/column.component';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { ISelectionNode } from '../selection/selection.service';
 import { getLocaleCurrencyCode } from '@angular/common';
+import { ISelectionNode } from '../common/types';
+import { ColumnType } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-summary-cell',
     templateUrl: './summary-cell.component.html'
 })
@@ -25,7 +19,7 @@ export class IgxSummaryCellComponent {
     public summaryResults: IgxSummaryResult[];
 
     @Input()
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     @Input()
     public firstCellIndentation = 0;
@@ -38,6 +32,9 @@ export class IgxSummaryCellComponent {
 
     @Input()
     public summaryFormatter: (summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
+
+    @Input()
+    public summaryTemplate: TemplateRef<any>;
 
     /** @hidden */
     @Input()
@@ -118,35 +115,30 @@ export class IgxSummaryCellComponent {
     /**
      * @hidden @internal
      */
-    public isNumberOperand(): boolean {
-        return this.column.summaries?.constructor === IgxNumberSummaryOperand;
+    public isNumberColumn(): boolean {
+        return this.column.dataType === GridColumnDataType.Number;
     }
 
     /**
      * @hidden @internal
      */
-    public isDateOperand(): boolean {
-        return this.column.summaries?.constructor === IgxDateSummaryOperand;
+    public isDateKindColumn(): boolean {
+        return this.column.dataType === GridColumnDataType.Date ||
+               this.column.dataType === GridColumnDataType.DateTime ||
+               this.column.dataType === GridColumnDataType.Time;
     }
 
     /**
      * @hidden @internal
      */
-    public isTimeOperand(): boolean {
-        return this.column.summaries?.constructor === IgxTimeSummaryOperand;
+    public isCurrencyColumn(): boolean {
+        return this.column.dataType === GridColumnDataType.Currency;
     }
 
     /**
      * @hidden @internal
      */
-    public isCurrencyOperand(): boolean {
-        return this.column.summaries?.constructor === IgxCurrencySummaryOperand;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public isPercentOperand(): boolean {
-        return this.column.summaries?.constructor === IgxPercentSummaryOperand;
+    public isPercentColumn(): boolean {
+        return this.column.dataType === GridColumnDataType.Percent;
     }
 }

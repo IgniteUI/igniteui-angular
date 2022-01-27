@@ -1,8 +1,7 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { isPlatformBrowser } from '@angular/common';
+import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import mergeWith from 'lodash.mergewith';
-import { ResizeObserver as Polyfill } from '@juggle/resize-observer';
 import { Observable } from 'rxjs';
 import {
     blink, fadeIn, fadeOut, flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop,
@@ -25,15 +24,26 @@ import {
     swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
 } from '../animations/main';
 import { setImmediate } from './setImmediate';
+import { isDevMode } from '@angular/core';
+
+/**
+ * @hidden
+ */
+export const showMessage = (message: string, isMessageShown: boolean): boolean => {
+    if (!isMessageShown && isDevMode()) {
+        console.warn(message);
+    }
+
+    return true;
+};
 
 export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
 
 /**
- * Returns the ResizeObserver type or the polyfilled version if not available.
  *
  * @hidden @internal
  */
-export const getResizeObserver = () => window.ResizeObserver || Polyfill;
+export const getResizeObserver = () => window.ResizeObserver;
 
 /**
  * @hidden
@@ -70,6 +80,22 @@ export const cloneHierarchicalArray = (array: any[], childDataKey: any): any[] =
     }
     return result;
 };
+
+/**
+ * Creates an object with prototype from provided source and copies
+ * all properties descriptors from provided source
+ * @param obj Source to copy prototype and descriptors from
+ * @returns New object with cloned prototype and property descriptors
+ */
+export const copyDescriptors = (obj) => {
+    if (obj) {
+        return Object.create(
+            Object.getPrototypeOf(obj),
+            Object.getOwnPropertyDescriptors(obj)
+            );
+    }
+}
+
 
 /**
  * Deep clones all first level keys of Obj2 and merges them to Obj1
@@ -154,7 +180,7 @@ export const uniqueDates = (columnValues: any[]) => columnValues.reduce((a, c) =
  * @returns true if provided variable is Object
  * @hidden
  */
-export const isObject = (value: any): boolean => value && value.toString() === '[object Object]';
+export const isObject = (value: any): boolean => !!(value && value.toString() === '[object Object]');
 
 /**
  * Checks if provided variable is Date
@@ -193,18 +219,17 @@ export class PlatformUtil {
     public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
     public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
-    public isIE = this.isBrowser && navigator.appVersion.indexOf('Trident/') > 0;
     public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
-    /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
+        /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
 
     public KEYMAP = mkenum({
         ENTER: 'Enter',
-        SPACE: this.isIE ? 'Spacebar' : ' ',
-        ESCAPE: this.isIE ? 'Esc' : 'Escape',
-        ARROW_DOWN: this.isIE ? 'Down' : 'ArrowDown',
-        ARROW_UP: this.isIE ? 'Up' : 'ArrowUp',
-        ARROW_LEFT: this.isIE ? 'Left' : 'ArrowLeft',
-        ARROW_RIGHT: this.isIE ? 'Right' : 'ArrowRight',
+        SPACE: ' ',
+        ESCAPE: 'Escape',
+        ARROW_DOWN: 'ArrowDown',
+        ARROW_UP: 'ArrowUp',
+        ARROW_LEFT: 'ArrowLeft',
+        ARROW_RIGHT: 'ArrowRight',
         END: 'End',
         HOME: 'Home',
         PAGE_DOWN: 'PageDown',
@@ -213,7 +238,7 @@ export class PlatformUtil {
         TAB: 'Tab',
         SEMICOLON: ';',
         // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values#editing_keys
-        DELETE: this.isIE ? 'Del' : 'Delete',
+        DELETE: 'Delete',
         BACKSPACE: 'Backspace',
         CONTROL: 'Control',
         X: 'x',
@@ -238,7 +263,7 @@ export class PlatformUtil {
      * and the function may instead remove the parent size while measuring to get the correct value.
      * ```
      */
-     public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
+    public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
         let nodeStyles;
 
@@ -250,7 +275,7 @@ export class PlatformUtil {
 
         if (sizeHoldingNode) {
             const style = sizeHoldingNode.style;
-            nodeStyles = [ style.width, style.minWidth, style.flexBasis ];
+            nodeStyles = [style.width, style.minWidth, style.flexBasis];
             style.width = '';
             style.minWidth = '';
             style.flexBasis = '';
@@ -739,3 +764,17 @@ const verticalAnimations: AnimationReferenceMetadata[] = [
     swingInBottomBck,
     swingOutBottomBck,
 ];
+
+
+/**
+ * Similar to Angular's formatDate. However it will not throw on `undefined | null` instead
+ * coalescing to an empty string.
+ */
+export const formatDate = (value: string | number | Date, format: string, locale: string, timezone?: string): string => {
+    if (value === null || value === undefined) {
+        return '';
+    }
+    return _formatDate(value, format, locale, timezone);
+};
+
+export const formatCurrency = new CurrencyPipe(undefined).transform;

@@ -1,5 +1,5 @@
 import { useAnimation } from '@angular/animations';
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import {
     DisplayDensity, growVerIn, growVerOut,
     IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeComponent, ITreeNodeTogglingEventArgs,
@@ -33,7 +33,7 @@ interface CompanyData {
     templateUrl: 'tree.sample.html',
     styleUrls: ['tree.sample.scss']
 })
-export class TreeSampleComponent implements AfterViewInit, OnDestroy {
+export class TreeSampleComponent implements AfterViewInit {
     @ViewChild('tree1', { static: true })
     public tree: IgxTreeComponent;
 
@@ -188,18 +188,11 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public ngAfterViewInit() {
         this.tree.nodes.toArray().forEach(node => {
-            node.selectedChange.subscribe((ev) => {
-                // console.log(ev);
-            });
+            node.selectedChange.subscribe(() => {});
         });
     }
 
-    public ngOnDestroy() {
-    }
-
-    public toggleSelectionMode(args) {
-        // this.tree.selection = this.selectionModes[args.index].selectMode;
-    }
+    public toggleSelectionMode() { }
 
     public changeDensity(args) {
         this.density = this.displayDensities[args.index].selectMode;

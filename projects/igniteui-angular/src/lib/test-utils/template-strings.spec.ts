@@ -19,14 +19,15 @@ export class GridTemplateStrings {
     </igx-grid>`;
 
     public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``,
-            toolbarDefinition = '', paginatorDefinition = '') {
+        toolbarDefinition = '', paginatorDefinition = '', templateDefinitions: TemplateDefinitions = '') {
         return `<igx-grid [data]="data"
-        ${ attributes}
-        ${ events}
+        ${attributes}
+        ${events}
         >
-        ${ toolbarDefinition }
-        ${ columnDefinitions}
-        ${ paginatorDefinition }
+        ${toolbarDefinition}
+        ${columnDefinitions}
+        ${paginatorDefinition}
+        ${templateDefinitions}
     </igx-grid>`;
     }
 
@@ -187,26 +188,34 @@ export class ColumnDefinitions {
     `;
 
     public static columnTemplates = `
-    <igx-column field="ID">
+    <igx-column field="ID" [hasSummary]="true">
         <ng-template igxHeader>
             <span class="header">Header text</span>
         </ng-template>
 
         <ng-template igxCell>
             <span class="cell">Cell text</span>
+        </ng-template>
+
+        <ng-template igxSummary>
+            <span class="summary">Summary text</span>
         </ng-template>
 
         <ng-template igxFooter>
             <span class="footer">Footer text</span>
         </ng-template>
     </igx-column>
-    <igx-column field="Name">
+    <igx-column field="Name" [hasSummary]="true">
         <ng-template igxHeader>
             <span class="header">Header text</span>
         </ng-template>
 
         <ng-template igxCell>
             <span class="cell">Cell text</span>
+        </ng-template>
+
+        <ng-template igxSummary>
+            <span class="summary">Summary text</span>
         </ng-template>
 
         <ng-template igxFooter>
@@ -489,6 +498,20 @@ export class ColumnDefinitions {
     `;
 }
 
+export class TemplateDefinitions {
+    public static sortIconTemplates = `
+        <ng-template igxSortHeaderIcon>
+            <igx-icon>unfold_more</igx-icon>
+        </ng-template>
+        <ng-template igxSortAscendingHeaderIcon>
+            <igx-icon>expand_less</igx-icon>
+        </ng-template>
+        <ng-template igxSortDescendingHeaderIcon>
+            <igx-icon>expand_more</igx-icon>
+        </ng-template>
+    `;
+}
+
 export class EventSubscriptions {
 
     public static columnInit = ` (columnInit)="columnInit($event)"`;
@@ -509,7 +532,7 @@ export class EventSubscriptions {
 
     public static onEditDone = ` (cellEdit)="editDone($event)"`;
 
-    public static rowSelected = ` (rowSelected)="rowSelected($event)"`;
+    public static rowSelectionChanging = ` (rowSelectionChanging)="rowSelectionChanging($event)"`;
 
     public static columnResized = ` (columnResized)="columnResized($event)"`;
 

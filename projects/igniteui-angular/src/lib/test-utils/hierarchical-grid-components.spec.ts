@@ -6,7 +6,7 @@ import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.com
 import { IPinningConfig } from '../grids/grid.common';
 import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
 import { IgxActionStripComponent } from '../action-strip/public_api';
-import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
+import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from 'src/app/shared/sample-data';
 import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-grid/hierarchical-grid-base.directive';
 
 @Component({
@@ -300,16 +300,16 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
-        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        [primaryKey]="'ID'" [autoGenerate]="true">
         <igx-grid-toolbar>
             <button igxButton="raised">Parent Button</button>
         </igx-grid-toolbar>
-        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [autoGenerate]="true">
             <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
                 <button igxButton="raised">Child 1 Button</button>
             </igx-grid-toolbar>
         </igx-row-island>
-        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
         <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
                 <button igxButton="raised">Child2 Button</button>
             </igx-grid-toolbar>
@@ -321,14 +321,14 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
-        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true" [rowEditable]='true'>
+        [primaryKey]="'ID'" [autoGenerate]="true" [rowEditable]='true'>
         <igx-action-strip #actionStrip1>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
             <igx-grid-editing-actions></igx-grid-editing-actions>
         </igx-action-strip>
-        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [autoGenerate]="true">
         </igx-row-island>
-        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
             <igx-action-strip #actionStrip2>
                 <igx-grid-pinning-actions></igx-grid-pinning-actions>
                 <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
@@ -465,3 +465,38 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
     public data = HIERARCHICAL_SAMPLE_DATA;
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid>
+        <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+
+        <igx-row-island [key]="'ChildCompanies'" [autoGenerate]="false">
+            <igx-column-group [movable]="true" [pinned]="false" header="General Information">
+                <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column-group [movable]="true" header="Personal Details">
+                    <igx-column field="ContactName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="ContactTitle" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column-group header="Address Information">
+                <igx-column-group header="Location">
+                    <igx-column field="Address" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="City" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="PostalCode" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Country" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                </igx-column-group>
+                <igx-column-group header="Contact Information">
+                    <igx-column field="Phone" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Fax" [sortable]="true" [resizable]="true"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    `
+})
+export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    public data = HIERARCHICAL_SAMPLE_DATA_SHORT;
+}
+

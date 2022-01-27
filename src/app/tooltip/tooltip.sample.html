@@ -39,7 +39,7 @@
             <igx-card>
                 <igx-card-content style="padding: 0px;">
                     <div class="location">
-                        <igx-icon class="cursorHover" [color]="'rgb(0,153,255)'" [igxTooltipTarget]="locationTooltip">location_on</igx-icon>
+                        <igx-icon class="cursorHover" [style.color]="'rgb(0,153,255)'" [igxTooltipTarget]="locationTooltip">location_on</igx-icon>
 
                         <div class="locationTooltip" #locationTooltip="tooltip" igxTooltip>
                             <div class="locationTooltipContent">
@@ -79,12 +79,12 @@
                         </igx-icon>
 
                         <div class="cellTooltip" #tp="tooltip" igxTooltip>
-                            <div><strong>Launch: </strong>{{cell.row.rowData.Spec.Launch}}</div>
-                            <div><strong>Build: </strong>{{cell.row.rowData.Spec.Build}}</div>
-                            <div><strong>Display: </strong>{{cell.row.rowData.Spec.Display}}</div>
-                            <div><strong>Resolution: </strong>{{cell.row.rowData.Spec.Resolution}}</div>
-                            <div><strong>OS: </strong>{{cell.row.rowData.Spec.OS}}</div>
-                            <div><strong>Battery: </strong>{{cell.row.rowData.Spec.Battery}}</div>
+                            <div><strong>Launch: </strong>{{cell.row.data.Spec.Launch}}</div>
+                            <div><strong>Build: </strong>{{cell.row.data.Spec.Build}}</div>
+                            <div><strong>Display: </strong>{{cell.row.data.Spec.Display}}</div>
+                            <div><strong>Resolution: </strong>{{cell.row.data.Spec.Resolution}}</div>
+                            <div><strong>OS: </strong>{{cell.row.data.Spec.OS}}</div>
+                            <div><strong>Battery: </strong>{{cell.row.data.Spec.Battery}}</div>
                         </div>
                     </ng-template>
                 </igx-column>

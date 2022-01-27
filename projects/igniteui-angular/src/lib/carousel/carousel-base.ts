@@ -1,16 +1,17 @@
 import { AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
+import { ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { fadeIn } from '../animations/fade';
 import { slideInLeft } from '../animations/slide';
 import { mkenum } from '../core/utils';
 
 export enum Direction { NONE, NEXT, PREV }
 
-export const CarouselAnimationType = mkenum({
+export const HorizontalAnimationType = mkenum({
     none: 'none',
     slide: 'slide',
     fade: 'fade'
 });
-export type CarouselAnimationType = (typeof CarouselAnimationType)[keyof typeof CarouselAnimationType];
+export type HorizontalAnimationType = (typeof HorizontalAnimationType)[keyof typeof HorizontalAnimationType];
 
 export interface CarouselAnimationSettings {
     enterAnimation: AnimationReferenceMetadata;
@@ -26,7 +27,12 @@ export interface IgxSlideComponentBase {
 /** @hidden */
 export abstract class IgxCarouselComponentBase {
     /** @hidden */
-    public animationType = CarouselAnimationType.slide;
+    public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
+
+    /** @hidden @internal */
+    public enterAnimationDone = new EventEmitter();
+    /** @hidden @internal */
+    public leaveAnimationDone = new EventEmitter();
 
     /** @hidden */
     protected currentItem: IgxSlideComponentBase;
@@ -37,18 +43,18 @@ export abstract class IgxCarouselComponentBase {
     /** @hidden */
     protected leaveAnimationPlayer?: AnimationPlayer;
     /** @hidden */
-    protected animationDuration = 320;
+    protected defaultAnimationDuration = 320;
     /** @hidden */
     protected animationPosition = 0;
     /** @hidden */
     protected newDuration = 0;
 
-    constructor(private builder: AnimationBuilder) {
+    constructor(private builder: AnimationBuilder, private cdr: ChangeDetectorRef) {
     }
 
     /** @hidden */
     protected triggerAnimations() {
-        if (this.animationType !== CarouselAnimationType.none) {
+        if (this.animationType !== HorizontalAnimationType.none) {
             if (this.animationStarted(this.leaveAnimationPlayer) || this.animationStarted(this.enterAnimationPlayer)) {
                 requestAnimationFrame(() => {
                     this.resetAnimations();
@@ -74,10 +80,13 @@ export abstract class IgxCarouselComponentBase {
     private resetAnimations() {
         if (this.animationStarted(this.leaveAnimationPlayer)) {
             this.leaveAnimationPlayer.reset();
+            this.leaveAnimationDone.emit();
         }
 
         if (this.animationStarted(this.enterAnimationPlayer)) {
             this.enterAnimationPlayer.reset();
+            this.enterAnimationDone.emit();
+            this.cdr.markForCheck();
         }
     }
 
@@ -86,11 +95,11 @@ export abstract class IgxCarouselComponentBase {
         if (this.newDuration) {
             duration = this.animationPosition ? this.animationPosition * this.newDuration : this.newDuration;
         } else {
-            duration = this.animationPosition ? this.animationPosition * this.animationDuration : this.animationDuration;
+            duration = this.animationPosition ? this.animationPosition * this.defaultAnimationDuration : this.defaultAnimationDuration;
         }
 
         switch (this.animationType) {
-            case CarouselAnimationType.slide:
+            case HorizontalAnimationType.slide:
                 const trans = this.animationPosition ? this.animationPosition * 100 : 100;
                 return {
                     enterAnimation: useAnimation(slideInLeft,
@@ -116,7 +125,7 @@ export abstract class IgxCarouselComponentBase {
                             }
                         })
                 };
-            case CarouselAnimationType.fade:
+            case HorizontalAnimationType.fade:
                 return {
                     enterAnimation: useAnimation(fadeIn,
                         { params: { duration: `${duration}ms`, startOpacity: `${this.animationPosition}` } }),
@@ -146,6 +155,8 @@ export abstract class IgxCarouselComponentBase {
             this.animationPosition = 0;
             this.newDuration = 0;
             this.previousItem.previous = false;
+            this.enterAnimationDone.emit();
+            this.cdr.markForCheck();
         });
         this.previousItem.previous = true;
         this.enterAnimationPlayer.play();
@@ -167,6 +178,7 @@ export abstract class IgxCarouselComponentBase {
             }
             this.animationPosition = 0;
             this.newDuration = 0;
+            this.leaveAnimationDone.emit();
         });
         this.leaveAnimationPlayer.play();
     }

@@ -128,6 +128,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
 
     /**
+
      * Sets/gets the selected child radio button.
      *
      * @example

@@ -8,13 +8,14 @@ import {
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective,
     IgxCollapsibleIndicatorTemplateDirective,
-    IgxFilterCellTemplateDirective
+    IgxFilterCellTemplateDirective,
+    IgxSummaryTemplateDirective
 } from './templates.directive';
-
 
 @NgModule({
     declarations: [
         IgxFilterCellTemplateDirective,
+        IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellFooterTemplateDirective,
@@ -31,6 +32,7 @@ import {
     ],
     exports: [
         IgxFilterCellTemplateDirective,
+        IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellFooterTemplateDirective,

@@ -185,6 +185,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
 |`oddRowCSS`|string|Additional styling classes applied to all odd rows in the grid.|
 |`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
+|`groupStrategy`| IGridGroupingStrategy | Provides custom group strategy to be used when grouping |
 |`groupingExpressions`| Array | The group by state of the grid.
 |`groupingExpansionState`| Array | The list of expansion states of the group rows. Contains the expansion state(expanded: boolean) and an unique identifier for the group row (Array<IGroupByExpandState>) that contains a list of the group row's parents described via their fieldName and value.
 |`groupsExpanded`| boolean | Determines whether created groups are rendered expanded or collapsed.  |
@@ -193,17 +194,9 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`transactions`| `TransactionService` | Transaction provider allowing access to all transactions and states of the modified rows. |
 |`summaryPosition`| GridSummaryPosition | The summary row position for the child levels. The default is top. |
 |`summaryCalculationMode`| GridSummaryCalculationMode | The summary calculation mode. The default is rootAndChildLevels, which means summaries are calculated for root and child levels.|
-|`columnHiding`| boolean | Returns whether the column hiding UI for the `IgxGridComponent` is enabled.|
-| `columnHidingTitle`| string | The title to be displayed in the built-in column hiding UI.|
-| `columnPinning` | boolean | Returns if the built-in column pinning UI should be shown in the toolbar. |
-| `columnPinningTitle` | string | The title to be displayed in the UI of the column pinning.|
 | `rowHeight` | number | Sets the row height. |
 | `columnWidth` | string | The default width of the `IgxGridComponent`'s columns. |
 |`primaryKey`| any | Property that sets the primary key of the `IgxGridComponent`. |
-|`hiddenColumnsText`| string | The text to be displayed inside the toggle button for the built-in column hiding UI of the`IgxColumnComponent`. |
-|`pinnedColumnsText`| string | the text to be displayed inside the toggle button for the built-in column pinning UI of the`IgxColumnComponent`. |
-|`showToolbar`| boolean | Specifies whether the `IgxGridComponent`'s toolbar is shown or hidden.|
-|`toolbarTitle`| string | the toolbar's title. |
 |`exportExcel`| boolean | Returns whether the option for exporting to MS Excel is enabled or disabled. |
 |`exportCsv`| boolean | Returns whether the option for exporting to CSV is enabled or disabled.|
 |`exportText`| string | Returns the textual content for the main export button.|
@@ -230,13 +223,15 @@ A list of the events emitted by the **igx-grid**:
 |`rowEdit`|Emitted just before a row in edit mode's value is committed (e.g. by clicking the Done button on the Row Editing Overlay).|
 |`rowEditDone`|Emitted after exiting edit mode for a row and editing has been committed.|
 |`rowEditExit`|Emitted when a row exits edit mode without committing its values (e.g. by clicking the Cancel button on the Row Editing Overlay).|
+|`dataChanging`|Emitted before the grid's data view is changed because of a data operation, rebinding, etc.|
+|`dataChanged`|Emitted after the grid's data view is changed because of a data operation, rebinding, etc.|
 |`cellClick`|Emitted when a cell is clicked. Returns the cell object.|
 |`columnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
 |`columnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|
 |`columnMovingStart`|Emitted when a column moving starts. Returns the moved column object.|
 |`selected`|Emitted when a cell is selected. Returns the cell object.|
-|`rowSelected`|Emitted when a row selection has changed. Returns array with old and new selected rows' IDs and the target row, if available.|
-|`columnSelected`|Emitted when a column selection has changed. Returns array with old and new selected column' fields|
+|`rowSelectionChanging`|Emitted when row selection is changing. Returns array with old and new selected rows' IDs and the target row, if available.|
+|`columnSelectionChanging`|Emitted when a column selection is changing. Returns array with old and new selected column' fields|
 |`columnInit`|Emitted when the grid columns are initialized. Returns the column object.|
 |`sortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
 |`filteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expressions tree of the column for which the filtering was performed.|

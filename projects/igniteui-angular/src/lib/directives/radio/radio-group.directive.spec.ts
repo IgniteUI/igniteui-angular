@@ -220,7 +220,7 @@ class RadioGroupComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 }
 
-class Person {
+interface Person {
     name: string;
     favoriteSeason: string;
 }
@@ -236,14 +236,14 @@ class Person {
 class RadioGroupWithModelComponent {
     @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 
-    seasons = [
+    public seasons = [
         'Winter',
         'Spring',
         'Summer',
         'Autumn',
     ];
 
-    personBob: Person = { name: 'Bob', favoriteSeason: 'Summer' };
+    public personBob: Person = { name: 'Bob', favoriteSeason: 'Summer' };
 }
 
 @Component({
@@ -258,22 +258,22 @@ class RadioGroupWithModelComponent {
 `
 })
 class RadioGroupReactiveFormsComponent {
-    seasons = [
+    public seasons = [
         'Winter',
         'Spring',
         'Summer',
         'Autumn',
     ];
 
-    newModel: Person;
-    model: Person = { name: 'Kirk', favoriteSeason: this.seasons[1] };
-    personForm: FormGroup;
+    public newModel: Person;
+    public model: Person = { name: 'Kirk', favoriteSeason: this.seasons[1] };
+    public personForm: FormGroup;
 
     constructor(private _formBuilder: FormBuilder) {
         this._createForm();
     }
 
-    updateModel() {
+    public updateModel() {
         const formModel = this.personForm.value;
 
         this.newModel = {

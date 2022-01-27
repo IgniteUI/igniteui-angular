@@ -1,7 +1,5 @@
 import { IFilteringState } from './filtering-state.interface';
 
-import { IgxSorting, IgxDataRecordSorting, IGridSortingStrategy } from './sorting-strategy';
-import { IgxGrouping } from './grouping-strategy';
 import { IGroupByResult } from './grouping-result.interface';
 
 import { IPagingState, PagingError } from './paging-state.interface';
@@ -9,13 +7,21 @@ import { IPagingState, PagingError } from './paging-state.interface';
 import { IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { ISortingExpression } from './sorting-expression.interface';
 import { FilteringStrategy } from './filtering-strategy';
-import { ITreeGridRecord } from '../grids/tree-grid/public_api';
-import { cloneValue, mergeObjects, mkenum } from '../core/utils';
+import { mergeObjects, mkenum } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
+import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
+import { ISortingExpression } from './sorting-strategy';
+import {
+    IGridSortingStrategy,
+    IGridGroupingStrategy,
+    IgxDataRecordSorting,
+    IgxSorting,
+    IgxGrouping
+} from '../grids/common/strategy';
+import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 
 /**
  * @hidden
@@ -63,7 +69,7 @@ export class DataUtil {
 
     public static cloneTreeGridRecord(hierarchicalRecord: ITreeGridRecord) {
         const rec: ITreeGridRecord = {
-            rowID: hierarchicalRecord.rowID,
+            key: hierarchicalRecord.key,
             data: hierarchicalRecord.data,
             children: hierarchicalRecord.children,
             isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,
@@ -73,9 +79,8 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState, grid: GridType = null,
+    public static group<T>(data: T[], state: IGroupingState, grouping: IGridGroupingStrategy = new IgxGrouping(), grid: GridType = null,
         groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
-        const grouping = new IgxGrouping();
         groupsRecords.splice(0, groupsRecords.length);
         return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
     }
@@ -143,12 +148,12 @@ export class DataUtil {
      * @param deleteRows Should delete rows with DELETE transaction type from data
      * @returns Provided data collections updated with all provided transactions
      */
-    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, deleteRows: boolean = false): T[] {
+    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy(), deleteRows: boolean = false): T[] {
         data.forEach((item: any, index: number) => {
             const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
             if (transaction && transaction.type === TransactionType.UPDATE) {
-                data[index] = transaction.newValue;
+                data[index] = mergeObjects(cloneStrategy.clone(data[index]), transaction.newValue);
             }
         });
 
@@ -185,6 +190,7 @@ export class DataUtil {
         transactions: HierarchicalTransaction[],
         childDataKey: any,
         primaryKey?: any,
+        cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy(),
         deleteRows: boolean = false): any[] {
         for (const transaction of transactions) {
             if (transaction.path) {
@@ -201,7 +207,7 @@ export class DataUtil {
                     case TransactionType.UPDATE:
                         const updateIndex = collection.findIndex(x => x[primaryKey] === transaction.id);
                         if (updateIndex !== -1) {
-                            collection[updateIndex] = mergeObjects(cloneValue(collection[updateIndex]), transaction.newValue);
+                            collection[updateIndex] = mergeObjects(cloneStrategy.clone(collection[updateIndex]), transaction.newValue);
                         }
                         break;
                     case TransactionType.DELETE:

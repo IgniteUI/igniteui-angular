@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IRowDataEventArgs } from '../grid/public_api';
-import { IgxRowDirective } from '../row.directive';
-import { GridType } from './grid.interface';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataEventArgs } from '../common/events';
+import { GridType, RowType } from './grid.interface';
 import { Subject } from 'rxjs';
-import { isEqual } from '../../core/utils';
+import { copyDescriptors, isEqual } from '../../core/utils';
 
 export class IgxEditRow {
     public transactionState: any;
     public state: any;
     public newData: any;
 
-    constructor(public id: any, public index: number, public data: any, public grid: IgxGridBaseDirective & GridType) { }
+    constructor(public id: any, public index: number, public data: any, public grid: GridType) { }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
@@ -58,7 +57,7 @@ export class IgxAddRow extends IgxEditRow {
         public index: number,
         public data: any,
         public recordRef: any,
-        public grid: IgxGridBaseDirective & GridType) {
+        public grid: GridType) {
         super(id, index, data, grid);
     }
 
@@ -94,7 +93,7 @@ export class IgxCell {
         public value: any,
         public editValue: any,
         public rowData: any,
-        public grid: IgxGridBaseDirective & GridType) { }
+        public grid: GridType) { }
 
     public castToNumber(value: any): any {
         if (this.column.dataType === 'number' && !this.column.inlineEditorTemplate) {
@@ -142,19 +141,14 @@ export class IgxCell {
 }
 
 export class IgxCellCrudState {
-    public grid: IgxGridBaseDirective & GridType;
+    public grid: GridType;
     public cell: IgxCell | null = null;
     public row: IgxEditRow | null = null;
     public isInCompositionMode = false;
 
     public createCell(cell): IgxCell {
-        // cell.rowData ?? cell.row.data covers the cases, where
-        // 1. cell is an instance og IgxGridCellComponent
-        // 2. cell is an instance of IgxGridCell
-        // Note: if at some point we are going to get rid of using 1), then see test 'should allow adding row to empty grid':
-        // cell.row.data will return a { data; rowID } object here, and test will fail
         return this.cell = new IgxCell(cell.cellID || cell.id, cell.row.index, cell.column, cell.value, cell.value,
-            cell.rowData ?? cell.row.data, cell.grid);
+            cell.row.data, cell.grid);
     }
 
     public createRow(cell: IgxCell): IgxEditRow {
@@ -266,9 +260,9 @@ export class IgxRowCrudState extends IgxCellCrudState {
         return this.grid.primaryKey;
     }
 
-    public get rowInEditMode(): IgxRowDirective<IgxGridBaseDirective & GridType> {
+    public get rowInEditMode(): RowType {
         const editRowState = this.row;
-        return editRowState !== null ? this.grid.rowList.find(e => e.rowID === editRowState.id) : null;
+        return editRowState !== null ? this.grid.rowList.find(e => e.key === editRowState.id) : null;
     }
 
     public get rowEditing(): boolean {
@@ -411,7 +405,8 @@ export class IgxRowCrudState extends IgxCellCrudState {
 
 
         if (rowInEditMode && row.id === rowInEditMode.id) {
-            row.data = { ...row.data, ...rowInEditMode.transactionState };
+            // do not use spread operator here as it will copy everything over an empty object with no descriptors
+            row.data = Object.assign(copyDescriptors(row.data), row.data, rowInEditMode.transactionState);
             // TODO: Workaround for updating a row in edit mode through the API
         } else if (this.grid.transactions.enabled) {
             const state = grid.transactions.getState(row.id);
@@ -430,7 +425,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
     /**
      * @hidden @internal
      */
-    public createAddRow(parentRow: IgxRowDirective<IgxGridBaseDirective & GridType>, asChild?: boolean) {
+    public createAddRow(parentRow: RowType, asChild?: boolean) {
         this.createAddRowParent(parentRow, asChild);
 
         const newRec = this.grid.getEmptyRecordObjectFor(parentRow);
@@ -441,9 +436,10 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
     /**
      * @hidden @internal
      */
-    public createAddRowParent(row: IgxRowDirective<IgxGridBaseDirective & GridType>, newRowAsChild?: boolean) {
+    public createAddRowParent(row: RowType, newRowAsChild?: boolean) {
         const rowIndex = row ? row.index : -1;
-        const rowId = row ? row.rowID : null;
+        const rowId = row ? row.key : (rowIndex >= 0 ? this.grid.rowList.last.key : null);
+
         const isInPinnedArea = this.grid.isRecordPinnedByViewIndex(rowIndex);
         const pinIndex = this.grid.pinnedRecords.findIndex(x => x[this.primaryKey] === rowId);
         const unpinIndex = this.grid.getUnpinnedIndexById(rowId);
@@ -505,7 +501,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
 
     protected getParentRowId() {
         if (this.addRowParent.asChild) {
-            return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;;
+            return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;
         } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
             const spawnedForRecord = this.grid.gridAPI.get_rec_by_id(this.addRowParent.rowID);
             return spawnedForRecord?.parent?.rowID;
@@ -532,6 +528,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
             this.createCell(cell);
             if (this.rowEditing) {
+                // TODO rowData
                 if (this.row && !this.sameRow(this.cell?.id?.rowID)) {
                     this.rowEditingBlocked = this.endEdit(true, event);
                     if (this.rowEditingBlocked) {
@@ -563,15 +560,15 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
      * @param asChild Specifies if the new row should be added as a child to a tree row.
      * @param event Base event that triggered the add row mode.
      */
-    public enterAddRowMode(parentRow: IgxRowDirective<IgxGridBaseDirective & GridType>, asChild?: boolean, event?: Event) {
+    public enterAddRowMode(parentRow: RowType, asChild?: boolean, event?: Event) {
         if (!this.rowEditing && (this.grid.primaryKey === undefined || this.grid.primaryKey === null)) {
             console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
             return;
         }
         this.endEdit(true, event);
 
-        if (parentRow != null && this.grid.expansionStates.get(parentRow.rowID)) {
-            this.grid.collapseRow(parentRow.rowID);
+        if (parentRow != null && this.grid.expansionStates.get(parentRow.key)) {
+            this.grid.collapseRow(parentRow.key);
         }
 
         this.createAddRow(parentRow, asChild);
@@ -588,7 +585,9 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         this.grid.navigateTo(this.row.index, -1);
         // when selecting the dummy row we need to adjust for top pinned rows
         const indexAdjust = this.grid.isRowPinningToTop && !this.addRowParent.isPinned ? this.grid.pinnedRows.length : 0;
-        const dummyRow = this.grid.gridAPI.get_row_by_index(this.row.index + indexAdjust);
+
+        // TODO: Type this without shoving a bunch of internal properties in the row type
+        const dummyRow = this.grid.gridAPI.get_row_by_index(this.row.index + indexAdjust) as any;
         dummyRow.triggerAddAnimation();
         dummyRow.cdr.detectChanges();
         dummyRow.addAnimationEnd.pipe(first()).subscribe(() => {

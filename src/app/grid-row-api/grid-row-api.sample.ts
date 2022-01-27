@@ -6,7 +6,6 @@ import {
     IgxHierarchicalGridComponent,
     IPinningConfig,
     RowPinningPosition,
-    IRowDragStartEventArgs,
     GridSummaryCalculationMode,
     GridSummaryPosition
 } from 'igniteui-angular';
@@ -179,7 +178,6 @@ export class GridRowAPISampleComponent implements OnInit {
     public togglePinning(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
         byIndex: boolean, index: number, key: any) {
         const row: RowType = byIndex ? grid.getRowByIndex(index) : grid.getRowByKey(key);
-        const index2: number = row.index;
         if (row.pinned) {
             row.unpin();
         } else {
@@ -215,6 +213,9 @@ export class GridRowAPISampleComponent implements OnInit {
         const row = grid.getRowByIndex(index);
         const parent = row.parent;
         parent.selected = !parent.selected;
+        if (parent) {
+            parent.selected = !parent.selected;
+        }
     }
 
     public generateDataUneven(count: number, level: number, parendID: string = null) {
@@ -303,21 +304,20 @@ export class GridRowAPISampleComponent implements OnInit {
             this.grid.deleteRow(rowData.ID);
         });
         if (selected === false) {
-            this.targetGrid.addRow(args.dragData.rowData);
-            // this.grid.deleteRow(args.dragData.rowID);
+            this.targetGrid.addRow(args.dragData.data);
+            // this.grid.deleteRow(args.dragData.key);
         }
     }
 
-    public onEnter(args) {
+    public onEnter() {
         this.dragIcon = 'add';
     }
-    public onRowDragStart(args: IRowDragStartEventArgs) {
-        const row = args.dragData;
+    public onRowDragStart() {
         const count = this.grid.selectedRows.length || 1;
         this.countIcon = `filter_${count > 9 ? '9_plus' : `${count}`}`;
     }
-    public onLeave(args) {
-        this.onRowDragStart(args);
+    public onLeave() {
+        this.onRowDragStart();
         this.dragIcon = 'arrow_right_alt';
     }
 }
