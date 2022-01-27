@@ -1,7 +1,8 @@
-import { AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
+import { AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
 import { Directive, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
 import { noop, Subject } from 'rxjs';
 import { growVerIn, growVerOut } from '../animations/grow';
+import { IgxAnimationPlayer, IgxAnimationService } from '../services/animation/animation';
 
 /**@hidden @internal */
 export interface ToggleAnimationSettings {
@@ -15,8 +16,8 @@ export interface ToggleAnimationOwner {
     openAnimationDone: EventEmitter<void>;
     closeAnimationStart: EventEmitter<void>;
     closeAnimationDone: EventEmitter<void>;
-    openAnimationPlayer: AnimationPlayer;
-    closeAnimationPlayer: AnimationPlayer;
+    openAnimationPlayer: IgxAnimationPlayer;
+    closeAnimationPlayer: IgxAnimationPlayer;
     playOpenAnimation(element: ElementRef, onDone: () => void): void;
     playCloseAnimation(element: ElementRef, onDone: () => void): void;
 }
@@ -50,10 +51,10 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
     }
 
     /** @hidden @internal */
-    public openAnimationPlayer: AnimationPlayer = null;
+    public openAnimationPlayer: IgxAnimationPlayer = null;
 
     /** @hidden @internal */
-    public closeAnimationPlayer: AnimationPlayer = null;
+    public closeAnimationPlayer: IgxAnimationPlayer = null;
 
 
 
@@ -72,7 +73,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
     private onClosedCallback: () => any = this._defaultClosedCallback;
     private onOpenedCallback: () => any = this._defaultOpenedCallback;
 
-    constructor(protected builder: AnimationBuilder) {
+    constructor(protected animationService: IgxAnimationService) {
     }
 
     /** @hidden @internal */
@@ -112,7 +113,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         }
     }
 
-    private initializePlayer(type: ANIMATION_TYPE, targetElement: ElementRef, callback: () => void): AnimationPlayer {
+    private initializePlayer(type: ANIMATION_TYPE, targetElement: ElementRef, callback: () => void): IgxAnimationPlayer {
         const oppositeType = type === ANIMATION_TYPE.OPEN ? ANIMATION_TYPE.CLOSE : ANIMATION_TYPE.OPEN;
         // V.S. Jun 28th, 2021 #9783: Treat falsy animation settings as disabled animations
         const targetAnimationSettings = this.animationSettings || { closeAnimation: null, openAnimation: null };
@@ -126,29 +127,27 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
             this.onDoneHandler(type);
             return;
         }
-        const animation = useAnimation(animationSettings);
-        const animationBuilder = this.builder.build(animation);
         const opposite = this.getPlayer(oppositeType);
         let oppositePosition = 1;
         if (opposite) {
-            if (opposite.hasStarted()) {
-                // .getPosition() still returns 0 sometimes, regardless of the fix for https://github.com/angular/angular/issues/18891;
-                const renderer = (opposite as any)._renderer;
-                oppositePosition = renderer.engine.players[renderer.engine.players.length - 1].getPosition();
-            }
-
+            oppositePosition = opposite.Position;
+            // if (opposite.hasStarted()) {
+            //     // .getPosition() still returns 0 sometimes, regardless of the fix for https://github.com/angular/angular/issues/18891;
+            //     const renderer = (opposite as any)._renderer;
+            //     oppositePosition = renderer.engine.players[renderer.engine.players.length - 1].getPosition();
+            // }
             this.cleanUpPlayer(oppositeType);
         }
         if (type === ANIMATION_TYPE.OPEN) {
-            this.openAnimationPlayer = animationBuilder.create(targetElement.nativeElement);
+            this.openAnimationPlayer = this.animationService.buildAnimation(animationSettings, targetElement.nativeElement);
         } else if (type === ANIMATION_TYPE.CLOSE) {
-            this.closeAnimationPlayer = animationBuilder.create(targetElement.nativeElement);
+            this.closeAnimationPlayer = this.animationService.buildAnimation(animationSettings, targetElement.nativeElement);
         }
         const target = this.getPlayer(type);
         target.init();
-        this.getPlayer(type).setPosition(1 - oppositePosition);
+        this.getPlayer(type).Position = 1 - oppositePosition;
         this.setCallback(type, callback);
-        target.onDone(() => {
+        target.animationEnd.subscribe(() => {
             this.onDoneHandler(type);
         });
         return target;
@@ -173,7 +172,6 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
             this.closeInterrupted = false;
         }
     }
-
 
     private cleanUpPlayer(target: ANIMATION_TYPE) {
         switch (target) {
@@ -200,7 +198,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         }
     }
 
-    private getPlayer(type: ANIMATION_TYPE): AnimationPlayer {
+    private getPlayer(type: ANIMATION_TYPE): IgxAnimationPlayer {
         switch (type) {
             case ANIMATION_TYPE.OPEN:
                 return this.openAnimationPlayer;

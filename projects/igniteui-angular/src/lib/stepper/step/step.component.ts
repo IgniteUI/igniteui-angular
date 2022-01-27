@@ -1,13 +1,26 @@
-import { AnimationBuilder } from '@angular/animations';
 import {
     AfterViewInit,
-    ChangeDetectorRef, Component, ContentChild, ElementRef,
-    EventEmitter, forwardRef, HostBinding, HostListener, Inject, Input, OnDestroy, Output, Renderer2, TemplateRef, ViewChild
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input,
+    OnDestroy,
+    Output,
+    Renderer2,
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { HorizontalAnimationType, Direction, IgxSlideComponentBase } from '../../carousel/carousel-base';
+import { Direction, HorizontalAnimationType, IgxSlideComponentBase } from '../../carousel/carousel-base';
 import { PlatformUtil } from '../../core/utils';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
+import { IgxAnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT } from '../stepper.common';
 import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.directive';
@@ -371,11 +384,11 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         public renderer: Renderer2,
         protected platform: PlatformUtil,
         protected stepperService: IgxStepperService,
-        protected builder: AnimationBuilder,
+        protected animationService: IgxAnimationService,
         private element: ElementRef<HTMLElement>,
         private dir: IgxDirectionality
     ) {
-        super(builder);
+        super(animationService);
     }
 
     /** @hidden @internal */
