@@ -215,7 +215,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(value[1]).toBeFalse();
     });
 
-    fit('should display aggregations when no row dimensions are enabled', () => {
+    it('should display aggregations when no row dimensions are enabled', () => {
         const pivotGrid = fixture.componentInstance.pivotGrid;
         pivotGrid.pivotConfiguration.columns = [
             new IgxPivotDateDimension(
@@ -235,7 +235,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(pivotGrid.rowList.first.cells.first.title).toEqual('282$');
     });
 
-    fit('should display aggregations when no col dimensions are enabled', () => {
+    it('should display aggregations when no col dimensions are enabled', () => {
         const pivotGrid = fixture.componentInstance.pivotGrid;
         pivotGrid.pivotConfiguration.rows = [
             {
@@ -250,7 +250,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(pivotGrid.rowList.first.cells.first.title).toEqual('2127$');
     });
 
-    fit('should display aggregations when neither col nor row dimensions are set', () => {
+    it('should display aggregations when neither col nor row dimensions are set', () => {
         const pivotGrid = fixture.componentInstance.pivotGrid;
         pivotGrid.pivotConfiguration.rows = [];
         pivotGrid.pivotConfiguration.columns = [];
@@ -261,7 +261,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(pivotGrid.rowList.first.cells.first.title).toEqual('2127$');
     });
 
-    fit('should reevaluate aggregated values when all row dimensions are removed', () => {
+    it('should reevaluate aggregated values when all row dimensions are removed', () => {
         const pivotGrid = fixture.componentInstance.pivotGrid;
         pivotGrid.pivotConfiguration.columns = [
             new IgxPivotDateDimension(
@@ -298,7 +298,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(pivotGrid.rowList.length).toEqual(1);
     });
 
-    fit('should reevaluate aggregated values when all col dimensions are removed', () => {
+    it('should reevaluate aggregated values when all col dimensions are removed', () => {
         const pivotGrid = fixture.componentInstance.pivotGrid;
         pivotGrid.pivotConfiguration.columns = [
             new IgxPivotDateDimension(
