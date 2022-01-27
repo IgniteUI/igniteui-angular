@@ -1,29 +1,14 @@
 import { Component, HostBinding, Input } from "@angular/core";
-import {
-    AbsoluteScrollStrategy,
-    AutoPositionStrategy,
-    fadeIn,
-    fadeOut,
-    GridColumnDataType,
-    IDragBaseEventArgs,
-    IDragGhostBaseEventArgs,
-    IDropBaseEventArgs,
-    IDropDroppedEventArgs,
-    IgxDropDownComponent,
-    IgxPivotAggregate,
-    IgxPivotDateAggregate,
-    IgxPivotTimeAggregate,
-    IPivotAggregator,
-    IPivotValue,
-    ISelectionEventArgs,
-    OverlaySettings,
-    PivotDimensionType,
-    PositionSettings,
-    VerticalAlignment,
-} from "igniteui-angular";
+import { fadeIn, fadeOut } from '../../animations/fade';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/public_api';
+import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs } from '../../directives/drag-drop/drag-drop.directive';
+import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
+import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
+import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
+import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { DisplayDensity } from "../../core/displayDensity";
 import { PivotGridType } from "../common/grid.interface";
-import { IPivotDimension } from "./pivot-grid.interface";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { useAnimation } from "@angular/animations";
 import { first } from "rxjs/operators";

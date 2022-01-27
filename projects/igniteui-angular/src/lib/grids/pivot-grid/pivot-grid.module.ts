@@ -11,7 +11,7 @@ import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-
 import { IgxPivotDataSelectorComponent } from './pivot-data-selector.component';
 import { IgxExpansionPanelModule } from '../../expansion-panel/expansion-panel.module';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
-import { IgxDragDropModule } from 'igniteui-angular';
+import { IgxDragDropModule } from '../../directives/drag-drop/drag-drop.directive';
 
 /**
  * @hidden
