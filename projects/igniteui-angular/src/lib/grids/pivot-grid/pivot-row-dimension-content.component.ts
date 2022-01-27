@@ -98,7 +98,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
             this.extractFromDimensions();
             this.viewRef.clear();
         }
-        if (changes.pivotRowWidths && this.rowDimensionData) {
+        if (changes.width && this.rowDimensionData) {
             const dimData = PivotUtil.getDimensionLevel(this.dimension, this.rowData, this.grid.pivotKeys);
             const data = this.rowDimensionData;
             data.column.width = this.grid.resolveRowDimensionWidth(this.dimension) + 'px';
