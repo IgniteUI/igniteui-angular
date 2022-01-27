@@ -1131,20 +1131,85 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.dimensionsChange.emit({ dimensions: collection, dimensionCollectionType: dimType });
     }
 
+    /**
+     * Inserts value at specified index or at the end.
+     *
+     * @example
+     * ```typescript
+     * this.grid.insertValueAt(value, 1);
+     * ```
+     * @param value The value definition that will be added.
+     * @param index The index in the collection at which to add.
+     * This parameter is optional. If not set it will add it to the end of the collection.
+     */
     public insertValueAt(value: IPivotValue, index?: number) {
-
+        if (!this.pivotConfiguration.values) {
+            this.pivotConfiguration.values = [];
+        }
+        const values = this.pivotConfiguration.values;
+        if (index !== undefined) {
+            values.splice(index, 0, value);
+        } else {
+            values.push(value);
+        }
+        this.setupColumns();
+        this.pipeTrigger++;
+        this.valuesChange.emit({ values });
     }
 
-    public moveValue(dimension: IPivotValue, index?: number) {
-
+    /**
+     * Move value from its currently at specified index or at the end.
+     *
+     * @example
+     * ```typescript
+     * this.grid.moveValue(value, 1);
+     * ```
+     * @param value The value that will be moved.
+     * @param index The index in the collection at which to add.
+     * This parameter is optional. If not set it will add it to the end of the collection.
+     */
+    public moveValue(value: IPivotValue, index?: number) {
+        // remove from old index
+        this.removeValue(value);
+        // add to new
+        this.insertValueAt(value, index);
     }
 
+    /**
+     * Removes value from collection.
+     * @remarks
+     * This is different than toggleValue that enabled/disables the value.
+     * This completely removes the specified value from the collection.
+     * @example
+     * ```typescript
+     * this.grid.removeValue(dimension);
+     * ```
+     * @param value The value to be removed.
+     */
     public removeValue(value: IPivotValue,) {
-
+        const values = this.pivotConfiguration.values;
+        const currentIndex = values.indexOf(value);
+        values.splice(currentIndex, 1);
+        this.setupColumns();
+        this.pipeTrigger++;
+        this.valuesChange.emit({ values });
     }
 
+    /**
+     * Toggles the value's enabled state on or off.
+     * @remarks
+     * The value remains in its current collection. This just changes its enabled state.
+     * @example
+     * ```typescript
+     * this.grid.toggleValue(value);
+     * ```
+     * @param value The value to be toggled.
+     */
     public toggleValue(value: IPivotValue) {
-
+        value.enabled = !value.enabled;
+        this.setupColumns();
+        this.pipeTrigger++;
+        this.valuesChange.emit({ values: this.pivotConfiguration.values });
     }
 
     public getDimensionsByType(dimension: PivotDimensionType) {

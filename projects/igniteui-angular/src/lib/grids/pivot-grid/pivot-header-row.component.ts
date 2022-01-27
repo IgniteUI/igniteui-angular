@@ -270,10 +270,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public valueRemoved(event: IBaseChipEventArgs) {
         const value = this.grid.pivotConfiguration.values.find(x => x.member === event.owner.id || x.displayName === event.owner.id);
-        value.enabled = false;
-        this.grid.setupColumns();
-        this.grid.pipeTrigger++;
-        this.grid.valuesChange.emit({ values: this.grid.pivotConfiguration.values });
+        this.grid.toggleValue(value);
     }
 
     /**
@@ -429,18 +426,15 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public onValueDrop(event, area) {
         //values can only be reordered
-        const currentDim = this.grid.pivotConfiguration.values;
+        const values = this.grid.pivotConfiguration.values;
         const dragId = event.dragChip?.id || event.dragData?.chip.id;
         const chipsArray = area.chipsList.toArray();
         let chipIndex = chipsArray.indexOf(event.owner) !== -1 ? chipsArray.indexOf(event.owner) : chipsArray.length;
         chipIndex = this._dropPos === DropPosition.AfterDropTarget ? chipIndex + 1 : chipIndex;
-        const newDim = currentDim.find(x => x.member === dragId || x.displayName === dragId);
-        if (newDim) {
+        const value = values.find(x => x.member === dragId || x.displayName === dragId);
+        if (value) {
             const dragChipIndex = chipsArray.indexOf(event.dragChip || event.dragData.chip);
-            currentDim.splice(dragChipIndex, 1);
-            currentDim.splice(dragChipIndex >= chipIndex ? chipIndex : chipIndex - 1, 0, newDim);
-            this.grid.setupColumns();
-            this.grid.valuesChange.emit({ values: this.grid.pivotConfiguration.values });
+            this.grid.moveValue(value, dragChipIndex >= chipIndex ? chipIndex : chipIndex - 1);
         }
     }
 
