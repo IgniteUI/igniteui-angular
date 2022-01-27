@@ -1,10 +1,23 @@
-import { Component, ChangeDetectorRef, EventEmitter, HostBinding, Input, Output,
-    ContentChild, AfterContentInit, ElementRef } from '@angular/core';
-import { AnimationBuilder } from '@angular/animations';
+import {
+    AfterContentInit,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output
+} from '@angular/core';
+import { IgxAnimationService } from '../services/animation/animation';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
-import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase,
-    IExpansionPanelEventArgs, IExpansionPanelCancelableEventArgs } from './expansion-panel.common';
+import {
+    IExpansionPanelCancelableEventArgs,
+    IExpansionPanelEventArgs,
+    IgxExpansionPanelBase,
+    IGX_EXPANSION_PANEL_COMPONENT
+} from './expansion-panel.common';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from './toggle-animation-component';
 
 let NEXT_ID = 0;
@@ -191,8 +204,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
 
-    constructor(private cdr: ChangeDetectorRef, protected builder: AnimationBuilder, private elementRef?: ElementRef) {
-        super(builder);
+    private _collapsed = true;
+
+    constructor(
+        protected animationService: IgxAnimationService,
+        private cdr: ChangeDetectorRef,
+        private elementRef?: ElementRef) {
+        super(animationService);
     }
 
     /** @hidden */
