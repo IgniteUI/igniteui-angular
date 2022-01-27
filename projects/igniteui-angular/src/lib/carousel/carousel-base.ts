@@ -1,8 +1,9 @@
-import { AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
+import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { fadeIn } from '../animations/fade';
 import { slideInLeft } from '../animations/slide';
 import { mkenum } from '../core/utils';
+import { IgxAnimationPlayer, IgxAnimationService } from '../services/animation/animation';
 
 export enum Direction { NONE, NEXT, PREV }
 
@@ -39,9 +40,9 @@ export abstract class IgxCarouselComponentBase {
     /** @hidden */
     protected previousItem: IgxSlideComponentBase;
     /** @hidden */
-    protected enterAnimationPlayer?: AnimationPlayer;
+    protected enterAnimationPlayer?: IgxAnimationPlayer;
     /** @hidden */
-    protected leaveAnimationPlayer?: AnimationPlayer;
+    protected leaveAnimationPlayer?: IgxAnimationPlayer;
     /** @hidden */
     protected defaultAnimationDuration = 320;
     /** @hidden */
@@ -49,7 +50,7 @@ export abstract class IgxCarouselComponentBase {
     /** @hidden */
     protected newDuration = 0;
 
-    constructor(private builder: AnimationBuilder, private cdr: ChangeDetectorRef) {
+    constructor(private animationService: IgxAnimationService, private cdr: ChangeDetectorRef) {
     }
 
     /** @hidden */
@@ -67,7 +68,7 @@ export abstract class IgxCarouselComponentBase {
     }
 
     /** @hidden */
-    protected animationStarted(animation: AnimationPlayer): boolean {
+    protected animationStarted(animation: IgxAnimationPlayer): boolean {
         return animation && animation.hasStarted();
     }
 
@@ -143,11 +144,9 @@ export abstract class IgxCarouselComponentBase {
         if (!animation) {
             return;
         }
-        const animationBuilder = this.builder.build(animation);
 
-        this.enterAnimationPlayer = animationBuilder.create(this.getCurrentElement());
-
-        this.enterAnimationPlayer.onDone(() => {
+        this.enterAnimationPlayer = this.animationService.buildAnimation(animation, this.getCurrentElement());
+        this.enterAnimationPlayer.animationEnd.subscribe(() => {
             if (this.enterAnimationPlayer) {
                 this.enterAnimationPlayer.reset();
                 this.enterAnimationPlayer = null;
@@ -168,10 +167,8 @@ export abstract class IgxCarouselComponentBase {
             return;
         }
 
-        const animationBuilder = this.builder.build(animation);
-        this.leaveAnimationPlayer = animationBuilder.create(this.getPreviousElement());
-
-        this.leaveAnimationPlayer.onDone(() => {
+        this.leaveAnimationPlayer = this.animationService.buildAnimation(animation, this.getPreviousElement());
+        this.leaveAnimationPlayer.animationEnd.subscribe(() => {
             if (this.leaveAnimationPlayer) {
                 this.leaveAnimationPlayer.reset();
                 this.leaveAnimationPlayer = null;

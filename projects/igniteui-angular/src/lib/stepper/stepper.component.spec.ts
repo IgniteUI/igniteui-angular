@@ -1,10 +1,14 @@
+import { AnimationBuilder } from '@angular/animations';
 import { Component, ViewChild } from '@angular/core';
-import { fakeAsync, ComponentFixture, TestBed, waitForAsync, tick } from '@angular/core/testing';
-import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxStepperComponent, IgxStepperModule } from './stepper.component';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { take } from 'rxjs/operators';
+import { IgxIconModule } from '../icon/public_api';
+import { Direction } from '../services/direction/directionality';
+import { configureTestSuite } from '../test-utils/configure-suite';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxStepComponent } from './step/step.component';
 import {
     IgxStepperOrientation,
     IgxStepperTitlePosition,
@@ -12,12 +16,8 @@ import {
     IStepChangedEventArgs,
     IStepChangingEventArgs
 } from './stepper.common';
-import { take } from 'rxjs/operators';
-import { IgxIconModule } from '../icon/public_api';
+import { IgxStepperComponent, IgxStepperModule } from './stepper.component';
 import { IgxStepperService } from './stepper.service';
-import { AnimationMetadata, AnimationOptions } from '@angular/animations';
-import { Direction } from '../services/direction/directionality';
-import { IgxStepComponent } from './step/step.component';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
@@ -907,7 +907,7 @@ describe('Stepper service unit tests', () => {
     let mockElement: any;
     let mockElementRef: any;
     let mockCdr: any;
-    let mockAnimationBuilder: any;
+    let mockAnimationService: any;
     let mockPlatform: any;
     let mockDocument: any;
     let mockDir: any;
@@ -931,26 +931,17 @@ describe('Stepper service unit tests', () => {
         mockElement.parentNode = mockElement;
         mockElementRef = { nativeElement: mockElement };
 
-        mockAnimationBuilder = {
-            build: (_a: AnimationMetadata | AnimationMetadata[]) => ({
-                create: (_e: any, _opt?: AnimationOptions) => ({
-                    onDone: (_fn: any) => { },
-                    onStart: (_fn: any) => { },
-                    onDestroy: (_fn: any) => { },
-                    init: () => { },
-                    hasStarted: () => true,
-                    play: () => { },
-                    pause: () => { },
-                    restart: () => { },
-                    finish: () => { },
-                    destroy: () => { },
-                    rest: () => { },
-                    setPosition: (_p: any) => { },
-                    getPosition: () => 0,
-                    parentPlayer: {},
-                    totalTime: 0,
-                    beforeDestroy: () => { }
-                })
+        mockAnimationService = {
+            buildAnimation: (_builder: AnimationBuilder) => ({
+                animationEnd:  { subscribe: () => { }},
+                animationStart: { subscribe: () => { }},
+                Position: 0,
+                init: () => { },
+                hasStarted: () => true,
+                play: () => { },
+                finish: () => { },
+                reset: () => { },
+                destroy: () => { }
             })
         };
 
@@ -980,11 +971,11 @@ describe('Stepper service unit tests', () => {
         };
 
         stepperService = new IgxStepperService();
-        stepper = new IgxStepperComponent(mockCdr, mockAnimationBuilder, stepperService, mockElementRef);
+        stepper = new IgxStepperComponent(mockCdr, mockAnimationService, stepperService, mockElementRef);
         steps = [];
         for (let index = 0; index < 4; index++) {
             const newStep = new IgxStepComponent(stepper, mockCdr, null,
-                mockPlatform, stepperService, mockAnimationBuilder, mockElementRef, mockDir);
+                mockPlatform, stepperService, mockAnimationService, mockElementRef, mockDir);
             newStep._index = index;
             steps.push(newStep);
         }
