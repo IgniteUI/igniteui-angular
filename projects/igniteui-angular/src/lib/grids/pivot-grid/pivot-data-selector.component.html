@@ -15,6 +15,7 @@
                 let dimension of grid.pivotConfiguration.columns
                     .concat(grid.pivotConfiguration.rows)
                     .concat(grid.pivotConfiguration.filters)
+                    .concat(grid.pivotConfiguration.values)
             "
         >
             <igx-checkbox
@@ -22,7 +23,7 @@
                 [checked]="dimension.enabled"
                 (click)="toggleDimension(dimension)"
             ></igx-checkbox>
-            <span>{{ dimension.memberName }}</span>
+            <span>{{ dimension.memberName || dimension.member }}</span>
         </igx-list-item>
     </igx-list>
 </div>
@@ -60,11 +61,15 @@
                 [displayDensity]="displayDensity"
             >
                 <igx-list-item
+                    igxDrop
                     [igxDrag]="panel.dragChannels"
-                    ghostClass="igx-pivot-data-selector__item-ghost"
                     [ghostTemplate]="itemGhost"
                     (ghostCreate)="ghostCreated($event, item[panel.itemKey])"
+                    (over)="onItemDragOver($event)"
+                    (leave)="onItemDragLeave($event)"
                     (dragMove)="onItemDragMove($event)"
+                    (dragEnd)="onItemDragEnd($event)"
+                    (dropped)="onItemDropped($event, panel.type)"
                     *ngFor="
                         let item of this.grid[panel.dataKey];
                         scrollOrientation: 'vertical';
@@ -138,7 +143,11 @@
 </igx-drop-down>
 
 <ng-template #itemGhost>
-    <div [style.width.px]="ghostWidth" [class.igx-pivot-data-selector__item-ghost--no-drop]="!dropAllowed">
+    <div
+        class="igx-pivot-data-selector__item-ghost"
+        [style.width.px]="ghostWidth"
+        [class.igx-pivot-data-selector__item-ghost--no-drop]="!dropAllowed"
+    >
         <div style="display: flex; align-items: center">
             <igx-icon style="margin-right: 8px">unfold_more</igx-icon>
             <span>{{ ghostText }}</span>

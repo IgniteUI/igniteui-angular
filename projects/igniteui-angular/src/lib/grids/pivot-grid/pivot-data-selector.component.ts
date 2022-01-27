@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input } from "@angular/core";
+import { Component, HostBinding, Input, Renderer2 } from "@angular/core";
 import { fadeIn, fadeOut } from '../../animations/fade';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/public_api';
 import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs } from '../../directives/drag-drop/drag-drop.directive';
@@ -66,6 +66,8 @@ export class IgxPivotDataSelectorComponent {
     public ghostText: string;
     public ghostWidth: number;
     public dropAllowed: boolean;
+
+    constructor(private renderer: Renderer2) {}
 
     /**
      * @hidden @internal
@@ -212,18 +214,6 @@ export class IgxPivotDataSelectorComponent {
             default:
                 return null;
         }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public onItemDragMove(event: IDragBaseEventArgs) {
-        const clientRect =
-            event.owner.element.nativeElement.getBoundingClientRect();
-        this._dropDelta = Math.round(
-            (event.pageY - event.startY) / clientRect.height
-        );
     }
 
     /**
@@ -418,15 +408,66 @@ export class IgxPivotDataSelectorComponent {
             event.owner.element.nativeElement.getBoundingClientRect();
         this.ghostWidth = itemWidth;
         this.ghostText = value;
+        this.renderer.setStyle(event.owner.element.nativeElement, 'position', 'absolute');
+        this.renderer.setStyle(event.owner.element.nativeElement, 'visibility', 'hidden');
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public toggleDimension(dimension: IPivotDimension | IPivotValue) {
         dimension.enabled = !dimension.enabled;
         this.grid.pipeTrigger++;
         this.grid.cdr.markForCheck();
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public onPanelEntry(event: IDropBaseEventArgs, panel: string) {
         this.dropAllowed = event.dragData.some((channel: string) => channel === panel);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public onItemDragMove(event: IDragBaseEventArgs) {
+        const clientRect =
+            event.owner.element.nativeElement.getBoundingClientRect();
+        this._dropDelta = Math.round(
+            (event.pageY - event.startY) / clientRect.height
+        );
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public onItemDragEnd(event: IDropBaseEventArgs) {
+        this.renderer.setStyle(event.owner.element.nativeElement, 'position', 'static');
+        this.renderer.setStyle(event.owner.element.nativeElement, 'visibility', 'visible');
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public onItemDragOver(event: IDropBaseEventArgs) {
+        if(this.dropAllowed) {
+            this.renderer.addClass(event.owner.element.nativeElement, 'igx-drag--push');
+        }
+    };
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public onItemDragLeave(event: IDropBaseEventArgs) {
+        if(this.dropAllowed) {
+            this.renderer.removeClass(event.owner.element.nativeElement, 'igx-drag--push');
+        }
     }
 }

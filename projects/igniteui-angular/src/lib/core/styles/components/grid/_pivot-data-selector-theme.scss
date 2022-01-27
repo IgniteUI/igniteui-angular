@@ -187,6 +187,10 @@
         align-items: center;
         justify-content: space-between;
         min-height: rem(32px);
+
+        .igx-drag--push & {
+            padding-top: rem(32px);
+        }
     }
 
     %selector-item-ghost {
