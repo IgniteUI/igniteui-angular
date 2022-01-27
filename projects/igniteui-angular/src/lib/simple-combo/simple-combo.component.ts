@@ -99,6 +99,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.checkMatch();
     }
 
+    private get selectedItem() {
+        return this.selectionService.get(this.id).values().next().value;
+    }
+
     constructor(protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selectionService: IgxSelectionAPIService,
@@ -180,6 +184,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.dropdown.navigateItem(index);
             }
         });
+        this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            const filtered = this.filteredData.find(this.findMatch);
+            if (filtered === undefined || filtered === null) {
+                this.searchValue = this.comboInput.value;
+                return;
+            }
+            this.searchValue = '';
+        });
         this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.composing) {
                 this.comboInput.focus();
@@ -193,6 +205,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this._onTouchedCallback();
             }
         });
+        this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.filterValue = this.comboInput.value;
+        });
 
         super.ngAfterViewInit();
     }
@@ -205,12 +220,15 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this._onChangeCallback(this.searchValue);
         if (this.collapsed && this.comboInput.focused) {
             this.open();
-            this.dropdown.navigateFirst();
         }
         if (!this.comboInput.value.trim()) {
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
+        }
+        // when filtering the focused item should be the first item or the currently selected item
+        if (!this.dropdown.focusedItem || this.dropdown.focusedItem.id !== this.dropdown.items[0].id) {
+            this.dropdown.navigateFirst();
         }
         super.handleInputChange(event);
         this.composing = true;
@@ -229,12 +247,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.close();
             // manually trigger text selection as it will not be triggered during editing
             this.textSelection.trigger();
+            this.updateFilterValue(filtered);
             return;
         }
         if (event.key === this.platformUtil.KEYMAP.BACKSPACE
             || event.key === this.platformUtil.KEYMAP.DELETE) {
             this._updateInput = false;
-            this.clearSelection();
+            this.clearSelection(true);
         }
         if (!this.collapsed && event.key === this.platformUtil.KEYMAP.TAB) {
             this.close();
@@ -348,7 +367,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
-        return value.toString().toLowerCase().includes(this.searchValue.trim().toLowerCase());
+        const searchValue = this.searchValue || this.comboInput.value;
+        return !!searchValue && value.toString().toLowerCase().includes(searchValue.trim().toLowerCase());
     };
 
     protected setSelection(newSelection: any): void {
@@ -403,10 +423,24 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clearOnBlur() {
         const filtered = this.filteredData.find(this.findMatch);
-        if ((filtered === undefined || filtered === null)) {
+        if (this.filterValue &&
+            (filtered === undefined
+                || filtered === null
+                || !this.selectedItem
+                || this.isPartialMatch(filtered))) {
+            this.clearSelection(true);
             this.close();
-            this.clearSelection();
             this.searchValue = '';
+        }
+    }
+
+    private isPartialMatch(filtered: any): boolean {
+        return this.filterValue.length !== filtered[this.displayKey].length;
+    }
+
+    private updateFilterValue(filtered: any): void {
+        if (filtered) {
+            this.filterValue = filtered[this.displayKey];
         }
     }
 }

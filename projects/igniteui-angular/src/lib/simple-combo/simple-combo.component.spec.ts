@@ -336,7 +336,7 @@ describe('IgxSimpleCombo', () => {
         it('should properly handleInputChange', () => {
             combo = new IgxSimpleComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
                 mockIconService, platformUtil, null, null, mockInjector);
-            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem', 'navigateFirst']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.data = data;
@@ -949,7 +949,6 @@ describe('IgxSimpleCombo', () => {
         it('should close the dropdown with Alt + ArrowUp', fakeAsync(() => {
             combo.open();
             fixture.detectChanges();
-
             spyOn(combo, 'close').and.callThrough();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', input);
@@ -963,15 +962,14 @@ describe('IgxSimpleCombo', () => {
         }));
 
         it('should select the first filtered item with Enter', () => {
-            UIInteractions.setInputElementValue(input, 'con', fixture);
+            UIInteractions.simulateTyping('con', input);
             expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
-            fixture.detectChanges();
             expect(document.activeElement).toHaveClass('igx-combo__content');
 
             UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
-            fixture.detectChanges();
             expect(input.nativeElement.value).toEqual('Wisconsin');
         });
 
