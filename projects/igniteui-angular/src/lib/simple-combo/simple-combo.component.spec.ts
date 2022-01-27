@@ -1010,6 +1010,22 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.close).toHaveBeenCalledTimes(1);
         });
+
+        it('should clear the input on blur with a partial match', () => {
+            spyOn(combo as any, 'clearSelection').and.callThrough();
+            spyOn(combo.dropdown.closing, 'emit').and.callThrough();
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+            UIInteractions.simulateTyping('new', input);
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect((combo as any).clearSelection).toHaveBeenCalledOnceWith(true);
+            expect(combo.dropdown.closing.emit).toHaveBeenCalledTimes(1);
+            expect(combo.value).toBeFalsy();
+        });
     });
 
     describe('Display density', () => {
@@ -1288,8 +1304,6 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
         this.cdr.detach();
     }
 }
-
-
 
 @Component({
     template: `
