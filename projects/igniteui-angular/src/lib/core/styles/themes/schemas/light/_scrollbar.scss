@@ -28,12 +28,17 @@ $light-scrollbar: extend(
 
 /// Generates a fluent scrollbar schema.
 /// @type {Map}
+/// @property {Color} thumb-background [igx-color: ('grays', 300)] - The background color used for the thumb.
 /// @requires {function} extend
 /// @requires {Map} $light-scrollbar
 $fluent-scrollbar: extend(
     $light-scrollbar,
     (
         variant: 'fluent',
+
+        thumb-background: (
+            igx-color: ('grays', 300)
+        ),
     )
 );
 

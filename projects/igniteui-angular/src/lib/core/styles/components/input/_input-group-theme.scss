@@ -784,6 +784,8 @@
 
     %fluent-label {
         padding: rem(5px) 0;
+        font-size: rem(14px, 16px);
+        font-weight: 600;
         line-height: normal !important;
         position: static;
         transform: translateY(0);
@@ -1245,6 +1247,7 @@
         height: auto;
         line-height: normal;
         font-weight: 400;
+        border-radius: var-get($theme, 'border-border-radius') 0 0 var-get($theme, 'border-border-radius');
 
         igx-icon {
             width: rem(18px);
@@ -1278,6 +1281,7 @@
         width: auto;
         height: auto;
         line-height: normal;
+        border-radius: 0 var-get($theme, 'border-border-radius') var-get($theme, 'border-border-radius') 0;
 
         igx-icon {
             width: rem(18px);
