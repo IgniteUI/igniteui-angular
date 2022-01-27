@@ -41,7 +41,7 @@ import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, Pla
 import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
+import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
@@ -1059,6 +1059,29 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public localeChange = new EventEmitter<boolean>();
+
+    /**
+     * Emitted before the grid's data view is changed because of a data operation, rebinding, etc.
+     * 
+     * @example
+     * ```typescript
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanging)='handleDataChangingEvent()'></igx-grid>
+     * ```
+     */
+     @Output()
+     public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+
+    /**
+     * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
+     * 
+     * @example
+     * ```typescript
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanged)='handleDataChangedEvent()'></igx-grid>
+     * ```
+     */
+    @Output()
+    public dataChanged = new EventEmitter<any>();
+ 
 
     /**
      * @hidden @internal
@@ -3385,6 +3408,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public dataRebinding(event: IForOfDataChangingEventArgs) {
+        this.dataChanging.emit(event);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public dataRebound(event) {
+        this.dataChanged.emit(event);
     }
 
     /** @hidden @internal */
@@ -6500,12 +6537,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.tbody.nativeElement.style.display = 'none';
         let res = !this.nativeElement.parentElement ||
             this.nativeElement.parentElement.clientHeight === 0 ||
-            this.nativeElement.parentElement.clientHeight === renderedHeight;
-        if (!this.platform.isChromium && !this.platform.isFirefox) {
+            this.nativeElement.parentElement.clientHeight === renderedHeight ||
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
-            res = this.checkContainerSizeChange();
-        }
+            this.checkContainerSizeChange();
         this.tbody.nativeElement.style.display = '';
         return res;
     }
@@ -6728,7 +6763,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator && source === this.filteredSortedData ? row + (this.paginator.perPage * this.paginator.page) : row;
+            row = this.paginator && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ? row + (this.paginator.perPage * this.paginator.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;

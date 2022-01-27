@@ -1215,17 +1215,18 @@ describe('igxOverlay', () => {
             spyOn(scrollStrat, 'attach').and.callThrough();
             spyOn(scrollStrat, 'detach').and.callThrough();
             const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
-            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+            const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
+            overlay.show(overlayId);
             tick();
 
             expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
             expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
             expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             expect(scrollSpy).toHaveBeenCalledTimes(1);
 
-            overlay.hide('0');
-            overlay.detach('0');
+            overlay.hide(overlayId);
+            overlay.detach(overlayId);
             tick();
             expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
         }));
@@ -1261,7 +1262,7 @@ describe('igxOverlay', () => {
             expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
             expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
             expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             overlay.hide('0');
             overlay.detach('0');
@@ -1302,7 +1303,7 @@ describe('igxOverlay', () => {
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(overlay.reposition).not.toHaveBeenCalled();
 
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             expect(scrollSpy).toHaveBeenCalledTimes(2);
             expect(overlay.reposition).toHaveBeenCalledTimes(1);
             expect(overlay.reposition).toHaveBeenCalledWith(id);
@@ -1798,12 +1799,12 @@ describe('igxOverlay', () => {
             expect(overlayChildPosition.y).toEqual(0);
             expect(buttonElement.getBoundingClientRect().y).toEqual(0);
 
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             expect(document.documentElement.scrollTop).toEqual(0);
 
             document.documentElement.scrollTop += 25;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             expect(document.documentElement.scrollTop).toEqual(25);
             contentElement = (fixture.nativeElement as HTMLElement)
@@ -1813,7 +1814,7 @@ describe('igxOverlay', () => {
             expect(buttonElement.getBoundingClientRect().y).toEqual(-25);
 
             document.documentElement.scrollTop += 500;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
@@ -2377,18 +2378,21 @@ describe('igxOverlay', () => {
 
             const scrollSpy = spyOn<any>(scrollStrategy, 'onScroll').and.callThrough();
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+            const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
+            overlay.show(overlayId);
             tick();
             expect(scrollStrategy.initialize).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.attach).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
             document.documentElement.scrollTop += scrollTolerance;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
+
+            overlay.detach(overlayId);
         }));
 
         it('Should persist the component open state when scrolling and absolute scroll strategy is used.', fakeAsync(() => {
@@ -2417,7 +2421,7 @@ describe('igxOverlay', () => {
             expect(scrollStrategy.attach).toHaveBeenCalledTimes(1);
 
             document.documentElement.scrollTop += scrollTolerance;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
@@ -2861,18 +2865,21 @@ describe('igxOverlay', () => {
 
             const scrollSpy = spyOn<any>(scrollStrategy, 'onScroll').and.callThrough();
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+            const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
+            overlay.show(overlayId);
             tick();
             expect(scrollStrategy.initialize).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.attach).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
             document.documentElement.scrollTop += scrollTolerance;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
+
+            overlay.detach(overlayId);
         }));
 
         it('Should persist the component open state when scrolling and absolute scroll strategy is used.', fakeAsync(() => {
@@ -2901,7 +2908,7 @@ describe('igxOverlay', () => {
             expect(scrollStrategy.attach).toHaveBeenCalledTimes(1);
 
             document.documentElement.scrollTop += scrollTolerance;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
@@ -3276,7 +3283,7 @@ describe('igxOverlay', () => {
 
             document.documentElement.scrollTop = 100;
             document.documentElement.scrollLeft = 50;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
 
             expect(componentRect).toEqual(componentElement.getBoundingClientRect());
@@ -3288,7 +3295,7 @@ describe('igxOverlay', () => {
         it('Should retain the component state when scrolling and block scroll strategy is used.', fakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
-                    styles: [`button { position: absolute, bottom: -2000px; } `]
+                    styles: [`button { position: absolute; bottom: -2000px; } `]
                 }
             });
             await TestBed.compileComponents();
@@ -3308,17 +3315,17 @@ describe('igxOverlay', () => {
             overlay.show(overlayId);
             tick();
             expect(document.documentElement.scrollTop).toEqual(0);
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             expect(document.documentElement.scrollTop).toEqual(0);
 
             document.documentElement.scrollTop += 25;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             expect(document.documentElement.scrollTop).toEqual(0);
 
             document.documentElement.scrollTop += 1000;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -3698,7 +3705,7 @@ describe('igxOverlay', () => {
 
             document.documentElement.scrollTop = 100;
             document.documentElement.scrollLeft = 50;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
 
             expect(componentRect).toEqual(componentElement.getBoundingClientRect());
@@ -3736,7 +3743,7 @@ describe('igxOverlay', () => {
 
                 document.documentElement.scrollTop = 40;
                 document.documentElement.scrollLeft = 30;
-                document.dispatchEvent(new Event('scroll'));
+                document.documentElement.dispatchEvent(new Event('scroll'));
                 tick();
 
                 expect(componentRect).toEqual(componentElement.getBoundingClientRect());
@@ -3821,7 +3828,7 @@ describe('igxOverlay', () => {
                 expect(document.documentElement.scrollTop).toEqual(0);
 
                 document.documentElement.scrollTop += scrollTolerance;
-                document.dispatchEvent(new Event('scroll'));
+                document.documentElement.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
                 const wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -3908,7 +3915,7 @@ describe('igxOverlay', () => {
                 const componentRect = componentElement.getBoundingClientRect();
 
                 document.documentElement.scrollTop += scrollTolerance;
-                document.dispatchEvent(new Event('scroll'));
+                document.documentElement.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
@@ -3949,7 +3956,7 @@ describe('igxOverlay', () => {
             const componentRect = componentElement.getBoundingClientRect();
 
             document.documentElement.scrollTop += scrollTolerance;
-            document.dispatchEvent(new Event('scroll'));
+            document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             const newElementRect = componentElement.getBoundingClientRect();
             expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
@@ -4450,14 +4457,12 @@ const DIRECTIVE_COMPONENTS = [
 @NgModule({
     imports: [BrowserModule],
     declarations: [DYNAMIC_COMPONENTS],
-    exports: [DYNAMIC_COMPONENTS],
-    entryComponents: [DYNAMIC_COMPONENTS]
+    exports: [DYNAMIC_COMPONENTS]
 })
 export class DynamicModule { }
 
 @NgModule({
-    imports: [IgxCalendarModule, IgxAvatarModule, IgxDatePickerModule],
-    entryComponents: IgniteUIComponents
+    imports: [IgxCalendarModule, IgxAvatarModule, IgxDatePickerModule]
 })
 export class IgxComponentsModule {
 }
