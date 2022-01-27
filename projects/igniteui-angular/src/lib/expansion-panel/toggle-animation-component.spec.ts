@@ -1,14 +1,14 @@
-import { AnimationBuilder } from '@angular/animations';
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { noop } from 'rxjs';
 import { growVerIn, growVerOut } from '../animations/main';
+import { IgxAnimationService } from '../services/animation/animation';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { ToggleAnimationPlayer ,ANIMATION_TYPE } from './toggle-animation-component';
+import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 
 class MockTogglePlayer extends ToggleAnimationPlayer {
-    constructor(protected builder: AnimationBuilder) {
-        super(builder);
+    constructor(protected animationService: IgxAnimationService) {
+        super(animationService);
     }
 }
 

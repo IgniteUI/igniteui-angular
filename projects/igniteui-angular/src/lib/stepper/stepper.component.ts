@@ -1,9 +1,9 @@
-import { AnimationBuilder, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
+import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
-    Component, HostBinding, OnDestroy, OnInit,
-    Input, Output, EventEmitter, ContentChildren, QueryList, ElementRef,
-    NgModule, OnChanges, SimpleChanges, TemplateRef, ContentChild, AfterContentInit, ChangeDetectorRef
+    AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
+    ElementRef, EventEmitter, HostBinding, Input, NgModule, OnChanges, OnDestroy,
+    OnInit, Output, QueryList, SimpleChanges,TemplateRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,9 +12,11 @@ import { fadeIn } from '../animations/main';
 import { HorizontalAnimationType, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
+import { IgxAnimationService } from '../services/animation/animation';
+import { IgxStepComponent } from './step/step.component';
 import {
-    IgxStepper, IgxStepperTitlePosition, IgxStepperOrientation,
-    IgxStepType, IGX_STEPPER_COMPONENT, IStepChangedEventArgs, IStepChangingEventArgs, VerticalAnimationType
+    IgxStepper, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType,
+    IGX_STEPPER_COMPONENT, IStepChangedEventArgs, IStepChangingEventArgs, VerticalAnimationType
 } from './stepper.common';
 import {
     IgxStepActiveIndicatorDirective,
@@ -23,7 +25,6 @@ import {
     IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective,
     IgxStepSubTitleDirective, IgxStepTitleDirective
 } from './stepper.directive';
-import { IgxStepComponent } from './step/step.component';
 import { IgxStepperService } from './stepper.service';
 
 
@@ -332,10 +333,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     constructor(
         cdr: ChangeDetectorRef,
-        private animBuilder: AnimationBuilder,
+        animationService: IgxAnimationService,
         private stepperService: IgxStepperService,
         private element: ElementRef<HTMLElement>) {
-        super(animBuilder, cdr);
+        super(animationService, cdr);
         this.stepperService.stepper = this;
     }
 
