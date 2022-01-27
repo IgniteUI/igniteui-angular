@@ -10,8 +10,18 @@
         />
     </igx-input-group>
     <igx-list [displayDensity]="displayDensity">
-        <igx-list-item *ngFor="let dimension of grid.pivotConfiguration.columns.concat(grid.pivotConfiguration.rows).concat(grid.pivotConfiguration.filters)">
-            <igx-checkbox [disableRipple]="true" [checked]="dimension.enabled" (click)="toggleDimension(dimension)"></igx-checkbox>
+        <igx-list-item
+            *ngFor="
+                let dimension of grid.pivotConfiguration.columns
+                    .concat(grid.pivotConfiguration.rows)
+                    .concat(grid.pivotConfiguration.filters)
+            "
+        >
+            <igx-checkbox
+                [disableRipple]="true"
+                [checked]="dimension.enabled"
+                (click)="toggleDimension(dimension)"
+            ></igx-checkbox>
             <span>{{ dimension.memberName }}</span>
         </igx-list-item>
     </igx-list>
@@ -27,7 +37,7 @@
             iconPosition="left"
             [disabled]="false"
             igxDrop
-            [dropChannel]="panel.name"
+            (enter)="onPanelEntry($event, panel.name)"
             (dropped)="onItemDropped($event, panel.type)"
         >
             <igx-expansion-panel-title class="igx-pivot-data-selector__header">
@@ -42,28 +52,19 @@
         </igx-expansion-panel-header>
         <igx-expansion-panel-body
             igxDrop
-            [dropChannel]="panel.name"
+            (enter)="onPanelEntry($event, panel.name)"
             (dropped)="onItemDropped($event, panel.type)"
         >
-            <!-- <div -->
-            <!--     *ngIf="droppableChannels?.indexOf(panel.name) === -1 || false" -->
-            <!--     class="igx-pivot-data-selector__no-drop-overlay" -->
-            <!-- > -->
-            <!--     <igx-icon>block</igx-icon> -->
-            <!-- </div> -->
-
             <igx-list
                 *ngIf="this.grid[panel.dataKey].length > 0"
                 [displayDensity]="displayDensity"
             >
                 <igx-list-item
-                    igxDrag
+                    [igxDrag]="panel.dragChannels"
                     ghostClass="igx-pivot-data-selector__item-ghost"
                     [ghostTemplate]="itemGhost"
-                    [dragChannel]="panel.dragChannels"
                     (ghostCreate)="ghostCreated($event, item[panel.itemKey])"
                     (dragMove)="onItemDragMove($event)"
-                    (dragEnd)="onItemDragEnd()"
                     *ngFor="
                         let item of this.grid[panel.dataKey];
                         scrollOrientation: 'vertical';
@@ -137,7 +138,7 @@
 </igx-drop-down>
 
 <ng-template #itemGhost>
-    <div [style.width.px]="ghostWidth">
+    <div [style.width.px]="ghostWidth" [class.igx-pivot-data-selector__item-ghost--no-drop]="!dropAllowed">
         <div style="display: flex; align-items: center">
             <igx-icon style="margin-right: 8px">unfold_more</igx-icon>
             <span>{{ ghostText }}</span>

@@ -65,7 +65,7 @@ export class IgxPivotDataSelectorComponent {
     public value: IPivotValue;
     public ghostText: string;
     public ghostWidth: number;
-    public droppableChannels: string[];
+    public dropAllowed: boolean;
 
     /**
      * @hidden @internal
@@ -224,12 +224,6 @@ export class IgxPivotDataSelectorComponent {
         this._dropDelta = Math.round(
             (event.pageY - event.startY) / clientRect.height
         );
-
-        this.droppableChannels = event.owner.dragChannel as any;
-    }
-
-    public onItemDragEnd() {
-       this.droppableChannels = null;
     }
 
     /**
@@ -240,6 +234,10 @@ export class IgxPivotDataSelectorComponent {
         event: IDropDroppedEventArgs,
         dimensionType: PivotDimensionType
     ) {
+        if(!this.dropAllowed) {
+            return;
+        }
+
         const dimension = this.getDimensionsByType(dimensionType);
         const dimensionState = this.getDimensionState(dimensionType);
         const itemId = event.drag.element.nativeElement.id;
@@ -422,13 +420,13 @@ export class IgxPivotDataSelectorComponent {
         this.ghostText = value;
     }
 
-    public onEnterPanel(event: IDropBaseEventArgs) {
-        console.log(event.drag.dragChannel, event.owner.dropChannel);
-    }
-
     public toggleDimension(dimension: IPivotDimension | IPivotValue) {
         dimension.enabled = !dimension.enabled;
         this.grid.pipeTrigger++;
         this.grid.cdr.markForCheck();
+    }
+
+    public onPanelEntry(event: IDropBaseEventArgs, panel: string) {
+        this.dropAllowed = event.dragData.some((channel: string) => channel === panel);
     }
 }

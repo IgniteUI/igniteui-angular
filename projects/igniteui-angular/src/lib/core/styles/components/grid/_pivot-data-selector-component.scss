@@ -31,6 +31,10 @@
             @extend %selector-item-ghost !optional;
         }
 
+        @include e(item-ghost, $m: no-drop) {
+            @extend %selector-item-ghost--no-drop !optional;
+        }
+
         @include e(item-text) {
             @extend %selector-item-text !optional;
         }
@@ -49,10 +53,6 @@
 
         @include e(action-summary) {
             @extend %selector-action-summary !optional;
-        }
-
-        @include e(no-drop-overlay) {
-            @extend %no-drop-overlay !optional;
         }
     }
 }

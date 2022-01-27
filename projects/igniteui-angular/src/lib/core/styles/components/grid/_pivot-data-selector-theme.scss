@@ -209,6 +209,10 @@
         }
     }
 
+    %selector-item-ghost--no-drop {
+        cursor: no-drop;
+    }
+
     %selector-item-text,
     %selector-action-sort,
     %selector-action-move,
@@ -230,25 +234,6 @@
 
         igx-icon + igx-icon {
             margin-#{$left}: rem(8px);
-        }
-    }
-
-    %no-drop-overlay {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: igx-color($color: grays, $variant: 100);
-        color: igx-contrast-color($color: grays, $variant: 100);
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-
-        igx-icon {
-            width: rem(48px);
-            height: rem(48px);
-            font-size: rem(48px);
         }
     }
 }
