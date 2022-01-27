@@ -1040,6 +1040,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
+    /**
+     * Inserts dimension in target collection by type at specified index or at the collection's end.
+     *
+     * @example
+     * ```typescript
+     * this.grid.insertDimensionAt(dimension, PivotDimensionType.Row, 1);
+     * ```
+     * @param dimension The dimension that will be added.
+     * @param targetCollectionType The target collection type to add to. Can be Row, Column or Filter.
+     * @param index The index in the collection at which to add.
+     * This parameter is optional. If not set it will add it to the end of the collection.
+     */
     public insertDimensionAt(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number) {
         const targetCollection = this.getDimensionsByType(targetCollectionType);
         if (index !== undefined) {
@@ -1054,6 +1066,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.dimensionsChange.emit({ dimensions: targetCollection, dimensionCollectionType: targetCollectionType });
     }
 
+    /**
+     * Move dimension from its currently collection to the specified target collection by type at specified index or at the collection's end.
+     *
+     * @example
+     * ```typescript
+     * this.grid.moveDimension(dimension, PivotDimensionType.Row, 1);
+     * ```
+     * @param dimension The dimension that will be moved.
+     * @param targetCollectionType The target collection type to move it to. Can be Row, Column or Filter.
+     * @param index The index in the collection at which to add.
+     * This parameter is optional. If not set it will add it to the end of the collection.
+     */
     public moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number) {
         // remove from old collection
         this.removeDimension(dimension);
@@ -1061,6 +1085,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.insertDimensionAt(dimension, targetCollectionType, index);
     }
 
+    /**
+     * Removes dimension from its currently collection.
+     * @remarks
+     * This is different than toggleDimension that enabled/disables the dimension.
+     * This completely removes the specified dimension from the collection.
+     * @example
+     * ```typescript
+     * this.grid.removeDimension(dimension);
+     * ```
+     * @param dimension The dimension to be removed.
+     */
     public removeDimension(dimension: IPivotDimension) {
         const prevCollectionType = this.getDimensionType(dimension);
         const prevCollection = this.getDimensionsByType(prevCollectionType);
@@ -1072,6 +1107,16 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.pipeTrigger++;
     }
 
+    /**
+     * Toggles the dimension's enabled state on or off.
+     * @remarks
+     * The dimension remains in its current collection. This just changes its enabled state.
+     * @example
+     * ```typescript
+     * this.grid.toggleDimension(dimension);
+     * ```
+     * @param dimension The dimension to be toggled.
+     */
     public toggleDimension(dimension: IPivotDimension) {
         const dimType = this.getDimensionType(dimension);
         const collection = this.getDimensionsByType(dimType);
@@ -1079,7 +1124,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (dimType === PivotDimensionType.Column) {
             this.setupColumns();
         }
-        if(!dimension.enabled) {
+        if (!dimension.enabled) {
             this.filteringService.clearFilter(dimension.memberName);
         }
         this.pipeTrigger++;
