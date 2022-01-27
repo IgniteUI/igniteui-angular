@@ -30,7 +30,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
@@ -121,8 +121,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /** @hidden @internal */
     @ViewChild(IgxPivotHeaderRowComponent, { static: true })
     public theadRow: IgxPivotHeaderRowComponent;
-
-
 
     @Input()
     /**
@@ -643,6 +641,20 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /** @hidden @internal */
+    public createFilterESF(dropdown: any, column: ColumnType, options: OverlaySettings, shouldReatach: boolean) {
+        options.outlet = this.outlet;
+        if (dropdown) {
+            dropdown.initialize(column, this.overlayService);
+            if (shouldReatach) {
+                const id = this.overlayService.attach(dropdown.element, options);
+                dropdown.overlayComponentId = id;
+                return { id, ref: undefined };
+            }
+            return {id: dropdown.overlayComponentId, ref: undefined};
+        }
+    }
+
     /** @hidden */
     public featureColumnsWidth() {
         return this.pivotRowWidths;
@@ -1103,6 +1115,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         prevCollection.splice(currentIndex, 1);
         if (prevCollectionType === PivotDimensionType.Column) {
             this.setupColumns();
+        }
+        if (prevCollectionType === PivotDimensionType.Filter) {
+            this.reflow();
         }
         this.pipeTrigger++;
     }
