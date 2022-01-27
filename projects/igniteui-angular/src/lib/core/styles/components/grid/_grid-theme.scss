@@ -1065,6 +1065,7 @@
         z-index: 4;
         cursor: move;
         border-#{$right}: 1px solid transparent;
+        background-clip: border-box;
 
         igx-icon {
             width: $drag-icon-size;
@@ -1783,6 +1784,7 @@
         align-items: center;
         background: inherit;
         z-index: 4;
+        background-clip: border-box;
     }
 
     %cbx-padding {
@@ -2149,6 +2151,7 @@
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
         background: inherit;
         z-index: 1;
+        background-clip: border-box;
 
         &::after {
             content: '';
@@ -2726,7 +2729,7 @@
         cursor: pointer;
         z-index: 3;
         color: var-get($theme, 'expand-icon-color');
-        background-clip: initial;
+        background-clip: border-box;
 
         &:focus {
             outline: none;
@@ -2772,6 +2775,7 @@
         background: inherit;
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
         z-index: 3;
+        background-clip: border-box;
 
         igx-icon {
             display: flex;
