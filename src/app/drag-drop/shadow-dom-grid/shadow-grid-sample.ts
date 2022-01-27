@@ -23,7 +23,6 @@ export class ShadowGridSampleComponent implements OnInit {
 
   public initColumns(event: IgxColumnComponent) {
     const column: IgxColumnComponent = event;
-    column.movable = true;
     if (column.field === 'Name') {
       column.filterable = true;
       column.sortable = true;

@@ -396,6 +396,8 @@
             height: $icon-in-button-size;
             font-size: $icon-in-button-size;
             color: inherit;
+            display: flex;
+            justify-content: center;
         }
 
         @include icon-w-margin(

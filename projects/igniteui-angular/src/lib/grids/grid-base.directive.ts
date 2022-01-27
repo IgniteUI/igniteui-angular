@@ -41,7 +41,7 @@ import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, Pla
 import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
+import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
@@ -150,6 +150,7 @@ import { IGridSortingStrategy } from './common/strategy';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
+import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -187,6 +188,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public autoGenerate = false;
+
+    /**
+     * Controls whether columns moving is enabled in the grid.
+     *
+     */
+    @Input()
+    public moving = false;
 
     /**
      * Gets/Sets a custom template when empty.
@@ -238,6 +246,26 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return this._summaryRowHeight || this.summaryService.calcMaxSummaryHeight();
         }
         return 0;
+    }
+
+    /**
+     * Gets/Sets the data clone strategy of the grid when in edit mode.
+     *
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [dataCloneStrategy]="customCloneStrategy"></igx-grid>
+     * ```
+     */
+    @Input()
+    public get dataCloneStrategy(): IDataCloneStrategy {
+        return this._dataCloneStrategy;
+    }
+
+    public set dataCloneStrategy(strategy: IDataCloneStrategy) {
+        if (strategy) {
+            this._dataCloneStrategy = strategy;
+            this._transactions.cloneStrategy = strategy;
+        }
     }
 
     /**
@@ -1031,6 +1059,29 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public localeChange = new EventEmitter<boolean>();
+
+    /**
+     * Emitted before the grid's data view is changed because of a data operation, rebinding, etc.
+     * 
+     * @example
+     * ```typescript
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanging)='handleDataChangingEvent()'></igx-grid>
+     * ```
+     */
+     @Output()
+     public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+
+    /**
+     * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
+     * 
+     * @example
+     * ```typescript
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanged)='handleDataChangedEvent()'></igx-grid>
+     * ```
+     */
+    @Output()
+    public dataChanged = new EventEmitter<any>();
+ 
 
     /**
      * @hidden @internal
@@ -2796,6 +2847,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private transactionChange$ = new Subject<void>();
     private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
+    private _dataCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
 
     /**
      * @hidden @internal
@@ -2951,6 +3003,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         super(_displayDensityOptions);
         this.locale = this.locale || this.localeId;
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+        this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
     }
 
@@ -3355,6 +3408,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public dataRebinding(event: IForOfDataChangingEventArgs) {
+        this.dataChanging.emit(event);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public dataRebound(event) {
+        this.dataChanged.emit(event);
     }
 
     /** @hidden @internal */
@@ -4856,13 +4923,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Returns if the `IgxGridComponent` has moveable columns.
      *
+     * @deprecated
+     * Use `IgxGridComponent.moving` instead.
+     *
      * @example
      * ```typescript
      * const movableGrid = this.grid.hasMovableColumns;
      * ```
      */
     public get hasMovableColumns(): boolean {
-        return this.columnList && this.columnList.some((col) => col.movable);
+        return this.moving;
     }
 
     /**
@@ -5923,6 +5993,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         }
+
+        if (this.dataCloneStrategy) {
+            this._transactions.cloneStrategy = this.dataCloneStrategy;
+        }
     }
 
     protected subscribeToTransactions(): void {
@@ -6463,12 +6537,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.tbody.nativeElement.style.display = 'none';
         let res = !this.nativeElement.parentElement ||
             this.nativeElement.parentElement.clientHeight === 0 ||
-            this.nativeElement.parentElement.clientHeight === renderedHeight;
-        if (!this.platform.isChromium && !this.platform.isFirefox) {
+            this.nativeElement.parentElement.clientHeight === renderedHeight ||
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
-            res = this.checkContainerSizeChange();
-        }
+            this.checkContainerSizeChange();
         this.tbody.nativeElement.style.display = '';
         return res;
     }
@@ -6691,7 +6763,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator && source === this.filteredSortedData ? row + (this.paginator.perPage * this.paginator.page) : row;
+            row = this.paginator && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ? row + (this.paginator.perPage * this.paginator.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;

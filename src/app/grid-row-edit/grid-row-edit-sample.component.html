@@ -82,7 +82,7 @@
                 <igx-switch [(ngModel)]="cancel.row.done"><span class='green'>Row - DONE</span></igx-switch>
             </div>
         </div>
-        <igx-grid #gridRowEditTransaction [batchEditing]="true" [data]="data" primaryKey="ProductID" width="900px" height="700px" [rowEditable]="true" (rowEdit)="rowEdit($event)" (rowEditDone)="rowEditDone($event)" (rowEditExit)="rowEditExit($event)" (rowEditEnter)="rowEditEnter($event)"
+        <igx-grid #gridRowEditTransaction [batchEditing]="true" [data]="data" primaryKey="ProductID" [moving]="true" width="900px" height="700px" [rowEditable]="true" (rowEdit)="rowEdit($event)" (rowEditDone)="rowEditDone($event)" (rowEditExit)="rowEditExit($event)" (rowEditEnter)="rowEditEnter($event)"
             (cellEditEnter)="cellEnterEditMode($event)" (cellEdit)="cellEdit($event)" (cellEditDone)="cellEditDone($event)" (cellEditExit)="cellEditExit($event)">
             <igx-column width="100px" [editable]="false" [groupable]="true">
                 <ng-template igxCell let-cell="cell" let-val>
@@ -100,7 +100,7 @@
             </igx-column>
             <igx-column width="100px" field="OrderDate" header="Order Date" [dataType]="'date'"></igx-column>
             <igx-column width="100px" field="Discontinued2" header="PINNED DISCONTINUED" [dataType]="'boolean'" [hidden]="hideFlag" [pinned]="pinFlag" [sortable]="true"></igx-column>
-            <igx-column-group [movable]="true" header="Column Group 1">
+            <igx-column-group header="Column Group 1">
                 <igx-column width="100px" field="ReorderLevel2" header="ReorderLevel2" [dataType]="'number'" [hasSummary]="summaryFlag" [editable]="true"></igx-column>
                 <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'number'" [hasSummary]="summaryFlag" [hidden]="hideFlag" [editable]="true"></igx-column>
                 <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'number'" [filterable]="true" [hasSummary]="summaryFlag" [pinned]="pinFlag" [sortable]="true" [editable]="true">
