@@ -62,7 +62,7 @@
             </ng-template>
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>
-            <igx-pivot-row [style.min-height.px]="renderedRowHeight" [pivotRowWidths]='pivotRowWidths' [gridID]="id" [index]="rowIndex" [data]="rowData" 
+            <igx-pivot-row [style.min-height.px]="renderedRowHeight" [pivotRowWidths]='pivotRowWidths' [gridID]="id" [index]="rowIndex" [data]="rowData"
             [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
             [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-pivot-row>
@@ -139,13 +139,11 @@
     </div>
 </ng-template>
 
-
 <div [hidden]='true'>
-<igx-grid-excel-style-filtering>
-    <div igxExcelStyleColumnOperations [hidden]='true'>
-    </div>
-    <igx-excel-style-filter-operations>
-        <igx-excel-style-search></igx-excel-style-search>
-    </igx-excel-style-filter-operations>
-</igx-grid-excel-style-filtering>
+    <igx-grid-excel-style-filtering>
+        <div igxExcelStyleColumnOperations [hidden]='true'></div>
+        <igx-excel-style-filter-operations>
+            <igx-excel-style-search></igx-excel-style-search>
+        </igx-excel-style-filter-operations>
+    </igx-grid-excel-style-filtering>
 </div>

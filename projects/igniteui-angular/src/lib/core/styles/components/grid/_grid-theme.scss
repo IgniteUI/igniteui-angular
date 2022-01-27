@@ -2931,6 +2931,32 @@
         }
     }
 
+    %igx-grid__pivot-filter-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+
+        > igx-badge {
+            position: absolute;
+            top: rem(-4px);
+            left: 60%;
+            width: rem(18px);
+            min-width: rem(18px);
+            height: rem(18px);
+            font-size: rem(10px);
+            pointer-events: none;
+            user-select: none;
+        }
+    }
+
+    %igx-grid__pivot-empty-chip-area {
+        line-height: normal;
+        font-size: rem(14px);
+        margin-right: 0 !important;
+    }
+
     %igx-grid__tr-pivot--row-area {
         height: auto !important;
         align-items: flex-end;
