@@ -21,7 +21,14 @@ $dark-fluent-grid-summary: $fluent-grid-summary;
 /// Generates a dark bootstrap grid-summary schema.
 /// @type {Map}
 /// @requires $bootstrap-grid-summary
-$dark-bootstrap-grid-summary: $bootstrap-grid-summary;
+$dark-bootstrap-grid-summary: extend(
+    $bootstrap-grid-summary,
+    (
+        background-color: (
+            igx-color: ('grays', 100),
+        ),
+    )
+);
 
 /// Generates a dark indigo grid-summary schema.
 /// @type {Map}
