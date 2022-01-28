@@ -16,12 +16,6 @@ export class IgxAnimationService {
     }
 }
 
-export interface AnimationInfo {
-    id?: number;
-    animation?: AnimationReferenceMetadata;
-    openAnimationPlayer?: AnimationPlayer;
-}
-
 export interface IAnimationPlayer{
     onStart(fn: () => void): void;
     onDone(fn: () => void): void;
@@ -51,7 +45,11 @@ export class IgxAnimationPlayer {
     constructor(private internalPlayer: IAnimationPlayer) {
         this.internalPlayer.onDone(() => this.onDone());
         const innerRenderer  = (this.internalPlayer as any)._renderer;
-        this._innerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
+            //  We need inner player as Angular.AnimationPlayer.getPosition returns always 0.
+            // To workaround this we are getting the positions from the inner player.
+            //  This is logged in Angular here - https://github.com/angular/angular/issues/18891
+            //  As soon as this is resolved we can remove this hack
+            this._innerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
     }
 
     public init(): void {
@@ -65,7 +63,8 @@ export class IgxAnimationPlayer {
 
     public finish(): void {
         this.internalPlayer.finish();
-    }
+        // TODO: when animation finish angular deletes all onDone handlers. Add handlers again if needed
+        }
 
     public reset(): void {
         this.internalPlayer.reset();
