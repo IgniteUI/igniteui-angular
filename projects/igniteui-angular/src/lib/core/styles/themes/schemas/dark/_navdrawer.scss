@@ -49,8 +49,17 @@ $dark-fluent-navdrawer: extend(
 
 /// Generates a dark bootstrap navdrawer schema.
 /// @type {Map}
+/// @prop {Map} item-hover-background [igx-color: ('grays', 100)] - The item's hover background color.
 /// @requires $bootstrap-navdrawer
-$dark-bootstrap-navdrawer: extend($bootstrap-navdrawer, $dark-base-navdrawer);
+$dark-bootstrap-navdrawer: extend(
+    $bootstrap-navdrawer,
+    $dark-base-navdrawer,
+    (
+        item-hover-background: (
+            igx-color: ('grays', 100),
+        )
+    )
+);
 
 
 /// Generates a dark indigo navdrawer schema.
