@@ -123,14 +123,11 @@ $fluent-list: extend($light-list);
 
 /// Generates a bootstrap list schema.
 /// @type {Map}
-/// @property {Map} header-background [igx-color: ('surface')] - The list header background color.
-///
-/// @property {Map} item-background [igx-color: ('surface')] - The list item background color.
-///
+/// @property {Map} header-background [igx-contrast-color: ('grays', 900)] - The list header background color.
+/// @property {Map} item-background [igx-contrast-color: ('grays', 900)] - The list item background color.
 /// @property {Map} item-text-color [igx-color: ('grays', 900)] - The list item text color.
 /// @property {Map} item-text-color-hover [igx-color: ('grays', 900)] - The list item text color.
 /// @property {Map} item-text-color-active [igx-color: ('grays', 900)] - The active list item text color.
-///
 /// @prop {Number} border-radius [4px] - The border radius used for list component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} item-border-radius [0] - The border radius used for list item. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-color [igx-color: ('grays', 300)] - The list border color.
@@ -151,11 +148,11 @@ $bootstrap-list: extend(
         ),
 
         item-background: (
-            igx-color: ('surface')
+            igx-contrast-color: ('grays', 900)
         ),
 
         header-background: (
-            igx-color: ('surface')
+            igx-contrast-color: ('grays', 900)
         ),
 
         item-text-color: (
