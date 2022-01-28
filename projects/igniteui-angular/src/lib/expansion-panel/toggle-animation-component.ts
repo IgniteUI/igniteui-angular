@@ -32,8 +32,6 @@ export enum ANIMATION_TYPE {
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnDestroy {
-
-
     /** @hidden @internal */
     public openAnimationDone: EventEmitter<void> = new EventEmitter();
     /** @hidden @internal */
@@ -55,8 +53,6 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
 
     /** @hidden @internal */
     public closeAnimationPlayer: IgxAnimationPlayer = null;
-
-
 
     protected destroy$: Subject<void> = new Subject();
     protected players: Map<string, AnimationPlayer> = new Map();
@@ -94,18 +90,15 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         if (!targetElement) { // if no element is passed, there is nothing to animate
             return;
         }
-
         let target = this.getPlayer(type);
         if (!target) {
             target = this.initializePlayer(type, targetElement, callback);
         }
-
         // V.S. Jun 28th, 2021 #9783: player will NOT be initialized w/ null settings
         // events will already be emitted
         if (!target || target.hasStarted()) {
             return;
         }
-
         const targetEmitter = type === ANIMATION_TYPE.OPEN ? this.openAnimationStart : this.closeAnimationStart;
         targetEmitter.emit();
         if (target) {
@@ -131,11 +124,6 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         let oppositePosition = 1;
         if (opposite) {
             oppositePosition = opposite.Position;
-            // if (opposite.hasStarted()) {
-            //     // .getPosition() still returns 0 sometimes, regardless of the fix for https://github.com/angular/angular/issues/18891;
-            //     const renderer = (opposite as any)._renderer;
-            //     oppositePosition = renderer.engine.players[renderer.engine.players.length - 1].getPosition();
-            // }
             this.cleanUpPlayer(oppositeType);
         }
         if (type === ANIMATION_TYPE.OPEN) {
