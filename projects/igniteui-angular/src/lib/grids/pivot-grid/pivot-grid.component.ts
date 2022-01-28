@@ -137,7 +137,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this._pivotConfiguration = value;
         this.notifyChanges(true);
     }
-    
+
     public get pivotConfiguration() {
         return this._pivotConfiguration;
     }
@@ -1145,6 +1145,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     protected autogenerateColumns() {
         let columns = [];
+        this.filterStrategy = this.filterStrategy ?? new DimensionValuesFilteringStrategy();
         const data = this.gridAPI.filterDataByExpressions(this.filteringExpressionsTree);
         this.dimensionDataColumns = this.generateDimensionColumns();
         let fieldsMap;
