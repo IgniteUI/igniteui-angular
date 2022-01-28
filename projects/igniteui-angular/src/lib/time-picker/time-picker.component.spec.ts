@@ -1901,7 +1901,7 @@ describe('IgxTimePicker', () => {
 
         it('Should mask editable input correctly when format contains only hours.', fakeAsync(() => {
             fixture.componentInstance.format = 'hh tt';
-            fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
+            fixture.componentInstance.customDate = new Date();
             fixture.detectChanges();
             const clearTime = dom.queryAll(By.css('.igx-icon'))[1];
 
