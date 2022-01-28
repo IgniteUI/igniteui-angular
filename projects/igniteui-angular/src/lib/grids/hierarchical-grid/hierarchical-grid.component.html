@@ -21,10 +21,10 @@
      (keydown)="navigation.handleNavigation($event)" (dragStop)="selectionService.dragMode = $event"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? null : 'row'"
         [style.height.px]='totalHeight' [style.width.px]='calcWidth' #tbody (scroll)='preventContainerScroll($event)'>
-        <span *ngIf="hasMovableColumns && columnInDrag && pinnedColumns.length <= 0"
+        <span *ngIf="moving && columnInDrag && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-left"></span>
-        <span *ngIf="hasMovableColumns && columnInDrag && pinnedColumns.length > 0"
+        <span *ngIf="moving && columnInDrag && pinnedColumns.length > 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template #pinnedRecordsTemplate>
@@ -58,7 +58,7 @@
         | gridRowPinning:id:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
-            #verticalScrollContainer (chunkPreload)="dataLoading($event)">
+            #verticalScrollContainer (chunkPreload)="dataLoading($event)" (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
             <ng-template
                 [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) ? child_record_template : hierarchical_record_template))'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)' (viewCreated)='viewCreatedHandler($event)'
@@ -93,7 +93,7 @@
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
         <ng-container *ngTemplateOutlet="template"></ng-container>
-        <span *ngIf="hasMovableColumns && columnInDrag" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
+        <span *ngIf="moving && columnInDrag" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
             id="right" class="igx-grid__scroll-on-drag-right"></span>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
         <igc-trial-watermark *ngIf="!this.parent"></igc-trial-watermark>
@@ -102,7 +102,7 @@
         <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
         </igx-circular-bar>
     </div>
-    <span *ngIf="hasMovableColumns && columnInDrag" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
+    <span *ngIf="moving && columnInDrag" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
     <div [hidden]='!hasVerticalScroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollSize" (pointerdown)="$event.preventDefault()">
         <div class="igx-grid__tbody-scrollbar-start" [style.height.px]=' isRowPinningToTop ? pinnedRowHeight : 0'></div>
@@ -118,15 +118,15 @@
     <div igxOverlayOutlet #igxBodyOverlayOutlet="overlay-outlet"></div>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
+<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summaryRowHeight' #tfoot>
     <div tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
      (keydown)="navigation.summaryNav($event)">
-        <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
+        <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summaryRowHeight'
             *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
             [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
             class="igx-grid__summaries" #summaryRow>
         </igx-grid-summary-row>
-        <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summariesHeight'
+        <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summaryRowHeight'
             [style.width.px]="scrollSize"></div>
     </div>
 </div>

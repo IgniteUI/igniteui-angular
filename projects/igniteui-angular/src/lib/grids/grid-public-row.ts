@@ -1,11 +1,10 @@
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IgxEditRow } from './common/crud.service';
+import { IgxAddRow, IgxEditRow } from './common/crud.service';
 import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
 import { IgxGridCell } from './grid-public-cell';
 import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import mergeWith from 'lodash.mergewith';
-import { cloneValue } from '../core/utils';
 import { CellType, GridServiceType, GridType, RowType } from './common/grid.interface';
 
 abstract class BaseRow implements RowType {
@@ -40,6 +39,19 @@ abstract class BaseRow implements RowType {
     }
 
     /**
+     * Gets if this represents add row UI
+     * 
+     * ```typescript
+     * let isAddRow = row.addRowUI;
+     * ```
+     */
+    public get addRowUI(): boolean {
+        return !!this.grid.crudService.row &&
+            this.grid.crudService.row.getClassName() === IgxAddRow.name &&
+            this.grid.crudService.row.id === this.key;
+    }
+
+    /**
      * The data record that populates the row.
      *
      * ```typescript
@@ -48,7 +60,7 @@ abstract class BaseRow implements RowType {
      */
     public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(cloneValue(this._data ?? this.grid.dataView[this.index]),
+            return mergeWith(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
                 this.grid.transactions.getAggregatedValue(this.key, false),
                 (objValue, srcValue) => {
                     if (Array.isArray(srcValue)) {
@@ -352,7 +364,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      */
     public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(cloneValue(this._data ?? this.grid.dataView[this.index]),
+            return mergeWith(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
                 this.grid.transactions.getAggregatedValue(this.key, false),
                 (objValue, srcValue) => {
                     if (Array.isArray(srcValue)) {

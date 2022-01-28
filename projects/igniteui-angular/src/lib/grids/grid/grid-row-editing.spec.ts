@@ -9,7 +9,6 @@ import { IgxGridModule, RowType } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxGridCellComponent } from '../cell.component';
 import { TransactionType, Transaction } from '../../services/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -22,11 +21,13 @@ import {
     IgxGridRowEditingWithoutEditableColumnsComponent,
     IgxGridCustomOverlayComponent,
     IgxGridEmptyRowEditTemplateComponent,
-    VirtualGridComponent
+    VirtualGridComponent,
+    ObjectCloneStrategy
 } from '../../test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CellType } from '../common/grid.interface';
+import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -1410,9 +1411,9 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it(`Moving: Should exit edit mode when moving a column`, () => {
+            grid.moving = true;
             const column = grid.columnList.filter(c => c.field === 'ProductName')[0];
             const targetColumn = grid.columnList.filter(c => c.field === 'ProductID')[0];
-            column.movable = true;
 
             fix.detectChanges();
 
@@ -1793,7 +1794,6 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should properly emit 'rowEditExit' event - Button Click`, () => {
-
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
             spyOn(grid.rowEdit, 'emit').and.callThrough();
 
@@ -2766,7 +2766,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ id: 100, type: 'add', newValue: addRowData });
+            expect(trans.add).toHaveBeenCalledWith({ id: 100, type: 'add', newValue: addRowData});
             expect(grid.data.length).toBe(10);
         });
 
@@ -2788,7 +2788,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ id: 3, type: 'update', newValue: { ProductName: 'Updated Cell' } }, grid.data[2]);
+            expect(trans.add).toHaveBeenCalledWith({ id: 3, type: 'update', newValue: { ProductName: 'Updated Cell' }}, grid.data[2]);
             expect(grid.data.length).toBe(10);
         });
 
@@ -2851,6 +2851,29 @@ describe('IgxGrid - Row Editing #grid', () => {
 
 
             expect(grid.rowList.length).toBeGreaterThan(rowCount);
+        });
+
+        it(`Should be able to clone data with custom clone strategy`, () => {
+            trans = grid.transactions;
+            expect(trans.cloneStrategy).toBeInstanceOf(DefaultDataCloneStrategy);
+
+            grid.dataCloneStrategy = new ObjectCloneStrategy();
+            fix.detectChanges();
+
+            const cell = grid.getCellByColumn(0, 'ProductName');
+            cell.editMode = true;
+            fix.detectChanges();
+
+            cell.editValue = 'New Name';
+            fix.detectChanges();
+            const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
+            doneButtonElement.click();
+            fix.detectChanges();
+
+            trans = grid.transactions;
+            const states = trans.getAggregatedChanges(false);
+            expect(states[0]['newValue']['cloned']).toEqual(true);
+            expect(trans.cloneStrategy).toBeInstanceOf(ObjectCloneStrategy);
         });
     });
 });

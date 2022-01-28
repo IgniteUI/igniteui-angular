@@ -41,7 +41,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
                 data = DataUtil.mergeTransactions(
                     cloneArray(grid.data),
                     grid.transactions.getAggregatedChanges(true),
-                    grid.primaryKey
+                    grid.primaryKey,
+                    grid.dataCloneStrategy
                 );
                 const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === TransactionType.DELETE).map(t => t.id);
                 deletedRows.forEach(rowID => {

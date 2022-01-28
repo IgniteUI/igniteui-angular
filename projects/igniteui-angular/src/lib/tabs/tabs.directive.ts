@@ -1,11 +1,12 @@
 import { AnimationBuilder } from '@angular/animations';
 import {
-    AfterViewInit, ContentChildren, Directive, EventEmitter,
+    AfterViewInit, ChangeDetectorRef, ContentChildren, Directive, EventEmitter,
     Input, OnDestroy, Output, QueryList
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IBaseEventArgs } from '../core/utils';
+import { IgxDirectionality } from '../services/direction/directionality';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabContentBase, IgxTabsBase } from './tabs.base';
 
@@ -119,8 +120,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     private _itemChanges$: Subscription;
 
     /** @hidden */
-    constructor(builder: AnimationBuilder) {
-        super(builder);
+    constructor(builder: AnimationBuilder, cdr: ChangeDetectorRef, public dir: IgxDirectionality) {
+        super(builder, cdr);
     }
 
     /** @hidden */
@@ -293,7 +294,9 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             this.hasPanels &&
             this.currentItem &&
             !this.currentItem.selected) {
-            item.direction = this._selectedIndex > oldSelectedIndex ? Direction.NEXT : Direction.PREV;
+            item.direction = (!this.dir.rtl && this._selectedIndex > oldSelectedIndex) ||
+                (this.dir.rtl && this._selectedIndex < oldSelectedIndex)
+                ? Direction.NEXT : Direction.PREV;
 
             if (this.previousItem && this.previousItem.previous) {
                 this.previousItem.previous = false;

@@ -33,7 +33,7 @@ export class IgxFlatTransactionFactory {
     public create(type: TRANSACTION_TYPE): TransactionService<Transaction, State> {
         switch (type) {
             case (TRANSACTION_TYPE.Base):
-                return new IgxTransactionService();;
+                return new IgxTransactionService();
             default:
                 return new IgxBaseTransactionService();
         }

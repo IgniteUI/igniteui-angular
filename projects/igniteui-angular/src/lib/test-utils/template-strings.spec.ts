@@ -188,26 +188,34 @@ export class ColumnDefinitions {
     `;
 
     public static columnTemplates = `
-    <igx-column field="ID">
+    <igx-column field="ID" [hasSummary]="true">
         <ng-template igxHeader>
             <span class="header">Header text</span>
         </ng-template>
 
         <ng-template igxCell>
             <span class="cell">Cell text</span>
+        </ng-template>
+
+        <ng-template igxSummary>
+            <span class="summary">Summary text</span>
         </ng-template>
 
         <ng-template igxFooter>
             <span class="footer">Footer text</span>
         </ng-template>
     </igx-column>
-    <igx-column field="Name">
+    <igx-column field="Name" [hasSummary]="true">
         <ng-template igxHeader>
             <span class="header">Header text</span>
         </ng-template>
 
         <ng-template igxCell>
             <span class="cell">Cell text</span>
+        </ng-template>
+
+        <ng-template igxSummary>
+            <span class="summary">Summary text</span>
         </ng-template>
 
         <ng-template igxFooter>
@@ -345,7 +353,7 @@ export class ColumnDefinitions {
     `;
 
     public static movableColumns = `
-        <igx-column [movable]="true" field="ID" width="150px"
+        <igx-column field="ID" width="150px"
                     [resizable]="isResizable"
                     [editable]="isEditable"
                     [sortable]="isSortable"
@@ -353,19 +361,19 @@ export class ColumnDefinitions {
                     [groupable]="isGroupable"
                     [filterable]="isFilterable">
         </igx-column>
-        <igx-column [movable]="true" field="Name" width="150px"
+        <igx-column field="Name" width="150px"
                     [resizable]="isResizable"
                     [editable]="isEditable"
                     [sortable]="isSortable"
                     [filterable]="isFilterable">
         </igx-column>
-        <igx-column [movable]="false" field="LastName" width="150px"
+        <igx-column field="LastName" width="150px"
                     [resizable]="isResizable"
                     [editable]="isEditable"
                     [sortable]="isSortable"
                     [filterable]="isFilterable">
         </igx-column>
-        <igx-column [movable]="true" field="Region" width="150px"
+        <igx-column field="Region" width="150px"
                     [resizable]="isResizable"
                     [editable]="isEditable"
                     [sortable]="isSortable"
@@ -374,17 +382,17 @@ export class ColumnDefinitions {
     `;
 
     public static multiColHeadersColumns = `
-        <igx-column [width]="'100px'" [movable]="true" [resizable]="true" [pinned]="isPinned"
+        <igx-column [width]="'100px'" [resizable]="true" [pinned]="isPinned"
                     [sortable]="true" [filterable]="true" field="Missing"></igx-column>
-        <igx-column-group [movable]="true" header="General Information">
-            <igx-column [movable]="true" [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
-            <igx-column-group [movable]="true" header="Person Details">
-                <igx-column [movable]="true" [width]="'100px'" field="ContactName"></igx-column>
-                <igx-column [movable]="true" [filterable]="true" [sortable]="true" field="ContactTitle"></igx-column>
+        <igx-column-group  header="General Information">
+            <igx-column [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
+            <igx-column-group  header="Person Details">
+                <igx-column [width]="'100px'" field="ContactName"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" field="ContactTitle"></igx-column>
             </igx-column-group>
         </igx-column-group>
-        <igx-column [movable]="true" [resizable]="true" field="ID"></igx-column>
-        <igx-column-group [movable]="true" header="Address Information">
+        <igx-column [resizable]="true" field="ID"></igx-column>
+        <igx-column-group  header="Address Information">
             <igx-column field="Country" [width]="'90px'">
                 <ng-template igxHeader let-column>
                     {{ column.field }}
@@ -393,39 +401,39 @@ export class ColumnDefinitions {
                     {{val}}
                 </ng-template>
             </igx-column>
-            <igx-column [movable]="true" [width]="'150px'" field="Region"></igx-column>
-            <igx-column [movable]="true" field="City"></igx-column>
-            <igx-column [movable]="true" field="Address"></igx-column>
+            <igx-column [width]="'150px'" field="Region"></igx-column>
+            <igx-column field="City"></igx-column>
+            <igx-column field="Address"></igx-column>
         </igx-column-group>
   `;
 
     public static multiColHeadersWithGroupingColumns = `
-  <igx-column [width]="'100px'" [movable]="true" [resizable]="true" [pinned]="false"
+  <igx-column [width]="'100px'" [resizable]="true" [pinned]="false"
               [sortable]="true" [filterable]="true" field="Missing"></igx-column>
-  <igx-column-group [movable]="true" header="General Information" [groupable]="true"  [pinned]="isPinned">
-      <igx-column [movable]="true" [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
-      <igx-column-group [movable]="true" header="Person Details">
-          <igx-column [movable]="true" [width]="'100px'" field="ContactName"></igx-column>
-          <igx-column [movable]="true" [width]="'100px'"[filterable]="true" [sortable]="true" field="ContactTitle"></igx-column>
+  <igx-column-group header="General Information" [groupable]="true"  [pinned]="isPinned">
+      <igx-column [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
+      <igx-column-group header="Person Details">
+          <igx-column [width]="'100px'" field="ContactName"></igx-column>
+          <igx-column [width]="'100px'"[filterable]="true" [sortable]="true" field="ContactTitle"></igx-column>
       </igx-column-group>
   </igx-column-group>
-  <igx-column [movable]="true" [resizable]="true" field="ID" [width]="'100px'" [groupable]="true"></igx-column>
+  <igx-column [resizable]="true" field="ID" [width]="'100px'" [groupable]="true"></igx-column>
 `;
 
     public static contactInfoGroupableColumns = `
-    <igx-column [movable]="true" [hasSummary]="true" [resizable]="true"
+    <igx-column [hasSummary]="true" [resizable]="true"
                 [pinned]="true" field="Missing"></igx-column>
-    <igx-column-group [movable]="true" [pinned]="false" header="General Information">
-        <igx-column [movable]="true" [filterable]="true" [sortable]="true"
+    <igx-column-group [pinned]="false" header="General Information">
+        <igx-column [filterable]="true" [sortable]="true"
                 [resizable]="true" field="CompanyName"></igx-column>
-        <igx-column-group [movable]="true" header="Person Details">
-            <igx-column [movable]="true" [pinned]="false" [filterable]="true"
+        <igx-column-group header="Person Details">
+            <igx-column [pinned]="false" [filterable]="true"
                 [sortable]="true" [resizable]="true" field="ContactName"></igx-column>
-            <igx-column [movable]="true" [hasSummary]="true" [filterable]="true"
+            <igx-column [hasSummary]="true" [filterable]="true"
                 [sortable]="true" [resizable]="true" field="ContactTitle"></igx-column>
         </igx-column-group>
     </igx-column-group>
-    <igx-column field="ID" [movable]="true" [hasSummary]="true" [resizable]="true"
+    <igx-column field="ID" [hasSummary]="true" [resizable]="true"
                 [editable]="true"></igx-column>
     `;
 
@@ -465,13 +473,13 @@ export class ColumnDefinitions {
     `;
 
     public static multiColHeadersExportColumns = `
-        <igx-column [movable]="true" [resizable]="true" field="ID" [filterable]="false"></igx-column>
-        <igx-column-group [movable]="true" header="General Information" [collapsible]="true" [expanded]="true">
-            <igx-column [movable]="true" field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
-            <igx-column-group [movable]="true" header="Personal Details" [collapsible]="true" [expanded]="false"
+        <igx-column [resizable]="true" field="ID" [filterable]="false"></igx-column>
+        <igx-column-group header="General Information" [collapsible]="true" [expanded]="true">
+            <igx-column field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column-group header="Personal Details" [collapsible]="true" [expanded]="false"
                 [visibleWhenCollapsed]="false">
-                <igx-column [movable]="true" field="ContactName"></igx-column>
-                <igx-column [movable]="true" field="ContactTitle"></igx-column>
+                <igx-column field="ContactName"></igx-column>
+                <igx-column field="ContactTitle"></igx-column>
             </igx-column-group>
         </igx-column-group>
         <igx-column-group header="Address Information">

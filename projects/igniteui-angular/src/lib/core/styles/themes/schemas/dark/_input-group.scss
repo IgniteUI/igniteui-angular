@@ -22,6 +22,11 @@ $dark-input-group: $base-dark-input-group;
 /// @type {Map}
 /// @prop {Map} input-prefix-background [igx-color: ('grays', 100)] - The background color of an input prefix of type line, box and border.
 /// @prop {Map} input-suffix-background [igx-color: ('grays', 100)] - The background color of an input sufix of type line, box and border.
+/// @prop {Map} box-background [igx-color: ('grays', 100)] - The background color of an input group of type box.
+/// @prop {Map} border-color [igx-color: ('grays', 500)] - The border color for input groups of type border and fluent.
+/// @prop {Map} hover-border-color [igx-color: ('grays', 800)] - The hover input border for input groups of type border and fluent.
+/// @prop {Map} focused-border-color [igx-color: ('grays', 500)] - The focused input border color for input groups of type border and fluent.
+/// @prop {Map} disabled-border-color [igx-color: ('grays', 500)] - The disabled border color for input groups of type border and fluent.
 /// @requires {function} extend
 /// @requires $fluent-input-group
 /// @requires $base-dark-input-group
@@ -30,27 +35,74 @@ $dark-fluent-input-group: extend(
     $base-dark-input-group,
     (
         input-prefix-background: (
-            igx-color: ('grays', 50)
+            igx-color: ('grays', 100)
         ),
 
         input-suffix-background: (
-            igx-color: ('grays', 50)
+            igx-color: ('grays', 100)
         ),
 
         box-background: (
-            igx-color: ('grays', 50),
+            igx-color: ('grays', 100),
+        ),
+
+        border-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        hover-border-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        focused-border-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        disabled-border-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        idle-bottom-line-color: (
+            igx-color: ('grays', 400)
+        ),
+
+        hover-bottom-line-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        focused-bottom-line-color: (
+            igx-color: ('primary', 600)
+        ),
+
+        interim-bottom-line-color: (
+            igx-color: ('primary', 500, .12),
+        ),
+
+        disabled-bottom-line-color: (
+            igx-color: ('grays', 400)
         ),
     )
 );
 
 /// Generates a dark bootstrap input-group schema based on a mix of $bootstrap-input-group and $base-dark-input-group.
 /// @type {Map}
+/// @prop {Color} input-prefix-background [igx-color: ('grays', 100)] - The background color of an input prefix of type line, box, border and fluent.
+/// @prop {Color} input-suffix-background [ igx-color: ('grays', 100)] - The background color of an input suffix of type line, box, border and fluent.
 /// @requires {function} extend
 /// @requires $bootstrap-input-group
 /// @requires $base-dark-input-group
 $dark-bootstrap-input-group: extend(
+    $base-dark-input-group,
     $bootstrap-input-group,
-    $base-dark-input-group
+    (
+        input-prefix-background: (
+            igx-color: ('grays', 100)
+        ),
+
+        input-suffix-background: (
+            igx-color: ('grays', 100)
+        ),
+    )
 );
 
 /// Generates an dark indigo input-group schema
@@ -97,7 +149,6 @@ $dark-indigo-input-group: extend(
         focused-bottom-line-color: (
             igx-contrast-color: ('surface')
         ),
-
     )
 );
 

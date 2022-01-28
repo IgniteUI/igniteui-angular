@@ -204,7 +204,7 @@ export class TabsTestSelectedTabComponent {
 }
 
 @Component({
-    template:`
+    template: `
         <igx-tabs class="tabsClass">
             <igx-tab-item>
                 <igx-tab-header><span igxTabHeaderLabel>Tab1</span></igx-tab-header>
@@ -220,7 +220,7 @@ export class TabsTestCustomStylesComponent {
 }
 
 @Component({
-    template:`
+    template: `
         <button igxButton="flat" [igxToggleAction]="userProfile">
             Click
         </button>
@@ -516,7 +516,7 @@ export class TabsContactsComponent extends TabsTestComponent {
         </div>`
 })
 export class AddingSelectedTabComponent {
-    @ViewChild(IgxTabsComponent, {static: true}) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
     public collection: any[];
     constructor() {
         this.collection = [
@@ -527,6 +527,36 @@ export class AddingSelectedTabComponent {
 
     public addTab(num: number) {
         this.collection.forEach(t => t.selected = false);
-        this.collection.push({name: 'tab' + num, selected: true });
+        this.collection.push({ name: 'tab' + num, selected: true });
+    }
+}
+
+@Component({
+    template: `
+    <div #wrapperDiv>
+            <igx-tabs>
+                <igx-tab-item *ngFor="let tab of collection">
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-content></igx-tab-content>
+                </igx-tab-item>
+            </igx-tabs>
+        </div>`
+})
+export class TabsRtlComponent {
+    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
+    public collection: any[];
+    constructor() {
+        this.collection = [
+            { name: 'tab1', selected: true },
+            { name: 'tab2', selected: false },
+            { name: 'tab3', selected: false },
+            { name: 'tab4', selected: false },
+            { name: 'tab5', selected: false },
+            { name: 'tab6', selected: false },
+            { name: 'tab7', selected: false },
+            { name: 'tab8', selected: false },
+            { name: 'tab9', selected: false },
+        ];
     }
 }
