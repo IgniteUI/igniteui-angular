@@ -23,6 +23,9 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IgxTabs` have full right-to-left (RTL) support.
 
+- `IgxExcelExporterService`
+    - Added support for exporting the grids' headers by default when the data is empty. This behavior can be controlled by the `alwaysExportHeaders` option of the IgxExcelExporterOptions object.
+
 ### General
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`

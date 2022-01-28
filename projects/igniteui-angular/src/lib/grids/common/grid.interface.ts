@@ -628,6 +628,7 @@ export interface PivotGridType extends GridType {
     showPivotConfigurationUI: boolean;
     columnDimensions: IPivotDimension[];
     rowDimensions: IPivotDimension[];
+    rowDimensionResizing: boolean;
     values: IPivotValue[];
     filterDimensions: IPivotDimension[];
     dimensionDataColumns: ColumnType[];
@@ -639,6 +640,7 @@ export interface PivotGridType extends GridType {
     dimensionsChange: EventEmitter<IDimensionsChange>;
     valuesChange: EventEmitter<IValuesChange>;
     pivotKeys: IPivotKeys;
+    hasMultipleValues: boolean;
 }
 export interface GridSVGIcon {
     name: string;

@@ -557,6 +557,16 @@
             @extend %igx-grid__tr-pivot !optional
         }
 
+        @include e(pivot-filter-toggle) {
+            @extend %igx-grid__pivot-filter-toggle !optional
+        }
+
+        @include e(pivot-empty-chip-area) {
+            @extend %igx-grid__pivot-empty-chip-area !optional
+        }
+
+
+
         @include e(tr-pivot, $m: 'row-area') {
             @extend %igx-grid__tr-pivot--row-area !optional
         }
@@ -583,6 +593,14 @@
 
         @include e(tr-header-row) {
             @extend %igx-grid__tr-header-row !optional;
+        }
+
+        @include e(tr-pivot, $m: 'columnDimensionLeaf') {
+            @extend %igx-grid__tr-pivot--columnDimensionLeaf !optional
+        }
+
+        @include e(tr-pivot, $m: 'columnMultiRowSpan') {
+            @extend %igx-grid__tr-pivot--columnMultiRowSpan !optional
         }
 
         @include e(tr-pivot-toggle-icons) {

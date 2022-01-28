@@ -75,7 +75,11 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     ) {
         super(ref, cdr);
     }
-    protected rowDimensionData: IPivotDimensionData;
+
+    /**
+     * @hidden @internal
+     */
+    public rowDimensionData: IPivotDimensionData;
 
     public get rowDimensionColumn() {
         return this.rowDimensionData?.column;
@@ -183,6 +187,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         ref.instance.field = field;
         ref.instance.header = header;
         ref.instance.width = this.grid.resolveRowDimensionWidth(this.dimension) + 'px';
+        ref.instance.resizable = this.grid.rowDimensionResizing;
         (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows.length;
         if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.rowData, this.grid.pivotKeys)) {
             ref.instance.headerTemplate = this.headerTemplate;

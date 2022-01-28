@@ -30,7 +30,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IPivotConfiguration, IPivotDimension, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
@@ -51,7 +51,7 @@ import { DropPosition } from '../moving/moving.service';
 import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
-import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
@@ -65,6 +65,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { flatten } from '@angular/compiler';
+import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -82,6 +83,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         { provide: IGX_GRID_BASE, useExisting: IgxPivotGridComponent },
         { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
         IgxPivotGridNavigationService,
+        IgxPivotColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
     ]
@@ -130,7 +132,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * <igx-pivot-grid [pivotConfiguration]="config"></igx-pivot-grid>
      * ```
      */
-    public pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
+    public set pivotConfiguration(value :IPivotConfiguration) {
+        this._pivotConfiguration = value;
+        this.notifyChanges(true);
+    }
+    
+    public get pivotConfiguration() {
+        return this._pivotConfiguration;
+    }
 
     @Input()
     /**
@@ -175,6 +184,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @ViewChild('headerTemplate', { read: TemplateRef, static: true })
     public headerTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild(IgxPivotGridColumnResizerComponent)
+    public resizeLine: IgxPivotGridColumnResizerComponent;
 
     /**
      * @hidden @interal
@@ -338,9 +353,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return false;
     }
 
+    /**
+     * @hidden @internal
+     */
+    public rowDimensionResizing = true;
+
     protected _defaultExpandState = false;
     private _data;
     private _filteredData;
+    private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
 
 
@@ -528,7 +549,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     constructor(
         public selectionService: IgxGridSelectionService,
-        public colResizingService: IgxColumnResizingService,
+        public colResizingService: IgxPivotColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         protected transactionFactory: IgxFlatTransactionFactory,
         elementRef: ElementRef<HTMLElement>,
@@ -648,6 +669,20 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         columnValues = flatData.map(record => record['value']);
         done(columnValues);
         return;
+    }
+
+    /** @hidden @internal */
+    public createFilterESF(dropdown: any, column: ColumnType, options: OverlaySettings, shouldReatach: boolean) {
+        options.outlet = this.outlet;
+        if (dropdown) {
+            dropdown.initialize(column, this.overlayService);
+            if (shouldReatach) {
+                const id = this.overlayService.attach(dropdown.element, options);
+                dropdown.overlayComponentId = id;
+                return { id, ref: undefined };
+            }
+            return {id: dropdown.overlayComponentId, ref: undefined};
+        }
     }
 
     /** @hidden */
@@ -1076,6 +1111,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
+    /**
+    * @hidden
+    */
+    public get hasMultipleValues() {
+        return this.values.length > 1;
+    }
+
     protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
         groupColumn.hidden = state;
         this.columnGroupStates.set(groupColumn.field, state);
@@ -1118,8 +1160,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return dvl < this._defaultTargetRecordNumber ? 0 : this.defaultTargetBodyHeight;
     }
 
-    protected get hasMultipleValues() {
-        return this.values.length > 1;
+    protected horizontalScrollHandler(event) {
+        const scrollLeft = event.target.scrollLeft;
+        this.theadRow.headerContainers.forEach(headerForOf => {
+            headerForOf.onHScroll(scrollLeft);
+        });
+        super.horizontalScrollHandler(event);
     }
 
     /**

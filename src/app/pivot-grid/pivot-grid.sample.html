@@ -10,6 +10,7 @@
             <button igxButton [disabled]="grid1.displayDensity === compact" (click)="setDensity('compact')">Compact</button>
         </igx-buttongroup>
     </div>
+    <button igxButton (click)="setRowDimWidth(0, '400px')">ResizeRowDim</button>
     <button (click)='autoSizeRow(0)'>AutoSize Row 0</button>
     <button (click)='autoSizeRow(1)'>AutoSize Row 1</button>
 </div>

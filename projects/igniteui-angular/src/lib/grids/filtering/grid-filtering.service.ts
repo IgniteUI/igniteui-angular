@@ -35,11 +35,11 @@ export class IgxFilteringService implements OnDestroy {
 
     private columnsWithComplexFilter = new Set<string>();
     private areEventsSubscribed = false;
-    private destroy$ = new Subject<boolean>();
+    protected destroy$ = new Subject<boolean>();
     private isFiltering = false;
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private columnStartIndex = -1;
-    private _filterMenuOverlaySettings: OverlaySettings = {
+    protected _filterMenuOverlaySettings: OverlaySettings = {
         closeOnEscape: true,
         closeOnOutsideClick: true,
         modal: false,
@@ -50,11 +50,11 @@ export class IgxFilteringService implements OnDestroy {
         }),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
-    private lastActiveNode;
+    protected lastActiveNode;
 
     constructor(
         private iconService: IgxIconService,
-        private _overlayService: IgxOverlayService,
+        protected _overlayService: IgxOverlayService,
     ) { }
 
     public ngOnDestroy(): void {

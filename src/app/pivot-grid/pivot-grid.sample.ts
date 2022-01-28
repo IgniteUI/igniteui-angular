@@ -82,6 +82,7 @@ export class PivotGridSampleComponent {
             memberFunction: () => 'All',
             memberName: 'AllProducts',
             enabled: true,
+            width: '25%',
             childLevel: {
                 memberFunction: (data) => data.ProductCategory,
                 memberName: 'ProductCategory',
@@ -103,11 +104,14 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-            this.dimensions[0]
+            this.dimensions[1]
         ],
         rows: [
-            this.dimensions[1],
-            this.dimensions[2]
+            this.dimensions[2],
+            {
+                memberName: 'City',
+                enabled: true,
+            },
         ],
         values: [
             {
@@ -225,5 +229,12 @@ export class PivotGridSampleComponent {
 
     public autoSizeRow(ind) {
         this.grid1.autoSizeRowDimension(this.pivotConfigHierarchy.rows[ind]);
+    }
+
+    public setRowDimWidth(rowDimIndex, widthValue) {
+        const newPivotConfig = {...this.pivotConfigHierarchy};
+        newPivotConfig.rows[rowDimIndex].width = widthValue;
+
+        this.grid1.pivotConfiguration = newPivotConfig;
     }
 }
