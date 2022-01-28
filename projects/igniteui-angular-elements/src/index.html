@@ -7,7 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
-<body>
-  <app-root></app-root>
+<body class="igx-typography">
+  <igc-grid id="grid1">
+  </igc-grid>
+  <script src="assets/nw-products.js"></script>
+  <script>
+    let grid = document.getElementById('grid1');
+    grid.autoGenerate = true;
+    grid.data = northwindProducts;
+  </script>
 </body>
 </html>

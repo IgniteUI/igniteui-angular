@@ -1062,7 +1062,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted before the grid's data view is changed because of a data operation, rebinding, etc.
-     * 
+     *
      * @example
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanging)='handleDataChangingEvent()'></igx-grid>
@@ -1073,7 +1073,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
-     * 
+     *
      * @example
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanged)='handleDataChangedEvent()'></igx-grid>
@@ -1081,7 +1081,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public dataChanged = new EventEmitter<any>();
- 
 
     /**
      * @hidden @internal
@@ -2362,10 +2361,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @HostBinding('attr.class')
     public get hostClass(): string {
-        const classes = [this.getComponentDensityClass('igx-grid')];
-        // The custom classes should be at the end.
-        classes.push(this.class);
-        return classes.join(' ');
+        if (this._class === '') {
+            const classes = [this.getComponentDensityClass('igx-grid')];
+            // The custom classes should be at the end.
+            if (this.class !== '') {
+                classes.push(this.class);
+            }
+            this._class = classes.join(' ');
+
+        }
+        return this._class;
     }
 
     public get bannerClass(): string {
@@ -2848,6 +2853,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
     private _dataCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
+    private _class = '';
 
     /**
      * @hidden @internal
