@@ -59,13 +59,13 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    @ViewChild('list', { read: IgxListComponent, static: true })
+    @ViewChild('list', { read: IgxListComponent, static: false })
     public list: IgxListComponent;
 
     /**
      * @hidden @internal
      */
-     @ViewChild('tree', { read: IgxTreeComponent, static: true })
+     @ViewChild('tree', { read: IgxTreeComponent, static: false })
      public tree: IgxTreeComponent;
 
     /**

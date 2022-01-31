@@ -77,7 +77,7 @@ import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-s
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxColumnResizingService } from './resizing/resizing.service';
-import { IFilteringStrategy } from '../data-operations/filtering-strategy';
+import { BaseFilteringStrategy, FilteringStrategy } from '../data-operations/filtering-strategy';
 import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective,
     IgxHeaderCollapseIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
@@ -2061,12 +2061,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public get filterStrategy(): IFilteringStrategy {
-        return this._filteringStrategy;
+    public get filterStrategy(): BaseFilteringStrategy {
+        return this._filterStrategy;
     }
 
-    public set filterStrategy(classRef: IFilteringStrategy) {
-        this._filteringStrategy = classRef;
+    public set filterStrategy(classRef: BaseFilteringStrategy) {
+        this._filterStrategy = classRef;
     }
 
     /**
@@ -2729,6 +2729,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _userOutletDirective: IgxOverlayOutletDirective;
     protected _transactions: TransactionService<Transaction, State>;
     protected _batchEditing = false;
+    protected _filterStrategy = new FilteringStrategy() as BaseFilteringStrategy;
 
     /** @hidden @internal */
     public get paginator() {
@@ -2754,7 +2755,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _isLoading = false;
     private _locale: string;
     private overlayIDs = [];
-    private _filteringStrategy: IFilteringStrategy;
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
 

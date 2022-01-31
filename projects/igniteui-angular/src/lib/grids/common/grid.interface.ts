@@ -19,7 +19,7 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { IgxCell, IgxEditRow } from './crud.service';
 import { GridSelectionRange } from './types';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
-import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { BaseFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { DropPosition, IgxColumnMovingService } from '../moving/moving.service';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { Observable, Subject } from 'rxjs';
@@ -488,7 +488,7 @@ export interface GridType extends IGridDataBindable {
     sortStrategy: IGridSortingStrategy;
     groupStrategy?: IGridGroupingStrategy;
     filteringLogic: FilteringLogic;
-    filterStrategy: IFilteringStrategy;
+    filterStrategy: BaseFilteringStrategy;
     allowAdvancedFiltering: boolean;
     sortingExpressions: ISortingExpression[];
     sortingExpressionsChange: EventEmitter<ISortingExpression[]>;
