@@ -777,7 +777,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get values() {
-        return this.pivotConfiguration.values.filter(x => x.enabled);
+        return this.pivotConfiguration.values.filter(x => x.enabled) || [];
     }
 
     public toggleColumn(col: IgxColumnComponent) {
@@ -1076,6 +1076,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
         this.pipeTrigger++;
         this.dimensionsChange.emit({ dimensions: targetCollection, dimensionCollectionType: targetCollectionType });
+        if (targetCollectionType === PivotDimensionType.Filter) {
+            this.reflow();
+        }
     }
 
     /**
@@ -1091,6 +1094,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * This parameter is optional. If not set it will add it to the end of the collection.
      */
     public moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number) {
+        const prevCollectionType = this.getDimensionType(dimension);
+        if (prevCollectionType === null) return;
         // remove from old collection
         this.removeDimension(dimension);
         // add to target
@@ -1110,6 +1115,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public removeDimension(dimension: IPivotDimension) {
         const prevCollectionType = this.getDimensionType(dimension);
+        if (prevCollectionType === null) return;
         const prevCollection = this.getDimensionsByType(prevCollectionType);
         const currentIndex = prevCollection.indexOf(dimension);
         prevCollection.splice(currentIndex, 1);
@@ -1134,6 +1140,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public toggleDimension(dimension: IPivotDimension) {
         const dimType = this.getDimensionType(dimension);
+        if (dimType === null) return;
         const collection = this.getDimensionsByType(dimType);
         dimension.enabled = !dimension.enabled;
         if (dimType === PivotDimensionType.Column) {
@@ -1184,6 +1191,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * This parameter is optional. If not set it will add it to the end of the collection.
      */
     public moveValue(value: IPivotValue, index?: number) {
+        if (this.pivotConfiguration.values.indexOf(value) === -1) return;
         // remove from old index
         this.removeValue(value);
         // add to new
@@ -1204,10 +1212,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public removeValue(value: IPivotValue,) {
         const values = this.pivotConfiguration.values;
         const currentIndex = values.indexOf(value);
-        values.splice(currentIndex, 1);
-        this.setupColumns();
-        this.pipeTrigger++;
-        this.valuesChange.emit({ values });
+        if (currentIndex !== -1) {
+            values.splice(currentIndex, 1);
+            this.setupColumns();
+            this.pipeTrigger++;
+            this.valuesChange.emit({ values });
+        }
     }
 
     /**
@@ -1221,6 +1231,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @param value The value to be toggled.
      */
     public toggleValue(value: IPivotValue) {
+        if (this.pivotConfiguration.values.indexOf(value) === -1) return;
         value.enabled = !value.enabled;
         this.setupColumns();
         this.pipeTrigger++;
@@ -1255,7 +1266,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
         return PivotUtil.flatten(this.rowDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
-            PivotUtil.flatten(this.columnDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Column : PivotDimensionType.Filter;
+            PivotUtil.flatten(this.columnDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Column :
+            PivotUtil.flatten(this.columnDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Filter : null;
     }
 
     protected getLargesContentWidth(contents: ElementRef[]): string {
