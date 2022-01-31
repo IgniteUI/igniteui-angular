@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxLinearProgressBarComponent, IgxProgressBarModule, toPercent } from './progressbar.component';
+import { IgxLinearProgressBarComponent, toPercent } from './progressbar.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
@@ -17,7 +17,7 @@ describe('IgxLinearBar', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [ IgxProgressBarModule ]
+            declarations: [IgxLinearProgressBarComponent]
         })
         .compileComponents();
     }));
