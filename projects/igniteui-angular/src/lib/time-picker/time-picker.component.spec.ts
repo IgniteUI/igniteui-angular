@@ -1906,6 +1906,7 @@ describe('IgxTimePicker', () => {
             const clearTime = dom.queryAll(By.css('.igx-icon'))[1];
 
             UIInteractions.simulateClickAndSelectEvent(clearTime);
+            tick();
             fixture.detectChanges();
             input.nativeElement.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
