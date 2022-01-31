@@ -757,8 +757,8 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             }, rowChipArea, PivotDimensionType.Row);
             pivotGrid.cdr.detectChanges();
             //check chip order is updated.
-            expect(rowChipArea.chipsList.toArray()[0]).toBe(rowChip2);
-            expect(rowChipArea.chipsList.toArray()[1]).toBe(rowChip1);
+            expect(rowChipArea.chipsList.toArray()[0].id).toBe(rowChip2.id);
+            expect(rowChipArea.chipsList.toArray()[1].id).toBe(rowChip1.id);
             // check dimension order is updated.
             expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['SellerName', 'ProductCategory']);
         });
@@ -807,8 +807,8 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             }, colChipArea, PivotDimensionType.Column);
             pivotGrid.cdr.detectChanges();
             //check chip order is updated.
-            expect(colChipArea.chipsList.toArray()[0]).toBe(colChip2);
-            expect(colChipArea.chipsList.toArray()[1]).toBe(colChip1);
+            expect(colChipArea.chipsList.toArray()[0].id).toBe(colChip2.id);
+            expect(colChipArea.chipsList.toArray()[1].id).toBe(colChip1.id);
             // check dimension order is updated.
             expect(pivotGrid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['SellerName', 'Country']);
             // check columns reflect new order of dims
@@ -846,8 +846,8 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             }, valuesChipArea);
             pivotGrid.cdr.detectChanges();
             //check chip order is updated.
-            expect(valuesChipArea.chipsList.toArray()[0]).toBe(valChip2);
-            expect(valuesChipArea.chipsList.toArray()[1]).toBe(valChip1);
+            expect(valuesChipArea.chipsList.toArray()[0].id).toBe(valChip2.id);
+            expect(valuesChipArea.chipsList.toArray()[1].id).toBe(valChip1.id);
             // check dimension order is updated.
             expect(pivotGrid.pivotConfiguration.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
 
