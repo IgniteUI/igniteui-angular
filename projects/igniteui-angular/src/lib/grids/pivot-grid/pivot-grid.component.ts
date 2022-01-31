@@ -1043,7 +1043,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (this.getDimensionType(dimension) === PivotDimensionType.Row) {
             const relatedDims = PivotUtil.flatten([dimension]).map(x => x.memberName);
             const content = this.rowDimensionContentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
-            const headers = flatten(content.map(x => x.headerGroups.toArray())).map(x => x.header.refInstance);
+            const headers = content.map(x => x.headerGroups.toArray()).flat().map(x => x.header && x.header.refInstance);
             const autoWidth = this.getLargesContentWidth(headers);
             dimension.width = autoWidth;
             this.pipeTrigger++;
