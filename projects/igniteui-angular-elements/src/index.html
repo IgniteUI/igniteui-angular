@@ -8,12 +8,20 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body class="igx-typography">
-  <igc-grid id="grid1">
-  </igc-grid>
+  <igx-grid id="grid1">
+      <igx-column></igx-column>
+    <igx-paginator></igx-paginator>
+  </igx-grid>
+  <!-- <igc-paginator></igc-paginator> -->
   <script src="assets/nw-products.js"></script>
   <script>
     let grid = document.getElementById('grid1');
     grid.autoGenerate = true;
+    grid.allowFiltering = true;
+    grid.filterMode = 'excelStyleFilter';
+    grid.displayDensity = 'compact';
+    grid.moving = true;
+    grid.paging = true; // This won't work at the moment
     grid.data = northwindProducts;
   </script>
 </body>

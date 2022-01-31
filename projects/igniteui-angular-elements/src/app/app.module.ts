@@ -19,7 +19,10 @@ export class AppModule {
 
   ngDoBootstrap() {
     const grid = createCustomElement(IgxGridComponent, { injector: this.injector });
-    customElements.define("igc-grid", grid);
+    customElements.define("igx-grid", grid);
+
+    // const pager = createCustomElement(IgxPaginatorComponent, { injector: this.injector });
+    // customElements.define("igc-paginator", pager);
   }
 
 }

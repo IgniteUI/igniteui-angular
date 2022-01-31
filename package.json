@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open --configuration hmr",
+    "start:elements": "ng serve --project igniteui-angular-elements",
     "build": "ng build",
     "test": "ng test igniteui-angular",
     "lint": "ng lint",
