@@ -2882,6 +2882,15 @@
         %grid-cell-header {
             padding: 0 rem(4px) !important;
             min-height: rem(24px) !important;
+            height: rem(24px);
+        }
+
+        %grid-cell-header {
+            > * {
+                line-height: normal;
+                align-self: initial;
+                max-height: 100%;
+            }
         }
     }
 
