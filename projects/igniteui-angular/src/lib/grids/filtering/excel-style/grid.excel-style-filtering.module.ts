@@ -102,9 +102,6 @@ import { IgxTreeModule } from '../../../tree/public_api';
         IgxDateTimeEditorModule,
         IgxTreeModule
     ],
-    entryComponents: [
-        IgxGridExcelStyleFilteringComponent
-    ],
     providers: [
         IgxSelectionAPIService
     ]

@@ -61,7 +61,8 @@
         | treeGridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
-            [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer>
+            [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
+            (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)'
                 (cachedViewLoaded)='cachedViewLoaded($event)'>
