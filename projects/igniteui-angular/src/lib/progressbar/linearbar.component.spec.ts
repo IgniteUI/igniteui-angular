@@ -44,7 +44,7 @@ describe('IgxLinearBar', () => {
         expect(progress.value).toBe(defaultValue);
     });
 
-    it('should initialize linearProgressbar with default values', () => {
+    it('should initialize linearProgressbar with non-default values', () => {
         const domProgress = progress.element.nativeElement;
         const defaultMaxValue = 100;
         const defaultValue = 0;
