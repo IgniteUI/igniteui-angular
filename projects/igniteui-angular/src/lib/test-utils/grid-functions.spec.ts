@@ -992,6 +992,14 @@ export class GridFunctions {
         }
         return excelMenu;
     }
+    public static getExcelStyleFilteringComponents(fix, grid = 'igx-pivot-grid') {
+        const gridNativeElement = fix.debugElement.query(By.css(grid)).nativeElement;
+        let excelMenus = gridNativeElement.querySelectorAll(ESF_MENU_CLASS);
+        if (!excelMenus) {
+            excelMenus = fix.nativeElement.querySelector(ESF_MENU_CLASS);
+        }
+        return excelMenus;
+    }
     public static getExcelStyleFilteringCheckboxes(fix, menu = null, grid = 'igx-grid'): HTMLElement[] {
         const searchComp = GridFunctions.getExcelStyleSearchComponent(fix, menu, grid);
         return GridFunctions.sortNativeElementsVertically(Array.from(searchComp.querySelectorAll(CHECKBOX_INPUT_CSS_CLASS)));
