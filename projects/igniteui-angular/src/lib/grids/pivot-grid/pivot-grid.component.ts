@@ -54,7 +54,7 @@ import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
-import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
+import { DisplayDensity, DisplayDensityToken, IDensityChangedEventArgs, IDisplayDensityOptions } from '../../core/displayDensity';
 import { cloneArray, PlatformUtil } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';
@@ -132,11 +132,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * <igx-pivot-grid [pivotConfiguration]="config"></igx-pivot-grid>
      * ```
      */
-    public set pivotConfiguration(value :IPivotConfiguration) {
+    public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
         this.notifyChanges(true);
     }
-    
+
     public get pivotConfiguration() {
         return this._pivotConfiguration;
     }
@@ -163,7 +163,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * Enables a super compact theme for the component.
      * @remarks
-     * Overrides the displayDensity option is one is set.
+     * Overrides the displayDensity option if one is set.
      * @example
      * ```html
      * <igx-pivot-grid [superCompactMode]="true"></igx-pivot-grid>
@@ -172,6 +172,41 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @HostBinding('class.igx-grid__pivot--super-compact')
     @Input()
     public superCompactMode = false;
+
+    /**
+    * Returns the theme of the component.
+    * The default theme is `comfortable`.
+    * Available options are `comfortable`, `cosy`, `compact`.
+    * @remarks
+    * If set while superCompactMode is enabled will have no affect.
+    * ```typescript
+    * let componentTheme = this.component.displayDensity;
+    * ```
+    */
+    @Input()
+    public get displayDensity(): DisplayDensity {
+        if (this.superCompactMode) {
+            return DisplayDensity.compact;
+        }
+        return super.displayDensity;
+    }
+
+    /**
+    * Sets the theme of the component.
+    */
+    public set displayDensity(val: DisplayDensity) {
+        const currentDisplayDensity = this._displayDensity;
+        this._displayDensity = val as DisplayDensity;
+
+        if (currentDisplayDensity !== this._displayDensity) {
+            const densityChangedArgs: IDensityChangedEventArgs = {
+                oldDensity: currentDisplayDensity,
+                newDensity: this._displayDensity
+            };
+
+            this.onDensityChanged.emit(densityChangedArgs);
+        }
+    }
 
     /**
      * @hidden @internal
@@ -681,7 +716,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 dropdown.overlayComponentId = id;
                 return { id, ref: undefined };
             }
-            return {id: dropdown.overlayComponentId, ref: undefined};
+            return { id: dropdown.overlayComponentId, ref: undefined };
         }
     }
 
@@ -1220,7 +1255,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (this.superCompactMode) {
             return `${baseStyleClass}--${DisplayDensity.compact} igx-grid__pivot--super-compact`;
         }
-       return super.getComponentDensityClass(baseStyleClass);
+        return super.getComponentDensityClass(baseStyleClass);
     }
 
     protected generateDimensionColumns(): IgxColumnComponent[] {
@@ -1371,7 +1406,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const cols = [];
         const count = this.values.length;
         const width = parentWidth ? parseInt(parentWidth, 10) / count :
-         this.superCompactMode ? MINIMUM_COLUMN_WIDTH_SUPER_COMPACT : MINIMUM_COLUMN_WIDTH;
+            this.superCompactMode ? MINIMUM_COLUMN_WIDTH_SUPER_COMPACT : MINIMUM_COLUMN_WIDTH;
         const isPercent = parentWidth && parentWidth.indexOf('%') !== -1;
         this.values.forEach(val => {
             const ref = colFactory.create(this.viewRef.injector);
