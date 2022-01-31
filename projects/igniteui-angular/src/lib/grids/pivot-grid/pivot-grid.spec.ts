@@ -12,6 +12,7 @@ import { PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotDateDimension, IgxPivotGridModule } from './public_api';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
+import { IgxPivotDateAggregate } from './pivot-grid-aggregate';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -1241,7 +1242,7 @@ describe('IgxPivotGrid Resizing #pivotGrid', () => {
     }));
 });
 
-fdescribe('IgxPivotGrid APIs #pivotGrid', () => {
+describe('IgxPivotGrid APIs #pivotGrid', () => {
     let fixture: ComponentFixture<any>;
     let pivotGrid: IgxPivotGridComponent;
 
@@ -1432,5 +1433,72 @@ fdescribe('IgxPivotGrid APIs #pivotGrid', () => {
         rowHeaders = dimensionContents[1].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
         const first = rowHeaders.map(x => x.componentInstance.column.header)[0];
         expect(first).toBe('All Cities');
+     });
+
+     it('should allow inserting new value at index.', () => {
+         const value = {
+            member: 'Date',
+            aggregate: {
+                aggregator: IgxPivotDateAggregate.latest,
+                key: 'LATEST',
+                label: 'Latest'
+            },
+            enabled: true
+        };
+        pivotGrid.insertValueAt(value, 1);
+        fixture.detectChanges();
+        expect(pivotGrid.values.length).toBe(3);
+        expect(pivotGrid.values[1].member).toBe('Date');
+        expect(pivotGrid.columns.length).toBe(20);
+     });
+
+     it('should allow removing value.', () => {
+         pivotGrid.removeValue(pivotGrid.values[1]);
+         fixture.detectChanges();
+         expect(pivotGrid.pivotConfiguration.values.length).toBe(1);
+         expect(pivotGrid.values[0].member).toBe('UnitsSold');
+         expect(pivotGrid.columns.length).toBe(5);
+     });
+
+     it('should allow toggling value.', () => {
+        // toggle off
+        pivotGrid.toggleValue(pivotGrid.pivotConfiguration.values[1]);
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.values.length).toBe(2);
+        expect(pivotGrid.values.length).toBe(1);
+        expect(pivotGrid.values[0].member).toBe('UnitsSold');
+        expect(pivotGrid.columns.length).toBe(5);
+        // toggle on
+        pivotGrid.toggleValue(pivotGrid.pivotConfiguration.values[1]);
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.values.length).toBe(2);
+        expect(pivotGrid.values.length).toBe(2);
+        expect(pivotGrid.values[0].member).toBe('UnitsSold');
+        expect(pivotGrid.values[1].member).toBe('AmountOfSale');
+        expect(pivotGrid.columns.length).toBe(15);
+     });
+
+     it('should allow moving value.', () => {
+         const val = pivotGrid.pivotConfiguration.values[0];
+         // move after
+         pivotGrid.moveValue(val, 1);
+         fixture.detectChanges();
+
+         expect(pivotGrid.values[0].member).toBe('AmountOfSale');
+         expect(pivotGrid.values[1].member).toBe('UnitsSold');
+
+         let valueCols = pivotGrid.columns.filter(x => x.level === 1);
+         expect(valueCols[0].header).toBe('Amount of Sale');
+         expect(valueCols[1].header).toBe('UnitsSold');
+
+         // move before
+         pivotGrid.moveValue(val, 0);
+         fixture.detectChanges();
+
+         expect(pivotGrid.values[0].member).toBe('UnitsSold');
+         expect(pivotGrid.values[1].member).toBe('AmountOfSale');
+         valueCols = pivotGrid.columns.filter(x => x.level === 1);
+         expect(valueCols[0].header).toBe('UnitsSold');
+         expect(valueCols[1].header).toBe('Amount of Sale');
      });
 });
