@@ -16,6 +16,7 @@
                     .concat(grid.pivotConfiguration.rows)
                     .concat(grid.pivotConfiguration.filters)
                     .concat(grid.pivotConfiguration.values)
+                    | filterDimensions: input.value:grid.pipeTrigger
             "
         >
             <igx-checkbox

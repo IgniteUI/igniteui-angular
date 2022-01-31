@@ -1,17 +1,44 @@
-import { Component, HostBinding, Input, Renderer2 } from "@angular/core";
-import { fadeIn, fadeOut } from '../../animations/fade';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/public_api';
-import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs } from '../../directives/drag-drop/drag-drop.directive';
-import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
-import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
-import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
-import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
-import { GridColumnDataType } from '../../data-operations/data-util';
-import { DisplayDensity } from "../../core/displayDensity";
-import { PivotGridType } from "../common/grid.interface";
-import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { useAnimation } from "@angular/animations";
+import {
+    Component,
+    HostBinding,
+    Input,
+    Pipe,
+    PipeTransform,
+    Renderer2,
+} from "@angular/core";
 import { first } from "rxjs/operators";
+import { fadeIn, fadeOut } from "../../animations/fade";
+import { DisplayDensity } from "../../core/displayDensity";
+import { GridColumnDataType } from "../../data-operations/data-util";
+import { SortingDirection } from "../../data-operations/sorting-strategy";
+import {
+    IDragBaseEventArgs,
+    IDragGhostBaseEventArgs,
+    IDropBaseEventArgs,
+    IDropDroppedEventArgs,
+} from "../../directives/drag-drop/drag-drop.directive";
+import { ISelectionEventArgs } from "../../drop-down/drop-down.common";
+import { IgxDropDownComponent } from "../../drop-down/drop-down.component";
+import {
+    AbsoluteScrollStrategy,
+    AutoPositionStrategy,
+    OverlaySettings,
+    PositionSettings,
+    VerticalAlignment,
+} from "../../services/public_api";
+import { PivotGridType } from "../common/grid.interface";
+import {
+    IgxPivotAggregate,
+    IgxPivotDateAggregate,
+    IgxPivotTimeAggregate,
+} from "./pivot-grid-aggregate";
+import {
+    IPivotAggregator,
+    IPivotDimension,
+    IPivotValue,
+    PivotDimensionType,
+} from "./pivot-grid.interface";
 
 interface IDataSelectorPanel {
     name: string;
@@ -224,13 +251,14 @@ export class IgxPivotDataSelectorComponent {
         event: IDropDroppedEventArgs,
         dimensionType: PivotDimensionType
     ) {
-        if(!this.dropAllowed) {
+        if (!this.dropAllowed) {
             return;
         }
 
         const dimension = this.getDimensionsByType(dimensionType);
         const dimensionState = this.getDimensionState(dimensionType);
         const itemId = event.drag.element.nativeElement.id;
+        const targetId = event.owner.element.nativeElement.id;
         const dimensionItem = dimension?.find((x) => x.memberName === itemId);
         const itemIndex =
             dimension?.findIndex((x) => x?.memberName === itemId) !== -1
@@ -244,7 +272,11 @@ export class IgxPivotDataSelectorComponent {
         const reorder =
             dimensionState?.findIndex((item) => item.memberName === itemId) !==
             -1;
-        let targetIndex = dimension?.length;
+
+        let targetIndex =
+            targetId !== ""
+                ? dimension?.findIndex((x) => x.memberName === targetId)
+                : dimension?.length;
 
         if (!dimension) {
             const aggregation = this.grid.pivotConfiguration.values;
@@ -408,8 +440,16 @@ export class IgxPivotDataSelectorComponent {
             event.owner.element.nativeElement.getBoundingClientRect();
         this.ghostWidth = itemWidth;
         this.ghostText = value;
-        this.renderer.setStyle(event.owner.element.nativeElement, 'position', 'absolute');
-        this.renderer.setStyle(event.owner.element.nativeElement, 'visibility', 'hidden');
+        this.renderer.setStyle(
+            event.owner.element.nativeElement,
+            "position",
+            "absolute"
+        );
+        this.renderer.setStyle(
+            event.owner.element.nativeElement,
+            "visibility",
+            "hidden"
+        );
     }
 
     /**
@@ -427,7 +467,9 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     public onPanelEntry(event: IDropBaseEventArgs, panel: string) {
-        this.dropAllowed = event.dragData.some((channel: string) => channel === panel);
+        this.dropAllowed = event.dragData.some(
+            (channel: string) => channel === panel
+        );
     }
 
     /**
@@ -447,8 +489,16 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     public onItemDragEnd(event: IDropBaseEventArgs) {
-        this.renderer.setStyle(event.owner.element.nativeElement, 'position', 'static');
-        this.renderer.setStyle(event.owner.element.nativeElement, 'visibility', 'visible');
+        this.renderer.setStyle(
+            event.owner.element.nativeElement,
+            "position",
+            "static"
+        );
+        this.renderer.setStyle(
+            event.owner.element.nativeElement,
+            "visibility",
+            "visible"
+        );
     }
 
     /**
@@ -456,18 +506,54 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     public onItemDragOver(event: IDropBaseEventArgs) {
-        if(this.dropAllowed) {
-            this.renderer.addClass(event.owner.element.nativeElement, 'igx-drag--push');
+        if (this.dropAllowed) {
+            this.renderer.addClass(
+                event.owner.element.nativeElement,
+                "igx-drag--push"
+            );
         }
-    };
+    }
 
     /**
      * @hidden
      * @internal
      */
     public onItemDragLeave(event: IDropBaseEventArgs) {
-        if(this.dropAllowed) {
-            this.renderer.removeClass(event.owner.element.nativeElement, 'igx-drag--push');
+        if (this.dropAllowed) {
+            this.renderer.removeClass(
+                event.owner.element.nativeElement,
+                "igx-drag--push"
+            );
         }
+    }
+}
+
+@Pipe({ name: "filterDimensions" })
+export class IgxFilterDimensionsPipe implements PipeTransform {
+    public transform(
+        collection: IPivotDimension[],
+        filterCriteria: string,
+        _pipeTrigger: number
+    ): IPivotDimension[] {
+        if (!collection) {
+            return collection;
+        }
+        let copy = collection.slice(0);
+        if (filterCriteria && filterCriteria.length > 0) {
+            const filterFunc = (c) => {
+                const filterText = c.member || c.memberName;
+                if (!filterText) {
+                    return false;
+                }
+                return (
+                    filterText
+                        .toLocaleLowerCase()
+                        .indexOf(filterCriteria.toLocaleLowerCase()) >= 0 ||
+                    (c.children?.some(filterFunc) ?? false)
+                );
+            };
+            copy = collection.filter(filterFunc);
+        }
+        return copy;
     }
 }
