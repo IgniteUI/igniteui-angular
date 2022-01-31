@@ -1126,6 +1126,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.reflow();
         }
         this.pipeTrigger++;
+        this.cdr.detectChanges();
     }
 
     /**
@@ -1267,7 +1268,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
         return PivotUtil.flatten(this.rowDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
             PivotUtil.flatten(this.columnDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Column :
-            PivotUtil.flatten(this.columnDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Filter : null;
+            PivotUtil.flatten(this.filterDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Filter : null;
     }
 
     protected getLargesContentWidth(contents: ElementRef[]): string {
