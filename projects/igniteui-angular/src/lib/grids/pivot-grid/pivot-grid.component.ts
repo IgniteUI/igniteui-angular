@@ -23,9 +23,7 @@ import {
     ViewContainerRef,
     Injector,
     NgModuleRef,
-    ApplicationRef,
-    ContentChildren
-} from '@angular/core';
+    ApplicationRef} from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -64,7 +62,6 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
-import { flatten } from '@angular/compiler';
 import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
 
 let NEXT_ID = 0;
@@ -1044,7 +1041,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (this.getDimensionType(dimension) === PivotDimensionType.Row) {
             const relatedDims = PivotUtil.flatten([dimension]).map(x => x.memberName);
             const content = this.rowDimensionContentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
-            const headers = flatten(content.map(x => x.headerGroups.toArray())).map(x => x.header.refInstance);
+            const headers = content.map(x => x.headerGroups.toArray()).flat().map(x => x.header && x.header.refInstance);
             const autoWidth = this.getLargesContentWidth(headers);
             dimension.width = autoWidth;
             this.pipeTrigger++;
@@ -1461,78 +1458,67 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 }
             }
             if (shouldGenerate && (value.children == null || value.children.length === 0 || value.children.size === 0)) {
-                const ref = this.hasMultipleValues ?
-                    factoryColumnGroup.create(this.viewRef.injector) :
-                    factoryColumn.create(this.viewRef.injector);
-                ref.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
-                ref.instance.field = key;
-                ref.instance.parent = parent;
-                ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
-                ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
-                ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
-                ref.instance.sortable = true;
-                ref.changeDetectorRef.detectChanges();
-                columns.push(ref.instance);
+                const col = this.createColumnForDimension(value, data, parent, this.hasMultipleValues);
+                columns.push(col);
                 if (this.hasMultipleValues) {
-                    const measureChildren = this.getMeasureChildren(factoryColumn, data, ref.instance, false, value.dimension.width);
-                    ref.instance.children.reset(measureChildren);
+                    const measureChildren = this.getMeasureChildren(factoryColumn, data, col, false, value.dimension.width);
+                    col.children.reset(measureChildren);
                     columns = columns.concat(measureChildren);
                 }
 
             } else if (shouldGenerate) {
-                const ref = factoryColumnGroup.create(this.viewRef.injector);
-                ref.instance.parent = parent;
-                ref.instance.field = key;
-                ref.instance.sortable = true;
-                ref.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
+                const col = this.createColumnForDimension(value, data, parent, true);
                 if (value.expandable) {
-                    ref.instance.headerTemplate = this.headerTemplate;
+                    col.headerTemplate = this.headerTemplate;
                 }
-                const children = this.generateColumnHierarchy(value.children, data, ref.instance);
-                const filteredChildren = children.filter(x => x.level === ref.instance.level + 1);
-                ref.changeDetectorRef.detectChanges();
-                columns.push(ref.instance);
+                const children = this.generateColumnHierarchy(value.children, data, col);
+                const filteredChildren = children.filter(x => x.level === col.level + 1);
+                columns.push(col);
                 if (this.hasMultipleValues) {
-                    let measureChildren = this.getMeasureChildren(factoryColumn, data, ref.instance, true, value.dimension.width);
+                    let measureChildren = this.getMeasureChildren(factoryColumn, data, col, true, value.dimension.width);
                     const nestedChildren = filteredChildren;
                     //const allChildren = children.concat(measureChildren);
-                    ref.instance.children.reset(nestedChildren);
+                    col.children.reset(nestedChildren);
                     columns = columns.concat(children);
                     if (value.dimension.childLevel) {
-                        const refSibling = factoryColumnGroup.create(this.viewRef.injector);
-                        refSibling.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
-                        refSibling.instance.field = key;
-                        refSibling.instance.parent = parent;
-                        ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
-                        ref.instance.sortable = true;
-                        refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
-                        refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
-                        columns.push(refSibling.instance);
+                        const sibling = this.createColumnForDimension(value, data, parent, true);
+                        columns.push(sibling);
 
-                        measureChildren = this.getMeasureChildren(factoryColumn, data, refSibling.instance, false, value.dimension?.width);
-                        refSibling.instance.children.reset(measureChildren);
+                        measureChildren = this.getMeasureChildren(factoryColumn, data, sibling, false, value.dimension?.width);
+                        sibling.children.reset(measureChildren);
                         columns = columns.concat(measureChildren);
                     }
 
                 } else {
-                    ref.instance.children.reset(filteredChildren);
+                    col.children.reset(filteredChildren);
                     columns = columns.concat(children);
                     if (value.dimension.childLevel) {
-                        const refSibling = factoryColumn.create(this.viewRef.injector);
-                        refSibling.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
-                        refSibling.instance.field = key;
-                        refSibling.instance.parent = parent;
-                        ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
-                        ref.instance.sortable = true;
-                        refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
-                        refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
-                        columns.push(refSibling.instance);
+                        const sibling = this.createColumnForDimension(value, data, parent, false);
+                        columns.push(sibling);
                     }
                 }
             }
         });
 
         return columns;
+    }
+
+    protected createColumnForDimension(value: any, data: any, parent: ColumnType, isGroup: boolean) {
+        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
+        const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
+        const key = value.value;
+        const ref = isGroup ?
+        factoryColumnGroup.create(this.viewRef.injector) :
+        factoryColumn.create(this.viewRef.injector);
+        ref.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
+        ref.instance.field = key;
+        ref.instance.parent = parent;
+        ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
+        ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
+        ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
+        ref.instance.sortable = true;
+        ref.changeDetectorRef.detectChanges();
+        return ref.instance;
     }
 
     protected getMeasureChildren(colFactory, data, parent, hidden, parentWidth) {

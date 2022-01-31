@@ -224,6 +224,8 @@ A list of the events emitted by the **igx-grid**:
 |`rowEdit`|Emitted just before a row in edit mode's value is committed (e.g. by clicking the Done button on the Row Editing Overlay).|
 |`rowEditDone`|Emitted after exiting edit mode for a row and editing has been committed.|
 |`rowEditExit`|Emitted when a row exits edit mode without committing its values (e.g. by clicking the Cancel button on the Row Editing Overlay).|
+|`dataChanging`|Emitted before the grid's data view is changed because of a data operation, rebinding, etc.|
+|`dataChanged`|Emitted after the grid's data view is changed because of a data operation, rebinding, etc.|
 |`cellClick`|Emitted when a cell is clicked. Returns the cell object.|
 |`columnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
 |`columnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|
