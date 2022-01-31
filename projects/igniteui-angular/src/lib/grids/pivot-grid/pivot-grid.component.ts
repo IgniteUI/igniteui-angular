@@ -55,7 +55,7 @@ import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resi
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
-import { cloneArray, PlatformUtil } from '../../core/utils';
+import { cloneArray, flatten, PlatformUtil } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -64,7 +64,6 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
-import { flatten } from '@angular/compiler';
 import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
 
 let NEXT_ID = 0;
