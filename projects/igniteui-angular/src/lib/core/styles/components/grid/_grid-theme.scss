@@ -2881,7 +2881,8 @@
         %grid-cell-display,
         %grid-cell-header {
             padding: 0 rem(4px) !important;
-            height: rem(24px) !important;
+            min-height: rem(24px) !important;
+            height: rem(24px);
         }
 
         %grid-cell-header {
