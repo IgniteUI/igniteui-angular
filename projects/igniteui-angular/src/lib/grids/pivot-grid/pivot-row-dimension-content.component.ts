@@ -132,22 +132,6 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         return this.rowSpan * this.grid.rowHeight + (this.rowSpan - 1);
     }
 
-    /**
-     * @hidden @internal
-     */
-    public selectPivotRow(col: any, event?: any) {
-        if (this.grid.rowSelection === 'none') {
-            return;
-        }
-        event?.stopPropagation();
-        const key = this.getRowDimensionKey(col);
-        if (this.grid.selectionService.isRowSelected(key)) {
-            this.grid.selectionService.deselectRow(key, event);
-        } else {
-            this.grid.selectionService.selectRowById(key, true, event);
-        }
-    }
-
     protected extractFromDimensions() {
         const dimData = PivotUtil.getDimensionLevel(this.dimension, this.rowData, this.grid.pivotKeys);
         const prevDims = this.getPrevDims(this.dimension);
