@@ -128,15 +128,16 @@
     %selector-filter {
         display: flex;
         flex-direction: column;
+        overflow: hidden;
 
         igx-list {
             display: flex;
             flex-direction: column;
             padding-top: rem(8px);
             padding-bottom: rem(8px);
-            max-height: 200px;
-            height: 50%;
-            overflow: auto;
+            min-height: 186px;
+            max-height: 50%;
+            overflow-y: auto;
         }
 
         igx-list-item {
@@ -146,6 +147,7 @@
 
         igx-checkbox + span {
             margin-#{$left}: rem(8px);
+            line-height: rem(28px);
         }
     }
 
