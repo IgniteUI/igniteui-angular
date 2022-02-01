@@ -1958,6 +1958,11 @@
         z-index: 25;
     }
 
+    // Fix Grid column headers background has transparency on drag #10864
+    %grid__drag-ghost-image%igx-grid-th--selectable {
+        opacity: 1;
+    }
+
     %grid__drag-ghost-image {
         position: absolute;
         display: flex;
