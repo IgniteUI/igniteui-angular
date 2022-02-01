@@ -500,7 +500,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
         expect(childGridSecondCell.editMode).toBeTruthy();
 
-        UIInteractions.simulateClickAndSelectEvent(masterGridFirstRow.expander);
+        UIInteractions.simulateClickAndSelectEvent(childGridSecondRow.expander);
         fixture.detectChanges();
         wait();
 

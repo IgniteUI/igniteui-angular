@@ -149,6 +149,6 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
 
     // TODO: consider moving into CRUD
     protected endEdit(grid: GridType) {
-        grid.gridAPI.endEditAll();
+        grid.hgridAPI.endEditAll();
     }
 }
