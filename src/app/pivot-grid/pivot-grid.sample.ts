@@ -82,6 +82,7 @@ export class PivotGridSampleComponent {
             memberFunction: () => 'All',
             memberName: 'AllProducts',
             enabled: true,
+            width: '25%',
             childLevel: {
                 memberFunction: (data) => data.ProductCategory,
                 memberName: 'ProductCategory',
@@ -106,8 +107,11 @@ export class PivotGridSampleComponent {
             this.dimensions[1]
         ],
         rows: [
-            this.dimensions[0],
-            this.dimensions[2]
+            this.dimensions[2],
+            {
+                memberName: 'City',
+                enabled: true,
+            },
         ],
         values: [
             {

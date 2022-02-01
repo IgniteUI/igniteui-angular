@@ -33,7 +33,7 @@
 /// @prop {Map} group-row-selected-background [igx-color: ('grays', 100)] - The drop area background on drop color.
 /// @prop {Map} body-summaries-background [igx-color: ('grays', 100)] - The background color of the summary groups located the body.
 /// @prop {Map} body-summaries-text-color [igx-contrast-color: ('grays', 100)] - The text color of the summary groups located the body.
-/// @prop {Map} root-summaries-background [igx-color: ('grays', 200)] - The background color of the summary groups located the footer.
+/// @prop {Map} root-summaries-background [igx-color: ('grays', 50)] - The background color of the summary groups located the footer.
 /// @prop {Map} root-summaries-text-color [igx-contrast-color: ('grays', 200)] - The text color of the summary groups located the footer.
 $base-dark-grid: (
     content-background: (
@@ -157,8 +157,11 @@ $dark-grid: extend($light-grid, $base-dark-grid);
 /// @prop {Map} row-selected-background [igx-color: ('grays', 100)] - The selected row background color.
 /// @prop {Map} row-selected-hover-background [igx-color: ('grays', 200)] - The selected row background color on hover.
 /// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('grays', 200)] - The selected row hover text color.
-/// @prop {Map} cell-selected-within-background [igx-color: ('grays', 300)] - The background of the selected cell inside a selected row/column.
-/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('grays', 300)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('grays', 200)] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('grays', 200)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} group-row-background [igx-color: ('grays', 100, .5)] - The grid group row background color.
+/// @prop {Map} group-row-selected-background [igx-color: ('grays', 100)] - The drop area background on drop color.
+
 ///
 /// @requires {function} extend
 /// @requires $fluent-grid
@@ -192,7 +195,7 @@ $dark-fluent-grid: extend(
         ),
 
         cell-selected-within-background: (
-            igx-color: ('grays', 100),
+            igx-color: ('grays', 200),
         ),
 
         cell-selected-within-text-color: (
@@ -202,16 +205,60 @@ $dark-fluent-grid: extend(
         row-selected-hover-background: (
             igx-color: ('grays', 200)
         ),
+
+        group-row-background: (
+            igx-color: ('grays', 100, .5)
+        ),
+
+        group-row-selected-background: (
+            igx-color: ('grays', 100)
+        ),
     )
 );
 
 
 /// Generates a dark bootstrap grid schema based on a mix of $bootstrap-grid and $base-dark-grid.
 /// @type {Map}
+/// @prop {Map} group-row-background [igx-color: 'surface'] - The grid group row background color.
+/// @prop {Map} group-row-selected-background [igx-color: 'surface'] - The drop area background on drop color.
+/// @prop {Map} header-background [igx-color: ('grays', 50)] - The table header background color.
+/// @prop {Map} content-background [igx-color: ('grays', 50)] - The table body background color.
+/// @prop {Map} drop-area-background [igx-color: ('grays', 100, .5)] - The drop area background color.
+/// @prop {Map} grouparea-background [igx-color: 'surface'] - The grid group area background color.
+/// @prop {Map} grouparea-color [igx-contrast-color: 'surface'] - The grid group area color.
+/// @prop {Map} root-summaries-background [igx-color: ('grays', 100)] - The background color of the summary groups located the footer.
 /// @requires {function} extend
 /// @requires $bootstrap-grid
 /// @requires $base-dark-grid
-$dark-bootstrap-grid: extend($bootstrap-grid, $base-dark-grid);
+$dark-bootstrap-grid: extend(
+    $bootstrap-grid,
+    $base-dark-grid,
+    (
+        root-summaries-background: (
+            igx-color: ('grays', 100),
+        ),
+
+        group-row-background: (
+            igx-color: 'surface',
+        ),
+
+        group-row-selected-background: (
+            igx-color: 'surface',
+        ),
+
+        header-background: (
+            igx-color: ('grays', 50)
+        ),
+
+        content-background: (
+            igx-color: ('grays', 50)
+        ),
+
+        drop-area-background: (
+            igx-color: ('grays', 100, .5)
+        )
+    )
+);
 
 /// Generates a dark indigo grid schema.
 /// @type {Map}
@@ -275,7 +322,7 @@ $dark-indigo-grid: extend(
         ),
 
         header-border-color: (
-            igx-color: ('grays', 50, .24)
+            igx-color: ('grays', 100, .24)
         ),
 
         header-text-color: (
@@ -315,7 +362,7 @@ $dark-indigo-grid: extend(
         ),
 
         drop-area-background: (
-            igx-color: ('grays', 200)
+            igx-color: ('grays', 100)
         ),
 
         drop-area-text-color: (
@@ -335,7 +382,7 @@ $dark-indigo-grid: extend(
         ),
 
         row-border-color: (
-            igx-color: ('grays', 50, .24),
+            igx-color: ('grays', 100, .24),
         ),
 
         row-hover-background: (
@@ -343,7 +390,7 @@ $dark-indigo-grid: extend(
         ),
 
         row-hover-text-color: (
-            igx-contrast-color: ('grays', 200),
+            igx-contrast-color: ('grays',100),
         ),
 
         row-selected-background: (
@@ -363,11 +410,11 @@ $dark-indigo-grid: extend(
         ),
 
         group-row-background: (
-            igx-color: 'surface',
+            igx-color: ('grays', 50),
         ),
 
         group-row-selected-background: (
-            igx-color: ('grays', 200),
+            igx-color: ('grays', 100),
         ),
 
         group-count-text-color: (
