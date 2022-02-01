@@ -247,6 +247,31 @@ export class IgxPivotDataSelectorComponent {
      * @hidden
      * @internal
      */
+    protected moveValueItem(itemId: string) {
+        const aggregation = this.grid.pivotConfiguration.values;
+        const valueIndex =
+            aggregation.findIndex((x) => x.member === itemId) !== -1
+                ? aggregation?.findIndex((x) => x.member === itemId)
+                : aggregation.length;
+        const newValueIndex =
+            valueIndex + this._dropDelta < 0 ? 0 : valueIndex + this._dropDelta;
+
+        const aggregationItem = aggregation.find(
+            (x) => x.member === itemId || x.displayName === itemId
+        );
+
+        if (aggregationItem) {
+            this.grid.moveValue(aggregationItem, newValueIndex);
+            this.grid.valuesChange.emit({
+                values: this.grid.pivotConfiguration.values,
+            });
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public onItemDropped(
         event: IDropDroppedEventArgs,
         dimensionType: PivotDimensionType
@@ -279,28 +304,7 @@ export class IgxPivotDataSelectorComponent {
                 : dimension?.length;
 
         if (!dimension) {
-            const aggregation = this.grid.pivotConfiguration.values;
-            const valueIndex =
-                aggregation.findIndex((x) => x.member === itemId) !== -1
-                    ? aggregation?.findIndex((x) => x.member === itemId)
-                    : aggregation.length;
-            const newValueIndex =
-                valueIndex + this._dropDelta < 0
-                    ? 0
-                    : valueIndex + this._dropDelta;
-
-            const aggregationItem = aggregation.find(
-                (x) => x.member === itemId || x.displayName === itemId
-            );
-
-            if (aggregationItem) {
-                aggregation.splice(valueIndex, 1);
-                aggregation.splice(newValueIndex, 0, aggregationItem);
-                this.grid.setupColumns();
-                this.grid.valuesChange.emit({
-                    values: this.grid.pivotConfiguration.values,
-                });
-            }
+            this.moveValueItem(itemId);
         }
 
         if (reorder) {
@@ -310,21 +314,13 @@ export class IgxPivotDataSelectorComponent {
                     : itemIndex + this._dropDelta;
         }
 
-        dimensions?.forEach((item) => {
-            item.enabled = false;
-        });
-
         if (dimensionItem) {
-            dimensionItem.enabled = true;
-            dimension.splice(itemIndex, 1);
-            dimension.splice(targetIndex, 0, dimensionItem);
+            this.grid.moveDimension(dimensionItem, dimensionType, targetIndex);
         } else {
-            const newDim = Object.assign({}, dimensions[0]);
-            newDim.enabled = true;
-            dimension?.splice(targetIndex, 0, newDim);
+            const newDim = dimensions.find((x) => x.memberName === itemId);
+            this.grid.moveDimension(newDim, dimensionType, targetIndex);
         }
 
-        this.grid.pipeTrigger++;
         this.grid.dimensionsChange.emit({
             dimensions: dimension,
             dimensionCollectionType: dimensionType,
