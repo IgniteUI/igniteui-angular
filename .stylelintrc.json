@@ -1,5 +1,7 @@
 {
     "plugins": ["stylelint-scss"],
+    "files": ["**/*.scss"],
+    "customSyntax": "postcss-scss",
     "ignoreFiles": ["projects/igniteui-angular/src/lib/core/styles/**/*.md"],
     "rules": {
         "at-rule-disallowed-list": ["debug", {
