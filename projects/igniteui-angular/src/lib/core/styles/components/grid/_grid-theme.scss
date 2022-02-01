@@ -1675,7 +1675,16 @@
     %igx-grid-th--selectable {
         color: var-get($theme, 'header-selected-text-color');
         background: var-get($theme, 'header-selected-background');
-        opacity: if($variant != 'indigo-design', .7, 1);
+
+        @if $variant != 'indigo-design' {
+            opacity: .7;
+
+            &%grid__drag-ghost-image {
+                opacity: 1;
+            }
+        } @else {
+            opacity: 1;
+        }
 
         .sort-icon {
             color: var-get($theme, 'header-selected-text-color');
@@ -1956,11 +1965,6 @@
         height: 100%;
         top: 0;
         z-index: 25;
-    }
-
-    // Fix Grid column headers background has transparency on drag #10864
-    %grid__drag-ghost-image%igx-grid-th--selectable {
-        opacity: 1;
     }
 
     %grid__drag-ghost-image {
