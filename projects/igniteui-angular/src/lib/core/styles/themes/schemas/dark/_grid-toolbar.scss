@@ -24,7 +24,14 @@ $dark-fluent-grid-toolbar: extend($fluent-grid-toolbar);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $bootstrap-grid-toolbar
-$dark-bootstrap-grid-toolbar: extend($bootstrap-grid-toolbar);
+$dark-bootstrap-grid-toolbar: extend(
+    $bootstrap-grid-toolbar,
+    //(
+    //    background-color: (
+    //        igx-color: ('grays', 100, .5),
+    //    )
+    //)
+);
 
 /// Generates a dark indigo grid-toolbar schema.
 /// @type {Map}
