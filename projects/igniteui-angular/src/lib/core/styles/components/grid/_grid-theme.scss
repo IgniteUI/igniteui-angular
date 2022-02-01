@@ -235,7 +235,7 @@
     $cell-selected-within-text-color: null,
 ) {
     $name: 'igx-grid';
-    $selector: 'igx-grid, igx-hierarchical-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary';
+    $selector: 'igx-grid, igx-hierarchical-grid, igx-pivot-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary';
     $grid-schema: ();
 
     @if map.has-key($schema, $name) {
@@ -630,16 +630,26 @@
         color: var-get($theme, 'pinned-border-color')
     );
 
+    $padding-comfortable: rem(24px);
+    $padding-cosy: rem(16px);
+    $padding-compact: rem(12px);
+
     $grid-header-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+        comfortable: 0 $padding-comfortable,
+        cosy: 0 $padding-cosy,
+        compact: 0 $padding-compact
+    );
+
+    $pivot-row-aria-padding: (
+        comfortable: $padding-comfortable,
+        cosy: $padding-cosy,
+        compact: $padding-compact
     );
 
     $grid-cbx-padding: (
-        comfortable: rem(24px),
-        cosy: rem(16px),
-        compact: rem(12px)
+        comfortable: $padding-comfortable,
+        cosy: $padding-cosy,
+        compact: $padding-compact
     );
 
     $cbx-padding: map.get($grid-cbx-padding, 'comfortable');
@@ -1194,6 +1204,11 @@
     %igx-grid__tr--inner {
         display: flex;
         background: inherit;
+    }
+
+    %igx-grid__tr--header {
+        display: flex;
+        align-items: center;
     }
 
     %igx-grid__tr--add-animate {
@@ -2869,5 +2884,172 @@
             border-#{$right}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         }
     }
+
+    // Pivot grid
+    %grid-thead--pivot {
+        display: flex;
+
+        %grid-thead--virtualizationWrapper {
+            border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        }
+    }
+
+    %grid-thead--virtualizationWrapper {
+        height: 100%;
+    }
+
+    %grid-thead--virtualizationContainer {
+        overflow: visible;
+        height: 100%;
+    }
+
+    %igx-grid__tr-pivot {
+        display: flex;
+        align-items: center;
+        background: inherit;
+        overflow: hidden;
+        z-index: 3;
+        height: map.get($grid-header-height, 'comfortable');
+
+        &--cosy {
+            height: map.get($grid-header-height, 'cosy');
+            padding: map.get($grid-header-padding, 'cosy');
+        }
+
+        &--compact {
+            height: map.get($grid-header-height, 'compact');
+            padding: map.get($grid-header-padding, 'compact');
+        }
+
+        padding: map.get($grid-header-padding, 'comfortable');
+        background-clip: border-box !important;
+        border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+
+        igx-chips-area {
+            flex-wrap: nowrap;
+            width: auto;
+
+            > * {
+                margin-#{$right}: rem(4px);
+            }
+
+            &:last-child {
+                margin-#{$right}: 0;
+            }
+        }
+    }
+
+    %igx-grid__pivot-filter-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+
+        > igx-badge {
+            position: absolute;
+            top: rem(-4px);
+            left: 60%;
+            width: rem(18px);
+            min-width: rem(18px);
+            height: rem(18px);
+            font-size: rem(10px);
+            pointer-events: none;
+            user-select: none;
+        }
+    }
+
+    %igx-grid__pivot-empty-chip-area {
+        line-height: normal;
+        font-size: rem(14px);
+        margin-right: 0 !important;
+    }
+
+    %igx-grid__tr-pivot--row-area {
+        height: auto !important;
+        align-items: flex-end;
+        padding-bottom: map.get($pivot-row-aria-padding, 'comfortable');
+
+        &--cosy{
+            padding-bottom: map.get($pivot-row-aria-padding, 'cosy');
+        }
+
+        &--compact{
+            padding-bottom: map.get($pivot-row-aria-padding, 'compact');
+        }
+
+        border-#{$left}: 0;
+        border-bottom: 0;
+    }
+
+    %igx-grid__tr-pivot--filter-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    %igx-grid__tr-pivot--chip_drop_indicator {
+        width: 2px;
+        background: var-get($theme, 'resize-line-color');
+    }
+
+    %igx-grid__tr-pivot--drop-row-area {
+        flex-grow: 1;
+    }
+
+    %igx-grid__tr-pivot--filter {
+        height: map.get($grid-header-height, 'comfortable');
+
+        &--cosy {
+            height: map.get($grid-header-height, 'cosy');
+        }
+
+        &--compact {
+            height: map.get($grid-header-height, 'compact');
+        }
+
+        border-left: 0;
+        border-right: 0;
+        border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+    }
+
+    %igx-grid-thead__wrapper--pivot {
+        border-bottom: 0;
+    }
+
+    %igx-grid__tr-pivot-group {
+        flex: 1;
+    }
+
+    %igx-grid__tr-pivot-toggle-icons {
+        display: inline-flex !important;
+    }
+
+    %igx-grid__tr-pivot--columnDimensionLeaf {
+        box-shadow: none;
+
+        igx-grid-header {
+            border: none;
+        }
+    }
+
+    %igx-grid__tr-pivot--columnMultiRowSpan {
+        igx-grid-header {
+            > * {
+                visibility: hidden;
+            }
+        }
+    }
+
+    %igx-grid__tr-header-row {
+        igx-pivot-row-dimension-header-group {
+            igx-pivot-row-dimension-header {
+                align-items: center;
+            }
+        }
+    }
+    // Pivot grid END
 }
+
+
 

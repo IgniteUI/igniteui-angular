@@ -1,0 +1,45 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.density-chooser {
+    max-width: 60%;
+    min-width: 400px;
+
+}
+
+igx-pivot-grid {
+    flex: 1;
+}
+
+.sample-flex-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    igx-combo {
+        min-width: 400px;
+    }
+}
+
+:host ::ng-deep {
+    .upFont {
+        color: lightgreen;
+    }
+
+    .downFont {
+        color: lightcoral;
+    }
+
+    .upFont1 {
+        color: skyblue;
+    }
+
+    .downFont1 {
+        color: yellow;
+    }
+}
