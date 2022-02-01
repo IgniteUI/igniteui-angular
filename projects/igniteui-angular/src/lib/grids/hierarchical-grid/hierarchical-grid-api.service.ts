@@ -3,11 +3,10 @@ import { Subject } from 'rxjs';
 import { GridType, IPathSegment } from '../common/grid.interface';
 import { Injectable } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-
 @Injectable()
 export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> {
     protected childRowIslands: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();
-    protected childGrids:  Map<string, Map<any, GridType>> =
+    protected childGrids: Map<string, Map<any, GridType>> =
         new Map<string, Map<any, GridType>>();
 
     public registerChildRowIsland(rowIsland: IgxRowIslandComponent) {
@@ -126,5 +125,16 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
         const data = this.get_all_data(false);
         const index = this.get_row_index_in_data(rowID, data);
         return data[index];
+    }
+
+    public endEditAll(): void {
+        if (this.grid.gridAPI.crudService.cellInEditMode) {
+            this.grid.gridAPI.crudService.endEdit();
+        }
+        this.getChildGrids(true).forEach(g => {
+            if (g.gridAPI.crudService.cellInEditMode) {
+                g.gridAPI.crudService.endEdit();
+            }
+        });
     }
 }
