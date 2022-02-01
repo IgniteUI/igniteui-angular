@@ -38,7 +38,7 @@ $dark-fluent-pagination: extend($fluent-pagination, $base-dark-pagination);
 /// @requires {function} extend
 /// @requires $bootstrap-pagination
 /// @requires $base-dark-pagination
-$dark-bootstrap-pagination: extend($bootstrap-pagination, $base-dark-pagination);
+$dark-bootstrap-pagination: extend($bootstrap-pagination);
 
 /// Generates a dark indigo pagination schema.
 /// @type {Map}

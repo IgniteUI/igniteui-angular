@@ -38,9 +38,11 @@ $dark-fluent-list: extend($fluent-list, $base-dark-list);
 
 /// Generates a base dark bootstrap list schema based on a mix of $bootstrap-list and $base-dark-list..
 /// @type {Map}
-/// @prop {Number} border-color [igx-color: ('grays', 100)] - The list border color.
+/// @property {Map} border-color [igx-color: ('grays', 100)] - The list border color.
+/// @property {Map} item-background [igx-color: ('grays', 50)] - The list item background color.
 /// @property {Map} item-background-hover [igx-color: ('grays', 100)] - The list item hover background.
 /// @property {Map} item-background-active [igx-color: ('grays', 100)] - The active list item background color.
+/// @property {Map} header-background [igx-color: ('grays', 50)] - The list header background color.
 /// @requires {function} extend
 /// @requires $bootstrap-list
 /// @requires $base-dark-list
@@ -51,6 +53,10 @@ $dark-bootstrap-list: extend(
             igx-color: ('grays', 100)
         ),
 
+        item-background: (
+            igx-color: ('grays', 50)
+        ),
+
         item-background-hover: (
             igx-color: ('grays', 100),
         ),
@@ -58,14 +64,18 @@ $dark-bootstrap-list: extend(
         item-background-active: (
             igx-color: ('grays', 100),
         ),
+
+        header-background: (
+            igx-color: ('grays', 50)
+        ),
     )
 );
 
 /// Generates a dark indigo list schema
 /// @type {Map}
 /// @property {Map} header-text-color [igx-contrast-color: 'surface'] - The list header text color.
-/// @property {Map} item-background-hover [igx-color: ('primary', 500), rgba: .5, to-opaque: (igx-color: 'surface')] - The list item hover background.
-/// @property {Map} item-background-active [igx-color: ('primary', 500), rgba: .5, to-opaque: (igx-color: 'surface')] - The active list item background color.
+/// @property {Map} item-background-hover [igx-color: ('primary')] - The list item hover background.
+/// @property {Map} item-background-active [igx-color: ('primary')] - The active list item background color.
 /// @requires {function} extend
 /// @requires $indigo-list
 $dark-indigo-list: extend(
@@ -76,20 +86,11 @@ $dark-indigo-list: extend(
         ),
 
         item-background-hover: (
-            igx-color: ('primary', 500),
-            rgba: .5,
-            to-opaque: (
-                igx-color: 'surface',
-            )
-
+            igx-color: ('primary'),
         ),
 
         item-background-active: (
-            igx-color: ('primary', 500),
-            rgba: .5,
-            to-opaque: (
-                igx-color: 'surface',
-            )
+            igx-color: ('primary'),
         )
     )
 );

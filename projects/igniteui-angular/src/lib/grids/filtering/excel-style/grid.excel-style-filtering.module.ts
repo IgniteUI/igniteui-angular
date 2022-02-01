@@ -100,9 +100,6 @@ import { IgxDateTimeEditorModule } from '../../../directives/date-time-editor/da
         IgxFocusModule,
         IgxDateTimeEditorModule
     ],
-    entryComponents: [
-        IgxGridExcelStyleFilteringComponent
-    ],
     providers: [
         IgxSelectionAPIService
     ]

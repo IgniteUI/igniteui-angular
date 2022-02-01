@@ -1813,7 +1813,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         HVirtualHelperComponent,
         VirtualHelperBaseDirective
     ],
-    entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     exports: [IgxForOfDirective, IgxGridForOfDirective],
     imports: [IgxScrollInertiaModule, CommonModule]
 })
