@@ -5,6 +5,16 @@ All notable changes for each version of this project will be documented in this 
 ## 13.1.0
 
 ### New Features
+- Added `IgxPivotGrid` component(Preview)
+    - The igxPivotGrid is a data presentation control for displaying data in a pivot table. It enables users to perform complex analysis on the supplied data. Main purpose is to transform and display a flat array of data into a complex grouped structure with aggregated values based on the main 3 dimensions: rows, columns and values, which the user may specify depending on his/her business needs. The whole pivot grid configuration is set through `IPivotConfiguration` interface.
+
+    ```html
+    <igx-pivot-grid [data]="origData" [pivotConfiguration]="pivotConfigHierarchy">
+    </igx-pivot-grid>
+    ```
+
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/pivot-grid/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxPivotGrid-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotgrid).
+
 - `igxTooltipTarget` directive now allows specifying a plain text tooltip without adding an additional DOM element decorated with the `igxTooltip` directive. This is achieved via the newly introduced `tooltip` string input.
     ```html
     <button igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">
@@ -99,6 +109,11 @@ All notable changes for each version of this project will be documented in this 
     - Exposed new input `buttonText` which sets the text that is displayed inside the dropdown button in the toolbar.
 - `IgxCombo`
     - Added `groupSortingDirection` input, which allows you to set groups sorting order.
+- `igxChip`
+    - Exposed drop directive related events for the chip when it's used as a drop target:
+         - `dragLeave`
+         - `dragDrop`
+         - `dragOver`
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added new directives for re-templating header sorting indicators - `IgxSortHeaderIconDirective`, `IgxSortAscendingHeaderIconDirective` and `IgxSortDescendingHeaderIconDirective`.
 - `IgxGrid`

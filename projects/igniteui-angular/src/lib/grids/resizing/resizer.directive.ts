@@ -27,6 +27,9 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     @Input()
     public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
 
+    @Input()
+    public restrictResizerTop: number;
+
     @Output()
     public resizeEnd = new Subject<MouseEvent>();
 
@@ -94,7 +97,11 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     }
 
     public set top(val: number) {
-        requestAnimationFrame(() => this.element.nativeElement.style.top = val + 'px');
+        if (this.restrictResizerTop != undefined) {
+            requestAnimationFrame(() => this.element.nativeElement.style.top = this.restrictResizerTop + 'px');
+        } else {
+            requestAnimationFrame(() => this.element.nativeElement.style.top = val + 'px');
+        }
     }
 
     public onMouseup(event: MouseEvent) {
