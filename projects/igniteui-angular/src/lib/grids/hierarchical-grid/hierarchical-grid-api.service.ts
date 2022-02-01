@@ -128,10 +128,11 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
     }
 
     public endEditAll(): void {
-        if (this.grid.gridAPI.crudService.cellInEditMode) {
-            this.grid.gridAPI.crudService.endEdit();
+        const rootGrid = this.grid.rootGrid;
+        if (rootGrid.gridAPI.crudService.cellInEditMode) {
+            rootGrid.gridAPI.crudService.endEdit();
         }
-        this.getChildGrids(true).forEach(g => {
+        rootGrid.getChildGrids(true).forEach(g => {
             if (g.gridAPI.crudService.cellInEditMode) {
                 g.gridAPI.crudService.endEdit();
             }
