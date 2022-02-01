@@ -22,6 +22,7 @@ import { parseDate } from '../core/utils';
 import { IgxGridHeaderRowComponent } from '../grids/headers/grid-header-row.component';
 import { IgxGridRowComponent } from '../grids/grid/grid-row.component';
 import { IgxGridCellComponent } from '../grids/cell.component';
+import { IgxPivotRowComponent } from '../grids/pivot-grid/pivot-row.component';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../grids/row.directive';
 import { GridType, RowType } from '../grids/common/grid.interface';
@@ -156,6 +157,11 @@ export class GridFunctions {
         } else {
             throw new Error('More than one column group found.');
         }
+    }
+
+    public static getPivotRows(fix): DebugElement[] {
+        const rows: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxPivotRowComponent));
+        return rows;
     }
 
     /**
@@ -985,6 +991,14 @@ export class GridFunctions {
             excelMenu = fix.nativeElement.querySelector(ESF_MENU_CLASS);
         }
         return excelMenu;
+    }
+    public static getExcelStyleFilteringComponents(fix, grid = 'igx-pivot-grid') {
+        const gridNativeElement = fix.debugElement.query(By.css(grid)).nativeElement;
+        let excelMenus = gridNativeElement.querySelectorAll(ESF_MENU_CLASS);
+        if (!excelMenus) {
+            excelMenus = fix.nativeElement.querySelector(ESF_MENU_CLASS);
+        }
+        return excelMenus;
     }
     public static getExcelStyleFilteringCheckboxes(fix, menu = null, grid = 'igx-grid'): HTMLElement[] {
         const searchComp = GridFunctions.getExcelStyleSearchComponent(fix, menu, grid);
