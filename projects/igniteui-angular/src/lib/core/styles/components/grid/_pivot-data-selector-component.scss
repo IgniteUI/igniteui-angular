@@ -15,6 +15,10 @@
             @extend %selector-header !optional;
         }
 
+        @include e(header-inner) {
+            @extend %igx-expansion-panel__header-inner !optional;
+        }
+
         @include e(header-extra) {
             @extend %selector-header-extra !optional;
         }

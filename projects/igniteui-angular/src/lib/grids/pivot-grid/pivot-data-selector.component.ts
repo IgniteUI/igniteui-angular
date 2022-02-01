@@ -5,7 +5,7 @@ import {
     Input,
     Pipe,
     PipeTransform,
-    Renderer2,
+    Renderer2
 } from "@angular/core";
 import { first } from "rxjs/operators";
 import { fadeIn, fadeOut } from "../../animations/fade";
@@ -16,7 +16,7 @@ import {
     IDragBaseEventArgs,
     IDragGhostBaseEventArgs,
     IDropBaseEventArgs,
-    IDropDroppedEventArgs,
+    IDropDroppedEventArgs
 } from "../../directives/drag-drop/drag-drop.directive";
 import { ISelectionEventArgs } from "../../drop-down/drop-down.common";
 import { IgxDropDownComponent } from "../../drop-down/drop-down.component";
@@ -25,19 +25,19 @@ import {
     AutoPositionStrategy,
     OverlaySettings,
     PositionSettings,
-    VerticalAlignment,
+    VerticalAlignment
 } from "../../services/public_api";
 import { PivotGridType } from "../common/grid.interface";
 import {
     IgxPivotAggregate,
     IgxPivotDateAggregate,
-    IgxPivotTimeAggregate,
+    IgxPivotTimeAggregate
 } from "./pivot-grid-aggregate";
 import {
     IPivotAggregator,
     IPivotDimension,
     IPivotValue,
-    PivotDimensionType,
+    PivotDimensionType
 } from "./pivot-grid.interface";
 
 interface IDataSelectorPanel {

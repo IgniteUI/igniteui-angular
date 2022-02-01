@@ -104,14 +104,10 @@
 
         %igx-expansion-panel__body {
             position: relative;
-            min-height: rem(128px);
+            height: rem(128px);
             font-size: rem(14px);
             padding: $panel-padding;
-        }
-
-        %igx-expansion-panel__header-inner {
-            background: var-get($theme, 'header-color');
-            padding: $panel-padding;
+            overflow-y: auto;
         }
 
         %igx-expansion-panel__header-icon--start {
@@ -157,6 +153,16 @@
     %selector-header-extra {
         display: flex;
         align-items: center;
+    }
+
+    %igx-expansion-panel__header-inner {
+        background: var-get($theme, 'header-color');
+        padding: $panel-padding;
+
+        .dragOver & {
+            background: igx-color($color: 'grays', $variant: 300);
+            box-shadow: inset 0 0 0 1px igx-color($color: 'grays', $variant: 400);
+        }
     }
 
     %selector-header-extra {
