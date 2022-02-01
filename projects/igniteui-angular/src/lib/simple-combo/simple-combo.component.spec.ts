@@ -1294,8 +1294,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
     template: `
     <form #form="ngForm">
         <igx-simple-combo #testCombo class="input-container" [placeholder]="'Locations'"
-            name="anyName" required [(ngModel)]="values"
-            [data]="items" [filterable]="filterableFlag"
+            name="anyName" required [(ngModel)]="values" [data]="items"
             [displayKey]="'field'" [valueKey]="'field'"
             [groupKey]="'field' ? 'region' : ''" [width]="'100%'">
             <label igxLabel>Combo Label</label>
