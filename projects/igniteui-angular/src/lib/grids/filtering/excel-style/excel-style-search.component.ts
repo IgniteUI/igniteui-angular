@@ -473,8 +473,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public isHierarchical() {
-        return this.esf.grid.filterStrategy?.hasOwnProperty('hierarchicalFilterFields')
-            && this.esf.grid.filterStrategy['hierarchicalFilterFields'].indexOf(this.esf.column.field) >= 0;
+        return this.esf.grid?.filterStrategy?.hasOwnProperty('hierarchicalFilterFields')
+            && this.esf.grid?.filterStrategy['hierarchicalFilterFields'].indexOf(this.esf.column.field) >= 0;
     }
 
     private createCondition(conditionName: string) {

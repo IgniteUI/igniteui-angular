@@ -747,7 +747,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private getFilterItemLabel(element: any, applyFormatter: boolean = true, data?: any) {
-        if (element.value) {
+        if (element?.value) {
             element = element.value;
         }
 
