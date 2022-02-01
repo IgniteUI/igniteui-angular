@@ -3,6 +3,7 @@ import { first, takeUntil } from 'rxjs/operators';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { DimensionValuesFilteringStrategy } from '../../data-operations/pivot-strategy';
 import { ColumnType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxPivotGridComponent } from './pivot-grid.component';
@@ -46,6 +47,7 @@ export class IgxPivotFilteringService extends IgxFilteringService {
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         dim.filter = filteringTree;
         grid.filteringPipeTrigger++;
+        grid.filterStrategy = grid.filterStrategy ?? new DimensionValuesFilteringStrategy();
         if (allDimensions.indexOf(dim) !== -1) {
             // update columns
             (grid as any).setupColumns();
