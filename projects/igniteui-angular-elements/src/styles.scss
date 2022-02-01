@@ -8,3 +8,8 @@ $palette: $light-material-palette;
 @include igx-core();
 @include igx-typography();
 @include igx-theme($palette: $palette);
+
+body {
+    display: grid;
+    gap: 16px;
+}

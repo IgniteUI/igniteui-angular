@@ -8,21 +8,42 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body class="igx-typography">
-  <igx-grid id="grid1">
-      <igx-column></igx-column>
-    <igx-paginator></igx-paginator>
+  <igx-grid id="grid1" moving="true">
   </igx-grid>
+
+  <igx-tree-grid id="treegrid1" moving="true">
+  </igx-tree-grid>
+
+  <igx-hierarchical-grid id="hgrid1" moving="true">
+  </igx-hierarchical-grid>
   <!-- <igc-paginator></igc-paginator> -->
-  <script src="assets/nw-products.js"></script>
+  <script src="assets/data/nw-products.js"></script>
+  <script src="assets/data/tree-grid-ds.js"></script>
+  <script src="assets/data/projects-hgrid.js"></script>
   <script>
     let grid = document.getElementById('grid1');
     grid.autoGenerate = true;
     grid.allowFiltering = true;
     grid.filterMode = 'excelStyleFilter';
     grid.displayDensity = 'compact';
-    grid.moving = true;
-    grid.paging = true; // This won't work at the moment
+    // grid.moving = true; // This works in attribute because of the casing
+    // grid.paging = true; // This won't work at the moment idk why
     grid.data = northwindProducts;
+
+    let treegrid = document.getElementById('treegrid1');
+    treegrid.autoGenerate = true;
+    treegrid.childDataKey = 'products';
+    treegrid.allowFiltering = true;
+    treegrid.filterMode = 'excelStyleFilter';
+    treegrid.displayDensity = 'compact';
+    treegrid.data = treeGridDS;
+
+    let hgrid = document.getElementById('hgrid1');
+    hgrid.autoGenerate = true;
+    hgrid.allowFiltering = true;
+    hgrid.filterMode = 'excelStyleFilter';
+    hgrid.displayDensity = 'compact';
+    hgrid.data = hgridData;
   </script>
 </body>
 </html>
