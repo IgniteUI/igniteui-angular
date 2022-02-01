@@ -1660,7 +1660,16 @@
     %igx-grid-th--selectable {
         color: var-get($theme, 'header-selected-text-color');
         background: var-get($theme, 'header-selected-background');
-        opacity: if($variant != 'indigo-design', .7, 1);
+
+        @if $variant != 'indigo-design' {
+            opacity: .7;
+
+            &%grid__drag-ghost-image {
+                opacity: 1;
+            }
+        } @else {
+            opacity: 1;
+        }
 
         .sort-icon {
             color: var-get($theme, 'header-selected-text-color');
