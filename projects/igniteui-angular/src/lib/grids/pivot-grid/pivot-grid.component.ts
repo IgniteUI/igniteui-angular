@@ -1366,6 +1366,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     protected autogenerateColumns() {
         let columns = [];
+        this.filterStrategy = this.filterStrategy ?? new DimensionValuesFilteringStrategy();
         const data = this.gridAPI.filterDataByExpressions(this.filteringExpressionsTree);
         this.dimensionDataColumns = this.generateDimensionColumns();
         let fieldsMap;
