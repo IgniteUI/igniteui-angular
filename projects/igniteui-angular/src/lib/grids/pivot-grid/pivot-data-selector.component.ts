@@ -452,10 +452,15 @@ export class IgxPivotDataSelectorComponent {
      * @hidden
      * @internal
      */
-    public toggleDimension(dimension: IPivotDimension | IPivotValue) {
-        dimension.enabled = !dimension.enabled;
-        this.grid.pipeTrigger++;
-        this.grid.cdr.markForCheck();
+    public toggleItem(item: IPivotDimension | IPivotValue) {
+        if (item as IPivotValue) {
+            this.grid.toggleValue(item as IPivotValue);
+        }
+
+        if (item as IPivotDimension) {
+            console.log(item);
+            this.grid.toggleDimension(item as IPivotDimension);
+        }
     }
 
     /**
