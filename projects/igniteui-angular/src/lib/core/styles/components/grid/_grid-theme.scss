@@ -984,7 +984,7 @@
 
     %grid-thead-thumb {
         background: var-get($theme, 'header-background');
-        border-#{$left}: 1px solid var-get($theme, 'header-border-color');
+        border-#{$left}: rem(1px) solid var-get($theme, 'header-border-color');
     }
 
     %grid-tfoot-thumb {
@@ -992,12 +992,12 @@
         top: 0;
         #{$right}: 0;
         background: var-get($theme, 'header-background');
-        border-#{$left}: 1px solid igx-color($palette, 'grays', 300);
+        border-#{$left}: rem(1px) solid var-get($theme, 'header-border-color');
     }
 
     %grid-tbody-scrollbar {
         background: var-get($theme, 'content-background');
-        border-#{$left}: 1px solid var-get($theme, 'row-border-color');
+        border-#{$left}: rem(1px) solid var-get($theme, 'row-border-color');
         position: relative;
     }
 
@@ -1075,6 +1075,7 @@
         z-index: 4;
         cursor: move;
         border-#{$right}: 1px solid transparent;
+        background-clip: border-box;
 
         igx-icon {
             width: $drag-icon-size;
@@ -1798,6 +1799,7 @@
         align-items: center;
         background: inherit;
         z-index: 4;
+        background-clip: border-box;
     }
 
     %cbx-padding {
@@ -1874,7 +1876,11 @@
     }
 
     %grid-summaries-patch {
-        background: inherit;
+        @if $bootstrap-theme {
+            background: igx-color($palette, 'grays', 100);
+        } @else {
+            background: inherit;
+        }
         position: relative;
         z-index: 1;
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
@@ -2160,6 +2166,7 @@
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
         background: inherit;
         z-index: 1;
+        background-clip: border-box;
 
         &::after {
             content: '';
@@ -2737,6 +2744,7 @@
         cursor: pointer;
         z-index: 3;
         color: var-get($theme, 'expand-icon-color');
+        background-clip: border-box;
 
         &:focus {
             outline: none;
@@ -2782,6 +2790,7 @@
         background: inherit;
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
         z-index: 3;
+        background-clip: border-box;
 
         igx-icon {
             display: flex;
@@ -2878,7 +2887,11 @@
 
     // Pivot grid
     %grid-thead--pivot {
-        flex-direction: column;
+        display: flex;
+
+        %grid-thead--virtualizationWrapper {
+            border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        }
     }
 
     %grid-thead--virtualizationWrapper {
@@ -2911,7 +2924,6 @@
         padding: map.get($grid-header-padding, 'comfortable');
         background-clip: border-box !important;
         border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
-        border-#{$right}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 
         igx-chips-area {
@@ -2926,6 +2938,32 @@
                 margin-#{$right}: 0;
             }
         }
+    }
+
+    %igx-grid__pivot-filter-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+
+        > igx-badge {
+            position: absolute;
+            top: rem(-4px);
+            left: 60%;
+            width: rem(18px);
+            min-width: rem(18px);
+            height: rem(18px);
+            font-size: rem(10px);
+            pointer-events: none;
+            user-select: none;
+        }
+    }
+
+    %igx-grid__pivot-empty-chip-area {
+        line-height: normal;
+        font-size: rem(14px);
+        margin-right: 0 !important;
     }
 
     %igx-grid__tr-pivot--row-area {
