@@ -65,7 +65,7 @@
         <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
         </ng-container>
     </div>
-    <div class="igx-grid-thead__group">
+    <div class="igx-grid-thead__group" *ngIf='!grid.isPivot'>
         <ng-container *ngFor="let child of column.children">
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
                 [ngClass]="child.headerGroupClasses"
