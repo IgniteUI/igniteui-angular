@@ -264,6 +264,8 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
 
     it('should reevaluate aggregated values when all row dimensions are removed', () => {
         const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.height = '700px';
+        pivotGrid.width = '1000px';
         pivotGrid.pivotConfiguration.columns = [
             new IgxPivotDateDimension(
                 {
@@ -301,6 +303,8 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
 
     it('should reevaluate aggregated values when all col dimensions are removed', () => {
         const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.height = '700px';
+        pivotGrid.width = '1000px';
         pivotGrid.pivotConfiguration.columns = [
             new IgxPivotDateDimension(
                 {

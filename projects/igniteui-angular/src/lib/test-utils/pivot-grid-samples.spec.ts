@@ -6,7 +6,7 @@ import { IPivotConfiguration, PivotAggregation } from '../grids/pivot-grid/pivot
 @Component({
     template: `
     <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
-        [rowSelection]="'single'" [height]="'700px'" [width]="'1000px'" [columnSelection]="'single'" [defaultExpandState]='defaultExpand'>
+        [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]='defaultExpand'>
     </igx-pivot-grid>`
 })
 export class IgxPivotGridTestBaseComponent {
