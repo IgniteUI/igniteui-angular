@@ -23,17 +23,15 @@ import {
     ViewContainerRef,
     Injector,
     NgModuleRef,
-    ApplicationRef,
-    ContentChildren
-} from '@angular/core';
+    ApplicationRef} from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IPivotConfiguration, IPivotDimension, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -64,7 +62,6 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
-import { flatten } from '@angular/compiler';
 import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
 
 let NEXT_ID = 0;
@@ -122,8 +119,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @ViewChild(IgxPivotHeaderRowComponent, { static: true })
     public theadRow: IgxPivotHeaderRowComponent;
 
-
-
     @Input()
     /**
      * Gets/Sets the pivot configuration with all related dimensions and values.
@@ -133,11 +128,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * <igx-pivot-grid [pivotConfiguration]="config"></igx-pivot-grid>
      * ```
      */
-    public set pivotConfiguration(value :IPivotConfiguration) {
+    public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
         this.notifyChanges(true);
     }
-    
+
     public get pivotConfiguration() {
         return this._pivotConfiguration;
     }
@@ -643,6 +638,20 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /** @hidden @internal */
+    public createFilterESF(dropdown: any, column: ColumnType, options: OverlaySettings, shouldReatach: boolean) {
+        options.outlet = this.outlet;
+        if (dropdown) {
+            dropdown.initialize(column, this.overlayService);
+            if (shouldReatach) {
+                const id = this.overlayService.attach(dropdown.element, options);
+                dropdown.overlayComponentId = id;
+                return { id, ref: undefined };
+            }
+            return {id: dropdown.overlayComponentId, ref: undefined};
+        }
+    }
+
     /** @hidden */
     public featureColumnsWidth() {
         return this.pivotRowWidths;
@@ -765,7 +774,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get values() {
-        return this.pivotConfiguration.values.filter(x => x.enabled);
+        return this.pivotConfiguration.values.filter(x => x.enabled) || [];
     }
 
     public toggleColumn(col: IgxColumnComponent) {
@@ -1032,7 +1041,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (this.getDimensionType(dimension) === PivotDimensionType.Row) {
             const relatedDims = PivotUtil.flatten([dimension]).map(x => x.memberName);
             const content = this.rowDimensionContentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
-            const headers = flatten(content.map(x => x.headerGroups.toArray())).map(x => x.header.refInstance);
+            const headers = content.map(x => x.headerGroups.toArray()).flat().map(x => x.header && x.header.refInstance);
             const autoWidth = this.getLargesContentWidth(headers);
             dimension.width = autoWidth;
             this.pipeTrigger++;
@@ -1040,12 +1049,225 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
+    /**
+     * Inserts dimension in target collection by type at specified index or at the collection's end.
+     *
+     * @example
+     * ```typescript
+     * this.grid.insertDimensionAt(dimension, PivotDimensionType.Row, 1);
+     * ```
+     * @param dimension The dimension that will be added.
+     * @param targetCollectionType The target collection type to add to. Can be Row, Column or Filter.
+     * @param index The index in the collection at which to add.
+     * This parameter is optional. If not set it will add it to the end of the collection.
+     */
+    public insertDimensionAt(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number) {
+        const targetCollection = this.getDimensionsByType(targetCollectionType);
+        if (index !== undefined) {
+            targetCollection.splice(index, 0, dimension);
+        } else {
+            targetCollection.push(dimension);
+        }
+        if (targetCollectionType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
+        this.pipeTrigger++;
+        this.dimensionsChange.emit({ dimensions: targetCollection, dimensionCollectionType: targetCollectionType });
+        if (targetCollectionType === PivotDimensionType.Filter) {
+            this.reflow();
+        }
+    }
+
+    /**
+     * Move dimension from its currently collection to the specified target collection by type at specified index or at the collection's end.
+     *
+     * @example
+     * ```typescript
+     * this.grid.moveDimension(dimension, PivotDimensionType.Row, 1);
+     * ```
+     * @param dimension The dimension that will be moved.
+     * @param targetCollectionType The target collection type to move it to. Can be Row, Column or Filter.
+     * @param index The index in the collection at which to add.
+     * This parameter is optional. If not set it will add it to the end of the collection.
+     */
+    public moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number) {
+        const prevCollectionType = this.getDimensionType(dimension);
+        if (prevCollectionType === null) return;
+        // remove from old collection
+        this.removeDimension(dimension);
+        // add to target
+        this.insertDimensionAt(dimension, targetCollectionType, index);
+    }
+
+    /**
+     * Removes dimension from its currently collection.
+     * @remarks
+     * This is different than toggleDimension that enabled/disables the dimension.
+     * This completely removes the specified dimension from the collection.
+     * @example
+     * ```typescript
+     * this.grid.removeDimension(dimension);
+     * ```
+     * @param dimension The dimension to be removed.
+     */
+    public removeDimension(dimension: IPivotDimension) {
+        const prevCollectionType = this.getDimensionType(dimension);
+        if (prevCollectionType === null) return;
+        const prevCollection = this.getDimensionsByType(prevCollectionType);
+        const currentIndex = prevCollection.indexOf(dimension);
+        prevCollection.splice(currentIndex, 1);
+        if (prevCollectionType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
+        if (prevCollectionType === PivotDimensionType.Filter) {
+            this.reflow();
+        }
+        this.pipeTrigger++;
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * Toggles the dimension's enabled state on or off.
+     * @remarks
+     * The dimension remains in its current collection. This just changes its enabled state.
+     * @example
+     * ```typescript
+     * this.grid.toggleDimension(dimension);
+     * ```
+     * @param dimension The dimension to be toggled.
+     */
+    public toggleDimension(dimension: IPivotDimension) {
+        const dimType = this.getDimensionType(dimension);
+        if (dimType === null) return;
+        const collection = this.getDimensionsByType(dimType);
+        dimension.enabled = !dimension.enabled;
+        if (dimType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
+        if (!dimension.enabled) {
+            this.filteringService.clearFilter(dimension.memberName);
+        }
+        this.pipeTrigger++;
+        this.dimensionsChange.emit({ dimensions: collection, dimensionCollectionType: dimType });
+    }
+
+    /**
+     * Inserts value at specified index or at the end.
+     *
+     * @example
+     * ```typescript
+     * this.grid.insertValueAt(value, 1);
+     * ```
+     * @param value The value definition that will be added.
+     * @param index The index in the collection at which to add.
+     * This parameter is optional. If not set it will add it to the end of the collection.
+     */
+    public insertValueAt(value: IPivotValue, index?: number) {
+        if (!this.pivotConfiguration.values) {
+            this.pivotConfiguration.values = [];
+        }
+        const values = this.pivotConfiguration.values;
+        if (index !== undefined) {
+            values.splice(index, 0, value);
+        } else {
+            values.push(value);
+        }
+        this.setupColumns();
+        this.pipeTrigger++;
+        this.cdr.detectChanges();
+        this.valuesChange.emit({ values });
+    }
+
+    /**
+     * Move value from its currently at specified index or at the end.
+     *
+     * @example
+     * ```typescript
+     * this.grid.moveValue(value, 1);
+     * ```
+     * @param value The value that will be moved.
+     * @param index The index in the collection at which to add.
+     * This parameter is optional. If not set it will add it to the end of the collection.
+     */
+    public moveValue(value: IPivotValue, index?: number) {
+        if (this.pivotConfiguration.values.indexOf(value) === -1) return;
+        // remove from old index
+        this.removeValue(value);
+        // add to new
+        this.insertValueAt(value, index);
+    }
+
+    /**
+     * Removes value from collection.
+     * @remarks
+     * This is different than toggleValue that enabled/disables the value.
+     * This completely removes the specified value from the collection.
+     * @example
+     * ```typescript
+     * this.grid.removeValue(dimension);
+     * ```
+     * @param value The value to be removed.
+     */
+    public removeValue(value: IPivotValue,) {
+        const values = this.pivotConfiguration.values;
+        const currentIndex = values.indexOf(value);
+        if (currentIndex !== -1) {
+            values.splice(currentIndex, 1);
+            this.setupColumns();
+            this.pipeTrigger++;
+            this.valuesChange.emit({ values });
+        }
+    }
+
+    /**
+     * Toggles the value's enabled state on or off.
+     * @remarks
+     * The value remains in its current collection. This just changes its enabled state.
+     * @example
+     * ```typescript
+     * this.grid.toggleValue(value);
+     * ```
+     * @param value The value to be toggled.
+     */
+    public toggleValue(value: IPivotValue) {
+        if (this.pivotConfiguration.values.indexOf(value) === -1) return;
+        value.enabled = !value.enabled;
+        this.setupColumns();
+        this.pipeTrigger++;
+        this.valuesChange.emit({ values: this.pivotConfiguration.values });
+        this.reflow();
+    }
+
+    public getDimensionsByType(dimension: PivotDimensionType) {
+        switch (dimension) {
+            case PivotDimensionType.Row:
+                if (!this.pivotConfiguration.rows) {
+                    this.pivotConfiguration.rows = [];
+                }
+                return this.pivotConfiguration.rows;
+            case PivotDimensionType.Column:
+                if (!this.pivotConfiguration.columns) {
+                    this.pivotConfiguration.columns = [];
+                }
+                return this.pivotConfiguration.columns;
+            case PivotDimensionType.Filter:
+                if (!this.pivotConfiguration.filters) {
+                    this.pivotConfiguration.filters = [];
+                }
+                return this.pivotConfiguration.filters;
+            default:
+                return null;
+        }
+    }
+
+
     @ViewChildren(IgxPivotRowDimensionContentComponent)
     protected rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
 
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
         return PivotUtil.flatten(this.rowDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
-            PivotUtil.flatten(this.columnDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Column : PivotDimensionType.Filter;
+            PivotUtil.flatten(this.columnDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Column :
+            PivotUtil.flatten(this.filterDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Filter : null;
     }
 
     protected getLargesContentWidth(contents: ElementRef[]): string {
@@ -1145,6 +1367,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     protected autogenerateColumns() {
         let columns = [];
+        this.filterStrategy = this.filterStrategy ?? new DimensionValuesFilteringStrategy();
         const data = this.gridAPI.filterDataByExpressions(this.filteringExpressionsTree);
         this.dimensionDataColumns = this.generateDimensionColumns();
         let fieldsMap;
@@ -1237,78 +1460,67 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 }
             }
             if (shouldGenerate && (value.children == null || value.children.length === 0 || value.children.size === 0)) {
-                const ref = this.hasMultipleValues ?
-                    factoryColumnGroup.create(this.viewRef.injector) :
-                    factoryColumn.create(this.viewRef.injector);
-                ref.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
-                ref.instance.field = key;
-                ref.instance.parent = parent;
-                ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
-                ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
-                ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
-                ref.instance.sortable = true;
-                ref.changeDetectorRef.detectChanges();
-                columns.push(ref.instance);
+                const col = this.createColumnForDimension(value, data, parent, this.hasMultipleValues);
+                columns.push(col);
                 if (this.hasMultipleValues) {
-                    const measureChildren = this.getMeasureChildren(factoryColumn, data, ref.instance, false, value.dimension.width);
-                    ref.instance.children.reset(measureChildren);
+                    const measureChildren = this.getMeasureChildren(factoryColumn, data, col, false, value.dimension.width);
+                    col.children.reset(measureChildren);
                     columns = columns.concat(measureChildren);
                 }
 
             } else if (shouldGenerate) {
-                const ref = factoryColumnGroup.create(this.viewRef.injector);
-                ref.instance.parent = parent;
-                ref.instance.field = key;
-                ref.instance.sortable = true;
-                ref.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
+                const col = this.createColumnForDimension(value, data, parent, true);
                 if (value.expandable) {
-                    ref.instance.headerTemplate = this.headerTemplate;
+                    col.headerTemplate = this.headerTemplate;
                 }
-                const children = this.generateColumnHierarchy(value.children, data, ref.instance);
-                const filteredChildren = children.filter(x => x.level === ref.instance.level + 1);
-                ref.changeDetectorRef.detectChanges();
-                columns.push(ref.instance);
+                const children = this.generateColumnHierarchy(value.children, data, col);
+                const filteredChildren = children.filter(x => x.level === col.level + 1);
+                columns.push(col);
                 if (this.hasMultipleValues) {
-                    let measureChildren = this.getMeasureChildren(factoryColumn, data, ref.instance, true, value.dimension.width);
+                    let measureChildren = this.getMeasureChildren(factoryColumn, data, col, true, value.dimension.width);
                     const nestedChildren = filteredChildren;
                     //const allChildren = children.concat(measureChildren);
-                    ref.instance.children.reset(nestedChildren);
+                    col.children.reset(nestedChildren);
                     columns = columns.concat(children);
                     if (value.dimension.childLevel) {
-                        const refSibling = factoryColumnGroup.create(this.viewRef.injector);
-                        refSibling.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
-                        refSibling.instance.field = key;
-                        refSibling.instance.parent = parent;
-                        ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
-                        ref.instance.sortable = true;
-                        refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
-                        refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
-                        columns.push(refSibling.instance);
+                        const sibling = this.createColumnForDimension(value, data, parent, true);
+                        columns.push(sibling);
 
-                        measureChildren = this.getMeasureChildren(factoryColumn, data, refSibling.instance, false, value.dimension?.width);
-                        refSibling.instance.children.reset(measureChildren);
+                        measureChildren = this.getMeasureChildren(factoryColumn, data, sibling, false, value.dimension?.width);
+                        sibling.children.reset(measureChildren);
                         columns = columns.concat(measureChildren);
                     }
 
                 } else {
-                    ref.instance.children.reset(filteredChildren);
+                    col.children.reset(filteredChildren);
                     columns = columns.concat(children);
                     if (value.dimension.childLevel) {
-                        const refSibling = factoryColumn.create(this.viewRef.injector);
-                        refSibling.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
-                        refSibling.instance.field = key;
-                        refSibling.instance.parent = parent;
-                        ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
-                        ref.instance.sortable = true;
-                        refSibling.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
-                        refSibling.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
-                        columns.push(refSibling.instance);
+                        const sibling = this.createColumnForDimension(value, data, parent, false);
+                        columns.push(sibling);
                     }
                 }
             }
         });
 
         return columns;
+    }
+
+    protected createColumnForDimension(value: any, data: any, parent: ColumnType, isGroup: boolean) {
+        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
+        const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
+        const key = value.value;
+        const ref = isGroup ?
+        factoryColumnGroup.create(this.viewRef.injector) :
+        factoryColumn.create(this.viewRef.injector);
+        ref.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
+        ref.instance.field = key;
+        ref.instance.parent = parent;
+        ref.instance.width = value.dimension?.width || MINIMUM_COLUMN_WIDTH + 'px';
+        ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
+        ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
+        ref.instance.sortable = true;
+        ref.changeDetectorRef.detectChanges();
+        return ref.instance;
     }
 
     protected getMeasureChildren(colFactory, data, parent, hidden, parentWidth) {

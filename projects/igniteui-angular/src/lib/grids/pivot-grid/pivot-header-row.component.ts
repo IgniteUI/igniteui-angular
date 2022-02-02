@@ -7,6 +7,7 @@ import {
     OnChanges,
     QueryList,
     Renderer2,
+    ViewChild,
     SimpleChanges,
     ViewChildren
 } from '@angular/core';
@@ -44,6 +45,8 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public aggregateList: IPivotAggregator[] = [];
 
     public value: IPivotValue;
+    public filterDropdownDimensions: Set<any> = new Set<any>();
+    public filterAreaDimensions: Set<any> = new Set<any>();
     private _dropPos = DropPosition.AfterDropTarget;
     private valueData: Map<string, IPivotAggregator[]>;
     private _subMenuPositionSettings: PositionSettings = {
@@ -57,6 +60,50 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('esf') public esf: any;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('filterAreaHidden', { static: false }) public filterArea;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('filterIcon') public filtersButton;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('dropdownChips') public dropdownChips;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('pivotFilterContainer') public pivotFilterContainer;
+
+    /**
+    * @hidden
+    * @internal
+    */
+    @ViewChildren('notifyChip')
+    public notificationChips: QueryList<IgxChipComponent>;
+
+    /**
+    * @hidden
+    * @internal
+    * The virtualized part of the header row containing the unpinned header groups.
+    */
+    @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective })
+    public headerContainers: QueryList<IgxGridForOfDirective<IgxGridHeaderGroupComponent>>;
+
+    public get headerForOf() {
+        return this.headerContainers.last;
+    }
+
     constructor(
         @Inject(IGX_GRID_BASE) public grid: PivotGridType,
         protected ref: ElementRef<HTMLElement>,
@@ -69,26 +116,37 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     /**
     * @hidden
     * @internal
-    * The virtualized part of the header row containing the unpinned header groups. */
-    @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective })
-    public headerContainers: QueryList<IgxGridForOfDirective<IgxGridHeaderGroupComponent>>;
-
-    public get headerForOf() {
-        return this.headerContainers.last;
-    }
-
-    /**
-    * @hidden
-    * @internal
-    */
-    @ViewChildren('notifyChip')
-    public notificationChips: QueryList<IgxChipComponent>;
-
-    /**
-    * @hidden
-    * @internal
     */
     public columnDimensionsByLevel: any[] = [];
+
+    /**
+    * @hidden @internal
+    */
+    public get isFiltersButton(): boolean {
+        let chipsWidth = 0;
+        this.filterDropdownDimensions.clear();
+        this.filterAreaDimensions.clear();
+        if (this.filterArea?.chipsList && this.filterArea.chipsList.length !== 0) {
+            const styles = getComputedStyle(this.pivotFilterContainer.nativeElement);
+            const containerPaddings = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+            chipsWidth += containerPaddings + (this.filtersButton && this.filterArea?.chipsList.length > 1 ? this.filtersButton.el.nativeElement.getBoundingClientRect().width : 0);
+            this.filterArea.chipsList.forEach(chip => {
+                const dim = this.grid.filterDimensions.find(x => x.memberName === chip.id);
+                if (dim) {
+                    // 8 px margin between chips
+                    const currentChipWidth = chip.nativeElement.getBoundingClientRect().width + 8;
+                    if (chipsWidth + currentChipWidth < this.grid.pivotRowWidths) {
+                        this.filterAreaDimensions.add(dim);
+                    } else {
+                        this.filterDropdownDimensions.add(dim);
+                    }
+                    chipsWidth += currentChipWidth;
+                }
+            });
+            return this.filterDropdownDimensions.size > 0;
+        }
+        return false;
+    }
 
     /**
     * @hidden
@@ -252,10 +310,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public rowRemoved(event: IBaseChipEventArgs) {
         const row = this.grid.pivotConfiguration.rows.find(x => x.memberName === event.owner.id);
-        row.enabled = false;
-        this.grid.pipeTrigger++;
-        this.grid.filteringService.clearFilter(row.memberName);
-        this.grid.dimensionsChange.emit({ dimensions: this.grid.pivotConfiguration.rows, dimensionCollectionType: PivotDimensionType.Row });
+        this.grid.toggleDimension(row);
     }
 
     /**
@@ -264,12 +319,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public columnRemoved(event: IBaseChipEventArgs) {
         const col = this.grid.pivotConfiguration.columns.find(x => x.memberName === event.owner.id);
-        col.enabled = false;
-        this.grid.setupColumns();
-        this.grid.filteringService.clearFilter(col.memberName);
-        this.grid.pipeTrigger++;
-        this.grid.dimensionsChange.emit({ dimensions: this.grid.pivotConfiguration.columns, dimensionCollectionType: PivotDimensionType.Row });
-        this.grid.reflow();
+        this.grid.toggleDimension(col);
     }
 
     /**
@@ -278,11 +328,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public valueRemoved(event: IBaseChipEventArgs) {
         const value = this.grid.pivotConfiguration.values.find(x => x.member === event.owner.id || x.displayName === event.owner.id);
-        value.enabled = false;
-        this.grid.setupColumns();
-        this.grid.pipeTrigger++;
-        this.grid.valuesChange.emit({ values: this.grid.pivotConfiguration.values });
-        this.grid.reflow();
+        this.grid.toggleValue(value);
     }
 
     /**
@@ -291,10 +337,37 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public filterRemoved(event: IBaseChipEventArgs) {
         const filter = this.grid.pivotConfiguration.filters.find(x => x.memberName === event.owner.id);
-        filter.enabled = false;
-        this.grid.filteringService.clearFilter(filter.memberName);
-        this.grid.pipeTrigger++;
-        this.grid.dimensionsChange.emit({ dimensions: this.grid.pivotConfiguration.filters, dimensionCollectionType: PivotDimensionType.Filter });
+        this.grid.toggleDimension(filter);
+        if (this.isFiltersButton && this.filterDropdownDimensions.has(filter)) {
+            const selectedChip = this.dropdownChips.chipsList.find(x => x.selected);
+            if (!selectedChip || selectedChip.id === event.owner.id) {
+                this.dropdownChips.chipsList.first.selected = true;
+            }
+            this.filterDropdownDimensions.delete(filter)
+            if (this.filterDropdownDimensions.size === 0) {
+                this.grid.filteringService.hideESF();
+            } else {
+                this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, undefined, false);
+            }
+        } else {
+            if (this.filterAreaDimensions.has(filter))  {
+                this.filterAreaDimensions.delete(filter)
+                this.grid.filteringService.hideESF();
+            } else if (this.filterDropdownDimensions.size > 0) {
+                this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, undefined, false);
+            } else {
+                this.grid.filteringService.hideESF();
+            }
+        }
+    }
+
+    public onFiltersSelectionChanged(event?: IBaseChipEventArgs) {
+        this.dropdownChips.chipsList.forEach(chip => {
+            if (chip.id !== event.owner.id) {
+                chip.selected = false
+            }
+        });
+        this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, this.grid.filterDimensions.find(dim => dim.memberName === event.owner.id), false);
     }
 
     /**
@@ -341,6 +414,29 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
                 this.updateDropDown(value, dropdown, chip);
             });
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onFiltersAreaDropdownClick(event, dimension?, shouldReattach = true) {
+        let dim = dimension || this.filterDropdownDimensions.values().next().value;
+        let col;
+        while (dim) {
+            col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
+            if (col) {
+                break;
+            } else {
+                dim = dim.childLevel;
+            }
+        }
+        if (shouldReattach) {
+            this.dropdownChips.chipsList.forEach(chip => {
+                chip.selected = false
+            });
+            this.dropdownChips.chipsList.first.selected = true;
+        }
+        this.grid.filteringService.toggleFiltersESF(this.esf, event.target, col, shouldReattach);
     }
 
     /**
@@ -428,7 +524,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public onAreaDragLeave(event, area) {
         const dataChips = area.chipsList.toArray().filter(x => this.notificationChips.toArray().indexOf(x) === -1);
         dataChips.forEach(element => {
-            element.nativeElement.previousElementSibling.style.visibility = 'hidden';
+            if (element.nativeElement.previousElementSibling) {
+                element.nativeElement.previousElementSibling.style.visibility = 'hidden';
+            }
             if (element.nativeElement.nextElementSibling) {
                 element.nativeElement.nextElementSibling.style.visibility = 'hidden';
             }
@@ -441,18 +539,15 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public onValueDrop(event, area) {
         //values can only be reordered
-        const currentDim = this.grid.pivotConfiguration.values;
+        const values = this.grid.pivotConfiguration.values;
         const dragId = event.dragChip?.id || event.dragData?.chip.id;
         const chipsArray = area.chipsList.toArray();
         let chipIndex = chipsArray.indexOf(event.owner) !== -1 ? chipsArray.indexOf(event.owner) : chipsArray.length;
         chipIndex = this._dropPos === DropPosition.AfterDropTarget ? chipIndex + 1 : chipIndex;
-        const newDim = currentDim.find(x => x.member === dragId || x.displayName === dragId);
-        if (newDim) {
+        const value = values.find(x => x.member === dragId || x.displayName === dragId);
+        if (value) {
             const dragChipIndex = chipsArray.indexOf(event.dragChip || event.dragData.chip);
-            currentDim.splice(dragChipIndex, 1);
-            currentDim.splice(dragChipIndex >= chipIndex ? chipIndex : chipIndex - 1, 0, newDim);
-            this.grid.setupColumns();
-            this.grid.valuesChange.emit({ values: this.grid.pivotConfiguration.values });
+            this.grid.moveValue(value, dragChipIndex >= chipIndex ? chipIndex : chipIndex - 1);
         }
     }
 
@@ -460,9 +555,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @hidden
     * @internal
     */
-    public onDimDrop(event, area, dimension: PivotDimensionType) {
+    public onDimDrop(event, area, dimensionType: PivotDimensionType) {
         const dragId = event.dragChip?.id || event.dragData?.chip.id;
-        const currentDim = this.getDimensionsByType(dimension);
+        const currentDim = this.grid.getDimensionsByType(dimensionType);
         const chipsArray = area.chipsList.toArray();
         const chip = chipsArray.find(x => x.id === dragId);
         const isNewChip = chip === undefined;
@@ -481,58 +576,18 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
                 // you have dragged something that is not a dimension
                 return;
             }
-            const dimType = this.getDimensionsType(dim);
-
-            // Dragged chip from a different dimension to the current one.
-            const prevDimensionCollection = this.getDimensionsByType(dimType);
-            // delete from previous dimension collection and add to current.
-            prevDimensionCollection.splice(prevDimensionCollection.indexOf(dim), 1);
-            currentDim.splice(targetIndex, 0, dim);
-
-            const isDraggedFromColumn = !!this.grid.pivotConfiguration.columns?.find(x => x && x.memberName === dragId);
-            if (isDraggedFromColumn) {
-                // columns have changed.
-                this.grid.setupColumns();
-            }
+            this.grid.moveDimension(dim, dimensionType, targetIndex);
         } else if (isReorder) {
             // chip from same collection, reordered.
             const newDim = currentDim.find(x => x.memberName === dragId);
-            //const dragChipIndex = chipsArray.indexOf(event.dragChip || event.dragData.chip);
             const dragChipIndex = currentDim.findIndex(x => x.memberName === dragId);
-            currentDim.splice(dragChipIndex, 1);
-            currentDim.splice(dragChipIndex > chipIndex ? targetIndex : targetIndex - 1, 0, newDim);
-        }
-        if (dimension === PivotDimensionType.Column) {
-            // if columns have changed need to regenerate columns.
-            this.grid.setupColumns();
+            this.grid.moveDimension(newDim, dimensionType, dragChipIndex > chipIndex ? targetIndex : targetIndex - 1);
         }
         this.grid.pipeTrigger++;
-        this.grid.dimensionsChange.emit({ dimensions: currentDim, dimensionCollectionType: dimension });
+        this.grid.dimensionsChange.emit({ dimensions: currentDim, dimensionCollectionType: dimensionType });
         // clean states
         this.onDimDragEnd();
         this.onAreaDragLeave(event, area);
-    }
-
-    protected getDimensionsByType(dimension: PivotDimensionType) {
-        switch (dimension) {
-            case PivotDimensionType.Row:
-                if (!this.grid.pivotConfiguration.rows) {
-                    this.grid.pivotConfiguration.rows = [];
-                }
-                return this.grid.pivotConfiguration.rows;
-            case PivotDimensionType.Column:
-                if (!this.grid.pivotConfiguration.columns) {
-                    this.grid.pivotConfiguration.columns = [];
-                }
-                return this.grid.pivotConfiguration.columns;
-            case PivotDimensionType.Filter:
-                if (!this.grid.pivotConfiguration.filters) {
-                    this.grid.pivotConfiguration.filters = [];
-                }
-                return this.grid.pivotConfiguration.filters;
-            default:
-                return null;
-        }
     }
 
     protected getDimensionsType(dimension: IPivotDimension) {

@@ -11,30 +11,27 @@ import { IgxGridComponent } from '../grid/grid.component';
  * @hidden
  */
 @NgModule({
-  declarations: [
-    IgxHierarchicalGridComponent,
-    IgxHierarchicalRowComponent,
-    IgxRowIslandComponent,
-    IgxChildGridRowComponent,
-    IgxHierarchicalGridCellComponent,
-    IgxGridHierarchicalPipe,
-    IgxGridHierarchicalPagingPipe
-  ],
-  exports: [
-    IgxGridModule,
-    IgxHierarchicalGridComponent,
-    IgxHierarchicalRowComponent,
-    IgxHierarchicalGridCellComponent,
-    IgxRowIslandComponent,
-    IgxChildGridRowComponent
-  ],
-  imports: [
-    IgxGridModule,
-  ],
-  entryComponents: [
-    IgxGridComponent
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    declarations: [
+        IgxHierarchicalGridComponent,
+        IgxHierarchicalRowComponent,
+        IgxRowIslandComponent,
+        IgxChildGridRowComponent,
+        IgxHierarchicalGridCellComponent,
+        IgxGridHierarchicalPipe,
+        IgxGridHierarchicalPagingPipe
+    ],
+    exports: [
+        IgxGridModule,
+        IgxHierarchicalGridComponent,
+        IgxHierarchicalRowComponent,
+        IgxHierarchicalGridCellComponent,
+        IgxRowIslandComponent,
+        IgxChildGridRowComponent
+    ],
+    imports: [
+        IgxGridModule,
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxHierarchicalGridModule {
 }
