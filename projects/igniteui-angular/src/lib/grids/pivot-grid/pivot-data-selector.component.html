@@ -80,24 +80,23 @@
                 >
                     <div class="igx-pivot-data-selector__item">
                         <div
-                            class="igx-pivot-data-selector__item-text"
+                            class="igx-pivot-data-selector__item-start"
+                            (click)="onItemSort($event, item, panel.type)"
                             [class.igx-pivot-data-selector__action-sort]="
                                 panel.sortable
                             "
-                            (click)="onItemSort($event, item, panel.type)"
                         >
-                            <span *ngIf="panel.type === null">{{
-                                item.aggregate.key
-                            }}</span>
-                            <span *ngIf="panel.type === null">(</span>
-                            <span>{{ item[panel.itemKey] }}</span>
-                            <span *ngIf="panel.type === null">)</span>
-                        </div>
-                        <div class="igx-pivot-data-selector__item-actions">
+                            <div class="igx-pivot-data-selector__item-text">
+                                <span *ngIf="panel.type === null">{{
+                                    item.aggregate.key
+                                }}</span>
+                                <span *ngIf="panel.type === null">(</span>
+                                <span>{{ item[panel.itemKey] }}</span>
+                                <span *ngIf="panel.type === null">)</span>
+                            </div>
                             <igx-icon
                                 class="igx-pivot-data-selector__action-sort"
                                 *ngIf="panel.sortable && item.sortDirection"
-                                (click)="onItemSort($event, item, panel.type)"
                             >
                                 {{
                                     item.sortDirection < 2
@@ -105,6 +104,8 @@
                                         : "arrow_downward"
                                 }}
                             </igx-icon>
+                        </div>
+                        <div class="igx-pivot-data-selector__item-end">
                             <igx-icon
                                 class="igx-pivot-data-selector__action-summary"
                                 *ngIf="panel.type === null"

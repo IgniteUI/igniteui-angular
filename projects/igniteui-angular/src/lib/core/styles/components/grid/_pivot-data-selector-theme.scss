@@ -241,7 +241,15 @@
         cursor: grab;
     }
 
-    %selector-item-actions {
+    %selector-item-start {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex: 1 1 auto;
+        padding-inline-end: rem(8px);
+    }
+
+    %selector-item-end {
         display: flex;
 
         igx-icon + igx-icon {
