@@ -4,8 +4,8 @@ import { IgxExpansionPanelModule } from "../../expansion-panel/expansion-panel.m
 import { IgxGridComponent } from "../grid/grid.component";
 import { IgxGridModule } from "../grid/grid.module";
 import {
-    IgxFilterDimensionsPipe,
-    IgxPivotDataSelectorComponent,
+    IgxFilterPivotItemsPipe,
+    IgxPivotDataSelectorComponent
 } from "./pivot-data-selector.component";
 import { IgxPivotGridComponent } from "./pivot-grid.component";
 import {
@@ -15,7 +15,7 @@ import {
     IgxPivotGridFilterPipe,
     IgxPivotGridSortingPipe,
     IgxPivotRowExpansionPipe,
-    IgxPivotRowPipe,
+    IgxPivotRowPipe
 } from "./pivot-grid.pipes";
 import { IgxPivotHeaderRowComponent } from "./pivot-header-row.component";
 import { IgxPivotRowDimensionContentComponent } from "./pivot-row-dimension-content.component";
@@ -42,7 +42,7 @@ import { IgxPivotRowComponent } from "./pivot-row.component";
         IgxPivotGridColumnSortingPipe,
         IgxPivotDataSelectorComponent,
         IgxPivotCellMergingPipe,
-        IgxFilterDimensionsPipe,
+        IgxFilterPivotItemsPipe,
     ],
     exports: [
         IgxGridModule,

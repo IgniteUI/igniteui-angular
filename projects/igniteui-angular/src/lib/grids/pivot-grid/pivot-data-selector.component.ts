@@ -1,5 +1,6 @@
 import { useAnimation } from "@angular/animations";
 import {
+    AfterContentInit,
     Component,
     HostBinding,
     Input,
@@ -54,7 +55,7 @@ interface IDataSelectorPanel {
     selector: "igx-pivot-data-selector",
     templateUrl: "./pivot-data-selector.component.html",
 })
-export class IgxPivotDataSelectorComponent {
+export class IgxPivotDataSelectorComponent implements AfterContentInit {
     private _grid: PivotGridType;
     private _dropDelta = 0;
 
@@ -93,8 +94,20 @@ export class IgxPivotDataSelectorComponent {
     public ghostText: string;
     public ghostWidth: number;
     public dropAllowed: boolean;
+    public dims: IPivotDimension[];
+    public values: IPivotValue[];
 
     constructor(private renderer: Renderer2) {}
+
+    public ngAfterContentInit(): void {
+        this.dims = [
+            ...this.grid.pivotConfiguration.columns,
+            ...this.grid.pivotConfiguration.rows,
+            ...this.grid.pivotConfiguration.filters,
+        ];
+
+        this.values = this.grid.pivotConfiguration.values;
+    }
 
     /**
      * @hidden @internal
@@ -458,7 +471,6 @@ export class IgxPivotDataSelectorComponent {
         }
 
         if (item as IPivotDimension) {
-            console.log(item);
             this.grid.toggleDimension(item as IPivotDimension);
         }
     }
@@ -489,7 +501,7 @@ export class IgxPivotDataSelectorComponent {
      * @hidden
      * @internal
      */
-    public onItemDragEnd(event: IDropBaseEventArgs) {
+    public onItemDragEnd(event: IDragBaseEventArgs) {
         this.renderer.setStyle(
             event.owner.element.nativeElement,
             "position",
@@ -529,13 +541,13 @@ export class IgxPivotDataSelectorComponent {
     }
 }
 
-@Pipe({ name: "filterDimensions" })
-export class IgxFilterDimensionsPipe implements PipeTransform {
+@Pipe({ name: "filterPivotItems" })
+export class IgxFilterPivotItemsPipe implements PipeTransform {
     public transform(
-        collection: IPivotDimension[],
+        collection: (IPivotDimension | IPivotValue)[],
         filterCriteria: string,
         _pipeTrigger: number
-    ): IPivotDimension[] {
+    ): any[] {
         if (!collection) {
             return collection;
         }

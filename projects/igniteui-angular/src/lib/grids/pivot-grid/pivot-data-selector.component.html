@@ -12,11 +12,8 @@
     <igx-list [displayDensity]="displayDensity">
         <igx-list-item
             *ngFor="
-                let item of grid.pivotConfiguration.columns
-                    .concat(grid.pivotConfiguration.rows)
-                    .concat(grid.pivotConfiguration.filters)
-                    .concat(grid.pivotConfiguration.values)
-                    | filterDimensions: input.value
+                let item of dims
+                    | filterPivotItems: input.value:grid.pipeTrigger
             "
         >
             <igx-checkbox
@@ -24,7 +21,20 @@
                 [checked]="item.enabled"
                 (click)="toggleItem(item)"
             ></igx-checkbox>
-            <span>{{ item.memberName || item.member }}</span>
+            <span>{{ item.memberName }}</span>
+        </igx-list-item>
+        <igx-list-item
+            *ngFor="
+                let item of values
+                    | filterPivotItems: input.value:grid.pipeTrigger
+            "
+        >
+            <igx-checkbox
+                [disableRipple]="true"
+                [checked]="item.enabled"
+                (click)="toggleItem(item)"
+            ></igx-checkbox>
+            <span>{{ item.member }}</span>
         </igx-list-item>
     </igx-list>
 </div>
