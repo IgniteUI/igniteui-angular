@@ -225,6 +225,11 @@
         cursor: no-drop;
     }
 
+    %selector-item-text {
+        @include ellipsis();
+        max-width: calc(100% - 18px + 8px);
+    }
+
     %selector-item-text,
     %selector-action-sort,
     %selector-action-move,
@@ -246,7 +251,7 @@
         justify-content: space-between;
         align-items: center;
         flex: 1 1 auto;
-        padding-inline-end: rem(8px);
+        margin-inline-end: rem(8px);
     }
 
     %selector-item-end {
