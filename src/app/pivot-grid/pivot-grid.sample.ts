@@ -11,7 +11,8 @@ import {
     DisplayDensity,
     FilteringExpressionsTree,
     FilteringLogic,
-    IgxStringFilteringOperand
+    IgxStringFilteringOperand,
+    PivotDimensionType
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -24,7 +25,8 @@ export class IgxTotalSaleAggregate {
         if (data.length === 1) {
             min = data[0].UnitPrice * data[0].UnitsSold;
         } else if (data.length > 1) {
-            min = data.reduce((a, b) => Math.min(a.UnitPrice * a.UnitsSold, b.UnitPrice * b.UnitsSold));
+            const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
+            min = mappedData.reduce((a, b) => Math.min(a, b));
         }
         return min;
     };
@@ -34,7 +36,8 @@ export class IgxTotalSaleAggregate {
         if (data.length === 1) {
             max = data[0].UnitPrice * data[0].UnitsSold;
         } else if (data.length > 1) {
-            max = data.reduce((a, b) => Math.max(a.UnitPrice * a.UnitsSold, b.UnitPrice * b.UnitsSold));
+            const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
+            max = mappedData.reduce((a, b) => Math.max(a,b));
         }
         return max;
     };
@@ -236,5 +239,57 @@ export class PivotGridSampleComponent {
         newPivotConfig.rows[rowDimIndex].width = widthValue;
 
         this.grid1.pivotConfiguration = newPivotConfig;
+    }
+
+    public remove(){
+        this.grid1.removeDimension({memberName: 'test', enabled: true});
+    }
+
+    public toggle(){
+        this.grid1.toggleDimension({memberName: 'test', enabled: true});
+    }
+
+    public move(){
+        this.grid1.moveDimension({memberName: 'test', enabled: true}, PivotDimensionType.Filter, 0);
+    }
+
+    public insert(){
+        this.grid1.insertDimensionAt({
+            memberName: 'Country',
+            enabled: true
+        }, PivotDimensionType.Filter, 0);
+    }
+
+
+    public removeVal(){
+        this.grid1.removeValue({member: 'test', enabled: true, aggregate: {
+            key: 'SUM',
+            aggregator: IgxPivotNumericAggregate.sum,
+            label: 'Sum'
+        } });
+    }
+
+    public toggleVal(){
+        this.grid1.toggleValue({member: 'test', enabled: true, aggregate: {
+            key: 'SUM',
+            aggregator: IgxPivotNumericAggregate.sum,
+            label: 'Sum'
+        } });
+    }
+
+    public moveVal(){
+        this.grid1.moveValue({member: 'test', enabled: true, aggregate: {
+            key: 'SUM',
+            aggregator: IgxPivotNumericAggregate.sum,
+            label: 'Sum'
+        } }, 0);
+    }
+
+    public insertVal(){
+        this.grid1.insertValueAt({member: 'test', enabled: true, aggregate: {
+            key: 'SUM',
+            aggregator: IgxPivotNumericAggregate.sum,
+            label: 'Sum'
+        } }, 0);
     }
 }

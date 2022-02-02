@@ -34,7 +34,7 @@ import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
-import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange } from '../pivot-grid/pivot-grid.interface';
+import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
@@ -637,6 +637,11 @@ export interface PivotGridType extends GridType {
     toggleRow(rowID: any): void;
     resolveDataTypes(field: any): GridColumnDataType;
     resolveRowDimensionWidth(dim: IPivotDimension): number;
+    moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index? : number);
+    getDimensionsByType(dimension: PivotDimensionType);
+    toggleDimension(dimension: IPivotDimension);
+    toggleValue(value: IPivotValue);
+    moveValue(value: IPivotValue, index?: number);
     dimensionsChange: EventEmitter<IDimensionsChange>;
     valuesChange: EventEmitter<IValuesChange>;
     pivotKeys: IPivotKeys;
