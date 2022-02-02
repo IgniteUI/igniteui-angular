@@ -250,8 +250,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex: 1 1 auto;
+        flex: 0 1 100%;
         margin-inline-end: rem(8px);
+        overflow: hidden;
     }
 
     %selector-item-end {
