@@ -1150,6 +1150,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
         this.pipeTrigger++;
         this.dimensionsChange.emit({ dimensions: collection, dimensionCollectionType: dimType });
+        this.cdr.detectChanges();
     }
 
     /**
