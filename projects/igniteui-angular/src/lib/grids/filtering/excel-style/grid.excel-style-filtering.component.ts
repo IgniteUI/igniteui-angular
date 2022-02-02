@@ -794,6 +794,10 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private getExpressionValue(element: any): string {
+        if (this.isHierarchical()) {
+            element = element.value;
+        }
+
         let value;
         if (this.column.dataType === GridColumnDataType.Date) {
             value = element && element.value ? new Date(element.value).toISOString() : element.value;

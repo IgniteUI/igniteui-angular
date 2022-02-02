@@ -20,7 +20,7 @@ import {
 } from '../../../data-operations/filtering-condition';
 import { Subject } from 'rxjs';
 import { IgxListComponent } from '../../../list/public_api';
-import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
+import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../../../checkbox/checkbox.component';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
@@ -65,6 +65,18 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    @ViewChild('selectAllCheckbox', { read: IgxCheckboxComponent, static: false })
+    public selectAllCheckbox: IgxCheckboxComponent;
+    
+    /**
+     * @hidden @internal
+     */
+     @ViewChild('addToCurrentFilterCheckbox', { read: IgxCheckboxComponent, static: false })
+     public addToCurrentFilterCheckbox: IgxCheckboxComponent;
+
+    /**
+     * @hidden @internal
+     */
      @ViewChild('tree', { read: IgxTreeComponent, static: false })
      public tree: IgxTreeComponent;
 
@@ -83,8 +95,29 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public get addToCurrentFilter(): FilterListItem {
-        if (!this._addToCurrentFilter) {
+     public get selectAllItem(): FilterListItem {
+        if (!this._selectAllItem) {
+            const selectAllItem = {
+                isSelected: false,
+                isFiltered: false,
+                indeterminate: false,
+                isSpecial: true,
+                isBlanks: false,
+                value: this.esf.grid.resourceStrings.igx_grid_excel_select_all,
+                label: this.esf.grid.resourceStrings.igx_grid_excel_select_all
+            };
+
+            this._selectAllItem = selectAllItem;
+        }
+
+        return this._selectAllItem;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get addToCurrentFilterItem(): FilterListItem {
+        if (!this._addToCurrentFilterItem) {
             const addToCurrentFilterItem = {
                 isSelected: false,
                 isFiltered: false,
@@ -95,10 +128,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 label: this.esf.grid.resourceStrings.igx_grid_excel_add_to_filter
             };
 
-            this._addToCurrentFilter = addToCurrentFilterItem;
+            this._addToCurrentFilterItem = addToCurrentFilterItem;
         }
 
-        return this._addToCurrentFilter;
+        return this._addToCurrentFilterItem;
     }
 
     /**
@@ -140,7 +173,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     private _isLoading;
-    private _addToCurrentFilter: FilterListItem;
+    private _selectAllItem: FilterListItem;
+    private _addToCurrentFilterItem: FilterListItem;
+    private _hierarchicalSelectedItems: FilterListItem[];
     private destroy$ = new Subject<boolean>();
 
     constructor(public cdr: ChangeDetectorRef, public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
@@ -174,6 +209,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
+        if (this.isHierarchical()) {
+            this._selectAllItem = this.esf.listData[0];
+            this.esf.listData.splice(0, 1);
+        }
         requestAnimationFrame(this.refreshSize);
     }
 
@@ -211,7 +250,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
         if (selectedIndex === 0) {
             this.displayedListData.forEach(element => {
-                if (element === this.addToCurrentFilter) {
+                if (element === this.addToCurrentFilterItem) {
                     return;
                 }
                 element.isSelected = eventArgs.checked;
@@ -220,7 +259,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             selectAllBtn.indeterminate = false;
         } else {
             eventArgs.checkbox.value.isSelected = eventArgs.checked;
-            const indexToStartSlicing = this.displayedListData.indexOf(this.addToCurrentFilter) > -1 ? 2 : 1;
+            const indexToStartSlicing = this.displayedListData.indexOf(this.addToCurrentFilterItem) > -1 ? 2 : 1;
 
             const slicedArray =
                 this.displayedListData.slice(indexToStartSlicing, this.displayedListData.length);
@@ -238,29 +277,24 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         eventArgs.checkbox.nativeCheckbox.nativeElement.blur();
     }
 
+    /**
+     * @hidden @internal
+     */
+    public onSelectAllCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
+        const treeNodes = this.tree.nodes;
+        treeNodes.forEach(node => (node.data as FilterListItem).isSelected = eventArgs.checked);
+    }
     
     /**
      * @hidden @internal
      */
+    public onAddToCurrentFilterCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
+    }
+
+    /**
+     * @hidden @internal
+     */
      public onNodeSelectionChange(eventArgs: ITreeNodeSelectionEvent) {
-        const selectAllBtn = this.displayedListData[0];
-        if (eventArgs.removed.length === 1 && eventArgs.removed[0].data === selectAllBtn) {
-            this.displayedListData.forEach(element => {
-                if (element === this.addToCurrentFilter) {
-                    return;
-                }
-                element.isSelected = false;
-            });
-            selectAllBtn.indeterminate = false;
-        } else if (eventArgs.added.length === 1 && eventArgs.added[0].data === selectAllBtn) {
-            this.displayedListData.forEach(element => {
-                if (element === this.addToCurrentFilter) {
-                    return;
-                }
-                element.isSelected = true;
-            });
-            selectAllBtn.indeterminate = false;
-        } else {
             eventArgs.added.forEach(node => {
                 (node.data as FilterListItem).isSelected = true;
             });
@@ -268,24 +302,19 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 (node.data as FilterListItem).isSelected = false;
             });
 
-            const indexToStartSlicing = this.displayedListData.indexOf(this.addToCurrentFilter) > -1 ? 2 : 1;
-
-            const slicedArray =
-                this.displayedListData.slice(indexToStartSlicing, this.displayedListData.length);
-
-            if (!slicedArray.find(el => el.isSelected === false)) {
-                selectAllBtn.indeterminate = false;
-                selectAllBtn.isSelected = true;
-            } else if (!slicedArray.find(el => el.isSelected === true)) {
+        this._hierarchicalSelectedItems = eventArgs.newSelection.map(item => item.data as FilterListItem);
+        const selectAllBtn = this.selectAllItem;
+        if (this._hierarchicalSelectedItems.length === 0) {
                 selectAllBtn.indeterminate = false;
                 selectAllBtn.isSelected = false;
+        } else if (this._hierarchicalSelectedItems.length === this.tree.nodes.length) {
+            selectAllBtn.indeterminate = false;
+            selectAllBtn.isSelected = true;
             } else {
                 selectAllBtn.indeterminate = true;
+            selectAllBtn.isSelected = false;
             }
         }
-
-        eventArgs.owner.nodes.first.indeterminate = selectAllBtn.indeterminate;
-    }
 
     /**
      * @hidden @internal
@@ -318,8 +347,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get applyButtonDisabled(): boolean {
-        return this.esf.listData[0] && !this.esf.listData[0].isSelected && !this.esf.listData[0].indeterminate ||
-            this.displayedListData && this.displayedListData.length === 0;
+        if (this.isHierarchical()) {
+            return (this._hierarchicalSelectedItems ? this._hierarchicalSelectedItems.length === 0 : false);
+        } else {
+            return (this.esf.listData[0] && !this.esf.listData[0].isSelected && !this.esf.listData[0].indeterminate) ||
+                (this.displayedListData && this.displayedListData.length === 0);
+        }
     }
 
     /**
@@ -358,19 +391,24 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        const searchAllBtn = this.esf.listData[0];
+        let selectAllBtn;
+        if (this._selectAllItem) {
+            selectAllBtn = this._selectAllItem;
+        } else {
+            selectAllBtn = this.esf.listData[0];
+        }
 
         if (!this.searchValue) {
             const anyFiltered = this.esf.listData.some(i => i.isFiltered);
             const anyUnfiltered = this.esf.listData.some(i => !i.isFiltered);
 
             if (anyFiltered && anyUnfiltered) {
-                searchAllBtn.indeterminate = true;
+                selectAllBtn.indeterminate = true;
             }
 
             this.esf.listData.forEach(i => i.isSelected = i.isFiltered);
             this.displayedListData = this.esf.listData;
-            searchAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all;
+            selectAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all;
 
             return;
         }
@@ -401,13 +439,23 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const filterTree = new FilteringExpressionsTree(FilteringLogic.Or, this.esf.column.field);
 
         const item = this.displayedListData[1];
-        const addToCurrentFilterOptionVisible = item === this.addToCurrentFilter;
+        const addToCurrentFilterOptionVisible = item === this.addToCurrentFilterItem;
 
-        const selectedItems = addToCurrentFilterOptionVisible && item.isSelected ?
+        let selectedItems = [];
+        if (this.isHierarchical()) {
+            selectedItems = this._hierarchicalSelectedItems;
+        } else {
+            selectedItems = addToCurrentFilterOptionVisible && item.isSelected ?
             this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected || el.isFiltered) :
             this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected);
+        }
 
-        const unselectedItem = this.esf.listData.slice(1, this.esf.listData.length).find(el => el.isSelected === false);
+        let unselectedItem;
+        if (this.isHierarchical()) {
+            unselectedItem = this.esf.listData.find(el => el.isSelected === false);
+        } else {
+            unselectedItem = this.esf.listData.slice(1, this.esf.listData.length).find(el => el.isSelected === false);
+        }
 
         if (unselectedItem) {
             if (selectedItems.length <= IgxExcelStyleSearchComponent.filterOptimizationThreshold) {

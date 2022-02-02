@@ -27,9 +27,9 @@
             <igx-checkbox
                 [value]="item"
                 [tabindex]="-1"
-                [checked]="item.isSelected"
+                [checked]="item?.isSelected"
                 [disableRipple]="true"
-                [indeterminate]="item.indeterminate"
+                [indeterminate]="item?.indeterminate"
                 [disableTransitions]="true"
                 (change)="onCheckboxChange($event)">
                 {{ item.label }}
@@ -45,8 +45,30 @@
     </ng-template>
 </igx-list>
 
-<igx-tree #tree [displayDensity]="esf.displayDensity" selection="Cascading" (nodeSelection)="onNodeSelectionChange($event)" *ngIf="isHierarchical()">
-    <igx-tree-node [data]="item" *ngFor="let item of displayedListData" [selected]="item.isSelected">
+<div style="overflow-y: auto;" *ngIf="isHierarchical()">
+    <igx-checkbox #selectAllCheckbox
+        [value]="selectAllItem"
+        [tabindex]="-1"
+        [checked]="selectAllItem?.isSelected"
+        [disableRipple]="true"
+        [indeterminate]="selectAllItem?.indeterminate"
+        [disableTransitions]="true"
+        (change)="onSelectAllCheckboxChange($event)">
+        {{ selectAllItem.label }}
+    </igx-checkbox>
+    
+    <!-- <igx-checkbox #addToCurrentFilterCheckbox *ngIf="searchValue"
+        [value]="addToCurrentFilterItem"
+        [tabindex]="-1"
+        [checked]="addToCurrentFilterItem.isSelected"
+        [disableRipple]="true"
+        [disableTransitions]="true"
+        (change)="onAddToCurrentFilterCheckboxChange($event)">
+        {{ addToCurrentFilterItem.label }}
+    </igx-checkbox> -->
+
+    <igx-tree #tree [displayDensity]="esf.displayDensity" selection="Cascading"  (nodeSelection)="onNodeSelectionChange($event)">
+        <igx-tree-node [data]="item" *ngFor="let item of displayedListData;" [selected]="item.isSelected">
         <div>{{item.label}}</div>
         <igx-tree-node [data]="childLevel1" *ngFor="let childLevel1 of item.children" [selected]="childLevel1.isSelected">
             <div>{{childLevel1.label}}</div>
@@ -65,6 +87,7 @@
         </igx-tree-node>
     </igx-tree-node>
 </igx-tree>
+</div>
 
 <ng-template #defaultExcelStyleLoadingValuesTemplate>
     <igx-circular-bar [indeterminate]="true">
