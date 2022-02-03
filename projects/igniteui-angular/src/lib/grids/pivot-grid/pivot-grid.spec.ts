@@ -294,11 +294,13 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         let uniqueVals = Array.from(new Set(pivotGrid.data.map(x => x.SellerName))).length;
         expect(pivotGrid.rowList.length).toEqual(uniqueVals + 1);
         expect(pivotGrid.rowList.first.cells.first.title).toEqual('282$');
+        expect(pivotGrid.rowDimensions.length).toEqual(1);
 
         pivotGrid.pivotConfiguration.rows = [];
         pivotGrid.notifyDimensionChange(true);
         fixture.detectChanges();
         expect(pivotGrid.rowList.length).toEqual(1);
+        expect(pivotGrid.rowDimensions.length).toEqual(0);
     });
 
     it('should reevaluate aggregated values when all col dimensions are removed', () => {
@@ -334,12 +336,14 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(pivotGrid.rowList.length).toEqual(uniqueVals + 1);
         expect(pivotGrid.rowList.first.cells.first.title).toEqual('282$');
         expect(pivotGrid.rowList.first.cells.length).toEqual(5);
+        expect(pivotGrid.columnDimensions.length).toEqual(1);
 
         pivotGrid.pivotConfiguration.columns = [];
         pivotGrid.notifyDimensionChange(true);
         fixture.detectChanges();
 
         expect(pivotGrid.rowList.first.cells.length).toEqual(pivotGrid.values.length);
+        expect(pivotGrid.columnDimensions.length).toEqual(0);
     });
 
     describe('IgxPivotGrid Features #pivotGrid', () => {
@@ -1443,7 +1447,7 @@ describe('IgxPivotGrid APIs #pivotGrid', () => {
 
         expect(pivotGrid.pivotConfiguration.columns.length).toBe(0);
         expect(pivotGrid.columnDimensions.length).toBe(0);
-        expect(pivotGrid.columns.length).toBe(0);
+        expect(pivotGrid.columns.length).toBe(pivotGrid.values.length);
 
         // remove filter
         pivotGrid.removeDimension(filter);
