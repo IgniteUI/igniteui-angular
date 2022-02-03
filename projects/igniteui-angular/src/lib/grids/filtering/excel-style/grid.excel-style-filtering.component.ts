@@ -24,7 +24,7 @@ import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
-import { BaseFilteringStrategy, FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
+import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
 import { IHierarchicalItem, TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
@@ -484,21 +484,21 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private renderColumnValuesFromData() {
         const expressionsTree = this.getColumnFilterExpressionsTree();
-        
-        if (this.grid.filterStrategy instanceof BaseFilteringStrategy) {
-            this.grid.filterStrategy.getColumnValues(this.column, expressionsTree, (colVals: any[]) => {
-                const columnValues = (this.column.dataType === GridColumnDataType.Date) ?
-                    colVals.map(value => {
-                        const label = this.getFilterItemLabel(value);
-                        return { label, value };
-                    }) : colVals; // TODO: should formatter go here?
-    
-                this.renderValues(columnValues);
-            });
-        }
+
+        this.grid.filterStrategy.getColumnValues(this.column, expressionsTree, (colVals: any[]) => {
+            const columnValues = (this.column.dataType === GridColumnDataType.Date) ?
+                colVals.map(value => {
+                    const label = this.getFilterItemLabel(value);
+                    return { label, value };
+                }) : colVals; // TODO: should formatter go here?
+
+            this.renderValues(columnValues);
+        });
     }
 
     private isHierarchical() {
+        // TODO: remove and check the return array type from filterStrategy.getColumnValues method
+
         return this.grid.filterStrategy.hasOwnProperty('hierarchicalFilterFields')
             && this.grid.filterStrategy['hierarchicalFilterFields'].indexOf(this.column.field) >= 0;
     }
@@ -575,7 +575,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private generateListData() {
         this.listData = new Array<FilterListItem>();
-        const shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
+        const shouldUpdateSelection = (this.areExpressionsSelectable() && this.areExpressionsValuesInTheList()) || this.isHierarchical();
 
         if (this.column.dataType === GridColumnDataType.Boolean) {
             this.addBooleanItems();
@@ -666,8 +666,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private addItems(shouldUpdateSelection: boolean) {
         this.selectAllSelected = true;
-        this.containsNullOrEmpty = false;
         this.selectAllIndeterminate = false;
+        this.containsNullOrEmpty = false;
         this.listData = this.generateFilterListItems(this.uniqueValues, shouldUpdateSelection);
         this.containsNullOrEmpty = this.uniqueValues.length > this.listData.length;
     }

@@ -22,7 +22,7 @@ import { Subject } from 'rxjs';
 import { IgxListComponent } from '../../../list/public_api';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../../../checkbox/checkbox.component';
 import { takeUntil } from 'rxjs/operators';
-import { PlatformUtil } from '../../../core/utils';
+import { cloneHierarchicalArray, PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem } from './common';
 import { IgxTreeComponent, ITreeNodeSelectionEvent } from '../../../tree/public_api';
@@ -155,7 +155,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public searchValue: any;
-
+    
     /**
      * @hidden @internal
      */
@@ -284,7 +284,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const treeNodes = this.tree.nodes;
         treeNodes.forEach(node => (node.data as FilterListItem).isSelected = eventArgs.checked);
     }
-    
+
     /**
      * @hidden @internal
      */
@@ -295,26 +295,26 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
      public onNodeSelectionChange(eventArgs: ITreeNodeSelectionEvent) {
-            eventArgs.added.forEach(node => {
-                (node.data as FilterListItem).isSelected = true;
-            });
-            eventArgs.removed.forEach(node => {
-                (node.data as FilterListItem).isSelected = false;
-            });
+        eventArgs.added.forEach(node => {
+            (node.data as FilterListItem).isSelected = true;
+        });
+        eventArgs.removed.forEach(node => {
+            (node.data as FilterListItem).isSelected = false;
+        });
 
         this._hierarchicalSelectedItems = eventArgs.newSelection.map(item => item.data as FilterListItem);
         const selectAllBtn = this.selectAllItem;
         if (this._hierarchicalSelectedItems.length === 0) {
-                selectAllBtn.indeterminate = false;
-                selectAllBtn.isSelected = false;
+            selectAllBtn.indeterminate = false;
+            selectAllBtn.isSelected = false;
         } else if (this._hierarchicalSelectedItems.length === this.tree.nodes.length) {
             selectAllBtn.indeterminate = false;
             selectAllBtn.isSelected = true;
-            } else {
-                selectAllBtn.indeterminate = true;
+        } else {
+            selectAllBtn.indeterminate = true;
             selectAllBtn.isSelected = false;
-            }
         }
+    }
 
     /**
      * @hidden @internal
@@ -408,27 +408,91 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
             this.esf.listData.forEach(i => i.isSelected = i.isFiltered);
             this.displayedListData = this.esf.listData;
+            this.esf.detectChanges();
             selectAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all;
 
             return;
         }
 
         const searchVal = this.searchValue.toLowerCase();
-        this.displayedListData = this.esf.listData.filter((it, i) => (i === 0 && it.isSpecial) ||
-            (it.label !== null && it.label !== undefined) &&
-            !it.isBlanks &&
-            it.label.toString().toLowerCase().indexOf(searchVal) > -1);
+        if (this.isHierarchical()) {
+            // TODO: add to current filter
+            
+            this._hierarchicalSelectedItems = [];
+            this.esf.listData.forEach(i => i.isSelected = false);
+            const matchedData = cloneHierarchicalArray(this.esf.listData, 'children');
+            this.displayedListData = this.selectMatches(matchedData, searchVal);
+            this.esf.detectChanges();
+            this.tree.nodes.forEach(n => {
+                n.selected = true;
+                if ((n.data as FilterListItem).label.toString().toLowerCase().indexOf(searchVal) > -1) {
+                    this.expandAllParentNodes(n);
+                }
+            });
 
-        this.esf.listData.forEach(i => i.isSelected = false);
-        this.displayedListData.forEach(i => i.isSelected = true);
+            // set state for select all btn
+        } else {
+            this.displayedListData = this.esf.listData.filter((it, i) => (i === 0 && it.isSpecial) ||
+                (it.label !== null && it.label !== undefined) &&
+                !it.isBlanks &&
+                it.label.toString().toLowerCase().indexOf(searchVal) > -1);
 
-        this.displayedListData.splice(1, 0, this.addToCurrentFilter);
+            this.esf.listData.forEach(i => i.isSelected = false);
+            this.displayedListData.forEach(i => i.isSelected = true);
+            this.displayedListData.splice(1, 0, this.addToCurrentFilterItem);
+            if (this.displayedListData.length === 2) {
+                this.displayedListData = [];
+            }
+        }
 
-        searchAllBtn.indeterminate = false;
-        searchAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all_search_results;
+        selectAllBtn.indeterminate = false;
+        selectAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all_search_results;
+        this.esf.detectChanges();
+    }
 
-        if (this.displayedListData.length === 2) {
-            this.displayedListData = [];
+    private selectMatches(data: FilterListItem[], searchVal: string) {
+        data.forEach(element => {
+            element.indeterminate = false;
+            element.isSelected = false;
+            const node = this.tree.nodes.filter(n => (n.data as FilterListItem).label === element.label)[0];
+            if (node) {
+                node.expanded = false;
+            }
+
+            if (element.label.toString().toLowerCase().indexOf(searchVal) > -1) {
+                element.isSelected = true;
+                this.selectAllChildren(element);
+                this._hierarchicalSelectedItems.push(element);
+            } else if (element.children.length > 0) {
+                element.children = this.selectMatches(element.children, searchVal);
+                // this.selectMatches(element.children, searchVal);
+                if (element.children.length > 0) {
+                    element.isSelected = true;
+                    if (node) {
+                        node.expanded = true;
+                    }
+                }
+            } 
+        });
+
+        return data.filter(element => element.isSelected === true);
+    }
+
+    private selectAllChildren(element: FilterListItem) {
+        element.children.forEach(child => {
+            child.indeterminate = false;
+            child.isSelected = true;
+            this._hierarchicalSelectedItems.push(child);
+            if (child.children) {
+                this.selectAllChildren(child);
+            }
+        })
+    }
+
+    private expandAllParentNodes(node: any) {
+        if (node.parentNode) {
+            node.parentNode.expanded = true;
+            this.expandAllParentNodes(node.parentNode);
         }
     }
 
@@ -438,13 +502,16 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     public applyFilter() {
         const filterTree = new FilteringExpressionsTree(FilteringLogic.Or, this.esf.column.field);
 
-        const item = this.displayedListData[1];
-        const addToCurrentFilterOptionVisible = item === this.addToCurrentFilterItem;
-
         let selectedItems = [];
         if (this.isHierarchical()) {
-            selectedItems = this._hierarchicalSelectedItems;
+            if (this.addToCurrentFilterCheckbox && this.addToCurrentFilterCheckbox.checked) {
+                // TODO
+            }
+
+            selectedItems = this._hierarchicalSelectedItems; // TODO: fix apply without modifying selection
         } else {
+            const item = this.displayedListData[1];
+            const addToCurrentFilterOptionVisible = item === this.addToCurrentFilterItem;
             selectedItems = addToCurrentFilterOptionVisible && item.isSelected ?
             this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected || el.isFiltered) :
             this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected);
@@ -521,6 +588,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public isHierarchical() {
+        // TODO: remove and check the return array type from filterStrategy.getColumnValues method
+
         return this.esf.grid?.filterStrategy?.hasOwnProperty('hierarchicalFilterFields')
             && this.esf.grid?.filterStrategy['hierarchicalFilterFields'].indexOf(this.esf.column.field) >= 0;
     }

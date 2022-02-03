@@ -76,13 +76,13 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     public getColumnValues(
             column: ColumnType,
             tree: FilteringExpressionsTree,
-            done: (values: any[] | IHierarchicalItem[]) => void) { //TODO: Check import
+            done: (values: any[] | IHierarchicalItem[]) => void) {
 
         const data = column.grid.gridAPI.filterDataByExpressions(tree);
         const columnField = column.field;
         let columnValues;
         columnValues = data.map(record => resolveNestedPath(record, columnField));
-        done(columnValues);
+        done(columnValues); // TODO: change to promise
     }
 
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
