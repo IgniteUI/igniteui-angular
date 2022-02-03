@@ -19,7 +19,7 @@
 </igx-pivot-header-row>
 
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
-    <div tabindex="0" *ngFor='let dim of rowDimensions' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension' (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+    <div [style.height.px]='totalHeight' tabindex="0" *ngFor='let dim of rowDimensions' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension' (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
         <ng-template igxGridFor let-rowData [igxGridForOf]="dataView
         | pivotGridCellMerging:pivotConfiguration:dim:pivotKeys:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
