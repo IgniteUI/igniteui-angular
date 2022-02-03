@@ -237,6 +237,21 @@ describe('IgxLinearBar', () => {
         expect(progress.valueInPercent).toBe(100);
     });
 
+    it('Value should not exceed the max limit when max limit is set to 0', () => {
+        let value = 10;
+        const max = 0;
+
+        expect(progress.value).toBe(0);
+
+        progress.value = value;
+
+        expect(progress.value).toBe(value);
+        expect(progress.valueInPercent).toBe(10);
+
+        progress.max = max;
+        expect(progress.value).toBe(max);
+    });
+
     it('Should change class suffix which would be relevant to the type that has been passed', () => {
         const linearBar = progress.element.nativeElement;
 
