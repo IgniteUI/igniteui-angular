@@ -80,7 +80,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
     }
 
     public process(
-        collection: any[],
+        collection: IPivotGridRecord[],
         columns: IPivotDimension[],
         values: IPivotValue[],
         pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
@@ -89,54 +89,33 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         return res;
     }
 
-    private processHierarchy(collection, columns: IPivotDimension[], values, pivotKeys) {
-        const result = [];
-        collection.forEach(hierarchy => {
+    private processHierarchy(collection: IPivotGridRecord[], columns: IPivotDimension[], values, pivotKeys) {
+        const result: IPivotGridRecord[] = [];
+        collection.forEach(rec => {
             // apply aggregations based on the created groups and generate column fields based on the hierarchies
-            this.groupColumns(hierarchy, columns, values, pivotKeys);
-            if (hierarchy[pivotKeys.children]) {
-                let flatCols = {};
-                PivotUtil.flattenColumnHierarchy(hierarchy[pivotKeys.children], values, pivotKeys).forEach(o => {
-                    delete o[pivotKeys.records];
-                    flatCols = { ...flatCols, ...o };
-                });
-                delete hierarchy[pivotKeys.children]; /* or we can keep it
-                        and use when creating the columns in pivot grid instead of recreating it */
-                const keys = Object.keys(hierarchy);
-                //remove all record keys from final data since we don't need them anymore.
-                hierarchy.processed = true;
-                keys.forEach(k => {
-                    if (k.indexOf(pivotKeys.records) !== -1) {
-                        if (hierarchy[k] && hierarchy[k].length > 0 && k !== pivotKeys.records) {
-                            const unprocessed = hierarchy[k].filter(r => !r.processed);
-                            this.processHierarchy(unprocessed, columns, values, pivotKeys);
-                        }
-                        //delete hierarchy[k];
-                    }
-                    if (k === pivotKeys.level) {
-                        delete hierarchy[k];
-                    }
-                });
-                for (const property in flatCols) {
-                    if (flatCols.hasOwnProperty(property)) {
-                        hierarchy[property] = flatCols[property];
-                    }
-                }
-                result.push(hierarchy);
-            }
+            this.groupColumns(rec, columns, values, pivotKeys);
+            result.push(rec);
         });
         return result;
     }
 
-    private groupColumns(hierarchy, columns, values, pivotKeys) {
-        const children = hierarchy[pivotKeys.children];
-        if (children) {
-            this.groupColumns(children, columns, values, pivotKeys);
-        } else if (hierarchy[pivotKeys.records]) {
-            const leafRecords = this.getLeafs(hierarchy[pivotKeys.records], pivotKeys);
-            hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, PivotDimensionType.Column, pivotKeys);
-            PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
+    private groupColumns(rec: IPivotGridRecord, columns, values, pivotKeys) {
+        const children = rec.children;
+        if (children && children.size > 0) {
+            children.forEach((childRecs, key) => {
+                childRecs.forEach(child => {
+                    this.groupColumns(child, columns, values, pivotKeys);
+                })
+            });
+            
         }
+        this.applyAggregates(rec, columns, values, pivotKeys);
+    }
+
+    private applyAggregates(rec, columns, values, pivotKeys) {
+        const leafRecords = this.getLeafs(rec.records, pivotKeys);
+        const hierarchy = PivotUtil.getFieldsHierarchy(leafRecords, columns, PivotDimensionType.Column, pivotKeys);
+        PivotUtil.applyAggregations(rec, hierarchy, values, pivotKeys)
     }
 
     private getLeafs(records, pivotKeys) {

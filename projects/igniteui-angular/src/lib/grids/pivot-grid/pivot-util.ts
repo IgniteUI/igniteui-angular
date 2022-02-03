@@ -217,15 +217,17 @@ export class PivotUtil {
         return newArr;
     }
 
-    public static applyAggregations(hierarchies, values, pivotKeys) {
+    public static applyAggregations(rec: IPivotGridRecord, hierarchies, values, pivotKeys) {
         hierarchies.forEach((hierarchy) => {
             const children = hierarchy[pivotKeys.children];
             if (children && children.size > 0) {
-                this.applyAggregations(children, values, pivotKeys);
+                this.applyAggregations(rec, children, values, pivotKeys);
                 const childRecords = this.collectRecords(children, pivotKeys);
                 hierarchy[pivotKeys.aggregations] = this.aggregate(childRecords, values);
+                rec.aggregationValues.set(hierarchy.value, hierarchy[pivotKeys.aggregations]);
             } else if (hierarchy[pivotKeys.records]) {
                 hierarchy[pivotKeys.aggregations] = this.aggregate(hierarchy[pivotKeys.records], values);
+                rec.aggregationValues.set(hierarchy.value, hierarchy[pivotKeys.aggregations]);
             }
         });
     }

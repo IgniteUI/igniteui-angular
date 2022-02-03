@@ -188,7 +188,7 @@ export interface IPivotGridRecord {
     /** Gets/Sets the group value associated with the related row dimension by its memberName. **/
     dimensionValues: Map<string, string>;
     /** Gets/Sets the aggregation value associated with the value path. Value path depends on configured column dimension hierarchy and values.**/
-    aggregationValues: Map<string, string>;
+    aggregationValues: Map<string, any>;
     /** List of children records in case any row dimension member contain a hierarchy. Each dimension member contains its own hierarchy, which you can get by its memberName. **/
     children?: Map<string, IPivotGridRecord[]>;
     /** List of original data records associated with the current pivoted data. **/
