@@ -3,8 +3,8 @@
     <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="width">
             <igx-pivot-row-dimension-header-group [ngClass]="rowDimensionColumn.headerGroupClasses"
                 [ngStyle]="rowDimensionColumn.headerGroupStyles |igxHeaderGroupStyle:rowDimensionColumn:grid.pipeTrigger" [column]="rowDimensionColumn"
-                [style.min-width]="rowDimensionColumn.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                [style.flex-basis]="rowDimensionColumn.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.min-width]="grid.resolveRowDimensionWidth(dimension) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.flex-basis]="grid.resolveRowDimensionWidth(dimension) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [rowIndex]="rowIndex"
                 [style.min-height.px]='rowSpan > 1 ? headerHeight : undefined' [parent]='this'>
             </igx-pivot-row-dimension-header-group>
@@ -12,8 +12,7 @@
 </div>
 
 <ng-template #headerTemplate let-column>
-    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel(column)}}'
-        (click)="selectPivotRow(column, $event)">
+    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel(column)}}'>
         <igx-icon [attr.draggable]=" false" (click)="toggleRowDimension($event, column)">
             {{ getExpandState(column) ? 'expand_more' : 'chevron_right'}}</igx-icon>
         {{column.header}}
@@ -22,8 +21,7 @@
 
 <ng-template #headerDefaultTemplate let-column>
 
-    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel(column)}}'
-        (click)="selectPivotRow(column, $event)">
+    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel(column)}}'>
         <igx-icon style='flex-shrink: 0;' [attr.draggable]=" false">
         </igx-icon>
         {{column.header}}
