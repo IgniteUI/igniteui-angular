@@ -157,7 +157,7 @@ export class IgxSorting implements IGridSortingStrategy {
         const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
         const isTime = column?.dataType === TIME_TYPE;
         const isString = column?.dataType === STRING_TYPE;
-        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate, isTime);
+        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate, isTime, grid);
         if (expressionIndex === exprsLen - 1) {
             return data;
         }

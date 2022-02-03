@@ -34,6 +34,7 @@ import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
+import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
@@ -267,6 +268,7 @@ export interface GridType extends IGridDataBindable {
     renderedRowHeight: number;
     pipeTrigger: number;
     summaryPipeTrigger: number;
+    filteringPipeTrigger: number;
     hasColumnLayouts: boolean;
     moving: boolean;
     isLoading: boolean;
@@ -402,6 +404,7 @@ export interface GridType extends IGridDataBindable {
     hasColumnGroups: boolean;
     hasEditableColumns: boolean;
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
+    getHeaderCellWidth: (element: HTMLElement) => ISizeInfo;
 
     cdr: ChangeDetectorRef;
     document: Document;
@@ -508,6 +511,8 @@ export interface GridType extends IGridDataBindable {
     groupingMetadata?: any[];
     selectedCells?: CellType[];
     selectedRows: any[];
+    activeDescendant?: string;
+    isPivot?: boolean;
 
     toggleGroup?(groupRow: IGroupByRecord): void;
     clearGrouping?(field: string): void;
@@ -586,6 +591,7 @@ export interface GridType extends IGridDataBindable {
     toggleAllGroupRows?(): void;
     toggleAll?(): void;
     generateRowPath?(rowId: any): any[];
+    preventHeaderScroll?(args: any): void;
 
 }
 
@@ -617,7 +623,36 @@ export interface HierarchicalGridType extends GridType {
     childLayoutKeys: any[];
 }
 
+export interface PivotGridType extends GridType {
+    pivotConfiguration: IPivotConfiguration;
+    showPivotConfigurationUI: boolean;
+    columnDimensions: IPivotDimension[];
+    rowDimensions: IPivotDimension[];
+    rowDimensionResizing: boolean;
+    values: IPivotValue[];
+    filterDimensions: IPivotDimension[];
+    dimensionDataColumns: ColumnType[];
+    pivotRowWidths: number;
+    setupColumns(): void;
+    toggleRow(rowID: any): void;
+    resolveDataTypes(field: any): GridColumnDataType;
+    resolveRowDimensionWidth(dim: IPivotDimension): number;
+    moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index? : number);
+    getDimensionsByType(dimension: PivotDimensionType);
+    toggleDimension(dimension: IPivotDimension);
+    toggleValue(value: IPivotValue);
+    moveValue(value: IPivotValue, index?: number);
+    dimensionsChange: EventEmitter<IDimensionsChange>;
+    valuesChange: EventEmitter<IValuesChange>;
+    pivotKeys: IPivotKeys;
+    hasMultipleValues: boolean;
+}
 export interface GridSVGIcon {
     name: string;
     value: string;
+}
+
+export interface ISizeInfo {
+    width: number,
+    padding: number
 }
