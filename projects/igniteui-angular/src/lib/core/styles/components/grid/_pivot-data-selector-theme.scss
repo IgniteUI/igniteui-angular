@@ -60,6 +60,7 @@
         flex-direction: column;
         max-width: rem(280px);
         background: var-get($theme, 'background');
+        z-index: 0;
 
         > igx-input-group {
             flex: 0 1 auto;
@@ -232,13 +233,15 @@
 
     %selector-item-text,
     %selector-action-sort,
+    %selector-action-filter,
     %selector-action-move,
     %selector-action-summary {
         user-select: none;
     }
 
     %selector-action-sort,
-    %selector-action-summary {
+    %selector-action-summary,
+    %selector-action-filter {
         cursor: pointer;
     }
 

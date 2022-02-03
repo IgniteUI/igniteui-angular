@@ -55,6 +55,10 @@
             @extend %selector-action-sort !optional;
         }
 
+        @include e(action-filter) {
+            @extend %selector-action-filter !optional;
+        }
+
         @include e(action-move) {
             @extend %selector-action-move !optional;
         }

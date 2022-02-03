@@ -28,7 +28,7 @@ import {
     PositionSettings,
     VerticalAlignment
 } from "../../services/public_api";
-import { PivotGridType } from "../common/grid.interface";
+import { ColumnType, PivotGridType } from "../common/grid.interface";
 import {
     IgxPivotAggregate,
     IgxPivotDateAggregate,
@@ -211,6 +211,38 @@ export class IgxPivotDataSelectorComponent implements AfterContentInit {
         if (dimensionType === PivotDimensionType.Column) {
             this.grid.setupColumns();
         }
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public onFilteringIconPointerDown(event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public onFilteringIconClick(event: MouseEvent, dimension: IPivotDimension) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        let dim = dimension;
+        let col: ColumnType;
+
+        while (dim) {
+            col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName);
+            if (col) {
+                break;
+            } else {
+                dim = dim.childLevel;
+            }
+        }
+
+        this.grid.filteringService.toggleFilterDropdown(event.target, col);
     }
 
     /**

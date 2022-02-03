@@ -117,6 +117,15 @@
                         </div>
                         <div class="igx-pivot-data-selector__item-end">
                             <igx-icon
+                                class="igx-pivot-data-selector__action-filter"
+                                *ngIf="panel.type !== null"
+                                (pointerdown)="
+                                    onFilteringIconPointerDown($event)
+                                "
+                                (click)="onFilteringIconClick($event, item)"
+                                >filter_list
+                            </igx-icon>
+                            <igx-icon
                                 class="igx-pivot-data-selector__action-summary"
                                 *ngIf="panel.type === null"
                                 (click)="onSummaryClick($event, item, dropdown)"
