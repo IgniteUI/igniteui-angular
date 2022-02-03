@@ -184,7 +184,6 @@ export interface PivotRowHeaderGroupType {
     grid: any;
 }
 
-
 export interface IPivotGridRecord {
     /** Gets/Sets the group value associated with the related row dimension by its memberName. **/
     dimensionValues: Map<string, string>;
@@ -194,4 +193,6 @@ export interface IPivotGridRecord {
     children?: Map<string, IPivotGridRecord[]>;
     /** List of original data records associated with the current pivoted data. **/
     records?: any[];
+    level?: number;
+    dimensions: IPivotDimension[];
 }
