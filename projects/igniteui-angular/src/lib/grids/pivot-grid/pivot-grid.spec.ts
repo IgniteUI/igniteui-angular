@@ -1492,7 +1492,7 @@ describe('IgxPivotGrid APIs #pivotGrid', () => {
 
         expect(pivotGrid.pivotConfiguration.columns.length).toBe(1);
         expect(pivotGrid.columnDimensions.length).toBe(0);
-        expect(pivotGrid.columns.length).toBe(0);
+        expect(pivotGrid.columns.length).toBe(pivotGrid.values.length);
 
         // toggle filter
         pivotGrid.toggleDimension(filter);
