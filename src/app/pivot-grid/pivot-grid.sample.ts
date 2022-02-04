@@ -112,9 +112,14 @@ export class PivotGridSampleComponent {
         rows: [
             this.dimensions[2],
             {
-                memberName: 'City',
+            memberName: 'AllSeller',
+            memberFunction: () => 'All Sellers',
+            enabled: true,
+            childLevel: {
                 enabled: true,
-            },
+                memberName: 'SellerName'
+            }
+        }
         ],
         values: [
             {

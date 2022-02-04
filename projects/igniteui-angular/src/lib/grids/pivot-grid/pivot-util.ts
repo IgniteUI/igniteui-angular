@@ -79,9 +79,11 @@ export class PivotUtil {
         config: IPivotConfiguration,
         dim: IPivotDimension,
         expansionStates: any,
-        defaultExpandState: boolean
+        defaultExpandState: boolean,
+        level = 0
     ) {
         let data = records;
+        const groupEndIndex = (data as any).findLastIndex(x => x.dimensionValues.get(dim.memberName) && x.level === level);
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
             const field = dim.memberName;
@@ -95,11 +97,10 @@ export class PivotUtil {
             const childData = rec.children?.get(field);
             if (childData && childData.length > 0 && isExpanded) {
                 let dimData = this.flattenHierarchy(childData, config, dim.childLevel,
-                    expansionStates, defaultExpandState);
+                    expansionStates, defaultExpandState, level + 1);
                 // add children
-                data = data.concat(dimData);
-                // data.splice(i + 1, 0, ...dimData);
-                // i += dimData.length;
+                data.splice(groupEndIndex + 1, 0, ...dimData);
+                i += dimData.length;
             }
         }
         return data;
