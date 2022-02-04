@@ -638,7 +638,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             if (operand instanceof FilteringExpressionsTree) {
                 const columnExprTree = operand as FilteringExpressionsTree;
                 if (columnExprTree.fieldName === this.column.field) {
-                    continue;
+                    break;
                 }
             }
             expressionsTree.filteringOperands.push(operand);
