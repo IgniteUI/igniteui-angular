@@ -60,6 +60,7 @@ import { IgxPivotRowComponent } from "./pivot-row.component";
         IgxPivotGridColumnSortingPipe,
         IgxPivotDataSelectorComponent,
         IgxPivotCellMergingPipe,
+        IgxFilterPivotItemsPipe,
     ],
     imports: [IgxGridModule, IgxExpansionPanelModule, IgxDragDropModule],
     entryComponents: [IgxGridComponent],

@@ -1,6 +1,5 @@
 import { useAnimation } from "@angular/animations";
 import {
-    AfterContentInit,
     Component,
     HostBinding,
     Input,
@@ -55,7 +54,7 @@ interface IDataSelectorPanel {
     selector: "igx-pivot-data-selector",
     templateUrl: "./pivot-data-selector.component.html",
 })
-export class IgxPivotDataSelectorComponent implements AfterContentInit {
+export class IgxPivotDataSelectorComponent {
     private _grid: PivotGridType;
     private _dropDelta = 0;
 
@@ -98,16 +97,6 @@ export class IgxPivotDataSelectorComponent implements AfterContentInit {
     public values: IPivotValue[];
 
     constructor(private renderer: Renderer2) {}
-
-    public ngAfterContentInit(): void {
-        this.dims = [
-            ...this.grid.pivotConfiguration.columns,
-            ...this.grid.pivotConfiguration.rows,
-            ...this.grid.pivotConfiguration.filters,
-        ];
-
-        this.values = this.grid.pivotConfiguration.values;
-    }
 
     /**
      * @hidden @internal
@@ -162,8 +151,14 @@ export class IgxPivotDataSelectorComponent implements AfterContentInit {
      * An @Input property that sets the grid.
      */
     @Input()
-    public set grid(grid: PivotGridType) {
-        this._grid = grid;
+    public set grid(value: PivotGridType) {
+        this._grid = value;
+        this.dims = [
+            ...this._grid.pivotConfiguration.columns,
+            ...this._grid.pivotConfiguration.rows,
+            ...this._grid.pivotConfiguration.filters
+        ];
+        this.values = this._grid.pivotConfiguration.values;
     }
 
     /**
@@ -214,18 +209,18 @@ export class IgxPivotDataSelectorComponent implements AfterContentInit {
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public onFilteringIconPointerDown(event) {
         event.stopPropagation();
         event.preventDefault();
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public onFilteringIconClick(event: MouseEvent, dimension: IPivotDimension) {
         event.stopPropagation();
         event.preventDefault();
@@ -234,7 +229,9 @@ export class IgxPivotDataSelectorComponent implements AfterContentInit {
         let col: ColumnType;
 
         while (dim) {
-            col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName);
+            col = this.grid.dimensionDataColumns.find(
+                (x) => x.field === dim.memberName
+            );
             if (col) {
                 break;
             } else {
