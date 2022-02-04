@@ -103,9 +103,11 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         const children = rec.children;
         if (children && children.size > 0) {
             children.forEach((childRecs, key) => {
-                childRecs.forEach(child => {
-                    this.groupColumns(child, columns, values, pivotKeys);
-                })
+                if (childRecs) {
+                    childRecs.forEach(child => {
+                        this.groupColumns(child, columns, values, pivotKeys);
+                    })
+                }
             });
             
         }

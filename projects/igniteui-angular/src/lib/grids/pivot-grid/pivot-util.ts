@@ -108,15 +108,16 @@ export class PivotUtil {
                 } else {
                     children = children.concat(dimData);
                     if (groupEndIndex == i) {
-                        children.sort((a, b) => a.dimensionValues.get(dim.memberName) > b.dimensionValues.get(dim.memberName) ? 0 : 1);
+                        children = children.sort((a, b) => {
+                            const val1 = a.dimensionValues.get(dim.childLevel.memberName);
+                            const val2 = b.dimensionValues.get(dim.childLevel.memberName);
+                            return val1 < val2 ? -1 : (val1 > val2 ? 1 : 0);
+                        });
                         data.splice(groupEndIndex + 1, 0, ...children);
                         i += children.length;
                         children = [];
                     }
-                    
                 }
-                
-               
             }
         }
         return data;
@@ -204,8 +205,8 @@ export class PivotUtil {
     }
 
     public static resolveSiblingChildren(parentRec: IPivotGridRecord, siblingData: IPivotGridRecord[],
-         row: IPivotDimension,
-         pivotKeys: IPivotKeys) {
+        row: IPivotDimension,
+        pivotKeys: IPivotKeys) {
         if (!siblingData) {
             return;
         }
@@ -220,12 +221,14 @@ export class PivotUtil {
                     .processHierarchy(hierarchyFields, pivotKeys, 0);
                 if (parentRec.dimensions[0].childLevel) {
                     const data = siblingData[0].children.get(value);
-                    data.forEach(x => {
-                        x.dimensions = x.dimensions.concat(sib.dimensions);
-                        sib.dimensions.forEach(y => {
-                            x.dimensionValues.set(y.memberName, sib.dimensionValues.get(y.memberName));
+                    if (data) {
+                        data.forEach(x => {
+                            x.dimensions = x.dimensions.concat(sib.dimensions);
+                            sib.dimensions.forEach(y => {
+                                x.dimensionValues.set(y.memberName, sib.dimensionValues.get(y.memberName));
+                            });
                         });
-                    });
+                    }
                     sib.children.set(value, data);
                 }
                 sib.dimensions = parentRec.dimensions.concat(sib.dimensions);
