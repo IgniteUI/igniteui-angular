@@ -419,11 +419,50 @@ export class IgxChipComponent extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onDragEnter)="chipEnter($event)">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (dragEnter)="chipEnter($event)">
      * ```
      */
     @Output()
     public dragEnter = new EventEmitter<IChipEnterDragAreaEventArgs>();
+
+    /**
+     * Emits an event when the `IgxChipComponent` has left the `IgxChipsAreaComponent`.
+     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * the original drop event arguments.
+     *
+     * @example
+     * ```html
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (dragLeave)="chipLeave($event)">
+     * ```
+     */
+    @Output()
+    public dragLeave = new EventEmitter<IChipEnterDragAreaEventArgs>();
+
+    /**
+     * Emits an event when the `IgxChipComponent` is over the `IgxChipsAreaComponent`.
+     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * the original drop event arguments.
+     *
+     * @example
+     * ```html
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (dragOver)="chipOver($event)">
+     * ```
+     */
+     @Output()
+     public dragOver = new EventEmitter<IChipEnterDragAreaEventArgs>();
+
+    /**
+     * Emits an event when the `IgxChipComponent` has been dropped in the `IgxChipsAreaComponent`.
+     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * the original drop event arguments.
+     *
+     * @example
+     * ```html
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (dragDrop)="chipLeave($event)">
+     * ```
+     */
+    @Output()
+    public dragDrop = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
      * @hidden
@@ -747,10 +786,42 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @hidden
      * @internal
      */
+    public onChipDragLeaveHandler(event: IDropBaseEventArgs) {
+        const eventArgs: IChipEnterDragAreaEventArgs = {
+            owner: this,
+            dragChip: event.drag.data.chip,
+            originalEvent: event
+        };
+        this.dragLeave.emit(eventArgs);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public onChipDrop(event: IDropDroppedEventArgs) {
         // Cancel the default drop logic
         event.cancel = true;
+        const eventArgs: IChipEnterDragAreaEventArgs = {
+            owner: this,
+            dragChip: event.drag.data.chip,
+            originalEvent: event
+        };
+        this.dragDrop.emit(eventArgs);
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public onChipOverHandler(event: IDropBaseEventArgs) {
+            const eventArgs: IChipEnterDragAreaEventArgs = {
+                owner: this,
+                dragChip: event.drag.data.chip,
+                originalEvent: event
+            };
+            this.dragOver.emit(eventArgs);
+        }
     // End chip igxDrop behavior
 
     protected changeSelection(newValue: boolean, srcEvent = null) {

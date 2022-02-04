@@ -399,11 +399,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     });
                 }
             }
-
-            this.esf.grid.filteringService.filterInternal(this.esf.column.field, filterTree);
+            const grid = this.esf.grid;
+            const col = this.esf.column;
+            grid.filteringService.filterInternal(col.field, filterTree);
             this.esf.expressionsList = new Array<ExpressionUI>();
-            this.esf.grid.filteringService.generateExpressionsList(this.esf.column.filteringExpressionsTree,
-                this.esf.grid.filteringLogic, this.esf.expressionsList);
+            grid.filteringService.generateExpressionsList(col.filteringExpressionsTree,
+                grid.filteringLogic, this.esf.expressionsList);
         } else {
             this.esf.grid.filteringService.clearFilter(this.esf.column.field);
         }

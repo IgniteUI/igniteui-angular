@@ -33,10 +33,24 @@ $dark-fluent-expansion-panel: extend($fluent-expansion-panel, $base-dark-expansi
 
 /// Generates a dark bootstrap expansion panel schema based on a mix of $bootstrap-expansion-panel and $base-dark-expansion-panel.
 /// @type {Map}
+/// @prop {Map} header-background [igx-color: ('grays', 50)] - The panel header background color.
+/// @prop {Map} body-background [igx-color: ('grays', 50)] - The panel body background color.
 /// @requires {function} extend
 /// @requires $bootstrap-expansion-panel
 /// @requires $base-dark-expansion-panel
-$dark-bootstrap-expansion-panel: extend($bootstrap-expansion-panel, $base-dark-expansion-panel);
+$dark-bootstrap-expansion-panel: extend(
+    $bootstrap-expansion-panel,
+    $base-dark-expansion-panel,
+    (
+        header-background: (
+            igx-color: ('grays', 50)
+        ),
+
+        body-background: (
+            igx-color: ('grays', 50)
+        ),
+    )
+);
 
 /// Generates a dark indigo expansion panel schema.
 /// @type {Map}

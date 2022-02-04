@@ -10,6 +10,10 @@
     margin-bottom: 30px;
 }
 
+app-grid-search-box {
+    flex: 1;
+}
+
 .sample-title {
     margin-bottom: 15px;
 }

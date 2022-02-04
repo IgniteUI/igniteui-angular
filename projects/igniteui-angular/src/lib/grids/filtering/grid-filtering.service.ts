@@ -35,11 +35,11 @@ export class IgxFilteringService implements OnDestroy {
 
     private columnsWithComplexFilter = new Set<string>();
     private areEventsSubscribed = false;
-    private destroy$ = new Subject<boolean>();
+    protected destroy$ = new Subject<boolean>();
     private isFiltering = false;
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private columnStartIndex = -1;
-    private _filterMenuOverlaySettings: OverlaySettings = {
+    protected _filterMenuOverlaySettings: OverlaySettings = {
         closeOnEscape: true,
         closeOnOutsideClick: true,
         modal: false,
@@ -50,11 +50,11 @@ export class IgxFilteringService implements OnDestroy {
         }),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
-    private lastActiveNode;
+    protected lastActiveNode;
 
     constructor(
         private iconService: IgxIconService,
-        private _overlayService: IgxOverlayService,
+        protected _overlayService: IgxOverlayService,
     ) { }
 
     public ngOnDestroy(): void {
@@ -65,7 +65,7 @@ export class IgxFilteringService implements OnDestroy {
     public toggleFilterDropdown(element: HTMLElement, column: ColumnType) {
 
         const filterIcon = column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
-        const filterIconTarget = element.querySelector(`.${filterIcon}`) as HTMLElement;
+        const filterIconTarget = element.querySelector(`.${filterIcon}`) as HTMLElement || element;
 
         const { id, ref } = this.grid.createFilterDropdown(column, {
             ...this._filterMenuOverlaySettings,
@@ -508,7 +508,7 @@ export class IgxFilteringService implements OnDestroy {
         return true;
     }
 
-    private filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+    protected filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase: boolean) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
@@ -531,7 +531,7 @@ export class IgxFilteringService implements OnDestroy {
      * If createNewTree is true, filteringState will not be modified (because it directly affects the grid.filteringExpressionsTree),
      * but a new object is created and returned.
      */
-    private prepare_filtering_expression(
+    protected prepare_filtering_expression(
         filteringState: IFilteringExpressionsTree,
         fieldName: string,
         searchVal,
