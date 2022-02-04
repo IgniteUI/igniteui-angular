@@ -193,6 +193,8 @@ export interface IPivotGridRecord {
     children?: Map<string, IPivotGridRecord[]>;
     /** List of original data records associated with the current pivoted data. **/
     records?: any[];
+     /** Record level**/
     level?: number;
+    /** List of dimensions associated with the record.**/
     dimensions: IPivotDimension[];
 }
