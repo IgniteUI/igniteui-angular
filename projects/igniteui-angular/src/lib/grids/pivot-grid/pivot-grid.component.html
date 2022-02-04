@@ -29,6 +29,7 @@
             #verticalRowDimScrollContainer>
         <igx-pivot-row-dimension-content  role='row' class="igx-grid-thead" [grid]="this"
             [dimension]='rowData.dimensions[dimIndex]'
+            [rootDimension]='dim'
             [rowIndex]='rowIndex' [rowData]='rowData'
             [density]="displayDensity" [width]="resolveRowDimensionWidth(dim)">
         </igx-pivot-row-dimension-content>

@@ -49,6 +49,9 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     public dimension: IPivotDimension;
 
     @Input()
+    public rootDimension: IPivotDimension;
+
+    @Input()
     public rowData: IPivotGridGroupRecord;
 
     /**
