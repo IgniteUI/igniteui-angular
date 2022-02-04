@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { IgxRowDirective } from '../row.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IPivotDimension, IPivotDimensionData } from './pivot-grid.interface';
+import { IPivotDimension, IPivotDimensionData, IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
@@ -56,7 +56,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
         protected viewRef: ViewContainerRef
-    ){
+    ) {
         super(grid, selectionService, element, cdr);
     }
 
@@ -66,6 +66,36 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      */
     public get viewIndex(): number {
         return this.index;
+    }
+
+    /**
+    *  The pivot record data passed to the row component.
+    *
+    * ```typescript
+    * // get the pivot row data for the first selected row
+    * let selectedRowData = this.grid.selectedRows[0].data;
+    * ```
+    */
+    @Input()
+    public get data(): IPivotGridRecord {
+        return this._data;
+    }
+
+    public set data(v: IPivotGridRecord) {
+        this._data = v;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get pivotAggregationData() {
+        const aggregations = this.data.aggregationValues;
+        const obj = {};
+        aggregations.forEach((value, key) => {
+            obj[key] = value;
+        });
+        return obj;
     }
 
     public getCellClass(col: IgxColumnComponent) {

@@ -198,3 +198,8 @@ export interface IPivotGridRecord {
     /** List of dimensions associated with the record.**/
     dimensions: IPivotDimension[];
 }
+
+export interface IPivotGridGroupRecord extends IPivotGridRecord {
+    height?: number;
+    rowSpan?: number;
+}

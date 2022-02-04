@@ -20,7 +20,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxRowDirective } from '../row.directive';
-import { IPivotDimension, IPivotDimensionData } from './pivot-grid.interface';
+import { IPivotDimension, IPivotDimensionData, IPivotGridGroupRecord } from './pivot-grid.interface';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { PivotUtil } from './pivot-util';
 
@@ -49,7 +49,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     public dimension: IPivotDimension;
 
     @Input()
-    public rowData: any;
+    public rowData: IPivotGridGroupRecord;
 
     /**
     * @hidden @internal
@@ -125,7 +125,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     }
 
     public get rowSpan() {
-        return this.rowData[this.rowDimensionData.dimension.memberName + this.grid.pivotKeys.rowDimensionSeparator + 'rowSpan'] || 1;
+        return this.rowData.rowSpan || 1;
     }
 
     public get headerHeight() {
@@ -133,16 +133,11 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     }
 
     protected extractFromDimensions() {
-        const dimData = PivotUtil.getDimensionLevel(this.dimension, this.rowData, this.grid.pivotKeys);
-        const prevDims = this.getPrevDims(this.dimension);
-        let lvl = 0;
-        prevDims.forEach(prev => {
-            lvl += prev.level;
-        });
-        const col = this.extractFromDimension(dimData, this.rowData, lvl);
+        const col = this.extractFromDimension(this.dimension, this.rowData);
+        const prevDims = [];
         this.rowDimensionData = {
             column: col,
-            dimension: dimData.dimension,
+            dimension: this.dimension,
             prevDimensions: prevDims
         };
     }
@@ -158,21 +153,21 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         return prevDims;
     }
 
-    protected extractFromDimension(dimData, rowData: any[], lvl) {
-        const field = dimData.dimension.memberName;
-        const header = rowData[field];
-        const col = this._createColComponent(field, header, dimData.dimension, lvl);
+    protected extractFromDimension(dim: IPivotDimension, rowData: IPivotGridGroupRecord) {
+        const field = dim.memberName;
+        const header = rowData.dimensionValues.get(field);
+        const col = this._createColComponent(field, header, dim);
         return col;
     }
 
-    protected _createColComponent(field: string, header: string, dim: IPivotDimension, lvl) {
+    protected _createColComponent(field: string, header: string, dim: IPivotDimension) {
         const ref = this.viewRef.createComponent(IgxColumnComponent);
         ref.instance.field = field;
         ref.instance.header = header;
         ref.instance.width = this.grid.resolveRowDimensionWidth(this.dimension) + 'px';
         ref.instance.resizable = this.grid.rowDimensionResizing;
         (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows.length;
-        if (dim.childLevel && lvl >= PivotUtil.getTotalLvl(this.rowData, this.grid.pivotKeys)) {
+        if (dim.childLevel) {
             ref.instance.headerTemplate = this.headerTemplate;
         } else {
             ref.instance.headerTemplate = this.headerTemplateDefault;

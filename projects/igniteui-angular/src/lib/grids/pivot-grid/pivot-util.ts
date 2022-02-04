@@ -66,7 +66,7 @@ export class PivotUtil {
         return lvl;
     }
 
-    public static getDimensionLevel(dim: IPivotDimension, rec: any, pivotKeys: IPivotKeys) {
+    public static getDimensionLevel(dim: IPivotDimension, rec: IPivotGridRecord, pivotKeys: IPivotKeys) {
         let level = rec[dim.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.level];
         while (dim.childLevel && level === undefined) {
             dim = dim.childLevel;
@@ -202,6 +202,12 @@ export class PivotUtil {
                     .processHierarchy(hierarchyFields, pivotKeys, 0);
                 if (parentRec.dimensions[0].childLevel) {
                     const data = siblingData[0].children.get(value);
+                    data.forEach(x => {
+                        x.dimensions = x.dimensions.concat(sib.dimensions);
+                        sib.dimensions.forEach(y => {
+                            x.dimensionValues.set(y.memberName, sib.dimensionValues.get(y.memberName));
+                        });
+                    });
                     sib.children.set(value, data);
                 }
                 sib.dimensions = parentRec.dimensions.concat(sib.dimensions);

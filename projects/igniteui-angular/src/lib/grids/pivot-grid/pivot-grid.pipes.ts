@@ -3,7 +3,7 @@ import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
 import {
     DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
@@ -91,42 +91,43 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
 export class IgxPivotCellMergingPipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
     public transform(
-        collection: any[],
+        collection: IPivotGridRecord[],
         config: IPivotConfiguration,
         dim: IPivotDimension,
         pivotKeys: IPivotKeys,
         _pipeTrigger?: number
-    ): any[] {
+    ): IPivotGridGroupRecord[] {
         if (collection.length === 0 || config.rows.length === 0) return collection;
-        const data = collection ? cloneArray(collection, true) : [];
-        const res = [];
+        const data: IPivotGridGroupRecord[] = collection ? cloneArray(collection, true) : [];
+        const res: IPivotGridGroupRecord[] = [];
 
         const enabledRows = config.rows.filter(x => x.enabled);
 
         const prevDims = enabledRows.filter((d, ind) => ind < enabledRows.indexOf(dim));
-        let groupData = [];
+        let groupData: IPivotGridGroupRecord[] = [];
         let prevDim;
         let prevDimRoot;
         let prevId;
+        const index = config.rows.indexOf(dim);
         for (let rec of data) {
-            const dimData = PivotUtil.getDimensionLevel(dim, rec, pivotKeys);
-            const id = PivotUtil.getRecordKey(rec, dimData.dimension);
+            const currentDim = rec.dimensions[index];
+            const id = PivotUtil.getRecordKey(rec, currentDim);
             if (groupData.length > 0 && prevId !== id) {
                 const h = groupData.length > 1 ? groupData.length * this.grid.renderedRowHeight : undefined;
-                groupData[0][prevDimRoot.memberName + pivotKeys.rowDimensionSeparator + 'height'] = h;
-                groupData[0][prevDim.dimension.memberName + pivotKeys.rowDimensionSeparator + 'rowSpan'] = groupData.length;
+                groupData[0].height = h;
+                groupData[0].rowSpan = groupData.length;
                 res.push(groupData[0]);
                 groupData = [];
             }
             groupData.push(rec);
-            prevDim = dimData;
+            prevDim = currentDim;
             prevDimRoot = dim;
             prevId = id;
         }
         if (groupData.length > 0) {
             const h = groupData.length > 1 ? groupData.length * this.grid.rowHeight + (groupData.length - 1) + 1 : undefined;
-            groupData[0][prevDimRoot.memberName + pivotKeys.rowDimensionSeparator + 'height'] = h;
-            groupData[0][prevDim.dimension.memberName + pivotKeys.rowDimensionSeparator + 'rowSpan'] = groupData.length;
+            groupData[0].height = h;
+            groupData[0].rowSpan = groupData.length;
             res.push(groupData[0]);
         }
         return res;
