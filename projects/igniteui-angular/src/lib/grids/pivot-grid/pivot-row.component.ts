@@ -40,7 +40,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         let prevDims = [];
         for (let rowDim of this.grid.rowDimensions) {
             const dimData = PivotUtil.getDimensionLevel(rowDim, this.data, this.grid.pivotKeys);
-            const key = PivotUtil.getRecordKey(this.data, dimData.dimension, prevDims, this.grid.pivotKeys);
+            const key = PivotUtil.getRecordKey(this.data, dimData.dimension);
             if (this.selectionService.isPivotRowSelected(key)) {
                 isSelected = true;
             }

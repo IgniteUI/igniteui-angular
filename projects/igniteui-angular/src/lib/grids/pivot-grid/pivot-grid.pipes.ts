@@ -3,7 +3,7 @@ import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
 import {
     DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
@@ -35,7 +35,7 @@ export class IgxPivotRowPipe implements PipeTransform {
         _: Map<any, boolean>,
         _pipeTrigger?: number,
         __?
-    ): any[] {
+    ): IPivotGridRecord[] {
         const pivotKeys = config.pivotKeys || DEFAULT_PIVOT_KEYS;
         const enabledRows = config.rows.filter(x => x.enabled);
         const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
@@ -56,45 +56,28 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid?: GridType) { }
 
     public transform(
-        collection: any[],
+        collection: IPivotGridRecord[],
         config: IPivotConfiguration,
         expansionStates: Map<any, boolean>,
         defaultExpand: boolean,
         _pipeTrigger?: number,
         __?,
-    ): any[] {
+    ): IPivotGridRecord[] {
         const pivotKeys = config.pivotKeys || DEFAULT_PIVOT_KEYS;
         const enabledRows = config.rows.filter(x => x.enabled);
-        const data = collection ? cloneArray(collection, true) : [];
+        let data = collection ? cloneArray(collection, true) : [];
         let totalLlv = 0;
         const prevDims = [];
         for (const row of enabledRows) {
             const lvl = PivotUtil.getDimensionDepth(row);
             totalLlv += lvl;
-            PivotUtil.flattenHierarchy(data, config, row, expansionStates, defaultExpand, pivotKeys, totalLlv, prevDims, 0, lvl);
+            data = PivotUtil.flattenHierarchy(data, config, row, expansionStates, defaultExpand);
             prevDims.push(row);
         }
-        const finalData = config.columnStrategy ? data : data.filter(x => x[pivotKeys.records]);
-        this.cleanState(finalData, pivotKeys);
-
         if (this.grid) {
-            this.grid.setFilteredSortedData(finalData, false);
+            this.grid.setFilteredSortedData(data, false);
         }
-        return finalData;
-    }
-
-    private cleanState(data, pivotKeys) {
-        data.forEach(rec => {
-            const keys = Object.keys(rec);
-            delete rec.processed;
-            delete rec.sorted;
-            //remove all record keys from final data since we don't need them anymore.
-            keys.forEach(k => {
-                if (k.indexOf(pivotKeys.records) !== -1) {
-                    delete rec[k];
-                }
-            });
-        });
+        return data;
     }
 }
 
@@ -127,7 +110,7 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
         let prevId;
         for (let rec of data) {
             const dimData = PivotUtil.getDimensionLevel(dim, rec, pivotKeys);
-            const id = PivotUtil.getRecordKey(rec, dimData.dimension, prevDims, pivotKeys);
+            const id = PivotUtil.getRecordKey(rec, dimData.dimension);
             if (groupData.length > 0 && prevId !== id) {
                 const h = groupData.length > 1 ? groupData.length * this.grid.renderedRowHeight : undefined;
                 groupData[0][prevDimRoot.memberName + pivotKeys.rowDimensionSeparator + 'height'] = h;
@@ -161,12 +144,12 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
 export class IgxPivotColumnPipe implements PipeTransform {
 
     public transform(
-        collection: any,
+        collection: IPivotGridRecord[],
         config: IPivotConfiguration,
         _: Map<any, boolean>,
         _pipeTrigger?: number,
         __?
-    ): any[] {
+    ): IPivotGridRecord[] {
         const pivotKeys = config.pivotKeys || DEFAULT_PIVOT_KEYS;
         const enabledColumns = config.columns.filter(x => x.enabled);
         const enabledValues = config.values.filter(x => x.enabled);
@@ -220,17 +203,18 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
 })
 export class IgxPivotGridColumnSortingPipe implements PipeTransform {
     public transform(
-        collection: any[],
+        collection: IPivotGridRecord[],
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy,
         pipeTrigger: number,
         pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
-    ): any[] {
-        let result: any[];
+    ): IPivotGridRecord[] {
+        let result: IPivotGridRecord[];
 
         if (!expressions.length) {
             result = collection;
         } else {
+            // TODO - update to work with IPivotGridRecord
             result = PivotUtil.sort(cloneArray(collection, true), expressions, sorting, pivotKeys);
         }
         return result;

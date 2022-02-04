@@ -112,7 +112,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
      */
     public getRowDimensionKey(col: IgxColumnComponent) {
         const dimData = this.rowDimensionData;
-        const key = PivotUtil.getRecordKey(this.rowData, dimData.dimension, dimData.prevDimensions, this.grid.pivotKeys);
+        const key = PivotUtil.getRecordKey(this.rowData, dimData.dimension);
         return key;
     }
 

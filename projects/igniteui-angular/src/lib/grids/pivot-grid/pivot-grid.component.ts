@@ -495,7 +495,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 let currDim = dim;
                 let shouldBreak = false;
                 do {
-                    const key = PivotUtil.getRecordKey(record, currDim, prev, this.pivotKeys);
+                    const key = PivotUtil.getRecordKey(record, currDim);
                     if (this.selectionService.isPivotRowSelected(key) && !selectedRowIds.find(x => x === record)) {
                         selectedRowIds.push(record);
                         shouldBreak = true;
