@@ -84,6 +84,7 @@ export class PivotUtil {
     ) {
         let data = records;
         const groupEndIndex = (data as any).findLastIndex(x => x.dimensionValues.get(dim.memberName) && x.level === level);
+        let children: IPivotGridRecord[] = [];
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
             const field = dim.memberName;
@@ -99,8 +100,23 @@ export class PivotUtil {
                 let dimData = this.flattenHierarchy(childData, config, dim.childLevel,
                     expansionStates, defaultExpandState, level + 1);
                 // add children
-                data.splice(groupEndIndex + 1, 0, ...dimData);
-                i += dimData.length;
+                const currentDimIndex = rec.dimensions.findIndex(x => x.memberName === dim.memberName);
+                const prevDims = rec.dimensions.slice(0, currentDimIndex);
+                if (prevDims.length > 0) {
+                    data.splice(i + 1, 0, ...dimData);
+                    i += dimData.length;
+                } else {
+                    children = children.concat(dimData);
+                    if (groupEndIndex == i) {
+                        children.sort((a, b) => a.dimensionValues.get(dim.memberName) > b.dimensionValues.get(dim.memberName) ? 0 : 1);
+                        data.splice(groupEndIndex + 1, 0, ...children);
+                        i += children.length;
+                        children = [];
+                    }
+                    
+                }
+                
+               
             }
         }
         return data;
@@ -187,7 +203,9 @@ export class PivotUtil {
         return result;
     }
 
-    public static resolveSiblingChildren(parentRec: IPivotGridRecord, siblingData: IPivotGridRecord[], pivotKeys: IPivotKeys) {
+    public static resolveSiblingChildren(parentRec: IPivotGridRecord, siblingData: IPivotGridRecord[],
+         row: IPivotDimension,
+         pivotKeys: IPivotKeys) {
         if (!siblingData) {
             return;
         }
@@ -211,18 +229,26 @@ export class PivotUtil {
                     sib.children.set(value, data);
                 }
                 sib.dimensions = parentRec.dimensions.concat(sib.dimensions);
+
+                if (sib.children && sib.children.get(row.memberName)) {
+                    const children = sib.children.get(row.memberName);
+                    children.forEach(x => {
+                        x.dimensionValues.set(value, key);
+                        x.dimensions = parentRec.dimensions.concat(x.dimensions);
+                    });
+                }
             });
         });
     }
 
-    public static processSubGroups(row, prevRowDims, siblingData: IPivotGridRecord[], pivotKeys, lvl = 0) {
+    public static processSubGroups(row: IPivotDimension, prevRowDims, siblingData: IPivotGridRecord[], pivotKeys, lvl = 0) {
         const prevRowDimsIter = prevRowDims.slice(0);
         // process combined groups
         while (prevRowDimsIter.length > 0) {
             const prevRowDim = prevRowDimsIter.pop();
             const prevRowField = prevRowDim.memberName;
             for (const sibling of siblingData) {
-                const childCollection = sibling.children.get(prevRowField);
+                const childCollection = sibling.children.get(row.memberName);
                 if (!childCollection) return;
                 for (const child of childCollection) {
                     if (!child.records) {
@@ -256,7 +282,7 @@ export class PivotUtil {
                         // Process sibling dimensions in depth
                         this.processSubGroups(row, [...sibs], [child], pivotKeys, lvl);
                     }
-                    PivotUtil.resolveSiblingChildren(child, siblingData2, pivotKeys);
+                    PivotUtil.resolveSiblingChildren(child, siblingData2, row, pivotKeys);
                 }
                 const prevRowDimsFromLvl = prevRowDims.filter(x => x.level === lvl);
                 if (prevRowDimsFromLvl.some(x => x.childLevel)) {

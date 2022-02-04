@@ -56,8 +56,8 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                         .getFieldsHierarchy(newData[i].records, [row], PivotDimensionType.Row, pivotKeys);
                     const siblingData = PivotUtil
                         .processHierarchy(hierarchyFields, pivotKeys, 0);
-                    PivotUtil.resolveSiblingChildren(newData[i], siblingData, pivotKeys);
-                    PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
+                    PivotUtil.resolveSiblingChildren(newData[i], siblingData, row, pivotKeys);
+                    //PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
                     newData.splice(i, 1, ...siblingData);
                     // Increase the index the amount of sibling record that replaces the current one. Subtract 1 because there is already i++ in the for cycle.
                     i += siblingData.length - 1;
