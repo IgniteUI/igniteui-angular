@@ -2,6 +2,7 @@ import { fakeAsync, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { DisplayDensity } from "../../core/displayDensity";
+import { IgxInputDirective } from "../../input-group/public_api";
 import { configureTestSuite } from "../../test-utils/configure-suite";
 import { IgxPivotGridTestBaseComponent } from "../../test-utils/pivot-grid-samples.spec";
 import { PivotGridType } from "../common/grid.interface";
@@ -62,27 +63,77 @@ fdescribe("Pivot data selector", () => {
         });
     });
 
-    it("should render a header section for the filters panel", () => {});
+    it("should filter the dimension list based on a search term", () => {
+        const term = (
+            Object.values(
+                fixture.componentInstance.pivotConfigHierarchy
+            )[0][0] as IPivotDimension
+        ).memberName;
 
-    it("should render a section of all filter items in an expansion panel", () => {
-        expectConfigToMatchPanels(PivotDimensionType.Filter);
+        const inputElement = fixture.debugElement
+            .query(By.directive(IgxPivotDataSelectorComponent))
+            .query(By.directive(IgxInputDirective)).nativeElement;
+
+        inputElement.value = term;
+        inputElement.dispatchEvent(new Event("input"));
+        fixture.detectChanges();
+
+        const valueList = Array.from(
+            fixture.debugElement
+                .query(By.directive(IgxPivotDataSelectorComponent))
+                .nativeElement.querySelectorAll(
+                    ".igx-pivot-data-selector__filter > igx-list > igx-list-item"
+                ) as NodeList
+        );
+
+        valueList.forEach((li) => {
+            expect(li.textContent).toContain(term);
+        });
+
+        expect(valueList.length).toBe(1);
     });
 
-    it("should render a header section for the columns panel", () => {});
+    it("should include/exclude a dimension from the pivot config on chekcbox selection", () => {
 
-    it("should render a section of all column items in an expansion panel", () => {
-        expectConfigToMatchPanels(PivotDimensionType.Column);
     });
 
-    it("should render a header section for the rows panel", () => {});
+    it("should render panel header sections for all pivot dimensions", () => {
+        Object.values(PivotDimensionType).forEach((dt) => {
+            if (isNaN(Number(dt))) return;
+            const headerNode = getPanelHeaderByDimensionType(
+                dt as PivotDimensionType
+            );
+            const headerTitle = selector._panels.find(
+                (panel) => panel.type === (dt as PivotDimensionType)
+            ).name;
+            const dimensionSize = grid.getDimensionsByType(
+                dt as PivotDimensionType
+            ).length;
 
-    it("should render a section of all row items in an expansion panel", () => {
-        expectConfigToMatchPanels(PivotDimensionType.Row);
+            expect(headerNode.textContent).toContain(headerTitle);
+            expect(headerNode.textContent).toContain(dimensionSize);
+        });
     });
 
-    it("should render a header section for the values panel", () => {});
+    it("should render panel header section for the values", () => {
+        const headerNode = getPanelHeaderByDimensionType(null);
+        const headerTitle = selector._panels.find(
+            (panel) => panel.type === null
+        ).name;
+        const valuesSize = grid.pivotConfiguration.values?.length;
 
-    it("should render a section of all value items in an expansion panel", () => {
+        expect(headerNode.textContent).toContain(headerTitle);
+        expect(headerNode.textContent).toContain(valuesSize.toString());
+    });
+
+    it("should render a section of all dimension items in a panel", () => {
+        Object.values(PivotDimensionType).forEach((dt) => {
+            if (isNaN(Number(dt))) return;
+            expectConfigToMatchPanels(dt as PivotDimensionType);
+        });
+    });
+
+    it("should render a section of all value items in a panel", () => {
         expectConfigToMatchPanels(null); // pass an invalid type (null) to test for values
     });
 
@@ -113,6 +164,20 @@ fdescribe("Pivot data selector", () => {
             const item = dimension[index] as any;
             expect(li.textContent).toContain(item.memberName || item.member);
         });
+    };
+
+    const getPanelHeaderByDimensionType = (
+        dimensionType: PivotDimensionType
+    ) => {
+        const panelIndex = selector._panels.findIndex(
+            (panel) => panel.type === dimensionType
+        );
+
+        return fixture.debugElement
+            .query(By.directive(IgxPivotDataSelectorComponent))
+            .nativeElement.querySelectorAll("igx-expansion-panel-header")[
+            panelIndex
+        ] as Node;
     };
 
     const getPanelItemsByDimensionType = (
