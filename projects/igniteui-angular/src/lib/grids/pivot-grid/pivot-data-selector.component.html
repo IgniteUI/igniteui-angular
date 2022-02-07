@@ -15,8 +15,10 @@
                 let item of dims
                     | filterPivotItems: input.value:grid.pipeTrigger
             "
+            [id]="item.memberName"
         >
             <igx-checkbox
+                [aria-labelledby]="item.memberName"
                 [disableRipple]="true"
                 [checked]="item.enabled"
                 (click)="toggleItem(item)"
@@ -28,8 +30,10 @@
                 let item of values
                     | filterPivotItems: input.value:grid.pipeTrigger
             "
+            [id]="item.member"
         >
             <igx-checkbox
+                [aria-labelledby]="item.member"
                 [disableRipple]="true"
                 [checked]="item.enabled"
                 (click)="toggleItem(item)"

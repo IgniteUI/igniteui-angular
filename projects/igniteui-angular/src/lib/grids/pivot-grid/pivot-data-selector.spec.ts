@@ -1,7 +1,10 @@
+import { DebugElement } from "@angular/core";
 import { fakeAsync, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
 import { DisplayDensity } from "../../core/displayDensity";
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxInputDirective } from "../../input-group/public_api";
 import { configureTestSuite } from "../../test-utils/configure-suite";
 import { IgxPivotGridTestBaseComponent } from "../../test-utils/pivot-grid-samples.spec";
@@ -91,10 +94,70 @@ fdescribe("Pivot data selector", () => {
         });
 
         expect(valueList.length).toBe(1);
+
+        // Clear the filter
+        inputElement.value = undefined;
+        inputElement.dispatchEvent(new Event("input"));
+        fixture.detectChanges();
     });
 
-    it("should include/exclude a dimension from the pivot config on chekcbox selection", () => {
+    it("should enable/disable dimensions from the pivot config on checkbox click", () => {
+        const dimension = grid.pivotConfiguration.columns[0];
+        let items = getPanelItemsByDimensionType(PivotDimensionType.Column);
 
+        const checkbox = fixture.debugElement
+            .query(By.directive(IgxPivotDataSelectorComponent))
+            .queryAll(By.directive(IgxCheckboxComponent))
+            .find(
+                (el: DebugElement) =>
+                    el.componentInstance.ariaLabelledBy === dimension.memberName
+            );
+
+        // Initial State
+        expect(dimension.enabled).toBe(true);
+        expect(items.length).toEqual(grid.pivotConfiguration.columns.length);
+        checkbox.nativeElement.dispatchEvent(new Event("click"));
+
+        fixture.detectChanges();
+
+        // After clicking on the checkbox
+        items = getPanelItemsByDimensionType(PivotDimensionType.Column);
+        expect(dimension.enabled).toBe(false);
+        expect(items.length).toEqual(
+            grid.pivotConfiguration.columns.length - 1
+        );
+    });
+
+    it("should sort column and row dimensions on item click", () => {
+        const colDimension = grid.pivotConfiguration.columns[0];
+        const rowDimension = grid.pivotConfiguration.rows[0];
+        const colSortEl = getPanelItemsByDimensionType(PivotDimensionType.Column)
+            .find((item) => item.textContent.includes(colDimension.memberName))
+            .parentNode.querySelector(".igx-pivot-data-selector__action-sort");
+        const rowSortEl = getPanelItemsByDimensionType(PivotDimensionType.Row)
+            .find((item) => item.textContent.includes(rowDimension.memberName))
+            .parentNode.querySelector(".igx-pivot-data-selector__action-sort");
+
+        colSortEl.dispatchEvent(new Event("click"));
+        rowSortEl.dispatchEvent(new Event("click"));
+        fixture.detectChanges();
+
+        expect(colDimension.sortDirection).toEqual(SortingDirection.Asc);
+        expect(rowDimension.sortDirection).toEqual(SortingDirection.Asc);
+
+        colSortEl.dispatchEvent(new Event("click"));
+        rowSortEl.dispatchEvent(new Event("click"));
+        fixture.detectChanges();
+
+        expect(colDimension.sortDirection).toEqual(SortingDirection.Desc);
+        expect(rowDimension.sortDirection).toEqual(SortingDirection.Desc);
+
+        colSortEl.dispatchEvent(new Event("click"));
+        rowSortEl.dispatchEvent(new Event("click"));
+        fixture.detectChanges();
+
+        expect(colDimension.sortDirection).toEqual(SortingDirection.None);
+        expect(rowDimension.sortDirection).toEqual(SortingDirection.None);
     });
 
     it("should render panel header sections for all pivot dimensions", () => {
@@ -136,8 +199,6 @@ fdescribe("Pivot data selector", () => {
     it("should render a section of all value items in a panel", () => {
         expectConfigToMatchPanels(null); // pass an invalid type (null) to test for values
     });
-
-    it("should sort row and column dimensions on click", () => {});
 
     const expectConfigToMatchPanels = (dimensionType: PivotDimensionType) => {
         const items = getPanelItemsByDimensionType(dimensionType);
