@@ -2,7 +2,7 @@ import { EmptyTree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChanges, ThemePropertyChanges, ImportsChanges, ElementType } from './schema';
+import { ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges, ElementType, ThemeType } from './schema';
 import { UpdateChanges, InputPropertyType, BoundPropertyObject } from './UpdateChanges';
 import * as tsUtils from './tsUtils';
 
@@ -22,8 +22,8 @@ describe('UpdateChanges', () => {
         public getInputChanges() {
             return this.inputChanges;
         }
-        public getThemePropChanges() {
-            return this.themePropsChanges;
+        public getThemeChanges() {
+            return this.themeChanges;
         }
         public getImportsChanges() {
             return this.importsChanges;
@@ -545,19 +545,27 @@ export class Test {
     });
 
     it('should replace/remove inputs', done => {
-        const themePropsJson: ThemePropertyChanges = {
+        // TODO add proper types
+        const themeChangesJson: ThemeChanges = {
             changes: [
                 {
                     name: '$replace-me', replaceWith: '$replaced',
-                    owner: 'igx-theme-func'
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Variable
+
+
                 },
                 {
                     name: '$remove-me', remove: true,
-                    owner: 'igx-theme-func'
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Variable
+
                 },
                 {
                     name: '$old-prop', remove: true,
-                    owner: 'igx-comp-theme'
+                    owner: 'igx-comp-theme',
+                    type: ThemeType.Variable
+
                 }
             ]
         };
@@ -568,7 +576,7 @@ export class Test {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themePropsJson));
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
 `$var: igx-theme-func(
@@ -594,7 +602,7 @@ $var3: igx-comp-theme(
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
         expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
-        expect(update.getThemePropChanges()).toEqual(themePropsJson);
+        expect(update.getThemeChanges()).toEqual(themeChangesJson);
 
         update.applyChanges();
         expect(appTree.readContent('styles.scss')).toEqual(
@@ -931,28 +939,37 @@ export class CustomGridComponent {
     });
 
     // sass variable migrations
-    it('Should migrate sass variables names correctly', ()=> {
-        const themePropsJson: ThemePropertyChanges = {
+    fit('Should migrate sass variables names correctly', ()=> {
+        const themeChangesJson: ThemeChanges = {
             changes: [
                 {
                     name: '$light-material-palette',
-                    replaceWith: '$igx-light-material-palette'
+                    replaceWith: '$igx-light-material-palette',
+                    type: ThemeType.Variable
                 },
                 {
                     name: '$light-palette',
-                    replaceWith: '$igx-light-palette'
+                    replaceWith: '$igx-light-palette',
+                    type: ThemeType.Variable
+
                 },
                 {
                     name: '$dark-palette',
-                    replaceWith: '$igx-dark-palette'
+                    replaceWith: '$igx-dark-palette',
+                    type: ThemeType.Variable
+
                 },
                 {
                     name: '$color',
-                    replaceWith: '$igx-color'
+                    replaceWith: '$igx-color',
+                    type: ThemeType.Variable
+
                 },
                 {
                     name: '$elevation',
-                    replaceWith: '$igx-elevation'
+                    replaceWith: '$igx-elevation',
+                    type: ThemeType.Variable
+
                 }
 
             ]
@@ -964,7 +981,7 @@ export class CustomGridComponent {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themePropsJson));
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
 `$palette: $light-material-palette;
