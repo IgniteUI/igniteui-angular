@@ -256,18 +256,22 @@ export class PivotUtil {
         siblingData.forEach(sib => {
             const parentDims = parentRec.dimensionValues;
             parentDims.forEach((key, value) => {
-                sib.dimensionValues.set(value, key);
                 const dim = parentRec.dimensions.find(x => x.memberName === value);
-                sib.dimensions.unshift(dim);
-                parentRec.children.forEach((recs, key) => {
-                    sib.children.set(key, recs);
-                });
-                sib.children.forEach((children, childKey) => {
-                    children.forEach(x => {
-                        x.dimensionValues.set(value, key);
-                        x.dimensions.unshift(dim);
+                if (dim) {
+                    sib.dimensionValues.set(value, key);
+                    sib.dimensions.unshift(dim);
+                    parentRec.children.forEach((recs, key) => {
+                        sib.children.set(key, recs);
                     });
-                });
+                    sib.children.forEach((children, childKey) => {
+                        children.forEach(x => {
+                            if (dim.memberName !== childKey && !x.dimensionValues.get(value)) {
+                                x.dimensionValues.set(value, key);
+                                x.dimensions.unshift(dim);
+                            }
+                        });
+                    });
+                }
             });
         });
     }
@@ -281,7 +285,7 @@ export class PivotUtil {
             for (const sibling of siblingData) {
                 //const childCollection = sibling[prevRowField + pivotKeys.rowDimensionSeparator + pivotKeys.records] || [];
                 const childCollection = sibling.children.get(prevRowField);
-                if(!childCollection) continue;
+                if (!childCollection) continue;
                 for (const child of childCollection) {
                     if (!child[pivotKeys.records]) {
                         continue;
@@ -294,6 +298,7 @@ export class PivotUtil {
                     if (siblingData2.length === 1) {
                         //child[row.memberName] = sibling[row.memberName];
                         child.dimensionValues.set(row.memberName, sibling.dimensionValues.get(row.memberName));
+                        child.dimensions.push(row);
                         // add children to current level if dimensions have same depth
                         for (const sib of siblingData2) {
                             if (sib.children.get(row.memberName)) {
