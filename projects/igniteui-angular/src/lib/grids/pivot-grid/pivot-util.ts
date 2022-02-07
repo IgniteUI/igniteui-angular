@@ -257,12 +257,16 @@ export class PivotUtil {
             const parentDims = parentRec.dimensionValues;
             parentDims.forEach((key, value) => {
                 const dim = parentRec.dimensions.find(x => x.memberName === value);
-                if (dim) {
+                if (dim && dim.memberName !== row.memberName) {
                     sib.dimensionValues.set(value, key);
                     sib.dimensions.unshift(dim);
-                    parentRec.children.forEach((recs, key) => {
-                        sib.children.set(key, recs);
-                    });
+                    if (dim.childLevel) {
+                        const hierarchyFields = PivotUtil
+                            .getFieldsHierarchy(sib.records, [dim.childLevel], PivotDimensionType.Row, pivotKeys);
+                        const siblingData = PivotUtil
+                            .processHierarchy(hierarchyFields, pivotKeys, 0);
+                        sib.children.set(value, siblingData);
+                    }
                     sib.children.forEach((children, childKey) => {
                         children.forEach(x => {
                             if (dim.memberName !== childKey && !x.dimensionValues.get(value)) {
@@ -294,7 +298,7 @@ export class PivotUtil {
                     const hierarchyFields2 = PivotUtil
                         .getFieldsHierarchy(child[pivotKeys.records], [row], PivotDimensionType.Row, pivotKeys);
                     const siblingData2 = PivotUtil
-                        .processHierarchy(hierarchyFields2, child ?? [], pivotKeys);
+                        .processHierarchy(hierarchyFields2, pivotKeys);
                     if (siblingData2.length === 1) {
                         //child[row.memberName] = sibling[row.memberName];
                         child.dimensionValues.set(row.memberName, sibling.dimensionValues.get(row.memberName));
@@ -350,8 +354,21 @@ export class PivotUtil {
             if (h[pivotKeys.children] && h[pivotKeys.children].size > 0) {
                 const nestedData = this.processHierarchy(h[pivotKeys.children],
                     pivotKeys, level + 1, rootData);
+                for (const nested of nestedData) {
+                    if (nested.records && nested.records.length === 1) {
+                        //  TODO
+                        // only 1 child record, apply same props to parent.
+                        // const memberName = h[pivotKeys.children].entries().next().value[1].dimension.memberName;
+                        //PivotUtil.processSiblingProperties(nested[pivotKeys.records][0], [nested], keys);
+                        //PivotUtil.resolveSiblingChildren( nested.children.get(memberName)[0], [nested], h.dimension, pivotKeys);
+                    }
+                }
                 rec.records = this.getDirectLeafs(nestedData);
                 rec.children.set(field, nestedData);
+                if (!rootData) {
+                    //PivotUtil.resolveSiblingChildren(rec, rec[field + pivotKeys.rowDimensionSeparator + pivotKeys.records], keys);
+                    PivotUtil.resolveSiblingChildren(rec, rec.children.get(field), h.dimension, pivotKeys);
+                }
             }
         });
 
