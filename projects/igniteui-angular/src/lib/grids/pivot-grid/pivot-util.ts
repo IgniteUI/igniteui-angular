@@ -257,15 +257,15 @@ export class PivotUtil {
             const parentDims = parentRec.dimensionValues;
             parentDims.forEach((key, value) => {
                 sib.dimensionValues.set(value, key);
-                sib.dimensions = parentRec.dimensions.concat(sib.dimensions);
+                const dim = parentRec.dimensions.find(x => x.memberName === value);
+                sib.dimensions.unshift(dim);
                 parentRec.children.forEach((recs, key) => {
                     sib.children.set(key, recs);
                 });
                 sib.children.forEach((children, childKey) => {
                     children.forEach(x => {
                         x.dimensionValues.set(value, key);
-                        const dim = parentRec.dimensions.find(x => x.memberName === value);
-                        x.dimensions.push(dim);
+                        x.dimensions.unshift(dim);
                     });
                 });
             });
