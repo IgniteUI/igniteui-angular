@@ -1422,12 +1422,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             for (const val of arr) {
                 path.push(val);
                 const newPath = path.join(separator);
-                let h = currentHierarchy.get(newPath);
-                if (!h) {
+                let targetHierarchy = currentHierarchy.get(newPath);
+                if (!targetHierarchy) {
                     currentHierarchy.set(newPath, { value: newPath ,expandable: true, children: new Map<string, any>(), dimension: this.columnDimensions[0] });
-                    h = currentHierarchy.get(newPath);
+                    targetHierarchy = currentHierarchy.get(newPath);
                 }
-                currentHierarchy = h.children;
+                currentHierarchy = targetHierarchy.children;
             }
         });
         return hierarchy;
