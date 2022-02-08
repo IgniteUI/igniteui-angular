@@ -99,6 +99,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.checkMatch();
     }
 
+    /** @hidden @internal */
+    public get searchValue(): string {
+        return this._searchValue;
+    }
+    public set searchValue(val: string) {
+        this._searchValue = val;
+    }
+
     private get selectedItem() {
         return this.selectionService.get(this.id).values().next().value;
     }
@@ -187,10 +195,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const filtered = this.filteredData.find(this.findMatch);
             if (filtered === undefined || filtered === null) {
-                this.searchValue = this.comboInput.value;
+                this.filterValue = this.searchValue = this.comboInput.value;
                 return;
             }
-            this.searchValue = '';
+            this.filterValue = this.searchValue = '';
         });
         this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.composing) {
@@ -215,7 +223,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public handleInputChange(event?: any) {
         if (event !== undefined) {
-            this.searchValue = typeof event === 'string' ? event : event.target.value;
+            this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
         this._onChangeCallback(this.searchValue);
         if (this.collapsed && this.comboInput.focused) {
@@ -247,7 +255,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.close();
             // manually trigger text selection as it will not be triggered during editing
             this.textSelection.trigger();
-            this.updateFilterValue(filtered);
+            this.filterValue = filtered[this.displayKey];
             return;
         }
         if (event.key === this.platformUtil.KEYMAP.BACKSPACE
@@ -436,12 +444,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private isPartialMatch(filtered: any): boolean {
         return this.filterValue.length !== filtered[this.displayKey].length;
-    }
-
-    private updateFilterValue(filtered: any): void {
-        if (filtered) {
-            this.filterValue = filtered[this.displayKey];
-        }
     }
 }
 

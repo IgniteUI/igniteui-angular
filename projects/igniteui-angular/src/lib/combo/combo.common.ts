@@ -838,6 +838,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _data = [];
     protected _value = '';
     protected _groupKey = '';
+    protected _searchValue = '';
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
@@ -849,7 +850,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     private _type = null;
     private _dataType = '';
-    private _searchValue = '';
     private _itemHeight = null;
     private _itemsMaxHeight = null;
     private _overlaySettings: OverlaySettings;
