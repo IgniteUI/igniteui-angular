@@ -13,7 +13,7 @@
         [formatter]="col.formatter" [intRow]="this" [active]="isCellActive(col.visibleIndex)"
         [style.min-height.px]="cellHeight" [rowData]="pivotAggregationData" [style.min-width]="col.width" [style.max-width]="col.width"
         [style.flex-basis]="col.width" [width]="col.getCellWidth()" [visibleColumnIndex]="col.visibleIndex"
-        [value]="pivotAggregationData | dataMapper:col.field:grid.pipeTrigger:pivotAggregationData[col.field]:col.hasNestedPath"
+        [value]="pivotAggregationData[col.field] | dataMapper:col.field:grid.pipeTrigger:pivotAggregationData[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate" [lastSearchInfo]="grid.lastSearchInfo"
         [cellSelectionMode]="grid.cellSelection" [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
         (pointerdown)="grid.navigation.focusOutRowHeader($event)">
