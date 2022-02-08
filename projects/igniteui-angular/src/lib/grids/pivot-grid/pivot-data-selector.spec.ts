@@ -4,10 +4,11 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
 import { DisplayDensity } from "../../core/displayDensity";
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IgxInputDirective } from "../../input-group/public_api";
 import { configureTestSuite } from "../../test-utils/configure-suite";
 import { IgxPivotGridTestBaseComponent } from "../../test-utils/pivot-grid-samples.spec";
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { PivotGridType } from "../common/grid.interface";
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import {
@@ -131,7 +132,9 @@ fdescribe("Pivot data selector", () => {
     it("should sort column and row dimensions on item click", () => {
         const colDimension = grid.pivotConfiguration.columns[0];
         const rowDimension = grid.pivotConfiguration.rows[0];
-        const colSortEl = getPanelItemsByDimensionType(PivotDimensionType.Column)
+        const colSortEl = getPanelItemsByDimensionType(
+            PivotDimensionType.Column
+        )
             .find((item) => item.textContent.includes(colDimension.memberName))
             .parentNode.querySelector(".igx-pivot-data-selector__action-sort");
         const rowSortEl = getPanelItemsByDimensionType(PivotDimensionType.Row)
@@ -198,6 +201,49 @@ fdescribe("Pivot data selector", () => {
 
     it("should render a section of all value items in a panel", () => {
         expectConfigToMatchPanels(null); // pass an invalid type (null) to test for values
+    });
+
+    xit("should reorder items in a panel using drag and drop gestures", async () => {
+        // Get all value items
+        let items = getPanelItemsByDimensionType(null);
+
+        spyOn(selector, 'ghostCreated');
+        spyOn(selector, 'onItemDragMove');
+        spyOn(selector, 'ghostDestroyed');
+        spyOn(selector, 'onItemDragEnd');
+        spyOn(selector, 'onItemDropped');
+
+        // Get the drag handle of the last item in the panel
+        const dragHandle = items[0].parentNode
+            .querySelectorAll("igx-list-item")
+            [items.length - 1].querySelector("[igxDragHandle]");
+
+        const { x: itemX, y: itemY } = items[0].parentNode.querySelectorAll('igx-list-item')[0].getBoundingClientRect();
+        const { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
+
+        console.log("First item position", itemX, itemY);
+        console.log("handle position", handleX, handleY);
+        UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
+        fixture.detectChanges();
+
+        UIInteractions.simulatePointerEvent("pointermove", dragHandle, handleX + 10, handleY - 10);
+        fixture.detectChanges();
+        await wait(100);
+        const ghost = document.body.querySelector('.igx-pivot-data-selector__item-ghost');
+        expect(selector.ghostCreated).toHaveBeenCalled();
+
+        UIInteractions.simulatePointerEvent("pointermove", ghost, handleX, handleY - 36);
+        fixture.detectChanges();
+        await wait(100);
+        console.log(ghost);
+        expect(selector.onItemDragMove).toHaveBeenCalled();
+
+        UIInteractions.simulatePointerEvent("pointerup", ghost, handleX, handleY - 36);
+        await wait(1000);
+        fixture.detectChanges();
+        expect(selector.onItemDragEnd).toHaveBeenCalled();
+        expect(selector.ghostDestroyed).toHaveBeenCalled();
+        expect(selector.onItemDropped).toHaveBeenCalled();
     });
 
     const expectConfigToMatchPanels = (dimensionType: PivotDimensionType) => {

@@ -1,7 +1,6 @@
 import { useAnimation } from "@angular/animations";
 import {
-    Component,
-    HostBinding,
+    Component, HostBinding,
     Input,
     Pipe,
     PipeTransform,
@@ -55,6 +54,8 @@ interface IDataSelectorPanel {
     templateUrl: "./pivot-data-selector.component.html",
 })
 export class IgxPivotDataSelectorComponent {
+    public ghost: HTMLElement;
+
     private _grid: PivotGridType;
     private _dropDelta = 0;
 
@@ -212,7 +213,7 @@ export class IgxPivotDataSelectorComponent {
      * @hidden
      * @internal
      */
-    public onFilteringIconPointerDown(event) {
+    public onFilteringIconPointerDown(event: PointerEvent) {
         event.stopPropagation();
         event.preventDefault();
     }
@@ -488,6 +489,11 @@ export class IgxPivotDataSelectorComponent {
             "visibility",
             "hidden"
         );
+        this.ghost = event.ghostElement;
+    }
+
+    public ghostDestroyed(event: IDragGhostBaseEventArgs, value: string) {
+        console.log(event.ghostElement);
     }
 
     /**
