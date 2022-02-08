@@ -124,7 +124,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     }
 
     public getLevel(col: IgxColumnComponent) {
-        return this.rowData[col.field + this.grid.pivotKeys.rowDimensionSeparator + this.grid.pivotKeys.level];
+        return (this.dimension as any).level;
     }
 
     public get rowSpan() {
