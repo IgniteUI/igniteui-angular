@@ -203,8 +203,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
         collection: IPivotGridRecord[],
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy,
-        pipeTrigger: number,
-        pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
+        pipeTrigger: number
     ): IPivotGridRecord[] {
         let result: IPivotGridRecord[];
 
