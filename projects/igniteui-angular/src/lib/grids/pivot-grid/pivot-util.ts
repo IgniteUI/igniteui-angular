@@ -70,7 +70,7 @@ export class PivotUtil {
                         rec.dimensionValues.forEach((value, key) => {
                             if (dimension.memberName !== key) {
                                 x.dimensionValues.set(key, value);
-                                const dim = rec.dimensions.find(x => x.memberName === key);
+                                const dim = rec.dimensions.find(y => y.memberName === key);
                                 x.dimensions.unshift(dim);
                             }
 
