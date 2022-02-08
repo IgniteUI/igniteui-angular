@@ -7,6 +7,67 @@ import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 
 export class PivotUtil {
+
+    // go through all children and apply new dimension groups as child
+    public static processGroups(recs: IPivotGridRecord[], dimension: IPivotDimension, pivotKeys: IPivotKeys) {
+        for (const rec of recs) {
+            // process existing children
+            if (rec.children && rec.children.size > 0) {
+                // process hierarchy in dept
+                rec.children.forEach((values, key) => {
+                    this.processGroups(values, dimension, pivotKeys);
+                });
+            }
+            // add children for current dimension
+            const hierarchyFields = PivotUtil
+                .getFieldsHierarchy(rec.records, [dimension], PivotDimensionType.Row, pivotKeys);
+            const values = Array.from(hierarchyFields.values()).find(x => x.dimension.memberName === dimension.memberName);
+            const siblingData = PivotUtil
+                .processHierarchy(hierarchyFields, pivotKeys, 0);
+            rec.children.set(dimension.memberName, siblingData);
+        }
+    }
+
+    public static flattenGroups(data: IPivotGridRecord[], dimension: IPivotDimension, expansionStates, defaultExpand: boolean, parent?: IPivotDimension) {
+        for (let i = 0; i < data.length; i++) {
+            const rec = data[i];
+            const field = dimension.memberName;
+            if (!field) {
+                continue;
+            }
+            const expansionRowKey = PivotUtil.getRecordKey(rec, dimension);
+            const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
+                defaultExpand :
+                expansionStates.get(expansionRowKey);
+            let recordsData = rec.children.get(field);
+            if(!recordsData && parent) {
+                // check parent
+                recordsData = rec.children.get(parent.memberName);
+                dimension = parent;
+                debugger;
+            }
+            if ((isExpanded || !dimension.childLevel) && recordsData) {
+                if (dimension.childLevel) {
+                    this.flattenGroups(recordsData, dimension.childLevel, expansionStates, defaultExpand, dimension);
+                }
+                // copy parent values and dims in child
+                recordsData.forEach(x => {
+                    rec.dimensionValues.forEach((value, key) => {
+                        if (dimension.memberName !== key) {
+                            x.dimensionValues.set(key, value);
+                            const dim = rec.dimensions.find(x => x.memberName === key);
+                            x.dimensions.unshift(dim);
+                        }
+
+                    });
+                });
+
+                data.splice(i + 1, 0, ...recordsData);
+                i += recordsData.length;
+
+            }
+        }
+    }
     public static assignLevels(dims) {
         for (const dim of dims) {
             let currDim = dim;

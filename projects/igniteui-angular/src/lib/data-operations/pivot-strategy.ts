@@ -50,34 +50,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                 prevDim = row;
                 prevDimTopRecords = data;
             } else {
-                const newData = [...data];
-                const curDimTopRecords = [];
-                for (let i = 0; i < newData.length; i++) {
-                    // const currData = newData[i].children.get(prevDim.memberName);
-                    // const leafData = PivotUtil.getDirectLeafs(currData);
-                    const hierarchyFields = PivotUtil
-                        .getFieldsHierarchy(newData[i].records, [row], PivotDimensionType.Row, pivotKeys);
-                    const siblingData = PivotUtil
-                        .processHierarchy(hierarchyFields, pivotKeys, 0);
-                    PivotUtil.resolveSiblingChildren(newData[i], siblingData, row, pivotKeys);
-                    PivotUtil.processSubGroups(row, prevRowDims.slice(0), siblingData, pivotKeys);
-                    if ((prevDimTopRecords[i].length != undefined && prevDimTopRecords[i].length < siblingData.length) || prevDimTopRecords.length < siblingData.length) {
-                        // Add the sibling data as child records because the previous dimension contains more dense version of the previous dimension records.
-                        newData[i].children.set(row.memberName, siblingData);
-                    } else {
-                        // Replace the current record with the sibling records because the current dimension is a denser version or produces the same amount of records.
-                        newData.splice(i, 1, ...siblingData);
-                        // Shift the prevDimTopRecords item to the right because of the previous row transforms the newData and increases the elements in newData
-                        prevDimTopRecords.splice(siblingData.length, prevDimTopRecords.length - siblingData.length, ...prevDimTopRecords);
-                        // Increase the index the amount of sibling record that replaces the current one. Subtract 1 because there is already i++ in the for cycle.
-                        i += siblingData.length - 1;
-                    }
-                    // Add the current top sibling elements for the dimension
-                    curDimTopRecords.push(cloneArray(siblingData, true));
-                }
-                data = newData;
-                prevDim = row;
-                prevRowDims.push(row);
+                PivotUtil.processGroups(data, row, pivotKeys);
             }
         }
         return data;
