@@ -23,7 +23,8 @@ import {
     ViewContainerRef,
     Injector,
     NgModuleRef,
-    ApplicationRef} from '@angular/core';
+    ApplicationRef
+} from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -648,7 +649,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 dropdown.overlayComponentId = id;
                 return { id, ref: undefined };
             }
-            return {id: dropdown.overlayComponentId, ref: undefined};
+            return { id: dropdown.overlayComponentId, ref: undefined };
         }
     }
 
@@ -1144,11 +1145,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (dimType === PivotDimensionType.Column) {
             this.setupColumns();
         }
-        if (!dimension.enabled) {
+        if (!dimension.enabled && dimension.filter) {
             this.filteringService.clearFilter(dimension.memberName);
         }
         this.pipeTrigger++;
         this.dimensionsChange.emit({ dimensions: collection, dimensionCollectionType: dimType });
+        this.cdr.detectChanges();
     }
 
     /**
@@ -1264,9 +1266,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
 
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
-        return PivotUtil.flatten(this.rowDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
-            PivotUtil.flatten(this.columnDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Column :
-            PivotUtil.flatten(this.filterDimensions).indexOf(dimension) !== -1 ? PivotDimensionType.Filter : null;
+        return PivotUtil.flatten(this.pivotConfiguration.rows).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
+            PivotUtil.flatten(this.pivotConfiguration.columns).indexOf(dimension) !== -1 ? PivotDimensionType.Column :
+                PivotUtil.flatten(this.pivotConfiguration.filters).indexOf(dimension) !== -1 ? PivotDimensionType.Filter : null;
     }
 
     protected getLargesContentWidth(contents: ElementRef[]): string {
@@ -1509,8 +1511,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         const key = value.value;
         const ref = isGroup ?
-        factoryColumnGroup.create(this.viewRef.injector) :
-        factoryColumn.create(this.viewRef.injector);
+            factoryColumnGroup.create(this.viewRef.injector) :
+            factoryColumn.create(this.viewRef.injector);
         ref.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
         ref.instance.field = key;
         ref.instance.parent = parent;

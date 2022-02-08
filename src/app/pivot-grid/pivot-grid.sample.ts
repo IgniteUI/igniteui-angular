@@ -247,7 +247,7 @@ export class PivotGridSampleComponent {
     }
 
     public toggle(){
-        this.grid1.toggleDimension({memberName: 'test', enabled: true});
+        this.grid1.toggleDimension(this.dimensions[2]);
     }
 
     public move(){
