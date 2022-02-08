@@ -28,38 +28,55 @@ export class PivotUtil {
         }
     }
 
-    public static flattenGroups(data: IPivotGridRecord[], dimension: IPivotDimension, expansionStates, defaultExpand: boolean, parent?: IPivotDimension) {
+    public static flattenGroups(data: IPivotGridRecord[], dimension: IPivotDimension, expansionStates, defaultExpand: boolean, parent?: IPivotDimension, parentRec?: IPivotGridRecord) {
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
             const field = dimension.memberName;
             if (!field) {
                 continue;
             }
+
+            let recordsData = rec.children.get(field);
+            if (!recordsData && parent) {
+                // check parent
+                recordsData = rec.children.get(parent.memberName);
+                if (recordsData) {
+                    dimension = parent;
+                }
+            }
+
+            if (parentRec) {
+                parentRec.dimensionValues.forEach((value, key) => {
+                    if (parent.memberName !== key) {
+                        rec.dimensionValues.set(key, value);
+                        const dim = parentRec.dimensions.find(x => x.memberName === key);
+                        rec.dimensions.unshift(dim);
+                    }
+
+                });
+            }
+
+
             const expansionRowKey = PivotUtil.getRecordKey(rec, dimension);
             const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
                 defaultExpand :
                 expansionStates.get(expansionRowKey);
-            let recordsData = rec.children.get(field);
-            if(!recordsData && parent) {
-                // check parent
-                recordsData = rec.children.get(parent.memberName);
-                dimension = parent;
-            }
             if ((isExpanded || !dimension.childLevel) && recordsData) {
                 if (dimension.childLevel) {
-                    this.flattenGroups(recordsData, dimension.childLevel, expansionStates, defaultExpand, dimension);
-                }
-                // copy parent values and dims in child
-                recordsData.forEach(x => {
-                    rec.dimensionValues.forEach((value, key) => {
-                        if (dimension.memberName !== key) {
-                            x.dimensionValues.set(key, value);
-                            const dim = rec.dimensions.find(x => x.memberName === key);
-                            x.dimensions.unshift(dim);
-                        }
+                    this.flattenGroups(recordsData, dimension.childLevel, expansionStates, defaultExpand, dimension, rec);
+                } else {
+                    // copy parent values and dims in child
+                    recordsData.forEach(x => {
+                        rec.dimensionValues.forEach((value, key) => {
+                            if (dimension.memberName !== key) {
+                                x.dimensionValues.set(key, value);
+                                const dim = rec.dimensions.find(x => x.memberName === key);
+                                x.dimensions.unshift(dim);
+                            }
 
+                        });
                     });
-                });
+                }
 
                 data.splice(i + 1, 0, ...recordsData);
                 i += recordsData.length;
