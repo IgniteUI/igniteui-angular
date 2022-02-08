@@ -30,7 +30,7 @@ describe('IgxLinearBar', () => {
     });
 
     it('should initialize linearProgressbar with default values', () => {
-        const domProgress = progress.element.nativeElement;
+        const domProgress = fixture.debugElement.nativeElement;
         const defaultMaxValue = 100;
         const defaultValue = 0;
         const defaultStriped = false;
@@ -45,7 +45,7 @@ describe('IgxLinearBar', () => {
     });
 
     it('should initialize linearProgressbar with non-default values', () => {
-        const domProgress = progress.element.nativeElement;
+        const domProgress = fixture.debugElement.nativeElement;
         const defaultMaxValue = 100;
         const defaultValue = 0;
         const newStriped = true;
@@ -169,7 +169,7 @@ describe('IgxLinearBar', () => {
     it('Prevent constant update of progress value when value and max value differ', () => {
         const maxVal = 3.25;
         const value = 2.55;
-        const progressBar = progress.element.nativeElement;
+        const progressBar = fixture.debugElement.nativeElement;
 
         expect(progressBar.attributes['aria-valuenow'].textContent).toBe(progress.value.toString());
         progress.step = 0.634;
@@ -253,7 +253,7 @@ describe('IgxLinearBar', () => {
     });
 
     it('Should change class suffix which would be relevant to the type that has been passed', () => {
-        const linearBar = progress.element.nativeElement;
+        const linearBar = fixture.debugElement.nativeElement;
 
         expect(linearBar.classList.length).toEqual(1);
         expect(linearBar.classList.contains(LINEAR_BAR_TAG)).toEqual(true);
@@ -265,7 +265,7 @@ describe('IgxLinearBar', () => {
     });
 
     it('Change progressbar style to be striped', () => {
-        const linerBar = progress.element.nativeElement;
+        const linerBar = fixture.debugElement.nativeElement;
 
         expect(linerBar.classList.contains(STRIPED_CLASS)).toEqual(false);
 
@@ -276,7 +276,7 @@ describe('IgxLinearBar', () => {
     });
 
     it('should stay striped when the type has changed', () => {
-        const linearBar = progress.element.nativeElement;
+        const linearBar = fixture.debugElement.nativeElement;
 
         progress.striped = true;
         fixture.detectChanges();
@@ -291,7 +291,7 @@ describe('IgxLinearBar', () => {
     });
 
     it('When enable indeterminate mode, then the appropriate class should be applied.', () => {
-        const bar = progress.element.nativeElement;
+        const bar = fixture.debugElement.nativeElement;
         expect(bar.classList.contains(INDETERMINATE_CLASS)).toEqual(false);
 
         progress.indeterminate = true;

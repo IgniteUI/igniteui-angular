@@ -212,13 +212,13 @@ describe('IgxCircularBar', () => {
 
             fixture.detectChanges();
 
-            const progressBarContainer = progress.element.nativeElement;
+            const progressBarContainer = fixture.debugElement.nativeElement;
             expect(parseFloat(progressBarContainer.attributes['aria-valuenow'].textContent)).toBe(value);
             expect(progress.value).toBe(value);
         });
 
         it('When enable indeterminate mode, then the appropriate class should be applied.', () => {
-            const bar = progress.element.nativeElement;
+            const bar = fixture.debugElement.nativeElement;
             expect(bar.classList.contains(CIRCULAR_INDETERMINATE_CLASS)).toEqual(false);
 
             progress.indeterminate = true;
@@ -240,7 +240,7 @@ describe('IgxCircularBar', () => {
             fixture.detectChanges();
 
             const progressRepresentation = toPercent(val, maxVal);
-            const progressBarElem = progress.element.nativeElement;
+            const progressBarElem = fixture.debugElement.nativeElement;
             const valueInPercent = progressBarElem.querySelector('text').firstElementChild;
             expect(valueInPercent.textContent.trim()).toBe(`${progressRepresentation}%`);
         });
@@ -264,7 +264,7 @@ describe('IgxCircularBar', () => {
         });
 
         it('should respond correctly to passed maximum value', () => {
-            const progressBarElem = progress.element.nativeElement;
+            const progressBarElem = fixture.debugElement.nativeElement;
 
             expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(progress.value.toString());
             expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(progress.max.toString());

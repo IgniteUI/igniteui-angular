@@ -98,7 +98,7 @@ export abstract class BaseProgressDirective {
         newVal: 0
     };
 
-    constructor(public element: ElementRef) { }
+    constructor() { }
 
     /**
      * Returns the value which update the progress indicator of the `progress bar`.
@@ -580,8 +580,8 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
         strokeOpacity: 1
     };
 
-    constructor(private renderer: Renderer2, private _directionality: IgxDirectionality, element: ElementRef) {
-        super(element);
+    constructor(private renderer: Renderer2, private _directionality: IgxDirectionality) {
+        super();
     }
 
     public ngAfterContentInit() {
