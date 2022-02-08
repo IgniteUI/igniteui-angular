@@ -211,8 +211,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
         if (!expressions.length) {
             result = collection;
         } else {
-            // TODO - update to work with IPivotGridRecord
-            result = PivotUtil.sort(cloneArray(collection, true), expressions, sorting, pivotKeys);
+            result = PivotUtil.sort(cloneArray(collection, true), expressions, sorting);
         }
         return result;
     }

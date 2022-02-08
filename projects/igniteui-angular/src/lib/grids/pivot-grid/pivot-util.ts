@@ -115,17 +115,14 @@ export class PivotUtil {
         return hierarchy;
     }
 
-    public static sort(data: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting(), pivotKeys): any[] {
+    public static sort(data: IPivotGridRecord[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting()): any[] {
         data.forEach(rec => {
-            const keys = Object.keys(rec);
-            rec.sorted = true;
-            keys.forEach(k => {
-                if (k.indexOf(pivotKeys.records) !== -1 && k !== pivotKeys.records) {
-                    const unsorted = rec[k].filter(x => !x.sorted);
-                    // sort all child record collections based on expression recursively.
-                    rec[k] = this.sort(unsorted, expressions, sorting, pivotKeys);
-                }
-            });
+            const children = rec.children;
+            if (children) {
+                children.forEach(x => {
+                    this.sort(x, expressions, sorting);
+                });
+            }
         });
         return DataUtil.sort(data, expressions, sorting);
     }
@@ -213,12 +210,14 @@ export class PivotUtil {
                 const childRecords = this.collectRecords(children, pivotKeys);
                 hierarchy[pivotKeys.aggregations] = this.aggregate(childRecords, values);
                 Object.keys(hierarchy[pivotKeys.aggregations]).forEach((key) => {
-                    rec.aggregationValues.set(hierarchy.value + pivotKeys.columnDimensionSeparator + key, hierarchy[pivotKeys.aggregations][key]);
+                    const aggregationKey = hierarchy.value + pivotKeys.columnDimensionSeparator + key;
+                    rec.aggregationValues.set(aggregationKey, hierarchy[pivotKeys.aggregations][key]);
                 });
             } else if (hierarchy[pivotKeys.records]) {
                 hierarchy[pivotKeys.aggregations] = this.aggregate(hierarchy[pivotKeys.records], values);
                 Object.keys(hierarchy[pivotKeys.aggregations]).forEach((key) => {
-                    rec.aggregationValues.set(hierarchy.value + pivotKeys.columnDimensionSeparator + key, hierarchy[pivotKeys.aggregations][key]);
+                    const aggregationKey = hierarchy.value + pivotKeys.columnDimensionSeparator + key;
+                    rec.aggregationValues.set(aggregationKey, hierarchy[pivotKeys.aggregations][key]);
                 });
             }
         });
