@@ -21,10 +21,10 @@ module.exports = function (config) {
       require('karma-spec-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
-    parallelOptions: {
+    /*parallelOptions: {
       executors: 2,
       shardStrategy: 'round-robin'
-    },
+    },*/
     client: {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
       jasmine: {
