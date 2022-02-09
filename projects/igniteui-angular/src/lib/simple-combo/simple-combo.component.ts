@@ -88,6 +88,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public composing = false;
 
     private _updateInput = true;
+    private _internalFilter = '';
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
@@ -198,6 +199,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.filterValue = this.searchValue = this.comboInput.value;
                 return;
             }
+            this._internalFilter = this.filterValue;
             this.filterValue = this.searchValue = '';
         });
         this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -214,7 +216,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
         });
         this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.filterValue = this.comboInput.value;
+            this.filterValue = this._internalFilter = this.comboInput.value;
         });
 
         super.ngAfterViewInit();
@@ -223,7 +225,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public handleInputChange(event?: any) {
         if (event !== undefined) {
-            this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
+            this.filterValue = this._internalFilter = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
         this._onChangeCallback(this.searchValue);
         if (this.collapsed && this.comboInput.focused) {
@@ -255,7 +257,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.close();
             // manually trigger text selection as it will not be triggered during editing
             this.textSelection.trigger();
-            this.filterValue = filtered[this.displayKey];
+            this.filterValue = this.getElementVal(filtered);
             return;
         }
         if (event.key === this.platformUtil.KEYMAP.BACKSPACE
@@ -264,7 +266,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.clearSelection(true);
         }
         if (!this.collapsed && event.key === this.platformUtil.KEYMAP.TAB) {
-            this.close();
             this.clearOnBlur();
         }
         this.composing = false;
@@ -431,19 +432,30 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clearOnBlur() {
         const filtered = this.filteredData.find(this.findMatch);
-        if (this.filterValue &&
-            (filtered === undefined
-                || filtered === null
-                || !this.selectedItem
-                || this.isPartialMatch(filtered))) {
-            this.clearSelection(true);
-            this.close();
-            this.searchValue = '';
+        if (filtered === undefined || filtered === null || !this.selectedItem) {
+            this.clearAndClose();
+            return;
+        }
+        if (this.isPartialMatch(filtered)) {
+            this.clearAndClose();
         }
     }
 
     private isPartialMatch(filtered: any): boolean {
-        return this.filterValue.length !== filtered[this.displayKey].length;
+        return !!this._internalFilter && this._internalFilter.length !== this.getElementVal(filtered).length;
+    }
+
+    private getElementVal(element: any) {
+        return this.displayKey ? element[this.displayKey] : element;
+    }
+
+    private clearAndClose() {
+        this.clearSelection(true);
+        this._internalFilter = '';
+        this.searchValue = '';
+        if (!this.collapsed) {
+            this.close();
+        }
     }
 }
 
