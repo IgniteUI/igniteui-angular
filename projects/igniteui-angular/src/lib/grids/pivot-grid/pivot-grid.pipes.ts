@@ -90,7 +90,6 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
         collection: IPivotGridRecord[],
         config: IPivotConfiguration,
         dim: IPivotDimension,
-        pivotKeys: IPivotKeys,
         _pipeTrigger?: number
     ): IPivotGridGroupRecord[] {
         if (collection.length === 0 || config.rows.length === 0) return collection;
@@ -98,13 +97,11 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
         const res: IPivotGridGroupRecord[] = [];
 
         const enabledRows = config.rows.filter(x => x.enabled);
-
-        const prevDims = enabledRows.filter((d, ind) => ind < enabledRows.indexOf(dim));
         let groupData: IPivotGridGroupRecord[] = [];
         let prevDim;
         let prevDimRoot;
         let prevId;
-        const index = config.rows.indexOf(dim);
+        const index = enabledRows.indexOf(dim);
         for (let rec of data) {
             const currentDim = rec.dimensions[index];
             const id = PivotUtil.getRecordKey(rec, currentDim);
