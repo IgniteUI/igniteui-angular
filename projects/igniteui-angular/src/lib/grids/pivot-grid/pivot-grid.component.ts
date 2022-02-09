@@ -1245,6 +1245,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.setupColumns();
         this.pipeTrigger++;
         this.valuesChange.emit({ values: this.pivotConfiguration.values });
+        this.reflow();
     }
 
     public getDimensionsByType(dimension: PivotDimensionType) {
