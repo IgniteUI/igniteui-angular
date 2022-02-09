@@ -681,13 +681,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.notifyChanges(true);
     }
 
-    public preventHeaderScroll(args) {
-        if (args.target.scrollLeft !== 0) {
-            (this.navigation as any).forOfDir().getScroll().scrollLeft = args.target.scrollLeft;
-            args.target.scrollLeft = 0;
-        }
-    }
-
     /**
      * Returns if a group is expanded or not.
      *

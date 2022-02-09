@@ -423,7 +423,7 @@ $light-grid: extend(
 /// @prop {Map} grouparea-background [color: 'surface'] - The grid group area background color.
 /// @prop {Map} group-row-background [color: ('grays', 50)] - The grid group row background color.
 /// @prop {Map} group-row-selected-background [color: ('grays', 100)] - The drop area background on drop color.
-/// @prop {Map} filtering-header-background [color: ('grays', 100)] - The background color of the filtered column header.
+/// @prop {Map} filtering-header-background [color: ('grays', 50)] - The background color of the filtered column header.
 /// @prop {Map} filtering-header-text-color [color: ('grays', 900)] - The text color color of the filtered column header.
 /// @prop {Map} filtering-row-background [color: ('grays', 200)] - The background color of the filtering row.
 /// @prop {Map} root-summaries-background [color: 'surface'] - The background color of the summary groups located the footer.
@@ -513,7 +513,7 @@ $fluent-grid: extend(
         ),
 
         filtering-header-background: (
-            color: ('grays', 100)
+            color: ('grays', 50)
         ),
 
         filtering-header-text-color: (
@@ -521,7 +521,7 @@ $fluent-grid: extend(
         ),
 
         filtering-row-background: (
-            color: ('grays', 200)
+            color: ('grays', 50)
         ),
 
         row-selected-background: (
@@ -816,23 +816,23 @@ $indigo-grid: extend(
         ),
 
         cell-selected-within-background: (
-            color: ('primary', 300),
+            color: ('primary', 200),
         ),
 
         cell-selected-within-text-color: (
-            contrast-color: ('primary', 300)
+            contrast-color: ('primary', 200)
         ),
 
         row-selected-hover-background: (
-            color: ('primary', 100),
+            color: ('primary', 200),
         ),
 
         row-selected-hover-text-color: (
-            contrast-color: ('primary', 50)
+            contrast-color: ('primary', 200)
         ),
 
         pinned-border-color: (
-            color: ('primary', 200)
+            color: ('primary', 300)
         ),
 
         resize-line-color: (

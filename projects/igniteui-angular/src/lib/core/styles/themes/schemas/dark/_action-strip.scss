@@ -27,12 +27,17 @@ $dark-fluent-action-strip: extend(
 
 /// Generates a dark bootstrap action strip schema.
 /// @type {Map}
+/// @prop {Map} actions-background [color: ('grays', 100)] - The color used for actions background.
 /// @requires {function} extend
 /// @requires $dark-action-strip
 $dark-bootstrap-action-strip: extend(
     $dark-action-strip,
     (
-        variant: 'bootstrap'
+        variant: 'bootstrap',
+
+        actions-background: (
+            color: ('grays', 100),
+        ),
     )
 );
 

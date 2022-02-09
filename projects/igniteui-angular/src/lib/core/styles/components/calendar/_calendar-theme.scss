@@ -1118,7 +1118,7 @@
 /// @param {Map} $categories [(header-year: 'subtitle-1', header-date: 'h4', picker-date: 'subtitle-1', content: 'body-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin calendar-typography($type-scale, $categories: (
-    header-year: 'subtitle-1',
+    header-year: 'overline',
     header-date: 'h4',
     weekday-label: 'body-1',
     picker-date: 'subtitle-1',
