@@ -261,8 +261,8 @@
 @mixin typography(
     $font-family: $material-typeface,
     $type-scale: $material-type-scale,
-) {
-    @if(is-root()) {
+    $prefix: 'igx') {
+    @if (is-root()) {
         // Use the BEM notation to create a link
         // between the igx-typography class selector
         // and all typographic elements.
@@ -320,3 +320,6 @@
     }
 }
 
+@mixin typography-to-wc($font-family: $material-typeface, $type-scale: $material-type-scale) {
+    @include typography($font-family: $material-typeface, $type-scale: $material-type-scale, $prefix: 'igc');
+}
