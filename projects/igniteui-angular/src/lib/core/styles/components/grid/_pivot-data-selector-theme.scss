@@ -209,6 +209,7 @@
         font-size: rem(14px);
         background: igx-color($color: 'surface');
         min-height: rem(32px);
+        height: auto;
         padding: 0 rem(2px) 0 rem(4px);
         cursor: grabbing;
         box-shadow: igx-elevation($igx-elevations, 24);
