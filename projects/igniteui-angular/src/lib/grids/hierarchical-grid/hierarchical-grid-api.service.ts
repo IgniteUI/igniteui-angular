@@ -129,4 +129,16 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         const index = this.get_row_index_in_data(rowID, data);
         return data[index];
     }
+
+    public endEditAll(): void {
+        const rootGrid = (this.grid as IgxHierarchicalGridComponent).rootGrid;
+        if (rootGrid.gridAPI.crudService.cellInEditMode) {
+            rootGrid.gridAPI.crudService.endEdit();
+        }
+        rootGrid.hgridAPI.getChildGrids(true).forEach(g => {
+            if (g.gridAPI.crudService.cellInEditMode) {
+                g.gridAPI.crudService.endEdit();
+            }
+        });
+    }
 }
