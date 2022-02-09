@@ -105,6 +105,15 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         }
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
+    public toggleRowDimension(event, column) {
+        this.grid.toggleRow(this.getRowDimensionKey(column))
+        event?.stopPropagation();
+    }
+
 
     /**
      * @hidden
