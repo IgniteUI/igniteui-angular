@@ -47,7 +47,7 @@ import {
 } from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
-import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
@@ -59,7 +59,6 @@ import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridTransaction } from '../common/types';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
@@ -1423,12 +1422,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             const path = [];
             for (const val of arr) {
                 path.push(val);
-                let h = currentHierarchy.get(path.join(separator));
-                if (!h) {
-                    currentHierarchy.set(path.join(separator), { expandable: true, children: new Map<string, any>(), dimension: this.columnDimensions[0] });
-                    h = currentHierarchy.get(path.join(separator));
+                const newPath = path.join(separator);
+                let targetHierarchy = currentHierarchy.get(newPath);
+                if (!targetHierarchy) {
+                    currentHierarchy.set(newPath, { value: newPath ,expandable: true, children: new Map<string, any>(), dimension: this.columnDimensions[0] });
+                    targetHierarchy = currentHierarchy.get(newPath);
                 }
-                currentHierarchy = h.children;
+                currentHierarchy = targetHierarchy.children;
             }
         });
         return hierarchy;
@@ -1445,8 +1445,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const dim: IPivotDimension = fields.get(first).dimension;
         let currentFields = fields;
         if (dim && dim.sortDirection) {
-            const reverse = (dim.sortDirection === SortingDirection.Desc ? -1 : 1);
-            currentFields = new Map([...fields.entries()].sort((a, b) => reverse * (a > b ? 1 : a < b ? -1 : 0)));
+            const entries = Array.from(fields.entries());
+            const expressions = [{
+                dir: dim.sortDirection,
+                fieldName: dim.memberName,
+                strategy: DefaultPivotSortingStrategy.instance()
+            }];
+            const sorted = DataUtil.sort(cloneArray(entries, true), expressions, this.sortStrategy, this.gridAPI.grid);
+            currentFields = new Map(sorted);
         }
         currentFields.forEach((value, key) => {
             let shouldGenerate = true;
