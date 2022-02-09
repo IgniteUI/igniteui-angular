@@ -40,6 +40,14 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         let prevDimTopRecords = [];
         const currRows = cloneArray(rows, true);
         PivotUtil.assignLevels(currRows);
+
+        if (currRows.length === 0) {
+            hierarchies = PivotUtil.getFieldsHierarchy(collection, [{ memberName: '', enabled: true }], PivotDimensionType.Row, pivotKeys);
+            // generate flat data from the hierarchies
+            data = PivotUtil.processHierarchy(hierarchies, collection[0] ?? [], pivotKeys, 0, true);
+            return data;
+        }
+
         for (const row of currRows) {
             if (!data) {
                 // build hierarchies - groups and subgroups
@@ -108,7 +116,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         collection.forEach(hierarchy => {
             // apply aggregations based on the created groups and generate column fields based on the hierarchies
             this.groupColumns(hierarchy, columns, values, pivotKeys);
-            if (hierarchy[pivotKeys.children]) {
+            if (hierarchy[pivotKeys.children] && hierarchy[pivotKeys.children].size) {
                 let flatCols = {};
                 PivotUtil.flattenColumnHierarchy(hierarchy[pivotKeys.children], values, pivotKeys).forEach(o => {
                     delete o[pivotKeys.records];
@@ -137,6 +145,8 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                     }
                 }
                 result.push(hierarchy);
+            } else {
+                result.push(hierarchy);
             }
         });
         return result;
@@ -144,12 +154,22 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
 
     private groupColumns(hierarchy, columns, values, pivotKeys) {
         const children = hierarchy[pivotKeys.children];
+        const hierarchyRecords = hierarchy[pivotKeys.records] ? hierarchy[pivotKeys.records] : [hierarchy];
         if (children) {
             this.groupColumns(children, columns, values, pivotKeys);
-        } else if (hierarchy[pivotKeys.records]) {
-            const leafRecords = this.getLeafs(hierarchy[pivotKeys.records], pivotKeys);
+        } else if (hierarchyRecords) {
+            const leafRecords = this.getLeafs(hierarchyRecords, pivotKeys);
             hierarchy[pivotKeys.children] = PivotUtil.getFieldsHierarchy(leafRecords, columns, PivotDimensionType.Column, pivotKeys);
-            PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
+            if (hierarchy[pivotKeys.children].size) {
+                PivotUtil.applyAggregations(hierarchy[pivotKeys.children], values, pivotKeys);
+            } else {
+                hierarchy[pivotKeys.children].set('Root', leafRecords);
+                const aggrResult = PivotUtil.aggregate(leafRecords, values);
+                const keys = Object.keys(aggrResult);
+                keys.forEach(key => {
+                    hierarchy[key] = aggrResult[key];
+                });
+            }
         }
     }
 
