@@ -1899,25 +1899,26 @@ describe('IgxTimePicker', () => {
             expect(minuteColumn).toBeNull();
         }));
 
-        it('Should mask editable input correctly when format contains only hours.', fakeAsync(() => {
+        it('Should mask editable input correctly when format contains only hours.', fakeAsync (() => {
+
+            const inputDirectiveElement = fixture.debugElement.queryAll(By.directive(IgxInputDirective))[0];
             fixture.componentInstance.format = 'hh tt';
-            fixture.componentInstance.customDate = new Date();
-            fixture.detectChanges();
-            const clearTime = dom.queryAll(By.css('.igx-icon'))[1];
-
-            UIInteractions.simulateClickAndSelectEvent(clearTime);
-            tick();
-            fixture.detectChanges();
-            input.nativeElement.dispatchEvent(new Event('focus'));
+            fixture.componentInstance.customDate = new Date(2018, 10, 27, 5, 45, 0, 0);
             fixture.detectChanges();
 
-            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.componentInstance.timePicker.clear();
+            fixture.detectChanges();
+
+            inputDirectiveElement.triggerEventHandler('focus', { target: { value: '' }});
+            fixture.detectChanges();
+
+            inputDirectiveElement.triggerEventHandler('blur', { target: { value: ''}});
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toEqual('');
             expect(input.nativeElement.placeholder).toEqual('hh tt');
 
-            input.nativeElement.dispatchEvent(new Event('focus'));
+            inputDirectiveElement.triggerEventHandler('focus', { target: { value: ''}});
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('-- AM');
