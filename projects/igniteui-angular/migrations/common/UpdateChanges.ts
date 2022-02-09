@@ -173,6 +173,7 @@ export class UpdateChanges {
             for (const entryPath of this.sassFiles) {
                 this.updateThemeProps(entryPath);
                 this.updateSassVariables(entryPath);
+                this.updateSassFunctionsAndMixins(entryPath);
             }
         }
 
@@ -472,7 +473,23 @@ export class UpdateChanges {
     protected updateSassFunctionsAndMixins(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
-
+        // const allowedEndCharacters = new RegExp('(\()', 'g');
+        for (const change of this.themeChanges.changes) {
+            if (change.type !== ThemeType.Function && change.type !== ThemeType.Mixin) {
+                continue;
+            }
+            const occurrences = findMatches(fileContent, change.name);
+            for (let i = occurrences.length - 1; i >= 0; i--) {
+                const endCharacters = fileContent[(occurrences[i] + change.name.length)] === '(';
+                if(endCharacters) {
+                    fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
+                    overwrite = true;
+                }
+            }
+        }
+        if (overwrite) {
+            this.host.overwrite(entryPath, fileContent);
+        }
     }
 
     protected updateImports(entryPath: string) {

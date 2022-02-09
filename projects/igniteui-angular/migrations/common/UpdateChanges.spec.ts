@@ -939,7 +939,7 @@ export class CustomGridComponent {
     });
 
     // sass variable migrations
-    fit('Should migrate sass variables names correctly', ()=> {
+    it('Should migrate sass variables names correctly', ()=> {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1035,6 +1035,64 @@ $cell-selected-text-color: igx-color($dark-theme-palette, "secondary", 500),
 $row-hover-background: igx-color($dark-theme-palette, "primary", 100),
 $header-border-color: igx-color($dark-theme-palette, "primary", 600)
 );
+`;
+
+    const update = new UnitUpdateChanges(__dirname, appTree);
+
+    update.applyChanges();
+    expect(appTree.readContent('test.component.scss')).toEqual(expectedFileContent);
+    });
+
+    fit('Should migrate sass functions and mixin names correctly', ()=> {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: 'igx-elevations',
+                    replaceWith: 'elevations',
+                    type: ThemeType.Function
+                },
+                {
+                    name: 'igx-contrast-color',
+                    replaceWith: 'contrast-color',
+                    type: ThemeType.Function
+                },
+                {
+                    name: 'igx-color',
+                    replaceWith: 'color',
+                    type: ThemeType.Function
+                }
+
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-props.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const fileContent =
+`
+igx-elevations
+igx-elevations($igx-color, $color-2, $color-3) {
+    @return $result;
+}
+igx-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
+    @return igx-color($palette, $color, #{$variant}-contrast, $opacity);
+}
+`;
+        appTree.create('test.component.scss', fileContent);
+        const expectedFileContent =
+`
+igx-elevations
+elevations($igx-color, $color-2, $color-3) {
+    @return $result;
+}
+contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
+    @return color($palette, $color, #{$variant}-contrast, $opacity);
+}
 `;
 
     const update = new UnitUpdateChanges(__dirname, appTree);
