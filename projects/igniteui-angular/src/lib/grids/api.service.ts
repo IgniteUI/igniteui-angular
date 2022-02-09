@@ -397,6 +397,13 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (args.cancel) {
             return;
         }
+
+        const isHierarchicalGrid = grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+
+        if (isHierarchicalGrid) {
+            grid.hgridAPI.endEditAll();
+        }
+
         expandedStates.set(rowID, expanded);
         grid.expansionStates = expandedStates;
         this.crudService.endEdit(false);
