@@ -340,6 +340,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public rowDimensionResizing = true;
 
+    /**
+     * @hidden @internal
+     */
+    private _emptyRowDimension: IPivotDimension = { memberName: '', enabled: true };
+    public get emptyRowDimension(): IPivotDimension {
+        return this._emptyRowDimension;
+    }
+
     protected _defaultExpandState = false;
     private _data;
     private _filteredData;
@@ -746,7 +754,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get pivotRowWidths() {
-        return this.rowDimensions.reduce((accumulator, dim) => accumulator + this.resolveRowDimensionWidth(dim), 0);
+        return this.rowDimensions.length ? this.rowDimensions.reduce((accumulator, dim) => accumulator + this.resolveRowDimensionWidth(dim), 0) :
+            this.resolveRowDimensionWidth(this.emptyRowDimension);
     }
 
     public resolveRowDimensionWidth(dim: IPivotDimension): number {
@@ -1236,6 +1245,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.setupColumns();
         this.pipeTrigger++;
         this.valuesChange.emit({ values: this.pivotConfiguration.values });
+        this.reflow();
     }
 
     public getDimensionsByType(dimension: PivotDimensionType) {
@@ -1447,6 +1457,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         let columns = [];
         if (fields.size === 0) {
+            this.values.forEach((value) => {
+                const ref = factoryColumn.create(this.viewRef.injector);
+                ref.instance.header = value.displayName;
+                ref.instance.field = value.member;
+                ref.instance.parent = parent;
+                ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
+                ref.instance.sortable = true;
+                ref.instance.dataType = value.dataType || this.resolveDataTypes(data[0]);
+                ref.instance.formatter = value.formatter;
+                columns.push(ref.instance);
+            });
             return columns;
         }
         const first = fields.keys().next().value;
@@ -1561,6 +1582,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public getPropName(dim: IPivotDimension) {
-        return dim.memberName + this.pivotKeys.rowDimensionSeparator + 'height';
+        return !!dim ?? dim.memberName + this.pivotKeys.rowDimensionSeparator + 'height';
     }
 }
