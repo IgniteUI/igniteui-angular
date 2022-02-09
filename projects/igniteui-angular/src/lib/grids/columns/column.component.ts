@@ -422,8 +422,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public disablePinning = false;
     /**
+     * @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.
+     * 
      * Sets/gets whether the column is movable.
      * Default value is `false`.
+     *
      * ```typescript
      * let isMovable = this.column.movable;
      * ```
@@ -433,8 +436,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    @WatchColumnChanges()
-    @notifyChanges()
     @Input()
     public movable = false;
     /**
@@ -1789,7 +1790,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public getGridTemplate(isRow: boolean): string {
         if (isRow) {
-            const rowsCount = this.grid.multiRowLayoutRowSize;
+            const rowsCount = !this.grid.isPivot ? this.grid.multiRowLayoutRowSize : this.children.length - 1;
             return `repeat(${rowsCount},1fr)`;
         } else {
             return this.getColumnSizesString(this.children);
@@ -2311,23 +2312,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Returns the width and padding of a header cell.
      */
     public getHeaderCellWidths() {
-        const range = this.grid.document.createRange();
-
-        // We do not cover cases where there are children with width 100% and etc,
-        // because then we try to get new column size, based on header content, which is sized based on column size...
-        const headerWidth = this.platform.getNodeSizeViaRange(range,
-            this.headerCell.nativeElement,
-            this.headerGroup.nativeElement);
-
-        const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.nativeElement);
-        const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
-            parseFloat(headerStyle.borderRightWidth);
-
-        // Take into consideration the header group element, since column pinning applies borders to it if its not a columnGroup.
-        const headerGroupStyle = this.grid.document.defaultView.getComputedStyle(this.headerGroup.nativeElement);
-        const borderSize = !this.parent ? parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth) : 0;
-
-        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize) };
+        return this.grid.getHeaderCellWidth(this.headerCell.nativeElement);
     }
 
     /**

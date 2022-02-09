@@ -90,12 +90,76 @@
     @include tree-typography($type-scale);
 
     // Add theme type-scale specific quirks
-    @if ($_variant == 'material' or $_variant == 'fluent') {
+    @if ($_variant == 'material') {
         @include calendar-typography($type-scale);
         @include card-typography($type-scale);
         @include dialog-typography($type-scale);
         @include drop-down-typography($type-scale);
         @include list-typography($type-scale);
+    }
+
+    @if ($_variant == 'material' or $_variant == 'fluent') {
+        @include calendar-typography($type-scale);
+        @include dialog-typography($type-scale);
+        @include drop-down-typography($type-scale);
+    }
+
+    @if ($_variant == 'fluent') {
+        @include checkbox-typography($type-scale, $categories: (
+            label: 'body-2'
+        ));
+
+        @include radio-typography($type-scale, $categories: (
+            label: 'body-2'
+        ));
+
+        @include switch-typography($type-scale, $categories: (
+            label: 'body-2'
+        ));
+
+        @include input-group-typography($type-scale, $categories: (
+            input-text: 'body-2'
+        ));
+
+        @include navdrawer-typography($type-scale, $categories: (
+            item: 'body-2',
+            header: 'caption'
+        ));
+
+        @include navbar-typography($type-scale, $categories: (
+            title: 'subtitle-2'
+        ));
+
+        @include card-typography($type-scale, $categories: (
+            title: 'subtitle-1',
+            subtitle: 'body-2',
+        ));
+
+        @include list-typography($type-scale, $categories: (
+            item: 'caption',
+            title: 'caption',
+        ));
+
+        @include chip-typography($type-scale, $categories: (
+            text: 'subtitle-2'
+        ));
+
+        @include expansion-panel-typography($type-scale, $categories: (
+            title: 'subtitle-1',
+            description: 'body-2'
+        ));
+
+        @include snackbar-typography($type-scale, $categories: (
+            text: 'caption'
+        ));
+
+        @include toast-typography($type-scale, $categories: (
+            text: 'caption'
+        ));
+
+        @include banner-typography($type-scale, $categories: (
+            message: 'caption'
+        ));
     }
 
     @if ($_variant == 'bootstrap') {
@@ -118,7 +182,6 @@
 
         @include dialog-typography($type-scale, $categories: (
             title: 'h5',
-            content: 'body-1',
         ));
 
         @include drop-down-typography($type-scale, $categories: (
@@ -133,16 +196,50 @@
             subtitle: 'subtitle-1',
             header: 'overline',
         ));
+
+        @include checkbox-typography($type-scale, $categories: (
+            label: 'body-2',
+        ));
+
+        @include input-group-typography($type-scale, $categories: (
+            helper-text: 'body-2',
+            input-text: 'body-1'
+        ));
+
+        @include navbar-typography($type-scale, $categories: (
+            title: 'h5'
+        ));
+
+        @include drop-down-typography($type-scale, $categories: (
+            header: 'body-1',
+            item: 'body-1',
+            select-item: 'body-1'
+        ));
+
+        @include expansion-panel-typography($type-scale, $categories: (
+            description: 'body-1',
+        ));
     }
 
     @if ($_variant == 'indigo') {
         @include calendar-typography($type-scale);
 
-        @include card-typography($type-scale, $categories: (
-            title: 'h5',
-            title-small: 'subtitle-2',
-            subtitle: 'subtitle-2',
-            content: 'body-2',
+        @include checkbox-typography($type-scale, $categories: (
+            label: 'body-1',
+        ));
+
+        @include input-group-typography($type-scale, $categories: (
+            input-text: 'body-1'
+        ));
+
+        @include list-typography($type-scale, $categories: (
+            header: 'overline',
+            subtitle: 'body-2'
+        ));
+
+
+        @include expansion-panel-typography($type-scale, $categories: (
+            body: 'body-1'
         ));
 
         @include dialog-typography($type-scale);

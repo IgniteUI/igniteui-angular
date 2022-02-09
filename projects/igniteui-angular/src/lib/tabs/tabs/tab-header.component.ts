@@ -5,6 +5,7 @@ import { IgxTabHeaderBase } from '../tabs.base';
 import { IgxTabsComponent } from './tabs.component';
 import { getResizeObserver } from '../../core/utils';
 import { PlatformUtil } from '../../core/utils';
+import { IgxDirectionality } from '../../services/direction/directionality';
 
 @Component({
     selector: 'igx-tab-header',
@@ -37,7 +38,8 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         tab: IgxTabItemDirective,
         elementRef: ElementRef<HTMLElement>,
         protected platform: PlatformUtil,
-        private ngZone: NgZone
+        private ngZone: NgZone,
+        private dir: IgxDirectionality
     ) {
         super(tabs, tab, elementRef, platform);
     }
@@ -52,16 +54,10 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         const hasDisabledItems = itemsArray.some((item) => item.disabled);
         switch (event.key) {
             case this.platform.KEYMAP.ARROW_RIGHT:
-                newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
-                while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex < itemsArray.length) {
-                    newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
-                }
+                newIndex = this.getNewSelectionIndex(newIndex, itemsArray, event.key, hasDisabledItems);
                 break;
             case this.platform.KEYMAP.ARROW_LEFT:
-                newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
-                while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex >= 0) {
-                    newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
-                }
+                newIndex = this.getNewSelectionIndex(newIndex, itemsArray, event.key, hasDisabledItems);
                 break;
             case this.platform.KEYMAP.HOME:
                 event.preventDefault();
@@ -96,7 +92,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         }
 
         if (!unsupportedKey) {
-            itemsArray[newIndex].headerComponent.nativeElement.focus();
+            itemsArray[newIndex].headerComponent.nativeElement.focus({preventScroll:true});
             if (this.tab.panelComponent) {
                 this.tabs.selectedIndex = newIndex;
             }
@@ -118,6 +114,21 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         this.ngZone.runOutsideAngular(() => {
             this._resizeObserver?.disconnect();
         });
+    }
+
+    private getNewSelectionIndex(newIndex: number, itemsArray: any[], key: string, hasDisabledItems: boolean): number {
+        if ((key === this.platform.KEYMAP.ARROW_RIGHT && !this.dir.rtl) || (key === this.platform.KEYMAP.ARROW_LEFT && this.dir.rtl)) {
+            newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
+            while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex < itemsArray.length) {
+                newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
+            }
+        } else {
+            newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
+            while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex >= 0) {
+                newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
+            }
+        }
+        return newIndex;
     }
 }
 

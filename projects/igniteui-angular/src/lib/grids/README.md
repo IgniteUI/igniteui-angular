@@ -167,6 +167,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`resourceStrings`| IGridResourceStrings | Resource strings of the grid. |
 |`autoGenerate`|boolean|Autogenerate grid's columns, default value is _false_|
 |`batchEditing`|boolean|Toggles batch editing in the grid, default is _false_|
+|`moving`|boolean|Enables the columns moving feature. Defaults to _false_|
 |`paging`|boolean|Enables the paging feature. Defaults to _false_.|
 |`page`| number | The current page index.|
 |`perPage`|number|Visible items per page, default is 15|
@@ -223,6 +224,8 @@ A list of the events emitted by the **igx-grid**:
 |`rowEdit`|Emitted just before a row in edit mode's value is committed (e.g. by clicking the Done button on the Row Editing Overlay).|
 |`rowEditDone`|Emitted after exiting edit mode for a row and editing has been committed.|
 |`rowEditExit`|Emitted when a row exits edit mode without committing its values (e.g. by clicking the Cancel button on the Row Editing Overlay).|
+|`dataChanging`|Emitted before the grid's data view is changed because of a data operation, rebinding, etc.|
+|`dataChanged`|Emitted after the grid's data view is changed because of a data operation, rebinding, etc.|
 |`cellClick`|Emitted when a cell is clicked. Returns the cell object.|
 |`columnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
 |`columnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|
@@ -333,7 +336,6 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`hasSummary`| boolean  |Sets whether or not the specific column has summaries enabled.|
 |`summaries`| IgxSummaryOperand |Set custom summary for the specific column|
 |`hidden`|boolean|Visibility of the column|
-|`movable`|boolean|Set column to be movable|
 |`resizable`|boolean|Set column to be resizable|
 |`selectable`|boolean|Set column to be selectable|
 |`selected`|boolean|Set column to be selected|

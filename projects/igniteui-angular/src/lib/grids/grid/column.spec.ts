@@ -214,7 +214,8 @@ describe('IgxGrid - Column properties #grid', () => {
         const maxVindex = fix.componentInstance.columns.length - 1;
 
         // add to unpinned area
-        fix.componentInstance.columns.push({ field: 'City', width: 150, movable: true, type: 'string' });
+        grid.moving = true;
+        fix.componentInstance.columns.push({ field: 'City', width: 150, type: 'string' });
         fix.detectChanges();
 
         let cityCol = grid.getColumnByName('City');
@@ -227,8 +228,8 @@ describe('IgxGrid - Column properties #grid', () => {
         cityCol = grid.getColumnByName('City');
         expect(cityCol).not.toBeDefined();
 
-        // add to pinned area
-        fix.componentInstance.columns.push({ field: 'City', width: 150, movable: true, type: 'string', pinned: true });
+         // add to pinned area
+        fix.componentInstance.columns.push({ field: 'City', width: 150, type: 'string', pinned: true });
         fix.detectChanges();
 
         cityCol = grid.getColumnByName('City');

@@ -151,7 +151,13 @@
         justify-content: space-between;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
-        border-bottom: 1px solid color(map.get($theme, 'palette'), 'grays', 300);
+
+        @if $bootstrap-theme {
+            border-bottom: 1px solid color(map.get($theme, 'palette'), 'grays', 100);
+        } @else {
+            border-bottom: 1px solid color(map.get($theme, 'palette'), 'grays', 300);
+        }
+
         background: var-get($theme, 'background-color');
         height: auto;
         min-height: map.get($grid-toolbar-height, 'comfortable');

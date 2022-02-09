@@ -82,7 +82,7 @@ $fluent-card: extend(
 
 /// Generates a bootstrap card schema.
 /// @type {Map}
-/// @prop {Color} background [color: ('grays', 50)]- The card background color.
+/// @prop {Map} background [contrast-color: ('grays', 900)]- The card background color.
 /// @prop {Map} outline-color [color: ('grays', 300)] - The outline color of an outlined type card.
 /// @prop {Map} header-text-color [color: ('grays', 900)] - The text color of the card title.
 /// @prop {Map} subtitle-text-color [color: ('grays', 800)] - The text color of the card subtitle.
@@ -103,7 +103,7 @@ $bootstrap-card: extend(
         variant: 'bootstrap',
 
         background: (
-            color: ('grays', 50)
+            contrast-color: ('grays', 900)
         ),
 
         outline-color: (

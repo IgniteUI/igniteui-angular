@@ -27,9 +27,22 @@ $dark-fluent-card: $fluent-card;
 
 /// Generates a dark bootstrap card schema.
 /// @type {Map}
+/// @prop {Map} background [color: ('grays', 50)]- The card background color.
+/// @prop {Map} outline-color [color: ('grays', 100)] - The outline color of an outlined type card.
 /// @requires {function} extend
 /// @requires $bootstrap-card
-$dark-bootstrap-card: $bootstrap-card;
+$dark-bootstrap-card: extend(
+    $bootstrap-card,
+    (
+        background: (
+            color: ('grays', 50)
+        ),
+
+        outline-color: (
+            color: ('grays', 100)
+        )
+    )
+);
 
 /// Generates a dark indigo card schema.
 /// @type {Map}

@@ -12,6 +12,7 @@
             </div>
             <igx-grid style="margin-bottom: 10vh;"
                 [allowFiltering]="true"
+                [moving]="true"
                 filterMode="excelStyleFilter"
                 #grid1 [data]="data"
                 primaryKey="ID"
@@ -21,7 +22,6 @@
                 <igx-column *ngFor="let c of columns"
                     [field]="c.field"
                     [header]="c.field"
-                    [movable]="true"
                     [groupable]="true"
                     [resizable]="true"
                     [sortable]="true"
@@ -34,6 +34,7 @@
             <h3>Grid sample with rowClasses property applied based on row ID</h3>
             <igx-grid style="margin-bottom: 10vh;"
                 [allowFiltering]="true"
+                [moving]="true"
                 filterMode="excelStyleFilter"
                 #grid1 [data]="data"
                 primaryKey="ID"
@@ -46,7 +47,6 @@
                 <igx-column *ngFor="let c of columns"
                     [field]="c.field"
                     [header]="c.field"
-                    [movable]="true"
                     [groupable]="true"
                     [resizable]="true"
                     [sortable]="true"
@@ -62,6 +62,7 @@
             </igx-grid>
             <igx-tree-grid
                 [allowFiltering]="true"
+                [moving]="true"
                 filterMode="excelStyleFilter"
                 [data]="data2"
                 childDataKey="ChildCompanies"
@@ -73,7 +74,6 @@
                 <igx-column *ngFor="let c of columns"
                     [field]="c.field"
                     [header]="c.field"
-                    [movable]="true"
                     [resizable]="true"
                     [sortable]="true"
                     [editable]="true"

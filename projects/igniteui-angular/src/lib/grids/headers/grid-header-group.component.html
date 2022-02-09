@@ -1,5 +1,5 @@
 <ng-container *ngIf="grid.hasColumnLayouts && column.columnGroup">
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-left"></span>
+    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-left"></span>
     <div class="igx-grid-thead__group igx-grid__mrl-block"
      [ngClass]="{
          'igx-grid-th--pinned-last': hasLastPinnedChildColumn,
@@ -19,7 +19,7 @@
             </igx-grid-header-group>
         </ng-container>
     </div>
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-right"></span>
+    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-right"></span>
 </ng-container>
 
 
@@ -33,7 +33,7 @@
 </ng-template>
 
 <ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-left"></span>
+    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-left"></span>
     <div class="igx-grid-thead__title"
         role="columnheader"
         [attr.aria-label]="column.header || column.field"
@@ -65,7 +65,7 @@
         <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
         </ng-container>
     </div>
-    <div class="igx-grid-thead__group">
+    <div class="igx-grid-thead__group" *ngIf='!grid.isPivot'>
         <ng-container *ngFor="let child of column.children">
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
                 [ngClass]="child.headerGroupClasses"
@@ -76,11 +76,11 @@
             </igx-grid-header-group>
         </ng-container>
     </div>
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-right"></span>
+    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-right"></span>
 </ng-container>
 
 <ng-container *ngIf="!column.columnGroup">
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-left"></span>
+    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-left"></span>
     <igx-grid-header
         role="columnheader"
         class="igx-grid-th--fw"
@@ -102,5 +102,5 @@
         [attr.draggable]="false"
         [style.cursor]="colResizingService.resizeCursor">
     </span>
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-right"></span>
+    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-right"></span>
 </ng-container>

@@ -10,6 +10,7 @@
     [hideGroupedColumns]="true"
     [rowSelection]="selectionMode"
     [allowFiltering]="true"
+    [moving]="true"
     [filterMode]="'excelStyleFilter'">
 
     <igx-grid-toolbar *ngIf="showToolbar">
@@ -47,8 +48,8 @@
         </ng-template>
     </igx-column>
     <igx-column [field]="'LastUpdated'" [width]="'120px'" [editable]='true' header="Last Update" dataType="date"></igx-column>
-    <igx-column [field]="'Open Price'" [width]="'120px'" dataType="currency" [pipeArgs]="columnFormat" [movable]="true" [sortable]="true"></igx-column>
-    <igx-column [field]="'Price'" [width]="'110px'" dataType="number" [cellClasses]="trends" [movable]="true" [sortable]="true">
+    <igx-column [field]="'Open Price'" [width]="'120px'" dataType="currency" [pipeArgs]="columnFormat" [sortable]="true"></igx-column>
+    <igx-column [field]="'Price'" [width]="'110px'" dataType="number" [cellClasses]="trends" [sortable]="true">
         <ng-template igxCell let-cell="cell">
             <div class="finjs-icons">
                 <span>{{cell.value | currency:'USD':'symbol':'1.4-4'}}</span>
@@ -68,22 +69,22 @@
         </ng-template>
     </igx-column>
 
-    <igx-column [field]="'Change'" [width]="'120px'" dataType="number" [headerClasses]="'headerAlignSyle'" [sortable]="true" [cellClasses]="trendsChange" [movable]="true">
+    <igx-column [field]="'Change'" [width]="'120px'" dataType="number" [headerClasses]="'headerAlignSyle'" [sortable]="true" [cellClasses]="trendsChange">
     </igx-column>
 
-    <igx-column [field]="'Change(%)'" [width]="'110px'" dataType="percent" [movable]="true" [sortable]="true" [cellClasses]="trendsChange">
+    <igx-column [field]="'Change(%)'" [width]="'110px'" dataType="percent" [sortable]="true" [cellClasses]="trendsChange">
     </igx-column>
 
-    <igx-column [field]="'Buy'" [width]="'110px'" dataType="currency" [pipeArgs]="columnFormat" [movable]="true" [sortable]="true"></igx-column>
-    <igx-column [field]="'Sell'" [width]="'110px'" dataType="currency" [pipeArgs]="columnFormat" [movable]="true" [sortable]="true"></igx-column>
-    <igx-column [field]="'Spread'" [width]="'110px'" dataType="number" [pipeArgs]="columnFormat" [movable]="true">
+    <igx-column [field]="'Buy'" [width]="'110px'" dataType="currency" [pipeArgs]="columnFormat" [sortable]="true"></igx-column>
+    <igx-column [field]="'Sell'" [width]="'110px'" dataType="currency" [pipeArgs]="columnFormat" [sortable]="true"></igx-column>
+    <igx-column [field]="'Spread'" [width]="'110px'" dataType="number" [pipeArgs]="columnFormat">
     </igx-column>
-    <igx-column [field]="'Volume'" [width]="'110px'" dataType="number" [movable]="true" [sortable]="true"></igx-column>
-    <igx-column [field]="'High(D)'" [width]="'110px'" dataType="currency" [movable]="true" [sortable]="true"></igx-column>
-    <igx-column [field]="'Low(D)'" [width]="'110px'" dataType="currency" [movable]="true" [sortable]="true"></igx-column>
-    <igx-column [field]="'High(Y)'" [width]="'110px'" dataType="currency" [movable]="true" [sortable]="true"></igx-column>
-    <igx-column [field]="'Low(Y)'" [width]="'110px'" dataType="currency" [movable]="true" [sortable]="true"></igx-column>
-    <igx-column [field]="'Start(Y)'" [width]="'110px'" dataType="currency" [movable]="true" [sortable]="true"></igx-column>
+    <igx-column [field]="'Volume'" [width]="'110px'" dataType="number" [sortable]="true"></igx-column>
+    <igx-column [field]="'High(D)'" [width]="'110px'" dataType="currency" [sortable]="true"></igx-column>
+    <igx-column [field]="'Low(D)'" [width]="'110px'" dataType="currency" [sortable]="true"></igx-column>
+    <igx-column [field]="'High(Y)'" [width]="'110px'" dataType="currency" [sortable]="true"></igx-column>
+    <igx-column [field]="'Low(Y)'" [width]="'110px'" dataType="currency" [sortable]="true"></igx-column>
+    <igx-column [field]="'Start(Y)'" [width]="'110px'" dataType="currency" [sortable]="true"></igx-column>
     <igx-column [field]="'IndGrou'" [width]="'100px'" [filterable]='false'></igx-column>
     <igx-column [field]="'IndSect'" [width]="'120px'" [filterable]='false' [resizable]='true'></igx-column>
     <igx-column [field]="'IndSubg'" [width]="'100px'" [filterable]='false'></igx-column>

@@ -38,18 +38,18 @@ $fluent_h4: type-style(
 );
 
 $fluent_h5: type-style(
-    $font-size: rem(20px),
+    $font-size: rem(24px),
     $font-weight: 400,
-    $line-height: rem(28px),
+    $line-height: rem(32px),
     $text-transform: none,
     $margin-top: 0,
     $margin-bottom: 0
 );
 
 $fluent_h6: type-style(
-    $font-size: rem(18px),
+    $font-size: rem(20px),
     $font-weight: 400,
-    $line-height: rem(22px),
+    $line-height: rem(28px),
     $text-transform: none,
     $margin-top: 0,
     $margin-bottom: 0
@@ -74,9 +74,9 @@ $fluent_body-2: type-style(
 );
 
 $fluent_subtitle-1: type-style(
-    $font-size: rem(12px),
+    $font-size: rem(18px),
     $font-weight: 400,
-    $line-height: rem(16px),
+    $line-height: rem(24px),
     $text-transform: none,
     $margin-top: 0,
     $margin-bottom: 0
@@ -84,8 +84,8 @@ $fluent_subtitle-1: type-style(
 
 $fluent_subtitle-2: type-style(
     $font-size: rem(14px),
-    $font-weight: 400,
-    $line-height: rem(16px),
+    $font-weight: 600,
+    $line-height: rem(20px),
     $text-transform: none,
     $margin-top: 0,
     $margin-bottom: 0
@@ -95,7 +95,15 @@ $fluent_button: type-style(
     $font-size: rem(14px),
     $font-weight: 600,
     $line-height: rem(14px),
-    $text-transform: capitalize,
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: 0
+);
+
+$fluent_overline: type-style(
+    $font-size: rem(10px),
+    $font-weight: 400,
+    $line-height: rem(14px),
     $margin-top: 0,
     $margin-bottom: 0
 );
@@ -112,5 +120,6 @@ $fluent-type-scale: type-scale(
     $subtitle-2: $fluent_subtitle-2,
     $body-1: $fluent_body-1,
     $body-2: $fluent_body-2,
-    $button: $fluent_button
+    $button: $fluent_button,
+    $overline: $fluent_overline
 );

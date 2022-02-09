@@ -3085,7 +3085,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move column left/right when clicking buttons.', fakeAsync(() => {
-            grid.columnList.get(2).movable = true;
+            grid.moving = true;
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -3126,7 +3126,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.pinnedColumns.length).toBe(1);
 
             const columnToMove = grid.unpinnedColumns[grid.unpinnedColumns.length - 1];
-            columnToMove.movable = true;
+            grid.moving = true;
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, columnToMove.field);
 
@@ -3584,11 +3584,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move pinned column correctly by using move buttons', fakeAsync(() => {
+            grid.moving = true;
             const productNameCol = grid.getColumnByName('ProductName');
             const idCol = grid.getColumnByName('ID');
-            productNameCol.movable = true;
             productNameCol.pinned = true;
-            idCol.movable = true;
             idCol.pinned = true;
             fix.detectChanges();
 
@@ -3629,11 +3628,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move unpinned column correctly by using move buttons', fakeAsync(() => {
+            grid.moving = true;
             const productNameCol = grid.getColumnByName('ProductName');
             const downloadsCol = grid.getColumnByName('Downloads');
-            productNameCol.movable = true;
             productNameCol.pinned = true;
-            downloadsCol.movable = true;
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 2).innerText).toBe('Downloads');
@@ -3703,7 +3701,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(inputNativeElement.value).toBe('', 'incorrect rendered list items count');
-            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
         });
 
         it('Should enable/disable the apply button correctly.', async () => {
@@ -3728,7 +3726,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
             const column = grid.columnList.find((c) => c.field === 'ProductName');
             column.sortable = true;
-            column.movable = true;
+            grid.moving = true;
             fix.detectChanges();
 
             // Open excel style filtering component and verify its display density
@@ -3792,7 +3790,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('display density is properly applied on the excel style custom filtering dialog', fakeAsync(() => {
             const column = grid.columnList.find((c) => c.field === 'ProductName');
             column.sortable = true;
-            column.movable = true;
+            grid.moving = true;
             fix.detectChanges();
 
             // Open excel style custom filtering dialog and verify its display density
@@ -4014,15 +4012,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 670 && scrollbar.scrollTop <= 700).toBe(true,
+            expect(scrollbar.scrollTop >= 660 && scrollbar.scrollTop <= 700).toBe(true,
                 'search scrollbar has incorrect scrollTop: ' + scrollbar.scrollTop);
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(216, 'incorrect search display container height');
+            expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(10, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -4296,8 +4294,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', '0', '20', '100', '127', '254', '702', '1,000'],
-                [true, true, true, true, true, true, true, true, true]);
+                ['Select All', '(Blanks)', '0', '20', '100', '127', '254', '702'],
+                [true, true, true, true, true, true, true, true]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
@@ -5602,7 +5600,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move column left/right when clicking buttons from template', fakeAsync(() => {
-            grid.columnList.get(2).movable = true;
+            grid.moving = true;
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -5871,7 +5869,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
             listItems.forEach((item, ind) => {
                 expect(item.innerText).toBe(downloads[ind]);
@@ -6028,7 +6026,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             expect(compInstance.doneCallbackCounter).toBe(2, 'Incorrect done callback execution count');
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -6067,8 +6065,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             });
             fix.detectChanges();
             // Make 'AnotherField' column movable.
-            const column = grid.columnList.find((c) => c.field === 'AnotherField');
-            column.movable = true;
+            const column = grid.columns.find((c) => c.field === 'AnotherField');
+            grid.moving = true;
             fix.detectChanges();
 
             // Pin the 'General Information' group by pinning its child 'ProductName' column.
