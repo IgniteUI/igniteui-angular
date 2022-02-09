@@ -236,7 +236,7 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
     }
 
     protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
-        let resolvedValue = PivotUtil.extractValueFromDimension(this.dimension, obj);
+        let resolvedValue = PivotUtil.extractValueFromDimension(this.dimension, obj) || obj[0];
         const formatAsDate = this.dimension.dataType === GridColumnDataType.Date || this.dimension.dataType === GridColumnDataType.DateTime;
         if (formatAsDate) {
             const date = parseDate(resolvedValue);
