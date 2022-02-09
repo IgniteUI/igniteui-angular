@@ -15,8 +15,6 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IGridSortingStrategy } from '../common/strategy';
-import { IGroupByResult } from '../../data-operations/grouping-result.interface';
-import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 
 /**
  * @hidden
@@ -42,6 +40,73 @@ export class IgxPivotRowPipe implements PipeTransform {
         const data = cloneArray(collection, true);
         return rowStrategy.process(data, enabledRows, config.values, pivotKeys);
     }
+}
+
+/**
+ * @hidden
+ * Transforms generic array data into IPivotGridRecord[]
+ */
+ @Pipe({
+    name: 'pivotGridAutoTransform',
+    pure: true
+})
+export class IgxPivotAutoTransform implements PipeTransform {
+    public transform(
+        collection: any[],
+        config: IPivotConfiguration,
+        _pipeTrigger?: number,
+        __?,
+    ): IPivotGridRecord[] {
+        let needsTransformation = false;
+        if (collection.length > 0) {
+            needsTransformation = !this.isPivotRecord(collection[0]);
+        }
+
+        if(!needsTransformation) return collection;
+
+        const res = this.processCollectionToPivotRecord(config, collection);
+        return res;
+    }
+
+    protected isPivotRecord(arg: IPivotGridRecord): arg is IPivotGridRecord {
+        return !!(arg as IPivotGridRecord).aggregationValues;
+    }
+
+    protected processCollectionToPivotRecord(config: IPivotConfiguration, collection: any[]) : IPivotGridRecord[] {
+        const pivotKeys: IPivotKeys = config.pivotKeys || DEFAULT_PIVOT_KEYS;
+        const enabledRows = config.rows.filter(x => x.enabled);
+        const allFlat : IPivotDimension[] =  PivotUtil.flatten(enabledRows);
+        const result: IPivotGridRecord[] = [];
+        for (const rec of collection) {
+            const pivotRec: IPivotGridRecord = {
+                dimensionValues: new Map<string, string>(),
+                aggregationValues: new Map<string, string>(),
+                children: new Map<string, IPivotGridRecord[]>(),
+                dimensions: []
+            };
+            const keys = Object.keys(rec)
+            for (const key of keys) {
+                const dim = allFlat.find(x => x.memberName === key);
+                if (dim) {
+                    //field has matching dimension
+                    pivotRec.dimensions.push(dim);
+                    pivotRec.dimensionValues.set(key, rec[key]);
+                } else if (key.indexOf(pivotKeys.rowDimensionSeparator + pivotKeys.records) !== -1) {
+                    // field that contains child collection
+                    const dimKey = key.slice(0, key.indexOf(pivotKeys.rowDimensionSeparator + pivotKeys.records));
+                    const childData = rec[key];
+                    const childPivotData = this.processCollectionToPivotRecord(config, childData);
+                    pivotRec.children.set(dimKey, childPivotData);
+                } else {
+                    // an aggregation
+                    pivotRec.aggregationValues.set(key, rec[key]);
+                }
+            }
+            result.push(pivotRec);
+        }
+        return result;
+    }
+
 }
 
 /**

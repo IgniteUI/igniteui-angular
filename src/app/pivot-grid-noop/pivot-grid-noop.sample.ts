@@ -79,7 +79,7 @@ export class PivotGridNoopSampleComponent {
 
     public mockRemoteData = [
         {
-            ProductCategory: 'All', AllProducts: 'All Products', All: 1000, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, AllProducts_records: [
+            AllProducts: 'All Products', All: 1000, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, AllProducts_records: [
                 { ProductCategory: 'Clothing', 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456 },
                 { ProductCategory: 'Bikes', 'All-Uruguay': 68 },
                 { ProductCategory: 'Accessories', 'All-USA': 293 },
@@ -91,7 +91,7 @@ export class PivotGridNoopSampleComponent {
 
     public mockRemoteDataDifferentSeparator = [
         {
-            ProductCategory: 'All', AllProducts: 'All Products', All: 2127, 'All_Country-Bulgaria': 774, 'All_Country-USA': 829, 'All_Country-Uruguay': 524, 'AllProducts-records': [
+            AllProducts: 'All Products', All: 2127, 'All_Country-Bulgaria': 774, 'All_Country-USA': 829, 'All_Country-Uruguay': 524, 'AllProducts-records': [
                 { ProductCategory: 'Clothing', All: 1523, 'All_Country-Bulgaria': 774, 'All_Country-USA': 296, 'All_Country-Uruguay': 456,  },
                 { ProductCategory: 'Bikes', All: 68, 'All_Country-Uruguay': 68 },
                 { ProductCategory: 'Accessories', All: 293, 'All_Country-USA': 293 },
