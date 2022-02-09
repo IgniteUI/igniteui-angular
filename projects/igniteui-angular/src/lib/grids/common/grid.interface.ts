@@ -51,23 +51,23 @@ export interface IGridDataBindable {
 }
 
 export interface CellType {
-	value: any;
-	editValue: any;
-	selected: boolean;
-	active: boolean;
-	editable: boolean;
-	editMode: boolean;
+    value: any;
+    editValue: any;
+    selected: boolean;
+    active: boolean;
+    editable: boolean;
+    editMode: boolean;
     nativeElement?: HTMLElement;
-	column: ColumnType;
-	row: RowType;
-	grid: GridType;
-	id: { rowID: any; columnID: number; rowIndex: number };
+    column: ColumnType;
+    row: RowType;
+    grid: GridType;
+    id: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
     readonly?: boolean;
     title?: any;
-	width: string;
+    width: string;
     visibleColumnIndex?: number;
-	update: (value: any) => void;
+    update: (value: any) => void;
     setEditMode?(value: boolean): void;
     calculateSizeToFit?(range: any): number;
     activate?(event: FocusEvent | KeyboardEvent): void;
@@ -96,7 +96,7 @@ export interface RowType {
     children?: RowType[];
     parent?: RowType;
     hasChildren?: boolean;
-    treeRow? : ITreeGridRecord;
+    treeRow?: ITreeGridRecord;
     addRowUI?: boolean;
     focused?: boolean;
     grid: GridType;
@@ -246,6 +246,7 @@ export interface GridServiceType {
     getParentRowId?(child: GridType): any;
     getChildGrids?(inDepth?: boolean): GridType[];
     getChildGrid?(path: IPathSegment[]): GridType;
+    endEditAll?(): void;
     // XXX: Fix type
     unsetChildRowIsland?(rowIsland: any): void;
 }
