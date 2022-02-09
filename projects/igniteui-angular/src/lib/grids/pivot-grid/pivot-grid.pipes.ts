@@ -68,7 +68,9 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         for (const row of enabledRows) {
             PivotUtil.flattenGroups(data, row, expansionStates, defaultExpand);
         }
-        const finalData = config.columnStrategy ? data : data.filter(x => x.dimensions.length === enabledRows.length);
+        const finalData = enabledRows.length > 0 ?
+         config.columnStrategy ? data : data.filter(x => x.dimensions.length === enabledRows.length) :
+         data;
 
         if (this.grid) {
             this.grid.setFilteredSortedData(finalData, false);

@@ -40,6 +40,14 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         let prevDimTopRecords = [];
         const currRows = cloneArray(rows, true);
         PivotUtil.assignLevels(currRows);
+
+        if (currRows.length === 0) {
+            hierarchies = PivotUtil.getFieldsHierarchy(collection, [{ memberName: '', enabled: true }], PivotDimensionType.Row, pivotKeys);
+            // generate flat data from the hierarchies
+            data = PivotUtil.processHierarchy(hierarchies, pivotKeys, 0, true);
+            return data;
+        }
+
         for (const row of currRows) {
             if (!data) {
                 // build hierarchies - groups and subgroups
@@ -168,7 +176,7 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
     }
 
     protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
-        let resolvedValue = PivotUtil.extractValueFromDimension(this.dimension, obj);
+        let resolvedValue = PivotUtil.extractValueFromDimension(this.dimension, obj) || obj[0];
         const formatAsDate = this.dimension.dataType === GridColumnDataType.Date || this.dimension.dataType === GridColumnDataType.DateTime;
         if (formatAsDate) {
             const date = parseDate(resolvedValue);

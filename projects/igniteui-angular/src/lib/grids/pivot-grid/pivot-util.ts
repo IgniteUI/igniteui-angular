@@ -203,6 +203,15 @@ export class PivotUtil {
     }
 
     public static applyAggregations(rec: IPivotGridRecord, hierarchies, values, pivotKeys: IPivotKeys) {
+        if (hierarchies.size === 0) {
+            // no column groups
+            const aggregationResult = this.aggregate(rec.records, values);
+            const keys = Object.keys(aggregationResult);
+            keys.forEach(key => {
+                rec.aggregationValues.set(key, aggregationResult[key]);
+            });
+            return;
+        }
         hierarchies.forEach((hierarchy) => {
             const children = hierarchy[pivotKeys.children];
             if (children && children.size > 0) {

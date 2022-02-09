@@ -36,7 +36,7 @@ export class IgxPivotColumnResizingService extends IgxColumnResizingService {
         } else {
             rowDim.width = (currentColWidth + diff) + 'px';
         }
-        
+
         // Notify the grid to reflow, to update if horizontal scrollbar needs to be rendered/removed.
         this.rowHeaderGroup.grid.pipeTrigger++;
         this.rowHeaderGroup.grid.notifyChanges(true);
