@@ -125,7 +125,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         if (hasCells && typeof columnID === 'number') {
             return row.cells.find((cell) => cell.column.index === columnID);
         }
-        if (hasCells && typeof columnID === 'string'){
+        if (hasCells && typeof columnID === 'string') {
             return row.cells.find((cell) => cell.column.field === columnID);
         }
 
@@ -406,7 +406,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         if (isHierarchicalGrid) {
             (grid as any).hgridAPI.endEditAll();
         }
-        
+
         expandedStates.set(rowID, expanded);
         grid.expansionStates = expandedStates;
         this.crudService.endEdit(false);
