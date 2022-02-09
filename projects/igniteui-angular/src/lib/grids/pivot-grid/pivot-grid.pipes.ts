@@ -5,7 +5,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
 import {
-    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
+    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
 } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
@@ -77,7 +77,9 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         const finalData = config.columnStrategy ? data :
             enabledRows.length ? data.filter(x => x[pivotKeys.records]) : data;
 
-        this.cleanState(finalData, pivotKeys);
+        if (!(config.rowStrategy instanceof NoopPivotDimensionsStrategy || config.columnStrategy instanceof NoopPivotDimensionsStrategy)) {
+            this.cleanState(finalData, pivotKeys);
+        }
 
         if (this.grid) {
             this.grid.setFilteredSortedData(finalData, false);
