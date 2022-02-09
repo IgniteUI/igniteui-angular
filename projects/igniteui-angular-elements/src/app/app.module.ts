@@ -2,7 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
-import { IgxGridComponent, IgxGridModule, IgxHierarchicalGridComponent, IgxTreeGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, IgxGridModule, IgxHierarchicalGridComponent, IgxPivotGridComponent, IgxTreeGridComponent } from 'igniteui-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -26,6 +26,9 @@ export class AppModule {
 
     const hgrid = createCustomElement(IgxHierarchicalGridComponent, { injector: this.injector });
     customElements.define("igx-hierarchical-grid", hgrid);
+
+    const pivot = createCustomElement(IgxPivotGridComponent, { injector: this.injector });
+    customElements.define("igx-pivot-grid", pivot);
 
     // const pager = createCustomElement(IgxPaginatorComponent, { injector: this.injector });
     // customElements.define("igc-paginator", pager);
