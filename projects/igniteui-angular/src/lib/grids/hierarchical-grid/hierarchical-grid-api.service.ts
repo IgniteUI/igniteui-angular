@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBaseDirective & GridType> {
     protected childRowIslands: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();
-    protected childGrids:  Map<string, Map<any, IgxHierarchicalGridComponent>> =
+    protected childGrids: Map<string, Map<any, IgxHierarchicalGridComponent>> =
         new Map<string, Map<any, IgxHierarchicalGridComponent>>();
 
     registerChildRowIsland(rowIsland: IgxRowIslandComponent) {
@@ -128,5 +128,17 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         const data = this.get_all_data(false);
         const index = this.get_row_index_in_data(rowID, data);
         return data[index];
+    }
+
+    public endEditAll(): void {
+        const rootGrid = (this.grid as IgxHierarchicalGridComponent).rootGrid;
+        if (rootGrid.crudService.cellInEditMode) {
+            rootGrid.endEdit();
+        }
+        rootGrid.hgridAPI.getChildGrids(true).forEach(g => {
+            if (g.crudService.cellInEditMode) {
+                g.endEdit();
+            }
+        });
     }
 }

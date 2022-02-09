@@ -455,6 +455,13 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         if (args.cancel) {
             return;
         }
+
+        const isHierarchicalGrid = grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+
+        if (isHierarchicalGrid) {
+            (grid as any).hgridAPI.endEditAll();
+        }
+
         expandedStates.set(rowID, expanded);
         grid.expansionStates = expandedStates;
         grid.endEdit(false);

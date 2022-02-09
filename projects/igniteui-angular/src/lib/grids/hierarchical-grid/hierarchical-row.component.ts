@@ -110,7 +110,6 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
             return;
         }
         const grid = this.gridAPI.grid;
-        this.endEdit(grid.rootGrid);
         this.gridAPI.set_row_expansion_state(this.rowID, !this.expanded);
         grid.cdr.detectChanges();
     }
@@ -150,13 +149,6 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
     }
 
     protected endEdit(grid: IgxHierarchicalGridComponent) {
-        if (grid.crudService.cellInEditMode) {
-            grid.endEdit();
-        }
-        grid.hgridAPI.getChildGrids(true).forEach(g => {
-            if (g.crudService.cellInEditMode) {
-            g.endEdit();
-        }
-});
+        grid.hgridAPI.endEditAll();
     }
 }
