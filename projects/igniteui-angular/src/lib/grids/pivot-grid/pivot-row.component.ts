@@ -5,21 +5,13 @@ import {
     ComponentFactoryResolver,
     ElementRef,
     forwardRef,
-    HostBinding,
-    Input,
-    Inject,
-    OnChanges,
-    SimpleChanges,
-    TemplateRef,
-    ViewChild,
-    ViewContainerRef
+    HostBinding, Inject, Input, ViewContainerRef
 } from '@angular/core';
-import { IgxRowDirective } from '../row.directive';
-import { IgxGridSelectionService } from '../selection/selection.service';
-import { IPivotDimension, IPivotDimensionData } from './pivot-grid.interface';
-import { PivotUtil } from './pivot-util';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
+import { IgxRowDirective } from '../row.directive';
+import { IgxGridSelectionService } from '../selection/selection.service';
+import { PivotUtil } from './pivot-util';
 
 
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -56,7 +48,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
         protected viewRef: ViewContainerRef
-    ){
+    ) {
         super(grid, selectionService, element, cdr);
     }
 
