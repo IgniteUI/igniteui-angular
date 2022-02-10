@@ -37,29 +37,27 @@
         </igx-buttongroup>
     </div>
     <button igxButton (click)="setRowDimWidth(0, '400px')">ResizeRowDim</button>
-    <button (click)='remove()'>Remove</button>
-    <button (click)='toggle()'>Toggle</button>
-    <button (click)='move()'>Move</button>
-    <button (click)='insert()'>Insert</button>
-  
-    <button (click)='removeVal()'>Remove</button>
-    <button (click)='toggleVal()'>Toggle</button>
-    <button (click)='moveVal()'>Move</button>
-    <button (click)='insertVal()'>Insert</button>
-</div>
+    <button (click)="remove()">Remove</button>
+    <button (click)="toggle()">Toggle</button>
+    <button (click)="move()">Move</button>
+    <button (click)="insert()">Insert</button>
 
-<div class="sample-flex-row">
+    <button (click)="removeVal()">Remove</button>
+    <button (click)="toggleVal()">Toggle</button>
+    <button (click)="moveVal()">Move</button>
+    <button (click)="insertVal()">Insert</button>
+</div>
+<div style="flex: 1 1 auto; order: 0">
     <igx-pivot-grid
         #grid1
         [data]="origData"
         [width]="'100%'"
         [height]="'100%'"
         [defaultExpandState]="true"
-        [rowSelection]="'single'"
+        [rowSelection]='"single"'
         [pivotConfiguration]="pivotConfigHierarchy"
         (dimensionsChange)="dimensionChange($event)"
     >
     </igx-pivot-grid>
-
     <igx-pivot-data-selector [grid]="grid1"></igx-pivot-data-selector>
 </div>
