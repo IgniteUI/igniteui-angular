@@ -77,9 +77,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         const finalData = config.columnStrategy ? data :
             enabledRows.length ? data.filter(x => x[pivotKeys.records]) : data;
 
-        if (!(config.rowStrategy instanceof NoopPivotDimensionsStrategy || config.columnStrategy instanceof NoopPivotDimensionsStrategy)) {
-            this.cleanState(finalData, pivotKeys);
-        }
+        this.cleanState(finalData, pivotKeys, config);
 
         if (this.grid) {
             this.grid.setFilteredSortedData(finalData, false);
@@ -87,17 +85,19 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         return finalData;
     }
 
-    private cleanState(data, pivotKeys) {
+    private cleanState(data, pivotKeys, config) {
         data.forEach(rec => {
             const keys = Object.keys(rec);
             delete rec.processed;
             delete rec.sorted;
             //remove all record keys from final data since we don't need them anymore.
-            keys.forEach(k => {
-                if (k.indexOf(pivotKeys.records) !== -1) {
-                    delete rec[k];
-                }
-            });
+            if (!(config.rowStrategy instanceof NoopPivotDimensionsStrategy || config.columnStrategy instanceof NoopPivotDimensionsStrategy)) {
+                keys.forEach(k => {
+                    if (k.indexOf(pivotKeys.records) !== -1) {
+                        delete rec[k];
+                    }
+                });
+            }
         });
     }
 }
