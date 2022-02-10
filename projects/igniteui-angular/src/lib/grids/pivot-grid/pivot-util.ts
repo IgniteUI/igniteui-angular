@@ -206,10 +206,7 @@ export class PivotUtil {
         if (hierarchies.size === 0) {
             // no column groups
             const aggregationResult = this.aggregate(rec.records, values);
-            const keys = Object.keys(aggregationResult);
-            keys.forEach(key => {
-                rec.aggregationValues.set(key, aggregationResult[key]);
-            });
+            this.applyAggregationRecordData(aggregationResult, undefined, rec, pivotKeys);
             return;
         }
         hierarchies.forEach((hierarchy) => {
@@ -218,18 +215,25 @@ export class PivotUtil {
                 this.applyAggregations(rec, children, values, pivotKeys);
                 const childRecords = this.collectRecords(children, pivotKeys);
                 hierarchy[pivotKeys.aggregations] = this.aggregate(childRecords, values);
-                Object.keys(hierarchy[pivotKeys.aggregations]).forEach((key) => {
-                    const aggregationKey = hierarchy.value + pivotKeys.columnDimensionSeparator + key;
-                    rec.aggregationValues.set(aggregationKey, hierarchy[pivotKeys.aggregations][key]);
-                });
+                this.applyAggregationRecordData(hierarchy[pivotKeys.aggregations], hierarchy.value, rec, pivotKeys);
             } else if (hierarchy[pivotKeys.records]) {
                 hierarchy[pivotKeys.aggregations] = this.aggregate(hierarchy[pivotKeys.records], values);
-                Object.keys(hierarchy[pivotKeys.aggregations]).forEach((key) => {
-                    const aggregationKey = hierarchy.value + pivotKeys.columnDimensionSeparator + key;
-                    rec.aggregationValues.set(aggregationKey, hierarchy[pivotKeys.aggregations][key]);
-                });
+                this.applyAggregationRecordData(hierarchy[pivotKeys.aggregations], hierarchy.value, rec, pivotKeys);
             }
         });
+    }
+
+    protected static applyAggregationRecordData(aggregationData: any, groupName: string, rec: IPivotGridRecord, pivotKeys: IPivotKeys) {
+        const aggregationKeys = Object.keys(aggregationData);
+        if (aggregationKeys.length > 1) {
+            aggregationKeys.forEach((key) => {
+                const aggregationKey = groupName ? groupName + pivotKeys.columnDimensionSeparator + key : key;
+                rec.aggregationValues.set(aggregationKey, aggregationData[key]);
+            });
+        } else  if (aggregationKeys.length === 1) {
+            const aggregationKey = aggregationKeys[0];
+            rec.aggregationValues.set(groupName || aggregationKey, aggregationData[aggregationKey]);
+        }
     }
 
     public static aggregate(records, values: IPivotValue[]) {
