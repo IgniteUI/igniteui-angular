@@ -88,6 +88,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public composing = false;
 
     private _updateInput = true;
+    // stores the last filtered value - move to common?
     private _internalFilter = '';
 
     /** @hidden @internal */
@@ -436,7 +437,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.clearAndClose();
             return;
         }
-        if (this.isPartialMatch(filtered)) {
+        if (this.isPartialMatch(filtered) || this.selectedItem !== this._internalFilter) {
             this.clearAndClose();
         }
     }
