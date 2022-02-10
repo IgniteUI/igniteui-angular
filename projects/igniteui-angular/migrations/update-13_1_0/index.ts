@@ -41,12 +41,27 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     }
   };
 
+  const getMovingColumns = (parent: Element, columns: any[]) => {
+    const movingNestedGroup = parent.children.filter(column => (column as Element).name === 'igx-column-group');
+    const movingColumns = parent.children.filter(column => (column as Element).name === 'igx-column' && hasAttribute(column as Element, prop));
+    columns.push(...movingColumns);
+    movingNestedGroup.forEach(group => {
+      if (hasAttribute(group as Element, prop)) {
+        columns.push(group);
+      }
+      getMovingColumns(group as Element, columns);
+    });
+  }
+
   // migrate movable on column-level to moving on grid-level for grid, tree grid, hierarchical grid and row island
   for (const path of update.templateFiles) {
+    gridsToMigrate.clear();
     const grids = findElementNodes(parseFile(new HtmlParser(), host, path), GRID_TAGS);
     grids.forEach(grid => {
       const grid_elem = grid as Element;
-      const columns = grid_elem.children.filter(column => (column as Element).name === 'igx-column' && hasAttribute(column as Element, prop));
+      const columns: any[] = [];
+      getMovingColumns(grid_elem, columns);
+
       columns.map(node => getSourceOffset(node as Element))
         .forEach(offset => {
           const { startTag, file, node } = offset;
@@ -60,6 +75,8 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
           addChange(file.url, new FileChange(startTag.start, removePropTxt, repTxt, 'replace'));
         });
     });
+    applyChanges();
+    changes.clear();
 
     Array.from(gridsToMigrate).map(node => getSourceOffset(node as Element)).forEach(offset => {
       const { startTag, file } = offset;
