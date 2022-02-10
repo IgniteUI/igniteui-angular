@@ -183,164 +183,114 @@ fdescribe('Pivot pipes #pivotGrid', () => {
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         const dimensionValues = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         expect(dimensionValues).toEqual([
-            { "AllProd": "AllProd", "AllDate": "AllDate" },
-            { "AllProd": "AllProd", "Date": "01/01/2021" },
-            { "AllProd": "AllProd", "Date": "01/05/2019" },
-            { "AllProd": "AllProd", "Date": "05/12/2020" },
-            { "AllProd": "AllProd", "Date": "02/19/2020", },
-            { "AllProd": "AllProd", "Date": "01/06/2020" },
-            { "AllProd": "AllProd", "Date": "04/07/2021" },
-            { "AllProd": "AllProd", "Date": "12/08/2021" },
-            { "ProductCategory": "Clothing", "AllDate": "AllDate" },
-            { "ProductCategory": "Clothing", "Date": "01/01/2021" },
-            { "ProductCategory": "Clothing", "Date": "01/05/2019" },
-            { "ProductCategory": "Clothing", "Date": "05/12/2020" },
-            { "ProductCategory": "Clothing", "Date": "02/19/2020" },
-            { "ProductCategory": "Bikes", "AllDate": "AllDate", },
-            { "ProductCategory": "Bikes", "Date": "01/06/2020" },
-            { "ProductCategory": "Accessories", "AllDate": "AllDate" },
-            { "ProductCategory": "Accessories", "Date": "04/07/2021" },
-            { "ProductCategory": "Components", "AllDate": "AllDate" },
-            { "ProductCategory": "Components", "Date": "12/08/2021" }]);
+            { 'AllProd': 'AllProd', 'AllDate': 'AllDate' },
+            { 'AllProd': 'AllProd', 'Date': '01/01/2021' },
+            { 'AllProd': 'AllProd', 'Date': '01/05/2019' },
+            { 'AllProd': 'AllProd', 'Date': '05/12/2020' },
+            { 'AllProd': 'AllProd', 'Date': '02/19/2020', },
+            { 'AllProd': 'AllProd', 'Date': '01/06/2020' },
+            { 'AllProd': 'AllProd', 'Date': '04/07/2021' },
+            { 'AllProd': 'AllProd', 'Date': '12/08/2021' },
+            { 'ProductCategory': 'Clothing', 'AllDate': 'AllDate' },
+            { 'ProductCategory': 'Clothing', 'Date': '01/01/2021' },
+            { 'ProductCategory': 'Clothing', 'Date': '01/05/2019' },
+            { 'ProductCategory': 'Clothing', 'Date': '05/12/2020' },
+            { 'ProductCategory': 'Clothing', 'Date': '02/19/2020' },
+            { 'ProductCategory': 'Bikes', 'AllDate': 'AllDate', },
+            { 'ProductCategory': 'Bikes', 'Date': '01/06/2020' },
+            { 'ProductCategory': 'Accessories', 'AllDate': 'AllDate' },
+            { 'ProductCategory': 'Accessories', 'Date': '04/07/2021' },
+            { 'ProductCategory': 'Components', 'AllDate': 'AllDate' },
+            { 'ProductCategory': 'Components', 'Date': '12/08/2021' }]);
     });
 
-    // it('transforms flat data to pivot data 2 column dimensions', () => {
-    //     pivotConfig.columns = [{
-    //         memberName: 'Country',
-    //         enabled: true
-    //     },
-    //     {
-    //         memberName: 'Date',
-    //         enabled: true
-    //     }];
-    //     const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
-    //     const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
-    //     const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
-    //     /* eslint-disable quote-props */
-    //     expect(rowStatePipeResult).toEqual([
-    //         {
-    //             'AllCategory': 'All', 'Bulgaria': 774, 'Bulgaria-01/01/2021': 282, 'Bulgaria-02/19/2020': 492, 'USA': 829, 'USA-01/05/2019': 296,
-    //             'USA-04/07/2021': 293, 'USA-12/08/2021': 240, 'Uruguay': 524, 'Uruguay-05/12/2020': 456, 'Uruguay-01/06/2020': 68, 'AllCategory_level': 0
-    //         },
-    //         {
-    //             'ProductCategory': 'Clothing', 'Bulgaria': 774, 'Bulgaria-01/01/2021': 282, 'Bulgaria-02/19/2020': 492, 'USA': 296, 'USA-01/05/2019': 296,
-    //             'Uruguay': 456, 'Uruguay-05/12/2020': 456, 'ProductCategory_level': 1
-    //         },
-    //         {
-    //             'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia', 'Country': 'Uruguay', 'Date': '01/06/2020', 'UnitsSold': 68, 'Uruguay': 68,
-    //             'Uruguay-01/06/2020': 68, 'ProductCategory_level': 1
-    //         },
-    //         {
-    //             'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA', 'Date': '04/07/2021', 'UnitsSold': 293,
-    //             'USA': 293, 'USA-04/07/2021': 293, 'ProductCategory_level': 1
-    //         },
-    //         {
-    //             'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA', 'Date': '12/08/2021', 'UnitsSold': 240,
-    //             'USA': 240, 'USA-12/08/2021': 240, 'ProductCategory_level': 1
-    //         }
-    //     ]);
-    // });
+    it('transforms flat data to pivot data 2 column dimensions', () => {
+        pivotConfig.columns = [{
+            memberName: 'Country',
+            enabled: true
+        },
+        {
+            memberName: 'Date',
+            enabled: true
+        }];
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
+        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
+        const dimensionValues = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        expect(dimensionValues).toEqual([
+            { 'AllCategory': 'All' },
+            { 'ProductCategory': 'Clothing' },
+            { 'ProductCategory': 'Bikes' },
+            { 'ProductCategory': 'Accessories' },
+            { 'ProductCategory': 'Components' }]);
+        // for columns we need to check aggregations
+        const aggregations = PivotGridFunctions.getAggregationValues(rowStatePipeResult);
+        expect(aggregations).toEqual([
+            { 'Bulgaria-01/01/2021': 282, 'Bulgaria-02/19/2020': 492, 'Bulgaria': 774, 'USA-01/05/2019': 296, 'USA-04/07/2021': 293, 'USA-12/08/2021': 240, 'USA': 829, 'Uruguay-05/12/2020': 456, 'Uruguay-01/06/2020': 68, 'Uruguay': 524 },
+            { 'Bulgaria-01/01/2021': 282, 'Bulgaria-02/19/2020': 492, 'Bulgaria': 774, 'USA-01/05/2019': 296, 'USA': 296, 'Uruguay-05/12/2020': 456, 'Uruguay': 456 },
+            { 'Uruguay-01/06/2020': 68, 'Uruguay': 68 },
+            { 'USA-04/07/2021': 293, 'USA': 293 },
+            { 'USA-12/08/2021': 240, 'USA': 240 }
+        ]);
+    });
 
-    // it('transforms flat data to pivot data 3 column dimensions', () => {
-    //     pivotConfig.columns = [{
-    //         memberName: 'Country',
-    //         enabled: true
-    //     },
-    //     {
-    //         memberName: 'SellerName',
-    //         enabled: true
-    //     },
-    //     {
-    //         memberName: 'Date',
-    //         enabled: true
-    //     }];
-    //     const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
-    //     const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
-    //     const rowStateResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
-    //     /* eslint-disable quote-props */
-    //     expect(rowStateResult).toEqual(
-    //         [
-    //             {
-    //                 'AllCategory': 'All', 'Bulgaria': 774, 'Bulgaria-Stanley': 282, 'Bulgaria-Stanley-01/01/2021': 282, 'Bulgaria-Walter': 492,
-    //                 'Bulgaria-Walter-02/19/2020': 492, 'USA': 829, 'USA-Elisa': 296, 'USA-Elisa-01/05/2019': 296, 'USA-David': 293,
-    //                 'USA-David-04/07/2021': 293, 'USA-John': 240, 'USA-John-12/08/2021': 240, 'Uruguay': 524, 'Uruguay-Larry': 456,
-    //                 'Uruguay-Larry-05/12/2020': 456, 'Uruguay-Lydia': 68, 'Uruguay-Lydia-01/06/2020': 68, 'AllCategory_level': 0
-    //             },
-    //             {
-    //                 'ProductCategory': 'Clothing', 'Bulgaria': 774, 'Bulgaria-Stanley': 282, 'Bulgaria-Stanley-01/01/2021': 282,
-    //                 'Bulgaria-Walter': 492, 'Bulgaria-Walter-02/19/2020': 492, 'USA': 296, 'USA-Elisa': 296, 'USA-Elisa-01/05/2019': 296,
-    //                 'Uruguay': 456, 'Uruguay-Larry': 456, 'Uruguay-Larry-05/12/2020': 456, 'ProductCategory_level': 1
-    //             },
-    //             {
-    //                 'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia', 'Country': 'Uruguay', 'Date': '01/06/2020',
-    //                 'UnitsSold': 68, 'Uruguay': 68, 'Uruguay-Lydia': 68, 'Uruguay-Lydia-01/06/2020': 68, 'ProductCategory_level': 1
-    //             },
-    //             {
-    //                 'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA', 'Date': '04/07/2021',
-    //                 'UnitsSold': 293, 'USA': 293, 'USA-David': 293, 'USA-David-04/07/2021': 293, 'ProductCategory_level': 1
-    //             },
-    //             {
-    //                 'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA', 'Date': '12/08/2021',
-    //                 'UnitsSold': 240, 'USA': 240, 'USA-John': 240, 'USA-John-12/08/2021': 240, 'ProductCategory_level': 1
-    //             }
-    //         ]
-    //     );
-    // });
+    it('transforms flat data to pivot data 3 column dimensions', () => {
+        pivotConfig.columns = [{
+            memberName: 'Country',
+            enabled: true
+        },
+        {
+            memberName: 'SellerName',
+            enabled: true
+        },
+        {
+            memberName: 'Date',
+            enabled: true
+        }];
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
+        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStateResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
+        const aggregations = PivotGridFunctions.getAggregationValues(rowStateResult);
+        expect(aggregations).toEqual([
+            { 'Bulgaria-Stanley-01/01/2021': 282, 'Bulgaria-Stanley': 282, 'Bulgaria-Walter-02/19/2020': 492, 'Bulgaria-Walter': 492, 'Bulgaria': 774, 'USA-Elisa-01/05/2019': 296, 'USA-Elisa': 296, 'USA-David-04/07/2021': 293, 'USA-David': 293, 'USA-John-12/08/2021': 240, 'USA-John': 240, 'USA': 829, 'Uruguay-Larry-05/12/2020': 456, 'Uruguay-Larry': 456, 'Uruguay-Lydia-01/06/2020': 68, 'Uruguay-Lydia': 68, 'Uruguay': 524 },
+            { 'Bulgaria-Stanley-01/01/2021': 282, 'Bulgaria-Stanley': 282, 'Bulgaria-Walter-02/19/2020': 492, 'Bulgaria-Walter': 492, 'Bulgaria': 774, 'USA-Elisa-01/05/2019': 296, 'USA-Elisa': 296, 'USA': 296, 'Uruguay-Larry-05/12/2020': 456, 'Uruguay-Larry': 456, 'Uruguay': 456 },
+            { 'Uruguay-Lydia-01/06/2020': 68, 'Uruguay-Lydia': 68, 'Uruguay': 68 },
+            { 'USA-David-04/07/2021': 293, 'USA-David': 293, 'USA': 293 },
+            { 'USA-John-12/08/2021': 240, 'USA-John': 240, 'USA': 240 }]);
+    });
 
-    // it('transforms flat data to pivot data 2 value dimensions', () => {
-    //     pivotConfig.values = [
-    //         {
-    //             member: 'UnitsSold',
-    //             aggregate: {
-    //                 aggregator: IgxPivotNumericAggregate.sum,
-    //                 key: 'sum',
-    //                 label: 'SUM',
-    //             },
-    //             enabled: true
-    //         },
-    //         {
-    //             member: 'UnitPrice',
-    //             aggregate: {
-    //                 aggregator: IgxPivotNumericAggregate.sum,
-    //                 key: 'sum',
-    //                 label: 'SUM',
-    //             },
-    //             enabled: true
-    //         }
-    //     ];
-    //     const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
-    //     const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
-    //     const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
-    //     expect(rowStatePipeResult).toEqual(
-    //         [
-    //             {
-    //                 'AllCategory': 'All', 'All-UnitsSold': 2127, 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86, 'All-USA-UnitsSold': 829,
-    //                 'All-USA-UnitPrice': 153.28, 'All-Uruguay-UnitsSold': 524, 'All-Uruguay-UnitPrice': 71.89, 'All-UnitPrice': 254.02999999999997,
-    //                 'AllCategory_level': 0
-    //             },
-    //             {
-    //                 'ProductCategory': 'Clothing', 'All-UnitsSold': 1526, 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86,
-    //                 'All-USA-UnitsSold': 296, 'All-USA-UnitPrice': 49.57, 'All-Uruguay-UnitsSold': 456, 'All-Uruguay-UnitPrice': 68.33,
-    //                 'All-UnitPrice': 146.76, 'ProductCategory_level': 1
-    //             },
-    //             {
-    //                 'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia',
-    //                 'Country': 'Uruguay', 'Date': '01/06/2020', 'UnitsSold': 68, 'All-UnitsSold': 68, 'All-Uruguay-UnitsSold': 68,
-    //                 'All-Uruguay-UnitPrice': 3.56, 'All-UnitPrice': 3.56, 'ProductCategory_level': 1
-    //             },
-    //             {
-    //                 'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA', 'Date': '04/07/2021',
-    //                 'UnitsSold': 293, 'All-UnitsSold': 293, 'All-USA-UnitsSold': 293, 'All-USA-UnitPrice': 85.58, 'All-UnitPrice': 85.58,
-    //                 'ProductCategory_level': 1
-    //             },
-    //             {
-    //                 'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA', 'Date': '12/08/2021',
-    //                 'UnitsSold': 240, 'All-UnitsSold': 240, 'All-USA-UnitsSold': 240, 'All-USA-UnitPrice': 18.13, 'All-UnitPrice': 18.13,
-    //                 'ProductCategory_level': 1
-    //             }
-    //         ]
-    //     );
-    // });
+    it('transforms flat data to pivot data 2 value dimensions', () => {
+        pivotConfig.values = [
+            {
+                member: 'UnitsSold',
+                aggregate: {
+                    aggregator: IgxPivotNumericAggregate.sum,
+                    key: 'sum',
+                    label: 'SUM',
+                },
+                enabled: true
+            },
+            {
+                member: 'UnitPrice',
+                aggregate: {
+                    aggregator: IgxPivotNumericAggregate.sum,
+                    key: 'sum',
+                    label: 'SUM',
+                },
+                enabled: true
+            }
+        ];
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
+        const aggregations = PivotGridFunctions.getAggregationValues(rowStatePipeResult);
+
+        expect(aggregations).toEqual([
+            { 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86, 'All-USA-UnitsSold': 829, 'All-USA-UnitPrice': 153.28, 'All-Uruguay-UnitsSold': 524, 'All-Uruguay-UnitPrice': 71.89, 'All-UnitsSold': 2127, 'All-UnitPrice': 254.02999999999997 },
+            { 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86, 'All-USA-UnitsSold': 296, 'All-USA-UnitPrice': 49.57, 'All-Uruguay-UnitsSold': 456, 'All-Uruguay-UnitPrice': 68.33, 'All-UnitsSold': 1526, 'All-UnitPrice': 146.76 },
+            { 'All-Uruguay-UnitsSold': 68, 'All-Uruguay-UnitPrice': 3.56, 'All-UnitsSold': 68, 'All-UnitPrice': 3.56 }, { 'All-USA-UnitsSold': 293, 'All-USA-UnitPrice': 85.58, 'All-UnitsSold': 293, 'All-UnitPrice': 85.58 },
+            { 'All-USA-UnitsSold': 240, 'All-USA-UnitPrice': 18.13, 'All-UnitsSold': 240, 'All-UnitPrice': 18.13 }]);
+    });
 
     // it('allow setting NoopPivotDimensionsStrategy for rows/columns', () => {
     //     const preprocessedData = [
