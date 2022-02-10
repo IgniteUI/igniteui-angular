@@ -5,6 +5,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
 import {
+    DefaultPivotGridRecordSortingStrategy,
     DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
 } from '../../data-operations/pivot-strategy';
@@ -46,7 +47,7 @@ export class IgxPivotRowPipe implements PipeTransform {
  * @hidden
  * Transforms generic array data into IPivotGridRecord[]
  */
- @Pipe({
+@Pipe({
     name: 'pivotGridAutoTransform',
     pure: true
 })
@@ -62,7 +63,7 @@ export class IgxPivotAutoTransform implements PipeTransform {
             needsTransformation = !this.isPivotRecord(collection[0]);
         }
 
-        if(!needsTransformation) return collection;
+        if (!needsTransformation) return collection;
 
         const res = this.processCollectionToPivotRecord(config, collection);
         return res;
@@ -72,10 +73,10 @@ export class IgxPivotAutoTransform implements PipeTransform {
         return !!(arg as IPivotGridRecord).aggregationValues;
     }
 
-    protected processCollectionToPivotRecord(config: IPivotConfiguration, collection: any[]) : IPivotGridRecord[] {
+    protected processCollectionToPivotRecord(config: IPivotConfiguration, collection: any[]): IPivotGridRecord[] {
         const pivotKeys: IPivotKeys = config.pivotKeys || DEFAULT_PIVOT_KEYS;
         const enabledRows = config.rows.filter(x => x.enabled);
-        const allFlat : IPivotDimension[] =  PivotUtil.flatten(enabledRows);
+        const allFlat: IPivotDimension[] = PivotUtil.flatten(enabledRows);
         const result: IPivotGridRecord[] = [];
         for (const rec of collection) {
             const pivotRec: IPivotGridRecord = {
@@ -134,8 +135,8 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
             PivotUtil.flattenGroups(data, row, expansionStates, defaultExpand);
         }
         const finalData = enabledRows.length > 0 ?
-         config.columnStrategy ? data : data.filter(x => x.dimensions.length === enabledRows.length) :
-         data;
+            config.columnStrategy ? data : data.filter(x => x.dimensions.length === enabledRows.length) :
+            data;
 
         if (this.grid) {
             this.grid.setFilteredSortedData(finalData, false);
@@ -274,6 +275,9 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
         if (!expressions.length) {
             result = collection;
         } else {
+            for(const expr of expressions) {
+                expr.strategy = DefaultPivotGridRecordSortingStrategy.instance();
+            }
             result = PivotUtil.sort(cloneArray(collection, true), expressions, sorting);
         }
         return result;

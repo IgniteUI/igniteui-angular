@@ -187,3 +187,26 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
         return resolvedValue;
     }
 }
+
+export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrategy {
+    protected static _instance: DefaultPivotGridRecordSortingStrategy = null;
+    public static instance(): DefaultPivotGridRecordSortingStrategy {
+        return this._instance || (this._instance = new this());
+    }
+    public sort(data: any[],
+        fieldName: string,
+        dir: SortingDirection,
+        ignoreCase: boolean,
+        valueResolver: (obj: any, key: string, isDate?: boolean) => any,
+        isDate?: boolean,
+        isTime?: boolean,
+        grid?: PivotGridType) {
+        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
+        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, fieldName, reverse, ignoreCase, this.getFieldValue, isDate, isTime);
+        return this.arraySort(data, cmpFunc);
+    }
+
+    protected getFieldValue(obj: IPivotGridRecord, key: string, isDate: boolean = false, isTime: boolean = false): any {
+        return obj.aggregationValues.get(key);
+    }
+}
