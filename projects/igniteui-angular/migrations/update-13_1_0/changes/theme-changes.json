@@ -1,0 +1,20 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+        {
+            "name": "igx-palette",
+            "replaceWith": "palette",
+            "type": "function"
+        },
+        {
+            "name": "igx-theme",
+            "replaceWith": "theme",
+            "type": "mixin"
+        },
+        {
+            "name": "$igx-elevations",
+            "replaceWith": "$elevations",
+            "type": "variable"
+        }
+    ]
+}
