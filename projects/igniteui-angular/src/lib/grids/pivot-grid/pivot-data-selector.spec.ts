@@ -203,7 +203,7 @@ fdescribe("Pivot data selector", () => {
         expectConfigToMatchPanels(null); // pass an invalid type (null) to test for values
     });
 
-    xit("should reorder items in a panel using drag and drop gestures", async () => {
+    it("should reorder items in a panel using drag and drop gestures", async () => {
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
@@ -221,26 +221,26 @@ fdescribe("Pivot data selector", () => {
         const { x: itemX, y: itemY } = items[0].parentNode.querySelectorAll('igx-list-item')[0].getBoundingClientRect();
         const { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
 
-        console.log("First item position", itemX, itemY);
-        console.log("handle position", handleX, handleY);
         UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
         fixture.detectChanges();
+        await wait();
 
-        UIInteractions.simulatePointerEvent("pointermove", dragHandle, handleX + 10, handleY - 10);
+        UIInteractions.simulatePointerEvent("pointermove", dragHandle, handleX, handleY - 10);
         fixture.detectChanges();
         await wait(100);
+
         const ghost = document.body.querySelector('.igx-pivot-data-selector__item-ghost');
         expect(selector.ghostCreated).toHaveBeenCalled();
 
         UIInteractions.simulatePointerEvent("pointermove", ghost, handleX, handleY - 36);
         fixture.detectChanges();
         await wait(100);
-        console.log(ghost);
         expect(selector.onItemDragMove).toHaveBeenCalled();
 
         UIInteractions.simulatePointerEvent("pointerup", ghost, handleX, handleY - 36);
-        await wait(1000);
         fixture.detectChanges();
+        await wait();
+
         expect(selector.onItemDragEnd).toHaveBeenCalled();
         expect(selector.ghostDestroyed).toHaveBeenCalled();
         expect(selector.onItemDropped).toHaveBeenCalled();
