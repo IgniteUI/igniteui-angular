@@ -24,8 +24,8 @@ import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
-import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
-import { IHierarchicalItem, TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
+import { FormattedValuesFilteringStrategy, HierarchicalColumnValue } from '../../../data-operations/filtering-strategy';
+import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
@@ -197,6 +197,10 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      * @hidden @internal
      */
     public overlayComponentId: string;
+    /**
+     * @hidden @internal
+     */
+    public isHierarchical = false;
 
     private _minHeight;
 
@@ -485,26 +489,21 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     private renderColumnValuesFromData() {
         const expressionsTree = this.getColumnFilterExpressionsTree();
 
-        this.grid.filterStrategy.getColumnValues(this.column, expressionsTree, (colVals: any[]) => {
+        const promise = this.grid.filterStrategy.getColumnValues(this.column, expressionsTree);
+        promise.then((colVals) => {
+            this.isHierarchical = colVals.length > 0 && colVals[0] instanceof HierarchicalColumnValue;
             const columnValues = (this.column.dataType === GridColumnDataType.Date) ?
-                colVals.map(value => {
-                    const label = this.getFilterItemLabel(value);
-                    return { label, value };
-                }) : colVals; // TODO: should formatter go here?
+            colVals.map(value => {
+                const label = this.getFilterItemLabel(value);
+                return { label, value };
+            }) : colVals; // TODO: should formatter go here?
 
             this.renderValues(columnValues);
         });
     }
 
-    private isHierarchical() {
-        // TODO: remove and check the return array type from filterStrategy.getColumnValues method
-
-        return this.grid.filterStrategy.hasOwnProperty('hierarchicalFilterFields')
-            && this.grid.filterStrategy['hierarchicalFilterFields'].indexOf(this.column.field) >= 0;
-    }
-
-    private renderValues(columnValues: any[] | IHierarchicalItem[]) {
-        if (this.isHierarchical()) {
+    private renderValues(columnValues: any[] | HierarchicalColumnValue[]) {
+        if (this.isHierarchical) {
             this.uniqueValues = columnValues;
         } else {
             this.uniqueValues = this.generateUniqueValues(columnValues);
@@ -575,7 +574,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private generateListData() {
         this.listData = new Array<FilterListItem>();
-        const shouldUpdateSelection = (this.areExpressionsSelectable() && this.areExpressionsValuesInTheList()) || this.isHierarchical();
+        const shouldUpdateSelection = (this.areExpressionsSelectable() && this.areExpressionsValuesInTheList()) || this.isHierarchical;
 
         if (this.column.dataType === GridColumnDataType.Boolean) {
             this.addBooleanItems();
@@ -782,7 +781,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private getFilterItemValue(element: any) {
-        if (this.isHierarchical()) {
+        if (this.isHierarchical) {
             element = element.value;
         }
 
@@ -794,7 +793,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private getExpressionValue(element: any): string {
-        if (this.isHierarchical()) {
+        if (this.isHierarchical) {
             element = element.value;
         }
 
