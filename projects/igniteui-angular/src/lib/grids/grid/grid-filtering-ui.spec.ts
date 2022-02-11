@@ -46,7 +46,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
-import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { formatDate } from '../../core/utils';
@@ -6221,7 +6221,8 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     }));
 
     it('Should be able to set custom filtering strategy', () => {
-        expect(grid.filterStrategy).toBeUndefined();
+        expect(grid.filterStrategy).toBeDefined();
+        expect(grid.filterStrategy).toBeInstanceOf(FilteringStrategy);
         grid.filterStrategy = fix.componentInstance.strategy;
         fix.detectChanges();
 

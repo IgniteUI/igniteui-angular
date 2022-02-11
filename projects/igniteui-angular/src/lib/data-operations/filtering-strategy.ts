@@ -77,7 +77,6 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         return true;
     }
 
-    // move formatting from base implementation to formatted values strategies - grid and treegrid
     public getColumnValues(
             column: ColumnType,
             tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]> {

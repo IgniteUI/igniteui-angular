@@ -488,15 +488,18 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private renderColumnValuesFromData() {
         const expressionsTree = this.getColumnFilterExpressionsTree();
-
         const promise = this.grid.filterStrategy.getColumnValues(this.column, expressionsTree);
         promise.then((colVals) => {
             this.isHierarchical = colVals.length > 0 && colVals[0] instanceof HierarchicalColumnValue;
-            const columnValues = (this.column.dataType === GridColumnDataType.Date) ?
-            colVals.map(value => {
-                const label = this.getFilterItemLabel(value);
-                return { label, value };
-            }) : colVals; // TODO: should formatter go here?
+            const shouldFormatValues = this.shouldFormatValues();
+            const columnValues = colVals.map(value => {
+                if (this.column.dataType === GridColumnDataType.Date){
+                    const label = this.getFilterItemLabel(value, true);
+                    return { label, value }
+                } else {
+                    return shouldFormatValues ? this.column.formatter(value) : value;
+                };
+            });
 
             this.renderValues(columnValues);
         });
