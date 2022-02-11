@@ -3276,6 +3276,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
 
@@ -3307,6 +3309,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
 
@@ -3327,6 +3331,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Should not be able to exit custom dialog when press tab on apply button', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             tick();
