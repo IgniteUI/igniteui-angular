@@ -21,8 +21,9 @@ export class IgxPivotFilteringService extends IgxFilteringService {
         super.clear_filter(fieldName);
         const grid = this.grid;
         const config = (grid as IgxPivotGridComponent).pivotConfiguration;
-        const allDimensions = PivotUtil.flatten(config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined));
-        const dim = allDimensions.find(x => x.memberName === fieldName || x.member === fieldName);
+        const allDimensions = (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
+        const allDimensionsFlat = PivotUtil.flatten(allDimensions);
+        const dim = allDimensionsFlat.find(x => x.memberName === fieldName);
         dim.filter = undefined;
         grid.filteringPipeTrigger++;
         if (allDimensions.indexOf(dim) !== -1) {

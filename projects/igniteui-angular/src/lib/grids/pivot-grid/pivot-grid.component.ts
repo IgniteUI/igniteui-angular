@@ -614,12 +614,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public uniqueDimensionValuesStrategy(column: IgxColumnComponent, exprTree: IFilteringExpressionsTree,
         done: (uniqueValues: any[]) => void) {
         const config = this.pivotConfiguration;
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
-        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+        const enabledDimensions = this.allDimension.filter(x => x && x.enabled);
         const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === column.field);
         if (dim) {
             this.getDimensionData(dim, exprTree, uniqueValues => done(uniqueValues));
         }
+    }
+
+    /** @hidden @internal */
+    public get allDimension() {
+        const config = this.pivotConfiguration;
+        return (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
     }
 
     public getDimensionData(dim: IPivotDimension,
@@ -771,11 +776,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get rowDimensions() {
-        return this.pivotConfiguration.rows.filter(x => x.enabled) || [];
+        return this.pivotConfiguration.rows?.filter(x => x.enabled) || [];
     }
 
     public get columnDimensions() {
-        return this.pivotConfiguration.columns.filter(x => x.enabled) || [];
+        return this.pivotConfiguration.columns?.filter(x => x.enabled) || [];
     }
 
     public get filterDimensions() {
@@ -783,7 +788,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get values() {
-        return this.pivotConfiguration.values.filter(x => x.enabled) || [];
+        return this.pivotConfiguration.values?.filter(x => x.enabled) || [];
     }
 
     public toggleColumn(col: IgxColumnComponent) {
@@ -1408,9 +1413,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected generateDimensionColumns(): IgxColumnComponent[] {
-        const config = this.pivotConfiguration;
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
-        const leafFields = PivotUtil.flatten(allDimensions, 0).filter(x => !x.childLevel).map(x => x.memberName);
+        const leafFields = PivotUtil.flatten(this.allDimension, 0).filter(x => !x.childLevel).map(x => x.memberName);
         const columns = [];
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         leafFields.forEach((field) => {
