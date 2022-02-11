@@ -517,7 +517,6 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
 
     /**
      * @hidden
-     * ```
      */
     @HostBinding('class.igx-circular-bar--indeterminate')
     @Input()
