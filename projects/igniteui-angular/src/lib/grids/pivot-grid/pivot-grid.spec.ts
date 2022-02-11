@@ -12,6 +12,7 @@ import { PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotDateDimension, IgxPivotGridModule } from './public_api';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
+import { IgxPivotDateAggregate } from './pivot-grid-aggregate';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -213,6 +214,136 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         value = pivotGrid.columnGroupStates.entries().next().value;
         expect(value[0]).toEqual('All Countries');
         expect(value[1]).toBeFalse();
+    });
+
+    it('should display aggregations when no row dimensions are enabled', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.pivotConfiguration.columns = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            )
+        ];
+        pivotGrid.pivotConfiguration.rows = [];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+        expect(pivotGrid.rowList.first.cells.length).toBeGreaterThanOrEqual(1);
+        expect(pivotGrid.rowList.first.cells.first.title).toEqual('282$');
+    });
+
+    it('should display aggregations when no col dimensions are enabled', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.pivotConfiguration.rows = [
+            {
+                memberName: 'City',
+                enabled: true,
+            }
+        ];
+        pivotGrid.pivotConfiguration.columns = [];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+        expect(pivotGrid.rowList.first.cells.length).toEqual(pivotGrid.values.length);
+        expect(pivotGrid.rowList.first.cells.first.title).toEqual('2127$');
+    });
+
+    it('should display aggregations when neither col nor row dimensions are set', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.pivotConfiguration.rows = [];
+        pivotGrid.pivotConfiguration.columns = [];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+
+        expect(pivotGrid.rowList.first.cells.length).toEqual(pivotGrid.values.length);
+        expect(pivotGrid.rowList.first.cells.first.title).toEqual('2127$');
+    });
+
+    it('should reevaluate aggregated values when all row dimensions are removed', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.height = '700px';
+        pivotGrid.width = '1000px';
+        pivotGrid.pivotConfiguration.columns = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            )
+        ];
+        pivotGrid.pivotConfiguration.rows = [
+            {
+                memberName: 'AllSeller',
+                memberFunction: () => 'All Sellers',
+                enabled: true,
+                childLevel: {
+                    enabled: true,
+                    memberName: 'SellerName'
+                }
+            }
+        ];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+
+        let uniqueVals = Array.from(new Set(pivotGrid.data.map(x => x.SellerName))).length;
+        expect(pivotGrid.rowList.length).toEqual(uniqueVals + 1);
+        expect(pivotGrid.rowList.first.cells.first.title).toEqual('282$');
+        expect(pivotGrid.rowDimensions.length).toEqual(1);
+
+        pivotGrid.pivotConfiguration.rows = [];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+        expect(pivotGrid.rowList.length).toEqual(1);
+        expect(pivotGrid.rowDimensions.length).toEqual(0);
+    });
+
+    it('should reevaluate aggregated values when all col dimensions are removed', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.height = '700px';
+        pivotGrid.width = '1000px';
+        pivotGrid.pivotConfiguration.columns = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            )
+        ];
+        pivotGrid.pivotConfiguration.rows = [
+            {
+                memberName: 'AllSeller',
+                memberFunction: () => 'All Sellers',
+                enabled: true,
+                childLevel: {
+                    enabled: true,
+                    memberName: 'SellerName'
+                }
+            }
+        ];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+
+        let uniqueVals = Array.from(new Set(pivotGrid.data.map(x => x.SellerName))).length;
+        expect(pivotGrid.rowList.length).toEqual(uniqueVals + 1);
+        expect(pivotGrid.rowList.first.cells.first.title).toEqual('282$');
+        expect(pivotGrid.rowList.first.cells.length).toEqual(5);
+        expect(pivotGrid.columnDimensions.length).toEqual(1);
+
+        pivotGrid.pivotConfiguration.columns = [];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+
+        expect(pivotGrid.rowList.first.cells.length).toEqual(pivotGrid.values.length);
+        expect(pivotGrid.columnDimensions.length).toEqual(0);
     });
 
     describe('IgxPivotGrid Features #pivotGrid', () => {
@@ -756,8 +887,8 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             }, rowChipArea, PivotDimensionType.Row);
             pivotGrid.cdr.detectChanges();
             //check chip order is updated.
-            expect(rowChipArea.chipsList.toArray()[0]).toBe(rowChip2);
-            expect(rowChipArea.chipsList.toArray()[1]).toBe(rowChip1);
+            expect(rowChipArea.chipsList.toArray()[0].id).toBe(rowChip2.id);
+            expect(rowChipArea.chipsList.toArray()[1].id).toBe(rowChip1.id);
             // check dimension order is updated.
             expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['SellerName', 'ProductCategory']);
         });
@@ -778,41 +909,41 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const colChip1 = colChipArea.chipsList.toArray()[0];
             const colChip2 = colChipArea.chipsList.toArray()[1];
 
-             // start drag in col chip area.
-             headerRow.onDimDragStart({}, colChipArea);
-             fixture.detectChanges();
+            // start drag in col chip area.
+            headerRow.onDimDragStart({}, colChipArea);
+            fixture.detectChanges();
 
-             // move first chip over the second one
-             headerRow.onDimDragOver({
-                 dragChip: {
-                     id: 'Country'
-                 },
-                 owner: colChip2,
-                 originalEvent: {
-                     offsetX: 100
-                 }
-             }, PivotDimensionType.Column);
-             fixture.detectChanges();
+            // move first chip over the second one
+            headerRow.onDimDragOver({
+                dragChip: {
+                    id: 'Country'
+                },
+                owner: colChip2,
+                originalEvent: {
+                    offsetX: 100
+                }
+            }, PivotDimensionType.Column);
+            fixture.detectChanges();
 
-             // check drop indicator has shown after the second chip
-             expect((colChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('');
+            // check drop indicator has shown after the second chip
+            expect((colChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('');
 
-             // drop chip
-             headerRow.onDimDrop({
-                 dragChip: {
-                     id: 'Country'
-                 },
-                 owner: colChip2
-             }, colChipArea, PivotDimensionType.Column);
-             pivotGrid.cdr.detectChanges();
-             //check chip order is updated.
-             expect(colChipArea.chipsList.toArray()[0]).toBe(colChip2);
-             expect(colChipArea.chipsList.toArray()[1]).toBe(colChip1);
-             // check dimension order is updated.
-             expect(pivotGrid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['SellerName', 'Country']);
-             // check columns reflect new order of dims
-             const cols = pivotGrid.columns;
-             expect(cols.filter(x => x.level === 0).map(x => x.field)).toEqual(['Stanley', 'Elisa', 'Lydia', 'David', 'John', 'Larry', 'Walter']);
+            // drop chip
+            headerRow.onDimDrop({
+                dragChip: {
+                    id: 'Country'
+                },
+                owner: colChip2
+            }, colChipArea, PivotDimensionType.Column);
+            pivotGrid.cdr.detectChanges();
+            //check chip order is updated.
+            expect(colChipArea.chipsList.toArray()[0].id).toBe(colChip2.id);
+            expect(colChipArea.chipsList.toArray()[1].id).toBe(colChip1.id);
+            // check dimension order is updated.
+            expect(pivotGrid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['SellerName', 'Country']);
+            // check columns reflect new order of dims
+            const cols = pivotGrid.columns;
+            expect(cols.filter(x => x.level === 0).map(x => x.field)).toEqual(['Stanley', 'Elisa', 'Lydia', 'David', 'John', 'Larry', 'Walter']);
         });
         it('should allow reorder in the value chip area', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
@@ -823,32 +954,32 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const valChip1 = valuesChipArea.chipsList.toArray()[0];
             const valChip2 = valuesChipArea.chipsList.toArray()[1];
 
-             // move first chip over the second one
-             headerRow.onDimDragOver({
-                 dragChip: {
-                     id: 'UnitsSold'
-                 },
-                 owner: valChip2,
-                 originalEvent: {
-                     offsetX: 100
-                 }
-             });
-             fixture.detectChanges();
+            // move first chip over the second one
+            headerRow.onDimDragOver({
+                dragChip: {
+                    id: 'UnitsSold'
+                },
+                owner: valChip2,
+                originalEvent: {
+                    offsetX: 100
+                }
+            });
+            fixture.detectChanges();
 
-             // check drop indicator has shown after the second chip
-             expect((valChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('');
+            // check drop indicator has shown after the second chip
+            expect((valChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('');
 
-             // drop chip
-             headerRow.onValueDrop({
-                 dragChip: valChip1,
-                 owner: valChip2
-             }, valuesChipArea);
-             pivotGrid.cdr.detectChanges();
-             //check chip order is updated.
-             expect(valuesChipArea.chipsList.toArray()[0]).toBe(valChip2);
-             expect(valuesChipArea.chipsList.toArray()[1]).toBe(valChip1);
-             // check dimension order is updated.
-             expect(pivotGrid.pivotConfiguration.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
+            // drop chip
+            headerRow.onValueDrop({
+                dragChip: valChip1,
+                owner: valChip2
+            }, valuesChipArea);
+            pivotGrid.cdr.detectChanges();
+            //check chip order is updated.
+            expect(valuesChipArea.chipsList.toArray()[0].id).toBe(valChip2.id);
+            expect(valuesChipArea.chipsList.toArray()[1].id).toBe(valChip1.id);
+            // check dimension order is updated.
+            expect(pivotGrid.pivotConfiguration.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
 
         });
         it('should allow moving dimension between rows, columns and filters.', () => {
@@ -866,37 +997,37 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const rowChipArea: IgxChipsAreaComponent = chipAreas[3].componentInstance;
             const filterChipArea: IgxChipsAreaComponent = chipAreas[0].componentInstance;
             const filterChip = filterChipArea.chipsList.first;
-             // start drag in filter chip area.
-             headerRow.onDimDragStart({}, filterChipArea);
-             fixture.detectChanges();
+            // start drag in filter chip area.
+            headerRow.onDimDragStart({}, filterChipArea);
+            fixture.detectChanges();
 
-             // check drop here chips are displayed in other areas
-             expect(headerRow.notificationChips.toArray()[1].nativeElement.hidden).toBeFalse();
-             expect(headerRow.notificationChips.toArray()[2].nativeElement.hidden).toBeFalse();
+            // check drop here chips are displayed in other areas
+            expect(headerRow.notificationChips.toArray()[1].nativeElement.hidden).toBeFalse();
+            expect(headerRow.notificationChips.toArray()[2].nativeElement.hidden).toBeFalse();
 
-             const dropHereRowChip = headerRow.notificationChips.toArray()[2];
-             // move Seller onto the drop here chip
+            const dropHereRowChip = headerRow.notificationChips.toArray()[2];
+            // move Seller onto the drop here chip
 
-             // drop chip
-             headerRow.onDimDrop({
-                 dragChip: filterChip,
-                 owner: dropHereRowChip
-             }, rowChipArea, PivotDimensionType.Row);
-             fixture.detectChanges();
-             pivotGrid.cdr.detectChanges();
+            // drop chip
+            headerRow.onDimDrop({
+                dragChip: filterChip,
+                owner: dropHereRowChip
+            }, rowChipArea, PivotDimensionType.Row);
+            fixture.detectChanges();
+            pivotGrid.cdr.detectChanges();
 
-             // check dimensions
-             expect(pivotGrid.pivotConfiguration.filters.filter(x => x.enabled).length).toBe(0);
-             expect(pivotGrid.pivotConfiguration.rows.filter(x => x.enabled).length).toBe(2);
+            // check dimensions
+            expect(pivotGrid.pivotConfiguration.filters.filter(x => x.enabled).length).toBe(0);
+            expect(pivotGrid.pivotConfiguration.rows.filter(x => x.enabled).length).toBe(2);
 
-             const rowSellerChip = rowChipArea.chipsList.toArray()[1];
-             const colChip = colChipArea.chipsList.first;
-             // start drag in row chip area.
-             headerRow.onDimDragStart({}, rowChipArea);
-             fixture.detectChanges();
+            const rowSellerChip = rowChipArea.chipsList.toArray()[1];
+            const colChip = colChipArea.chipsList.first;
+            // start drag in row chip area.
+            headerRow.onDimDragStart({}, rowChipArea);
+            fixture.detectChanges();
 
-             // drag Seller from row dimension as first chip in columns
-             headerRow.onDimDragOver({
+            // drag Seller from row dimension as first chip in columns
+            headerRow.onDimDragOver({
                 dragChip: rowSellerChip,
                 owner: colChip,
                 originalEvent: {
@@ -908,25 +1039,25 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             expect((colChip.nativeElement.previousElementSibling as any).style.visibility).toBe('');
             expect((colChip.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
 
-             // drop chip
-             headerRow.onDimDrop({
+            // drop chip
+            headerRow.onDimDrop({
                 dragChip: rowSellerChip,
                 owner: colChip
             }, colChipArea, PivotDimensionType.Column);
             pivotGrid.cdr.detectChanges();
             fixture.detectChanges();
 
-             // check dimensions
-             expect(pivotGrid.pivotConfiguration.filters.filter(x => x.enabled).length).toBe(0);
-             expect(pivotGrid.pivotConfiguration.rows.filter(x => x.enabled).length).toBe(1);
-             expect(pivotGrid.pivotConfiguration.columns.filter(x => x.enabled).length).toBe(2);
+            // check dimensions
+            expect(pivotGrid.pivotConfiguration.filters.filter(x => x.enabled).length).toBe(0);
+            expect(pivotGrid.pivotConfiguration.rows.filter(x => x.enabled).length).toBe(1);
+            expect(pivotGrid.pivotConfiguration.columns.filter(x => x.enabled).length).toBe(2);
 
-             // drag Seller over filter area
-             const colSellerChip = colChipArea.chipsList.toArray()[0];
-             // start drag in col chip area.
-             headerRow.onDimDragStart({}, colChipArea);
-              // drop chip
-              headerRow.onDimDrop({
+            // drag Seller over filter area
+            const colSellerChip = colChipArea.chipsList.toArray()[0];
+            // start drag in col chip area.
+            headerRow.onDimDragStart({}, colChipArea);
+            // drop chip
+            headerRow.onDimDrop({
                 dragChip: colSellerChip,
                 owner: {}
             }, filterChipArea, PivotDimensionType.Filter);
@@ -961,12 +1092,12 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const rowChip1 = rowChipArea.chipsList.toArray()[0];
             const rowChip2 = rowChipArea.chipsList.toArray()[1];
 
-             // start drag in row chip area.
-             headerRow.onDimDragStart({}, rowChipArea);
-             fixture.detectChanges();
+            // start drag in row chip area.
+            headerRow.onDimDragStart({}, rowChipArea);
+            fixture.detectChanges();
 
-             // drag second chip before prev chip
-             headerRow.onDimDragOver({
+            // drag second chip before prev chip
+            headerRow.onDimDragOver({
                 dragChip: rowChip2,
                 owner: rowChip1,
                 originalEvent: {
@@ -1239,4 +1370,265 @@ describe('IgxPivotGrid Resizing #pivotGrid', () => {
         expect(rowHeaders[5].componentInstance.column.width).toEqual('200px');
         expect(rowHeaders[7].componentInstance.column.width).toEqual('200px');
     }));
+});
+
+describe('IgxPivotGrid APIs #pivotGrid', () => {
+    let fixture: ComponentFixture<any>;
+    let pivotGrid: IgxPivotGridComponent;
+
+    configureTestSuite((() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxPivotGridTestComplexHierarchyComponent
+            ],
+            imports: [
+                NoopAnimationsModule,
+                IgxPivotGridModule
+            ]
+        });
+    }));
+
+    beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+        fixture.detectChanges();
+
+        pivotGrid = fixture.componentInstance.pivotGrid;
+    }));
+
+    it('should allow inserting new dimension at index.', () => {
+        // insert in rows
+        pivotGrid.insertDimensionAt({ memberName: 'SellerName', enabled: true }, PivotDimensionType.Row, 1);
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.rows[1].memberName).toBe('SellerName');
+        // check rows
+        let dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+        let rowHeaders = dimensionContents[1].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        const first = rowHeaders.map(x => x.componentInstance.column.header)[0];
+        expect(first).toBe('Larry Lieb');
+
+        // insert in columns
+        pivotGrid.insertDimensionAt({ memberName: 'SellerNameColumn', memberFunction: (rec) => rec.SellerName, enabled: true }, PivotDimensionType.Column, 0);
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.columns[0].memberName).toBe('SellerNameColumn');
+        expect(pivotGrid.columnDimensions.length).toBe(2);
+        expect(pivotGrid.columns.length).toBe(28);
+
+        // insert in filter
+        pivotGrid.insertDimensionAt({ memberName: 'SellerNameFilter', memberFunction: (rec) => rec.SellerName, enabled: true }, PivotDimensionType.Filter, 1);
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.filters.length).toBe(1);
+        expect(pivotGrid.pivotConfiguration.filters[0].memberName).toBe('SellerNameFilter');
+
+        const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        const chip = headerRow.querySelector('igx-chip[id="SellerNameFilter"]');
+        expect(chip).not.toBeNull();
+    });
+
+    it('should allow removing dimension.', () => {
+        const filter = { memberName: 'SellerNameFilter', memberFunction: (rec) => rec.SellerName, enabled: true };
+        pivotGrid.pivotConfiguration.filters = [filter];
+        fixture.detectChanges();
+
+        // remove row
+        pivotGrid.removeDimension(pivotGrid.pivotConfiguration.rows[0]);
+        fixture.detectChanges();
+
+        expect(pivotGrid.pivotConfiguration.rows.length).toBe(1);
+        expect(pivotGrid.pivotConfiguration.rows[0].memberName).toBe('AllProducts');
+
+        let dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+        let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        const headers = rowHeaders.map(x => x.componentInstance.column.header);
+        expect(headers.length).toBe(5);
+
+        // remove col
+        pivotGrid.removeDimension(pivotGrid.pivotConfiguration.columns[0]);
+        fixture.detectChanges();
+
+        expect(pivotGrid.pivotConfiguration.columns.length).toBe(0);
+        expect(pivotGrid.columnDimensions.length).toBe(0);
+        expect(pivotGrid.columns.length).toBe(pivotGrid.values.length);
+
+        // remove filter
+        pivotGrid.removeDimension(filter);
+        fixture.detectChanges();
+
+        expect(pivotGrid.pivotConfiguration.filters.length).toBe(0);
+        const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        const chip = headerRow.querySelector('igx-chip[id="SellerNameFilter"]');
+        expect(chip).toBeNull();
+
+        // remove something that is not part of the config
+        pivotGrid.removeDimension({ memberName: 'Test', enabled: true });
+        fixture.detectChanges();
+        // nothing should change
+        expect(pivotGrid.pivotConfiguration.filters.length).toBe(0);
+        expect(pivotGrid.pivotConfiguration.columns.length).toBe(0);
+        expect(pivotGrid.pivotConfiguration.rows.length).toBe(1);
+    });
+
+    it('should allow toggling dimension.', () => {
+        const filter = { memberName: 'SellerNameFilter', memberFunction: (rec) => rec.SellerName, enabled: true };
+        pivotGrid.pivotConfiguration.filters = [filter];
+        fixture.detectChanges();
+
+        // toggle row
+        pivotGrid.toggleDimension(pivotGrid.pivotConfiguration.rows[0]);
+        fixture.detectChanges();
+
+        // there are still 2
+        expect(pivotGrid.pivotConfiguration.rows.length).toBe(2);
+        // 1 is disabled
+        expect(pivotGrid.rowDimensions.length).toBe(1);
+
+        let dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+        let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        const headers = rowHeaders.map(x => x.componentInstance.column.header);
+        expect(headers.length).toBe(5);
+
+        // toggle column
+        pivotGrid.toggleDimension(pivotGrid.pivotConfiguration.columns[0]);
+        fixture.detectChanges();
+
+        expect(pivotGrid.pivotConfiguration.columns.length).toBe(1);
+        expect(pivotGrid.columnDimensions.length).toBe(0);
+        expect(pivotGrid.columns.length).toBe(pivotGrid.values.length);
+
+        // toggle filter
+        pivotGrid.toggleDimension(filter);
+        fixture.detectChanges();
+
+        expect(pivotGrid.pivotConfiguration.filters.length).toBe(1);
+        expect(pivotGrid.filterDimensions.length).toBe(0);
+        const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+        const chip = headerRow.querySelector('igx-chip[id="SellerNameFilter"]');
+        expect(chip).toBeNull();
+
+        // toggle something that is not part of the config
+        pivotGrid.toggleDimension({ memberName: 'Test', enabled: false });
+        fixture.detectChanges();
+
+        // nothing should change
+        expect(pivotGrid.filterDimensions.length).toBe(0);
+        expect(pivotGrid.columnDimensions.length).toBe(0);
+        expect(pivotGrid.rowDimensions.length).toBe(1);
+
+        expect(pivotGrid.pivotConfiguration.filters.length).toBe(1);
+        expect(pivotGrid.pivotConfiguration.columns.length).toBe(1);
+        expect(pivotGrid.pivotConfiguration.rows.length).toBe(2);
+
+    });
+
+    it('should allow moving dimension.', () => {
+        const dim = pivotGrid.pivotConfiguration.rows[0];
+
+        // from row to column
+        pivotGrid.moveDimension(dim, PivotDimensionType.Column, 0);
+        fixture.detectChanges();
+
+        expect(pivotGrid.rowDimensions.length).toBe(1);
+        expect(pivotGrid.columnDimensions.length).toBe(2);
+
+        let dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+        let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        const headers = rowHeaders.map(x => x.componentInstance.column.header);
+        expect(headers.length).toBe(5);
+
+        expect(pivotGrid.pivotConfiguration.columns[0].memberName).toBe(dim.memberName);
+        expect(pivotGrid.columnDimensions.length).toBe(2);
+        expect(pivotGrid.columns.length).toBe(28);
+
+         // from column to filter
+         pivotGrid.moveDimension(dim, PivotDimensionType.Filter, 0);
+         fixture.detectChanges();
+
+         expect(pivotGrid.pivotConfiguration.columns.length).toBe(1);
+         expect(pivotGrid.pivotConfiguration.filters.length).toBe(1);
+         expect(pivotGrid.columns.length).toBe(15);
+
+         let headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+         let chip = headerRow.querySelector('igx-chip[id="All cities"]');
+         expect(chip).not.toBeNull();
+
+
+        // from filter to row
+        pivotGrid.moveDimension(dim, PivotDimensionType.Row, 1);
+        fixture.detectChanges();
+
+        expect(pivotGrid.pivotConfiguration.rows.length).toBe(2);
+        expect(pivotGrid.pivotConfiguration.rows[1].memberName).toBe('All cities');
+        expect(pivotGrid.pivotConfiguration.filters.length).toBe(0);
+
+        dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+        rowHeaders = dimensionContents[1].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+        const first = rowHeaders.map(x => x.componentInstance.column.header)[0];
+        expect(first).toBe('All Cities');
+     });
+
+     it('should allow inserting new value at index.', () => {
+         const value = {
+            member: 'Date',
+            aggregate: {
+                aggregator: IgxPivotDateAggregate.latest,
+                key: 'LATEST',
+                label: 'Latest'
+            },
+            enabled: true
+        };
+        pivotGrid.insertValueAt(value, 1);
+        fixture.detectChanges();
+        expect(pivotGrid.values.length).toBe(3);
+        expect(pivotGrid.values[1].member).toBe('Date');
+        expect(pivotGrid.columns.length).toBe(20);
+     });
+
+     it('should allow removing value.', () => {
+         pivotGrid.removeValue(pivotGrid.values[1]);
+         fixture.detectChanges();
+         expect(pivotGrid.pivotConfiguration.values.length).toBe(1);
+         expect(pivotGrid.values[0].member).toBe('UnitsSold');
+         expect(pivotGrid.columns.length).toBe(5);
+     });
+
+     it('should allow toggling value.', () => {
+        // toggle off
+        pivotGrid.toggleValue(pivotGrid.pivotConfiguration.values[1]);
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.values.length).toBe(2);
+        expect(pivotGrid.values.length).toBe(1);
+        expect(pivotGrid.values[0].member).toBe('UnitsSold');
+        expect(pivotGrid.columns.length).toBe(5);
+        // toggle on
+        pivotGrid.toggleValue(pivotGrid.pivotConfiguration.values[1]);
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.values.length).toBe(2);
+        expect(pivotGrid.values.length).toBe(2);
+        expect(pivotGrid.values[0].member).toBe('UnitsSold');
+        expect(pivotGrid.values[1].member).toBe('AmountOfSale');
+        expect(pivotGrid.columns.length).toBe(15);
+     });
+
+     it('should allow moving value.', () => {
+         const val = pivotGrid.pivotConfiguration.values[0];
+         // move after
+         pivotGrid.moveValue(val, 1);
+         fixture.detectChanges();
+
+         expect(pivotGrid.values[0].member).toBe('AmountOfSale');
+         expect(pivotGrid.values[1].member).toBe('UnitsSold');
+
+         let valueCols = pivotGrid.columns.filter(x => x.level === 1);
+         expect(valueCols[0].header).toBe('Amount of Sale');
+         expect(valueCols[1].header).toBe('UnitsSold');
+
+         // move before
+         pivotGrid.moveValue(val, 0);
+         fixture.detectChanges();
+
+         expect(pivotGrid.values[0].member).toBe('UnitsSold');
+         expect(pivotGrid.values[1].member).toBe('AmountOfSale');
+         valueCols = pivotGrid.columns.filter(x => x.level === 1);
+         expect(valueCols[0].header).toBe('UnitsSold');
+         expect(valueCols[1].header).toBe('Amount of Sale');
+     });
 });
