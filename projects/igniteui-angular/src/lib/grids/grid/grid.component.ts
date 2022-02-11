@@ -1063,7 +1063,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public allRows(): RowType[] {
         return this.dataView.map((rec, index) => {
-            return this.createRow(this.virtualizationState.startIndex + index)
+            return this.createRow(this.dataRowList.first.index + index);
         });
     }
 
