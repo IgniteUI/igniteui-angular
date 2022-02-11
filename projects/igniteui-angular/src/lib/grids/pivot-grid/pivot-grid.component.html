@@ -143,13 +143,19 @@
     </div>
 </ng-template>
 <ng-template #emptyRowDimensionsTemplate>
-    <div tabindex="0" *ngIf='rowDimensions.length === 0' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension' (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+    <div tabindex="0" *ngIf='columnDimensions.length > 0 || values.length > 0' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension' (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
         <igx-pivot-row-dimension-content role='row' class="igx-grid-thead" [grid]="this"
             [dimension]='emptyRowDimension'
             [rowIndex]='0' [rowData]='emptyRowDimension'
             [density]="displayDensity" [width]="resolveRowDimensionWidth(emptyRowDimension)">
         </igx-pivot-row-dimension-content>
     </div>
+</ng-template>
+
+<ng-template #emptyPivotGridTemplate>
+    <span class="igx-grid__tbody-message" role="cell">
+        <span>{{resourceStrings.igx_grid_pivot_empty_message}}</span>
+    </span>
 </ng-template>
 
 <div [hidden]='true'>

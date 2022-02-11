@@ -38,6 +38,12 @@ export class IgxPivotRowPipe implements PipeTransform {
     ): any[] {
         const pivotKeys = config.pivotKeys || DEFAULT_PIVOT_KEYS;
         const enabledRows = config.rows.filter(x => x.enabled);
+        const enabledColumns = config.columns.filter(x => x.enabled);
+        const enabledValues = config.values.filter(x => x.enabled);
+        if (enabledRows.length === 0 && enabledColumns.length === 0 && enabledValues.length === 0) {
+            // nothing to group and aggregate by ...
+            return [];
+        }
         const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
         const data = cloneArray(collection, true);
         return rowStrategy.process(data, enabledRows, config.values, pivotKeys);

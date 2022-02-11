@@ -1434,7 +1434,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 const newPath = path.join(separator);
                 let targetHierarchy = currentHierarchy.get(newPath);
                 if (!targetHierarchy) {
-                    currentHierarchy.set(newPath, { value: newPath ,expandable: true, children: new Map<string, any>(), dimension: this.columnDimensions[0] });
+                    currentHierarchy.set(newPath, { value: newPath, expandable: true, children: new Map<string, any>(), dimension: this.columnDimensions[0] });
                     targetHierarchy = currentHierarchy.get(newPath);
                 }
                 currentHierarchy = targetHierarchy.children;
@@ -1574,5 +1574,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public getPropName(dim: IPivotDimension) {
         return !!dim ?? dim.memberName + this.pivotKeys.rowDimensionSeparator + 'height';
+    }
+
+    /**
+    * @hidden @internal
+    */
+    @ViewChild('emptyPivotGridTemplate', { read: TemplateRef, static: true })
+    public emptyPivotGridTemplate: TemplateRef<any>;
+
+    /**
+    * @hidden @internal
+    */
+    public get template(): TemplateRef<any> {
+        const allEnabledDimensions = this.rowDimensions.concat(this.columnDimensions);
+        if (allEnabledDimensions.length === 0 && this.values.length === 0) {
+            // no enabled values and dimensions
+            return this.emptyPivotGridTemplate;
+        }
+        super.template;
     }
 }
