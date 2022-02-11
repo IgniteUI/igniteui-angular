@@ -672,7 +672,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             }));
 
             it('should be able to apply custom filter strategy', fakeAsync(() => {
-                expect(treeGrid.filterStrategy).toBeUndefined();
+                expect(treeGrid.filterStrategy).toBeDefined();
                 treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
                 tick(30);
                 fix.detectChanges();
@@ -696,7 +696,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             }));
 
             it('should display only the filtered records when using TreeGridMatchingRecordsOnlyFilteringStrategy', fakeAsync(() => {
-                expect(treeGrid.filterStrategy).toBeUndefined();
+                expect(treeGrid.filterStrategy).toBeDefined();
                 treeGrid.filter('Name', 'Trevor', IgxStringFilteringOperand.instance().condition('contains'), true);
                 tick(30);
                 fix.detectChanges();
