@@ -140,15 +140,6 @@ export class PivotUtil {
         return lvl;
     }
 
-    public static getDimensionLevel(dim: IPivotDimension, rec: IPivotGridRecord, pivotKeys: IPivotKeys) {
-        let level = rec[dim.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.level];
-        while (dim.childLevel && level === undefined) {
-            dim = dim.childLevel;
-            level = rec[dim.memberName + pivotKeys.rowDimensionSeparator + pivotKeys.level];
-        }
-        return { level, dimension: dim };
-    }
-
     public static extractValuesForRow(dims: IPivotDimension[], recData: any, pivotKeys: IPivotKeys) {
         const values = new Map<string, any>();
         for (const col of dims) {

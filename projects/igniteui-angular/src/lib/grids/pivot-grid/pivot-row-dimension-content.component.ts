@@ -153,17 +153,6 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         };
     }
 
-    protected getPrevDims(currDim) {
-        const ind = this.grid.rowDimensions.indexOf(currDim);
-        const prevDims = [];
-        for (let i = 0; i < ind; i++) {
-            const prevDim = this.grid.rowDimensions[i];
-            const dimData = PivotUtil.getDimensionLevel(prevDim, this.rowData, this.grid.pivotKeys);
-            prevDims.push(dimData.dimension);
-        }
-        return prevDims;
-    }
-
     protected extractFromDimension(dim: IPivotDimension, rowData: IPivotGridGroupRecord) {
         const field = dim.memberName;
         const header = rowData.dimensionValues.get(field);

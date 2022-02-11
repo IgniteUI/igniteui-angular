@@ -30,14 +30,11 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     @HostBinding('attr.aria-selected')
     public get selected(): boolean {
         let isSelected = false;
-        let prevDims = [];
-        for (let rowDim of this.grid.rowDimensions) {
-            const dimData = PivotUtil.getDimensionLevel(rowDim, this.data, this.grid.pivotKeys);
-            const key = PivotUtil.getRecordKey(this.data, dimData.dimension);
+        for (let rowDim of this.data.dimensions) {
+            const key = PivotUtil.getRecordKey(this.data, rowDim);
             if (this.selectionService.isPivotRowSelected(key)) {
                 isSelected = true;
             }
-            prevDims.push(dimData.dimension);
         }
         return isSelected;
     }
