@@ -134,8 +134,7 @@
         igx-list {
             display: flex;
             flex-direction: column;
-            padding-top: rem(8px);
-            padding-bottom: rem(8px);
+            padding: rem(8px) rem(4px);
             min-height: 186px;
             max-height: 208px;
             overflow-y: auto;
