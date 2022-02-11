@@ -1034,7 +1034,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (index < 0) {
             return undefined;
         }
-        if (this.dataView.length >= this.virtualizationState.startIndex + index){
+        if (this.dataView.length >= this.virtualizationState.startIndex + this.virtualizationState.chunkSize){
             row = this.createRow(index);
         }else {
             row = this.createRow(this.virtualizationState.startIndex + index);
