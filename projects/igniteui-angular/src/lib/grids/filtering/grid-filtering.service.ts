@@ -564,7 +564,9 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         const fieldFilterIndex = filteringTree.findIndex(fieldName);
-
+        if (fieldFilterIndex > -1) {
+            filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
+        }
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         grid.filteringExpressionsTree = filteringTree;
     }
