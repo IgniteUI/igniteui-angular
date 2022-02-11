@@ -4181,8 +4181,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
             fix.detectChanges();
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', 'False'],
-                [null, true, true]);
+                ['Select All', '(Blanks)', 'False', 'True'],
+                [null, true, true, false]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
