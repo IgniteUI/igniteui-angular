@@ -127,7 +127,7 @@
 </ng-template>
 
 <ng-template #defaultRowDimensionsTemplate>
-    <div tabindex="0" *ngFor='let dim of rowDimensions; let dimIndex = index;' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension' (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+    <div tabindex="0" [style.height.px]='totalHeight' *ngFor='let dim of rowDimensions; let dimIndex = index;' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension' (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
         <ng-template igxGridFor let-rowData [igxGridForOf]="dataView
         | pivotGridCellMerging:pivotConfiguration:dim:pipeTrigger"
                      let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
