@@ -6126,7 +6126,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.columnList.get(1).hidden).toBeTruthy();
         }));
 
-        it('Column selection button should be visible/hidden when column is selectable/not selectable', () => {
+        it('Column selection button should be visible/hidden when column is selectable/not selectable', fakeAsync(() => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
@@ -6135,6 +6135,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const esf = fix.componentInstance.esf;
             esf.column = grid.getColumnByName('Downloads');
+            tick();
             fix.detectChanges();
 
             columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
@@ -6146,9 +6147,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
             expect(columnSelectionContainer).toBeNull();
-        });
+        }));
 
-        it('should select/deselect column when interact with the column selection item through esf menu', () => {
+        it('should select/deselect column when interact with the column selection item through esf menu', fakeAsync(() => {
             // Test in single multiple mode
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
@@ -6156,6 +6157,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             spyOn(grid.columnSelectionChanging, 'emit');
             const column = grid.getColumnByName('Downloads');
             fix.componentInstance.esf.column = column;
+            tick();
             fix.detectChanges();
 
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
@@ -6187,7 +6189,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
-        });
+        }));
 
     });
 });
