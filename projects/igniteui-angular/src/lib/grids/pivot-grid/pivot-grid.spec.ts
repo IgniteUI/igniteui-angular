@@ -34,7 +34,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         fixture.detectChanges();
     }));
 
-    fit('should show empty template when there are no dimensions and values', () => {
+    it('should show empty template when there are no dimensions and values', () => {
         // whole pivotConfiguration is undefined
         const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
         pivotGrid.pivotConfiguration = undefined;
