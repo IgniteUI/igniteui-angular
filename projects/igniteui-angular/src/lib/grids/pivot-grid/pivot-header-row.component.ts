@@ -116,8 +116,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     /**
     * @hidden
     * @internal
+    * Default is a single empty level since default depth is 1
     */
-    public columnDimensionsByLevel: any[] = [];
+    public columnDimensionsByLevel: any[] = [[]];
 
     /**
     * @hidden @internal
