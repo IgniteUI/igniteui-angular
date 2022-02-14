@@ -368,6 +368,10 @@ export class IgxPivotDataSelectorComponent {
         });
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     protected updateDropDown(
         value: IPivotValue,
         dropdown: IgxDropDownComponent

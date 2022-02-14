@@ -8,7 +8,7 @@ import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IgxInputDirective } from "../../input-group/public_api";
 import { configureTestSuite } from "../../test-utils/configure-suite";
 import { IgxPivotGridTestBaseComponent } from "../../test-utils/pivot-grid-samples.spec";
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions } from "../../test-utils/ui-interactions.spec";
 import { PivotGridType } from "../common/grid.interface";
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import {
@@ -18,7 +18,7 @@ import {
 } from "./pivot-grid.interface";
 import { IgxPivotGridModule } from "./pivot-grid.module";
 
-fdescribe("Pivot data selector", () => {
+describe("Pivot data selector", () => {
     let fixture;
     let grid: PivotGridType;
     let selector: IgxPivotDataSelectorComponent;
@@ -203,47 +203,89 @@ fdescribe("Pivot data selector", () => {
         expectConfigToMatchPanels(null); // pass an invalid type (null) to test for values
     });
 
-    it("should reorder items in a panel using drag and drop gestures", async () => {
+    it("should fire event handlers on reorder in a panel using drag and drop gestures", () => {
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
-        spyOn(selector, 'ghostCreated');
-        spyOn(selector, 'onItemDragMove');
-        spyOn(selector, 'ghostDestroyed');
-        spyOn(selector, 'onItemDragEnd');
-        spyOn(selector, 'onItemDropped');
+        spyOn(selector, "ghostCreated");
+        spyOn(selector, "onItemDragMove");
+        spyOn(selector, "onItemDragEnd");
+        spyOn(selector, "onItemDropped");
 
         // Get the drag handle of the last item in the panel
         const dragHandle = items[0].parentNode
             .querySelectorAll("igx-list-item")
             [items.length - 1].querySelector("[igxDragHandle]");
 
-        const { x: itemX, y: itemY } = items[0].parentNode.querySelectorAll('igx-list-item')[0].getBoundingClientRect();
         const { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
 
-        UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
+        UIInteractions.simulatePointerEvent(
+            "pointerdown",
+            dragHandle,
+            handleX,
+            handleY
+        );
         fixture.detectChanges();
-        await wait();
 
-        UIInteractions.simulatePointerEvent("pointermove", dragHandle, handleX, handleY - 10);
+        UIInteractions.simulatePointerEvent(
+            "pointermove",
+            dragHandle,
+            handleX,
+            handleY - 10
+        );
         fixture.detectChanges();
-        await wait(100);
 
-        const ghost = document.body.querySelector('.igx-pivot-data-selector__item-ghost');
+        const ghost = document.body.querySelector(
+            ".igx-pivot-data-selector__item-ghost"
+        );
         expect(selector.ghostCreated).toHaveBeenCalled();
 
-        UIInteractions.simulatePointerEvent("pointermove", ghost, handleX, handleY - 36);
+        UIInteractions.simulatePointerEvent(
+            "pointermove",
+            ghost,
+            handleX,
+            handleY - 36
+        );
         fixture.detectChanges();
-        await wait(100);
         expect(selector.onItemDragMove).toHaveBeenCalled();
 
-        UIInteractions.simulatePointerEvent("pointerup", ghost, handleX, handleY - 36);
+        UIInteractions.simulatePointerEvent(
+            "pointerup",
+            ghost,
+            handleX,
+            handleY - 36
+        );
         fixture.detectChanges();
-        await wait();
 
         expect(selector.onItemDragEnd).toHaveBeenCalled();
-        expect(selector.ghostDestroyed).toHaveBeenCalled();
         expect(selector.onItemDropped).toHaveBeenCalled();
+    });
+
+    it("should call filtering menu on column and row filter click", () => {
+        spyOn(grid.filteringService, "toggleFilterDropdown");
+
+        let columnItems = getPanelItemsByDimensionType(
+            PivotDimensionType.Column
+        );
+        let rowItems = getPanelItemsByDimensionType(PivotDimensionType.Row);
+
+        const getFilteringIcon = (item: Node) =>
+            item.parentNode
+                .querySelector("igx-list-item")
+                .querySelector(".igx-pivot-data-selector__action-filter");
+
+        const colFilterActions = columnItems.map(getFilteringIcon);
+        const rowFilterActions = rowItems.map(getFilteringIcon);
+
+        colFilterActions[0].dispatchEvent(new Event('click'));
+        fixture.detectChanges();
+
+        expect(grid.filteringService.toggleFilterDropdown).toHaveBeenCalled();
+
+        rowFilterActions[0].dispatchEvent(new Event('click'));
+        fixture.detectChanges();
+
+        expect(grid.filteringService.toggleFilterDropdown).toHaveBeenCalled();
     });
 
     const expectConfigToMatchPanels = (dimensionType: PivotDimensionType) => {
