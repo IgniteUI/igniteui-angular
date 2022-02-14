@@ -471,9 +471,10 @@ export class UpdateChanges {
     }
 
     protected updateSassFunctionsAndMixins(entryPath: string) {
+        this.isNamespaced(entryPath);
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
-        // const allowedEndCharacters = new RegExp('(\()', 'g');
+        // const allowedEndCharacters = new RegExp('\(', 'g');
         for (const change of this.themeChanges.changes) {
             if (change.type !== ThemeType.Function && change.type !== ThemeType.Mixin) {
                 continue;
@@ -490,6 +491,43 @@ export class UpdateChanges {
         if (overwrite) {
             this.host.overwrite(entryPath, fileContent);
         }
+    }
+
+    protected isNamespaced(entryPath: string) {
+        let fileContent = this.host.read(entryPath).toString();
+        const allUses = [
+            `@use 'igniteui-angular/theming' as `,
+            `@use 'igniteui-angular/theme' as `,
+            `@use 'igniteui-angular/lib/core/styles/themes/index' as `
+        ]
+        let implementedNamespaces = [];
+        for (let i = 0; i < allUses.length; i++) {
+            // contains = fileContent.includes(use);
+            if (fileContent.includes(allUses[i])) {
+                implementedNamespaces.push(allUses[i].substring(5, allUses[i].length - 4));
+            }
+        }
+        this.getAliasesList(implementedNamespaces, fileContent);
+    }
+
+    protected getAliasesList(implementedNamespaces: string[], fileContent: string) {
+        let temp = [];
+        let aliases = [];
+        const forwardSlash = new RegExp('/', 'g');
+        for (let i = 0; i < implementedNamespaces.length; i++) {
+            temp.push(implementedNamespaces[i].replace(forwardSlash, '\\/'));
+        }
+        implementedNamespaces = temp;
+
+        for (let i = 0; i < implementedNamespaces.length; i++) {
+            const namespace = implementedNamespaces[i];
+            const matcher = new RegExp(String.raw`@use\s+${namespace}\s+as\s+(\w+)`, 'g');
+            // aliases.push(matcher.matched[1]);
+            aliases.push(matcher.exec(fileContent)[1]);
+
+
+        }
+        return aliases;
     }
 
     protected updateImports(entryPath: string) {
