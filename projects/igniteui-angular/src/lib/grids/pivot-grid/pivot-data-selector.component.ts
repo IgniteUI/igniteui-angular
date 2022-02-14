@@ -54,8 +54,6 @@ interface IDataSelectorPanel {
     templateUrl: "./pivot-data-selector.component.html",
 })
 export class IgxPivotDataSelectorComponent {
-    public ghost: HTMLElement;
-
     private _grid: PivotGridType;
     private _dropDelta = 0;
 
@@ -489,11 +487,6 @@ export class IgxPivotDataSelectorComponent {
             "visibility",
             "hidden"
         );
-        this.ghost = event.ghostElement;
-    }
-
-    public ghostDestroyed(event: IDragGhostBaseEventArgs, value: string) {
-        console.log(event.ghostElement);
     }
 
     /**
