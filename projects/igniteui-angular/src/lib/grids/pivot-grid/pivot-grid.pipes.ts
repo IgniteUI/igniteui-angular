@@ -97,6 +97,12 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
                         delete rec[k];
                     }
                 });
+            } else {
+                keys.forEach(k => {
+                    if (k.indexOf(pivotKeys.records) !== -1 && k !== pivotKeys.records) {
+                        this.cleanState(rec[k], pivotKeys, config);
+                    }
+                });
             }
         });
     }
