@@ -45,27 +45,29 @@
     </ng-template>
 </igx-list>
 
-<div style="overflow-y: auto;" *ngIf="isHierarchical()">
-    <igx-checkbox #selectAllCheckbox
-        [value]="selectAllItem"
-        [tabindex]="-1"
-        [checked]="selectAllItem?.isSelected"
-        [disableRipple]="true"
-        [indeterminate]="selectAllItem?.indeterminate"
-        [disableTransitions]="true"
-        (change)="onSelectAllCheckboxChange($event)">
-        {{ selectAllItem.label }}
-    </igx-checkbox>
-    
-    <igx-checkbox #addToCurrentFilterCheckbox *ngIf="searchValue"
-        [value]="addToCurrentFilterItem"
-        [tabindex]="-1"
-        [checked]="addToCurrentFilterItem.isSelected"
-        [disableRipple]="true"
-        [disableTransitions]="true"
-        (change)="onAddToCurrentFilterCheckboxChange($event)">
-        {{ addToCurrentFilterItem.label }}
-    </igx-checkbox>
+<div class="igx-excel-filter__tree" *ngIf="isHierarchical()">
+    <div class="igx-excel-filter__tree-checkboxes">
+        <igx-checkbox #selectAllCheckbox
+                      [value]="selectAllItem"
+                      [tabindex]="-1"
+                      [checked]="selectAllItem?.isSelected"
+                      [disableRipple]="true"
+                      [indeterminate]="selectAllItem?.indeterminate"
+                      [disableTransitions]="true"
+                      (change)="onSelectAllCheckboxChange($event)">
+            {{ selectAllItem.label }}
+        </igx-checkbox>
+
+        <igx-checkbox #addToCurrentFilterCheckbox *ngIf="searchValue"
+                      [value]="addToCurrentFilterItem"
+                      [tabindex]="-1"
+                      [checked]="addToCurrentFilterItem.isSelected"
+                      [disableRipple]="true"
+                      [disableTransitions]="true"
+                      (change)="onAddToCurrentFilterCheckboxChange($event)">
+            {{ addToCurrentFilterItem.label }}
+        </igx-checkbox>
+    </div>
 
     <igx-tree #tree [displayDensity]="esf.displayDensity" selection="Cascading"  (nodeSelection)="onNodeSelectionChange($event)">
         <igx-tree-node [data]="item" *ngFor="let item of displayedListData;" [selected]="item.isSelected">

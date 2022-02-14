@@ -17,6 +17,14 @@
             @extend %igx-excel-filter__loading !optional;
         }
 
+        @include e(tree) {
+            @extend %igx-excel-filter__tree !optional;
+        }
+
+        @include e(tree-checkboxes) {
+            @extend %igx-excel-filter__tree-checkboxes !optional;
+        }
+
         @include e(menu) {
             @extend %grid-excel-menu !optional;
         }

@@ -23,6 +23,17 @@
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
+    $tree-node-indent: (
+        comfortable: rem(16px),
+        cosy: rem(8px),
+        compact: rem(4px)
+    );
+
+    $tree-node-height: (
+        comfortable: rem(40px),
+        cosy: rem(32px),
+        compact: rem(24px)
+    );
 
     %grid-excel-filter {
         display: block;
@@ -32,6 +43,10 @@
         box-shadow: igx-elevation($elevation: 12);
         overflow: auto;
         min-width: rem(320px);
+
+        .igx-tree-node__wrapper {
+            padding: 0;
+        }
     }
 
     %grid-excel-filter--inline {
@@ -250,19 +265,55 @@
         padding: rem(16px);
         gap: rem(16px);
 
-
         igx-list {
             flex-grow: 1;
             overflow: hidden;
             margin-left: -#{rem(16px)};
             margin-right: -#{rem(16px)};
             border: 0;
+        }
+
+        igx-list,
+        %igx-excel-filter__tree {
             @if $bootstrap-theme {
                 border-top: 1px dashed igx-color($palette, 'grays', 100);
                 border-bottom: 1px dashed igx-color($palette, 'grays', 100);
             } @else {
                 border-top: 1px dashed igx-color($palette, 'grays', 300);
                 border-bottom: 1px dashed igx-color($palette, 'grays', 300);
+            }
+        }
+
+        %igx-excel-filter__tree {
+            overflow-y: auto;
+            margin: 0 rem(-16px);
+            padding: rem(8px) 0 0 0;
+
+            igx-icon {
+                width: rem(20px);
+                height: rem(20px);
+                font-size: rem(20px);
+            }
+
+            > igx-checkbox,
+            .igx-tree-node__wrapper {
+                height: map.get($tree-node-height, 'comfortable');
+                min-height: map.get($tree-node-height, 'comfortable');
+            }
+
+            .igx-tree-node__toggle-button {
+                min-width: rem(20px);
+                margin-left: map.get($tree-node-indent, 'comfortable');
+            }
+        }
+
+        %igx-excel-filter__tree-checkboxes {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: rem(4px);
+
+            > igx-checkbox {
+                margin-left: map.get($tree-node-indent, 'comfortable');
             }
         }
     }
@@ -301,6 +352,27 @@
         igx-list {
             margin-left: -#{rem(8px)};
             margin-right: -#{rem(8px)};
+        }
+
+        %igx-excel-filter__tree {
+            margin: 0 rem(-8px);
+            padding: rem(4px) 0;
+
+            > igx-checkbox,
+            .igx-tree-node__wrapper {
+                height: map.get($tree-node-height, 'cosy');
+                min-height: map.get($tree-node-height, 'cosy');
+            }
+
+            .igx-tree-node__toggle-button {
+                margin-left: map.get($tree-node-indent, 'cosy');
+            }
+        }
+
+        %igx-excel-filter__tree-checkboxes {
+            > igx-checkbox {
+                margin-left: map.get($tree-node-indent, 'cosy');
+            }
         }
     }
 
@@ -347,6 +419,27 @@
         igx-list {
             margin-left: -#{rem(4px)};
             margin-right: -#{rem(4px)};
+        }
+
+        %igx-excel-filter__tree {
+            margin: 0 rem(-4px);
+            padding: rem(2px) 0;
+
+            igx-checkbox,
+            .igx-tree-node__wrapper {
+                height: map.get($tree-node-height, 'compact');
+                min-height: map.get($tree-node-height, 'compact');
+            }
+
+            .igx-tree-node__toggle-button {
+                margin: 0 map.get($tree-node-indent, 'compact');
+            }
+        }
+
+        %igx-excel-filter__tree-checkboxes {
+            > igx-checkbox {
+                margin-left: map.get($tree-node-indent, 'compact');
+            }
         }
     }
 
