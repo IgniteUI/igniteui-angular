@@ -1,11 +1,11 @@
-import { Element } from '@angular/compiler';
 import {
-  Rule,
-  SchematicContext,
-  Tree
+    Rule,
+    SchematicContext,
+    Tree
 } from '@angular-devkit/schematics';
-import { UpdateChanges } from '../common/UpdateChanges';
+import { Element } from '@angular/compiler';
 import { nativeImport } from '../common/import-helper.js';
+import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 
 const version = '13.1.0';
@@ -86,4 +86,5 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 
   applyChanges();
   changes.clear();
+  update.applyChanges();
 };
