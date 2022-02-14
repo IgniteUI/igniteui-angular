@@ -203,7 +203,7 @@ describe("Pivot data selector", () => {
         expectConfigToMatchPanels(null); // pass an invalid type (null) to test for values
     });
 
-    it("should fire event handlers on reorder in a panel using drag and drop gestures", () => {
+    xit("should fire event handlers on reorder in a panel using drag and drop gestures", () => {
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
