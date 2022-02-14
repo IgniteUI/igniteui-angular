@@ -1,14 +1,9 @@
 import { parseDate, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { BaseFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { BaseFilteringStrategy, HierarchicalColumnValue } from '../../data-operations/filtering-strategy';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-
-export interface IHierarchicalItem {
-    value: any;
-    children?: IHierarchicalItem[];
-}
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
@@ -124,7 +119,7 @@ export class TreeGridMatchingRecordsOnlyFilteringStrategy extends TreeGridFilter
 }
 
 export class HierarchicalFilteringStrategy extends TreeGridFilteringStrategy {
-    private processedData: IHierarchicalItem[];
+    private processedData: HierarchicalColumnValue[];
     private childDataKey;
 
     constructor(public hierarchicalFilterFields: string[]) {
@@ -133,11 +128,10 @@ export class HierarchicalFilteringStrategy extends TreeGridFilteringStrategy {
 
     public override getColumnValues(
             column: ColumnType,
-            tree: FilteringExpressionsTree,
-            done: (values: any[] | IHierarchicalItem[]) => void): void {
+            tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]> {
 
         if (this.hierarchicalFilterFields.indexOf(column.field) < 0) {
-            return super.getColumnValues(column, tree, done);
+            return super.getColumnValues(column, tree);
         }
 
         this.processedData = [];
@@ -147,8 +141,8 @@ export class HierarchicalFilteringStrategy extends TreeGridFilteringStrategy {
         let columnValues = [];
         columnValues = data.map(record => {
             if (this.processedData.indexOf(record) < 0) { // TODO: add check for DATE
-                let hierarchicalItem: IHierarchicalItem;
-                hierarchicalItem = { value: resolveNestedPath(record, columnField) };
+                let hierarchicalItem = new HierarchicalColumnValue();
+                hierarchicalItem.value =  resolveNestedPath(record, columnField);
                 // if (shouldFormatValues) {
                 //     value = this.column.formatter(value, record);
                 // }
@@ -160,7 +154,7 @@ export class HierarchicalFilteringStrategy extends TreeGridFilteringStrategy {
             return el !== undefined
         });
 
-        done(columnValues);
+        return Promise.resolve(columnValues);
     }
 
     private getChildren(record: any, columnField: string) {
@@ -170,7 +164,7 @@ export class HierarchicalFilteringStrategy extends TreeGridFilteringStrategy {
         if (children) {
             children.forEach(child => {
                 if (this.processedData.indexOf(child) < 0) {
-                    let hierarchicalItem: IHierarchicalItem;
+                    let hierarchicalItem: HierarchicalColumnValue;
                     hierarchicalItem = { value: resolveNestedPath(child, columnField) };
                     // if (shouldFormatValues) {
                     //     value = this.column.formatter(value, record);

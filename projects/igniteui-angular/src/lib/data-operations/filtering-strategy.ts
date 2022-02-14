@@ -3,7 +3,6 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering
 import { resolveNestedPath, parseDate } from '../core/utils';
 import { ColumnType, GridType, PivotGridType } from '../grids/common/grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
-import { IHierarchicalItem } from '../grids/tree-grid/tree-grid.filtering.strategy';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
@@ -12,6 +11,11 @@ const TimeType = 'time';
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridType): any[];
+}
+
+export class HierarchicalColumnValue {
+    public value: any;
+    public children?: HierarchicalColumnValue[];
 }
 
 export class NoopFilteringStrategy implements IFilteringStrategy {
@@ -73,17 +77,14 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         return true;
     }
 
-    // move formatting from base implementation to formatted values strategies - grid and treegrid
     public getColumnValues(
             column: ColumnType,
-            tree: FilteringExpressionsTree,
-            done: (values: any[] | IHierarchicalItem[]) => void) {
-
+            tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]> {
         const data = column.grid.gridAPI.filterDataByExpressions(tree);
         const columnField = column.field;
         let columnValues;
         columnValues = data.map(record => resolveNestedPath(record, columnField));
-        done(columnValues); // TODO: change to promise
+        return Promise.resolve(columnValues);
     }
 
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
@@ -93,14 +94,14 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 }
 
 export class FilteringStrategy extends BaseFilteringStrategy {
-    private static _instace: FilteringStrategy = null;
+    private static _instance: FilteringStrategy = null;
 
     constructor() {
         super();
     }
 
     public static instance() {
-        return this._instace || (this._instace = new this());
+        return this._instance || (this._instance = new this());
     }
 
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree,

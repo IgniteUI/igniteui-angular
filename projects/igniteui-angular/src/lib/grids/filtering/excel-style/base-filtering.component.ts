@@ -17,6 +17,7 @@ export abstract class BaseFilteringComponent {
     public abstract mainDropdown: ElementRef<HTMLElement>;
     public abstract expressionsList: ExpressionUI[];
     public abstract listData: FilterListItem[];
+    public abstract isHierarchical: boolean;
 
     public abstract loadingStart: EventEmitter<undefined>;
     public abstract loadingEnd: EventEmitter<undefined>;

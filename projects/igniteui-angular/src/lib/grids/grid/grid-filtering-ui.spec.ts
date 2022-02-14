@@ -46,7 +46,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
-import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { formatDate } from '../../core/utils';
@@ -3276,6 +3276,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
 
@@ -3307,6 +3309,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
 
@@ -3327,6 +3331,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Should not be able to exit custom dialog when press tab on apply button', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             tick();
@@ -6126,7 +6132,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.columnList.get(1).hidden).toBeTruthy();
         }));
 
-        it('Column selection button should be visible/hidden when column is selectable/not selectable', () => {
+        it('Column selection button should be visible/hidden when column is selectable/not selectable', fakeAsync(() => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
@@ -6135,6 +6141,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const esf = fix.componentInstance.esf;
             esf.column = grid.getColumnByName('Downloads');
+            tick();
             fix.detectChanges();
 
             columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
@@ -6146,9 +6153,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
             expect(columnSelectionContainer).toBeNull();
-        });
+        }));
 
-        it('should select/deselect column when interact with the column selection item through esf menu', () => {
+        it('should select/deselect column when interact with the column selection item through esf menu', fakeAsync(() => {
             // Test in single multiple mode
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
@@ -6156,6 +6163,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             spyOn(grid.columnSelectionChanging, 'emit');
             const column = grid.getColumnByName('Downloads');
             fix.componentInstance.esf.column = column;
+            tick();
             fix.detectChanges();
 
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
@@ -6187,7 +6195,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
-        });
+        }));
 
     });
 });
@@ -6213,7 +6221,8 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     }));
 
     it('Should be able to set custom filtering strategy', () => {
-        expect(grid.filterStrategy).toBeUndefined();
+        expect(grid.filterStrategy).toBeDefined();
+        expect(grid.filterStrategy).toBeInstanceOf(FilteringStrategy);
         grid.filterStrategy = fix.componentInstance.strategy;
         fix.detectChanges();
 
