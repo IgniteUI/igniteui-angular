@@ -80,7 +80,6 @@
                     [igxDrag]="panel.dragChannels"
                     [ghostTemplate]="itemGhost"
                     (ghostCreate)="ghostCreated($event, item[panel.itemKey])"
-                    (ghostDestroy)="ghostDestroyed($event, item[panel.itemKey])"
                     (over)="onItemDragOver($event)"
                     (leave)="onItemDragLeave($event)"
                     (dragMove)="onItemDragMove($event)"
@@ -170,12 +169,13 @@
 
 <ng-template #itemGhost>
     <div
+        #ghostContainer
         class="igx-pivot-data-selector__item-ghost"
         [style.width.px]="ghostWidth"
         [class.igx-pivot-data-selector__item-ghost--no-drop]="!dropAllowed"
     >
-        <div style="display: flex; align-items: center">
-            <igx-icon style="margin-right: 8px">unfold_more</igx-icon>
+        <div class="igx-pivot-data-selector__item-ghost-text">
+            <igx-icon>unfold_more</igx-icon>
             <span>{{ ghostText }}</span>
         </div>
         <igx-icon>drag_handle</igx-icon>

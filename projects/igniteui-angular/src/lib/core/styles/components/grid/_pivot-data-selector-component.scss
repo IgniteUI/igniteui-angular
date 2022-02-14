@@ -39,6 +39,10 @@
             @extend %selector-item-ghost--no-drop !optional;
         }
 
+        @include e(item-ghost-text) {
+            @extend %selector-item-ghost-text !optional;
+        }
+
         @include e(item-start) {
             @extend %selector-item-start !optional;
         }

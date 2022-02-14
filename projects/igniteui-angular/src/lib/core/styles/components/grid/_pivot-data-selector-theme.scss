@@ -222,6 +222,15 @@
         }
     }
 
+    %selector-item-ghost-text {
+        display: flex;
+        align-items: center;
+
+        igx-icon {
+            margin-inline-end: rem(8px);
+        }
+    }
+
     %selector-item-ghost--no-drop {
         cursor: no-drop;
     }
