@@ -87,4 +87,5 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
   applyChanges();
   update.applyChanges();
   changes.clear();
+  update.applyChanges();
 };
