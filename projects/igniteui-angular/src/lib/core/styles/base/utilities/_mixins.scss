@@ -208,9 +208,15 @@
                 $_valid-variant: not(string.index(#{$variant}, 'contrast')) and not(string.index(#{$variant}, 'variant')) and $theme;
 
                 @if $_valid-base and $variant == 500 {
-                    --#{$prefix}-#{$name}-h: #{math.round(color.hue($value))};
-                    --#{$prefix}-#{$name}-s: #{math.round(color.saturation($value))};
-                    --#{$prefix}-#{$name}-l: #{math.round(color.lightness($value))};
+                    @if $prefix == 'igc' {
+                        --#{$prefix}-#{$name}-h: var(--igx-primary-h);
+                        --#{$prefix}-#{$name}-s: var(--igx-primary-s);
+                        --#{$prefix}-#{$name}-l: var(--igx-primary-l);
+                    } @else {
+                        --#{$prefix}-#{$name}-h: #{math.round(color.hue($value))};
+                        --#{$prefix}-#{$name}-s: #{math.round(color.saturation($value))};
+                        --#{$prefix}-#{$name}-l: #{math.round(color.lightness($value))};
+                    }
 
                     @if $name != 'grays' {
                         --#{$prefix}-#{$name}-a: #{color.alpha($value)};
