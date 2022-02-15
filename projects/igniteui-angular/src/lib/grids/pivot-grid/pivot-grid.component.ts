@@ -1674,6 +1674,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     * @hidden @internal
     */
     @ViewChild('emptyPivotGridTemplate', { read: TemplateRef, static: true })
+    public defaultEmptyPivotGridTemplate: TemplateRef<any>;
+
+    /**
+     * Gets/Sets a custom template when pivot grid is empty.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-grid [emptyPivotGridTemplate]="myTemplate"><igx-pivot-grid>
+     * ```
+     */
+    @Input()
     public emptyPivotGridTemplate: TemplateRef<any>;
 
     /**
@@ -1683,7 +1694,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const allEnabledDimensions = this.rowDimensions.concat(this.columnDimensions);
         if (allEnabledDimensions.length === 0 && this.values.length === 0) {
             // no enabled values and dimensions
-            return this.emptyPivotGridTemplate;
+            return this.emptyPivotGridTemplate || this.defaultEmptyPivotGridTemplate;
         }
         super.template;
     }

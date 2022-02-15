@@ -90,6 +90,17 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values.');
     });
 
+    it('should show allow setting custom empty template.', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+        pivotGrid.emptyPivotGridTemplate = fixture.componentInstance.emptyTemplate;
+        pivotGrid.pivotConfiguration = undefined;
+        fixture.detectChanges();
+
+          // no rows, just empty message
+          expect(pivotGrid.rowList.length).toBe(0);
+          expect(pivotGrid.tbody.nativeElement.textContent).toBe('Custom empty template.');
+    });
+
     it('should apply formatter and dataType from measures', () => {
         const pivotGrid = fixture.componentInstance.pivotGrid;
         pivotGrid.width = '1500px';
