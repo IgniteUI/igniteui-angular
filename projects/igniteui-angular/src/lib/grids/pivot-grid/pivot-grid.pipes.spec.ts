@@ -516,7 +516,15 @@ describe('Pivot pipes #pivotGrid', () => {
             [
                 {
                     'All': 2127, 'AllCategory': 'All', 'All-Bulgaria': 774, 'All-USA': 829,
-                    'All-Uruguay': 524, 'AllCategory_level': 0
+                    'All-Uruguay': 524, 'AllCategory_level': 0, 'AllCategory_records': [
+                        {
+                            'ProductCategory': 'Clothing', 'All': 1526, 'All-Bulgaria': 774,
+                            'All-USA': 296, 'All-Uruguay': 456, 'ProductCategory_level': 1
+                        },
+                        { 'ProductCategory': 'Bikes', 'All': 68, 'All-Uruguay': 68, 'ProductCategory_level': 1 },
+                        { 'ProductCategory': 'Accessories', 'All': 293, 'All-USA': 293, 'ProductCategory_level': 1 },
+                        { 'ProductCategory': 'Components', 'All': 240, 'All-USA': 240, 'ProductCategory_level': 1 }
+                    ]
                 },
                 {
                     'ProductCategory': 'Clothing', 'All': 1526, 'All-Bulgaria': 774,
@@ -851,7 +859,7 @@ describe('Pivot pipes #pivotGrid', () => {
         ]);
     });
     it('should generate correct row data with 2 dimensions with varying depth.', () => {
-        // one dimension with 4 depth and one with 1 depth 
+        // one dimension with 4 depth and one with 1 depth
         pivotConfig.rows = [
             new IgxPivotDateDimension(
                 {
@@ -1645,5 +1653,61 @@ describe('Pivot pipes #pivotGrid', () => {
         const res = rowStatePipeResult.filter(x => x.AllSeller === undefined).map(x => x.Seller);
         // all values should be strings as the result of the processed member function is string.
         expect(res.filter(x => typeof x !== 'string').length).toBe(0);
+    });
+
+    it('should generate correct values for IgxPivotDateDimension with quarters enabled.', () => {
+        data = [
+            { Date: '01/19/2020', UnitsSold: 492 },
+            { Date: '02/19/2020', UnitsSold: 200 },
+            { Date: '03/19/2020', UnitsSold: 178 },
+            { Date: '04/19/2020', UnitsSold: 456 },
+            { Date: '05/19/2020', UnitsSold: 456 },
+            { Date: '06/19/2020', UnitsSold: 0 },
+            { Date: '07/19/2020', UnitsSold: 500 },
+            { Date: '08/19/2020', UnitsSold: 100 },
+            { Date: '09/19/2020', UnitsSold: 300 },
+            { Date: '10/19/2020', UnitsSold: 100 },
+            { Date: '11/19/2020', UnitsSold: 200 },
+            { Date: '12/19/2020', UnitsSold: 456 }
+        ];
+        pivotConfig.columns = [];
+        pivotConfig.rows = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: true,
+                    quarters: true,
+                    fullDate: false
+                }
+            )
+        ]
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
+
+        const dateData = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        expect(dateData).toEqual([
+            { 'AllPeriods': 'All Periods' },
+            { 'Years': '2020' },
+            { 'Quarters': 'Q1' },
+            { 'Months': 'January' },
+            { 'Months': 'February' },
+            { 'Months': 'March' },
+            { 'Quarters': 'Q2' },
+            { 'Months': 'April' },
+            { 'Months': 'May' },
+            { 'Months': 'June' },
+            { 'Quarters': 'Q3' },
+            { 'Months': 'July' },
+            { 'Months': 'August' },
+            { 'Months': 'September' },
+            { 'Quarters': 'Q4' },
+            { 'Months': 'October' },
+            { 'Months': 'November' },
+            { 'Months': 'December' }
+        ]);
     });
 });

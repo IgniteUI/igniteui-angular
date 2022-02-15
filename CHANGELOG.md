@@ -39,6 +39,9 @@ All notable changes for each version of this project will be documented in this 
    - Exposed `dataChanging` and `dataChanged` events for the three grids that are re-emits of the corresponding `IgxForOf` events. These indicate the beginning and end of the input change triggering the actual data re-rendering which happens each time the data view changes. This happens after changes in either the data the grid is bound or the state affecting the operations which alter this data (e.g. sorting, filtering, group-by).
    - Scrolling with the mouse wheel over cells with templates that include scrollable containers now correctly scroll these inner containers before the grid body scrolls.
 
+- `IgxToast`
+    - **Breaking Changes** - The toast deprecated `position` property have been removed. We suggest using `positionSettings` property instead.
+
 ## 13.0.5
 
 ### New Features
