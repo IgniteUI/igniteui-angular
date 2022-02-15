@@ -42,7 +42,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
 
         // no rows, just empty message
         expect(pivotGrid.rowList.length).toBe(0);
-        expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values defined.');
+        expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values.');
 
         // configuration is defined but all collections are empty
         pivotGrid.pivotConfiguration = {
@@ -54,7 +54,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
 
         // no rows, just empty message
         expect(pivotGrid.rowList.length).toBe(0);
-        expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values defined.');
+        expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values.');
 
 
         // has dimensions and values, but they are disabled
@@ -87,7 +87,7 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
 
         // no rows, just empty message
         expect(pivotGrid.rowList.length).toBe(0);
-        expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values defined.');
+        expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values.');
     });
 
     it('should apply formatter and dataType from measures', () => {
