@@ -516,7 +516,15 @@ describe('Pivot pipes #pivotGrid', () => {
             [
                 {
                     'All': 2127, 'AllCategory': 'All', 'All-Bulgaria': 774, 'All-USA': 829,
-                    'All-Uruguay': 524, 'AllCategory_level': 0
+                    'All-Uruguay': 524, 'AllCategory_level': 0, 'AllCategory_records': [
+                        {
+                            'ProductCategory': 'Clothing', 'All': 1526, 'All-Bulgaria': 774,
+                            'All-USA': 296, 'All-Uruguay': 456, 'ProductCategory_level': 1
+                        },
+                        { 'ProductCategory': 'Bikes', 'All': 68, 'All-Uruguay': 68, 'ProductCategory_level': 1 },
+                        { 'ProductCategory': 'Accessories', 'All': 293, 'All-USA': 293, 'ProductCategory_level': 1 },
+                        { 'ProductCategory': 'Components', 'All': 240, 'All-USA': 240, 'ProductCategory_level': 1 }
+                    ]
                 },
                 {
                     'ProductCategory': 'Clothing', 'All': 1526, 'All-Bulgaria': 774,
@@ -851,7 +859,7 @@ describe('Pivot pipes #pivotGrid', () => {
         ]);
     });
     it('should generate correct row data with 2 dimensions with varying depth.', () => {
-        // one dimension with 4 depth and one with 1 depth 
+        // one dimension with 4 depth and one with 1 depth
         pivotConfig.rows = [
             new IgxPivotDateDimension(
                 {
