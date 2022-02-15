@@ -103,7 +103,7 @@ export abstract class BaseProgressDirective {
     /**
      * Returns the value which update the progress indicator of the `progress bar`.
      * ```typescript
-     *  @ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      * public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
      * public stepValue(event) {
      *     let step = this.progressBar.step;
@@ -155,7 +155,7 @@ export abstract class BaseProgressDirective {
     /**
      * Returns whether the `progress bar` has animation true/false.
      * ```typescript
-     *  @ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      * public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
      * public animationStatus(event) {
      *     let animationStatus = this.progressBar.animate;
@@ -191,7 +191,7 @@ export abstract class BaseProgressDirective {
     /**
      * Returns the the maximum progress value of the `progress bar`.
      * ```typescript
-     *  @ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      * public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
      * public maxValue(event) {
      *     let max = this.progressBar.max;
@@ -206,7 +206,7 @@ export abstract class BaseProgressDirective {
     /**
      * Returns the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
      * ```typescript
-     *  @ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      * public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
      * public valuePercent(event){
      *     let percentValue = this.progressBar.valueInPercent;
@@ -222,7 +222,7 @@ export abstract class BaseProgressDirective {
     /**
      * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
      * ```typescript
-     *  @ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      * public progressBar: IgxLinearProgressBarComponent;
      * public getValue(event) {
      *     let value = this.progressBar.value;
