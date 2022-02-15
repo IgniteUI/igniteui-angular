@@ -168,11 +168,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @HostBinding('class.igx-grid__pivot--super-compact')
     @Input()
-    get superCompactMode() {
+    public get superCompactMode() {
         return this._superCompactMode;
     }
 
-    set superCompactMode(value) {
+    public set superCompactMode(value) {
         Promise.resolve().then(() => {
             // wait for the current detection cycle to end before triggering a new one.
             this._superCompactMode = value;
