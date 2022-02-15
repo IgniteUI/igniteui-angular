@@ -62,9 +62,8 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
         super();
     }
 
-    /** @hidden */
-    public shouldApplyFormatter(fieldName: string): boolean {
-        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === fieldName);
+    public shouldFormatFilterValues(column: ColumnType): boolean {
+        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === column.field);
     }
 }
 
