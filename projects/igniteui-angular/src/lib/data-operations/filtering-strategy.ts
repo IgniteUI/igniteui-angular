@@ -94,7 +94,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
         if (column.dataType === GridColumnDataType.String && column.filteringIgnoreCase) {
             const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
-                .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]), new Map());
+                .reduce((map, val, i) => map.has(val) ? map : map.set(val, columnValues[i]), new Map());
             uniqueValues = Array.from(filteredUniqueValues.values());
         } else if (column.dataType === GridColumnDataType.DateTime) {
             uniqueValues = Array.from(new Set(columnValues.map(v => v?.toLocaleString())));
@@ -109,9 +109,15 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                 }
             })));
             uniqueValues.forEach((d, i) => uniqueValues[i] = d ? new Date(d) : d);
+        } else if (column.dataType === GridColumnDataType.Date) {
+            const valuesMap = columnValues.reduce((map: Map<string, any>, val) =>  {
+                const date = new Date(val);
+                const key = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
+                return map.has(key) ? map : map.set(key, val)
+            }, new Map());
+            uniqueValues = Array.from(valuesMap.values());
         } else {
-            uniqueValues = column.dataType === GridColumnDataType.Date ?
-                uniqueDates(columnValues) : Array.from(new Set(columnValues));
+            uniqueValues = Array.from(new Set(columnValues));
         }
 
         return uniqueValues;
