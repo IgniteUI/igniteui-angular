@@ -48,7 +48,6 @@ import {
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 
 const DEBOUNCETIME = 30;
@@ -4351,7 +4350,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             verifyExcelStyleFilterAvailableOptions(fix,
                 ['Select All', '(Blanks)', 'False'],
-                [null, true, true]);
+                [true, true, true]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
