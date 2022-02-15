@@ -468,11 +468,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 return;
             }
 
-            this.uniqueValues = (this.column.dataType === GridColumnDataType.Date) ?
-                colVals.map(value => {
-                    const label = this.getFilterItemLabel(value);
-                    return { label, value };
-                }) : colVals;
+            this.uniqueValues = colVals;
 
             this.renderValues();
             this.loadingEnd.emit();
@@ -642,9 +638,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         let filterListItems = [];
         const applyFormatter = !this.shouldFormatValues();
         values?.forEach(element => {
-            const hasValue = (element !== undefined && element !== null && element !== ''
-                && this.column.dataType !== GridColumnDataType.Date)
-                || !!(element && element.label);
+            const hasValue = element !== undefined && element !== null && element !== '';
 
             if (hasValue) {
                 const filterListItem = new FilterListItem();
@@ -712,20 +706,12 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.listData.unshift(blanks);
     }
 
-    private getFilterItemLabel(element: any, applyFormatter: boolean = true, data?: any) {
-        if (element?.value) {
-            element = element.value;
-        }
-
-        if (element?.label) {
-            return element.label;
-        }
-
+    private getFilterItemLabel(value: any, applyFormatter: boolean = true, data?: any) {
         if (this.column.formatter) {
             if (applyFormatter) {
-                return this.column.formatter(element, data);
+                return this.column.formatter(value, data);
             }
-            return element;
+            return value;
         }
 
         const { display, format, digitsInfo, currencyCode, timezone } = this.column.pipeArgs;
@@ -735,15 +721,15 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             case GridColumnDataType.Date:
             case GridColumnDataType.DateTime:
             case GridColumnDataType.Time:
-                return formatDate(element, format, locale, timezone);
+                return formatDate(value, format, locale, timezone);
             case GridColumnDataType.Currency:
-                return formatCurrency(element, currencyCode || getLocaleCurrencyCode(locale), display, digitsInfo, locale);
+                return formatCurrency(value, currencyCode || getLocaleCurrencyCode(locale), display, digitsInfo, locale);
             case GridColumnDataType.Number:
-                return formatNumber(element, locale, digitsInfo);
+                return formatNumber(value, locale, digitsInfo);
             case GridColumnDataType.Percent:
-                return formatPercent(element, locale, digitsInfo);
+                return formatPercent(value, locale, digitsInfo);
             default:
-                return element;
+                return value;
         }
     }
 
@@ -753,7 +739,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         }
 
         if (this.column.dataType === GridColumnDataType.Date) {
-            element = parseDate(element.value);
+            element = parseDate(element);
         }
 
         return element;
@@ -766,7 +752,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
         let value;
         if (this.column.dataType === GridColumnDataType.Date) {
-            value = element && element.value ? new Date(element.value).toISOString() : element.value;
+            value = element ? new Date(element).toISOString() : element;
         } else if (this.column.dataType === GridColumnDataType.DateTime) {
             value = element ? new Date(element).toISOString() : element;
         } else if (this.column.dataType === GridColumnDataType.Time) {
