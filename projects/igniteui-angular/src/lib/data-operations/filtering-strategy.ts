@@ -1,7 +1,8 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate } from '../core/utils';
-import { GridType } from '../grids/common/grid.interface';
+import { GridType, PivotGridType } from '../grids/common/grid.interface';
+import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
