@@ -78,7 +78,8 @@ export class PivotGridSampleComponent {
                 enabled: true
             },
             {
-                months: true
+                months: true,
+                quarters: true
             }
         ),
         {
@@ -194,11 +195,56 @@ export class PivotGridSampleComponent {
         {
             ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
             Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
-        },
-        {
-            ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
-            Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
         }];
+
+    public data2 = [{
+        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+        Country: 'Bulgaria', City: 'Plovdiv', Date: '01/19/2020', UnitsSold: 492
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
+        Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '03/19/2020', UnitsSold: 456
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '04/19/2020', UnitsSold: 456
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/19/2020', UnitsSold: 456
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '06/19/2020', UnitsSold: 456
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '07/19/2020', UnitsSold: 456
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '08/19/2020', UnitsSold: 456
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '09/19/2020', UnitsSold: 456
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '10/19/2020', UnitsSold: 456
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '11/19/2020', UnitsSold: 456
+    },
+    {
+        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+        Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '12/19/2020', UnitsSold: 456
+    }];
 
     public handleChange(event) {
         let isColumnChange = false
