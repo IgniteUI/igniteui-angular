@@ -174,7 +174,7 @@ export class IgxFilteringService implements OnDestroy {
 
         const newFilteringTree: FilteringExpressionsTree =
             this.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree,
-            filteringIgnoreCase, fieldFilterIndex);
+            filteringIgnoreCase, fieldFilterIndex, true);
 
         const eventArgs: IFilteringEventArgs = {
             owner: grid,
