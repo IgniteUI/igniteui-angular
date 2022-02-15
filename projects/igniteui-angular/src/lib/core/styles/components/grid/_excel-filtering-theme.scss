@@ -3,6 +3,7 @@
 @use '../../themes/schemas/dark' as *;
 @use '../button-group/button-group-component' as *;
 @use '../button-group/button-group-theme' as *;
+@use '../tree/tree-theme' as *;
 @use 'sass:map';
 
 ////
@@ -29,10 +30,17 @@
         compact: rem(4px)
     );
 
+    $tree-node-expander-size: rem(20px);
     $tree-node-height: (
         comfortable: rem(40px),
         cosy: rem(32px),
         compact: rem(24px)
+    );
+
+    $checkbox-indent: (
+        comfortable: calc(#{map.get($tree-node-indent, 'comfortable')} + #{$tree-node-expander-size} + #{rem(8px)}),
+        cosy: calc((#{map.get($tree-node-indent, 'cosy')} * 2) + #{$tree-node-expander-size}),
+        compact: calc((#{map.get($tree-node-indent, 'compact')} * 2) + #{$tree-node-expander-size}),
     );
 
     %grid-excel-filter {
@@ -43,10 +51,6 @@
         box-shadow: igx-elevation($elevation: 12);
         overflow: auto;
         min-width: rem(320px);
-
-        .igx-tree-node__wrapper {
-            padding: 0;
-        }
     }
 
     %grid-excel-filter--inline {
@@ -105,6 +109,22 @@
             $item-border-color: transparent,
             $item-selected-border-color: transparent
         ));
+
+
+        @include igx-tree(igx-tree-theme(
+            $background: igx-color($palette, 'surface'),
+            $background-selected: igx-color($palette, 'surface'),
+            $background-active:  igx-color($palette, 'surface'),
+            $background-active-selected: igx-color($palette, 'surface'),
+            $foreground: igx-contrast-color($palette, 'surface'),
+            $foreground-selected: igx-contrast-color($palette, 'surface'),
+            $foreground-active: igx-contrast-color($palette, 'surface'),
+            $foreground-active-selected: igx-contrast-color($palette, 'surface'),
+        ));
+
+        .igx-tree-node__wrapper {
+            padding: 0;
+        }
 
         igx-chips-area  {
             padding: rem(16px) rem(16px) 0 rem(16px);
@@ -285,14 +305,15 @@
         }
 
         %igx-excel-filter__tree {
+            background: igx-color($palette, 'surface');
             overflow-y: auto;
             margin: 0 rem(-16px);
-            padding: rem(8px) 0 0 0;
+            flex: 1;
 
             igx-icon {
-                width: rem(20px);
-                height: rem(20px);
-                font-size: rem(20px);
+                width: $tree-node-expander-size;
+                height: $tree-node-expander-size;
+                font-size: $tree-node-expander-size;
             }
 
             > igx-checkbox,
@@ -307,13 +328,26 @@
             }
         }
 
-        %igx-excel-filter__tree-checkboxes {
+        %igx-excel-filter__tree-alike {
+            background: igx-color($palette, 'surface');
             display: flex;
             flex-direction: column;
-            margin-bottom: rem(4px);
+            z-index: 1;
+        }
+
+        %igx-excel-filter__tree-alike-item {
+            display: flex;
+            align-items: center;
+            height: map.get($tree-node-height, 'comfortable');
+            background: igx-color($palette, 'surface');
+
+            &:hover,
+            &:focus {
+                background: igx-color($palette, 'grays', 200);
+            }
 
             > igx-checkbox {
-                margin-left: map.get($tree-node-indent, 'comfortable');
+                margin-left: map.get($checkbox-indent, 'comfortable');
             }
         }
     }
@@ -356,7 +390,6 @@
 
         %igx-excel-filter__tree {
             margin: 0 rem(-8px);
-            padding: rem(4px) 0;
 
             > igx-checkbox,
             .igx-tree-node__wrapper {
@@ -369,9 +402,11 @@
             }
         }
 
-        %igx-excel-filter__tree-checkboxes {
+        %igx-excel-filter__tree-alike-item {
+            height: map.get($tree-node-height, 'cosy');
+
             > igx-checkbox {
-                margin-left: map.get($tree-node-indent, 'cosy');
+                margin-left: map.get($checkbox-indent, 'cosy');
             }
         }
     }
@@ -423,7 +458,6 @@
 
         %igx-excel-filter__tree {
             margin: 0 rem(-4px);
-            padding: rem(2px) 0;
 
             igx-checkbox,
             .igx-tree-node__wrapper {
@@ -436,9 +470,11 @@
             }
         }
 
-        %igx-excel-filter__tree-checkboxes {
+        %igx-excel-filter__tree-alike-item {
+            height: map.get($tree-node-height, 'compact');
+
             > igx-checkbox {
-                margin-left: map.get($tree-node-indent, 'compact');
+                margin-left: map.get($checkbox-indent, 'compact');
             }
         }
     }
