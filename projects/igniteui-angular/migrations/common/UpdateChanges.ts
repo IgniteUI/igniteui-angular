@@ -471,7 +471,7 @@ export class UpdateChanges {
     }
 
     protected updateSassFunctionsAndMixins(entryPath: string) {
-        this.isNamespaced(entryPath);
+        const aliases = this.getAliases(entryPath);
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
         // const allowedEndCharacters = new RegExp('\(', 'g');
@@ -479,12 +479,18 @@ export class UpdateChanges {
             if (change.type !== ThemeType.Function && change.type !== ThemeType.Mixin) {
                 continue;
             }
-            const occurrences = findMatches(fileContent, change.name);
-            for (let i = occurrences.length - 1; i >= 0; i--) {
-                const endCharacters = fileContent[(occurrences[i] + change.name.length)] === '(';
-                if(endCharacters) {
-                    fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
-                    overwrite = true;
+            let occurrences = [];
+            for (let i = 0; i < aliases.length; i++) {
+                occurrences = occurrences.concat(findMatches(fileContent, aliases[i] + '.' + change.name));
+            }
+            // const  = findMatches(fileContent, change.name);
+            for (let j = 0; j < occurrences.length; j++) {
+                for (let i = occurrences.length - 1; i >= 0; i--) {
+                    const endCharacters = fileContent[(occurrences[i] + occurrences[i].length + change.name.length)] === '(';
+                    if(endCharacters) {
+                        fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
+                        overwrite = true;
+                    }
                 }
             }
         }
@@ -493,7 +499,7 @@ export class UpdateChanges {
         }
     }
 
-    protected isNamespaced(entryPath: string) {
+    protected getAliases(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
         const allUses = [
             `@use 'igniteui-angular/theming' as `,
@@ -507,10 +513,10 @@ export class UpdateChanges {
                 implementedNamespaces.push(allUses[i].substring(5, allUses[i].length - 4));
             }
         }
-        this.getAliasesList(implementedNamespaces, fileContent);
+        return this.formatAliases(implementedNamespaces, fileContent);
     }
 
-    protected getAliasesList(implementedNamespaces: string[], fileContent: string) {
+    protected formatAliases(implementedNamespaces: string[], fileContent: string) {
         let temp = [];
         let aliases = [];
         const forwardSlash = new RegExp('/', 'g');

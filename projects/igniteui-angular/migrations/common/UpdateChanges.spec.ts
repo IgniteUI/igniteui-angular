@@ -1079,7 +1079,7 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
 @use 'igniteui-angular/theme' as igniteui2;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 igx-elevations
-igx-elevations($igx-color, $color-2, $color-3) {
+igniteui1.igx-elevations($igx-color, $color-2, $color-3) {
     @return $result;
 }
 igx-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
@@ -1094,7 +1094,7 @@ igx-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: nul
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 @use 'igniteui-angular/themeing' as igniteui;
 igx-elevations
-elevations($igx-color, $color-2, $color-3) {
+igniteui1.elevations($igx-color, $color-2, $color-3) {
     @return $result;
 }
 contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
