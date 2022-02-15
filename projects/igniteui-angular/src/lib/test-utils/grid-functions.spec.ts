@@ -1221,7 +1221,6 @@ export class GridFunctions {
     }
 
     public static getColumnCells(fix, columnKey, gridCell = 'igx-grid-cell') {
-        debugger
         const allCells = fix.debugElement.queryAll(By.css(gridCell));
         return allCells.filter((cell) => cell.componentInstance.column.field === columnKey);
     }
