@@ -1383,7 +1383,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             groupColumn.children.filter(x => x.columnGroup && x.children.filter(y => !y.columnGroup).length === 0) :
             groupColumn.children.filter(x => x.columnGroup);
         childrenTotal.forEach(group => {
-            if (state) {
+            const newState = this.columnGroupStates.get(group.field) || state;
+            if (newState) {
                 group.headerTemplate = this.headerTemplate;
             } else {
                 group.headerTemplate = undefined;
@@ -1391,7 +1392,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
         if (!groupColumn.hidden && childrenSubgroups.length > 0) {
             childrenSubgroups.forEach(group => {
-                this.resolveToggle(group, state);
+                const newState = this.columnGroupStates.get(group.field) || state;
+                this.resolveToggle(group, newState);
             });
         }
     }
