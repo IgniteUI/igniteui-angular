@@ -468,80 +468,44 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 return;
             }
 
-            const columnValues = (this.column.dataType === GridColumnDataType.Date) ?
+            this.uniqueValues = (this.column.dataType === GridColumnDataType.Date) ?
                 colVals.map(value => {
                     const label = this.getFilterItemLabel(value);
                     return { label, value };
                 }) : colVals;
 
-            this.renderValues(columnValues);
+            this.renderValues();
             this.loadingEnd.emit();
         });
     }
 
     private shouldFormatValues() {
-        return this.column.formatter &&
-            (this.grid.filterStrategy instanceof FormattedValuesFilteringStrategy ||
-                this.grid.filterStrategy instanceof TreeGridFormattedValuesFilteringStrategy) &&
-            this.grid.filterStrategy.shouldApplyFormatter(this.column.field);
+        return this.column.formatter && this.grid.filterStrategy.shouldFormatFilterValues(this.column);
     }
 
     private renderColumnValuesFromData() {
         const expressionsTree = this.getColumnFilterExpressionsTree();
-        const promise = this.grid.filterStrategy.getColumnValues(this.column, expressionsTree);
+        const promise = this.grid.filterStrategy.getUniqueColumnValues(this.column, expressionsTree);
         promise.then((colVals) => {
             this.isHierarchical = colVals.length > 0 && colVals[0] instanceof HierarchicalColumnValue;
-            const shouldFormatValues = this.shouldFormatValues();
-            const columnValues = colVals.map(value => {
-                if (this.column.dataType === GridColumnDataType.Date){
-                    const label = this.getFilterItemLabel(value, true);
-                    return { label, value }
-                } else {
-                    return shouldFormatValues ? this.column.formatter(value) : value;
-                };
-            });
+            this.uniqueValues = colVals;
+            // .map((colVal: ColumnValue | HierarchicalColumnValue) => {
+            //     const value = colVal.value;
+            //     if (this.column.dataType === GridColumnDataType.Date){
+            //         const label = this.getFilterItemLabel(value, true);
+            //         return { label, value }
+            //     } else {
+            //         return shouldFormatValues ? this.column.formatter(value) : value;
+            //     };
+            // });
 
-            this.renderValues(columnValues);
+            this.renderValues();
         });
     }
 
-    private renderValues(columnValues: any[] | HierarchicalColumnValue[]) {
-        if (this.isHierarchical) {
-            this.uniqueValues = columnValues;
-        } else {
-            this.uniqueValues = this.generateUniqueValues(columnValues);
-        }
-
+    private renderValues() {
         this.filterValues = this.generateFilterValues(this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime);
         this.generateListData();
-    }
-
-    private generateUniqueValues(columnValues: any[]) {
-        let uniqueValues;
-
-        if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase) {
-            const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
-                .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]), new Map());
-            uniqueValues = Array.from(filteredUniqueValues.values());
-        } else if (this.column.dataType === GridColumnDataType.DateTime) {
-            uniqueValues = Array.from(new Set(columnValues.map(v => v?.toLocaleString())));
-            uniqueValues.forEach((d, i) => uniqueValues[i] = d ? new Date(d) : d);
-        } else if (this.column.dataType === GridColumnDataType.Time) {
-            uniqueValues = Array.from(new Set(columnValues.map(v => {
-                if (v) {
-                    v = new Date(v);
-                    return new Date().setHours(v.getHours(), v.getMinutes(), v.getSeconds());
-                } else {
-                    return v;
-                }
-            })));
-            uniqueValues.forEach((d, i) => uniqueValues[i] = d ? new Date(d) : d);
-        } else {
-            uniqueValues = this.column.dataType === GridColumnDataType.Date ?
-                uniqueDates(columnValues) : Array.from(new Set(columnValues));
-        }
-
-        return uniqueValues;
     }
 
     private generateFilterValues(isDateColumn: boolean = false) {

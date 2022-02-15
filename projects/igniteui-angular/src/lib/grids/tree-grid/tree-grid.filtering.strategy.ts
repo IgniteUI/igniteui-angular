@@ -11,10 +11,15 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return this.filterImpl(data, expressionsTree, advancedExpressionsTree, undefined, grid);
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
+        const column = grid?.getColumnByName(fieldName);
         const hierarchicalRecord = rec as ITreeGridRecord;
         let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
-        value = value && isDate ? parseDate(value) : value;
+
+        value = column?.formatter && this.shouldFormatFilterValues(column) ?
+            column.formatter(value) :
+            value && (isDate || isTime) ? parseDate(value) : value;
+
         return value;
     }
 
@@ -60,18 +65,6 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
     /** @hidden */
     public shouldApplyFormatter(fieldName: string): boolean {
         return !this.fields || this.fields.length === 0 || this.fields.some(f => f === fieldName);
-    }
-
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
-        const column = grid.getColumnByName(fieldName);
-        const hierarchicalRecord = rec as ITreeGridRecord;
-        let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
-
-        value = column.formatter && this.shouldApplyFormatter(fieldName) ?
-            column.formatter(value) :
-            value && (isDate || isTime) ? parseDate(value) : value;
-
-        return value;
     }
 }
 
@@ -126,12 +119,12 @@ export class HierarchicalFilteringStrategy extends TreeGridFilteringStrategy {
         super();
     }
 
-    public override getColumnValues(
+    public override getUniqueColumnValues(
             column: ColumnType,
             tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]> {
 
         if (this.hierarchicalFilterFields.indexOf(column.field) < 0) {
-            return super.getColumnValues(column, tree);
+            return super.getUniqueColumnValues(column, tree);
         }
 
         this.processedData = [];

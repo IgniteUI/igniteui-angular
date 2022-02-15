@@ -1,8 +1,9 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { resolveNestedPath, parseDate } from '../core/utils';
+import { resolveNestedPath, parseDate, uniqueDates } from '../core/utils';
 import { ColumnType, GridType, PivotGridType } from '../grids/common/grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
+import { GridColumnDataType } from './data-util';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
@@ -11,6 +12,10 @@ const TimeType = 'time';
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridType): any[];
+    getUniqueColumnValues(
+        column: ColumnType,
+        tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]>;
+    shouldFormatFilterValues(column: ColumnType): boolean;
 }
 
 export class HierarchicalColumnValue {
@@ -18,27 +23,15 @@ export class HierarchicalColumnValue {
     public children?: HierarchicalColumnValue[];
 }
 
-export class NoopFilteringStrategy implements IFilteringStrategy {
-    private static _instance: NoopFilteringStrategy = null;
-
-    private constructor() {  }
-
-    public static instance() {
-        return this._instance || (this._instance = new NoopFilteringStrategy());
-    }
-
-    public filter(data: any[], _: IFilteringExpressionsTree, __?: IFilteringExpressionsTree): any[] {
-        return data;
-    }
-}
-
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
+    // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
         const cond = expr.condition;
         const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
+    // protected
     public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType): boolean {
         if (expressions) {
             if (expressions instanceof FilteringExpressionsTree) {
@@ -77,14 +70,55 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         return true;
     }
 
-    public getColumnValues(
+    public getUniqueColumnValues(
             column: ColumnType,
             tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]> {
         const data = column.grid.gridAPI.filterDataByExpressions(tree);
         const columnField = column.field;
-        let columnValues;
-        columnValues = data.map(record => resolveNestedPath(record, columnField));
-        return Promise.resolve(columnValues);
+        const columnValues = data.map(record => {
+            let value = resolveNestedPath(record, columnField);
+
+            value = column.formatter && this.shouldFormatFilterValues(column) ?
+                column.formatter(value) :
+                value;
+
+            return value;
+        });
+        const uniqueValues = this.generateUniqueValues(column, columnValues);
+
+        return Promise.resolve(uniqueValues);
+    }
+
+    private generateUniqueValues(column: ColumnType, columnValues: any[]) {
+        let uniqueValues: any[];
+
+        if (column.dataType === GridColumnDataType.String && column.filteringIgnoreCase) {
+            const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
+                .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]), new Map());
+            uniqueValues = Array.from(filteredUniqueValues.values());
+        } else if (column.dataType === GridColumnDataType.DateTime) {
+            uniqueValues = Array.from(new Set(columnValues.map(v => v?.toLocaleString())));
+            uniqueValues.forEach((d, i) => uniqueValues[i] = d ? new Date(d) : d);
+        } else if (column.dataType === GridColumnDataType.Time) {
+            uniqueValues = Array.from(new Set(columnValues.map(v => {
+                if (v) {
+                    v = new Date(v);
+                    return new Date().setHours(v.getHours(), v.getMinutes(), v.getSeconds());
+                } else {
+                    return v;
+                }
+            })));
+            uniqueValues.forEach((d, i) => uniqueValues[i] = d ? new Date(d) : d);
+        } else {
+            uniqueValues = column.dataType === GridColumnDataType.Date ?
+                uniqueDates(columnValues) : Array.from(new Set(columnValues));
+        }
+
+        return uniqueValues;
+    }
+
+    public shouldFormatFilterValues(_column: ColumnType): boolean {
+        return false;
     }
 
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
@@ -92,6 +126,22 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
     protected abstract getFieldValue(rec: any, fieldName: string, isDate?: boolean, isTime?: boolean, grid?: GridType): any;
 }
+
+export class NoopFilteringStrategy extends BaseFilteringStrategy {
+    protected getFieldValue(rec: any, _fieldName: string) {
+        return rec;
+    }
+    private static _instance: NoopFilteringStrategy = null;
+
+    public static instance() {
+        return this._instance || (this._instance = new NoopFilteringStrategy());
+    }
+
+    public filter(data: any[], _: IFilteringExpressionsTree, __?: IFilteringExpressionsTree): any[] {
+        return data;
+    }
+}
+
 
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instance: FilteringStrategy = null;
@@ -123,9 +173,14 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         return res;
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
+        const column = grid?.getColumnByName(fieldName);
         let value = resolveNestedPath(rec, fieldName);
-        value = value && (isDate || isTime) ? parseDate(value) : value;
+
+        value = column?.formatter && this.shouldFormatFilterValues(column) ?
+            column.formatter(value, rec) :
+            value && (isDate || isTime) ? parseDate(value) : value;
+
         return value;
     }
 }
@@ -140,18 +195,7 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
         super();
     }
 
-    /** @hidden */
-    public shouldApplyFormatter(fieldName: string): boolean {
-        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === fieldName);
-    }
-
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
-        const column = grid.getColumnByName(fieldName);
-        let value = resolveNestedPath(rec, fieldName);
-
-        value = column.formatter && this.shouldApplyFormatter(fieldName) ?
-            column.formatter(value, rec) : value && (isDate || isTime) ? parseDate(value) : value;
-
-        return value;
+    public shouldFormatFilterValues(column: ColumnType): boolean {
+        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === column.field);
     }
 }
