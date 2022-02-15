@@ -448,8 +448,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private populateColumnData() {
+        this.cdr.detectChanges();
         if (this.grid.uniqueColumnValuesStrategy) {
-            this.cdr.detectChanges();
             this.renderColumnValuesRemotely();
         } else {
             this.renderColumnValuesFromData();
