@@ -634,13 +634,15 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
         const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
 
-        const lastOperand = gridExpressionsTree.filteringOperands[gridExpressionsTree.filteringOperands.length - 1];
-
-        gridExpressionsTree.filteringOperands.forEach((operand) => {
-            if (lastOperand.fieldName !== this.column.field || lastOperand !== operand) {
-                expressionsTree.filteringOperands.push(operand);
+        for (const operand of gridExpressionsTree.filteringOperands) {
+            if (operand instanceof FilteringExpressionsTree) {
+                const columnExprTree = operand as FilteringExpressionsTree;
+                if (columnExprTree.fieldName === this.column.field) {
+                    continue;
+                }
             }
-        });
+            expressionsTree.filteringOperands.push(operand);
+        }
 
         return expressionsTree;
     }
