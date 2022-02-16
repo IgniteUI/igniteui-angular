@@ -493,7 +493,9 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             const columnValues = colVals.map(colVal => {
                 if (this.column.dataType === GridColumnDataType.Date) {
                     const label = this.getFilterItemLabel(colVal, true);
-                    colVal.children = this.setLabelForHierarchicalDates(colVal.children);
+                    if (this.isHierarchical && colVal.children) {
+                        colVal.children = this.setLabelForHierarchicalDates(colVal.children);
+                    }
                     return { label, value: colVal }
                 } else {
                     return shouldFormatValues ? this.column.formatter(colVal) : colVal;
