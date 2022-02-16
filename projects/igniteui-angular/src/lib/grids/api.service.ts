@@ -401,7 +401,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
             return;
         }
 
-        const isHierarchicalGrid = grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = grid.theadRow.isHierarchicalGrid;
 
         if (isHierarchicalGrid) {
             (grid as any).hgridAPI.endEditAll();
