@@ -19,13 +19,12 @@ import {
     ViewRef
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { parseDate, uniqueDates, PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
+import { parseDate, PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
-import { FormattedValuesFilteringStrategy, HierarchicalColumnValue } from '../../../data-operations/filtering-strategy';
-import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
+import { HierarchicalColumnValue } from '../../../data-operations/filtering-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
@@ -483,16 +482,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         promise.then((colVals) => {
             this.isHierarchical = colVals.length > 0 && colVals[0] instanceof HierarchicalColumnValue;
             this.uniqueValues = colVals;
-            // .map((colVal: ColumnValue | HierarchicalColumnValue) => {
-            //     const value = colVal.value;
-            //     if (this.column.dataType === GridColumnDataType.Date){
-            //         const label = this.getFilterItemLabel(value, true);
-            //         return { label, value }
-            //     } else {
-            //         return shouldFormatValues ? this.column.formatter(value) : value;
-            //     };
-            // });
-
             this.renderValues();
             this.sortingChanged.emit();
         });
