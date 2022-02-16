@@ -1101,6 +1101,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             const fieldColumn = parentCols.filter(x => x.header === col.header && !x.columnGroup)[0];
             const groupColumn = parentCols.filter(x => x.header === col.header && x.columnGroup)[0];
             this.resolveToggle(groupColumn, newState);
+            if (!fieldColumn) return;
             if (newState) {
                 fieldColumn.headerTemplate = this.headerTemplate;
             } else {
