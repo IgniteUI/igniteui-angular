@@ -61,7 +61,8 @@ export class PivotUtil {
             const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
                 defaultExpand :
                 expansionStates.get(expansionRowKey);
-            if ((isExpanded || !dimension.childLevel) && recordsData) {
+            const shouldExpand = isExpanded || !dimension.childLevel || !rec.dimensionValues.get(dimension.memberName);
+            if (shouldExpand && recordsData) {
                 if (dimension.childLevel) {
                     this.flattenGroups(recordsData, dimension.childLevel, expansionStates, defaultExpand, dimension, rec);
                 } else {
