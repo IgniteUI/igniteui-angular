@@ -132,12 +132,9 @@ export class HierarchicalFilteringStrategy extends TreeGridFilteringStrategy {
         const columnField = column.field;
         let columnValues = [];
         columnValues = data.map(record => {
-            if (this.processedData.indexOf(record) < 0) { // TODO: add check for DATE
+            if (this.processedData.indexOf(record) < 0) {
                 let hierarchicalItem = new HierarchicalColumnValue();
                 hierarchicalItem.value =  resolveNestedPath(record, columnField);
-                // if (shouldFormatValues) {
-                //     value = this.column.formatter(value, record);
-                // }
                 hierarchicalItem.children = this.getChildren(record, columnField)
                 return hierarchicalItem;
             }
@@ -158,15 +155,10 @@ export class HierarchicalFilteringStrategy extends TreeGridFilteringStrategy {
                 if (this.processedData.indexOf(child) < 0) {
                     let hierarchicalItem: HierarchicalColumnValue;
                     hierarchicalItem = { value: resolveNestedPath(child, columnField) };
-                    // if (shouldFormatValues) {
-                    //     value = this.column.formatter(value, record);
-                    // }
                     hierarchicalItem.children = this.getChildren(child, columnField)
                     childrenValues.push(hierarchicalItem);
                 }
             });
-        } else {
-            // TODO: unique values on last level
         }
 
         return childrenValues;

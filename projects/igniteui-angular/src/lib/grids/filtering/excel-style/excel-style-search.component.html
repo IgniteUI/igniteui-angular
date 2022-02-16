@@ -46,27 +46,28 @@
 </igx-list>
 
 <div class="igx-excel-filter__tree" *ngIf="isHierarchical()">
-    <div class="igx-excel-filter__tree-checkboxes">
-        <igx-checkbox #selectAllCheckbox
-                      [value]="selectAllItem"
-                      [tabindex]="-1"
-                      [checked]="selectAllItem?.isSelected"
-                      [disableRipple]="true"
-                      [indeterminate]="selectAllItem?.indeterminate"
-                      [disableTransitions]="true"
-                      (change)="onSelectAllCheckboxChange($event)">
-            {{ selectAllItem.label }}
-        </igx-checkbox>
+    <div class="igx-excel-filter__tree-alike">
+        <div class="igx-excel-filter__tree-alike-item">
+            <igx-checkbox #selectAllCheckbox
+                          [value]="selectAllItem"
+                          [checked]="selectAllItem?.isSelected"
+                          [disableRipple]="true"
+                          [indeterminate]="selectAllItem?.indeterminate"
+                          [disableTransitions]="true"
+                          (change)="onSelectAllCheckboxChange($event)">
+                {{ selectAllItem.label }}
+            </igx-checkbox>
+        </div>
+        <div class="igx-excel-filter__tree-alike-item" *ngIf="searchValue">
+            <igx-checkbox #addToCurrentFilterCheckbox
+                          [value]="addToCurrentFilterItem"
+                          [checked]="addToCurrentFilterItem.isSelected"
+                          [disableRipple]="true"
+                          [disableTransitions]="true">
 
-        <igx-checkbox #addToCurrentFilterCheckbox *ngIf="searchValue"
-                      [value]="addToCurrentFilterItem"
-                      [tabindex]="-1"
-                      [checked]="addToCurrentFilterItem.isSelected"
-                      [disableRipple]="true"
-                      [disableTransitions]="true">
-
-            {{ addToCurrentFilterItem.label }}
-        </igx-checkbox>
+                {{ addToCurrentFilterItem.label }}
+            </igx-checkbox>
+        </div>
     </div>
 
     <igx-tree #tree [displayDensity]="esf.displayDensity" selection="Cascading"  (nodeSelection)="onNodeSelectionChange($event)">

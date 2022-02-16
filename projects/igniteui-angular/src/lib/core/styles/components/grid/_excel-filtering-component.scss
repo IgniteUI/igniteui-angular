@@ -21,8 +21,12 @@
             @extend %igx-excel-filter__tree !optional;
         }
 
-        @include e(tree-checkboxes) {
-            @extend %igx-excel-filter__tree-checkboxes !optional;
+        @include e(tree-alike) {
+            @extend %igx-excel-filter__tree-alike !optional;
+        }
+
+        @include e(tree-alike-item) {
+            @extend %igx-excel-filter__tree-alike-item !optional;
         }
 
         @include e(menu) {
