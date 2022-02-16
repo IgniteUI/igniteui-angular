@@ -637,7 +637,6 @@ export interface PivotGridType extends GridType {
     setupColumns(): void;
     toggleRow(rowID: any): void;
     resolveDataTypes(field: any): GridColumnDataType;
-    resolveRowDimensionWidth(dim: IPivotDimension): number;
     moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index? : number);
     getDimensionsByType(dimension: PivotDimensionType);
     toggleDimension(dimension: IPivotDimension);
