@@ -89,7 +89,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         return Promise.resolve(uniqueValues);
     }
 
-    private generateUniqueValues(column: ColumnType, columnValues: any[]) {
+    protected generateUniqueValues(column: ColumnType, columnValues: any[]) {
         let uniqueValues: any[];
 
         if (column.dataType === GridColumnDataType.String && column.filteringIgnoreCase) {
