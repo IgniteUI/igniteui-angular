@@ -1081,6 +1081,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public toggleRowGroup(col: IgxColumnComponent, newState: boolean) {
+        if (!col) return;
         if (this.hasMultipleValues) {
             const parentCols = col.parent ? col.parent.children.toArray() : this.columns.filter(x => x.level === 0);
             const siblingCol = parentCols.filter(x => x.header === col.header && x !== col)[0];
@@ -1400,6 +1401,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
+        if (!groupColumn) return;
         groupColumn.hidden = state;
         this.columnGroupStates.set(groupColumn.field, state);
         const childrenTotal = this.hasMultipleValues ?
