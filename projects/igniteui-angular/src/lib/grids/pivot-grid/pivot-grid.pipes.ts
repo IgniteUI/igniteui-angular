@@ -103,6 +103,8 @@ export class IgxPivotAutoTransform implements PipeTransform {
                     pivotRec.aggregationValues.set(key, rec[key]);
                 }
             }
+            const flattened = PivotUtil.flatten(config.rows);
+            pivotRec.dimensions.sort((x,y) => flattened.indexOf(x) - flattened.indexOf(y));
             result.push(pivotRec);
         }
         return result;
