@@ -483,12 +483,12 @@ export class UpdateChanges {
             for (let i = 0; i < aliases.length; i++) {
                 occurrences = occurrences.concat(findMatches(fileContent, aliases[i] + '.' + change.name));
             }
-            // const  = findMatches(fileContent, change.name);
-            for (let j = 0; j < occurrences.length; j++) {
+            for (let j = 0; j < aliases.length; j++) {
+                let aliasLength = aliases[j].length + 1;
                 for (let i = occurrences.length - 1; i >= 0; i--) {
-                    const endCharacters = fileContent[(occurrences[i] + occurrences[i].length + change.name.length)] === '(';
+                    const endCharacters = fileContent[(occurrences[i] + aliasLength + change.name.length)] === '(';
                     if(endCharacters) {
-                        fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
+                        fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
                         overwrite = true;
                     }
                 }
