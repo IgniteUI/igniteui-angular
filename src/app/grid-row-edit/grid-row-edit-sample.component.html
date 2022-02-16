@@ -1,23 +1,26 @@
 <div class="sample-content">
     <article class="grid-row-edit-wrapper">
         <h4>Grid with rowEditing and without transactions</h4>
-        <igx-grid #gridRowEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
-            <igx-column width="100px">
-                <ng-template igxCell let-cell="cell" let-val>
-                    <button (click)="deleteRow($event, 'gridRowEdit', cell.id.rowID)">Delete</button>
-                </ng-template>
-            </igx-column>
-            <igx-column field="ProductID" width="60px" header="Product ID"></igx-column>
-            <igx-column field="ReorderLevel" width="100px" defaultWidth="150px" header="ReorderLever" [dataType]="'number'" [editable]="true"></igx-column>
-            <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" [editable]="true"></igx-column>
-            <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" [editable]="true">
-                <ng-template igxCellEditor let-cell="cell">
-                    <input name="units" [igxFocus]="true" [(ngModel)]="cell.editValue" style="color: black; width: 30px;" />
-                </ng-template>
-            </igx-column>
-            <igx-column width="100px" field="OrderDate" [dataType]="'date'" [editable]="true"></igx-column>
-            <igx-column width="100px" field="Discontinued" header="Discontinued" [dataType]="'boolean'" [editable]="true"></igx-column>
-        </igx-grid>
+        <form [formGroup]="gridForm" (ngSubmit)="onSubmit()">
+            <igx-grid #gridRowEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+                <igx-column width="100px">
+                    <ng-template igxCell let-cell="cell" let-val>
+                        <button (click)="deleteRow($event, 'gridRowEdit', cell.id.rowID)">Delete</button>
+                    </ng-template>
+                </igx-column>
+                <igx-column formControlName="ProductID" field="ProductID" width="60px" header="Product ID"></igx-column>
+                <igx-column formControlName="ReorderLevel" field="ReorderLevel" width="100px" defaultWidth="150px" header="ReorderLever" [dataType]="'number'" [editable]="true"></igx-column>
+                <igx-column formControlName="ProductName" width="100px" field="ProductName" header="ProductName" [dataType]="'string'" [editable]="true"></igx-column>
+                <igx-column formControlName="UnitsInStock" width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" [editable]="true">
+                    <ng-template igxCellEditor let-cell="cell">
+                        <input name="units" [igxFocus]="true" [(ngModel)]="cell.editValue" style="color: black; width: 30px;" />
+                    </ng-template>
+                </igx-column>
+                <igx-column width="100px" field="OrderDate" [dataType]="'date'" [editable]="true"></igx-column>
+                <igx-column width="100px" field="Discontinued" header="Discontinued" [dataType]="'boolean'" [editable]="true"></igx-column>
+            </igx-grid>
+            <button type="submit">Submit</button>
+        </form>
     </article>
     <article class="grid-row-edit-wrapper">
         <h4>Grid with rowEditing and with transactions</h4>

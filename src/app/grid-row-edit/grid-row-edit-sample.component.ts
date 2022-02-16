@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { data } from '../shared/data';
 
 import { IgxGridComponent, IgxToggleDirective, GridSelectionMode } from 'igniteui-angular';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
     selector: 'app-grid-row-edit',
@@ -19,6 +20,18 @@ export class GridRowEditSampleComponent {
     private grid: IgxGridComponent;
     @ViewChild('gridTransaction', { read: IgxGridComponent, static: true })
     private gridTransaction: IgxGridComponent;
+
+    public gridForm = this.fb.group({
+        firstName: [''],
+        lastName: [''],
+        address: this.fb.group({
+          street: [''],
+          city: [''],
+          state: [''],
+          zip: ['']
+        }),
+    });
+
 
     public console = window.console;
     public pinFlag = false;
@@ -71,7 +84,7 @@ export class GridRowEditSampleComponent {
     private cssBig = `font-size: 16px; font-weight: 800;`;
     private addProductId: number;
 
-    constructor() {
+    constructor(private fb: FormBuilder) {
         const enhancedData = data.map((e) => Object.assign(e, {
             UnitPrice2: this.getRandomInt(10, 1000),
             UnitsInStock2: this.getRandomInt(1, 100),
@@ -270,6 +283,10 @@ export class GridRowEditSampleComponent {
             OrderDate2: new Date(this.getRandomInt(2000, 2050), this.getRandomInt(0, 11), this.getRandomInt(1, 25))
                 .toISOString().slice(0, 10)
         };
+    }
+
+    public onSubmit() {
+        console.log('submitted');
     }
 }
 
