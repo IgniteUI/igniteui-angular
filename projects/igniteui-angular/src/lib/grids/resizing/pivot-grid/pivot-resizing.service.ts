@@ -29,17 +29,16 @@ export class IgxPivotColumnResizingService extends IgxColumnResizingService {
         const currentColWidth = parseFloat(column.width);
         const colMinWidth = column.minWidthPx;
         const colMaxWidth = column.maxWidthPx;
+        let newWidth = currentColWidth;
         if (currentColWidth + diff < colMinWidth) {
-            rowDim.width = colMinWidth + 'px';
+            newWidth = colMinWidth;
         } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
-            rowDim.width = colMaxWidth + 'px';
+            newWidth = colMaxWidth;
         } else {
-            rowDim.width = (currentColWidth + diff) + 'px';
+            newWidth = (currentColWidth + diff);
         }
 
-        // Notify the grid to reflow, to update if horizontal scrollbar needs to be rendered/removed.
-        this.rowHeaderGroup.grid.pipeTrigger++;
-        this.rowHeaderGroup.grid.notifyChanges(true);
+        this.rowHeaderGroup.grid.resizeRowDimensionPixels(rowDim, newWidth);
     }
 
     protected _handlePercentageResize(diff: number, column: ColumnType) { }

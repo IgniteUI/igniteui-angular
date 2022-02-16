@@ -139,7 +139,7 @@
                                              [dimension]='rowData.dimensions[dimIndex]'
                                              [rootDimension]='dim'
                                              [rowIndex]='rowIndex' [rowData]='rowData'
-                                             [density]="displayDensity" [width]="resolveRowDimensionWidth(dim)">
+                                             [density]="displayDensity" [width]="rowDimensionWidthToPixels(dim)">
             </igx-pivot-row-dimension-content>
         </ng-template>
     </div>
@@ -150,7 +150,7 @@
             [dimension]='emptyRowDimension'
             [rootDimension]='emptyRowDimension'
             [rowIndex]='0' [rowData]='dataView[0]'
-            [density]="displayDensity" [width]="resolveRowDimensionWidth(emptyRowDimension)">
+            [density]="displayDensity" [width]="rowDimensionWidthToPixels(emptyRowDimension)">
         </igx-pivot-row-dimension-content>
     </div>
 </ng-template>

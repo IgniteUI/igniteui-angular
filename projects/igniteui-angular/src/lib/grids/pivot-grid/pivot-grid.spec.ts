@@ -1120,18 +1120,18 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect((rowChip1.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
             });
 
-            it('should auto-size row dimension via the API.', () => {
-                const pivotGrid = fixture.componentInstance.pivotGrid;
-                const rowDimension = pivotGrid.pivotConfiguration.rows[0];
-                expect(rowDimension.width).toBeUndefined();
-                expect(pivotGrid.resolveRowDimensionWidth(rowDimension)).toBe(200);
-                pivotGrid.autoSizeRowDimension(rowDimension);
-                fixture.detectChanges();
-                expect(rowDimension.width).toBe('186px');
-                expect(pivotGrid.resolveRowDimensionWidth(rowDimension)).toBe(186);
-            });
+        it('should auto-size row dimension via the API.', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            const rowDimension = pivotGrid.pivotConfiguration.rows[0];
+            expect(rowDimension.width).toBeUndefined();
+            expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
+            pivotGrid.autoSizeRowDimension(rowDimension);
+            fixture.detectChanges();
+            expect(rowDimension.width).toBe('186px');
+            expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(186);
         });
     });
+});
 
     describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         let fixture;

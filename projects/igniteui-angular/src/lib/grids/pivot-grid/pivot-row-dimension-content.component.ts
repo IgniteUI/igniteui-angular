@@ -103,7 +103,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         }
         if (changes.width && this.rowDimensionData) {
             const data = this.rowDimensionData;
-            data.column.width = this.grid.resolveRowDimensionWidth(this.rootDimension) + 'px';
+            data.column.width = this.grid.rowDimensionWidthToPixels(this.rootDimension) + 'px';
         }
     }
 
@@ -165,8 +165,8 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         const ref = this.viewRef.createComponent(IgxColumnComponent);
         ref.instance.field = field;
         ref.instance.header = header;
+        ref.instance.width = this.grid.rowDimensionWidthToPixels(this.rootDimension) + 'px';
         ref.instance.resizable = this.grid.rowDimensionResizing;
-        ref.instance.width = this.grid.resolveRowDimensionWidth(this.rootDimension) + 'px';
         (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows.length;
         if (dim.childLevel) {
             ref.instance.headerTemplate = this.headerTemplate;
