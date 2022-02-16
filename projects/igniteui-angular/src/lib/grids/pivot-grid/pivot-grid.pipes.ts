@@ -6,7 +6,7 @@ import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
 import {
     DefaultPivotGridRecordSortingStrategy,
-    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
+    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
 } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
