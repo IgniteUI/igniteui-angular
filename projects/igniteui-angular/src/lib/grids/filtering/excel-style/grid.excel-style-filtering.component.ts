@@ -462,8 +462,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
         const prevColumn = this.column;
         this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (colVals: any[]) => {
-            // check for 'value' property - if 'value' then item is IHierarchicalItem
-
             if (!this.column || this.column !== prevColumn) {
                 return;
             }
@@ -492,12 +490,13 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         promise.then((colVals) => {
             this.isHierarchical = colVals.length > 0 && colVals[0] instanceof HierarchicalColumnValue;
             const shouldFormatValues = this.shouldFormatValues();
-            const columnValues = colVals.map(value => {
-                if (this.column.dataType === GridColumnDataType.Date){
-                    const label = this.getFilterItemLabel(value, true);
-                    return { label, value }
+            const columnValues = colVals.map(colVal => {
+                if (this.column.dataType === GridColumnDataType.Date) {
+                    const label = this.getFilterItemLabel(colVal, true);
+                    colVal.children = this.setLabelForHierarchicalDates(colVal.children);
+                    return { label, value: colVal }
                 } else {
-                    return shouldFormatValues ? this.column.formatter(value) : value;
+                    return shouldFormatValues ? this.column.formatter(colVal) : colVal;
                 };
             });
 
@@ -505,15 +504,53 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         });
     }
 
+    private setLabelForHierarchicalDates(colVals: HierarchicalColumnValue[]) {
+        const labeledVals = colVals.map((colVal) => {
+            if (colVal.children?.length > 0) {
+                colVal.children = this.setLabelForHierarchicalDates(colVal.children);
+            }
+            // const label = colVal.value ? this.getFilterItemLabel(colVal, true) : this.grid.resourceStrings.igx_grid_excel_blanks;
+            const label = this.getFilterItemLabel(colVal, true);
+            return { label, value: colVal };
+        });
+
+        return labeledVals;
+    }
+
     private renderValues(columnValues: any[] | HierarchicalColumnValue[]) {
         if (this.isHierarchical) {
-            this.uniqueValues = columnValues;
+            this.uniqueValues = this.generateHierarchicalUniqueValues(columnValues);
         } else {
             this.uniqueValues = this.generateUniqueValues(columnValues);
         }
 
         this.filterValues = this.generateFilterValues(this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime);
         this.generateListData();
+    }
+
+    private generateHierarchicalUniqueValues (columnValues: any[]) {
+        if (columnValues.some(colVal => (
+                (colVal.children && colVal.children.length > 0) || 
+                (colVal.value.children && colVal.value.children.length > 0)
+                ))) {
+            columnValues.forEach(colVal => {
+                if (colVal.children && colVal.children.length > 0) {
+                    colVal.children = this.generateHierarchicalUniqueValues(colVal.children);
+                } else if (colVal.value.children && colVal.value.children.length > 0) {
+                    colVal.value.children = this.generateHierarchicalUniqueValues(colVal.value.children);
+                }
+            });
+        } else {
+            columnValues = columnValues.map(colVal => colVal.value);
+            const uniqueValues = this.generateUniqueValues(columnValues);
+            columnValues = uniqueValues.map(value => {
+                const hierarchicalColumnValue = new HierarchicalColumnValue();
+                hierarchicalColumnValue.value = value;
+                return hierarchicalColumnValue;
+            })
+        }
+
+        return columnValues;
     }
 
     private generateUniqueValues(columnValues: any[]) {
@@ -599,8 +636,9 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 return resolvedValue;
             });
 
-        if (this.containsNullOrEmpty) {
-            this.addBlanksItem(shouldUpdateSelection);
+        if (!this.isHierarchical && this.containsNullOrEmpty) {
+            const blanksItem = this.generateBlanksItem(shouldUpdateSelection);
+            this.listData.unshift(blanksItem);
         }
 
         if (this.listData.length > 0) {
@@ -705,7 +743,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 filterListItem.value = this.getFilterItemValue(element);
                 filterListItem.label = this.getFilterItemLabel(element, applyFormatter);
                 filterListItem.indeterminate = false;
-                filterListItem.children = this.generateFilterListItems(element.children, shouldUpdateSelection);
+                filterListItem.children = this.generateFilterListItems(element.children ?? element.value?.children, shouldUpdateSelection);
                 filterListItems.push(filterListItem);
             }
         });
@@ -724,7 +762,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.listData.unshift(selectAll);
     }
 
-    private addBlanksItem(shouldUpdateSelection) {
+    private generateBlanksItem(shouldUpdateSelection) {
         const blanks = new FilterListItem();
         if (this.column.filteringExpressionsTree) {
             if (shouldUpdateSelection) {
@@ -745,16 +783,17 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         blanks.indeterminate = false;
         blanks.isSpecial = true;
         blanks.isBlanks = true;
-        this.listData.unshift(blanks);
+
+        return blanks;
     }
 
     private getFilterItemLabel(element: any, applyFormatter: boolean = true, data?: any) {
-        if (element?.value) {
-            element = element.value;
-        }
-
         if (element?.label) {
             return element.label;
+        }
+        
+        if (this.isHierarchical) {
+            element = element.value;
         }
 
         if (this.column.formatter) {
