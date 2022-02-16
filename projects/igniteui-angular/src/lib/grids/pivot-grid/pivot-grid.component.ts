@@ -406,7 +406,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    private _emptyRowDimension: IPivotDimension = { memberName: '', enabled: true };
+    private _emptyRowDimension: IPivotDimension = { memberName: '', enabled: true, level: 0 };
     public get emptyRowDimension(): IPivotDimension {
         return this._emptyRowDimension;
     }
@@ -566,7 +566,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 let currDim = dim;
                 let shouldBreak = false;
                 do {
-                    const key = PivotUtil.getRecordKey(record, currDim, prev, this.pivotKeys);
+                    const key = PivotUtil.getRecordKey(record, currDim);
                     if (this.selectionService.isPivotRowSelected(key) && !selectedRowIds.find(x => x === record)) {
                         selectedRowIds.push(record);
                         shouldBreak = true;

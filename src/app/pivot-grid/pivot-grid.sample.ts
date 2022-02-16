@@ -111,11 +111,16 @@ export class PivotGridSampleComponent {
             this.dimensions[1]
         ],
         rows: [
-            this.dimensions[2],
             {
                 memberName: 'City',
                 enabled: true,
             },
+            this.dimensions[2],
+            {
+                memberName: 'SellerName',
+                enabled: true,
+                //filter: this.filterExpTree
+            }
         ],
         values: [
             {
@@ -163,11 +168,7 @@ export class PivotGridSampleComponent {
             }
         ],
         filters: [
-            {
-                memberName: 'SellerName',
-                enabled: true,
-                //filter: this.filterExpTree
-            }
+           
         ]
     };
 
