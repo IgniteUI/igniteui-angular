@@ -67,6 +67,13 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     });
   }
 
+  const _import = new RegExp(`@import ('|")~igniteui-angular\/lib\/core\/styles\/themes\/index('|");`, 'g');
+  for (const path of update.sassFiles) {
+    const fileContent = host.read(path).toString();
+    const replacedString = fileContent.replace(_import, `@use "igniteui-angular/theming" as igniteui;`);
+    host.overwrite(path, replacedString);
+  }
   applyChanges();
   changes.clear();
+
 };

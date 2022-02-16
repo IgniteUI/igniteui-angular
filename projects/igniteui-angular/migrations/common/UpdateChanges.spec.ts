@@ -1085,33 +1085,29 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
         const fileContent =
 `
 @use 'igniteui-angular/theming' as igniteui1;
-@use 'igniteui-angular/theme' as igniteui2;
+@use 'igniteui-angular/theme' as *;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 igx-elevations
 igniteui1.igx-elevations($igx-color, $color-2, $color-3) {
     @return $result;
 }
-igniteui2.$igx-light-material-palette : $some-variable,
-$igx-ala-bala : $some-variable,
-igx-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
-    @return igx-color($palette, $color, #{$variant}-contrast, $opacity);
-}
+igniteui2.$igx-light-material-palette : $some-variable;
+$igx-ala-bala : $some-variable;
+igx-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null);
 `;
         appTree.create('test.component.scss', fileContent);
         const expectedFileContent =
 `
 @use 'igniteui-angular/theming' as igniteui1;
-@use 'igniteui-angular/theme' as igniteui2;
+@use 'igniteui-angular/theme' as *;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 igx-elevations
 igniteui1.elevations($igx-color, $color-2, $color-3) {
     @return $result;
 }
-igniteui2.$light-material-palette : $some-variable,
-$ala-bala : $some-variable,
-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
-    @return color($palette, $color, #{$variant}-contrast, $opacity);
-}
+igniteui2.$light-material-palette : $some-variable;
+$ala-bala : $some-variable;
+contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null);
 `;
 
     const update = new UnitUpdateChanges(__dirname, appTree);

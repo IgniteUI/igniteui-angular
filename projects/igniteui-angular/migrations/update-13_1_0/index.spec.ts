@@ -83,5 +83,22 @@ describe(`Update to ${version}`, () => {
         );
     });
 
+    fit('should rename @import to @use', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+`@import '~igniteui-angular/lib/core/styles/themes/index';`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
+        ).toEqual(
+`@use "igniteui-angular/theming" as igniteui;`
+        );
+    });
+
 
 });

@@ -480,7 +480,7 @@ export class UpdateChanges {
                 continue;
             }
             let occurrences = [];
-            if (aliases.length < 0) {
+            if (aliases.length > 0 && !aliases.includes('*')) {
                 for (let i = 0; i < aliases.length; i++) {
                     occurrences = occurrences.concat(findMatches(fileContent, aliases[i] + '.' + change.name));
                 }
