@@ -596,7 +596,7 @@ export class IgxFilteringService implements OnDestroy {
         // no expressions tree found for this field
         if (expressionsTree) {
             if (insertAtIndex > -1) {
-                newExpressionsTree.filteringOperands.splice(insertAtIndex, 1, expressionsTree);
+                newExpressionsTree.filteringOperands[insertAtIndex] = expressionsTree;
             } else {
                 newExpressionsTree.filteringOperands.push(expressionsTree);
             }
