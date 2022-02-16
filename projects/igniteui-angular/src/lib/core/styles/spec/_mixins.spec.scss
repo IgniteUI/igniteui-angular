@@ -137,11 +137,6 @@
         $secondary: $secondary,
     );
 
-    $h: round(hue($primary));
-    $s: round(saturation($primary));
-    $l: round(lightness($primary));
-    $a: round(alpha($primary));
-
     @include it('should generate CSS variables for all palette colors prefixed with --igc') {
         @include assert() {
             @include output() {
@@ -149,11 +144,9 @@
             }
 
             @include contains() {
-                --igc-primary-h: #{$h};
-                --igc-primary-s: #{$s};
-                --igc-primary-l: #{$l};
-                --igc-primary-a: #{$a};
-                --igc-primary-500: #{var(--igc-primary-h), var(--igc-primary-s), var(--igc-primary-l)};
+                --igc-primary-h: #{var(--igx-primary-h)};
+                --igc-primary-s: #{var(--igx-primary-s)};
+                --igc-primary-l: #{var(--igx-primary-l)};
             }
         }
     }
