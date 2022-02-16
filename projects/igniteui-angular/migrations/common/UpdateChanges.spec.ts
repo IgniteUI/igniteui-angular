@@ -544,8 +544,7 @@ export class Test {
         done();
     });
 
-    it('should replace/remove inputs', done => {
-        // TODO add proper types
+    it('should replace/remove variables', done => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -569,7 +568,7 @@ export class Test {
                 }
             ]
         };
-        const jsonPath = path.join(__dirname, 'changes', 'theme-props.json');
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
         spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
@@ -596,8 +595,8 @@ $var3: igx-comp-theme(
     $prop3: 1
 );`;
         appTree.create('styles.scss', fileContent);
-        appTree.create('src/app/app.component.sass', `igx-comp-theme($replace-me: not, $old-prop: 3, $prop3: 2);`);
-        appTree.create('test.component.sass', `igx-theme-func($replace-me: 10px, $old-prop: 3, $prop3: 2);`);
+        appTree.create('src/app/app.component.scss', `igx-comp-theme($replace-me: not, $old-prop: 3, $prop3: 2);`);
+        appTree.create('test.component.scss', `igx-theme-func($replace-me: 10px, $old-prop: 3, $prop3: 2);`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
@@ -619,8 +618,8 @@ $var3: igx-comp-theme(
     $replace-me: not,
     $prop3: 1
 );`);
-        expect(appTree.readContent('src/app/app.component.sass')).toEqual(`igx-comp-theme($replace-me: not, $prop3: 2);`);
-        expect(appTree.readContent('test.component.sass')).toEqual(`igx-theme-func($replaced: 10px, $old-prop: 3, $prop3: 2);`);
+        expect(appTree.readContent('src/app/app.component.scss')).toEqual(`igx-comp-theme($replace-me: not, $prop3: 2);`);
+        expect(appTree.readContent('test.component.scss')).toEqual(`igx-theme-func($replaced: 10px, $old-prop: 3, $prop3: 2);`);
         done();
     });
 
@@ -1043,7 +1042,7 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
     expect(appTree.readContent('test.component.scss')).toEqual(expectedFileContent);
     });
 
-    fit('Should migrate sass functions and mixin names correctly', ()=> {
+    it('Should migrate sass namespaced functions, mixins and variables correctly', ()=> {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1060,6 +1059,16 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
                     name: 'igx-color',
                     replaceWith: 'color',
                     type: ThemeType.Function
+                },
+                {
+                    name: '$igx-light-material-palette',
+                    replaceWith: '$light-material-palette',
+                    type: ThemeType.Variable
+                },
+                {
+                    name: '$igx-ala-bala',
+                    replaceWith: '$ala-bala',
+                    type: ThemeType.Variable
                 }
 
             ]
@@ -1082,6 +1091,8 @@ igx-elevations
 igniteui1.igx-elevations($igx-color, $color-2, $color-3) {
     @return $result;
 }
+igniteui2.$igx-light-material-palette : $some-variable,
+$igx-ala-bala : $some-variable,
 igx-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
     @return igx-color($palette, $color, #{$variant}-contrast, $opacity);
 }
@@ -1092,11 +1103,12 @@ igx-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: nul
 @use 'igniteui-angular/theming' as igniteui1;
 @use 'igniteui-angular/theme' as igniteui2;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
-@use 'igniteui-angular/themeing' as igniteui;
 igx-elevations
 igniteui1.elevations($igx-color, $color-2, $color-3) {
     @return $result;
 }
+igniteui2.$light-material-palette : $some-variable,
+$ala-bala : $some-variable,
 contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
     @return color($palette, $color, #{$variant}-contrast, $opacity);
 }
@@ -1105,6 +1117,6 @@ contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
     const update = new UnitUpdateChanges(__dirname, appTree);
 
     update.applyChanges();
-    expect(appTree.readContent('test.component.scss')).toEqual(expectedFileContent);
+    expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
     });
 });
