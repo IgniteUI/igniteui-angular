@@ -5,7 +5,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
 import {
-    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
+    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
 } from '../../data-operations/pivot-strategy';
 import { PivotUtil } from './pivot-util';
@@ -77,7 +77,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         const finalData = config.columnStrategy ? data :
             enabledRows.length ? data.filter(x => x[pivotKeys.records]) : data;
 
-        this.cleanState(finalData, pivotKeys);
+        this.cleanState(finalData, pivotKeys, config);
 
         if (this.grid) {
             this.grid.setFilteredSortedData(finalData, false);
@@ -85,17 +85,25 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         return finalData;
     }
 
-    private cleanState(data, pivotKeys) {
+    private cleanState(data, pivotKeys, config) {
         data.forEach(rec => {
             const keys = Object.keys(rec);
             delete rec.processed;
             delete rec.sorted;
             //remove all record keys from final data since we don't need them anymore.
-            keys.forEach(k => {
-                if (k.indexOf(pivotKeys.records) !== -1) {
-                    delete rec[k];
-                }
-            });
+            if (!(config.rowStrategy instanceof NoopPivotDimensionsStrategy || config.columnStrategy instanceof NoopPivotDimensionsStrategy)) {
+                keys.forEach(k => {
+                    if (k.indexOf(pivotKeys.records) !== -1) {
+                        delete rec[k];
+                    }
+                });
+            } else {
+                keys.forEach(k => {
+                    if (k.indexOf(pivotKeys.records) !== -1 && k !== pivotKeys.records) {
+                        this.cleanState(rec[k], pivotKeys, config);
+                    }
+                });
+            }
         });
     }
 }
