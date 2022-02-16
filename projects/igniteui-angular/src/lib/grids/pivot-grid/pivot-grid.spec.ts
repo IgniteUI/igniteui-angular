@@ -1188,11 +1188,11 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const rowDimension = pivotGrid.pivotConfiguration.rows[0];
             expect(rowDimension.width).toBeUndefined();
-            expect(pivotGrid.resolveRowDimensionWidth(rowDimension)).toBe(200);
+            expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
             pivotGrid.autoSizeRowDimension(rowDimension);
             fixture.detectChanges();
             expect(rowDimension.width).toBe('186px');
-            expect(pivotGrid.resolveRowDimensionWidth(rowDimension)).toBe(186);
+            expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(186);
         });
     });
 });
