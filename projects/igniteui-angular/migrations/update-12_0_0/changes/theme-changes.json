@@ -1,325 +1,389 @@
 {
-    "$schema": "../../common/schema/theme-props.schema.json",
+    "$schema": "../../common/schema/theme-changes.schema.json",
     "changes": [
         {
             "name": "$border-radius-round",
             "replaceWith": "$border-radius",
-            "owner": "igx-avatar-theme"
+            "owner": "igx-avatar-theme",
+            "type":"variable"
         },
         {
             "name": "$border-radius-square",
             "replaceWith": "$border-radius",
-            "owner": "igx-avatar-theme"
+            "owner": "igx-avatar-theme",
+            "type":"variable"
         },
         {
             "name": "$initials-background",
             "replaceWith": "$background",
-            "owner": "igx-avatar-theme"
+            "owner": "igx-avatar-theme",
+            "type":"variable"
         },
         {
             "name": "$initials-color",
             "replaceWith": "$color",
-            "owner": "igx-avatar-theme"
+            "owner": "igx-avatar-theme",
+            "type":"variable"
         },
         {
             "name": "$icon-background",
             "replaceWith": "$background",
-            "owner": "igx-avatar-theme"
+            "owner": "igx-avatar-theme",
+            "type":"variable"
         },
         {
             "name": "$icon-color",
             "replaceWith": "$color",
-            "owner": "igx-avatar-theme"
+            "owner": "igx-avatar-theme",
+            "type":"variable"
         },
         {
             "name": "$image-background",
             "replaceWith": "$background",
-            "owner": "igx-avatar-theme"
+            "owner": "igx-avatar-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-border-radius",
             "replaceWith": "$border-radius",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-border-radius",
             "replaceWith": "$border-radius",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-border-radius",
             "replaceWith": "$border-radius",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-border-radius",
             "replaceWith": "$border-radius",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$icon-border-radius",
             "replaceWith": "$border-radius",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-shadow-color",
             "replaceWith": "$shadow-color",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-shadow-color",
             "replaceWith": "$shadow-color",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-shadow-color",
             "replaceWith": "$shadow-color",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-shadow-color",
             "replaceWith": "$shadow-color",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$icon-shadow-color",
             "replaceWith": "$shadow-color",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-background",
             "replaceWith": "$background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-hover-background",
             "replaceWith": "$hover-background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-focus-background",
             "replaceWith": "$focus-background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-background",
             "replaceWith": "$background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-hover-background",
             "replaceWith": "$hover-background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-focus-background",
             "replaceWith": "$focus-background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-background",
             "replaceWith": "$background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-hover-background",
             "replaceWith": "$hover-background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-focus-background",
             "replaceWith": "$focus-background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-background",
             "replaceWith": "$background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-hover-background",
             "replaceWith": "$hover-background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-focus-background",
             "replaceWith": "$focus-background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$icon-background",
             "replaceWith": "$background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$icon-hover-background",
             "replaceWith": "$hover-background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$icon-focus-background",
             "replaceWith": "$focus-background",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-text-color",
             "replaceWith": "$foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-hover-text-color",
             "replaceWith": "$hover-foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-focus-text-color",
             "replaceWith": "$focus-foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-text-color",
             "replaceWith": "$foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-hover-text-color",
             "replaceWith": "$hover-foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-focus-text-color",
             "replaceWith": "$focus-foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-text-color",
             "replaceWith": "$foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-hover-text-color",
             "replaceWith": "$hover-foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-focus-text-color",
             "replaceWith": "$focus-foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-text-color",
             "replaceWith": "$foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-hover-text-color",
             "replaceWith": "$hover-foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-focus-text-color",
             "replaceWith": "$focus-foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$icon-color",
             "replaceWith": "$foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$icon-hover-color",
             "replaceWith": "$hover-foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$icon-focus-color",
             "replaceWith": "$focus-foreground",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-icon-color",
             "remove": true,
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-hover-icon-color",
             "remove": true,
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$flat-focus-icon-color",
             "remove": true,
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-icon-color",
             "remove": true,
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-hover-icon-color",
             "remove": true,
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-focus-icon-color",
             "remove": true,
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-icon-color",
             "remove": true,
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-hover-icon-color",
             "remove": true,
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-focus-icon-color",
             "remove": true,
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-resting-shadow",
             "replaceWith": "$resting-shadow",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-hover-shadow",
             "replaceWith": "$hover-shadow",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$raised-focus-shadow",
             "replaceWith": "$focus-shadow",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-resting-shadow",
             "replaceWith": "$resting-shadow",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-hover-shadow",
             "replaceWith": "$hover-shadow",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$fab-focus-shadow",
             "replaceWith": "$focus-shadow",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-outline-color",
             "replaceWith": "$border-color",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$outlined-disabled-outline-color",
             "replaceWith": "$disabled-border-color",
-            "owner": "igx-button-theme"
+            "owner": "igx-button-theme",
+            "type":"variable"
         },
         {
             "name": "$disabled-color",

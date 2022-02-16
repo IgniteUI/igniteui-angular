@@ -4,7 +4,8 @@
         {
             "name": "$base-color",
             "remove": true,
-            "owner": "igx-typography"
+            "owner": "igx-typography",
+            "type": "variable"
         }
     ]
 }
