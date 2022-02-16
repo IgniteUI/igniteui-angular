@@ -188,7 +188,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     /**
      * @hidden @internal
      */
-    public uniqueValues = [];
+    public uniqueValues: any[] | HierarchicalColumnValue[] = [];
     /**
      * @hidden @internal
      */
@@ -634,11 +634,12 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.containsNullOrEmpty = this.uniqueValues.length > this.listData.length;
     }
 
-    private generateFilterListItems(values: any[], shouldUpdateSelection: boolean) {
+    private generateFilterListItems(values: any[] | HierarchicalColumnValue[], shouldUpdateSelection: boolean) {
         let filterListItems = [];
         const applyFormatter = !this.shouldFormatValues();
         values?.forEach(element => {
-            const hasValue = element !== undefined && element !== null && element !== '';
+            const value = this.isHierarchical ? element.value : element;
+            const hasValue = value !== undefined && value !== null && value !== '';
 
             if (hasValue) {
                 const filterListItem = new FilterListItem();
@@ -650,8 +651,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                     filterListItem.isFiltered = false;
 
                     if (shouldUpdateSelection) {
-                        const value = this.getExpressionValue(element);
-                        if (this.filterValues.has(value)) {
+                        const exprValue = this.getExpressionValue(value);
+                        if (this.filterValues.has(exprValue)) {
                             filterListItem.isSelected = true;
                             filterListItem.isFiltered = true;
                         }
@@ -660,8 +661,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                         this.selectAllSelected = false;
                     }
                 }
-                filterListItem.value = this.getFilterItemValue(element);
-                filterListItem.label = this.getFilterItemLabel(element, applyFormatter);
+                filterListItem.value = this.getFilterItemValue(value);
+                filterListItem.label = this.getFilterItemLabel(value, applyFormatter);
                 filterListItem.indeterminate = false;
                 filterListItem.children = this.generateFilterListItems(element.children, shouldUpdateSelection);
                 filterListItems.push(filterListItem);
@@ -734,10 +735,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private getFilterItemValue(element: any) {
-        if (this.isHierarchical) {
-            element = element.value;
-        }
-
         if (this.column.dataType === GridColumnDataType.Date) {
             element = parseDate(element);
         }
@@ -746,10 +743,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private getExpressionValue(element: any): string {
-        if (this.isHierarchical) {
-            element = element.value;
-        }
-
         let value;
         if (this.column.dataType === GridColumnDataType.Date) {
             value = element ? new Date(element).toISOString() : element;
