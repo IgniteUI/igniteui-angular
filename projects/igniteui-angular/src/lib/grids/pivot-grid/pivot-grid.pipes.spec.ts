@@ -1308,7 +1308,7 @@ describe('Pivot pipes #pivotGrid', () => {
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
 
-        const dateData = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const dateData = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         expect(dateData).toEqual([
             { 'AllPeriods': 'All Periods' },
             { 'Years': '2020' },
