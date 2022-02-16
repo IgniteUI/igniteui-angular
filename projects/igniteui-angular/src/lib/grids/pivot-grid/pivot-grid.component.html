@@ -137,7 +137,7 @@
             <igx-pivot-row-dimension-content role='row' class="igx-grid-thead" [grid]="this"
                 [dimension]='dim'
                 [rowIndex]='rowIndex' [rowData]='rowData'
-                [density]="displayDensity" [width]="resolveRowDimensionWidth(dim)">
+                [density]="displayDensity" [width]="rowDimensionWidthToPixels(dim)">
             </igx-pivot-row-dimension-content>
         </ng-template>
     </div>
@@ -147,7 +147,7 @@
         <igx-pivot-row-dimension-content role='row' class="igx-grid-thead" [grid]="this"
             [dimension]='emptyRowDimension'
             [rowIndex]='0' [rowData]='emptyRowDimension'
-            [density]="displayDensity" [width]="resolveRowDimensionWidth(emptyRowDimension)">
+            [density]="displayDensity" [width]="rowDimensionWidthToPixels(emptyRowDimension)">
         </igx-pivot-row-dimension-content>
     </div>
 </ng-template>
