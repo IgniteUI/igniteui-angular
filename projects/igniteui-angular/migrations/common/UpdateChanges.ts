@@ -480,15 +480,26 @@ export class UpdateChanges {
                 continue;
             }
             let occurrences = [];
-            for (let i = 0; i < aliases.length; i++) {
-                occurrences = occurrences.concat(findMatches(fileContent, aliases[i] + '.' + change.name));
-            }
-            for (let j = 0; j < aliases.length; j++) {
-                let aliasLength = aliases[j].length + 1;
+            if (aliases.length < 0) {
+                for (let i = 0; i < aliases.length; i++) {
+                    occurrences = occurrences.concat(findMatches(fileContent, aliases[i] + '.' + change.name));
+                }
+                for (let j = 0; j < aliases.length; j++) {
+                    let aliasLength = aliases[j].length + 1;
+                    for (let i = occurrences.length - 1; i >= 0; i--) {
+                        const endCharacters = fileContent[(occurrences[i] + aliasLength + change.name.length)] === '(';
+                        if(endCharacters) {
+                            fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
+                            overwrite = true;
+                        }
+                    }
+                }
+            } else {
+                occurrences = findMatches(fileContent, change.name);
                 for (let i = occurrences.length - 1; i >= 0; i--) {
-                    const endCharacters = fileContent[(occurrences[i] + aliasLength + change.name.length)] === '(';
+                    const endCharacters = fileContent[(occurrences[i] + change.name.length)] === '(';
                     if(endCharacters) {
-                        fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
+                        fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
                         overwrite = true;
                     }
                 }
