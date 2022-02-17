@@ -933,7 +933,6 @@ export class CustomGridComponent {
         });
     });
 
-    // sass variable migrations
     it('Should migrate sass variables names correctly', ()=> {
         const themeChangesJson: ThemeChanges = {
             changes: [
@@ -1038,7 +1037,7 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
     expect(appTree.readContent('test.component.scss')).toEqual(expectedFileContent);
     });
 
-    xit('Should migrate sass namespaced functions, mixins and variables correctly', ()=> {
+    it('Should migrate aliased scss functions', () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1057,18 +1056,13 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
                     type: ThemeType.Function
                 },
                 {
-                    name: '$igx-light-material-palette',
-                    replaceWith: '$light-material-palette',
-                    type: ThemeType.Variable
-                },
-                {
-                    name: '$igx-ala-bala',
-                    replaceWith: '$ala-bala',
-                    type: ThemeType.Variable
+                    name: 'igx-palette',
+                    replaceWith: 'palette',
+                    type: ThemeType.Function
                 }
-
             ]
         };
+
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
         spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
@@ -1079,48 +1073,217 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
         spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
-`
-@use 'igniteui-angular/theming' as igniteui1;
-@use 'igniteui-angular/theme' as *;
+`@use 'igniteui-angular/theming' as igniteui1;
+@use 'igniteui-angular/theme' as igniteui2;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
-igx-elevations
-igniteui1.igx-elevations($igx-color, $color-2, $color-3) {
-    @return $result;
-}
-igniteui2.$igx-light-material-palette : $some-variable;
-$igx-ala-bala : $some-variable;
-igx-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null);
+@use 'some/url' as my-namespace;
+
+$my-palette: igniteui1.igx-palette($primary: red, $secondary:  blue);
+$my-color: igniteui2.igx-contrast-color($primary: blue, $secondary: orange);
+$my-text: igniteui3.text-contrast($background: yellow);
+$my-other-color: my-namespace.contrast-color($primary: white, $secondary: black, $elevation: true);
+$my-other-theme: my-namespace.function1($color1: igniteui2.igx-contrast-color($palette: igniteui1.igx-palette($primary: blue, $secondary: white), $color: igniteui1.igx-color($palette: $my-palette, $color: $my-color)));
 `;
+
         appTree.create('test.component.scss', fileContent);
+
         const expectedFileContent =
-`
-@use 'igniteui-angular/theming' as igniteui1;
-@use 'igniteui-angular/theme' as *;
+`@use 'igniteui-angular/theming' as igniteui1;
+@use 'igniteui-angular/theme' as igniteui2;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
-igx-elevations
-igniteui1.elevations($igx-color, $color-2, $color-3) {
-    @return $result;
-}
-igniteui2.$light-material-palette : $some-variable;
-$ala-bala : $some-variable;
-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null);
+@use 'some/url' as my-namespace;
+
+$my-palette: igniteui1.palette($primary: red, $secondary:  blue);
+$my-color: igniteui2.contrast-color($primary: blue, $secondary: orange);
+$my-text: igniteui3.text-contrast($background: yellow);
+$my-other-color: my-namespace.contrast-color($primary: white, $secondary: black, $elevation: true);
+$my-other-theme: my-namespace.function1($color1: igniteui2.contrast-color($palette: igniteui1.palette($primary: blue, $secondary: white), $color: igniteui1.color($palette: $my-palette, $color: $my-color)));
 `;
 
-    const update = new UnitUpdateChanges(__dirname, appTree);
-
-    update.applyChanges();
-    expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
     });
 
-    it('Should migrate scss functions', () => {
-        pending("TODO");
+    it('should migrate non-aliased scss functions', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: 'igx-elevations',
+                    replaceWith: 'elevations',
+                    type: ThemeType.Function
+                },
+                {
+                    name: 'igx-contrast-color',
+                    replaceWith: 'contrast-color',
+                    type: ThemeType.Function
+                },
+                {
+                    name: 'igx-color',
+                    replaceWith: 'color',
+                    type: ThemeType.Function
+                },
+                {
+                    name: 'igx-palette',
+                    replaceWith: 'palette',
+                    type: ThemeType.Function
+                }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const fileContent =
+`@use 'igniteui-angular/theming' as *;
+@use 'some/url' as my-namespace;
+
+$my-palette: igx-palette($primary: red, $secondary:  blue);
+$my-color: igx-contrast-color($primary: blue, $secondary: orange);
+$my-text: text-contrast($background: yellow);
+$my-other-color: my-namespace.contrast-color($primary: white, $secondary: black, $elevation: true);
+$my-other-theme: my-namespace.function1($color1: igx-contrast-color($palette: igx-palette($primary: blue, $secondary: white), $color: igx-color($palette: $my-palette, $color: $my-color)));
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`@use 'igniteui-angular/theming' as *;
+@use 'some/url' as my-namespace;
+
+$my-palette: palette($primary: red, $secondary:  blue);
+$my-color: contrast-color($primary: blue, $secondary: orange);
+$my-text: text-contrast($background: yellow);
+$my-other-color: my-namespace.contrast-color($primary: white, $secondary: black, $elevation: true);
+$my-other-theme: my-namespace.function1($color1: contrast-color($palette: palette($primary: blue, $secondary: white), $color: color($palette: $my-palette, $color: $my-color)));
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
     });
 
-    it('Should migrate scss mixins', () => {
-        pending("TODO");
+    it('Should migrate aliased scss mixins', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: 'igx-theme',
+                    replaceWith: 'theme',
+                    type: ThemeType.Mixin
+                },
+                {
+                    name: 'igx-light-theme',
+                    replaceWith: 'light-theme',
+                    type: ThemeType.Mixin
+                },
+                {
+                    name: 'igx-dark-theme',
+                    replaceWith: 'dark-theme',
+                    type: ThemeType.Mixin
+                }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const fileContent =
+`@use 'igniteui-angular/theming' as igniteui1;
+@use 'igniteui-angular/theme' as igniteui2;
+@use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
+@use 'some/url' as my-namespace;
+
+@include igniteui1.igx-theme($palette: $my-palette);
+@include igniteui2.igx-light-theme($palette: $my-palette);
+@include igniteui3.igx-dark-theme($elevation: $my-elevation);
+@include my-namespace.theme($palette: $my-palette);
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`@use 'igniteui-angular/theming' as igniteui1;
+@use 'igniteui-angular/theme' as igniteui2;
+@use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
+@use 'some/url' as my-namespace;
+
+@include igniteui1.theme($palette: $my-palette);
+@include igniteui2.light-theme($palette: $my-palette);
+@include igniteui3.dark-theme($elevation: $my-elevation);
+@include my-namespace.theme($palette: $my-palette);
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
     });
 
-    it('Should migrate scss variables', () => {
-        pending("TODO");
+    it('should migrate non-aliased scss mixins', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: 'igx-theme',
+                    replaceWith: 'theme',
+                    type: ThemeType.Mixin
+                },
+                {
+                    name: 'igx-light-theme',
+                    replaceWith: 'light-theme',
+                    type: ThemeType.Mixin
+                },
+                {
+                    name: 'igx-dark-theme',
+                    replaceWith: 'dark-theme',
+                    type: ThemeType.Mixin
+                }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const fileContent =
+`@use 'igniteui-angular/theming' as *;
+@use 'some/url' as my-namespace;
+
+@include igx-theme($palette: $my-palette);
+@include igx-light-theme($palette: $my-palette);
+@include igx-dark-theme($elevation: $my-elevation);
+@include my-namespace.theme($palette: $my-palette);
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`@use 'igniteui-angular/theming' as *;
+@use 'some/url' as my-namespace;
+
+@include theme($palette: $my-palette);
+@include light-theme($palette: $my-palette);
+@include dark-theme($elevation: $my-elevation);
+@include my-namespace.theme($palette: $my-palette);
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
     });
 });

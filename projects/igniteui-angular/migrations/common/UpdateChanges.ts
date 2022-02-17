@@ -488,7 +488,7 @@ export class UpdateChanges {
                     let aliasLength = aliases[j].length + 1;
                     for (let i = occurrences.length - 1; i >= 0; i--) {
                         const endCharacters = fileContent[(occurrences[i] + aliasLength + change.name.length)] === '(';
-                        if(endCharacters) {
+                        if (endCharacters) {
                             fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
                             overwrite = true;
                         }
@@ -498,7 +498,7 @@ export class UpdateChanges {
                 occurrences = findMatches(fileContent, change.name);
                 for (let i = occurrences.length - 1; i >= 0; i--) {
                     const endCharacters = fileContent[(occurrences[i] + change.name.length)] === '(';
-                    if(endCharacters) {
+                    if (endCharacters) {
                         fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
                         overwrite = true;
                     }
@@ -517,33 +517,26 @@ export class UpdateChanges {
             `@use 'igniteui-angular/theme' as `,
             `@use 'igniteui-angular/lib/core/styles/themes/index' as `
         ]
-        let implementedNamespaces = [];
+        let urls = [];
         for (let i = 0; i < allUses.length; i++) {
-            // contains = fileContent.includes(use);
             if (fileContent.includes(allUses[i])) {
-                implementedNamespaces.push(allUses[i].substring(5, allUses[i].length - 4));
+                urls.push(allUses[i].substring(5, allUses[i].length - 4));
             }
         }
-        return this.formatAliases(implementedNamespaces, fileContent);
+
+        return this.formatAliases(urls, fileContent);
     }
 
-    protected formatAliases(implementedNamespaces: string[], fileContent: string) {
-        let temp = [];
+    protected formatAliases(urls: string[], fileContent: string) {
         let aliases = [];
-        const forwardSlash = new RegExp('/', 'g');
-        for (let i = 0; i < implementedNamespaces.length; i++) {
-            temp.push(implementedNamespaces[i].replace(forwardSlash, '\\/'));
+        for (const url of urls) {
+            const matcher = new RegExp(String.raw`@use\s+${escapeRegExp(url)}\s+as\s+(\w+)`, 'g');
+            const match = matcher.exec(fileContent);
+            if (match) {
+                aliases.push(match[1]); // access the first captured match
+            }
         }
-        implementedNamespaces = temp;
 
-        for (let i = 0; i < implementedNamespaces.length; i++) {
-            const namespace = implementedNamespaces[i];
-            const matcher = new RegExp(String.raw`@use\s+${namespace}\s+as\s+(\w+)`, 'g');
-            // aliases.push(matcher.matched[1]);
-            aliases.push(matcher.exec(fileContent)[1]);
-
-
-        }
         return aliases;
     }
 
