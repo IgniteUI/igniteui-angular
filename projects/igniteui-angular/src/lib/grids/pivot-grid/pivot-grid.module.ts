@@ -3,7 +3,7 @@ import { IgxGridModule } from '../grid/grid.module';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
 import { IgxPivotRowPipe, IgxPivotColumnPipe, IgxPivotGridFilterPipe,
-   IgxPivotRowExpansionPipe, IgxPivotGridSortingPipe, IgxPivotGridColumnSortingPipe, IgxPivotCellMergingPipe } from './pivot-grid.pipes';
+   IgxPivotRowExpansionPipe, IgxPivotGridSortingPipe, IgxPivotGridColumnSortingPipe, IgxPivotCellMergingPipe, IgxPivotAutoTransform } from './pivot-grid.pipes';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
@@ -23,6 +23,7 @@ import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-heade
     IgxPivotRowDimensionHeaderGroupComponent,
     IgxPivotRowPipe,
     IgxPivotRowExpansionPipe,
+    IgxPivotAutoTransform,
     IgxPivotColumnPipe,
     IgxPivotGridFilterPipe,
     IgxPivotGridSortingPipe,
@@ -38,6 +39,7 @@ import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-heade
     IgxPivotRowDimensionHeaderComponent,
     IgxPivotRowDimensionHeaderGroupComponent,
     IgxPivotRowExpansionPipe,
+    IgxPivotAutoTransform,
     IgxPivotRowPipe,
     IgxPivotColumnPipe,
     IgxPivotGridFilterPipe,

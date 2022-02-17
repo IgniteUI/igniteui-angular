@@ -234,6 +234,24 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public resizeLine: IgxPivotGridColumnResizerComponent;
 
     /**
+     * @hidden @internal
+     */
+    @ViewChildren(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent })
+    public excelStyleFilteringComponents: QueryList<IgxGridExcelStyleFilteringComponent>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChildren(IgxPivotRowDimensionContentComponent)
+    protected rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChildren('verticalRowDimScrollContainer', { read: IgxGridForOfDirective })
+    public verticalRowDimScrollContainers: QueryList<IgxGridForOfDirective<any>>;
+
+    /**
      * @hidden @interal
      */
     @Input()
@@ -328,11 +346,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Output()
     public rowDragStart = new EventEmitter<IRowDragStartEventArgs>();
-    /**
-     * @hidden @internal
-     */
-    @ViewChildren(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent })
-    public excelStyleFilteringComponents: QueryList<IgxGridExcelStyleFilteringComponent>;
 
     /**
      * @hidden @internal
@@ -403,7 +416,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    private _emptyRowDimension: IPivotDimension = { memberName: '', enabled: true };
+    private _emptyRowDimension: IPivotDimension = { memberName: '', enabled: true, level: 0 };
     public get emptyRowDimension(): IPivotDimension {
         return this._emptyRowDimension;
     }
@@ -563,7 +576,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 let currDim = dim;
                 let shouldBreak = false;
                 do {
-                    const key = PivotUtil.getRecordKey(record, currDim, prev, this.pivotKeys);
+                    const key = PivotUtil.getRecordKey(record, currDim);
                     if (this.selectionService.isPivotRowSelected(key) && !selectedRowIds.find(x => x === record)) {
                         selectedRowIds.push(record);
                         shouldBreak = true;
@@ -829,11 +842,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get pivotRowWidths() {
-        return this.rowDimensions.length ? this.rowDimensions.reduce((accumulator, dim) => accumulator + this.resolveRowDimensionWidth(dim), 0) :
-            this.resolveRowDimensionWidth(this.emptyRowDimension);
+        return this.rowDimensions.length ? this.rowDimensions.reduce((accumulator, dim) => accumulator + this.rowDimensionWidthToPixels(dim), 0) :
+            this.rowDimensionWidthToPixels(this.emptyRowDimension);
     }
 
-    public resolveRowDimensionWidth(dim: IPivotDimension): number {
+    public rowDimensionWidthToPixels(dim: IPivotDimension): number {
         if (!dim.width) {
             return MINIMUM_COLUMN_WIDTH;
         }
@@ -843,6 +856,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         } else {
             return parseInt(dim.width, 10);
         }
+    }
+
+    public reverseDimensionWidthToPercent(width: number): number {
+        return (width * 100 / this.calcWidth);
     }
 
     public get rowDimensions() {
@@ -1345,9 +1362,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
+    public resizeRowDimensionPixels(dimension: IPivotDimension, newWidth: number) {
+        const isPercentageWidth = dimension.width && typeof dimension.width === 'string' && dimension.width.indexOf('%') !== -1;
+        if (isPercentageWidth) {
+            dimension.width = this.reverseDimensionWidthToPercent(newWidth).toFixed(2) + '%';
+        } else {
+            dimension.width = newWidth + 'px';
+        }
 
-    @ViewChildren(IgxPivotRowDimensionContentComponent)
-    protected rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
+        // Notify the grid to reflow, to update if horizontal scrollbar needs to be rendered/removed.
+        this.pipeTrigger++;
+        this.cdr.detectChanges();
+    }
 
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
         return PivotUtil.flatten(this.pivotConfiguration.rows).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
@@ -1393,7 +1419,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             groupColumn.children.filter(x => x.columnGroup && x.children.filter(y => !y.columnGroup).length === 0) :
             groupColumn.children.filter(x => x.columnGroup);
         childrenTotal.forEach(group => {
-            if (state) {
+            const newState = this.columnGroupStates.get(group.field) || state;
+            if (newState) {
                 group.headerTemplate = this.headerTemplate;
             } else {
                 group.headerTemplate = undefined;
@@ -1401,7 +1428,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
         if (!groupColumn.hidden && childrenSubgroups.length > 0) {
             childrenSubgroups.forEach(group => {
-                this.resolveToggle(group, state);
+                const newState = this.columnGroupStates.get(group.field) || state;
+                this.resolveToggle(group, newState);
             });
         }
     }
@@ -1432,12 +1460,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
         super.horizontalScrollHandler(event);
     }
-
-    /**
- * @hidden @internal
- */
-    @ViewChildren('verticalRowDimScrollContainer', { read: IgxGridForOfDirective })
-    public verticalRowDimScrollContainers: QueryList<IgxGridForOfDirective<any>>;
 
     protected verticalScrollHandler(event) {
         super.verticalScrollHandler(event);
