@@ -319,6 +319,12 @@
         ));
     }
 
+    @if is-used('igx-pivot-data-selector', $exclude) {
+        @include pivot-data-selector(pivot-data-selector-theme(
+            $schema: $schema
+        ));
+    }
+
     @if is-used('igx-highlight', $exclude) {
         @include highlight(highlight-theme(
             $schema: $schema
