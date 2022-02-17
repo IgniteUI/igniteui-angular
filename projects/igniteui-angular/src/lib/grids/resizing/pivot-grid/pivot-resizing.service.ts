@@ -23,7 +23,7 @@ export class IgxPivotColumnResizingService extends IgxColumnResizingService {
     }
 
     protected _handlePixelResize(diff: number, column: ColumnType) {
-        const rowDim = this.rowHeaderGroup.parent.dimension;
+        const rowDim = this.rowHeaderGroup.parent.rootDimension;
         if (!rowDim) return;
 
         const currentColWidth = parseFloat(column.width);
