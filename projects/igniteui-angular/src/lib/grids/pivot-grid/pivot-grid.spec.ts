@@ -1,24 +1,26 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxChipComponent } from '../../chips/chip.component';
 import { FilteringExpressionsTree, FilteringLogic, IgxPivotGridComponent, IgxPivotRowDimensionHeaderGroupComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
 import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { IgxPivotDateAggregate, IgxPivotNumericAggregate } from './pivot-grid-aggregate';
+import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IPivotGridRecord, PivotDimensionType } from './pivot-grid.interface';
+import { IgxPivotGridModule } from './pivot-grid.module';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
-import { IgxPivotDateDimension, IgxPivotGridModule } from './public_api';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
-import { IgxPivotDateAggregate } from './pivot-grid-aggregate';
 import { IgxPivotRowComponent } from './pivot-row.component';
-import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 describe('IgxPivotGrid #pivotGrid', () => {
+
     describe('Basic IgxPivotGrid #pivotGrid', () => {
         let fixture;
         configureTestSuite((() => {
@@ -35,6 +37,72 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
         }));
+        it('should show empty template when there are no dimensions and values', () => {
+            // whole pivotConfiguration is undefined
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            pivotGrid.pivotConfiguration = undefined;
+            fixture.detectChanges();
+
+            // no rows, just empty message
+            expect(pivotGrid.rowList.length).toBe(0);
+            expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values.');
+
+            // configuration is defined but all collections are empty
+            pivotGrid.pivotConfiguration = {
+                columns: [],
+                rows: [],
+                values: []
+            };
+            fixture.detectChanges();
+
+            // no rows, just empty message
+            expect(pivotGrid.rowList.length).toBe(0);
+            expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values.');
+
+
+            // has dimensions and values, but they are disabled
+            pivotGrid.pivotConfiguration = {
+                columns: [
+                    {
+                        enabled: false,
+                        memberName: 'Country'
+                    }
+                ],
+                rows: [
+                    {
+                        enabled: false,
+                        memberName: 'ProductCategory'
+                    }
+                ],
+                values: [
+                    {
+                        enabled: false,
+                        member: 'UnitsSold',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'SUM',
+                            label: 'Sum',
+                        },
+                    }
+                ]
+            };
+            fixture.detectChanges();
+
+            // no rows, just empty message
+            expect(pivotGrid.rowList.length).toBe(0);
+            expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values.');
+        });
+
+        it('should show allow setting custom empty template.', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            pivotGrid.emptyPivotGridTemplate = fixture.componentInstance.emptyTemplate;
+            pivotGrid.pivotConfiguration = undefined;
+            fixture.detectChanges();
+
+            // no rows, just empty message
+            expect(pivotGrid.rowList.length).toBe(0);
+            expect(pivotGrid.tbody.nativeElement.textContent).toBe('Custom empty template.');
+        });
 
         it('should apply formatter and dataType from measures', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
@@ -348,6 +416,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.rowList.first.cells.length).toEqual(pivotGrid.values.length);
             expect(pivotGrid.columnDimensions.length).toEqual(0);
         });
+
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', () => {
@@ -828,7 +897,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
 
                 let dropDown = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_LIST}`));
-                expect(dropDown.length).toBe(1);
+                expect(dropDown.length).toBe(2);
 
                 const valueChipUnitPrice = headerRow.querySelector('igx-chip[id="UnitPrice"]');
 
@@ -837,7 +906,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
 
                 dropDown = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_LIST}`));
-                expect(dropDown.length).toBe(1);
+                expect(dropDown.length).toBe(2);
             });
 
             it('should allow reorder in row chip area.', () => {
@@ -1120,18 +1189,18 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect((rowChip1.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
             });
 
-        it('should auto-size row dimension via the API.', () => {
-            const pivotGrid = fixture.componentInstance.pivotGrid;
-            const rowDimension = pivotGrid.pivotConfiguration.rows[0];
-            expect(rowDimension.width).toBeUndefined();
-            expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
-            pivotGrid.autoSizeRowDimension(rowDimension);
-            fixture.detectChanges();
-            expect(rowDimension.width).toBe('186px');
-            expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(186);
+            it('should auto-size row dimension via the API.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                const rowDimension = pivotGrid.pivotConfiguration.rows[0];
+                expect(rowDimension.width).toBeUndefined();
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
+                pivotGrid.autoSizeRowDimension(rowDimension);
+                fixture.detectChanges();
+                expect(rowDimension.width).toBe('186px');
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(186);
+            });
         });
     });
-});
 
     describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         let fixture;
