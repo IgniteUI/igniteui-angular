@@ -1,4 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { IgxPivotDataSelectorComponent } from '../grids/pivot-grid/pivot-data-selector.component';
 import { IgxPivotNumericAggregate } from '../grids/pivot-grid/pivot-grid-aggregate';
 import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, PivotAggregation } from '../grids/pivot-grid/pivot-grid.interface';
@@ -7,11 +8,18 @@ import { IPivotConfiguration, PivotAggregation } from '../grids/pivot-grid/pivot
     template: `
     <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
         [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]='defaultExpand'>
-    </igx-pivot-grid>`
+    </igx-pivot-grid>
+    <igx-pivot-data-selector #selector [grid]="grid"></igx-pivot-data-selector>
+    <ng-template #emptyTemplate>
+        <span>Custom empty template.</span>
+    </ng-template>
+    `
 })
 export class IgxPivotGridTestBaseComponent {
     public defaultExpand = true;
+    @ViewChild('emptyTemplate', { read: TemplateRef, static: true }) public emptyTemplate: TemplateRef<any>;
     @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public pivotGrid: IgxPivotGridComponent;
+    @ViewChild('selector', { read: IgxPivotDataSelectorComponent, static: true}) public dataSelector: IgxPivotDataSelectorComponent;
     public data;
 
     public cellClasses;
@@ -94,7 +102,7 @@ export class IgxPivotGridTestBaseComponent {
                     dataType: 'currency'
                 }
             ],
-            filters: null
+            filters: []
         };
     }
     public callback = (rowData: any, columnKey: any) => rowData[columnKey] >= 5;

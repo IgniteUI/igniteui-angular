@@ -78,7 +78,7 @@ export class PivotGridSampleComponent {
                 enabled: true
             },
             {
-                months: false,
+                months: true,
                 quarters: true
             }
         ),
