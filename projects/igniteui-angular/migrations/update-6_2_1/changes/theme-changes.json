@@ -1,5 +1,5 @@
 {
-    "$schema": "../../common/schema/theme-props.schema.json",
+    "$schema": "../../common/schema/theme-changes.schema.json",
     "changes": [{
             "name": "$chip-background",
             "replaceWith": "$background",
@@ -190,7 +190,8 @@
         {
             "name": "$variant",
             "remove": true,
-            "owner": "igx-tooltip-theme"
+            "owner": "igx-tooltip-theme",
+            "type": "property"
         }
     ]
 }

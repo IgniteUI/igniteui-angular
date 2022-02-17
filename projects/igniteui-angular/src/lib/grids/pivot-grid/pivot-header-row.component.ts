@@ -116,8 +116,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     /**
     * @hidden
     * @internal
+    * Default is a single empty level since default depth is 1
     */
-    public columnDimensionsByLevel: any[] = [];
+    public columnDimensionsByLevel: any[] = [[]];
 
     /**
     * @hidden @internal
@@ -206,11 +207,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public populateColumnDimensionsByLevel() {
         const res = [];
-        const columnDimensions = this.grid.columnDimensions;
-        if (columnDimensions.length === 0) {
-            this.columnDimensionsByLevel = res;
-            return;
-        }
         for (let i = 0; i < this.totalDepth; i++) {
             res[i] = [];
         }

@@ -144,7 +144,7 @@ export class UpdateChanges {
         this.classChanges = this.loadConfig('classes.json');
         this.outputChanges = this.loadConfig('outputs.json');
         this.inputChanges = this.loadConfig('inputs.json');
-        this.themeChanges = this.loadConfig('theme-props.json');
+        this.themeChanges = this.loadConfig('theme-changes.json');
         this.importsChanges = this.loadConfig('imports.json');
         this.membersChanges = this.loadConfig('members.json');
         this.serverHost = new ServerHost(this.host);
