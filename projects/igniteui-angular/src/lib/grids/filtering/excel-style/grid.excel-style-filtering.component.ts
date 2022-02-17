@@ -605,7 +605,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             if (operand instanceof FilteringExpressionsTree) {
                 const columnExprTree = operand as FilteringExpressionsTree;
                 if (columnExprTree.fieldName === this.column.field) {
-                    break;
+                    continue;
                 }
             }
             expressionsTree.filteringOperands.push(operand);
