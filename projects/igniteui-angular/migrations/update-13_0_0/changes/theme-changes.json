@@ -1,0 +1,3494 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-theme",
+            "type":"property"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-light-theme",
+            "type":"property"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-dark-theme",
+            "type":"property"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-fluent-light-theme",
+            "type":"property"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-fluent-dark-theme",
+            "type":"property"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-bootstrap-light-theme",
+            "type":"property"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-bootstrap-dark-theme",
+            "type":"property"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-indigo-light-theme",
+            "type":"property"
+        },
+        {
+            "name": "$legacy-support",
+            "remove": true,
+            "owner": "igx-indigo-dark-theme",
+            "type":"property"
+        },
+        {
+            "name": "$_default-shape-action-strip",
+            "replaceWith": "$default-shape-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-action-strip",
+            "replaceWith": "$bootstrap-shape-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-action-strip",
+            "replaceWith": "$indigo-shape-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-action-strip",
+            "replaceWith": "$light-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-action-strip",
+            "replaceWith": "$fluent-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-action-strip",
+            "replaceWith": "$bootstrap-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-action-strip",
+            "replaceWith": "$indigo-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-action-strip",
+            "replaceWith": "$dark-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-action-strip",
+            "replaceWith": "$dark-fluent-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-action-strip",
+            "replaceWith": "$dark-bootstrap-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-action-strip",
+            "replaceWith": "$dark-indigo-action-strip",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-avatar",
+            "replaceWith": "$square-shape-avatar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-avatar",
+            "replaceWith": "$bootstrap-shape-avatar",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-avatar",
+            "replaceWith": "$light-avatar",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-avatar",
+            "replaceWith": "$fluent-avatar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-avatar",
+            "replaceWith": "$bootstrap-avatar",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-avatar",
+            "replaceWith": "$indigo-avatar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-avatar",
+            "replaceWith": "$dark-avatar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-avatar",
+            "replaceWith": "$dark-fluent-avatar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-avatar",
+            "replaceWith": "$dark-bootstrap-avatar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-avatar",
+            "replaceWith": "$dark-indigo-avatar",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-badge",
+            "replaceWith": "$default-shape-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-badge",
+            "replaceWith": "$default-elevation-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-badge",
+            "replaceWith": "$bootstrap-shape-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-elevation-badge",
+            "replaceWith": "$bootstrap-elevation-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-badge",
+            "replaceWith": "$light-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-badge",
+            "replaceWith": "$fluent-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-badge",
+            "replaceWith": "$bootstrap-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-badge",
+            "replaceWith": "$indigo-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-light-badge",
+            "replaceWith": "$dark-light-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-badge",
+            "replaceWith": "$dark-fluent-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-badge",
+            "replaceWith": "$dark-bootstrap-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-badge",
+            "replaceWith": "$dark-indigo-badge",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-banner",
+            "replaceWith": "$light-banner",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-banner",
+            "replaceWith": "$fluent-banner",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-banner",
+            "replaceWith": "$bootstrap-banner",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-banner",
+            "replaceWith": "$indigo-banner",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-banner",
+            "replaceWith": "$light-banner",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-banner",
+            "replaceWith": "$fluent-banner",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-banner",
+            "replaceWith": "$bootstrap-banner",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-banner",
+            "replaceWith": "$indigo-banner",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-bottom-nav",
+            "replaceWith": "$default-elevation-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-elevation-bottom-nav",
+            "replaceWith": "$fluent-elevation-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-elevation-bottom-nav",
+            "replaceWith": "$indigo-elevation-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-bottom-nav",
+            "replaceWith": "$light-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-bottom-nav",
+            "replaceWith": "$fluent-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-bottom-nav",
+            "replaceWith": "$bootstrap-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-bottom-nav",
+            "replaceWith": "$indigo-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bottom-nav",
+            "replaceWith": "$dark-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-bottom-nav",
+            "replaceWith": "$dark-fluent-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-bottom-nav",
+            "replaceWith": "$dark-bootstrap-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-bottom-nav",
+            "replaceWith": "$dark-indigo-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-bottom-nav",
+            "replaceWith": "$base-dark-bottom-nav",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-button-group",
+            "replaceWith": "$default-shape-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-button-group",
+            "replaceWith": "$round-shape-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-button-group",
+            "replaceWith": "$square-shape-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-button-group",
+            "replaceWith": "$fluent-shape-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-button-group",
+            "replaceWith": "$bootstrap-shape-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-button-group",
+            "replaceWith": "$indigo-shape-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-button-group",
+            "replaceWith": "$default-elevation-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-elevation-button-group",
+            "replaceWith": "$fluent-elevation-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-elevation-button-group",
+            "replaceWith": "$bootstrap-elevation-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-elevation-button-group",
+            "replaceWith": "$indigo-elevation-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-button-group",
+            "replaceWith": "$light-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-button-group",
+            "replaceWith": "$fluent-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-button-group",
+            "replaceWith": "$bootstrap-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-button-group",
+            "replaceWith": "$indigo-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-button-group",
+            "replaceWith": "$dark-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-button-group",
+            "replaceWith": "$dark-fluent-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-button-group",
+            "replaceWith": "$bootstrap-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-button-group",
+            "replaceWith": "$dark-indigo-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-button-group",
+            "replaceWith": "$base-dark-button-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-button",
+            "replaceWith": "$round-shape-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-button",
+            "replaceWith": "$square-shape-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-shape-button",
+            "replaceWith": "$material-shape-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-button",
+            "replaceWith": "$fluent-shape-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-button",
+            "replaceWith": "$bootstrap-shape-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_flat-elevation-button",
+            "replaceWith": "$flat-elevation-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-raised-elevation",
+            "replaceWith": "$material-raised-elevation",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-fab-elevation",
+            "replaceWith": "$material-fab-elevation",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-ib-elevation",
+            "replaceWith": "$material-ib-elevation",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-elevation-button",
+            "replaceWith": "$bootstrap-elevation-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-elevation-button",
+            "replaceWith": "$indigo-elevation-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-base-button",
+            "replaceWith": "$material-base-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-flat-button",
+            "replaceWith": "$material-flat-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-outlined-button",
+            "replaceWith": "$material-outlined-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-raised-button",
+            "replaceWith": "$material-raised-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-fab-button",
+            "replaceWith": "$material-fab-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-icon-button",
+            "replaceWith": "$material-icon-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-button",
+            "replaceWith": "$light-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-base-button",
+            "replaceWith": "$fluent-base-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-flat-button",
+            "replaceWith": "$fluent-flat-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-outlined-button",
+            "replaceWith": "$fluent-outlined-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-raised-button",
+            "replaceWith": "$fluent-raised-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-fab-button",
+            "replaceWith": "$fluent-fab-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-icon-button",
+            "replaceWith": "$fluent-icon-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-button",
+            "replaceWith": "$fluent-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-base-button",
+            "replaceWith": "$bootstrap-base-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-flat-button",
+            "replaceWith": "$bootstrap-flat-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-outlined-button",
+            "replaceWith": "$bootstrap-outlined-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-raised-button",
+            "replaceWith": "$bootstrap-raised-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-fab-button",
+            "replaceWith": "$bootstrap-fab-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-icon-button",
+            "replaceWith": "$bootstrap-icon-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-button",
+            "replaceWith": "$bootstrap-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-base-button",
+            "replaceWith": "$indigo-base-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-button",
+            "replaceWith": "$indigo-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-flat-button",
+            "replaceWith": "$indigo-flat-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-outlined-button",
+            "replaceWith": "$indigo-outlined-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-raised-button",
+            "replaceWith": "$indigo-raised-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-fab-button",
+            "replaceWith": "$indigo-fab-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-icon-button",
+            "replaceWith": "$indigo-icon-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-button",
+            "replaceWith": "$dark-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-base-button-dark",
+            "replaceWith": "$material-base-button-dark",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-flat-button-dark",
+            "replaceWith": "$material-flat-button-dark",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-icon-button-dark",
+            "replaceWith": "$material-icon-button-dark",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-button",
+            "replaceWith": "$dark-fluent-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-flat-button-dark",
+            "replaceWith": "$fluent-flat-button-dark",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-base-button-dark",
+            "replaceWith": "$bootstrap-base-button-dark",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-button",
+            "replaceWith": "$dark-bootstrap-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-outlined-button-dark",
+            "replaceWith": "$bootstrap-outlined-button-dark",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-button",
+            "replaceWith": "$dark-indigo-button",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-calendar",
+            "replaceWith": "$default-shape-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-calendar",
+            "replaceWith": "$round-shape-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-calendar",
+            "replaceWith": "$square-shape-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-calendar",
+            "replaceWith": "$fluent-shape-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-calendar",
+            "replaceWith": "$bootstrap-shape-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-calendar",
+            "replaceWith": "$indigo-shape-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-calendar",
+            "replaceWith": "$light-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-calendar",
+            "replaceWith": "$fluent-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-calendar",
+            "replaceWith": "$bootstrap-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-calendar",
+            "replaceWith": "$indigo-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-calendar",
+            "replaceWith": "$dark-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-calendar",
+            "replaceWith": "$dark-fluent-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-calendar",
+            "replaceWith": "$dark-bootstrap-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-calendar",
+            "replaceWith": "$dark-indigo-calendar",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-card",
+            "replaceWith": "$default-shape-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-card",
+            "replaceWith": "$round-shape-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-card",
+            "replaceWith": "$square-shape-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-card",
+            "replaceWith": "$fluent-shape-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-card",
+            "replaceWith": "$bootstrap-shape-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-card",
+            "replaceWith": "$indigo-shape-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-card",
+            "replaceWith": "$default-elevation-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_flat-card",
+            "replaceWith": "$flat-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-elevation-card",
+            "replaceWith": "$fluent-elevation-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-elevation-card",
+            "replaceWith": "$indigo-elevation-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-card",
+            "replaceWith": "$light-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-card",
+            "replaceWith": "$fluent-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-card",
+            "replaceWith": "$bootstrap-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-card",
+            "replaceWith": "$indigo-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-card",
+            "replaceWith": "$dark-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-card",
+            "replaceWith": "$dark-fluent-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-card",
+            "replaceWith": "$dark-bootstrap-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-card",
+            "replaceWith": "$dark-indigo-card",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-carousel",
+            "replaceWith": "$default-shape-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-carousel",
+            "replaceWith": "$round-shape-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-carousel",
+            "replaceWith": "$square-shape-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-carousel",
+            "replaceWith": "$bootstrap-shape-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-carousel",
+            "replaceWith": "$default-elevation-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_flat-carousel",
+            "replaceWith": "$flat-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-elevation-carousel",
+            "replaceWith": "$fluent-elevation-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-elevation-carousel",
+            "replaceWith": "$bootstrap-elevation-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-elevation-carousel",
+            "replaceWith": "$indigo-elevation-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-carousel",
+            "replaceWith": "$light-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-carousel",
+            "replaceWith": "$fluent-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-carousel",
+            "replaceWith": "$bootstrap-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-carousel",
+            "replaceWith": "$indigo-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-carousel",
+            "replaceWith": "$base-dark-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-carousel",
+            "replaceWith": "$dark-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-carousel",
+            "replaceWith": "$dark-fluent-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-carousel",
+            "replaceWith": "$dark-bootstrap-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-carousel",
+            "replaceWith": "$dark-indigo-carousel",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-category-chart:",
+            "replaceWith": "$light-category-chart:",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-category-chart",
+            "replaceWith": "$fluent-category-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-category-chart",
+            "replaceWith": "$bootstrap-category-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-category-chart",
+            "replaceWith": "$indigo-category-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-category-chart",
+            "replaceWith": "$base-dark-category-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-category-chart",
+            "replaceWith": "$dark-category-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-category-chart",
+            "replaceWith": "$dark-fluent-category-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-category-chart",
+            "replaceWith": "$dark-bootstrap-category-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-category-chart",
+            "replaceWith": "$dark-indigo-category-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-checkbox",
+            "replaceWith": "$default-shape-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-checkbox",
+            "replaceWith": "$round-shape-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-checkbox",
+            "replaceWith": "$square-shape-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-checkbox",
+            "replaceWith": "$fluent-shape-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-checkbox",
+            "replaceWith": "$bootstrap-shape-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-checkbox",
+            "replaceWith": "$indigo-shape-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-checkbox",
+            "replaceWith": "$light-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-checkbox",
+            "replaceWith": "$fluent-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-checkbox",
+            "replaceWith": "$bootstrap-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-checkbox",
+            "replaceWith": "$indigo-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-checkbox",
+            "replaceWith": "$dark-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-checkbox",
+            "replaceWith": "$dark-fluent-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-checkbox",
+            "replaceWith": "$dark-bootstrap-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-checkbox",
+            "replaceWith": "$dark-indigo-checkbox",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-chip",
+            "replaceWith": "$round-shape-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-chip",
+            "replaceWith": "$square-shape-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-chip",
+            "replaceWith": "$bootstrap-shape-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-chip",
+            "replaceWith": "$indigo-shape-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-chip",
+            "replaceWith": "$default-elevation-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-elevation-chip",
+            "replaceWith": "$fluent-elevation-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-elevation-chip",
+            "replaceWith": "$bootstrap-elevation-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-elevation-chip",
+            "replaceWith": "$indigo-elevation-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-chip",
+            "replaceWith": "$light-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-chip",
+            "replaceWith": "$fluent-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-chip",
+            "replaceWith": "$bootstrap-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-chip",
+            "replaceWith": "$indigo-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-chip",
+            "replaceWith": "$base-dark-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-chip",
+            "replaceWith": "$dark-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-chip",
+            "replaceWith": "$dark-fluent-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-chip",
+            "replaceWith": "$dark-bootstrap-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-chip",
+            "replaceWith": "$dark-indigo-chip",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-column-actions",
+            "replaceWith": "$light-column-actions",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-column-actions",
+            "replaceWith": "$fluent-column-actions",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-column-actions",
+            "replaceWith": "$bootstrap-column-actions",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-column-actions",
+            "replaceWith": "$indigo-column-actions",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-column-actions",
+            "replaceWith": "$dark-column-actions",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-column-actions",
+            "replaceWith": "$dark-fluent-column-actions",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-column-actions",
+            "replaceWith": "$dark-bootstrap-column-actions",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-column-actions",
+            "replaceWith": "$dark-indigo-column-actions",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-combo",
+            "replaceWith": "$light-combo",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-combo",
+            "replaceWith": "$fluent-combo",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-combo",
+            "replaceWith": "$bootstrap-combo",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-combo",
+            "replaceWith": "$indigo-combo",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-combo",
+            "replaceWith": "$dark-combo",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-combo",
+            "replaceWith": "$dark-fluent-combo",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-combo",
+            "replaceWith": "$dark-bootstrap-combo",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-combo",
+            "replaceWith": "$dark-indigo-combo",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-data-chart",
+            "replaceWith": "$light-data-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-data-chart",
+            "replaceWith": "$fluent-data-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-data-chart",
+            "replaceWith": "$bootstrap-data-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-data-chart",
+            "replaceWith": "$indigo-data-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-data-chart",
+            "replaceWith": "$dark-data-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-data-chart",
+            "replaceWith": "$dark-fluent-data-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-data-chart",
+            "replaceWith": "$dark-bootstrap-data-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-data-chart",
+            "replaceWith": "$dark-indigo-data-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-date-range-picker",
+            "replaceWith": "$light-date-range-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-date-range-picker",
+            "replaceWith": "$fluent-date-range-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-date-range-picker",
+            "replaceWith": "$bootstrap-date-range-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-date-range-picker",
+            "replaceWith": "$indigo-date-range-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-date-range-picker",
+            "replaceWith": "$dark-date-range-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-date-range-picker",
+            "replaceWith": "$dark-fluent-date-range-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-date-range-picker",
+            "replaceWith": "$dark-bootstrap-date-range-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-date-range-picker",
+            "replaceWith": "$dark-indigo-date-range-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-dialog",
+            "replaceWith": "$default-shape-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-dialog",
+            "replaceWith": "$round-shape-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-dialog",
+            "replaceWith": "$square-shape-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-dialog",
+            "replaceWith": "$fluent-shape-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-dialog",
+            "replaceWith": "$bootstrap-shape-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-dialog",
+            "replaceWith": "$indigo-shape-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-dialog",
+            "replaceWith": "$default-elevation-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-elevation-dialog",
+            "replaceWith": "$bootstrap-elevation-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-dialog",
+            "replaceWith": "$light-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-dialog",
+            "replaceWith": "$fluent-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-dialog",
+            "replaceWith": "$bootstrap-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-dialog",
+            "replaceWith": "$indigo-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-dialog",
+            "replaceWith": "$dark-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-dialog",
+            "replaceWith": "$dark-fluent-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-dialog",
+            "replaceWith": "$dark-bootstrap-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-dialog",
+            "replaceWith": "$dark-indigo-dialog",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-divider",
+            "replaceWith": "$light-divider",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-divider",
+            "replaceWith": "$fluent-divider",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-divider",
+            "replaceWith": "$bootstrap-divider",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-divider",
+            "replaceWith": "$indigo-divider",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-divider",
+            "replaceWith": "$dark-fluent-divider",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-divider",
+            "replaceWith": "$dark-bootstrap-divider",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-divider",
+            "replaceWith": "$dark-indigo-divider",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-dock-manager",
+            "replaceWith": "$light-dock-manager",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-dock-manager",
+            "replaceWith": "$fluent-dock-manager",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-dock-manager",
+            "replaceWith": "$bootstrap-dock-manager",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-dock-manager",
+            "replaceWith": "$indigo-dock-manager",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-dock-manager",
+            "replaceWith": "$dark-dock-manager",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-dock-manager",
+            "replaceWith": "$dark-fluent-dock-manager",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-dock-manager",
+            "replaceWith": "$dark-bootstrap-dock-manager",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-dock-manager",
+            "replaceWith": "$dark-indigo-dock-manager",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-doughnut-chart",
+            "replaceWith": "$light-doughnut-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-doughnut-chart",
+            "replaceWith": "$fluent-doughnut-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-doughnut-chart",
+            "replaceWith": "$bootstrap-doughnut-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-doughnut-chart",
+            "replaceWith": "$indigo-doughnut-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-drop-down",
+            "replaceWith": "$default-shape-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-drop-down",
+            "replaceWith": "$round-shape-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-drop-down",
+            "replaceWith": "$square-shape-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-drop-down",
+            "replaceWith": "$fluent-shape-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-drop-down",
+            "replaceWith": "$bootstrap-shape-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-drop-down",
+            "replaceWith": "$indigo-shape-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-drop-down",
+            "replaceWith": "$default-elevation-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-elevation-drop-down",
+            "replaceWith": "$fluent-elevation-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-elevation-drop-down",
+            "replaceWith": "$bootstrap-elevation-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-elevation-drop-down",
+            "replaceWith": "$indigo-elevation-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-drop-down",
+            "replaceWith": "$light-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-drop-down",
+            "replaceWith": "$fluent-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-drop-down",
+            "replaceWith": "$bootstrap-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-drop-down",
+            "replaceWith": "$indigo-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-drop-down",
+            "replaceWith": "$dark-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-drop-down",
+            "replaceWith": "$dark-fluent-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-drop-down",
+            "replaceWith": "$dark-bootstrap-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-drop-down",
+            "replaceWith": "$dark-indigo-drop-down",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-expansion-panel",
+            "replaceWith": "$default-shape-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-expansion-panel",
+            "replaceWith": "$round-shape-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-expansion-panel",
+            "replaceWith": "$square-shape-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-expansion-panel",
+            "replaceWith": "$bootstrap-shape-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-expansion-panel",
+            "replaceWith": "$indigo-shape-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-expansion-panel",
+            "replaceWith": "$light-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-expansion-panel",
+            "replaceWith": "$fluent-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-expansion-panel",
+            "replaceWith": "$bootstrap-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-expansion-panel",
+            "replaceWith": "$indigo-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-expansion-panel",
+            "replaceWith": "$base-dark-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-expansion-panel",
+            "replaceWith": "$dark-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-expansion-panel",
+            "replaceWith": "$dark-fluent-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-expansion-panel",
+            "replaceWith": "$dark-bootstrap-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-expansion-panel",
+            "replaceWith": "$dark-indigo-expansion-panel",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-financial-chart",
+            "replaceWith": "$light-financial-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-financial-chart",
+            "replaceWith": "$fluent-financial-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-financial-chart",
+            "replaceWith": "$bootstrap-financial-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-financial-chart",
+            "replaceWith": "$indigo-financial-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-financial-chart",
+            "replaceWith": "$dark-financial-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-financial-chart",
+            "replaceWith": "$dark-fluent-financial-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-financial-chart",
+            "replaceWith": "$dark-bootstrap-financial-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-financial-chart",
+            "replaceWith": "$dark-indigo-financial-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-funnel-chart",
+            "replaceWith": "$light-funnel-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-funnel-chart",
+            "replaceWith": "$fluent-funnel-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-funnel-chart",
+            "replaceWith": "$bootstrap-funnel-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-funnel-chart",
+            "replaceWith": "$indigo-funnel-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-funnel-chart",
+            "replaceWith": "$dark-funnel-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-funnel-chart",
+            "replaceWith": "$dark-fluent-funnel-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-funnel-chart",
+            "replaceWith": "$dark-bootstrap-funnel-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-funnel-chart",
+            "replaceWith": "$dark-indigo-funnel-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-gauge",
+            "replaceWith": "$light-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-linear-gauge",
+            "replaceWith": "$light-linear-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-radial-gauge",
+            "replaceWith": "$light-radial-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-linear-gauge",
+            "replaceWith": "$fluent-linear-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-radial-gauge",
+            "replaceWith": "$fluent-radial-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-linear-gauge",
+            "replaceWith": "$bootstrap-linear-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-radial-gauge",
+            "replaceWith": "$bootstrap-radial-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-linear-gauge",
+            "replaceWith": "$indigo-linear-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-radial-gauge",
+            "replaceWith": "$indigo-radial-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-linear-gauge",
+            "replaceWith": "$dark-linear-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-radial-gauge",
+            "replaceWith": "$dark-radial-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-linear-gauge",
+            "replaceWith": "$dark-fluent-linear-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-radial-gauge",
+            "replaceWith": "$dark-fluent-radial-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-linear-gauge",
+            "replaceWith": "$dark-bootstrap-linear-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-radial-gauge",
+            "replaceWith": "$dark-bootstrap-radial-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-linear-gauge",
+            "replaceWith": "$dark-indigo-linear-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-radial-gauge",
+            "replaceWith": "$dark-indigo-radial-gauge",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-geo-map",
+            "replaceWith": "$light-geo-map",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-geo-map",
+            "replaceWith": "$fluent-geo-map",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-geo-map",
+            "replaceWith": "$bootstrap-geo-map",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-geo-map",
+            "replaceWith": "$indigo-geo-map",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-geo-map",
+            "replaceWith": "$dark-geo-map",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-geo-map",
+            "replaceWith": "$dark-fluent-geo-map",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-geo-map",
+            "replaceWith": "$dark-bootstrap-geo-map",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-geo-map",
+            "replaceWith": "$dark-indigo-geo-map",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-graph",
+            "replaceWith": "$light-graph",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-graph",
+            "replaceWith": "$fluent-graph",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-graph",
+            "replaceWith": "$bootstrap-graph",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-graph",
+            "replaceWith": "$indigo-graph",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-graph",
+            "replaceWith": "$dark-graph",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-graph",
+            "replaceWith": "$dark-fluent-graph",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-graph",
+            "replaceWith": "$dark-bootstrap-graph",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-graph",
+            "replaceWith": "$dark-indigo-graph",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-grid-filtering",
+            "replaceWith": "$light-grid-filtering",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-grid-filtering",
+            "replaceWith": "$fluent-grid-filtering",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-grid-filtering",
+            "replaceWith": "$bootstrap-grid-filtering",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-grid-filtering",
+            "replaceWith": "$indigo-grid-filtering",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-grid-filtering",
+            "replaceWith": "$dark-grid-filtering",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-grid-filtering",
+            "replaceWith": "$dark-fluent-grid-filtering",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-grid-filtering",
+            "replaceWith": "$dark-bootstrap-grid-filtering",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-grid-filtering",
+            "replaceWith": "$dark-indigo-grid-filtering",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-grid-summary",
+            "replaceWith": "$light-grid-summary",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-grid-summary",
+            "replaceWith": "$fluent-grid-summary",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-grid-summary",
+            "replaceWith": "$bootstrap-grid-summary",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-grid-summary",
+            "replaceWith": "$indigo-grid-summary",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-grid-summary",
+            "replaceWith": "$dark-grid-summary",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-grid-summary",
+            "replaceWith": "$dark-fluent-grid-summary",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-grid-summary",
+            "replaceWith": "$dark-bootstrap-grid-summary",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-grid-summary",
+            "replaceWith": "$dark-indigo-grid-summary",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-grid-toolbar",
+            "replaceWith": "$light-grid-toolbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-grid-toolbar",
+            "replaceWith": "$fluent-grid-toolbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-grid-toolbar",
+            "replaceWith": "$bootstrap-grid-toolbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-grid-toolbar",
+            "replaceWith": "$indigo-grid-toolbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-grid-toolbar",
+            "replaceWith": "$base-dark-grid-toolbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-grid-toolbar",
+            "replaceWith": "$dark-grid-toolbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-grid-toolbar",
+            "replaceWith": "$dark-fluent-grid-toolbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-grid-toolbar",
+            "replaceWith": "$dark-bootstrap-grid-toolbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-grid-toolbar",
+            "replaceWith": "$dark-indigo-grid-toolbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-grid",
+            "replaceWith": "$default-shape-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-grid",
+            "replaceWith": "$round-shape-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-grid",
+            "replaceWith": "$square-shape-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-grid",
+            "replaceWith": "$fluent-shape-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-grid",
+            "replaceWith": "$bootstrap-shape-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-grid",
+            "replaceWith": "$default-elevation-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-elevation-grid",
+            "replaceWith": "$fluent-elevation-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-grid",
+            "replaceWith": "$light-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-grid",
+            "replaceWith": "$fluent-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-grid",
+            "replaceWith": "$bootstrap-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-grid",
+            "replaceWith": "$indigo-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-grid",
+            "replaceWith": "$base-dark-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-grid",
+            "replaceWith": "$dark-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-grid",
+            "replaceWith": "$dark-fluent-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-grid",
+            "replaceWith": "$dark-bootstrap-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-grid",
+            "replaceWith": "$dark-indigo-grid",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-highlight",
+            "replaceWith": "$light-highlight",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-highlight",
+            "replaceWith": "$fluent-highlight",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-highlight",
+            "replaceWith": "$bootstrap-highlight",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-highlight",
+            "replaceWith": "$indigo-highlight",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-highlight",
+            "replaceWith": "$dark-highlight",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-highlight",
+            "replaceWith": "$dark-fluent-highlight",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-highlight",
+            "replaceWith": "$dark-bootstrap-highlight",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-highlight",
+            "replaceWith": "$dark-indigo-highlight",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-icon",
+            "replaceWith": "$light-icon",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-icon",
+            "replaceWith": "$fluent-icon",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-icon",
+            "replaceWith": "$bootstrap-icon",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-icon",
+            "replaceWith": "$indigo-icon",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-icon",
+            "replaceWith": "$dark-icon",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-icon",
+            "replaceWith": "$dark-fluent-icon",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-icon",
+            "replaceWith": "$dark-bootstrap-icon",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-icon",
+            "replaceWith": "$dark-indigo-icon",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-input-group",
+            "replaceWith": "$default-shape-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-input-group",
+            "replaceWith": "$round-shape-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-input-group",
+            "replaceWith": "$square-shape-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-input-group",
+            "replaceWith": "$fluent-shape-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-input-group",
+            "replaceWith": "$default-elevation-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-elevation-input-group",
+            "replaceWith": "$fluent-elevation-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-elevation-input-group",
+            "replaceWith": "$indigo-elevation-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-input-group",
+            "replaceWith": "$light-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-input-group",
+            "replaceWith": "$fluent-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-input-group",
+            "replaceWith": "$bootstrap-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-input-group",
+            "replaceWith": "$indigo-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-input-group",
+            "replaceWith": "$base-dark-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-input-group",
+            "replaceWith": "$dark-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-input-group",
+            "replaceWith": "$dark-fluent-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-input-group",
+            "replaceWith": "$dark-bootstrap-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-input-group",
+            "replaceWith": "$dark-indigo-input-group",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-list",
+            "replaceWith": "$default-shape-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-list",
+            "replaceWith": "$round-shape-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-list",
+            "replaceWith": "$square-shape-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-list",
+            "replaceWith": "$bootstrap-shape-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-list",
+            "replaceWith": "$indigo-shape-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-list",
+            "replaceWith": "$light-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-list",
+            "replaceWith": "$fluent-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-list",
+            "replaceWith": "$bootstrap-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-list",
+            "replaceWith": "$indigo-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-list",
+            "replaceWith": "$base-dark-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-list",
+            "replaceWith": "$dark-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-list",
+            "replaceWith": "$dark-fluent-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-list",
+            "replaceWith": "$dark-bootstrap-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-list",
+            "replaceWith": "$dark-indigo-list",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-navbar",
+            "replaceWith": "$default-elevation-navbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-elevation-navbar",
+            "replaceWith": "$bootstrap-elevation-navbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-elevation-navbar",
+            "replaceWith": "",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-navbar",
+            "replaceWith": "$light-navbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-navbar",
+            "replaceWith": "$fluent-navbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-navbar",
+            "replaceWith": "$bootstrap-navbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-navbar",
+            "replaceWith": "$indigo-navbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-navdrawer",
+            "replaceWith": "$default-shape-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-navdrawer",
+            "replaceWith": "$round-shape-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-navdrawer",
+            "replaceWith": "$square-shape-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-navdrawer",
+            "replaceWith": "$indigo-shape-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-navdrawer",
+            "replaceWith": "$default-elevation-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-elevation-navdrawer",
+            "replaceWith": "$indigo-elevation-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-navdrawer",
+            "replaceWith": "$light-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-navdrawer",
+            "replaceWith": "$fluent-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-navdrawer",
+            "replaceWith": "$bootstrap-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-navdrawer",
+            "replaceWith": "$indigo-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-navdrawer",
+            "replaceWith": "$dark-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-navdrawer",
+            "replaceWith": "$dark-fluent-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-navdrawer",
+            "replaceWith": "$dark-bootstrap-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-navdrawer",
+            "replaceWith": "$dark-indigo-navdrawer",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-overlay",
+            "replaceWith": "$light-overlay",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-overlay",
+            "replaceWith": "$fluent-overlay",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-overlay",
+            "replaceWith": "$bootstrap-overlay",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-overlay",
+            "replaceWith": "$indigo-overlay",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-overlay",
+            "replaceWith": "$dark-overlay",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-overlay",
+            "replaceWith": "$dark-fluent-overlay",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-overlay",
+            "replaceWith": "$dark-bootstrap-overlay",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-overlay",
+            "replaceWith": "$dark-indigo-overlay",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-pagination",
+            "replaceWith": "$light-pagination",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-pagination",
+            "replaceWith": "$fluent-pagination",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-pagination",
+            "replaceWith": "$bootstrap-pagination",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-pagination",
+            "replaceWith": "$indigo-pagination",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-pagination",
+            "replaceWith": "$base-dark-pagination",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-pagination",
+            "replaceWith": "$dark-pagination",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-pagination",
+            "replaceWith": "$dark-fluent-pagination",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-pagination",
+            "replaceWith": "$dark-bootstrap-pagination",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-pagination",
+            "replaceWith": "$dark-indigo-pagination",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-pie-chart",
+            "replaceWith": "$light-pie-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-pie-chart",
+            "replaceWith": "$fluent-pie-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-pie-chart",
+            "replaceWith": "$bootstrap-pie-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-pie-chart",
+            "replaceWith": "$indigo-pie-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-pie-chart",
+            "replaceWith": "$dark-pie-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-pie-chart",
+            "replaceWith": "$dark-fluent-pie-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-pie-chart",
+            "replaceWith": "$dark-bootstrap-pie-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-pie-chart",
+            "replaceWith": "$dark-indigo-pie-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-progress",
+            "replaceWith": "$default-shape-progress",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-progress",
+            "replaceWith": "$round-shape-progress",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-progress",
+            "replaceWith": "$square-shape-progress",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-progress",
+            "replaceWith": "$fluent-shape-progress",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-progress",
+            "replaceWith": "$bootstrap-shape-progress",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-progress-linear",
+            "replaceWith": "$light-progress-linear",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-progress-linear",
+            "replaceWith": "$fluent-progress-linear",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-progress-linear",
+            "replaceWith": "$bootstrap-progress-linear",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-progress-linear",
+            "replaceWith": "$indigo-progress-linear",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-progress-circular",
+            "replaceWith": "$light-progress-circular",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-progress-circular",
+            "replaceWith": "$fluent-progress-circular",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-progress-circular",
+            "replaceWith": "$bootstrap-progress-circular",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-progress-circular",
+            "replaceWith": "$indigo-progress-circular",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-progress-linear",
+            "replaceWith": "$dark-progress-linear",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-progress-linear",
+            "replaceWith": "$dark-fluent-progress-linear",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-progress-linear",
+            "replaceWith": "$dark-bootstrap-progress-linear",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-progress-linear",
+            "replaceWith": "$dark-indigo-progress-linear",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-progress-circular",
+            "replaceWith": "$dark-progress-circular",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-progress-circular",
+            "replaceWith": "$dark-fluent-progress-circular",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-progress-circular",
+            "replaceWith": "$dark-bootstrap-progress-circular",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-progress-circular",
+            "replaceWith": "$dark-indigo-progress-circular",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-radio",
+            "replaceWith": "$light-radio",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-radio",
+            "replaceWith": "$fluent-radio",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-radio",
+            "replaceWith": "$bootstrap-radio",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-radio",
+            "replaceWith": "$indigo-radio",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-radio",
+            "replaceWith": "$dark-radio",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-radio",
+            "replaceWith": "$dark-fluent-radio",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-radio",
+            "replaceWith": "$dark-bootstrap-radio",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-radio",
+            "replaceWith": "$dark-indigo-radio",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-ripple",
+            "replaceWith": "$light-ripple",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-ripple",
+            "replaceWith": "$fluent-ripple",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-ripple",
+            "replaceWith": "$bootstrap-ripple",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-ripple",
+            "replaceWith": "$indigo-ripple",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-ripple",
+            "replaceWith": "$dark-ripple",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-ripple",
+            "replaceWith": "$dark-fluent-ripple",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-ripple",
+            "replaceWith": "$dark-bootstrap-ripple",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-ripple",
+            "replaceWith": "$dark-indigo-ripple",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-scrollbar",
+            "replaceWith": "$light-scrollbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-scrollbar",
+            "replaceWith": "$fluent-scrollbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-scrollbar",
+            "replaceWith": "$bootstrap-scrollbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-scrollbar",
+            "replaceWith": "$indigo-scrollbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-scrollbar",
+            "replaceWith": "$dark-scrollbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-scrollbar",
+            "replaceWith": "$dark-fluent-scrollbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-scrollbar",
+            "replaceWith": "$dark-bootstrap-scrollbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-scrollbar",
+            "replaceWith": "$dark-indigo-scrollbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-shape-chart",
+            "replaceWith": "$light-shape-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-chart",
+            "replaceWith": "$fluent-shape-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-chart",
+            "replaceWith": "$bootstrap-shape-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-chart",
+            "replaceWith": "$indigo-shape-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-shape-chart",
+            "replaceWith": "$dark-shape-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-shape-chart",
+            "replaceWith": "$dark-fluent-shape-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-shape-chart",
+            "replaceWith": "$dark-bootstrap-shape-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-shape-chart",
+            "replaceWith": "$dark-indigo-shape-chart",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-slider",
+            "replaceWith": "$light-slider",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-slider",
+            "replaceWith": "$fluent-slider",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-slider",
+            "replaceWith": "$bootstrap-slider",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-slider",
+            "replaceWith": "$indigo-slider",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-slider",
+            "replaceWith": "$dark-slider",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-slider",
+            "replaceWith": "$dark-fluent-slider",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-slider",
+            "replaceWith": "$dark-bootstrap-slider",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-slider",
+            "replaceWith": "$dark-indigo-slider",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-snackbar",
+            "replaceWith": "$default-shape-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-snackbar",
+            "replaceWith": "$round-shape-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-snackbar",
+            "replaceWith": "$square-shape-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-snackbar",
+            "replaceWith": "$fluent-shape-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-snackbar",
+            "replaceWith": "$bootstrap-shape-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-snackbar",
+            "replaceWith": "$indigo-shape-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-snackbar",
+            "replaceWith": "$default-elevation-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-elevation-snackbar",
+            "replaceWith": "$bootstrap-elevation-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-snackbar",
+            "replaceWith": "$light-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-snackbar",
+            "replaceWith": "$fluent-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-snackbar",
+            "replaceWith": "$bootstrap-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-snackbar",
+            "replaceWith": "$indigo-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-snackbar",
+            "replaceWith": "$dark-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-snackbar",
+            "replaceWith": "$dark-fluent-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-snackbar",
+            "replaceWith": "$dark-bootstrap-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-snackbar",
+            "replaceWith": "$dark-indigo-snackbar",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-sparkline",
+            "replaceWith": "$light-sparkline",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-sparkline",
+            "replaceWith": "$fluent-sparkline",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-sparkline",
+            "replaceWith": "$bootstrap-sparkline",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-sparkline",
+            "replaceWith": "$indigo-sparkline",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-sparkline",
+            "replaceWith": "$dark-sparkline",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-sparkline",
+            "replaceWith": "$dark-fluent-sparkline",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-sparkline",
+            "replaceWith": "$dark-bootstrap-sparkline",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-sparkline",
+            "replaceWith": "$dark-indigo-sparkline",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-splitter",
+            "replaceWith": "$round-shape-splitter",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-splitter",
+            "replaceWith": "$square-shape-splitter",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-splitter",
+            "replaceWith": "$light-splitter",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-splitter",
+            "replaceWith": "$fluent-splitter",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-splitter",
+            "replaceWith": "$bootstrap-splitter",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-splitter",
+            "replaceWith": "$indigo-splitter",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-splitter",
+            "replaceWith": "$dark-splitter",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-splitter",
+            "replaceWith": "$dark-fluent-splitter",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-splitter",
+            "replaceWith": "$dark-bootstrap-splitter",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-splitter",
+            "replaceWith": "$dark-indigo-splitter",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-switch",
+            "replaceWith": "$default-shape-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-switch",
+            "replaceWith": "$round-shape-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-switch",
+            "replaceWith": "$square-shape-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-switch",
+            "replaceWith": "$fluent-shape-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-switch",
+            "replaceWith": "$bootstrap-shape-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-switch",
+            "replaceWith": "$indigo-shape-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-switch",
+            "replaceWith": "$default-elevation-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-switch",
+            "replaceWith": "$light-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-switch",
+            "replaceWith": "$fluent-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-switch",
+            "replaceWith": "$bootstrap-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-switch",
+            "replaceWith": "$indigo-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-switch",
+            "replaceWith": "$base-dark-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-switch",
+            "replaceWith": "$dark-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-switch",
+            "replaceWith": "$dark-fluent-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-switch",
+            "replaceWith": "$dark-bootstrap-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-switch",
+            "replaceWith": "$dark-indigo-switch",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-tabs",
+            "replaceWith": "$default-shape-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-tabs:",
+            "replaceWith": "$round-shape-tabs:",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-tabs",
+            "replaceWith": "$square-shape-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-tabs",
+            "replaceWith": "$fluent-shape-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-tabs",
+            "replaceWith": "$bootstrap-shape-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-tabs",
+            "replaceWith": "$light-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-tabs",
+            "replaceWith": "$fluent-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-tabs",
+            "replaceWith": "$bootstrap-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-tabs",
+            "replaceWith": "$indigo-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-tabs",
+            "replaceWith": "$base-dark-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-tabs",
+            "replaceWith": "$dark-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-tabs",
+            "replaceWith": "$dark-fluent-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-tabs",
+            "replaceWith": "$dark-bootstrap-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-tabs",
+            "replaceWith": "$dark-indigo-tabs",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-time-picker",
+            "replaceWith": "$default-shape-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-time-picker",
+            "replaceWith": "$round-shape-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-time-picker",
+            "replaceWith": "$square-shape-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-time-picker",
+            "replaceWith": "$fluent-shape-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-time-picker",
+            "replaceWith": "$bootstrap-shape-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-time-picker",
+            "replaceWith": "$indigo-shape-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-time-picker",
+            "replaceWith": "$default-elevation-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-time-picker",
+            "replaceWith": "$light-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-time-picker",
+            "replaceWith": "$fluent-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-time-picker",
+            "replaceWith": "$bootstrap-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-time-picker",
+            "replaceWith": "$indigo-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-time-picker",
+            "replaceWith": "$dark-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-time-picker",
+            "replaceWith": "$dark-fluent-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-time-picker",
+            "replaceWith": "$dark-bootstrap-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-time-picker",
+            "replaceWith": "$dark-indigo-time-picker",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-toast",
+            "replaceWith": "$default-shape-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-toast",
+            "replaceWith": "$round-shape-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-toast",
+            "replaceWith": "$square-shape-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-toast",
+            "replaceWith": "$fluent-shape-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-toast",
+            "replaceWith": "$bootstrap-shape-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-toast",
+            "replaceWith": "$indigo-shape-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-elevation-toast",
+            "replaceWith": "$default-elevation-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-elevation-toast",
+            "replaceWith": "$bootstrap-elevation-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-toast",
+            "replaceWith": "$light-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-toast",
+            "replaceWith": "$fluent-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-toast",
+            "replaceWith": "$bootstrap-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-toast",
+            "replaceWith": "$indigo-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-toast",
+            "replaceWith": "$dark-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-toast",
+            "replaceWith": "$dark-fluent-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-toast",
+            "replaceWith": "$dark-bootstrap-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-toast",
+            "replaceWith": "$dark-indigo-toast",
+            "type":"variable"
+        },
+        {
+            "name": "$_default-shape-tooltip",
+            "replaceWith": "$default-shape-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-tooltip",
+            "replaceWith": "$round-shape-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-tooltip",
+            "replaceWith": "$square-shape-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-tooltip",
+            "replaceWith": "$fluent-shape-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-tooltip",
+            "replaceWith": "$bootstrap-shape-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-tooltip",
+            "replaceWith": "$indigo-shape-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-tooltip",
+            "replaceWith": "$light-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-tooltip",
+            "replaceWith": "$fluent-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-tooltip",
+            "replaceWith": "$bootstrap-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-tooltip",
+            "replaceWith": "$indigo-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-tooltip",
+            "replaceWith": "$dark-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-tooltip",
+            "replaceWith": "$dark-fluent-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-tooltip",
+            "replaceWith": "$dark-bootstrap-tooltip",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-tooltip:",
+            "replaceWith": "$dark-indigo-tooltip:",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-tree",
+            "replaceWith": "$light-tree",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-tree",
+            "replaceWith": "$fluent-tree",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-tree",
+            "replaceWith": "$bootstrap-tree",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-tree",
+            "replaceWith": "$indigo-tree",
+            "type":"variable"
+        },
+        {
+            "name": "$_base-dark-tree",
+            "replaceWith": "$base-dark-tree",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-tree",
+            "replaceWith": "$dark-tree",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-tree",
+            "replaceWith": "$dark-fluent-tree",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-tree",
+            "replaceWith": "$dark-bootstrap-tree",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-tree",
+            "replaceWith": "$dark-indigo-tree",
+            "type":"variable"
+        },
+        {
+            "name": "$_round-shape-watermark",
+            "replaceWith": "$round-shape-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_square-shape-watermark",
+            "replaceWith": "$square-shape-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_material-shape-watermark",
+            "replaceWith": "$material-shape-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-shape-watermark",
+            "replaceWith": "$fluent-shape-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-shape-watermark",
+            "replaceWith": "$bootstrap-shape-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-shape-watermark",
+            "replaceWith": "$indigo-shape-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-watermark-image",
+            "replaceWith": "$light-watermark-image",
+            "type":"variable"
+        },
+        {
+            "name": "$_light-watermark",
+            "replaceWith": "$light-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_fluent-watermark",
+            "replaceWith": "$fluent-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_bootstrap-watermark",
+            "replaceWith": "$bootstrap-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_indigo-watermark",
+            "replaceWith": "$indigo-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-watermark-image",
+            "replaceWith": "$dark-watermark-image",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-watermark",
+            "replaceWith": "$dark-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-fluent-watermark",
+            "replaceWith": "$dark-fluent-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-bootstrap-watermark",
+            "replaceWith": "$dark-bootstrap-watermark",
+            "type":"variable"
+        },
+        {
+            "name": "$_dark-indigo-watermark",
+            "replaceWith": "$dark-indigo-watermark",
+            "type":"variable"
+        }
+    ]
+}
