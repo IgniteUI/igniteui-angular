@@ -612,6 +612,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         this.value = value;
         dropdown.width = chip.nativeElement.clientWidth + 'px';
         this.aggregateList = this.getAggregateList(value);
+        this.cdr.detectChanges();
         dropdown.open(this._subMenuOverlaySettings);
     }
 }
