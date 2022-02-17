@@ -237,7 +237,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.unpinnedColumnCollection && this.unpinnedColumnCollection.length > 0) {
+        if (changes.unpinnedColumnCollection) {
             this.populateColumnDimensionsByLevel();
         }
     }
