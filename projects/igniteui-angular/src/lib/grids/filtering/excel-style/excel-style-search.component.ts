@@ -304,9 +304,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             const anyFiltered = this.esf.listData.some(i => i.isFiltered);
             const anyUnfiltered = this.esf.listData.some(i => !i.isFiltered);
 
-            if (anyFiltered && anyUnfiltered) {
-                searchAllBtn.indeterminate = true;
-            }
+            searchAllBtn.indeterminate = anyFiltered && anyUnfiltered;
 
             this.esf.listData.forEach(i => i.isSelected = i.isFiltered);
             this.displayedListData = this.esf.listData;
