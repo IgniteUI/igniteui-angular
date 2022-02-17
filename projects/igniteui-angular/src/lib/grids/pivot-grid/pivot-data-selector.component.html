@@ -58,7 +58,7 @@
         >
             <igx-expansion-panel-title class="igx-pivot-data-selector__header">
                 <h6 class="igx-pivot-data-selector__header-title">
-                    {{ panel.name }}
+                    {{ grid.resourceStrings[panel.i18n] }}
                 </h6>
                 <div class="igx-pivot-data-selector__header-extra">
                     <igx-icon>{{ panel.icon }}</igx-icon>
@@ -151,7 +151,7 @@
                 class="igx-pivot-data-selector__empty"
                 *ngIf="this.grid[panel.dataKey].length === 0"
             >
-                Drag Items Here
+                {{ grid.resourceStrings.igx_grid_pivot_selector_panel_empty }}
             </div>
         </igx-expansion-panel-body>
     </igx-expansion-panel>

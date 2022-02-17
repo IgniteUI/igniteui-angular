@@ -3,13 +3,10 @@ import { IgxDragDropModule } from "../../directives/drag-drop/drag-drop.directiv
 import { IgxExpansionPanelModule } from "../../expansion-panel/expansion-panel.module";
 import { IgxGridComponent } from "../grid/grid.component";
 import { IgxGridModule } from "../grid/grid.module";
-import {
-    IgxFilterPivotItemsPipe,
-    IgxPivotDataSelectorComponent
-} from "./pivot-data-selector.component";
+import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import { IgxPivotGridComponent } from "./pivot-grid.component";
 import {
-    IgxPivotCellMergingPipe,
+    IgxFilterPivotItemsPipe, IgxPivotCellMergingPipe,
     IgxPivotColumnPipe,
     IgxPivotGridColumnSortingPipe,
     IgxPivotGridFilterPipe,
