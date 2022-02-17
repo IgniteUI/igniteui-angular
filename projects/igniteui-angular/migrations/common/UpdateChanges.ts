@@ -30,6 +30,11 @@ export interface BoundPropertyObject {
     bindingType: InputPropertyType;
 }
 
+interface AppliedChange {
+    overwrite: boolean,
+    fileContent: string
+}
+
 /* eslint-disable arrow-parens */
 export class UpdateChanges {
     protected tsconfigPath = TSCONFIG_PATH;
@@ -474,34 +479,22 @@ export class UpdateChanges {
         const aliases = this.getAliases(entryPath);
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
-        // const allowedEndCharacters = new RegExp('\(', 'g');
         for (const change of this.themeChanges.changes) {
             if (change.type !== ThemeType.Function && change.type !== ThemeType.Mixin) {
                 continue;
             }
-            let occurrences = [];
+            let occurrences: number[] = [];
             if (aliases.length > 0 && !aliases.includes('*')) {
-                for (let i = 0; i < aliases.length; i++) {
-                    occurrences = occurrences.concat(findMatches(fileContent, aliases[i] + '.' + change.name));
+                for (const alias of aliases) {
+                    occurrences = occurrences.concat(findMatches(fileContent, alias + '.' + change.name));
                 }
-                for (let j = 0; j < aliases.length; j++) {
-                    let aliasLength = aliases[j].length + 1;
-                    for (let i = occurrences.length - 1; i >= 0; i--) {
-                        const endCharacters = fileContent[(occurrences[i] + aliasLength + change.name.length)] === '(';
-                        if (endCharacters) {
-                            fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
-                            overwrite = true;
-                        }
-                    }
+                if (occurrences.length > 0) {
+                    ({ overwrite, fileContent } = this.tryReplaceScssFunctionWithAlias(occurrences, aliases, fileContent, change));
                 }
             } else {
                 occurrences = findMatches(fileContent, change.name);
-                for (let i = occurrences.length - 1; i >= 0; i--) {
-                    const endCharacters = fileContent[(occurrences[i] + change.name.length)] === '(';
-                    if (endCharacters) {
-                        fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
-                        overwrite = true;
-                    }
+                if (occurrences.length > 0) {
+                    ({ overwrite, fileContent } = this.tryReplaceScssFunction(occurrences, fileContent, change));
                 }
             }
         }
@@ -597,6 +590,35 @@ export class UpdateChanges {
         if (changes.size) {
             this.host.overwrite(entryPath, content);
         }
+    }
+
+    // TODO: combine both functions
+    private tryReplaceScssFunctionWithAlias(occurrences: number[], aliases: string[], fileContent: string, change: ThemeChange): AppliedChange {
+        let overwrite = false;
+        for (const alias of aliases) {
+            const aliasLength = alias.length + 1; // + 1 because of the dot - alias.member
+            for (let i = occurrences.length - 1; i >= 0; i--) {
+                const isOpenParenthesis = fileContent[occurrences[i] + aliasLength + change.name.length] === '(';
+                if (isOpenParenthesis) {
+                    fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
+                    overwrite = true;
+                }
+            }
+        }
+
+        return { overwrite, fileContent };
+    }
+    private tryReplaceScssFunction(occurrences: number[], fileContent: string, change: ThemeChange): AppliedChange {
+        let overwrite = false;
+        for (let i = occurrences.length - 1; i >= 0; i--) {
+            const isOpenParenthesis = fileContent[occurrences[i] + change.name.length] === '(';
+            if (isOpenParenthesis) {
+                fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
+                overwrite = true;
+            }
+        }
+
+        return { overwrite, fileContent };
     }
 
     private patchTsConfig(): void {

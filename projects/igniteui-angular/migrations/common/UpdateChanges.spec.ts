@@ -1079,8 +1079,8 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
 @use 'some/url' as my-namespace;
 
 $my-palette: igniteui1.igx-palette($primary: red, $secondary:  blue);
-$my-color: igniteui2.igx-contrast-color($primary: blue, $secondary: orange);
 $my-text: igniteui3.text-contrast($background: yellow);
+$my-color: igniteui2.igx-contrast-color($primary: blue, $secondary: orange);
 $my-other-color: my-namespace.contrast-color($primary: white, $secondary: black, $elevation: true);
 $my-other-theme: my-namespace.function1($color1: igniteui2.igx-contrast-color($palette: igniteui1.igx-palette($primary: blue, $secondary: white), $color: igniteui1.igx-color($palette: $my-palette, $color: $my-color)));
 `;
@@ -1094,8 +1094,8 @@ $my-other-theme: my-namespace.function1($color1: igniteui2.igx-contrast-color($p
 @use 'some/url' as my-namespace;
 
 $my-palette: igniteui1.palette($primary: red, $secondary:  blue);
-$my-color: igniteui2.contrast-color($primary: blue, $secondary: orange);
 $my-text: igniteui3.text-contrast($background: yellow);
+$my-color: igniteui2.contrast-color($primary: blue, $secondary: orange);
 $my-other-color: my-namespace.contrast-color($primary: white, $secondary: black, $elevation: true);
 $my-other-theme: my-namespace.function1($color1: igniteui2.contrast-color($palette: igniteui1.palette($primary: blue, $secondary: white), $color: igniteui1.color($palette: $my-palette, $color: $my-color)));
 `;
@@ -1201,12 +1201,12 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
 
         const fileContent =
 `@use 'igniteui-angular/theming' as igniteui1;
-@use 'igniteui-angular/theme' as igniteui2;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
+@use 'igniteui-angular/theme' as igniteui2;
 @use 'some/url' as my-namespace;
 
-@include igniteui1.igx-theme($palette: $my-palette);
 @include igniteui2.igx-light-theme($palette: $my-palette);
+@include igniteui1.igx-theme($palette: $my-palette);
 @include igniteui3.igx-dark-theme($elevation: $my-elevation);
 @include my-namespace.theme($palette: $my-palette);
 `;
@@ -1215,12 +1215,12 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
 
         const expectedFileContent =
 `@use 'igniteui-angular/theming' as igniteui1;
-@use 'igniteui-angular/theme' as igniteui2;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
+@use 'igniteui-angular/theme' as igniteui2;
 @use 'some/url' as my-namespace;
 
-@include igniteui1.theme($palette: $my-palette);
 @include igniteui2.light-theme($palette: $my-palette);
+@include igniteui1.theme($palette: $my-palette);
 @include igniteui3.dark-theme($elevation: $my-elevation);
 @include my-namespace.theme($palette: $my-palette);
 `;
