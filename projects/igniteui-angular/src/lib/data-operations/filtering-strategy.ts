@@ -116,7 +116,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
                 const date = new Date(val);
                 const key = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
-                return map.has(key) ? map : map.set(key, val)
+                return map.has(key) ? map : map.set(key, date);
             }, new Map());
             uniqueValues = Array.from(valuesMap.values());
         } else {

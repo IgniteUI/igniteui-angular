@@ -492,31 +492,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.generateListData();
     }
 
-    // private generateHierarchicalUniqueValues (columnValues: any[]) {
-    //     if (columnValues.some(colVal => (
-    //             (colVal.children && colVal.children.length > 0) ||
-    //             (colVal.value.children && colVal.value.children.length > 0)
-    //             ))) {
-    //         columnValues.forEach(colVal => {
-    //             if (colVal.children && colVal.children.length > 0) {
-    //                 colVal.children = this.generateHierarchicalUniqueValues(colVal.children);
-    //             } else if (colVal.value.children && colVal.value.children.length > 0) {
-    //                 colVal.value.children = this.generateHierarchicalUniqueValues(colVal.value.children);
-    //             }
-    //         });
-    //     } else {
-    //         columnValues = columnValues.map(colVal => colVal.value);
-    //         const uniqueValues = this.generateUniqueValues(columnValues);
-    //         columnValues = uniqueValues.map(value => {
-    //             const hierarchicalColumnValue = new HierarchicalColumnValue();
-    //             hierarchicalColumnValue.value = value;
-    //             return hierarchicalColumnValue;
-    //         })
-    //     }
-
-    //     return columnValues;
-    // }
-
     private generateFilterValues(isDateColumn: boolean = false) {
         let filterValues;
 
@@ -675,7 +650,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                         this.selectAllSelected = false;
                     }
                 }
-                filterListItem.value = this.getFilterItemValue(value);
+                filterListItem.value = value;
                 filterListItem.label = this.getFilterItemLabel(value, applyFormatter);
                 filterListItem.indeterminate = false;
                 filterListItem.children = this.generateFilterListItems(element.children ?? element.value?.children, shouldUpdateSelection);
@@ -747,14 +722,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             default:
                 return value;
         }
-    }
-
-    private getFilterItemValue(element: any) {
-        if (this.column.dataType === GridColumnDataType.Date) {
-            element = parseDate(element);
-        }
-
-        return element;
     }
 
     private getExpressionValue(element: any): string {
