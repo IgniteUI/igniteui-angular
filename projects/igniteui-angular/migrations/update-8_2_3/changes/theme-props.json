@@ -3,7 +3,8 @@
     "changes": [{
             "name": "$disable-button-shadow",
             "replaceWith": "$button-shadow",
-            "owner": "igx-carousel-theme"
+            "owner": "igx-carousel-theme",
+            "type": "property"
         }
     ]
 }

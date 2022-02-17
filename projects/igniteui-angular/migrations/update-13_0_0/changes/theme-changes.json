@@ -5,55 +5,55 @@
             "name": "$legacy-support",
             "remove": true,
             "owner": "igx-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$legacy-support",
             "remove": true,
             "owner": "igx-light-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$legacy-support",
             "remove": true,
             "owner": "igx-dark-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$legacy-support",
             "remove": true,
             "owner": "igx-fluent-light-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$legacy-support",
             "remove": true,
             "owner": "igx-fluent-dark-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$legacy-support",
             "remove": true,
             "owner": "igx-bootstrap-light-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$legacy-support",
             "remove": true,
             "owner": "igx-bootstrap-dark-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$legacy-support",
             "remove": true,
             "owner": "igx-indigo-light-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$legacy-support",
             "remove": true,
             "owner": "igx-indigo-dark-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$_default-shape-action-strip",

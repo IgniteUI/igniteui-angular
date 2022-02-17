@@ -5,7 +5,7 @@
             "name": "$color",
             "replaceWith": "$icon-color",
             "owner": "igx-action-strip-theme",
-            "type":"variable"
+            "type":"property"
         }
     ]
 }

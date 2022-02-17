@@ -3,7 +3,8 @@
     "changes": [{
             "name": "$disable-shadow",
             "remove": true,
-            "owner": "igx-badge-theme"
+            "owner": "igx-badge-theme",
+            "type": "property"
         }
     ]
 }
