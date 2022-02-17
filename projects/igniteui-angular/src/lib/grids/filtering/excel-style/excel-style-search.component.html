@@ -46,7 +46,7 @@
 </igx-list>
 
 <div class="igx-excel-filter__tree" *ngIf="isHierarchical()">
-    <div class="igx-excel-filter__tree-alike">
+    <div class="igx-excel-filter__tree-alike" *ngIf="!isTreeEmpty()">
         <div class="igx-excel-filter__tree-alike-item">
             <igx-checkbox #selectAllCheckbox
                           [value]="selectAllItem"
@@ -102,6 +102,10 @@
             </igx-tree-node>
         </igx-tree-node>
     </igx-tree>
+
+    <article *ngIf="isTreeEmpty()">
+        {{resourceStrings.igx_list_no_items}}
+    </article>
 </div>
 
 <ng-template #defaultExcelStyleLoadingValuesTemplate>

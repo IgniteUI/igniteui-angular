@@ -26,6 +26,8 @@ import { cloneHierarchicalArray, PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem } from './common';
 import { IgxTreeComponent, ITreeNodeSelectionEvent } from '../../../tree/public_api';
+import { CurrentResourceStrings } from '../../../core/i18n/resources';
+import { IListResourceStrings } from '../../../core/i18n/list-resources';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -171,11 +173,19 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             return this.defaultExcelStyleLoadingValuesTemplate;
         }
     }
+    
+    /**
+     * @hidden @internal
+     */
+    public get resourceStrings(): IListResourceStrings {
+        return this._resourceStrings;
+    }
 
     private _isLoading;
     private _addToCurrentFilterItem: FilterListItem;
     private _selectAllItem: FilterListItem;
     private _hierarchicalSelectedItems: FilterListItem[];
+    private _resourceStrings = CurrentResourceStrings.ListResStrings;
     private destroy$ = new Subject<boolean>();
 
     constructor(public cdr: ChangeDetectorRef, public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
@@ -409,12 +419,20 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             }
 
             this.esf.listData.forEach(i => i.isSelected = i.isFiltered);
-            this.displayedListData = this.esf.listData;
+            if (this.displayedListData !== this.esf.listData) {
+                this.displayedListData = this.esf.listData;
+                if (this.isHierarchical()) {
+                    this.cdr.detectChanges();
+                    this.tree.nodes.forEach(n => {
+                        n.selected = true;
+                    });
+                }
+            }
             selectAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all;
             this.cdr.detectChanges();
 
             return;
-        }
+        }   
 
         const searchVal = this.searchValue.toLowerCase();
         if (this.isHierarchical()) {
@@ -542,6 +560,13 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public isHierarchical() {
         return this.esf.isHierarchical;
+    }
+
+    /**
+     * @hidden @internal
+     */
+     public isTreeEmpty() {
+        return this.esf.isHierarchical && this.displayedListData.length === 0;
     }
 
     private hierarchicalSelectMatches(data: FilterListItem[], searchVal: string) {
