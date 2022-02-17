@@ -692,15 +692,22 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public uniqueDimensionValuesStrategy(column: IgxColumnComponent, exprTree: IFilteringExpressionsTree,
         done: (uniqueValues: any[]) => void) {
         const config = this.pivotConfiguration;
-        const enabledDimensions = this.allDimension.filter(x => x && x.enabled);
+        const enabledDimensions = this.allDimensions.filter(x => x && x.enabled);
         const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === column.field);
         if (dim) {
             this.getDimensionData(dim, exprTree, uniqueValues => done(uniqueValues));
         }
     }
 
-    /** @hidden @internal */
-    public get allDimension() {
+    /**
+     * Gets the full list of dimensions.
+     *
+     * @example
+     * ```typescript
+     * const dimensions = this.grid.allDimensions;
+     * ```
+     */
+    public get allDimensions() {
         const config = this.pivotConfiguration;
         return (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
     }
@@ -1516,7 +1523,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected generateDimensionColumns(): IgxColumnComponent[] {
-        const leafFields = PivotUtil.flatten(this.allDimension, 0).filter(x => !x.childLevel).map(x => x.memberName);
+        const leafFields = PivotUtil.flatten(this.allDimensions, 0).filter(x => !x.childLevel).map(x => x.memberName);
         const columns = [];
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         leafFields.forEach((field) => {
