@@ -156,6 +156,7 @@ const GridResourceStringsDA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_selector_columns: 'Columns',
     igx_grid_pivot_selector_values: 'Values',
     igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
 };
 
 /**

@@ -156,6 +156,7 @@ const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_selector_columns: 'Колони',
     igx_grid_pivot_selector_values: 'Стойнoсти',
     igx_grid_pivot_selector_panel_empty: 'Привлачи тук',
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
 };
 
 /**

@@ -148,6 +148,7 @@ export interface IGridResourceStrings {
     igx_grid_pivot_column_drop_chip?: string;
     igx_grid_pivot_filter_drop_chip?: string;
     igx_grid_pivot_value_drop_chip?: string;
+    igx_grid_pivot_empty_message?: string;
     igx_grid_pivot_selector_filters?: string;
     igx_grid_pivot_selector_rows?: string;
     igx_grid_pivot_selector_columns?: string;
@@ -305,6 +306,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_pivot_column_drop_chip: 'Drop here to use as column',
     igx_grid_pivot_filter_drop_chip: 'Drop here to use as filter',
     igx_grid_pivot_value_drop_chip: 'Drop here to use as value',
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.',
     igx_grid_pivot_selector_filters: 'Filters',
     igx_grid_pivot_selector_rows: 'Rows',
     igx_grid_pivot_selector_columns: 'Columns',
