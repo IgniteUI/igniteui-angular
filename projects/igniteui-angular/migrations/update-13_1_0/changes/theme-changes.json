@@ -7,6 +7,26 @@
             "type": "function"
         },
         {
+            "name": "igx-color",
+            "replaceWith": "color",
+            "type": "function"
+        },
+        {
+            "name": "igx-contrast-color",
+            "replaceWith": "contrast-color",
+            "type": "function"
+        },
+        {
+            "name": "igx-elevations",
+            "replaceWith": "elevations",
+            "type": "function"
+        },
+        {
+            "name": "igx-elevation",
+            "replaceWith": "elevation",
+            "type": "function"
+        },
+        {
             "name": "igx-theme",
             "replaceWith": "theme",
             "type": "mixin"
