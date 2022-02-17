@@ -168,7 +168,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @HostBinding('class.igx-grid__pivot--super-compact')
     @Input()
-    public superCompactMode = false;
+    public get superCompactMode() {
+        return this._superCompactMode;
+    }
+
+    public set superCompactMode(value) {
+        Promise.resolve().then(() => {
+            // wait for the current detection cycle to end before triggering a new one.
+            this._superCompactMode = value;
+            this.cdr.detectChanges();
+        });
+    }
 
     /**
     * Returns the theme of the component.
@@ -416,7 +426,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private _filteredData;
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
-
+    private _superCompactMode = false;
 
     /**
     * Gets/Sets the default expand state for all rows.
