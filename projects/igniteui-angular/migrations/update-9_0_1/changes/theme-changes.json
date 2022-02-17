@@ -1,11 +1,11 @@
 {
-    "$schema": "../../common/schema/theme-props.schema.json",
+    "$schema": "../../common/schema/theme-changes.schema.json",
     "changes": [
         {
             "name": "$base-color",
             "remove": true,
             "owner": "igx-typography",
-            "type": "variable"
+            "type": "property"
         }
     ]
 }
