@@ -135,7 +135,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get pivotConfiguration() {
-        return this._pivotConfiguration;
+        return this._pivotConfiguration || { rows: null, columns: null, values: null, filters: null };
     }
 
     @Input()
@@ -168,7 +168,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @HostBinding('class.igx-grid__pivot--super-compact')
     @Input()
-    public superCompactMode = false;
+    public get superCompactMode() {
+        return this._superCompactMode;
+    }
+
+    public set superCompactMode(value) {
+        Promise.resolve().then(() => {
+            // wait for the current detection cycle to end before triggering a new one.
+            this._superCompactMode = value;
+            this.cdr.detectChanges();
+        });
+    }
 
     /**
     * Returns the theme of the component.
@@ -416,8 +426,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private _filteredData;
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
+    private _superCompactMode = false;
     private _moving = true;
-
 
     /**
     * Gets/Sets the default expand state for all rows.
@@ -693,12 +703,24 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public uniqueDimensionValuesStrategy(column: IgxColumnComponent, exprTree: IFilteringExpressionsTree,
         done: (uniqueValues: any[]) => void) {
         const config = this.pivotConfiguration;
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
-        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+        const enabledDimensions = this.allDimensions.filter(x => x && x.enabled);
         const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === column.field);
         if (dim) {
             this.getDimensionData(dim, exprTree, uniqueValues => done(uniqueValues));
         }
+    }
+
+    /**
+     * Gets the full list of dimensions.
+     *
+     * @example
+     * ```typescript
+     * const dimensions = this.grid.allDimensions;
+     * ```
+     */
+    public get allDimensions() {
+        const config = this.pivotConfiguration;
+        return (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
     }
 
     public getDimensionData(dim: IPivotDimension,
@@ -854,11 +876,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get rowDimensions() {
-        return this.pivotConfiguration.rows.filter(x => x.enabled) || [];
+        return this.pivotConfiguration.rows?.filter(x => x.enabled) || [];
     }
 
     public get columnDimensions() {
-        return this.pivotConfiguration.columns.filter(x => x.enabled) || [];
+        return this.pivotConfiguration.columns?.filter(x => x.enabled) || [];
     }
 
     public get filterDimensions() {
@@ -866,7 +888,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get values() {
-        return this.pivotConfiguration.values.filter(x => x.enabled) || [];
+        return this.pivotConfiguration.values?.filter(x => x.enabled) || [];
     }
 
     public toggleColumn(col: IgxColumnComponent) {
@@ -1520,9 +1542,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected generateDimensionColumns(): IgxColumnComponent[] {
-        const config = this.pivotConfiguration;
-        const allDimensions = config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined);
-        const leafFields = PivotUtil.flatten(allDimensions, 0).filter(x => !x.childLevel).map(x => x.memberName);
+        const leafFields = PivotUtil.flatten(this.allDimensions, 0).filter(x => !x.childLevel).map(x => x.memberName);
         const columns = [];
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         leafFields.forEach((field) => {
@@ -1694,5 +1714,34 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public getPropName(dim: IPivotDimension) {
         return !!dim ?? dim.memberName + this.pivotKeys.rowDimensionSeparator + 'height';
+    }
+
+    /**
+    * @hidden @internal
+    */
+    @ViewChild('emptyPivotGridTemplate', { read: TemplateRef, static: true })
+    public defaultEmptyPivotGridTemplate: TemplateRef<any>;
+
+    /**
+     * Gets/Sets a custom template when pivot grid is empty.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-grid [emptyPivotGridTemplate]="myTemplate"><igx-pivot-grid>
+     * ```
+     */
+    @Input()
+    public emptyPivotGridTemplate: TemplateRef<any>;
+
+    /**
+    * @hidden @internal
+    */
+    public get template(): TemplateRef<any> {
+        const allEnabledDimensions = this.rowDimensions.concat(this.columnDimensions);
+        if (allEnabledDimensions.length === 0 && this.values.length === 0) {
+            // no enabled values and dimensions
+            return this.emptyPivotGridTemplate || this.defaultEmptyPivotGridTemplate;
+        }
+        super.template;
     }
 }
