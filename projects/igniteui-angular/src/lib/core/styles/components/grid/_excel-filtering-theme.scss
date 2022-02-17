@@ -196,6 +196,10 @@
         display: flex;
         justify-content: space-between;
 
+        igx-icon {
+            justify-content: initial;
+        }
+
         @include if-rtl() {
             flex-direction: row-reverse;
 
