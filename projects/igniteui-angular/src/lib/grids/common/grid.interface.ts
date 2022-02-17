@@ -626,6 +626,7 @@ export interface HierarchicalGridType extends GridType {
 
 export interface PivotGridType extends GridType {
     pivotConfiguration: IPivotConfiguration;
+    allDimensions: IPivotDimension[],
     showPivotConfigurationUI: boolean;
     columnDimensions: IPivotDimension[];
     rowDimensions: IPivotDimension[];
