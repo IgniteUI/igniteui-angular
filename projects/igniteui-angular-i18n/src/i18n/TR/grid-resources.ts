@@ -150,7 +150,8 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_row_drop_chip: 'Drop here to use as row',
     igx_grid_pivot_column_drop_chip: 'Drop here to use as column',
     igx_grid_pivot_filter_drop_chip: 'Drop here to use as filter',
-    igx_grid_pivot_value_drop_chip: 'Drop here to use as value'
+    igx_grid_pivot_value_drop_chip: 'Drop here to use as value',
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
 };
 
 /**
