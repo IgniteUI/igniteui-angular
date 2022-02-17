@@ -163,10 +163,11 @@
 /// @param {Color} $name - The base color name (primary, secondary, etc.) to be used to generate a color variant.
 /// @param {number|string} $variant - The target shade variant.
 /// @param {number|string} $theme - The target theme variant.
-@function gen-hsla-color($name, $variant, $theme, $color) {
-    $h: var(--igx-#{$name}-h);
-    $s: var(--igx-#{$name}-s);
-    $l: var(--igx-#{$name}-l);
+/// @param {String} $prefix [igx] - The prefix for the color variant.
+@function gen-hsla-color($name, $variant, $theme, $color, $prefix: 'igx') {
+    $h: var(--#{$prefix}-#{$name}-h);
+    $s: var(--#{$prefix}-#{$name}-s);
+    $l: var(--#{$prefix}-#{$name}-l);
     $lumen: luminance($color);
 
     @if ($variant == 50) {

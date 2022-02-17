@@ -216,6 +216,136 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
         expect(value[1]).toBeFalse();
     });
 
+    it('should display aggregations when no row dimensions are enabled', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.pivotConfiguration.columns = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            )
+        ];
+        pivotGrid.pivotConfiguration.rows = [];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+        expect(pivotGrid.rowList.first.cells.length).toBeGreaterThanOrEqual(1);
+        expect(pivotGrid.rowList.first.cells.first.title).toEqual('282$');
+    });
+
+    it('should display aggregations when no col dimensions are enabled', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.pivotConfiguration.rows = [
+            {
+                memberName: 'City',
+                enabled: true,
+            }
+        ];
+        pivotGrid.pivotConfiguration.columns = [];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+        expect(pivotGrid.rowList.first.cells.length).toEqual(pivotGrid.values.length);
+        expect(pivotGrid.rowList.first.cells.first.title).toEqual('2127$');
+    });
+
+    it('should display aggregations when neither col nor row dimensions are set', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.pivotConfiguration.rows = [];
+        pivotGrid.pivotConfiguration.columns = [];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+
+        expect(pivotGrid.rowList.first.cells.length).toEqual(pivotGrid.values.length);
+        expect(pivotGrid.rowList.first.cells.first.title).toEqual('2127$');
+    });
+
+    it('should reevaluate aggregated values when all row dimensions are removed', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.height = '700px';
+        pivotGrid.width = '1000px';
+        pivotGrid.pivotConfiguration.columns = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            )
+        ];
+        pivotGrid.pivotConfiguration.rows = [
+            {
+                memberName: 'AllSeller',
+                memberFunction: () => 'All Sellers',
+                enabled: true,
+                childLevel: {
+                    enabled: true,
+                    memberName: 'SellerName'
+                }
+            }
+        ];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+
+        let uniqueVals = Array.from(new Set(pivotGrid.data.map(x => x.SellerName))).length;
+        expect(pivotGrid.rowList.length).toEqual(uniqueVals + 1);
+        expect(pivotGrid.rowList.first.cells.first.title).toEqual('282$');
+        expect(pivotGrid.rowDimensions.length).toEqual(1);
+
+        pivotGrid.pivotConfiguration.rows = [];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+        expect(pivotGrid.rowList.length).toEqual(1);
+        expect(pivotGrid.rowDimensions.length).toEqual(0);
+    });
+
+    it('should reevaluate aggregated values when all col dimensions are removed', () => {
+        const pivotGrid = fixture.componentInstance.pivotGrid;
+        pivotGrid.height = '700px';
+        pivotGrid.width = '1000px';
+        pivotGrid.pivotConfiguration.columns = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: false
+                }
+            )
+        ];
+        pivotGrid.pivotConfiguration.rows = [
+            {
+                memberName: 'AllSeller',
+                memberFunction: () => 'All Sellers',
+                enabled: true,
+                childLevel: {
+                    enabled: true,
+                    memberName: 'SellerName'
+                }
+            }
+        ];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+
+        let uniqueVals = Array.from(new Set(pivotGrid.data.map(x => x.SellerName))).length;
+        expect(pivotGrid.rowList.length).toEqual(uniqueVals + 1);
+        expect(pivotGrid.rowList.first.cells.first.title).toEqual('282$');
+        expect(pivotGrid.rowList.first.cells.length).toEqual(5);
+        expect(pivotGrid.columnDimensions.length).toEqual(1);
+
+        pivotGrid.pivotConfiguration.columns = [];
+        pivotGrid.notifyDimensionChange(true);
+        fixture.detectChanges();
+
+        expect(pivotGrid.rowList.first.cells.length).toEqual(pivotGrid.values.length);
+        expect(pivotGrid.columnDimensions.length).toEqual(0);
+    });
+
     describe('IgxPivotGrid Features #pivotGrid', () => {
         it('should show excel style filtering via dimension chip.', () => {
             const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
@@ -991,11 +1121,11 @@ describe('Basic IgxPivotGrid #pivotGrid', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const rowDimension = pivotGrid.pivotConfiguration.rows[0];
             expect(rowDimension.width).toBeUndefined();
-            expect(pivotGrid.resolveRowDimensionWidth(rowDimension)).toBe(200);
+            expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
             pivotGrid.autoSizeRowDimension(rowDimension);
             fixture.detectChanges();
             expect(rowDimension.width).toBe('186px');
-            expect(pivotGrid.resolveRowDimensionWidth(rowDimension)).toBe(186);
+            expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(186);
         });
     });
 });
@@ -1317,7 +1447,7 @@ describe('IgxPivotGrid APIs #pivotGrid', () => {
 
         expect(pivotGrid.pivotConfiguration.columns.length).toBe(0);
         expect(pivotGrid.columnDimensions.length).toBe(0);
-        expect(pivotGrid.columns.length).toBe(0);
+        expect(pivotGrid.columns.length).toBe(pivotGrid.values.length);
 
         // remove filter
         pivotGrid.removeDimension(filter);
@@ -1362,7 +1492,7 @@ describe('IgxPivotGrid APIs #pivotGrid', () => {
 
         expect(pivotGrid.pivotConfiguration.columns.length).toBe(1);
         expect(pivotGrid.columnDimensions.length).toBe(0);
-        expect(pivotGrid.columns.length).toBe(0);
+        expect(pivotGrid.columns.length).toBe(pivotGrid.values.length);
 
         // toggle filter
         pivotGrid.toggleDimension(filter);

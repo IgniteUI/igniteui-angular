@@ -127,6 +127,32 @@
 }
 /* stylelint-enable max-nesting-depth */
 
+/* stylelint-disable max-nesting-depth */
+@include describe('palette-to-wc') {
+    $primary: red;
+    $secondary: green;
+
+    $igc-palette: palette(
+        $primary: $primary,
+        $secondary: $secondary,
+    );
+
+    @include it('should generate CSS variables for all palette colors prefixed with --igc') {
+        @include assert() {
+            @include output() {
+                @include palette-to-wc($igc-palette);
+            }
+
+            @include contains() {
+                --igc-primary-h: #{var(--igx-primary-h)};
+                --igc-primary-s: #{var(--igx-primary-s)};
+                --igc-primary-l: #{var(--igx-primary-l)};
+            }
+        }
+    }
+}
+/* stylelint-enable max-nesting-depth */
+
 @include describe('Direction') {
     @include it('should return styles only when the global direction is RTL') {
         $direction: 'rtl' !global;

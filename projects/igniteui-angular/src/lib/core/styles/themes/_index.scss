@@ -23,6 +23,7 @@
 /// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
 /// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
 /// @param {Map} $elevations [$elevations] - The elevation map to be used by all component themes.
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 /// @requires $components
 /// @requires $theme-palette
 /// @requires $elevations
@@ -34,14 +35,23 @@
     $roundness: null,
     $elevation: true,
     $elevations: $elevations,
+    $wc: false
 ) {
     // Stores all excluded component styles
     $excluded: ();
 
     @include palette-vars($palette, $contrast: true);
 
+    @if $wc {
+        @include palette-to-wc($palette);
+    }
+
     @if $elevation {
         @include elevation-vars($elevations);
+
+        @if $wc {
+            @include elevations-to-wc($elevations);
+        }
     }
 
     $theme-palette: $palette !global;
@@ -477,11 +487,13 @@
 /// Creates a global material theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 @mixin light-theme(
     $palette,
     $exclude: (),
     $roundness: null,
     $elevation: true,
+    $wc: false,
 ) {
     $grays: color($palette, 'grays');
     $surface: color($palette, 'surface');
@@ -509,11 +521,13 @@
 /// Creates a global material theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 @mixin dark-theme(
     $palette,
     $exclude: (),
     $roundness: null,
     $elevation: true,
+    $wc: false,
 ) {
     $grays: color($palette, 'grays');
     $surface: color($palette, 'surface');
@@ -541,11 +555,13 @@
 /// Creates a global fluent theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 @mixin fluent-light-theme(
     $palette,
     $exclude: (),
     $roundness: null,
     $elevation: true,
+    $wc: false,
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
@@ -568,11 +584,13 @@
 /// Creates a global fluent theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 @mixin fluent-dark-theme(
     $palette,
     $exclude: (),
     $roundness: null,
     $elevation: true,
+    $wc: false,
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
@@ -596,11 +614,13 @@
 /// Creates a global bootstrap-like theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 @mixin bootstrap-light-theme(
     $palette,
     $exclude: (),
     $roundness: null,
     $elevation: true,
+    $wc: false,
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
@@ -623,11 +643,13 @@
 /// Creates a global bootstrap-like theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 @mixin bootstrap-dark-theme(
     $palette,
     $exclude: (),
     $roundness: null,
     $elevation: true,
+    $wc: false,
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
@@ -650,11 +672,13 @@
 /// Creates a global indigo theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 @mixin indigo-light-theme(
     $palette,
     $exclude: (),
     $roundness: null,
     $elevation: true,
+    $wc: false,
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
@@ -677,11 +701,13 @@
 /// Creates a global indigo theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 @mixin indigo-dark-theme(
     $palette,
     $exclude: (),
     $roundness: null,
     $elevation: true,
+    $wc: false,
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');

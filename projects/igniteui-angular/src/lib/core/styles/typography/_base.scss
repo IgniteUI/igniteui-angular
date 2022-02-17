@@ -90,6 +90,7 @@
     $default-scale: (
         _meta: (variant: 'material'),
         h1: type-style(
+            $font-family: css-font-var,
             $font-size: rem(96px),
             $font-weight: 300,
             $font-style: normal,
@@ -100,6 +101,7 @@
             $margin-bottom: rem(56px)
         ),
         h2: type-style(
+            $font-family: css-font-var,
             $font-size: rem(60px),
             $font-weight: 300,
             $font-style: normal,
@@ -110,6 +112,7 @@
             $margin-bottom: rem(28px)
         ),
         h3: type-style(
+            $font-family: css-font-var,
             $font-size: rem(48px),
             $font-weight: 400,
             $font-style: normal,
@@ -120,6 +123,7 @@
             $margin-bottom: 0
         ),
         h4: type-style(
+            $font-family: css-font-var,
             $font-size: rem(34px),
             $font-weight: 400,
             $font-style: normal,
@@ -130,6 +134,7 @@
             $margin-bottom: 0
         ),
         h5: type-style(
+            $font-family: css-font-var,
             $font-size: rem(24px),
             $font-weight: 400,
             $font-style: normal,
@@ -140,6 +145,7 @@
             $margin-bottom: 0
         ),
         h6: type-style(
+            $font-family: css-font-var,
             $font-size: rem(20px),
             $font-weight: 600,
             $font-style: normal,
@@ -150,6 +156,7 @@
             $margin-bottom: 0
         ),
         subtitle-1: type-style(
+            $font-family: css-font-var,
             $font-size: rem(16px),
             $font-weight: 400,
             $font-style: normal,
@@ -158,6 +165,7 @@
             $text-transform: none
         ),
         subtitle-2: type-style(
+            $font-family: css-font-var,
             $font-size: rem(14px),
             $font-weight: 600,
             $font-style: normal,
@@ -166,6 +174,7 @@
             $text-transform: none
         ),
         body-1: type-style(
+            $font-family: css-font-var,
             $font-size: rem(16px),
             $font-weight: 400,
             $font-style: normal,
@@ -176,6 +185,7 @@
             $margin-bottom: rem(16)
         ),
         body-2: type-style(
+            $font-family: css-font-var,
             $font-size: rem(14px),
             $font-weight: 400,
             $font-style: normal,
@@ -184,6 +194,7 @@
             $text-transform: none
         ),
         button: type-style(
+            $font-family: css-font-var,
             $font-size: rem(14px),
             $font-weight: 600,
             $font-style: normal,
@@ -192,6 +203,7 @@
             $text-transform: uppercase
         ),
         caption: type-style(
+            $font-family: css-font-var,
             $font-size: rem(12px),
             $font-weight: 400,
             $font-style: normal,
@@ -200,6 +212,7 @@
             $text-transform: none
         ),
         overline: type-style(
+            $font-family: css-font-var,
             $font-size: rem(10px),
             $font-weight: 400,
             $font-style: normal,

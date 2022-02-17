@@ -101,4 +101,96 @@ describe(`Update to ${version}`, () => {
     });
 
 
+    it('should remove columns` and column-groups` movable prop and set the accurate moving prop to the grid', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+<igx-grid>
+    <igx-column [movable]="true"></igx-column>
+    <igx-column-group [movable]="true">
+        <igx-column [movable]="true"></igx-column>
+        <igx-column-group [movable]="true">
+            <igx-column [movable]="true"></igx-column>
+        </igx-column-group>
+    </igx-column-group>
+    <igx-column-group>
+        <igx-column-group [movable]="true">
+            <igx-column></igx-column>
+        </igx-column-group>
+    </igx-column-group>
+    <igx-column [movable]="false"></igx-column>
+</igx-grid>
+`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+<igx-grid [moving]="true">
+    <igx-column ></igx-column>
+    <igx-column-group >
+        <igx-column ></igx-column>
+        <igx-column-group >
+            <igx-column ></igx-column>
+        </igx-column-group>
+    </igx-column-group>
+    <igx-column-group>
+        <igx-column-group >
+            <igx-column></igx-column>
+        </igx-column-group>
+    </igx-column-group>
+    <igx-column ></igx-column>
+</igx-grid>
+`
+        );
+    });
+
+    it('should remove columns` movable prop and enable grid`s moving prop in multiple files', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test1.component.html`,
+            `
+<igx-grid>
+    <igx-column [movable]="true"></igx-column>
+    <igx-column></igx-column>
+</igx-grid>
+`
+        );
+        appTree.create(
+            `/testSrc/appPrefix/component/test2.component.html`,
+            `
+<igx-grid>
+    <igx-column [movable]="true"></igx-column>
+</igx-grid>
+`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test1.component.html')
+        ).toEqual(
+            `
+<igx-grid [moving]="true">
+    <igx-column ></igx-column>
+    <igx-column></igx-column>
+</igx-grid>
+`
+        );
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test2.component.html')
+        ).toEqual(
+            `
+<igx-grid [moving]="true">
+    <igx-column ></igx-column>
+</igx-grid>
+`
+        );
+    });
+
 });
