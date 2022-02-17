@@ -544,27 +544,23 @@ export class Test {
         done();
     });
 
-    it('should replace/remove variables', done => {
+    it('should replace/remove properties', done => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
                     name: '$replace-me', replaceWith: '$replaced',
                     owner: 'igx-theme-func',
-                    type: ThemeType.Variable
-
-
+                    type: ThemeType.Property
                 },
                 {
                     name: '$remove-me', remove: true,
                     owner: 'igx-theme-func',
-                    type: ThemeType.Variable
-
+                    type: ThemeType.Property
                 },
                 {
                     name: '$old-prop', remove: true,
                     owner: 'igx-comp-theme',
-                    type: ThemeType.Variable
-
+                    type: ThemeType.Property
                 }
             ]
         };
@@ -973,7 +969,7 @@ export class CustomGridComponent {
 
             ]
         };
-        const jsonPath = path.join(__dirname, 'changes', 'theme-props.json');
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
         spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
@@ -1042,7 +1038,7 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
     expect(appTree.readContent('test.component.scss')).toEqual(expectedFileContent);
     });
 
-    it('Should migrate sass namespaced functions, mixins and variables correctly', ()=> {
+    xit('Should migrate sass namespaced functions, mixins and variables correctly', ()=> {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1073,7 +1069,7 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
 
             ]
         };
-        const jsonPath = path.join(__dirname, 'changes', 'theme-props.json');
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
         spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
@@ -1114,5 +1110,17 @@ contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null);
 
     update.applyChanges();
     expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
+    });
+
+    it('Should migrate scss functions', () => {
+        pending("TODO");
+    });
+
+    it('Should migrate scss mixins', () => {
+        pending("TODO");
+    });
+
+    it('Should migrate scss variables', () => {
+        pending("TODO");
     });
 });

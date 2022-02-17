@@ -83,7 +83,7 @@ describe(`Update to ${version}`, () => {
         );
     });
 
-    fit('should rename @import to @use', async () => {
+    it('should rename @import to @use', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
 `@import '~igniteui-angular/lib/core/styles/themes/index';`

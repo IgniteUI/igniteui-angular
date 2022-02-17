@@ -5,73 +5,73 @@
             "name": "$border-radius-round",
             "replaceWith": "$border-radius",
             "owner": "igx-avatar-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$border-radius-square",
             "replaceWith": "$border-radius",
             "owner": "igx-avatar-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$initials-background",
             "replaceWith": "$background",
             "owner": "igx-avatar-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$initials-color",
             "replaceWith": "$color",
             "owner": "igx-avatar-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$icon-background",
             "replaceWith": "$background",
             "owner": "igx-avatar-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$icon-color",
             "replaceWith": "$color",
             "owner": "igx-avatar-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$image-background",
             "replaceWith": "$background",
             "owner": "igx-avatar-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$flat-border-radius",
             "replaceWith": "$border-radius",
             "owner": "igx-button-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$raised-border-radius",
             "replaceWith": "$border-radius",
             "owner": "igx-button-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$outlined-border-radius",
             "replaceWith": "$border-radius",
             "owner": "igx-button-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$fab-border-radius",
             "replaceWith": "$border-radius",
             "owner": "igx-button-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$icon-border-radius",
             "replaceWith": "$border-radius",
             "owner": "igx-button-theme",
-            "type":"variable"
+            "type":"property"
         },
         {
             "name": "$flat-shadow-color",
