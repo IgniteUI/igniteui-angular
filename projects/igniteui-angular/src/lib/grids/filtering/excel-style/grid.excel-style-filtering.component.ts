@@ -533,19 +533,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             this.addItems(shouldUpdateSelection);
         }
 
-        this.listData = this.column.sortStrategy.sort(this.listData, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
-            (obj, key) => {
-                let resolvedValue = obj[key];
-                if (this.column.dataType === GridColumnDataType.Time) {
-                    resolvedValue = new Date().setHours(
-                        resolvedValue.getHours(),
-                        resolvedValue.getMinutes(),
-                        resolvedValue.getSeconds(),
-                        resolvedValue.getMilliseconds());
-                }
-
-                return resolvedValue;
-            });
+        this.listData = this.sortFilterItems(this.listData);
 
         if (!this.isHierarchical && this.containsNullOrEmpty) {
             const blanksItem = this.generateBlanksItem(shouldUpdateSelection);
@@ -561,6 +549,29 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         }
 
         this.listDataLoaded.emit();
+    }
+
+    private sortFilterItems(items: FilterListItem[]) {
+        if (!items) {
+            return undefined;
+        }
+
+        items.forEach(item =>
+            item.children = this.sortFilterItems(item.children));
+
+        return this.column.sortStrategy.sort(items, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
+            (obj, key) => {
+                let resolvedValue = obj[key];
+                if (this.column.dataType === GridColumnDataType.Time) {
+                    resolvedValue = new Date().setHours(
+                        resolvedValue.getHours(),
+                        resolvedValue.getMinutes(),
+                        resolvedValue.getSeconds(),
+                        resolvedValue.getMilliseconds());
+                }
+
+                return resolvedValue;
+            });
     }
 
     private getColumnFilterExpressionsTree() {
