@@ -427,7 +427,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
     private _superCompactMode = false;
-    private _moving = true;
 
     /**
     * Gets/Sets the default expand state for all rows.
@@ -1207,16 +1206,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number) {
         const prevCollectionType = this.getDimensionType(dimension);
         if (prevCollectionType === null) return;
-        this._moving = true;
         // remove from old collection
-        this.removeDimension(dimension);
+        this._removeDimensionInternal(dimension);
         // add to target
         this.insertDimensionAt(dimension, targetCollectionType, index);
 
         if (prevCollectionType === PivotDimensionType.Column) {
             this.setupColumns();
         }
-        this._moving = false;
     }
 
     /**
@@ -1232,11 +1229,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public removeDimension(dimension: IPivotDimension) {
         const prevCollectionType = this.getDimensionType(dimension);
-        if (prevCollectionType === null) return;
-        const prevCollection = this.getDimensionsByType(prevCollectionType);
-        const currentIndex = prevCollection.indexOf(dimension);
-        prevCollection.splice(currentIndex, 1);
-        if (!this._moving && prevCollectionType === PivotDimensionType.Column) {
+        this._removeDimensionInternal(dimension);
+        if (prevCollectionType === PivotDimensionType.Column) {
             this.setupColumns();
         }
         if (prevCollectionType === PivotDimensionType.Filter) {
@@ -1392,6 +1386,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         // Notify the grid to reflow, to update if horizontal scrollbar needs to be rendered/removed.
         this.pipeTrigger++;
         this.cdr.detectChanges();
+    }
+
+    /*
+    * @hidden
+    * @internal
+    */
+    protected _removeDimensionInternal(dimension) {
+        const prevCollectionType = this.getDimensionType(dimension);
+        if (prevCollectionType === null) return;
+        const prevCollection = this.getDimensionsByType(prevCollectionType);
+        const currentIndex = prevCollection.indexOf(dimension);
+        prevCollection.splice(currentIndex, 1);
     }
 
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
