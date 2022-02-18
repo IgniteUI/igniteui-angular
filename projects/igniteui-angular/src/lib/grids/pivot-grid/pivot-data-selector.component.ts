@@ -45,6 +45,7 @@ interface IDataSelectorPanel {
     dataKey: string;
     icon: string;
     itemKey: string;
+    displayKey?: string;
     sortable: boolean;
     dragChannels: string[];
 }
@@ -145,6 +146,7 @@ export class IgxPivotDataSelectorComponent {
             dataKey: "values",
             icon: "functions",
             itemKey: "member",
+            displayKey: 'displayName',
             sortable: false,
             dragChannels: ["Values"],
         },

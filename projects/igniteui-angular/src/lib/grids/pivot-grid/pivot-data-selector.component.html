@@ -38,7 +38,7 @@
                 [checked]="item.enabled"
                 (click)="toggleItem(item)"
             ></igx-checkbox>
-            <span>{{ item.member }}</span>
+            <span>{{ item.displayName || item.member }}</span>
         </igx-list-item>
     </igx-list>
 </div>
@@ -105,7 +105,7 @@
                                     item.aggregate.key
                                 }}</span>
                                 <span *ngIf="panel.type === null">(</span>
-                                <span>{{ item[panel.itemKey] }}</span>
+                                <span>{{ item[panel.displayKey] || item[panel.itemKey] }}</span>
                                 <span *ngIf="panel.type === null">)</span>
                             </div>
                             <igx-icon
