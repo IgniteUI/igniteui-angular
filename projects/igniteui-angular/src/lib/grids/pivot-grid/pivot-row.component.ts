@@ -11,6 +11,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxRowDirective } from '../row.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
+import { IPivotDimension, IPivotDimensionData, IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 
 
@@ -29,14 +30,11 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     @HostBinding('attr.aria-selected')
     public get selected(): boolean {
         let isSelected = false;
-        let prevDims = [];
-        for (let rowDim of this.grid.rowDimensions) {
-            const dimData = PivotUtil.getDimensionLevel(rowDim, this.data, this.grid.pivotKeys);
-            const key = PivotUtil.getRecordKey(this.data, dimData.dimension, prevDims, this.grid.pivotKeys);
+        for (let rowDim of this.data.dimensions) {
+            const key = PivotUtil.getRecordKey(this.data, rowDim);
             if (this.selectionService.isPivotRowSelected(key)) {
                 isSelected = true;
             }
-            prevDims.push(dimData.dimension);
         }
         return isSelected;
     }
@@ -58,6 +56,36 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      */
     public get viewIndex(): number {
         return this.index;
+    }
+
+    /**
+    *  The pivot record data passed to the row component.
+    *
+    * ```typescript
+    * // get the pivot row data for the first selected row
+    * let selectedRowData = this.grid.selectedRows[0].data;
+    * ```
+    */
+    @Input()
+    public get data(): IPivotGridRecord {
+        return this._data;
+    }
+
+    public set data(v: IPivotGridRecord) {
+        this._data = v;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get pivotAggregationData() {
+        const aggregations = this.data.aggregationValues;
+        const obj = {};
+        aggregations.forEach((value, key) => {
+            obj[key] = value;
+        });
+        return obj;
     }
 
     public getCellClass(col: IgxColumnComponent) {

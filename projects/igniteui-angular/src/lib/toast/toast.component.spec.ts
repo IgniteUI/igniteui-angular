@@ -7,23 +7,36 @@ import {
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
-    IgxToastComponent,
-    IgxToastModule,
+    IgxToastComponent
 } from './toast.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular';
 
 describe('IgxToast', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxToastModule]
-        }).compileComponents();
-    }));
-
     const baseId = 'igx-toast-';
     let fixture: ComponentFixture<IgxToastComponent>;
     let toast: IgxToastComponent;
+    let firstPositionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Left,
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalStartPoint: HorizontalAlignment.Left,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
+    let secondPositionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Center,
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalStartPoint: HorizontalAlignment.Center,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
+
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [IgxToastComponent],
+            imports: [NoopAnimationsModule]
+        }).compileComponents();
+    }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxToastComponent);
@@ -57,36 +70,6 @@ describe('IgxToast', () => {
         expect(toast.isVisible).toBe(false);
         expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(2);
     }));
-});
-
-describe('IgxToast with positionSettings', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxToastModule]
-        }).compileComponents();
-    }));
-
-    let fixture: ComponentFixture<IgxToastComponent>;
-    let toast: IgxToastComponent;
-    let firstPositionSettings: PositionSettings = {
-        horizontalDirection: HorizontalAlignment.Left,
-        verticalDirection: VerticalAlignment.Middle,
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalStartPoint: VerticalAlignment.Middle
-    };
-    let secondPositionSettings: PositionSettings = {
-        horizontalDirection: HorizontalAlignment.Center,
-        verticalDirection: VerticalAlignment.Middle,
-        horizontalStartPoint: HorizontalAlignment.Center,
-        verticalStartPoint: VerticalAlignment.Middle
-    };
-
-    beforeEach(() => {
-        fixture = TestBed.createComponent(IgxToastComponent);
-        toast = fixture.componentInstance;
-        fixture.detectChanges();
-    });
 
     it('should be able to change positionSettings', () => {
         toast.positionSettings = firstPositionSettings;
