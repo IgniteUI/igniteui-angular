@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { fakeAsync, TestBed } from "@angular/core/testing";
+import { async, fakeAsync, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
@@ -8,7 +8,7 @@ import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IgxInputDirective } from "../../input-group/public_api";
 import { configureTestSuite } from "../../test-utils/configure-suite";
 import { IgxPivotGridTestBaseComponent } from "../../test-utils/pivot-grid-samples.spec";
-import { UIInteractions } from "../../test-utils/ui-interactions.spec";
+import { UIInteractions, wait } from "../../test-utils/ui-interactions.spec";
 import { PivotGridType } from "../common/grid.interface";
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import {
@@ -203,7 +203,7 @@ describe("Pivot data selector", () => {
         expectConfigToMatchPanels(null); // pass an invalid type (null) to test for values
     });
 
-    it("should fire event handlers on reorder in a panel using drag and drop gestures", () => {
+    it("should fire event handlers on reorder in a panel using drag and drop gestures", async() => {
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
@@ -221,25 +221,29 @@ describe("Pivot data selector", () => {
 
         UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
         fixture.detectChanges();
+        await wait();
 
         UIInteractions.simulatePointerEvent("pointermove", dragHandle, handleX, handleY - 10);
         fixture.detectChanges();
+        await wait(100);
 
         const ghost = document.body.querySelector(".igx-pivot-data-selector__item-ghost");
         expect(selector.ghostCreated).toHaveBeenCalled();
 
         UIInteractions.simulatePointerEvent("pointermove", ghost, handleX, handleY - 36);
         fixture.detectChanges();
+        await wait(100);
         expect(selector.onItemDragMove).toHaveBeenCalled();
 
         UIInteractions.simulatePointerEvent("pointerup", ghost, handleX, handleY - 36);
         fixture.detectChanges();
+        await wait();
 
         expect(selector.onItemDragEnd).toHaveBeenCalled();
         expect(selector.onItemDropped).toHaveBeenCalled();
     });
 
-    it("should reorder items in a panel using drag and drop gestures", () => {
+    it("should reorder items in a panel using drag and drop gestures", async() => {
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
@@ -255,16 +259,20 @@ describe("Pivot data selector", () => {
 
         UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
         fixture.detectChanges();
+        await wait();
 
         UIInteractions.simulatePointerEvent("pointermove", dragHandle, handleX, handleY - 10);
         fixture.detectChanges();
+        await wait(100);
 
         const ghost = document.body.querySelector(".igx-pivot-data-selector__item-ghost");
         UIInteractions.simulatePointerEvent("pointermove", ghost, handleX, handleY - 36);
         fixture.detectChanges();
+        await wait(100);
 
         UIInteractions.simulatePointerEvent("pointerup", ghost, handleX, handleY - 36);
         fixture.detectChanges();
+        await wait();
 
         expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[0].member).toEqual('UnitPrice');
         expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[1].member).toEqual('UnitsSold');
