@@ -225,6 +225,15 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
     }
 
     public filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[] {
+        let records = this.filterTreeDataByExpressions(expressionsTree);
+        const data = [];
+
+        this.getFlatDataFromFilteredRecords(records, data);
+
+        return data;
+    }
+
+    public filterTreeDataByExpressions(expressionsTree: IFilteringExpressionsTree): ITreeGridRecord[] {
         let records = this.grid.rootRecords;
 
         if (expressionsTree.filteringOperands.length) {
@@ -235,10 +244,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
             records = DataUtil.filter(cloneArray(records), state, this.grid);
         }
 
-        const data = [];
-        this.getFlatDataFromFilteredRecords(records, data);
-
-        return data;
+        return records;
     }
 
     protected update_row_in_array(value: any, rowID: any, index: number) {

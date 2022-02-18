@@ -7,12 +7,11 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringStrategy } from '../../data-operations/filtering-strategy';
-import { HierarchicalFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from './tree-grid.filtering.strategy';
+import { TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from './tree-grid.filtering.strategy';
 import { FilterMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { TreeTestFunctions } from '../../tree/tree-functions.spec';
 import { By } from '@angular/platform-browser';
 
 const IGX_CHECKBOX_LABEL = '.igx-checkbox__label';
@@ -363,7 +362,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tick(16);
             tGrid = fix.componentInstance.treeGrid;
 
-            const hierarchicalFilterStrategy = new HierarchicalFilteringStrategy(['ID']);
+            const hierarchicalFilterStrategy = new TreeGridFilteringStrategy(['ID']);
             tGrid.filterStrategy = hierarchicalFilterStrategy;
             tGrid.allowFiltering = true;
             tGrid.filterMode = FilterMode.excelStyleFilter;
