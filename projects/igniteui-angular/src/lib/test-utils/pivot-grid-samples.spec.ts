@@ -6,10 +6,12 @@ import { IPivotConfiguration, PivotAggregation } from '../grids/pivot-grid/pivot
 
 @Component({
     template: `
-    <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
-        [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]='defaultExpand'>
-    </igx-pivot-grid>
-    <igx-pivot-data-selector #selector [grid]="grid"></igx-pivot-data-selector>
+    <div style="display:flex;">
+        <igx-pivot-grid #grid [width]="'1500px'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
+            [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]='defaultExpand'>
+        </igx-pivot-grid>
+        <igx-pivot-data-selector #selector [grid]="grid"></igx-pivot-data-selector>
+    </div>
     <ng-template #emptyTemplate>
         <span>Custom empty template.</span>
     </ng-template>

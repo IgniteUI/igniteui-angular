@@ -203,7 +203,7 @@ describe("Pivot data selector", () => {
         expectConfigToMatchPanels(null); // pass an invalid type (null) to test for values
     });
 
-    xit("should fire event handlers on reorder in a panel using drag and drop gestures", () => {
+    it("should fire event handlers on reorder in a panel using drag and drop gestures", () => {
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
@@ -219,46 +219,55 @@ describe("Pivot data selector", () => {
 
         const { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
 
-        UIInteractions.simulatePointerEvent(
-            "pointerdown",
-            dragHandle,
-            handleX,
-            handleY
-        );
+        UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
         fixture.detectChanges();
 
-        UIInteractions.simulatePointerEvent(
-            "pointermove",
-            dragHandle,
-            handleX,
-            handleY - 10
-        );
+        UIInteractions.simulatePointerEvent("pointermove", dragHandle, handleX, handleY - 10);
         fixture.detectChanges();
 
-        const ghost = document.body.querySelector(
-            ".igx-pivot-data-selector__item-ghost"
-        );
+        const ghost = document.body.querySelector(".igx-pivot-data-selector__item-ghost");
         expect(selector.ghostCreated).toHaveBeenCalled();
 
-        UIInteractions.simulatePointerEvent(
-            "pointermove",
-            ghost,
-            handleX,
-            handleY - 36
-        );
+        UIInteractions.simulatePointerEvent("pointermove", ghost, handleX, handleY - 36);
         fixture.detectChanges();
         expect(selector.onItemDragMove).toHaveBeenCalled();
 
-        UIInteractions.simulatePointerEvent(
-            "pointerup",
-            ghost,
-            handleX,
-            handleY - 36
-        );
+        UIInteractions.simulatePointerEvent("pointerup", ghost, handleX, handleY - 36);
         fixture.detectChanges();
 
         expect(selector.onItemDragEnd).toHaveBeenCalled();
         expect(selector.onItemDropped).toHaveBeenCalled();
+    });
+
+    it("should reorder items in a panel using drag and drop gestures", () => {
+        // Get all value items
+        let items = getPanelItemsByDimensionType(null);
+
+        expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[0].member).toEqual('UnitsSold');
+        expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[1].member).toEqual('UnitPrice');
+
+        // Get the drag handle of the last item in the panel
+        const dragHandle = items[0].parentNode
+            .querySelectorAll("igx-list-item")
+            [items.length - 1].querySelector("[igxDragHandle]");
+
+        const { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
+
+        UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
+        fixture.detectChanges();
+
+        UIInteractions.simulatePointerEvent("pointermove", dragHandle, handleX, handleY - 10);
+        fixture.detectChanges();
+
+        const ghost = document.body.querySelector(".igx-pivot-data-selector__item-ghost");
+        UIInteractions.simulatePointerEvent("pointermove", ghost, handleX, handleY - 36);
+        fixture.detectChanges();
+
+        UIInteractions.simulatePointerEvent("pointerup", ghost, handleX, handleY - 36);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[0].member).toEqual('UnitPrice');
+        expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[1].member).toEqual('UnitsSold');
     });
 
     it("should call filtering menu on column and row filter click", () => {

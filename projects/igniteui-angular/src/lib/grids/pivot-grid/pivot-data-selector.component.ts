@@ -13,6 +13,7 @@ import { SortingDirection } from "../../data-operations/sorting-strategy";
 import {
     IDragBaseEventArgs,
     IDragGhostBaseEventArgs,
+    IDragMoveEventArgs,
     IDropBaseEventArgs,
     IDropDroppedEventArgs
 } from "../../directives/drag-drop/drag-drop.directive";
@@ -508,11 +509,11 @@ export class IgxPivotDataSelectorComponent {
      * @hidden
      * @internal
      */
-    public onItemDragMove(event: IDragBaseEventArgs) {
+    public onItemDragMove(event: IDragMoveEventArgs) {
         const clientRect =
             event.owner.element.nativeElement.getBoundingClientRect();
         this._dropDelta = Math.round(
-            (event.pageY - event.startY) / clientRect.height
+            (event.nextPageY - event.startY) / clientRect.height
         );
     }
 
