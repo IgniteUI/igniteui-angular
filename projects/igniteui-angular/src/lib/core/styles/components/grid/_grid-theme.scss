@@ -1886,7 +1886,7 @@
 
     %grid-summaries-patch {
         @if $bootstrap-theme {
-            background: igx-color($palette, 'grays', 100);
+            background: color($palette, 'grays', 100);
         } @else {
             background: inherit;
         }
