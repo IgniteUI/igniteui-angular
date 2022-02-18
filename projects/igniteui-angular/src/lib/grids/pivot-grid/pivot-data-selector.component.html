@@ -77,7 +77,7 @@
             >
                 <igx-list-item
                     igxDrop
-                    [igxDrag]="panel.dragChannels"
+                    [igxDrag]="{ gridID: grid.id, selectorChannels: panel.dragChannels }"
                     [ghostTemplate]="itemGhost"
                     (ghostCreate)="ghostCreated($event, item[panel.itemKey])"
                     (over)="onItemDragOver($event)"
