@@ -420,7 +420,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 if (this.isHierarchical()) {
                     this.cdr.detectChanges();
                     this.tree.nodes.forEach(n => {
-                        n.selected = true;
+                        const item = n.data as FilterListItem;
+                        n.selected = item.isSelected || item.isFiltered;
                     });
                 }
             }
