@@ -1400,6 +1400,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const prevCollection = this.getDimensionsByType(prevCollectionType);
         const currentIndex = prevCollection.indexOf(dimension);
         prevCollection.splice(currentIndex, 1);
+        this.pipeTrigger++;
+        this.cdr.detectChanges();
     }
 
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
