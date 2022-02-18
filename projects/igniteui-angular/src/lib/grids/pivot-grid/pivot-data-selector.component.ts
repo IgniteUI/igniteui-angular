@@ -1,9 +1,8 @@
 import { useAnimation } from "@angular/animations";
 import {
-    Component, HostBinding,
+    Component,
+    HostBinding,
     Input,
-    Pipe,
-    PipeTransform,
     Renderer2
 } from "@angular/core";
 import { first } from "rxjs/operators";
@@ -42,10 +41,12 @@ import { PivotUtil } from './pivot-util';
 
 interface IDataSelectorPanel {
     name: string;
+    i18n: string;
     type?: PivotDimensionType;
     dataKey: string;
     icon: string;
     itemKey: string;
+    displayKey?: string;
     sortable: boolean;
     dragChannels: string[];
 }
@@ -88,12 +89,19 @@ export class IgxPivotDataSelectorComponent {
         }),
     };
 
+    /** @hidden @internal */
     public aggregateList: IPivotAggregator[] = [];
+    /** @hidden @internal */
     public value: IPivotValue;
+    /** @hidden @internal */
     public ghostText: string;
+    /** @hidden @internal */
     public ghostWidth: number;
+    /** @hidden @internal */
     public dropAllowed: boolean;
+    /** @hidden @internal */
     public dims: IPivotDimension[];
+    /** @hidden @internal */
     public values: IPivotValue[];
 
     constructor(private renderer: Renderer2) {}
@@ -104,6 +112,7 @@ export class IgxPivotDataSelectorComponent {
     public _panels: IDataSelectorPanel[] = [
         {
             name: "Filters",
+            i18n: 'igx_grid_pivot_selector_filters',
             type: PivotDimensionType.Filter,
             dataKey: "filterDimensions",
             icon: "filter_list",
@@ -113,6 +122,7 @@ export class IgxPivotDataSelectorComponent {
         },
         {
             name: "Columns",
+            i18n: 'igx_grid_pivot_selector_columns',
             type: PivotDimensionType.Column,
             dataKey: "columnDimensions",
             icon: "view_column",
@@ -122,6 +132,7 @@ export class IgxPivotDataSelectorComponent {
         },
         {
             name: "Rows",
+            i18n: 'igx_grid_pivot_selector_rows',
             type: PivotDimensionType.Row,
             dataKey: "rowDimensions",
             icon: "table_rows",
@@ -131,10 +142,12 @@ export class IgxPivotDataSelectorComponent {
         },
         {
             name: "Values",
+            i18n: 'igx_grid_pivot_selector_values',
             type: null,
             dataKey: "values",
             icon: "functions",
             itemKey: "member",
+            displayKey: 'displayName',
             sortable: false,
             dragChannels: ["Values"],
         },
@@ -156,7 +169,7 @@ export class IgxPivotDataSelectorComponent {
         this.dims = [
             ...this._grid.pivotConfiguration.columns,
             ...this._grid.pivotConfiguration.rows,
-            ...this._grid.pivotConfiguration.filters
+            ...this._grid.pivotConfiguration.filters,
         ];
         this.values = this._grid.pivotConfiguration.values;
     }
@@ -246,32 +259,6 @@ export class IgxPivotDataSelectorComponent {
      * @hidden
      * @internal
      */
-    protected getDimensionsByType(dimensionType: PivotDimensionType) {
-        switch (dimensionType) {
-            case PivotDimensionType.Row:
-                if (!this.grid.pivotConfiguration.rows) {
-                    this.grid.pivotConfiguration.rows = [];
-                }
-                return this.grid.pivotConfiguration.rows;
-            case PivotDimensionType.Column:
-                if (!this.grid.pivotConfiguration.columns) {
-                    this.grid.pivotConfiguration.columns = [];
-                }
-                return this.grid.pivotConfiguration.columns;
-            case PivotDimensionType.Filter:
-                if (!this.grid.pivotConfiguration.filters) {
-                    this.grid.pivotConfiguration.filters = [];
-                }
-                return this.grid.pivotConfiguration.filters;
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     protected getDimensionState(dimensionType: PivotDimensionType) {
         switch (dimensionType) {
             case PivotDimensionType.Row:
@@ -322,7 +309,7 @@ export class IgxPivotDataSelectorComponent {
             return;
         }
 
-        const dimension = this.getDimensionsByType(dimensionType);
+        const dimension = this.grid.getDimensionsByType(dimensionType);
         const dimensionState = this.getDimensionState(dimensionType);
         const itemId = event.drag.element.nativeElement.id;
         const targetId = event.owner.element.nativeElement.id;
@@ -524,35 +511,5 @@ export class IgxPivotDataSelectorComponent {
                 "igx-drag--push"
             );
         }
-    }
-}
-
-@Pipe({ name: "filterPivotItems" })
-export class IgxFilterPivotItemsPipe implements PipeTransform {
-    public transform(
-        collection: (IPivotDimension | IPivotValue)[],
-        filterCriteria: string,
-        _pipeTrigger: number
-    ): any[] {
-        if (!collection) {
-            return collection;
-        }
-        let copy = collection.slice(0);
-        if (filterCriteria && filterCriteria.length > 0) {
-            const filterFunc = (c) => {
-                const filterText = c.member || c.memberName;
-                if (!filterText) {
-                    return false;
-                }
-                return (
-                    filterText
-                        .toLocaleLowerCase()
-                        .indexOf(filterCriteria.toLocaleLowerCase()) >= 0 ||
-                    (c.children?.some(filterFunc) ?? false)
-                );
-            };
-            copy = collection.filter(filterFunc);
-        }
-        return copy;
     }
 }

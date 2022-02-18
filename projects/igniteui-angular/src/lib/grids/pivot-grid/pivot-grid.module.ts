@@ -3,12 +3,11 @@ import { IgxDragDropModule } from "../../directives/drag-drop/drag-drop.directiv
 import { IgxExpansionPanelModule } from "../../expansion-panel/expansion-panel.module";
 import { IgxGridComponent } from "../grid/grid.component";
 import { IgxGridModule } from "../grid/grid.module";
-import {
-    IgxFilterPivotItemsPipe,
-    IgxPivotDataSelectorComponent
-} from "./pivot-data-selector.component";
+import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import { IgxPivotGridComponent } from "./pivot-grid.component";
 import {
+    IgxFilterPivotItemsPipe,
+    IgxPivotAutoTransform,
     IgxPivotCellMergingPipe,
     IgxPivotColumnPipe,
     IgxPivotGridColumnSortingPipe,
@@ -36,13 +35,14 @@ import { IgxPivotRowComponent } from "./pivot-row.component";
         IgxPivotRowDimensionHeaderGroupComponent,
         IgxPivotRowPipe,
         IgxPivotRowExpansionPipe,
+        IgxPivotAutoTransform,
         IgxPivotColumnPipe,
         IgxPivotGridFilterPipe,
         IgxPivotGridSortingPipe,
         IgxPivotGridColumnSortingPipe,
-        IgxPivotDataSelectorComponent,
         IgxPivotCellMergingPipe,
         IgxFilterPivotItemsPipe,
+        IgxPivotDataSelectorComponent,
     ],
     exports: [
         IgxGridModule,
@@ -53,14 +53,15 @@ import { IgxPivotRowComponent } from "./pivot-row.component";
         IgxPivotRowDimensionHeaderComponent,
         IgxPivotRowDimensionHeaderGroupComponent,
         IgxPivotRowExpansionPipe,
+        IgxPivotAutoTransform,
         IgxPivotRowPipe,
         IgxPivotColumnPipe,
         IgxPivotGridFilterPipe,
         IgxPivotGridSortingPipe,
         IgxPivotGridColumnSortingPipe,
-        IgxPivotDataSelectorComponent,
         IgxPivotCellMergingPipe,
         IgxFilterPivotItemsPipe,
+        IgxPivotDataSelectorComponent,
     ],
     imports: [IgxGridModule, IgxExpansionPanelModule, IgxDragDropModule],
     entryComponents: [IgxGridComponent],
