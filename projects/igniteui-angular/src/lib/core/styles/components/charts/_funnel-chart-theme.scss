@@ -25,10 +25,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $my-chart-theme: igx-funnel-chart-theme($brushes: (orange, blue, pink));
-///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($my-chart-theme);
-@function igx-funnel-chart-theme(
+///   $my-chart-theme: funnel-chart-theme($brushes: (orange, blue, pink));
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-chart-theme);
+@function funnel-chart-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -65,7 +65,7 @@
     ));
 }
 
-@mixin igx-funnel-chart-typography($type-scale, $categories: (
+@mixin funnel-chart-typography($type-scale, $categories: (
     outer-label-text-style: 'h1',
     text-style: 'subtitle-1',
 )) {
@@ -73,12 +73,12 @@
     $outer-label-text-style: map.get($categories, 'outer-label-text-style');
     $text-style: map.get($categories, 'text-style');
 
-    $outer-label: igx-type-scale-category($type-scale, $outer-label-text-style);
-    $text: igx-type-scale-category($type-scale, $text-style);
+    $outer-label: type-scale-category($type-scale, $outer-label-text-style);
+    $text: type-scale-category($type-scale, $text-style);
 
     igx-funnel-chart {
-        @include igx-font-var('outer-label-text-style', $outer-label, $name);
-        @include igx-font-var('text-style', $text, $name);
+        @include font-var('outer-label-text-style', $outer-label, $name);
+        @include font-var('text-style', $text, $name);
     }
 }
 
