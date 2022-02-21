@@ -69,7 +69,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     @ViewChild('selectAllCheckbox', { read: IgxCheckboxComponent, static: false })
     public selectAllCheckbox: IgxCheckboxComponent;
-    
+
     /**
      * @hidden @internal
      */
@@ -157,7 +157,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public searchValue: any;
-    
+
     /**
      * @hidden @internal
      */
@@ -173,7 +173,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             return this.defaultExcelStyleLoadingValuesTemplate;
         }
     }
-    
+
     /**
      * @hidden @internal
      */
@@ -429,7 +429,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.cdr.detectChanges();
 
             return;
-        }   
+        }
 
         const searchVal = this.searchValue.toLowerCase();
         if (this.isHierarchical()) {
@@ -473,8 +473,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         if (this.isHierarchical()) {
             if (this.addToCurrentFilterCheckbox && this.addToCurrentFilterCheckbox.checked) {
                 this.addFilteredToSelectedItems(this.esf.listData);
-            } 
-            
+            }
+
             selectedItems = this._hierarchicalSelectedItems;
         } else {
             const item = this.displayedListData[1];
@@ -509,7 +509,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         condition,
                         fieldName: this.esf.column.field,
                         ignoreCase: this.esf.column.filteringIgnoreCase,
-                        searchVal: element.value
+                        searchVal: this.esf.getFilterItemValue(element)
                     });
                 });
             } else {
@@ -527,7 +527,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         this.esf.column.dataType === GridColumnDataType.DateTime ?
                         selectedItems.map(d => d.value.toISOString()) : this.esf.column.dataType === GridColumnDataType.Time ?
                             selectedItems.map(e => e.value.toLocaleTimeString()) :
-                            selectedItems.map(e => e.value))
+                            selectedItems.map(e => this.esf.getFilterItemValue(e)))
                 });
 
                 if (blanksItem) {
@@ -587,7 +587,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         node.expanded = true;
                     }
                 }
-            } 
+            }
         });
 
         return data.filter(element => element.isSelected === true);
