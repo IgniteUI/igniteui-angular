@@ -53,6 +53,7 @@
     ));
 }
 
+// stylelint-disable font-family-no-missing-generic-family-keyword
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires var-get
@@ -74,6 +75,11 @@
             width: inherit;
             height: inherit;
             fill: currentColor;
+        }
+
+        &[igxPrefix].material-icons,
+        &[igxSuffix].material-icons {
+            font-family: 'Material Icons';
         }
     }
 

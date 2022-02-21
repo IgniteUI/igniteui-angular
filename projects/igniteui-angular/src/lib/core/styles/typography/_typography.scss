@@ -55,7 +55,12 @@
     font-size: $browser-context;
     line-height: $browser-line-height;
     font-size-adjust: 100%;
-    --#{$prefix}-font-family: #{$font-family};
+
+    @if $prefix == 'igc' {
+        --#{$prefix}-font-family: var(--igx-font-family);
+    } @else {
+        --#{$prefix}-font-family: #{$font-family};
+    }
 
     // Call the individual component styles with the type scale
     @include excel-filtering-typography($type-scale);

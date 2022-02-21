@@ -1886,7 +1886,7 @@
 
     %grid-summaries-patch {
         @if $bootstrap-theme {
-            background: igx-color($palette, 'grays', 100);
+            background: color($palette, 'grays', 100);
         } @else {
             background: inherit;
         }
@@ -2407,32 +2407,32 @@
 
     @for $i from 1 through 10 {
         %igx-grid__row-indentation--level-#{$i} {
-            padding-#{$left}: calc(#{$i*map.get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
+            padding-#{$left}: calc(#{$i * map.get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row--padding-level-#{$i} {
             %igx-grid__grouping-indicator {
-                padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'comfortable')};
+                padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'comfortable')};
             }
         }
 
         %igx-grid__row-indentation-cosy--level-#{$i} {
-            padding-#{$left}: calc(#{$i*map.get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
+            padding-#{$left}: calc(#{$i * map.get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row-cosy--padding-level-#{$i} {
             %igx-grid__grouping-indicator {
-                padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'cosy')};
+                padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'cosy')};
             }
         }
 
         %igx-grid__row-indentation-compact--level-#{$i} {
-            padding-#{$left}: calc(#{$i*map.get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
+            padding-#{$left}: calc(#{$i * map.get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row-compact--padding-level-#{$i} {
             %igx-grid__grouping-indicator {
-                padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'compact')};
+                padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'compact')};
             }
         }
     }
@@ -2895,6 +2895,24 @@
     }
 
     // Pivot grid
+    %igx-grid__pivot--super-compact {
+        %grid-cell-display,
+        %grid-cell-header {
+            padding: 0 rem(4px) !important;
+            min-height: rem(24px) !important;
+            height: rem(24px);
+        }
+
+        %grid-cell-header {
+            > * {
+                line-height: normal;
+                align-self: initial;
+                max-height: 100%;
+            }
+        }
+    }
+
+
     %grid-thead--pivot {
         display: flex;
 

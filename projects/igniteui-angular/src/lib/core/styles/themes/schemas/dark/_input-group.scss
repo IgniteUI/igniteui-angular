@@ -31,8 +31,8 @@ $dark-input-group: $base-dark-input-group;
 /// @requires $fluent-input-group
 /// @requires $base-dark-input-group
 $dark-fluent-input-group: extend(
-    $fluent-input-group,
     $base-dark-input-group,
+    $fluent-input-group,
     (
         input-prefix-background: (
             color: ('grays', 100)
