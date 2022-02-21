@@ -5909,7 +5909,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
-            expect(listItems[1].innerText).toBe('No value!');
+            expect(listItems[1].innerText).toBe('(Blanks)');
             for (let i = 2; i < listItems.length; i++) {
                 const date = dates[i];
                 const label = date !== null && date !== undefined && date !== '' ? datePipe.transform(date, 'longDate') : 'No value!';
@@ -5959,7 +5959,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
-            expect(listItems[1].innerText).toBe('No value!');
+            expect(listItems[1].innerText).toBe('(Blanks)');
             for (let i = 2; i < listItems.length; i++) {
                 const date = dates[i - 2];
                 const label = date !== null && date !== undefined && date !== '' ? datePipe.transform(date, 'longDate') : 'No value!';
@@ -5968,49 +5968,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
-        }));
-
-        it('Verify ESF list items when different date values produce same value label in the ESF list', fakeAsync(() => {
-            const grid = fix.componentInstance.grid;
-            grid.getColumnByName('ReleaseDate').formatter = ((value: any) => {
-                const pipe = new DatePipe(grid.locale);
-                const val = value !== null && value !== undefined && value !== '' ? pipe.transform(value, 'longTime') : 'No value!';
-                return val;
-            });
-            fix.detectChanges();
-
-            // Open excel style custom filtering dialog and wait a bit.
-            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
-            tick(1050);
-            fix.detectChanges();
-
-            // Verify items in search have loaded and that the loading indicator is not visible.
-            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            const uniqueValues = new Set<string>();
-            grid.data.forEach(r => {
-                const val = grid.getColumnByName('ReleaseDate').formatter(r.ReleaseDate);
-                uniqueValues.add(val);
-            });
-            // +1 stands for the Select All option
-            expect(listItems.length).toBe(uniqueValues.size + 1, 'incorrect rendered list items count');
-
-            const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
-            checkboxElements[0].click();
-            tick();
-            fix.detectChanges();
-
-            checkboxElements[2].click();
-            tick();
-            fix.detectChanges();
-
-            GridFunctions.clickApplyExcelStyleFiltering(fix);
-            fix.detectChanges();
-
-            expect(grid.filteredData.length).toEqual(1);
-            expect(grid.filteredData[0].Downloads).toEqual(254);
-
-            tick(1050);
-            fix.detectChanges();
         }));
 
         it('Done callback should be executed only once per column', fakeAsync(() => {

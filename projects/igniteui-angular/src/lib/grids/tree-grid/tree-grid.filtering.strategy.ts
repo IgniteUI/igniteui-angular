@@ -3,18 +3,29 @@ import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { BaseFilteringStrategy, HierarchicalColumnValue } from '../../data-operations/filtering-strategy';
 import { ColumnType, GridType } from '../common/grid.interface';
+import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
+
+    constructor(public hierarchicalFilterFields?: string[]) {
+        super();
+    }
+
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): ITreeGridRecord[] {
         return this.filterImpl(data, expressionsTree, advancedExpressionsTree, undefined, grid);
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
+        const column = grid?.getColumnByName(fieldName);
         const hierarchicalRecord = rec as ITreeGridRecord;
         let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
-        value = value && isDate ? parseDate(value) : value;
+
+        value = column?.formatter && this.shouldFormatFilterValues(column) ?
+            column.formatter(value) :
+            value && (isDate || isTime) ? parseDate(value) : value;
+
         return value;
     }
 
@@ -44,6 +55,35 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         }
         return res;
     }
+
+    public override getUniqueColumnValues(
+        column: ColumnType,
+        tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]> {
+
+        if (!this.hierarchicalFilterFields || this.hierarchicalFilterFields.indexOf(column.field) < 0) {
+            return super.getUniqueColumnValues(column, tree);
+        }
+
+        const data = (column.grid.gridAPI as IgxTreeGridAPIService).filterTreeDataByExpressions(tree);
+        const columnValues = this.getHierarchicalColumnValues(data, column);
+
+        return Promise.resolve(columnValues);
+    }
+
+    private getHierarchicalColumnValues(records: ITreeGridRecord[], column: ColumnType) {
+        return records?.map(record => {
+            let value = resolveNestedPath(record.data, column.field);
+
+            value = column.formatter && this.shouldFormatFilterValues(column) ?
+                column.formatter(value) :
+                value;
+
+            const hierarchicalItem = new HierarchicalColumnValue();
+            hierarchicalItem.value = value;
+            hierarchicalItem.children = this.getHierarchicalColumnValues(record.children, column)
+            return hierarchicalItem;
+        });
+    }
 }
 
 export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringStrategy {
@@ -57,21 +97,8 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
         super();
     }
 
-    /** @hidden */
-    public shouldApplyFormatter(fieldName: string): boolean {
-        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === fieldName);
-    }
-
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
-        const column = grid.getColumnByName(fieldName);
-        const hierarchicalRecord = rec as ITreeGridRecord;
-        let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
-
-        value = column.formatter && this.shouldApplyFormatter(fieldName) ?
-            column.formatter(value) :
-            value && (isDate || isTime) ? parseDate(value) : value;
-
-        return value;
+    public shouldFormatFilterValues(column: ColumnType): boolean {
+        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === column.field);
     }
 }
 
@@ -115,60 +142,5 @@ export class TreeGridMatchingRecordsOnlyFilteringStrategy extends TreeGridFilter
             });
         }
         return rec;
-    }
-}
-
-export class HierarchicalFilteringStrategy extends TreeGridFilteringStrategy {
-    private processedData: HierarchicalColumnValue[];
-    private childDataKey;
-
-    constructor(public hierarchicalFilterFields: string[]) {
-        super();
-    }
-
-    public override getColumnValues(
-            column: ColumnType,
-            tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]> {
-
-        if (this.hierarchicalFilterFields.indexOf(column.field) < 0) {
-            return super.getColumnValues(column, tree);
-        }
-
-        this.processedData = [];
-        this.childDataKey = column.grid.childDataKey;
-        const data = column.grid.gridAPI.filterDataByExpressions(tree);
-        const columnField = column.field;
-        let columnValues = [];
-        columnValues = data.map(record => {
-            if (this.processedData.indexOf(record) < 0) {
-                let hierarchicalItem = new HierarchicalColumnValue();
-                hierarchicalItem.value =  resolveNestedPath(record, columnField);
-                hierarchicalItem.children = this.getChildren(record, columnField)
-                return hierarchicalItem;
-            }
-        });
-        columnValues = columnValues.filter(function(el) {
-            return el !== undefined
-        });
-
-        return Promise.resolve(columnValues);
-    }
-
-    private getChildren(record: any, columnField: string) {
-        this.processedData.push(record);
-        let childrenValues = [];
-        const children = record[this.childDataKey];
-        if (children) {
-            children.forEach(child => {
-                if (this.processedData.indexOf(child) < 0) {
-                    let hierarchicalItem: HierarchicalColumnValue;
-                    hierarchicalItem = { value: resolveNestedPath(child, columnField) };
-                    hierarchicalItem.children = this.getChildren(child, columnField)
-                    childrenValues.push(hierarchicalItem);
-                }
-            });
-        }
-
-        return childrenValues;
     }
 }
