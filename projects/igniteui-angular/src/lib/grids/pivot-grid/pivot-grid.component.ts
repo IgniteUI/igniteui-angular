@@ -1386,7 +1386,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             dim = dim.childLevel;
         }
         this.dimensionsSortingExpressions = this.generateDimensionSortingExpressions(this.rowDimensions);
-        this.sortingExpressionsChange.emit(this.dimensionsSortingExpressions);
+        this.dimensionsSortingExpressionsChange.emit(this.dimensionsSortingExpressions);
         if (dimensionType === PivotDimensionType.Column) {
             this.setupColumns();
         }
