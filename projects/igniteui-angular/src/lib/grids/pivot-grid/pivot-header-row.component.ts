@@ -346,7 +346,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
                 this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, undefined, false);
             }
         } else {
-            if (this.filterAreaDimensions.has(filter))  {
+            if (this.filterAreaDimensions.has(filter)) {
                 this.filterAreaDimensions.delete(filter)
                 this.grid.filteringService.hideESF();
             } else if (this.filterDropdownDimensions.size > 0) {
@@ -459,21 +459,10 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onChipSort(event, dimension: IPivotDimension, dimensionType: PivotDimensionType) {
-        if (!dimension.sortDirection) {
-            dimension.sortDirection = SortingDirection.None;
-        }
-        dimension.sortDirection = dimension.sortDirection + 1 > SortingDirection.Desc ?
-            SortingDirection.None : dimension.sortDirection + 1;
-        // apply same sort direction to children.
-        let dim = dimension;
-        while (dim.childLevel) {
-            dim.childLevel.sortDirection = dimension.sortDirection;
-            dim = dim.childLevel;
-        }
-        this.grid.pipeTrigger++;
-        if (dimensionType === PivotDimensionType.Column) {
-            this.grid.setupColumns();
-        }
+        const startDirection = dimension.sortDirection || SortingDirection.None;
+        const direction = startDirection + 1 > SortingDirection.Desc ?
+            SortingDirection.None : startDirection + 1;
+        this.grid.sortDimension(dimension, direction);
     }
 
     /**

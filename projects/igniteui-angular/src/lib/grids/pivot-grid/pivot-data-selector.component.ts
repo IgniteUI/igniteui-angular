@@ -196,28 +196,10 @@ export class IgxPivotDataSelectorComponent {
         )
             return;
 
-        if (!dimension.sortDirection) {
-            dimension.sortDirection = SortingDirection.None;
-        }
-
-        dimension.sortDirection =
-            dimension.sortDirection + 1 > SortingDirection.Desc
-                ? SortingDirection.None
-                : dimension.sortDirection + 1;
-        // apply same sort direction to children.
-        let dim = dimension;
-
-        while (dim.childLevel) {
-            dim.childLevel.sortDirection = dimension.sortDirection;
-            dim = dim.childLevel;
-        }
-
-        this.grid.pipeTrigger++;
-        this.grid.cdr.markForCheck();
-
-        if (dimensionType === PivotDimensionType.Column) {
-            this.grid.setupColumns();
-        }
+        const startDirection = dimension.sortDirection || SortingDirection.None;
+        const direction = startDirection + 1 > SortingDirection.Desc ?
+            SortingDirection.None : startDirection + 1;
+        this.grid.sortDimension(dimension, direction);
     }
 
     /**
