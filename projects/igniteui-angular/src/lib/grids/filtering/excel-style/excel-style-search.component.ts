@@ -26,8 +26,6 @@ import { cloneHierarchicalArray, PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem } from './common';
 import { IgxTreeComponent, ITreeNodeSelectionEvent } from '../../../tree/public_api';
-import { CurrentResourceStrings } from '../../../core/i18n/resources';
-import { IListResourceStrings } from '../../../core/i18n/list-resources';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -93,6 +91,13 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef })
     protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+        @ViewChild('defaultEmptySearch', { read: TemplateRef, static: false })
+        protected defaultEmptySearchTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
@@ -173,19 +178,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             return this.defaultExcelStyleLoadingValuesTemplate;
         }
     }
-    
-    /**
-     * @hidden @internal
-     */
-    public get resourceStrings(): IListResourceStrings {
-        return this._resourceStrings;
-    }
 
     private _isLoading;
     private _addToCurrentFilterItem: FilterListItem;
     private _selectAllItem: FilterListItem;
     private _hierarchicalSelectedItems: FilterListItem[];
-    private _resourceStrings = CurrentResourceStrings.ListResStrings;
     private destroy$ = new Subject<boolean>();
 
     constructor(public cdr: ChangeDetectorRef, public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
@@ -208,6 +205,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.isHierarchical() && this.esf.listData[0].isSpecial) {
+                this._selectAllItem = this.esf.listData[0];
+                this.esf.listData.splice(0, 1);
+            }
+
             if (this.searchValue) {
                 this.clearInput();
             } else {
@@ -223,10 +225,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
-        if (this.isHierarchical()) {
-            this._selectAllItem = this.esf.listData[0];
-            this.esf.listData.splice(0, 1);
-        }
         requestAnimationFrame(this.refreshSize);
     }
 

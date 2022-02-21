@@ -10,7 +10,6 @@ import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
-import { IgxTreeModule } from '../../tree/public_api';
 /**
  * @hidden
  */

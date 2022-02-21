@@ -43,6 +43,10 @@
             </ng-container>
         </div>
     </ng-template>
+
+    <ng-template igxEmptyList>
+        <ng-container *ngTemplateOutlet="defaultEmptySearch"></ng-container>
+    </ng-template>
 </igx-list>
 
 <div class="igx-excel-filter__tree" *ngIf="isHierarchical()">
@@ -103,10 +107,23 @@
         </igx-tree-node>
     </igx-tree>
 
-    <article *ngIf="isTreeEmpty()">
-        {{resourceStrings.igx_list_no_items}}
-    </article>
+    <ng-template igxDataLoading>
+        <div class="igx-excel-filter__loading">
+            <ng-container *ngTemplateOutlet="valuesLoadingTemplate">
+            </ng-container>
+        </div>
+    </ng-template>
+
+    <ng-template [ngIf]="isTreeEmpty()">
+        <ng-container *ngTemplateOutlet="defaultEmptySearch"></ng-container>
+    </ng-template>
 </div>
+
+<ng-template #defaultEmptySearch>
+    <article>
+        {{esf.grid.resourceStrings.igx_grid_excel_no_matches}}
+    </article>
+</ng-template>
 
 <ng-template #defaultExcelStyleLoadingValuesTemplate>
     <igx-circular-bar [indeterminate]="true">
