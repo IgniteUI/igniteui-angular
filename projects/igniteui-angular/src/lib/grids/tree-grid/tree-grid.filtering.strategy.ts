@@ -20,13 +20,23 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
         const column = grid?.getColumnByName(fieldName);
         const hierarchicalRecord = rec as ITreeGridRecord;
-        let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
+        let value = this.isHierarchicalFilterField(fieldName) ?
+            this.getHierarchicalFieldValue(hierarchicalRecord, fieldName) :
+            resolveNestedPath(hierarchicalRecord.data, fieldName);
 
         value = column?.formatter && this.shouldFormatFilterValues(column) ?
             column.formatter(value) :
             value && (isDate || isTime) ? parseDate(value) : value;
 
         return value;
+    }
+
+    private getHierarchicalFieldValue(record: ITreeGridRecord, field: string) {
+        const value = resolveNestedPath(record.data, field);
+
+        return record.parent ?
+            `${this.getHierarchicalFieldValue(record.parent, field)}${value ? `.[${value}]` : ''}` :
+            `[${value}]`;
     }
 
     private filterImpl(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
@@ -56,11 +66,15 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return res;
     }
 
+    private isHierarchicalFilterField(field: string) {
+        return this.hierarchicalFilterFields && this.hierarchicalFilterFields.indexOf(field) !== -1;
+    }
+
     public override getUniqueColumnValues(
         column: ColumnType,
         tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]> {
 
-        if (!this.hierarchicalFilterFields || this.hierarchicalFilterFields.indexOf(column.field) < 0) {
+        if (!this.isHierarchicalFilterField(column.field)) {
             return super.getUniqueColumnValues(column, tree);
         }
 
