@@ -423,28 +423,29 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         return selectableExpressionsCount === this.expressionsList.length;
     }
 
-    private areExpressionsValuesInTheList() {
-        if (this.column.dataType === GridColumnDataType.Boolean) {
-            return true;
-        }
+    // TODO Check if this is necessary
+    // private areExpressionsValuesInTheList() {
+    //     if (this.column.dataType === GridColumnDataType.Boolean) {
+    //         return true;
+    //     }
 
-        if (this.filterValues.size === 1) {
-            const firstValue = this.filterValues.values().next().value;
+    //     if (this.filterValues.size === 1) {
+    //         const firstValue = this.filterValues.values().next().value;
 
-            if (!firstValue && firstValue !== 0) {
-                return true;
-            }
-        }
+    //         if (!firstValue && firstValue !== 0) {
+    //             return true;
+    //         }
+    //     }
 
-        for (const expression of this.uniqueValues) {
-            const value = this.getExpressionValue(expression);
-            if (this.filterValues.has(value)) {
-                return true;
-            }
-        }
+    //     for (const expression of this.uniqueValues) {
+    //         const value = this.getExpressionValue(expression);
+    //         if (this.filterValues.has(value)) {
+    //             return true;
+    //         }
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
     private populateColumnData() {
         if (this.grid.uniqueColumnValuesStrategy) {
@@ -525,7 +526,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private generateListData() {
         this.listData = new Array<FilterListItem>();
-        const shouldUpdateSelection = (this.areExpressionsSelectable() && this.areExpressionsValuesInTheList()) || this.isHierarchical;
+        const shouldUpdateSelection = this.areExpressionsSelectable();
 
         if (this.column.dataType === GridColumnDataType.Boolean) {
             this.addBooleanItems();
