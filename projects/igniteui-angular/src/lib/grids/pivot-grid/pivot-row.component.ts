@@ -89,13 +89,13 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     }
 
     public getCellClass(col: IgxColumnComponent) {
-        const configuration = this.grid.pivotConfiguration;
-        if (configuration.values.length === 1) {
-            return configuration.values[0].styles;
+        const values = this.grid.values;
+        if (values.length === 1) {
+            return values[0].styles;
         }
         const colName = col.field.split(this.grid.pivotKeys.columnDimensionSeparator);
         const measureName = colName[colName.length - 1];
-        return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
+        return values.find(v => v.member === measureName)?.styles;
     }
 
     public isCellActive(visibleColumnIndex) {
