@@ -204,6 +204,10 @@ describe("Pivot data selector", () => {
     });
 
     it("should fire event handlers on reorder in a panel using drag and drop gestures", async() => {
+        window.scrollTo(1000, 1000)
+        document.scrollingElement.scrollTop = 1000;
+        fixture.detectChanges()
+
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
@@ -244,6 +248,10 @@ describe("Pivot data selector", () => {
     });
 
     it("should reorder items in a panel using drag and drop gestures", async() => {
+        window.scrollTo(1000, 1000)
+        document.scrollingElement.scrollTop = 1000;
+        fixture.detectChanges()
+        
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
@@ -266,6 +274,8 @@ describe("Pivot data selector", () => {
         await wait(100);
 
         const ghost = document.body.querySelector(".igx-pivot-data-selector__item-ghost");
+        fixture.componentInstance.dataSelector.dropAllowed = true;
+
         UIInteractions.simulatePointerEvent("pointermove", ghost, handleX, handleY - 36);
         fixture.detectChanges();
         await wait(100);

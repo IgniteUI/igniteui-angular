@@ -1275,8 +1275,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         // document.elementsFromPoint consider position within the current viewport
         // window.pageXOffset == window.scrollX; // always true
         // using window.pageXOffset for IE9 compatibility
-        const viewPortX = pageX - window.pageXOffset;
-        const viewPortY = pageY - window.pageYOffset;
+        const viewPortX = pageX;
+        const viewPortY = pageY;
         if (document['msElementsFromPoint']) {
             // Edge and IE special snowflakes
             const elements = document['msElementsFromPoint'](viewPortX, viewPortY);
