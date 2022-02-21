@@ -291,7 +291,7 @@ export class PivotGridSampleComponent {
     }
 
     public toggle(){
-        this.grid1.toggleDimension(this.dimensions[2]);
+        this.grid1.toggleDimension(this.pivotConfigHierarchy.filters[0]);
     }
 
     public move(){
