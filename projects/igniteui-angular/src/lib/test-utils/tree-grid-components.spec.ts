@@ -25,7 +25,7 @@ export class IgxTreeGridSortingComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="800px">
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="1200px">
         <igx-column [field]="'ID'" dataType="number" [filterable]="true"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [filterable]="true"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date" [filterable]="true"></igx-column>
