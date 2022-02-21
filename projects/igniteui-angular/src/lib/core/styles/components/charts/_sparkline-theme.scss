@@ -37,10 +37,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $my-sparkline-theme: igx-sparkline-theme($brushes: (orange, blue, pink));
-///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($my-sparkline-theme);
-@function igx-sparkline-theme(
+///   $my-sparkline-theme: sparkline-theme($brushes: (orange, blue, pink));
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-sparkline-theme);
+@function sparkline-theme(
     $palette: null,
     $schema: $light-schema,
 

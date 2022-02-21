@@ -1,0 +1,10 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [{
+            "name": "$disable-button-shadow",
+            "replaceWith": "$button-shadow",
+            "owner": "igx-carousel-theme",
+            "type": "property"
+        }
+    ]
+}
