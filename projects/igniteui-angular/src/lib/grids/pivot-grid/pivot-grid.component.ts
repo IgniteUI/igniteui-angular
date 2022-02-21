@@ -1385,43 +1385,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             dim.childLevel.sortDirection = dimension.sortDirection;
             dim = dim.childLevel;
         }
-        this.dimensionsSortingExpressions = this.generateDimensionSortingExpressions(this.rowDimensions);
-        this.dimensionsSortingExpressionsChange.emit(this.dimensionsSortingExpressions);
+        const dimensionsSortingExpressions = PivotUtil.generateDimensionSortingExpressions(this.rowDimensions)
+        this.pipeTrigger++;
+        this.dimensionsSortingExpressionsChange.emit(dimensionsSortingExpressions);
         if (dimensionType === PivotDimensionType.Column) {
             this.setupColumns();
         }
         this.cdr.detectChanges();
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    public dimensionsSortingExpressions: Array<ISortingExpression> = [];
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected generateDimensionSortingExpressions(dimensions: IPivotDimension[]): ISortingExpression[] {
-        const expressions: ISortingExpression[] = [];
-        PivotUtil.flatten(dimensions).forEach(x => {
-            if (x.sortDirection) {
-                expressions.push({
-                    dir: x.sortDirection,
-                    fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
-                });
-            } else {
-                expressions.push({
-                    dir: SortingDirection.None,
-                    fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
-                });
-            }
-        });
-        return expressions;
-    }
 
     public getDimensionsByType(dimension: PivotDimensionType) {
         switch (dimension) {

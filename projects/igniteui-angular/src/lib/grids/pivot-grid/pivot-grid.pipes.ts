@@ -299,9 +299,12 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
 })
 export class IgxPivotGridSortingPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
-    public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
+    public transform(collection: any[], config: IPivotConfiguration, sorting: IGridSortingStrategy,
         id: string, pipeTrigger: number, pinned?): any[] {
         let result: any[];
+        const allDimensions = config.rows || [];
+        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
+        const expressions = PivotUtil.generateDimensionSortingExpressions(enabledDimensions);
         if (!expressions.length) {
             result = collection;
         } else {
