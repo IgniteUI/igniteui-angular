@@ -1,8 +1,10 @@
 import { useAnimation } from "@angular/animations";
 import {
     Component,
+    EventEmitter,
     HostBinding,
     Input,
+    Output,
     Renderer2
 } from "@angular/core";
 import { first } from "rxjs/operators";
@@ -13,11 +15,13 @@ import { SortingDirection } from "../../data-operations/sorting-strategy";
 import {
     IDragBaseEventArgs,
     IDragGhostBaseEventArgs,
+    IDragMoveEventArgs,
     IDropBaseEventArgs,
     IDropDroppedEventArgs
 } from "../../directives/drag-drop/drag-drop.directive";
 import { ISelectionEventArgs } from "../../drop-down/drop-down.common";
 import { IgxDropDownComponent } from "../../drop-down/drop-down.component";
+import { IgxExpansionPanelComponent } from '../../expansion-panel/expansion-panel.component';
 import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
@@ -55,6 +59,107 @@ interface IDataSelectorPanel {
     templateUrl: "./pivot-data-selector.component.html",
 })
 export class IgxPivotDataSelectorComponent {
+
+    /**
+     * Gets/sets whether the columns panel is expanded
+     * Get
+     * ```typescript
+     *  const columnsPanelState: boolean = this.dataSelector.columnsExpanded;
+     * ```
+     * Set
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [columnsExpanded]="columnsPanelState"></igx-pivot-data-selector>
+     * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [(columnsExpanded)]="columnsPanelState"></igx-pivot-data-selector>
+     * ```
+     */
+    @Input()
+    public columnsExpanded = true;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public columnsExpandedChange = new EventEmitter<boolean>();
+    
+    /**
+     * Gets/sets whether the rows panel is expanded
+     * Get
+     * ```typescript
+     *  const rowsPanelState: boolean = this.dataSelector.rowsExpanded;
+     * ```
+     * Set
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [rowsExpanded]="rowsPanelState"></igx-pivot-data-selector>
+     * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [(rowsExpanded)]="rowsPanelState"></igx-pivot-data-selector>
+     * ```
+     */
+    @Input()
+    public rowsExpanded = true;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public rowsExpandedChange = new EventEmitter<boolean>();
+
+    /**
+     * Gets/sets whether the filters panel is expanded
+     * Get
+     * ```typescript
+     *  const filtersPanelState: boolean = this.dataSelector.filtersExpanded;
+     * ```
+     * Set
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [filtersExpanded]="filtersPanelState"></igx-pivot-data-selector>
+     * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [(filtersExpanded)]="filtersPanelState"></igx-pivot-data-selector>
+     * ```
+     */
+    @Input()
+    public filtersExpanded = true;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public filtersExpandedChange = new EventEmitter<boolean>();
+
+    /**
+     * Gets/sets whether the values panel is expanded
+     * Get
+     * ```typescript
+     *  const valuesPanelState: boolean = this.dataSelector.valuesExpanded;
+     * ```
+     * Set
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [valuesExpanded]="valuesPanelState"></igx-pivot-data-selector>
+     * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [(valuesExpanded)]="valuesPanelState"></igx-pivot-data-selector>
+     * ```
+     */
+    @Input()
+    public valuesExpanded = true;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public valuesExpandedChange = new EventEmitter<boolean>();
+
     private _grid: PivotGridType;
     private _dropDelta = 0;
 
@@ -117,7 +222,7 @@ export class IgxPivotDataSelectorComponent {
             icon: "filter_list",
             itemKey: "memberName",
             sortable: false,
-            dragChannels: ["Filters", "Columns", "Rows"],
+            dragChannels: ["Filters", "Columns", "Rows"]
         },
         {
             name: "Columns",
@@ -127,7 +232,7 @@ export class IgxPivotDataSelectorComponent {
             icon: "view_column",
             itemKey: "memberName",
             sortable: true,
-            dragChannels: ["Filters", "Columns", "Rows"],
+            dragChannels: ["Filters", "Columns", "Rows"]
         },
         {
             name: "Rows",
@@ -137,7 +242,7 @@ export class IgxPivotDataSelectorComponent {
             icon: "table_rows",
             itemKey: "memberName",
             sortable: true,
-            dragChannels: ["Filters", "Columns", "Rows"],
+            dragChannels: ["Filters", "Columns", "Rows"]
         },
         {
             name: "Values",
@@ -148,7 +253,7 @@ export class IgxPivotDataSelectorComponent {
             itemKey: "member",
             displayKey: 'displayName',
             sortable: false,
-            dragChannels: ["Values"],
+            dragChannels: ["Values"]
         },
     ];
 
@@ -556,6 +661,39 @@ export class IgxPivotDataSelectorComponent {
                 event.owner.element.nativeElement,
                 "igx-drag--push"
             );
+        }
+    }
+
+    public getPanelCollapsed(panelType: PivotDimensionType): boolean {
+        switch(panelType) {
+            case PivotDimensionType.Column:
+                return !this.columnsExpanded;
+            case PivotDimensionType.Filter:
+                return !this.filtersExpanded;
+            case PivotDimensionType.Row:
+                return !this.rowsExpanded;
+            default:
+                return !this.valuesExpanded;
+        }
+    }
+
+    public onCollapseChange(value: boolean, panelType: PivotDimensionType): void {
+        switch(panelType) {
+            case PivotDimensionType.Column:
+                this.columnsExpanded = !value;
+                this.columnsExpandedChange.emit(this.columnsExpanded);
+                break;
+            case PivotDimensionType.Filter:
+                this.filtersExpanded = !value;
+                this.filtersExpandedChange.emit(this.filtersExpanded);
+                break;
+            case PivotDimensionType.Row:
+                this.rowsExpanded = !value;
+                this.rowsExpandedChange.emit(this.rowsExpanded);
+                break;
+            default:
+                this.valuesExpanded = !value;
+                this.valuesExpandedChange.emit(this.valuesExpanded)
         }
     }
 }

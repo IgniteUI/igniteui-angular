@@ -5,10 +5,12 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
 import { DisplayDensity } from "../../core/displayDensity";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
+import { IgxExpansionPanelHeaderComponent } from '../../expansion-panel/expansion-panel-header.component';
+import { IgxExpansionPanelComponent } from '../../expansion-panel/expansion-panel.component';
 import { IgxInputDirective } from "../../input-group/public_api";
 import { configureTestSuite } from "../../test-utils/configure-suite";
 import { IgxPivotGridTestBaseComponent } from "../../test-utils/pivot-grid-samples.spec";
-import { UIInteractions } from "../../test-utils/ui-interactions.spec";
+import { UIInteractions, wait } from "../../test-utils/ui-interactions.spec";
 import { PivotGridType } from "../common/grid.interface";
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import {
@@ -18,7 +20,7 @@ import {
 } from "./pivot-grid.interface";
 import { IgxPivotGridModule } from "./pivot-grid.module";
 
-describe("Pivot data selector", () => {
+fdescribe("Pivot data selector", () => {
     let fixture;
     let grid: PivotGridType;
     let selector: IgxPivotDataSelectorComponent;
@@ -48,6 +50,100 @@ describe("Pivot data selector", () => {
         grid.displayDensity = DisplayDensity.compact;
         fixture.detectChanges();
         expect(selector.displayDensity).toEqual(DisplayDensity.compact);
+    });
+
+    it("should set through API expand states for panels with two way data binding", () => {
+        spyOn(selector.filtersExpandedChange, "emit");
+        spyOn(selector.columnsExpandedChange, "emit");
+        spyOn(selector.rowsExpandedChange, "emit");
+        spyOn(selector.valuesExpandedChange, "emit");
+
+        const expansionPanels = fixture.debugElement.queryAll(By.directive(IgxExpansionPanelComponent));
+        expect(expansionPanels.length).toEqual(4);
+        expect(expansionPanels[0].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+
+        fixture.componentInstance.filterExpandState = false;
+        fixture.detectChanges();
+
+        expect(expansionPanels[0].componentInstance.collapsed).toBeTruthy();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+
+        fixture.componentInstance.columnExpandState = false;
+        fixture.detectChanges();
+
+        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+
+        fixture.componentInstance.rowExpandState = false;
+        fixture.detectChanges();
+
+        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeTrue();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+
+        fixture.componentInstance.valueExpandState = false;
+        fixture.detectChanges();
+
+        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeTrue();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeTrue();
+
+        expect(selector.filtersExpandedChange.emit).not.toHaveBeenCalled();
+        expect(selector.columnsExpandedChange.emit).not.toHaveBeenCalled();
+        expect(selector.rowsExpandedChange.emit).not.toHaveBeenCalled();
+        expect(selector.valuesExpandedChange.emit).not.toHaveBeenCalled();
+    });
+
+    it("should reflect expansion of panels through two way data binding", async() => {
+        const expansionPanels = fixture.debugElement.queryAll(By.directive(IgxExpansionPanelComponent));
+        const panelHeaders = fixture.debugElement.queryAll(By.directive(IgxExpansionPanelHeaderComponent));
+        expect(expansionPanels.length).toEqual(4);
+
+        expect(fixture.componentInstance.filterExpandState).toBeTrue();
+        expect(fixture.componentInstance.columnExpandState).toBeTrue();
+        expect(fixture.componentInstance.rowExpandState).toBeTrue();
+        expect(fixture.componentInstance.valueExpandState).toBeTrue();
+        expect(expansionPanels[0].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+
+        UIInteractions.simulateClickEvent(panelHeaders[0].nativeElement);
+        fixture.detectChanges();
+        await wait(100);
+
+        expect(fixture.componentInstance.filterExpandState).toBeFalse();
+        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
+
+        UIInteractions.simulateClickEvent(panelHeaders[1].nativeElement);
+        fixture.detectChanges();
+        await wait(100);
+
+        expect(fixture.componentInstance.columnExpandState).toBeFalse();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
+
+        UIInteractions.simulateClickEvent(panelHeaders[2].nativeElement);
+        fixture.detectChanges();
+        await wait(100);
+
+        expect(fixture.componentInstance.rowExpandState).toBeFalse();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeTrue();
+
+        UIInteractions.simulateClickEvent(panelHeaders[3].nativeElement);
+        fixture.detectChanges();
+        await wait(100);
+
+        expect(fixture.componentInstance.valueExpandState).toBeFalse();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeTrue();
     });
 
     it("should render a list of all row, column, filter, and value dimensions", () => {
@@ -203,7 +299,11 @@ describe("Pivot data selector", () => {
         expectConfigToMatchPanels(null); // pass an invalid type (null) to test for values
     });
 
-    xit("should fire event handlers on reorder in a panel using drag and drop gestures", () => {
+    it("should fire event handlers on reorder in a panel using drag and drop gestures", () => {
+        window.scrollTo(1000, 1000)
+        document.scrollingElement.scrollTop = 1000;
+        fixture.detectChanges()
+
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
@@ -217,48 +317,67 @@ describe("Pivot data selector", () => {
             .querySelectorAll("igx-list-item")
             [items.length - 1].querySelector("[igxDragHandle]");
 
-        const { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
+        let { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
+        // Take into account that the window offset, since pointer events automatically add it.
+        handleY = handleY + window.pageYOffset
 
-        UIInteractions.simulatePointerEvent(
-            "pointerdown",
-            dragHandle,
-            handleX,
-            handleY
-        );
+        UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
         fixture.detectChanges();
 
-        UIInteractions.simulatePointerEvent(
-            "pointermove",
-            dragHandle,
-            handleX,
-            handleY - 10
-        );
+        UIInteractions.simulatePointerEvent("pointermove", dragHandle, handleX, handleY - 10);
         fixture.detectChanges();
 
-        const ghost = document.body.querySelector(
-            ".igx-pivot-data-selector__item-ghost"
-        );
+        const ghost = document.body.querySelector(".igx-pivot-data-selector__item-ghost");
         expect(selector.ghostCreated).toHaveBeenCalled();
 
-        UIInteractions.simulatePointerEvent(
-            "pointermove",
-            ghost,
-            handleX,
-            handleY - 36
-        );
+        UIInteractions.simulatePointerEvent("pointermove", ghost, handleX, handleY - 36);
         fixture.detectChanges();
         expect(selector.onItemDragMove).toHaveBeenCalled();
 
-        UIInteractions.simulatePointerEvent(
-            "pointerup",
-            ghost,
-            handleX,
-            handleY - 36
-        );
+        UIInteractions.simulatePointerEvent("pointerup", ghost, handleX, handleY - 36);
         fixture.detectChanges();
 
         expect(selector.onItemDragEnd).toHaveBeenCalled();
         expect(selector.onItemDropped).toHaveBeenCalled();
+    });
+
+    it("should reorder items in a panel using drag and drop gestures", () => {
+        window.scrollTo(1000, 1000)
+        document.scrollingElement.scrollTop = 1000;
+        fixture.detectChanges()
+        
+        // Get all value items
+        let items = getPanelItemsByDimensionType(null);
+
+        expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[0].member).toEqual('UnitsSold');
+        expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[1].member).toEqual('UnitPrice');
+
+        // Get the drag handle of the last item in the panel
+        const dragHandle = items[0].parentNode
+            .querySelectorAll("igx-list-item")
+            [items.length - 1].querySelector("[igxDragHandle]");
+
+        let { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
+        // Take into account that the window offset, since pointer events automatically add it.
+        handleY = handleY + window.pageYOffset
+
+        UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
+        fixture.detectChanges();
+
+        UIInteractions.simulatePointerEvent("pointermove", dragHandle, handleX, handleY - 10);
+        fixture.detectChanges();
+
+        const ghost = document.body.querySelector(".igx-pivot-data-selector__item-ghost");
+        fixture.componentInstance.dataSelector.dropAllowed = true;
+
+        UIInteractions.simulatePointerEvent("pointermove", ghost, handleX, handleY - 36);
+        fixture.detectChanges();
+
+        UIInteractions.simulatePointerEvent("pointerup", ghost, handleX, handleY - 36);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[0].member).toEqual('UnitPrice');
+        expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[1].member).toEqual('UnitsSold');
     });
 
     it("should call filtering menu on column and row filter click", () => {

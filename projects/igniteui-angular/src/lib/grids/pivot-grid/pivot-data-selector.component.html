@@ -45,9 +45,10 @@
 
 <igx-accordion>
     <igx-expansion-panel
-        [animationSettings]="animationSettings"
-        [collapsed]="false"
         *ngFor="let panel of _panels"
+        [animationSettings]="animationSettings"
+        [collapsed]="getPanelCollapsed(panel.type)"
+        (collapsedChange)="onCollapseChange($event, panel.type)"
     >
         <igx-expansion-panel-header
             iconPosition="left"
