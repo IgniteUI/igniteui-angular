@@ -6,6 +6,6 @@
         placeholder="Dimension(s)" searchPlaceholder="Search...">
     </igx-combo>
 </div>
-<igx-pivot-grid [displayDensity]='"compact"' #grid1 [data]="origData" [pivotConfiguration]="pivotConfigHierarchy" (dimensionsChange)='dimensionChange($event)' [defaultExpandState]='true'>
+<igx-pivot-grid   [superCompactMode]="true" #grid1 [data]="origData" [pivotConfiguration]="pivotConfigHierarchy" (dimensionsChange)='dimensionChange($event)' [defaultExpandState]='true'>
 </igx-pivot-grid>
 
