@@ -897,7 +897,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
 
                 let dropDown = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_LIST}`));
-                expect(dropDown.length).toBe(1);
+                expect(dropDown.length).toBe(2);
 
                 const valueChipUnitPrice = headerRow.querySelector('igx-chip[id="UnitPrice"]');
 
@@ -906,7 +906,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
 
                 dropDown = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_LIST}`));
-                expect(dropDown.length).toBe(1);
+                expect(dropDown.length).toBe(2);
             });
 
             it('should allow reorder in row chip area.', () => {

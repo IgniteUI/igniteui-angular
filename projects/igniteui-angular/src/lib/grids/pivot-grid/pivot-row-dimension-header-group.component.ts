@@ -153,4 +153,8 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     public onMouseDown(_event: MouseEvent): void {
         this.activate();
     }
+
+    public get selectable(): boolean {
+        return false;
+    }
 }
