@@ -1279,6 +1279,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.pipeTrigger++;
         this.dimensionsChange.emit({ dimensions: collection, dimensionCollectionType: dimType });
         this.cdr.detectChanges();
+        if (dimType === PivotDimensionType.Filter) {
+            this.reflow();
+        }
     }
 
     /**
@@ -1624,7 +1627,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.parent = parent;
                 ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
                 ref.instance.sortable = true;
-                ref.instance.dataType = value.dataType || this.resolveDataTypes(data[0]);
+                ref.instance.dataType = value.dataType || this.resolveDataTypes(data[0][value.member]);
                 ref.instance.formatter = value.formatter;
                 columns.push(ref.instance);
             });
@@ -1713,8 +1716,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         ref.instance.field = key;
         ref.instance.parent = parent;
         ref.instance.width = this.resolveColumnDimensionWidth(value.dimension);
-        ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
-        ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
+        const valueDefinition = this.values[0];
+        ref.instance.dataType = valueDefinition?.dataType || this.resolveDataTypes(data[0][valueDefinition?.member]);
+        ref.instance.formatter = valueDefinition?.formatter;
         ref.instance.sortable = true;
         ref.changeDetectorRef.detectChanges();
         return ref.instance;
