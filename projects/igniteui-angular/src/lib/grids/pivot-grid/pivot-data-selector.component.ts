@@ -37,6 +37,7 @@ import {
     IPivotValue,
     PivotDimensionType
 } from "./pivot-grid.interface";
+import { PivotUtil } from './pivot-util';
 
 interface IDataSelectorPanel {
     name: string;
@@ -365,7 +366,7 @@ export class IgxPivotDataSelectorComponent {
     ) {
         this.value = value;
         dropdown.width = "200px";
-        this.aggregateList = this.getAggregateList(value);
+        this.aggregateList = PivotUtil.getAggregateList(value, this.grid);
         dropdown.open(this._subMenuOverlaySettings);
     }
 
@@ -390,53 +391,6 @@ export class IgxPivotDataSelectorComponent {
                 this.updateDropDown(value, dropdown);
             });
         }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected getAggregatorsForValue(value: IPivotValue): IPivotAggregator[] {
-        const dataType =
-            value.dataType ||
-            this.grid.resolveDataTypes(this.grid.data[0][value.member]);
-        switch (dataType) {
-            case GridColumnDataType.Number:
-            case GridColumnDataType.Currency:
-                return IgxPivotDateAggregate.aggregators();
-            case GridColumnDataType.Date:
-            case GridColumnDataType.DateTime:
-                return IgxPivotDateAggregate.aggregators();
-            case GridColumnDataType.Time:
-                return IgxPivotTimeAggregate.aggregators();
-            default:
-                return IgxPivotAggregate.aggregators();
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public getAggregateList(val: IPivotValue): IPivotAggregator[] {
-        if (!val.aggregateList) {
-            let defaultAggr = this.getAggregatorsForValue(val);
-            const isDefault = defaultAggr.find(
-                (x) => x.key === val.aggregate.key
-            );
-            // resolve custom aggregations
-            if (!isDefault && this.grid.data[0][val.member] !== undefined) {
-                // if field exists, then we can apply default aggregations and add the custom one.
-                defaultAggr.unshift(val.aggregate);
-            } else if (!isDefault) {
-                // otherwise this is a custom aggregation that is not compatible
-                // with the defaults, since it operates on field that is not in the data
-                // leave only the custom one.
-                defaultAggr = [val.aggregate];
-            }
-            val.aggregateList = defaultAggr;
-        }
-        return val.aggregateList;
     }
 
     /**
