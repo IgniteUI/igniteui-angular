@@ -208,10 +208,14 @@
                 $_valid-variant: not(string.index(#{$variant}, 'contrast')) and not(string.index(#{$variant}, 'variant')) and $theme;
 
                 @if $_valid-base and $variant == 500 {
-                    @if $prefix == 'igc' {
-                        --#{$prefix}-#{$name}-h: var(--igx-primary-h);
-                        --#{$prefix}-#{$name}-s: var(--igx-primary-s);
-                        --#{$prefix}-#{$name}-l: var(--igx-primary-l);
+                    @if $prefix == 'igc' and $name != 'grays' {
+                        --#{$prefix}-#{$name}-h: var(--igx-#{$name}-h);
+                        --#{$prefix}-#{$name}-s: var(--igx-#{$name}-s);
+                        --#{$prefix}-#{$name}-l: var(--igx-#{$name}-l);
+                    } @else if $prefix == 'igc' and $name == 'grays' {
+                        --#{$prefix}-gray-h: var(--igx-#{$name}-h);
+                        --#{$prefix}-gray-s: var(--igx-#{$name}-s);
+                        --#{$prefix}-gray-l: var(--igx-#{$name}-l);
                     } @else {
                         --#{$prefix}-#{$name}-h: #{math.round(color.hue($value))};
                         --#{$prefix}-#{$name}-s: #{math.round(color.saturation($value))};
@@ -220,15 +224,25 @@
 
                     @if $name != 'grays' {
                         --#{$prefix}-#{$name}-a: #{color.alpha($value)};
+                    } @else if $name == 'grays' and $prefix == 'igc' {
+                        --#{$prefix}-gray-a: 1;
                     } @else {
                         --#{$prefix}-#{$name}-a: 1;
                     }
                 }
 
                 @if $_valid-base and $_valid-variant {
-                    --#{$prefix}-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme, $gray, #{$prefix})};
+                    @if $prefix == 'igc' and $name == 'grays' {
+                        --#{$prefix}-gray-#{$variant}: #{gen-hsla-color('gray', $variant, $theme, $gray, #{$prefix})};
+                    } @else {
+                        --#{$prefix}-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme, $gray, #{$prefix})};
+                    }
                 } @else if $name != '_meta' {
-                    --#{$prefix}-#{$name}-#{$variant}: #{$value};
+                    @if $prefix == 'igc' and $name == 'grays' {
+                        --#{$prefix}-gray-#{$variant}: #{$value};
+                    } @else {
+                        --#{$prefix}-#{$name}-#{$variant}: #{$value};
+                    }
                 }
             }
         }
