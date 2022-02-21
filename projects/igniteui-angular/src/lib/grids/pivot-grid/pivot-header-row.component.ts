@@ -572,7 +572,8 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     protected updateDropDown(value: IPivotValue, dropdown: IgxDropDownComponent, chip: IgxChipComponent) {
         this.value = value;
         dropdown.width = chip.nativeElement.clientWidth + 'px';
-        this.aggregateList =  PivotUtil.getAggregateList(value, this.grid);
+        this.aggregateList = PivotUtil.getAggregateList(value, this.grid);
+        this.cdr.detectChanges();
         dropdown.open(this._subMenuOverlaySettings);
     }
 }

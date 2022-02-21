@@ -1,5 +1,6 @@
 import { useAnimation } from "@angular/animations";
 import {
+    ChangeDetectorRef,
     Component,
     HostBinding,
     Input,
@@ -104,7 +105,7 @@ export class IgxPivotDataSelectorComponent {
     /** @hidden @internal */
     public values: IPivotValue[];
 
-    constructor(private renderer: Renderer2) {}
+    constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
 
     /**
      * @hidden @internal
@@ -367,6 +368,7 @@ export class IgxPivotDataSelectorComponent {
         this.value = value;
         dropdown.width = "200px";
         this.aggregateList = PivotUtil.getAggregateList(value, this.grid);
+        this.cdr.detectChanges();
         dropdown.open(this._subMenuOverlaySettings);
     }
 
