@@ -20,7 +20,7 @@ import {
 } from "./pivot-grid.interface";
 import { IgxPivotGridModule } from "./pivot-grid.module";
 
-fdescribe("Pivot data selector", () => {
+describe("Pivot data selector", () => {
     let fixture;
     let grid: PivotGridType;
     let selector: IgxPivotDataSelectorComponent;
