@@ -23,18 +23,18 @@ export interface IDimensionsChange {
     dimensionCollectionType: PivotDimensionType
 }
 
- /**
- * Event emitted when values list is changed.
- */
+/**
+* Event emitted when values list is changed.
+*/
 export interface IValuesChange {
     /** The new list of values. */
     values: IPivotValue[]
 }
 
- /**
- * Interface describing Pivot data processing for dimensions.
- * Should contain a process method and return records hierarchy based on the provided dimensions.
- */
+/**
+* Interface describing Pivot data processing for dimensions.
+* Should contain a process method and return records hierarchy based on the provided dimensions.
+*/
 export interface IPivotDimensionStrategy {
     process(collection: any,
         dimensions: IPivotDimension[],
@@ -42,16 +42,16 @@ export interface IPivotDimensionStrategy {
         pivotKeys?: IPivotKeys): any[];
 }
 
- /**
- * Interface describing a PivotAggregation function. 
- * Accepts an array of extracted data members and a array of the original data records.
- */
+/**
+* Interface describing a PivotAggregation function. 
+* Accepts an array of extracted data members and a array of the original data records.
+*/
 export type PivotAggregation = (members: any[], data: any[]) => any;
 
- /**
- * Interface describing a IPivotAggregator class.
- * Used for specifying custom aggregator lists.
- */
+/**
+* Interface describing a IPivotAggregator class.
+* Used for specifying custom aggregator lists.
+*/
 export interface IPivotAggregator {
     /** Aggregation unique key. */
     key: string;
@@ -64,9 +64,9 @@ export interface IPivotAggregator {
     aggregator: (members: any[], data?: any[]) => any;
 }
 
- /**
- * Configuration of the pivot grid.
- */
+/**
+* Configuration of the pivot grid.
+*/
 export interface IPivotConfiguration {
     /** A strategy to transform the rows. */
     rowStrategy?: IPivotDimensionStrategy | null;
@@ -84,9 +84,9 @@ export interface IPivotConfiguration {
     pivotKeys?: IPivotKeys;
 }
 
- /**
- * Configuration of a pivot dimension.
- */
+/**
+* Configuration of a pivot dimension.
+*/
 export interface IPivotDimension {
     /** Allows defining a hierarchy when multiple sub groups need to be extracted from single member. */
     childLevel?: IPivotDimension;
@@ -110,10 +110,12 @@ export interface IPivotDimension {
     dataType?: GridColumnDataType;
     /** The width of the dimension cells to be rendered.Can be pixel or %. */
     width?: string;
+    /** Level of the dimension. */
+    level?: number;
 }
- /**
- * Configuration of a pivot value aggregation.
- */
+/**
+* Configuration of a pivot value aggregation.
+*/
 export interface IPivotValue {
     /** Field name to use in order to extract value. */
     member: string;
@@ -182,4 +184,24 @@ export interface PivotRowHeaderGroupType {
     header: any;
     headerID: string;
     grid: any;
+}
+
+export interface IPivotGridRecord {
+    /** Gets/Sets the group value associated with the related row dimension by its memberName. **/
+    dimensionValues: Map<string, string>;
+    /** Gets/Sets the aggregation value associated with the value path. Value path depends on configured column dimension hierarchy and values.**/
+    aggregationValues: Map<string, any>;
+    /** List of children records in case any row dimension member contain a hierarchy. Each dimension member contains its own hierarchy, which you can get by its memberName. **/
+    children?: Map<string, IPivotGridRecord[]>;
+    /** List of original data records associated with the current pivoted data. **/
+    records?: any[];
+     /** Record level**/
+    level?: number;
+    /** List of dimensions associated with the record.**/
+    dimensions: IPivotDimension[];
+}
+
+export interface IPivotGridGroupRecord extends IPivotGridRecord {
+    height?: number;
+    rowSpan?: number;
 }
