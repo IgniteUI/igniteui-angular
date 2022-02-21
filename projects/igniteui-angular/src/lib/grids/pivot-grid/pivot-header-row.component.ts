@@ -458,6 +458,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onDimDragOver(event, dimension?: PivotDimensionType) {
+        if (!event.dragChip || !event.dragChip.data?.pivotArea) return;
         const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id
             || x.displayName === event.dragChip.id) :
             !this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id || x.displayName === event.dragChip.id);
@@ -511,6 +512,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onValueDrop(event, area) {
+        if (!(event.dragChip && event.dragChip.data?.pivotArea) && !(event.dragData?.chip && !!event.dragData.chip.data.pivotArea)) return;
         //values can only be reordered
         const values = this.grid.pivotConfiguration.values;
         const dragId = event.dragChip?.id || event.dragData?.chip.id;
@@ -529,6 +531,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onDimDrop(event, area, dimensionType: PivotDimensionType) {
+        if (!(event.dragChip && event.dragChip.data?.pivotArea) && !(event.dragData?.chip && !!event.dragData.chip.data.pivotArea)) return;
         const dragId = event.dragChip?.id || event.dragData?.chip.id;
         const currentDim = this.grid.getDimensionsByType(dimensionType);
         const chipsArray = area.chipsList.toArray();

@@ -455,7 +455,7 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     public onPanelEntry(event: IDropBaseEventArgs, panel: string) {
-        this.dropAllowed = event.dragData.some(
+        this.dropAllowed = event.dragData.gridID === this.grid.id && event.dragData.selectorChannels?.some(
             (channel: string) => channel === panel
         );
     }
