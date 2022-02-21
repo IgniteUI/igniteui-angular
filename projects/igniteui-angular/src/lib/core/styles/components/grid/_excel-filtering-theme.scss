@@ -329,6 +329,10 @@
             }
         }
 
+        %grid-excel-move__buttons {
+            width: rem(208px);
+        }
+
         %grid-excel-move {
             @extend %grid-excel-action--compact;
             margin-bottom: 0;
