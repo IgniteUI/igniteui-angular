@@ -123,6 +123,7 @@
 
         %igx-expansion-panel__header-title {
             display: flex;
+
             > h6 {
                 font-size: rem(12px);
             }
@@ -218,6 +219,7 @@
         border: 1px solid color($color: 'grays', $variant: 100);
         border-radius: rem(2px);
         z-index: 10;
+
         igx-icon {
             width: rem(18px);
             height: rem(18px);
