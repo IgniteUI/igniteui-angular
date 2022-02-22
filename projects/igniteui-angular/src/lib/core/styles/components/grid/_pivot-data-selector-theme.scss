@@ -121,8 +121,12 @@
             font-size: rem(18px);
         }
 
-        %igx-expansion-panel__header-title > h6 {
-            font-size: rem(12px);
+        %igx-expansion-panel__header-title {
+            display: flex;
+
+            > h6 {
+                font-size: rem(12px);
+            }
         }
     }
 
@@ -142,7 +146,6 @@
 
         igx-list-item {
             display: flex;
-            align-items: center;
         }
 
         igx-checkbox + span {
@@ -195,6 +198,7 @@
         align-items: center;
         justify-content: space-between;
         min-height: rem(32px);
+        width: 100%;
 
         .igx-drag--push & {
             padding-top: rem(32px);
@@ -214,6 +218,7 @@
         box-shadow: elevation($elevations, 24);
         border: 1px solid color($color: 'grays', $variant: 100);
         border-radius: rem(2px);
+        z-index: 10;
 
         igx-icon {
             width: rem(18px);
