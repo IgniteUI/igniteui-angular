@@ -8,7 +8,25 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body class="igx-typography">
-  <igx-grid id="grid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+  <igx-grid id="grid1" moving="true" paging="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+    <igx-grid-toolbar>
+      <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
+      <igx-grid-toolbar-actions>
+        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+        <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+      </igx-grid-toolbar-actions>
+    </igx-grid-toolbar>
+
+    <!-- <igx-column field="ProductID" dataType="number"></igx-column>
+    <igx-column field="ProductName"></igx-column>
+    <igx-column field="CategoryName"></igx-column>
+    <igx-column field="InStock" dataType="number"></igx-column>
+    <igx-column field="ImageUrl">
+
+    </igx-column>
+
+    <igx-paginator></igx-paginator> -->
   </igx-grid>
 
   <igx-tree-grid id="treegrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">

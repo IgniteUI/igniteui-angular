@@ -1,13 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
-@use '../../igniteui-angular/src/lib/core/styles/themes' as *;
+@use '../../igniteui-angular/src/lib/core/styles/themes' as igx;
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 
-$palette: $light-material-palette;
+$palette: igx.$light-material-palette;
 
-@include igx-core();
-@include igx-typography();
-@include igx-theme($palette: $palette);
+@include igx.core();
+@include igx.typography();
+@include igx.theme($palette: $palette);
 
 body {
     display: grid;

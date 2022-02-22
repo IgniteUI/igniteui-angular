@@ -31,7 +31,7 @@ export class AppModule {
     customElements.define("igx-pivot-grid", pivot);
 
     // const pager = createCustomElement(IgxPaginatorComponent, { injector: this.injector });
-    // customElements.define("igc-paginator", pager);
+    // customElements.define("igx-paginator", pager);
   }
 
 }
