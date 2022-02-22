@@ -45,7 +45,7 @@
     </ng-template>
 
     <ng-template igxEmptyList>
-        <ng-container *ngTemplateOutlet="defaultEmptySearch"></ng-container>
+        <ng-container *ngTemplateOutlet="emptySearch"></ng-container>
     </ng-template>
 </igx-list>
 
@@ -115,11 +115,11 @@
     </ng-template>
 
     <ng-template [ngIf]="isTreeEmpty()">
-        <ng-container *ngTemplateOutlet="defaultEmptySearch"></ng-container>
+        <ng-container *ngTemplateOutlet="emptySearch"></ng-container>
     </ng-template>
 </div>
 
-<ng-template #defaultEmptySearch>
+<ng-template #emptySearch>
     <article>
         {{esf.grid?.resourceStrings.igx_grid_excel_no_matches}}
     </article>

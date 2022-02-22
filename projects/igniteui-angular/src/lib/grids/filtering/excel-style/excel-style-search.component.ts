@@ -93,13 +93,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
 
     /**
-     * @hidden
-     * @internal
-     */
-        @ViewChild('defaultEmptySearch', { read: TemplateRef, static: false })
-        protected defaultEmptySearchTemplate: TemplateRef<any>;
-
-    /**
      * @hidden @internal
      */
     public get selectAllItem(): FilterListItem {
@@ -205,8 +198,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this._selectAllItem = this.esf.listData[0];
             if (this.isHierarchical() && this.esf.listData[0].isSpecial) {
-                this._selectAllItem = this.esf.listData[0];
                 this.esf.listData.splice(0, 1);
             }
 
@@ -293,6 +286,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onSelectAllCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
+        this._selectAllItem.isSelected = eventArgs.checked;
+        this._selectAllItem.indeterminate = false;
         const treeNodes = this.tree.nodes;
         treeNodes.forEach(node => (node.data as FilterListItem).isSelected = eventArgs.checked);
     }
@@ -353,12 +348,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get applyButtonDisabled(): boolean {
-        if (this.isHierarchical()) {
-            return (this._hierarchicalSelectedItems ? this._hierarchicalSelectedItems.length === 0 : false);
-        } else {
-            return (this.esf.listData[0] && !this.esf.listData[0].isSelected && !this.esf.listData[0].indeterminate) ||
+        return (this._selectAllItem && !this._selectAllItem.isSelected && !this._selectAllItem.indeterminate) ||
                 (this.displayedListData && this.displayedListData.length === 0);
-        }
     }
 
     /**
