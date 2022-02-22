@@ -300,10 +300,6 @@ describe("Pivot data selector", () => {
     });
 
     it("should fire event handlers on reorder in a panel using drag and drop gestures", () => {
-        window.scrollTo(1000, 1000)
-        document.scrollingElement.scrollTop = 1000;
-        fixture.detectChanges()
-
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
@@ -316,6 +312,9 @@ describe("Pivot data selector", () => {
         const dragHandle = items[0].parentNode
             .querySelectorAll("igx-list-item")
             [items.length - 1].querySelector("[igxDragHandle]");
+
+        dragHandle.scrollIntoView();
+        fixture.detectChanges();
 
         let { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
         // Take into account that the window offset, since pointer events automatically add it.
@@ -341,11 +340,7 @@ describe("Pivot data selector", () => {
         expect(selector.onItemDropped).toHaveBeenCalled();
     });
 
-    it("should reorder items in a panel using drag and drop gestures", () => {
-        window.scrollTo(1000, 1000)
-        document.scrollingElement.scrollTop = 1000;
-        fixture.detectChanges()
-        
+    it("should reorder items in a panel using drag and drop gestures", () => {        
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 
@@ -356,6 +351,9 @@ describe("Pivot data selector", () => {
         const dragHandle = items[0].parentNode
             .querySelectorAll("igx-list-item")
             [items.length - 1].querySelector("[igxDragHandle]");
+
+        dragHandle.scrollIntoView();
+        fixture.detectChanges();
 
         let { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
         // Take into account that the window offset, since pointer events automatically add it.
