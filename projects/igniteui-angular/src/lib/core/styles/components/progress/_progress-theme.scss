@@ -31,12 +31,12 @@
 /// @requires round-borders
 ///
 /// @example scss Change the stripes color
-///   $my-progress-linear-theme: igx-progress-linear-theme(
+///   $my-progress-linear-theme: progress-linear-theme(
 ///     $stripes-color: orange
 ///   );
-///   // Pass the theme to the igx-progress-linear component mixin
-///   @include igx-progress-linear($my-progress-linear-theme);
-@function igx-progress-linear-theme(
+///   // Pass the theme to the progress-linear component mixin
+///   @include progress-linear($my-progress-linear-theme);
+@function progress-linear-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -81,11 +81,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
-@mixin igx-progress-linear($theme) {
-    @include igx-css-vars($theme);
+@mixin progress-linear($theme) {
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
 
@@ -266,7 +266,7 @@
 ///   );
 ///   // Pass the theme to the igx-progress-circular component mixin
 ///   @include igx-progress-circular($my-progress-circle-theme);
-@function igx-progress-circular-theme(
+@function progress-circular-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -311,15 +311,15 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires {mixin} rotate-center
 /// @requires var-get
-@mixin igx-progress-circular($theme) {
+@mixin progress-circular($theme) {
     // Include rotate animation
     @include rotate-center();
 
-    @include igx-css-vars($theme);
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
 

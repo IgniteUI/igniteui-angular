@@ -1,14 +1,14 @@
 @use 'node_modules/sass-true' as *;
 @use '../base' as *;
 
-$_my-elevations: igx-elevations(red, green, blue);
+$_my-elevations: elevations(red, green, blue);
 
 @include describe('Elevations') {
     @include it('should add elevations as CSS variables') {
         @include assert() {
 
             @include output() {
-                @include igx-elevation-vars($_my-elevations);
+                @include elevation-vars($_my-elevations);
             }
 
             @include contains() {
@@ -20,21 +20,37 @@ $_my-elevations: igx-elevations(red, green, blue);
     @include it('should get an elevation as a CSS variable') {
         $expected: var(--igx-elevation-5);
 
-        $actual: igx-elevation($elevation: 5);
+        $actual: elevation($elevation: 5);
         @include assert-equal($actual, $expected);
     }
 }
 
-@include describe('igx-elevation-vars') {
+@include describe('elevation-vars') {
     @include it('should generate CSS variables for a given elevations map') {
         @include assert() {
             @include output() {
-                @include igx-elevation-vars($_my-elevations);
+                @include elevation-vars($_my-elevations);
             }
 
             @include contains() {
                 @each $level, $shadow in $_my-elevations {
                     --igx-elevation-#{$level}: #{$shadow};
+                }
+            }
+        }
+    }
+}
+
+@include describe('elevations-to-wc') {
+    @include it('should generate CSS variables for a given elevations map prefixed with --igc') {
+        @include assert() {
+            @include output() {
+                @include elevations-to-wc($_my-elevations);
+            }
+
+            @include contains() {
+                @each $level, $shadow in $_my-elevations {
+                    --igc-elevation-#{$level}: #{$shadow};
                 }
             }
         }
