@@ -67,6 +67,23 @@ import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
 const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
+
+/**
+ * Pivot Grid provides a way to present data and manipulate data in a pivot table view.
+ *
+ * @igxModule IgxPivotGridModule
+ * @igxGroup Grids & Lists
+ * @igxKeywords pivot, grid, table
+ * @igxTheme igx-grid-theme
+ * @remarks
+ * The Ignite UI Pivot Grid is used for grouping and aggregating simple flat data into a pivot table.  Once data
+ * has been bound and the dimensions and values configured it can be manipulated via sorting and filtering.
+ * @example
+ * ```html
+ * <igx-pivot-grid [data]="data" [pivotConfiguration]="configuration">
+ * </igx-pivot-grid>
+ * ```
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
