@@ -3187,6 +3187,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.gridAPI.crudService;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public _setupServices() {
         this.gridAPI.grid = this as any;
         this.crudService.grid = this as any;
@@ -3196,6 +3200,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.summaryService.grid = this as any;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
@@ -6268,6 +6276,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         parent.children.reset(buffer);
     }
 
+    /**
+     * @hidden @internal
+     */
     protected setupColumns() {
         if (this.autoGenerate) {
             this.autogenerateColumns();

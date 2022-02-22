@@ -41,6 +41,7 @@ import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosi
 import { WatchChanges } from '../watch-changes';
 import { OverlaySettings } from '../../services/public_api';
 import {
+    ICellPosition,
     IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
     IColumnVisibilityChangedEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs,
     IGridToolbarExportEventArgs,
@@ -585,13 +586,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public nextPage(): void {
-        return;
-    }
-
-    /**
-     * @hidden @internal
-     */
     @Input()
     public get page(): number {
         return 0;
@@ -634,7 +628,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     * @hidden @internal
     */
     public get unpinnedColumns(): IgxColumnComponent[] {
-       return super.unpinnedColumns;
+        return super.unpinnedColumns;
     }
 
     /**
@@ -892,6 +886,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
     }
 
+    /**
+     * @hidden @internal
+     */
     public ngAfterViewInit() {
         Promise.resolve().then(() => {
             super.ngAfterViewInit();
@@ -932,6 +929,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
     }
 
+    /**
+     * @hidden @internal
+     */
     public getDimensionData(dim: IPivotDimension,
         dimExprTree: IFilteringExpressionsTree,
         done: (colVals: any[]) => void) {
@@ -1063,11 +1063,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         };
     }
 
+    /**
+     * @hidden @internal
+     */
     public get pivotRowWidths() {
         return this.rowDimensions.length ? this.rowDimensions.reduce((accumulator, dim) => accumulator + this.rowDimensionWidthToPixels(dim), 0) :
             this.rowDimensionWidthToPixels(this.emptyRowDimension);
     }
 
+    /**
+     * @hidden @internal
+     */
     public rowDimensionWidthToPixels(dim: IPivotDimension): number {
         if (!dim.width) {
             return MINIMUM_COLUMN_WIDTH;
@@ -1080,6 +1086,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public reverseDimensionWidthToPercent(width: number): number {
         return (width * 100 / this.calcWidth);
     }
@@ -1302,6 +1311,73 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
+    public clearSearch() { }
+
+    /**
+     * @hidden @internal
+     */
+    public paginate(_val: number): void {
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public nextPage(): void {
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public previousPage(): void {
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public refreshSearch(_updateActiveInfo?: boolean, _endEdit = true): number {
+        return 0;
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public findNext(_text: string, _caseSensitive?: boolean, _exactMatch?: boolean): number {
+        return 0;
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public findPrev(_text: string, _caseSensitive?: boolean, _exactMatch?: boolean): number {
+        return 0;
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public getNextCell(currRowIndex: number, curVisibleColIndex: number,
+        callback: (IgxColumnComponent) => boolean = null): ICellPosition {
+        return super.getNextCell(currRowIndex, curVisibleColIndex, callback);
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public getPreviousCell(currRowIndex: number, curVisibleColIndex: number,
+        callback: (IgxColumnComponent) => boolean = null): ICellPosition {
+        return super.getPreviousCell(currRowIndex, curVisibleColIndex, callback);
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public getPinnedWidth(takeHidden = false) {
+        return super.getPinnedWidth(takeHidden);
+    }
+
+    /**
+     * @hidden @internal
+     */
     public get totalHeight() {
         return this.calcHeight;
     }
@@ -1341,11 +1417,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
-    /*
-     * @hidden
-     * @internal
-     * Expose setup columns so it can used in pivot-header-row.component
-     */
+    /**
+    * @hidden @internal
+    */
     public setupColumns() {
         super.setupColumns();
     }
@@ -1568,6 +1642,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.reflow();
     }
 
+
+    /**
+     * @hidden @internal
+     */
     public getDimensionsByType(dimension: PivotDimensionType) {
         switch (dimension) {
             case PivotDimensionType.Row:
@@ -1590,6 +1668,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public resizeRowDimensionPixels(dimension: IPivotDimension, newWidth: number) {
         const isPercentageWidth = dimension.width && typeof dimension.width === 'string' && dimension.width.indexOf('%') !== -1;
         if (isPercentageWidth) {
@@ -1936,6 +2017,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return cols;
     }
 
+    /**
+    * @hidden @internal
+    */
     public getPropName(dim: IPivotDimension) {
         return !!dim ?? dim.memberName + this.pivotKeys.rowDimensionSeparator + 'height';
     }
