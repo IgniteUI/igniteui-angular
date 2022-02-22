@@ -43,6 +43,7 @@ import { OverlaySettings } from '../../services/public_api';
 import {
     IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
     IColumnVisibilityChangedEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs,
+    IGridToolbarExportEventArgs,
     IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs
 } from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
@@ -63,13 +64,15 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
+import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
+import { IPageEventArgs } from '../../paginator/paginator-interfaces';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
 const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 
 /**
- * Pivot Grid provides a way to present data and manipulate data in a pivot table view.
+ * Pivot Grid provides a way to present and manipulate data in a pivot table view.
  *
  * @igxModule IgxPivotGridModule
  * @igxGroup Grids & Lists
@@ -112,7 +115,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * Returns the new dimension collection and its type:
      * @example
      * ```html
-     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
      *              (dimensionsChange)="dimensionsChange($event)"></igx-grid>
      * ```
      */
@@ -126,7 +129,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * Returns the new dimension
      * @example
      * ```html
-     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
      *              (valuesChange)="valuesChange($event)"></igx-grid>
      * ```
     */
@@ -479,6 +482,46 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public set hideRowSelectors(_value: boolean) {
     }
+
+    /**
+     * @hidden @internal
+     */
+    public autoGenerate = true;
+
+    /**
+     * @hidden @internal
+     */
+    public actionStrip: IgxActionStripComponent;
+
+    /**
+     * @hidden @internal
+     */
+    public pageChange = new EventEmitter<number>();
+
+    /**
+     * @hidden @internal
+     */
+    public pagingDone = new EventEmitter<IPageEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    public perPageChange = new EventEmitter<number>();
+
+    /**
+     * @hidden @internal
+     */
+    public shouldGenerate: boolean;
+
+    /**
+     * @hidden @internal
+     */
+    public moving = false;
+
+    /**
+     * @hidden @internal
+     */
+    public toolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
 
     /**
      * @hidden @internal

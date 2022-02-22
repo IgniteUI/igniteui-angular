@@ -2612,6 +2612,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public unpinnedRecords: any[];
 
+    /**
+     * @hidden @internal
+     */
     public rendered$ = this.rendered.asObservable().pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
     /** @hidden @internal */
@@ -2639,6 +2642,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     public _filteredUnpinnedData;
+    /**
+     * @hidden @internal
+     */
     public _destroyed = false;
     /**
      * @hidden @internal
@@ -2661,6 +2667,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public summaryPipeTrigger = 0;
 
+    /**
+    * @hidden @internal
+    */
     public EMPTY_DATA = [];
 
     public isPivot = false;
