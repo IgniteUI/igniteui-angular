@@ -843,28 +843,34 @@
         },
         {
             "name": "igx-typography",
-            "replaceWith": "_typography",
+            "replaceWith": "typography",
             "type": "mixin"
         },
         {
             "name": "igx-background-color",
             "replaceWith": "background-color",
-            "type": "varialble"
+            "type": "variable"
         },
         {
             "name": "igx-foreground-color",
             "replaceWith": "foreground-color",
-            "type": "varialble"
+            "type": "variable"
         },
         {
             "name": "igx-elevations",
             "replaceWith": "elevations",
-            "type": "varialble"
+            "type": "variable"
         },
         {
             "name": "igx-elevation",
             "replaceWith": "elevation",
-            "type": "varialble"
+            "type": "variable"
+        },
+        {
+            "name": "igx-light-theme",
+            "replaceWith": "light-theme",
+            "type": "function"
         }
+
     ]
 }
