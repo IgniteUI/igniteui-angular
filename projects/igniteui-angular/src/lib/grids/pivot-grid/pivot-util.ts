@@ -1,10 +1,12 @@
 import { cloneValue } from '../../core/utils';
-import { DataUtil } from '../../data-operations/data-util';
+import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { PivotGridType } from '../common/grid.interface';
 import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
-import { IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
+import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
+import { IPivotAggregator, IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 
 export class PivotUtil {
 
@@ -397,6 +399,43 @@ export class PivotUtil {
                     this.applyHierarchyChildren(hierarchyChild, child, rec, pivotKeys);
                 }
             }
+        }
+    }
+
+    public static getAggregateList(val: IPivotValue, grid: PivotGridType): IPivotAggregator[] {
+        if (!val.aggregateList) {
+            let defaultAggr = this.getAggregatorsForValue(val, grid);
+            const isDefault = defaultAggr.find(
+                (x) => x.key === val.aggregate.key
+            );
+            // resolve custom aggregations
+            if (!isDefault && grid.data[0][val.member] !== undefined) {
+                // if field exists, then we can apply default aggregations and add the custom one.
+                defaultAggr.unshift(val.aggregate);
+            } else if (!isDefault) {
+                // otherwise this is a custom aggregation that is not compatible
+                // with the defaults, since it operates on field that is not in the data
+                // leave only the custom one.
+                defaultAggr = [val.aggregate];
+            }
+            val.aggregateList = defaultAggr;
+        }
+        return val.aggregateList;
+    }
+
+    public static getAggregatorsForValue(value: IPivotValue, grid: PivotGridType): IPivotAggregator[] {
+        const dataType = value.dataType || grid.resolveDataTypes(grid.data[0][value.member]);
+        switch (dataType) {
+            case GridColumnDataType.Number:
+            case GridColumnDataType.Currency:
+                return IgxPivotNumericAggregate.aggregators();
+            case GridColumnDataType.Date:
+            case GridColumnDataType.DateTime:
+                return IgxPivotDateAggregate.aggregators();
+            case GridColumnDataType.Time:
+                return IgxPivotTimeAggregate.aggregators();
+            default:
+                return IgxPivotAggregate.aggregators();
         }
     }
 }

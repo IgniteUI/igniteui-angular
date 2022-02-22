@@ -3,19 +3,18 @@ import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, PivotDimensionType } from './pivot-grid.interface';
 import {
     DefaultPivotGridRecordSortingStrategy,
-    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy, PivotColumnDimensionsStrategy,
+    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
 } from '../../data-operations/pivot-strategy';
-import { PivotUtil } from './pivot-util';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IGridSortingStrategy } from '../common/strategy';
+import { IgxGridBaseDirective } from '../grid-base.directive';
+import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, IPivotValue } from './pivot-grid.interface';
+import { PivotUtil } from './pivot-util';
 
 /**
  * @hidden
@@ -328,5 +327,38 @@ export class IgxPivotGridSortingPipe implements PipeTransform {
         }
 
         return result;
+    }
+}
+
+/**
+ * @hidden
+ */
+@Pipe({ name: "filterPivotItems" })
+export class IgxFilterPivotItemsPipe implements PipeTransform {
+    public transform(
+        collection: (IPivotDimension | IPivotValue)[],
+        filterCriteria: string,
+        _pipeTrigger: number
+    ): any[] {
+        if (!collection) {
+            return collection;
+        }
+        let copy = collection.slice(0);
+        if (filterCriteria && filterCriteria.length > 0) {
+            const filterFunc = (c) => {
+                const filterText = c.member || c.memberName;
+                if (!filterText) {
+                    return false;
+                }
+                return (
+                    filterText
+                        .toLocaleLowerCase()
+                        .indexOf(filterCriteria.toLocaleLowerCase()) >= 0 ||
+                    (c.children?.some(filterFunc) ?? false)
+                );
+            };
+            copy = collection.filter(filterFunc);
+        }
+        return copy;
     }
 }

@@ -1,20 +1,21 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxChipComponent } from '../../chips/chip.component';
 import { FilteringExpressionsTree, FilteringLogic, IgxPivotGridComponent, IgxPivotRowDimensionHeaderGroupComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
 import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IPivotGridRecord, PivotDimensionType } from './pivot-grid.interface';
-import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
-import { IgxPivotDateDimension, IgxPivotGridModule } from './public_api';
-import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotDateAggregate, IgxPivotNumericAggregate } from './pivot-grid-aggregate';
+import { IgxPivotDateDimension } from './pivot-grid-dimensions';
+import { IPivotGridRecord, PivotDimensionType } from './pivot-grid.interface';
+import { IgxPivotGridModule } from './pivot-grid.module';
+import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
+import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
-import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -896,7 +897,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
 
                 let dropDown = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_LIST}`));
-                expect(dropDown.length).toBe(1);
+                expect(dropDown.length).toBe(2);
 
                 const valueChipUnitPrice = headerRow.querySelector('igx-chip[id="UnitPrice"]');
 
@@ -905,7 +906,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
 
                 dropDown = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_LIST}`));
-                expect(dropDown.length).toBe(1);
+                expect(dropDown.length).toBe(2);
             });
 
             it('should allow reorder in row chip area.', () => {
@@ -937,7 +938,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // move first chip over the second one
                 headerRow.onDimDragOver({
                     dragChip: {
-                        id: 'ProductCategory'
+                        id: 'ProductCategory',
+                        data: { pivotArea: 'row' }
                     },
                     owner: rowChip2,
                     originalEvent: {
@@ -952,7 +954,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // drop chip
                 headerRow.onDimDrop({
                     dragChip: {
-                        id: 'ProductCategory'
+                        id: 'ProductCategory',
+                        data: { pivotArea: 'row' }
                     },
                     owner: rowChip2
                 }, rowChipArea, PivotDimensionType.Row);
@@ -987,7 +990,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // move first chip over the second one
                 headerRow.onDimDragOver({
                     dragChip: {
-                        id: 'Country'
+                        id: 'Country',
+                        data: { pivotArea: 'column' }
                     },
                     owner: colChip2,
                     originalEvent: {
@@ -1002,7 +1006,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // drop chip
                 headerRow.onDimDrop({
                     dragChip: {
-                        id: 'Country'
+                        id: 'Country',
+                        data: { pivotArea: 'column' }
                     },
                     owner: colChip2
                 }, colChipArea, PivotDimensionType.Column);
@@ -1028,7 +1033,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // move first chip over the second one
                 headerRow.onDimDragOver({
                     dragChip: {
-                        id: 'UnitsSold'
+                        id: 'UnitsSold',
+                        data: { pivotArea: 'value' }
                     },
                     owner: valChip2,
                     originalEvent: {

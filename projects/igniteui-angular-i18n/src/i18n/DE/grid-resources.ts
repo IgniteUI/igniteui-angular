@@ -151,6 +151,11 @@ const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_column_drop_chip: 'Drop here to use as column',
     igx_grid_pivot_filter_drop_chip: 'Drop here to use as filter',
     igx_grid_pivot_value_drop_chip: 'Drop here to use as value',
+    igx_grid_pivot_selector_filters: 'Filters',
+    igx_grid_pivot_selector_rows: 'Rows',
+    igx_grid_pivot_selector_columns: 'Columns',
+    igx_grid_pivot_selector_values: 'Values',
+    igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
     igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
 };
 
