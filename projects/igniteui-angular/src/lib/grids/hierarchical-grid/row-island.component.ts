@@ -47,7 +47,6 @@ import { IgxActionStripComponent } from '../../action-strip/action-strip.compone
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
-import { IgxHierarchicalGridComponent } from 'igniteui-angular';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -142,7 +141,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public rootGrid: IgxHierarchicalGridComponent = null;
+    public rootGrid: GridType = null;
     public readonly data: any[] | null;
     public readonly filteredData: any[];
 
@@ -272,7 +271,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     public ngOnInit() {
         this.filteringService.grid = this as GridType;
-        this.rootGrid = this.gridAPI.grid as IgxHierarchicalGridComponent;
+        this.rootGrid = this.gridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
         this.ri_columnListDiffer = this.differs.find([]).create(null);
     }
