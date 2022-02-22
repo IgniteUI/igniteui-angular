@@ -34,7 +34,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
             if (currPath.length === 0) {
                 grid = childGrid;
             } else {
-                grid = childGrid.hgridAPI.getChildGrid(currPath);
+                grid = childGrid.gridAPI.getChildGrid(currPath);
             }
         }
         return grid;
@@ -46,7 +46,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
             layoutMap.forEach((grid) => {
                 allChildren.push(grid);
                 if (inDepth) {
-                    const children = grid.hgridAPI.getChildGrids(inDepth);
+                    const children = grid.gridAPI.getChildGrids(inDepth);
                     children.forEach((item) => {
                         allChildren.push(item);
                     });
@@ -79,7 +79,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
         childrenForLayout.set(parentRowID, grid);
     }
 
-    public getChildGridsForRowIsland(rowIslandKey): GridType[] {
+    public getChildGridsForRowIsland(rowIslandKey: string): GridType[] {
         const childrenForLayout = this.childGrids.get(rowIslandKey);
         const children = [];
         if (childrenForLayout) {
@@ -132,7 +132,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
         if (rootGrid.gridAPI.crudService.cellInEditMode) {
             rootGrid.gridAPI.crudService.endEdit();
         }
-        rootGrid.hgridAPI.getChildGrids(true).forEach(g => {
+        rootGrid.gridAPI.getChildGrids(true).forEach(g => {
             if (g.gridAPI.crudService.cellInEditMode) {
                 g.gridAPI.crudService.endEdit();
             }

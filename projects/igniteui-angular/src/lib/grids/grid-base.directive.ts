@@ -1062,7 +1062,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted before the grid's data view is changed because of a data operation, rebinding, etc.
-     * 
+     *
      * @example
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanging)='handleDataChangingEvent()'></igx-grid>
@@ -1073,7 +1073,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
-     * 
+     *
      * @example
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanged)='handleDataChangedEvent()'></igx-grid>
@@ -1081,7 +1081,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public dataChanged = new EventEmitter<any>();
- 
+
 
     /**
      * @hidden @internal
@@ -2671,6 +2671,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    public destroy$ = new Subject<any>();
+
+    /**
+     * @hidden
+     */
     protected _perPage = DEFAULT_ITEMS_PER_PAGE;
     /**
      * @hidden
@@ -2730,11 +2735,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _columnPinning = false;
 
     protected _pinnedRecordIDs = [];
-
-    /**
-     * @hidden
-     */
-    protected destroy$ = new Subject<any>();
 
     /**
      * @hidden

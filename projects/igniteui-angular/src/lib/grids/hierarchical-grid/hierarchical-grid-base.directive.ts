@@ -29,7 +29,7 @@ import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-naviga
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE, IPathSegment } from '../common/grid.interface';
+import { GridType, IGX_GRID_SERVICE_BASE, IPathSegment } from '../common/grid.interface';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
@@ -142,11 +142,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * @hidden
      */
-    public hgridAPI: IgxHierarchicalGridAPIService;
-
-    /**
-     * @hidden
-     */
     public parentIsland: IgxRowIslandComponent;
     public abstract rootGrid: GridType;
 
@@ -155,7 +150,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     constructor(
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
+        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,
         protected transactionFactory: IgxFlatTransactionFactory,
         elementRef: ElementRef<HTMLElement>,
         zone: NgZone,
@@ -199,7 +194,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             _displayDensityOptions,
             localeId,
             platform);
-        this.hgridAPI = gridAPI as IgxHierarchicalGridAPIService;
     }
 
     /**
@@ -278,14 +272,14 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected getGridsForIsland(rowIslandID: string) {
-        return this.hgridAPI.getChildGridsForRowIsland(rowIslandID);
+        return this.gridAPI.getChildGridsForRowIsland(rowIslandID);
     }
 
     protected getChildGrid(path: Array<IPathSegment>) {
         if (!path) {
             return;
         }
-        return this.hgridAPI.getChildGrid(path);
+        return this.gridAPI.getChildGrid(path);
     }
 }
 

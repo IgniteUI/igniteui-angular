@@ -248,7 +248,10 @@ export interface GridServiceType {
     getChildGrid?(path: IPathSegment[]): GridType;
     endEditAll?(): void;
     // XXX: Fix type
-    unsetChildRowIsland?(rowIsland: any): void;
+    unsetChildRowIsland?(rowIsland: GridType): void;
+    registerChildRowIsland?(rowIsland: GridType): void;
+    registerChildGrid?(parentRowID: any, rowIslandKey: string, grid: GridType): void;
+    getChildGridsForRowIsland?(rowIslandKey: string): GridType[];
 }
 
 
@@ -276,7 +279,6 @@ export interface GridType extends IGridDataBindable {
     dataCloneStrategy: IDataCloneStrategy;
 
     gridAPI: GridServiceType;
-
 
     filterMode: FilterMode;
 
@@ -435,7 +437,6 @@ export interface GridType extends IGridDataBindable {
     loadingRows?: Set<any>;
     parent?: GridType;
     highlightedRowID?: any;
-    hgridAPI?: GridServiceType;
     updateOnRender?: boolean;
     childLayoutKeys?: any[];
     childLayoutList?: QueryList<any>;
