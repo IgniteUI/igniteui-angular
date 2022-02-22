@@ -489,12 +489,12 @@ export class UpdateChanges {
                     occurrences = occurrences.concat(findMatches(fileContent, alias + '.' + change.name));
                 }
                 if (occurrences.length > 0) {
-                    ({ overwrite, fileContent } = this.tryReplaceScssFunctionWithAlias(occurrences, aliases, fileContent, change));
+                    ({ overwrite, fileContent } = this.tryReplaceScssFunctionWithAlias(occurrences, aliases, fileContent, change, overwrite));
                 }
             } else {
                 occurrences = findMatches(fileContent, change.name);
                 if (occurrences.length > 0) {
-                    ({ overwrite, fileContent } = this.tryReplaceScssFunction(occurrences, fileContent, change));
+                    ({ overwrite, fileContent } = this.tryReplaceScssFunction(occurrences, fileContent, change, overwrite));
                 }
             }
         }
@@ -593,8 +593,7 @@ export class UpdateChanges {
     }
 
     // TODO: combine both functions
-    private tryReplaceScssFunctionWithAlias(occurrences: number[], aliases: string[], fileContent: string, change: ThemeChange): AppliedChange {
-        let overwrite = false;
+    private tryReplaceScssFunctionWithAlias(occurrences: number[], aliases: string[], fileContent: string, change: ThemeChange, overwrite: boolean): AppliedChange {
         for (const alias of aliases) {
             const aliasLength = alias.length + 1; // + 1 because of the dot - alias.member
             for (let i = occurrences.length - 1; i >= 0; i--) {
@@ -608,8 +607,7 @@ export class UpdateChanges {
 
         return { overwrite, fileContent };
     }
-    private tryReplaceScssFunction(occurrences: number[], fileContent: string, change: ThemeChange): AppliedChange {
-        let overwrite = false;
+    private tryReplaceScssFunction(occurrences: number[], fileContent: string, change: ThemeChange, overwrite: boolean): AppliedChange {
         for (let i = occurrences.length - 1; i >= 0; i--) {
             const isOpenParenthesis = fileContent[occurrences[i] + change.name.length] === '(';
             if (isOpenParenthesis) {
