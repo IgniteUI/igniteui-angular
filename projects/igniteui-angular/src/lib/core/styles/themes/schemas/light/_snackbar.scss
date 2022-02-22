@@ -10,9 +10,9 @@
 
 /// Generates a light snackbar schema.
 /// @type {Map}
-/// @property {Map} background [igx-color: ('grays', 900, .9)] - The background color used in the snackbar.
-/// @property {Map} text-color [igx-contrast-color: ('grays', 900)] - The text color used in the snackbar.
-/// @property {Map} button-color [igx-color: ('secondary', 500)] - The button color used in the snackbar.
+/// @property {Map} background [color: ('grays', 900, .9)] - The background color used in the snackbar.
+/// @property {Map} text-color [contrast-color: ('grays', 900)] - The text color used in the snackbar.
+/// @property {Map} button-color [color: ('secondary', 500)] - The button color used in the snackbar.
 /// @property {Number} elevation [4] - The elevation level, between 0-24, to be used in the snackbar.
 /// @prop {Number} border-radius [.17] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
@@ -24,15 +24,15 @@ $light-snackbar: extend(
     $default-elevation-snackbar,
     (
         background: (
-            igx-color: ('grays', 900, .9)
+            color: ('grays', 900, .9)
         ),
 
         text-color: (
-            igx-contrast-color: ('grays', 900)
+            contrast-color: ('grays', 900)
         ),
 
         button-color: (
-            igx-color: ('secondary', 500)
+            color: ('secondary', 500)
         ),
     )
 );
@@ -47,9 +47,9 @@ $fluent-snackbar: extend($light-snackbar, $fluent-shape-snackbar);
 
 /// Generates a bootstrap snackbar schema.
 /// @type {Map}
-/// @property {Map} background [igx-color: ('surface')] - The background color used in the snackbar.
-/// @property {Map} text-color [igx-contrast-color: ('surface')] - The text color used in the snackbar.
-/// @property {Map} button-color [igx-color: ('primary', 500)] - The button color used in the snackbar.
+/// @property {Map} background [color: ('surface')] - The background color used in the snackbar.
+/// @property {Map} text-color [contrast-color: ('surface')] - The text color used in the snackbar.
+/// @property {Map} button-color [color: ('primary', 500)] - The button color used in the snackbar.
 /// @property {Number} elevation [10] - The elevation level, between 0-24, to be used in the snackbar.
 /// @prop {Number} border-radius [.17] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
@@ -62,15 +62,15 @@ $bootstrap-snackbar: extend(
     $bootstrap-elevation-snackbar,
     (
         background: (
-            igx-color: ('surface')
+            color: ('surface')
         ),
 
         text-color: (
-            igx-contrast-color: ('surface')
+            contrast-color: ('surface')
         ),
 
         button-color: (
-            igx-color: ('primary', 500)
+            color: ('primary', 500)
         ),
     )
 );
@@ -78,9 +78,9 @@ $bootstrap-snackbar: extend(
 /// Generates an indigo snackbar schema.
 /// @type {Map}
 ///
-/// @property {Map} background [igx-color: ('grays', 700, .9)] - The background color used in the snackbar.
-/// @property {Map} text-color [igx-contrast-color: ('grays', 700)] - The text color used in the snackbar.
-/// @property {Map} button-color [igx-contrast-color: ('grays', 700)] - The button color used in the snackbar.
+/// @property {Map} background [color: ('grays', 700, .9)] - The background color used in the snackbar.
+/// @property {Map} text-color [contrast-color: ('grays', 700)] - The text color used in the snackbar.
+/// @property {Map} button-color [contrast-color: ('grays', 700)] - The button color used in the snackbar.
 /// @prop {Number} border-radius [6px] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
@@ -91,15 +91,15 @@ $indigo-snackbar: extend(
     $indigo-shape-snackbar,
     (
         background: (
-            igx-color: ('grays', 700, .9)
+            color: ('grays', 700, .9)
         ),
 
         text-color: (
-            igx-contrast-color: ('grays', 700),
+            contrast-color: ('grays', 700),
         ),
 
         button-color: (
-            igx-contrast-color: ('grays', 700),
+            contrast-color: ('grays', 700),
         )
     )
 );

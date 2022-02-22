@@ -8,55 +8,55 @@
 
 /// Generates a light grid-toolbar schema.
 /// @type {Map}
-/// @property {Map} background-color [igx-color: ('grays', 50)] - The toolbar background color.
-/// @property {Map} title-text-color [igx-color: ('grays', 600)] - The toolbar title text color.
-/// @property {Map} dropdown-background [igx-color: ('surface')] - The toolbar drop-down background color.
-/// @property {Map} item-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item text color.
-/// @property {Map} item-hover-background [igx-color: ('grays', 100)] - The toolbar drop-down item hover background color.
-/// @property {Map} item-hover-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item hover text color.
-/// @property {Map} item-focus-background [igx-color: ('grays', 100)] - The toolbar drop-down item focus background color.
-/// @property {Map} item-focus-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item focus text color.
+/// @property {Map} background-color [color: ('grays', 50)] - The toolbar background color.
+/// @property {Map} title-text-color [color: ('grays', 600)] - The toolbar title text color.
+/// @property {Map} dropdown-background [color: ('surface')] - The toolbar drop-down background color.
+/// @property {Map} item-text-color [color: ('grays', 600)] - The toolbar drop-down item text color.
+/// @property {Map} item-hover-background [color: ('grays', 100)] - The toolbar drop-down item hover background color.
+/// @property {Map} item-hover-text-color [color: ('grays', 600)] - The toolbar drop-down item hover text color.
+/// @property {Map} item-focus-background [color: ('grays', 100)] - The toolbar drop-down item focus background color.
+/// @property {Map} item-focus-text-color [color: ('grays', 600)] - The toolbar drop-down item focus text color.
 /// @see $default-palette
 $light-grid-toolbar: (
     variant: 'material',
 
     background-color: (
-        igx-color: ('grays', 50)
+        color: ('grays', 50)
     ),
 
     title-text-color : (
-        igx-color: ('grays', 600)
+        color: ('grays', 600)
     ),
 
     dropdown-background: (
-        igx-color: ('surface')
+        color: ('surface')
     ),
 
     item-text-color: (
-        igx-color: ('grays', 600)
+        color: ('grays', 600)
     ),
 
     item-hover-background: (
-        igx-color: ('grays', 100)
+        color: ('grays', 100)
     ),
 
     item-hover-text-color: (
-        igx-color: ('grays', 600)
+        color: ('grays', 600)
     ),
 
     item-focus-background: (
-        igx-color: ('grays', 100)
+        color: ('grays', 100)
     ),
 
     item-focus-text-color: (
-        igx-color: ('grays', 600)
+        color: ('grays', 600)
     ),
 );
 
 /// Generates a fluent grid-toolbar schema.
 /// @type {Map}
 ///
-/// @property {Map} background-color [igx-color: 'surface'] - The toolbar background color.
+/// @property {Map} background-color [color: 'surface'] - The toolbar background color.
 /// @requires {function} extend
 /// @requires {Map} $light-grid-toolbar
 $fluent-grid-toolbar: extend(
@@ -65,7 +65,7 @@ $fluent-grid-toolbar: extend(
         variant: 'fluent',
 
         background-color: (
-            igx-color: 'surface'
+            color: 'surface'
         ),
     )
 );
@@ -83,8 +83,8 @@ $bootstrap-grid-toolbar: extend(
 
 /// Generates an indigo grid-toolbar schema.
 /// @type {Map}
-/// @property {Map} background-color [igx-color: ('grays', 100)] - The toolbar background color.
-/// @property {Map} title-text-color [igx-color: ('primary', 500)] - The toolbar title text color.
+/// @property {Map} background-color [color: ('grays', 100)] - The toolbar background color.
+/// @property {Map} title-text-color [color: ('primary', 500)] - The toolbar title text color.
 /// @requires {function} extend
 /// @requires {Map} $light-grid-toolbar
 $indigo-grid-toolbar: extend(
@@ -93,11 +93,11 @@ $indigo-grid-toolbar: extend(
         variant: 'indigo-design',
 
         background-color: (
-            igx-color: ('grays', 100)
+            color: ('grays', 100)
         ),
 
         title-text-color: (
-            igx-color: ('primary', 500)
+            color: ('primary', 500)
         )
     )
 );

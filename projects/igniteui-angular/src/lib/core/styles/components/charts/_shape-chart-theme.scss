@@ -56,10 +56,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $my-chart-theme: igx-shape-chart-theme($brushes: (orange, blue, pink));
-///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($my-chart-theme);
-@function igx-shape-chart-theme(
+///   $my-chart-theme: shape-chart-theme($brushes: (orange, blue, pink));
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-chart-theme);
+@function shape-chart-theme(
     $palette: null,
     $schema: $light-schema,
     $margin: null,
@@ -220,8 +220,8 @@
 /// 'x-axis-title-text-style': 'h3',
 /// 'y-axis-title-text-style': 'h3',
 /// )] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-shape-chart-typography($type-scale, $categories: (
+/// @requires {mixin} type-style
+@mixin shape-chart-typography($type-scale, $categories: (
     'title': 'h6',
     'subtitle': 'subtitle-1',
     'x-axis-label-text-style': 'h4',
@@ -237,20 +237,20 @@
     $y-axis-title-text-style: map.get($categories, 'y-axis-title-text-style');
     $y-axis-label-text-style: map.get($categories, 'y-axis-label-text-style');
 
-    $title-styles: igx-type-scale-category($type-scale, $title);
-    $subtitle-styles: igx-type-scale-category($type-scale, $subtitle);
-    $x-axis-title-styles: igx-type-scale-category($type-scale, $x-axis-title-text-style);
-    $x-axis-label-styles: igx-type-scale-category($type-scale, $x-axis-label-text-style);
-    $y-axis-title-styles: igx-type-scale-category($type-scale, $y-axis-title-text-style);
-    $y-axis-label-styles: igx-type-scale-category($type-scale, $y-axis-label-text-style);
+    $title-styles: type-scale-category($type-scale, $title);
+    $subtitle-styles: type-scale-category($type-scale, $subtitle);
+    $x-axis-title-styles: type-scale-category($type-scale, $x-axis-title-text-style);
+    $x-axis-label-styles: type-scale-category($type-scale, $x-axis-label-text-style);
+    $y-axis-title-styles: type-scale-category($type-scale, $y-axis-title-text-style);
+    $y-axis-label-styles: type-scale-category($type-scale, $y-axis-label-text-style);
 
     igx-shape-chart {
-        @include igx-font-var('title-text-style', $title-styles, $name);
-        @include igx-font-var('subtitle-text-style', $subtitle-styles, $name);
-        @include igx-font-var('x-axis-title-text-style', $x-axis-title-styles, $name);
-        @include igx-font-var('x-axis-label-text-style', $x-axis-label-styles, $name);
-        @include igx-font-var('y-axis-title-text-style', $y-axis-title-styles, $name);
-        @include igx-font-var('y-axis-label-text-style', $y-axis-label-styles, $name);
+        @include font-var('title-text-style', $title-styles, $name);
+        @include font-var('subtitle-text-style', $subtitle-styles, $name);
+        @include font-var('x-axis-title-text-style', $x-axis-title-styles, $name);
+        @include font-var('x-axis-label-text-style', $x-axis-label-styles, $name);
+        @include font-var('y-axis-title-text-style', $y-axis-title-styles, $name);
+        @include font-var('y-axis-label-text-style', $y-axis-label-styles, $name);
     }
 }
 

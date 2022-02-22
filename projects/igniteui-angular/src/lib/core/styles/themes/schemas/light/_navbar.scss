@@ -10,10 +10,10 @@
 /// Generates a light navbar schema.
 /// @type {Map}
 ///
-/// @prop {Map} background [igx-color: ('primary', 500)] - The navbar background color.
-/// @prop {Map} text-color [igx-contrast-color: ('primary', 500)] - The navbar text color.
-/// @prop {Map} idle-icon-color [igx-contrast-color: ('primary', 500)] - The navbar idle icon color.
-/// @prop {Map} hover-icon-color [igx-contrast-color: ('primary', 500)] - The navbar hover icon color.
+/// @prop {Map} background [color: ('primary', 500)] - The navbar background color.
+/// @prop {Map} text-color [contrast-color: ('primary', 500)] - The navbar text color.
+/// @prop {Map} idle-icon-color [contrast-color: ('primary', 500)] - The navbar idle icon color.
+/// @prop {Map} hover-icon-color [contrast-color: ('primary', 500)] - The navbar hover icon color.
 /// @prop {Number} elevation [4] - The elevation level, between 0-24, to be used for the navbar.
 ///
 /// @requires {function} extend
@@ -23,19 +23,19 @@ $light-navbar: extend(
     $default-elevation-navbar,
     (
         background: (
-            igx-color: ('primary', 500)
+            color: ('primary', 500)
         ),
 
         text-color: (
-            igx-contrast-color: ('primary', 500)
+            contrast-color: ('primary', 500)
         ),
 
         idle-icon-color: (
-            igx-contrast-color: ('primary', 500)
+            contrast-color: ('primary', 500)
         ),
 
         hover-icon-color: (
-            igx-contrast-color: ('primary', 500)
+            contrast-color: ('primary', 500)
         ),
     )
 );
@@ -47,10 +47,10 @@ $fluent-navbar: $light-navbar;
 
 /// Generates a bootstrap navbar schema.
 /// @type {Map}
-/// @prop {Map} background [igx-color: 'surface'] - The navbar background color.
-/// @prop {Map} text-color [igx-contrast-color: 'surface'] - The navbar text color.
-/// @prop {Map} idle-icon-color [igx-contrast-color: 'surface'] - The navbar idle icon color.
-/// @prop {Map} hover-icon-color [igx-contrast-color: 'surface'] - The navbar hover icon color.
+/// @prop {Map} background [color: 'surface'] - The navbar background color.
+/// @prop {Map} text-color [contrast-color: 'surface'] - The navbar text color.
+/// @prop {Map} idle-icon-color [contrast-color: 'surface'] - The navbar idle icon color.
+/// @prop {Map} hover-icon-color [contrast-color: 'surface'] - The navbar hover icon color.
 /// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the navbar.
 /// @requires {function} extend
 /// @requires {Map} $light-navbar
@@ -60,19 +60,19 @@ $bootstrap-navbar: extend(
     $bootstrap-elevation-navbar,
     (
         background: (
-            igx-color: 'surface',
+            color: 'surface',
         ),
 
         text-color: (
-            igx-contrast-color: 'surface',
+            contrast-color: 'surface',
         ),
 
         idle-icon-color: (
-            igx-contrast-color: 'surface',
+            contrast-color: 'surface',
         ),
 
         hover-icon-color: (
-            igx-contrast-color: 'surface',
+            contrast-color: 'surface',
         ),
     )
 );

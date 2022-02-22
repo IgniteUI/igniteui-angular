@@ -1209,9 +1209,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const prevCollectionType = this.getDimensionType(dimension);
         if (prevCollectionType === null) return;
         // remove from old collection
-        this.removeDimension(dimension);
+        this._removeDimensionInternal(dimension);
         // add to target
         this.insertDimensionAt(dimension, targetCollectionType, index);
+
+        if (prevCollectionType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
     }
 
     /**
@@ -1227,10 +1231,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public removeDimension(dimension: IPivotDimension) {
         const prevCollectionType = this.getDimensionType(dimension);
-        if (prevCollectionType === null) return;
-        const prevCollection = this.getDimensionsByType(prevCollectionType);
-        const currentIndex = prevCollection.indexOf(dimension);
-        prevCollection.splice(currentIndex, 1);
+        this._removeDimensionInternal(dimension);
         if (prevCollectionType === PivotDimensionType.Column) {
             this.setupColumns();
         }
@@ -1392,6 +1393,20 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.cdr.detectChanges();
     }
 
+    /*
+    * @hidden
+    * @internal
+    */
+    protected _removeDimensionInternal(dimension) {
+        const prevCollectionType = this.getDimensionType(dimension);
+        if (prevCollectionType === null) return;
+        const prevCollection = this.getDimensionsByType(prevCollectionType);
+        const currentIndex = prevCollection.indexOf(dimension);
+        prevCollection.splice(currentIndex, 1);
+        this.pipeTrigger++;
+        this.cdr.detectChanges();
+    }
+
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
         return PivotUtil.flatten(this.pivotConfiguration.rows).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
             PivotUtil.flatten(this.pivotConfiguration.columns).indexOf(dimension) !== -1 ? PivotDimensionType.Column :
@@ -1480,11 +1495,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected verticalScrollHandler(event) {
-        super.verticalScrollHandler(event);
         this.verticalRowDimScrollContainers.forEach(x => {
             x.onScroll(event);
-            x.cdr.detectChanges();
         });
+        super.verticalScrollHandler(event);
     }
 
     /**
@@ -1586,7 +1600,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.parent = parent;
                 ref.instance.width = MINIMUM_COLUMN_WIDTH + 'px';
                 ref.instance.sortable = true;
-                ref.instance.dataType = value.dataType || this.resolveDataTypes(data[0]);
+                ref.instance.dataType = value.dataType || this.resolveDataTypes(data[0][value.member]);
                 ref.instance.formatter = value.formatter;
                 columns.push(ref.instance);
             });
@@ -1675,8 +1689,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         ref.instance.field = key;
         ref.instance.parent = parent;
         ref.instance.width = this.resolveColumnDimensionWidth(value.dimension);
-        ref.instance.dataType = this.pivotConfiguration.values[0]?.dataType || this.resolveDataTypes(data[0][key]);
-        ref.instance.formatter = this.pivotConfiguration.values[0]?.formatter;
+        const valueDefinition = this.values[0];
+        ref.instance.dataType = valueDefinition?.dataType || this.resolveDataTypes(data[0][valueDefinition?.member]);
+        ref.instance.formatter = valueDefinition?.formatter;
         ref.instance.sortable = true;
         ref.changeDetectorRef.detectChanges();
         return ref.instance;

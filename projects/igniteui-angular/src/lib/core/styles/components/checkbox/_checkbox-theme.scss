@@ -36,7 +36,7 @@
 ///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
 ///   // Pass the theme to the igx-checkbox component mixin
 ///   @include igx-checkbox($my-checkbox-theme);
-@function igx-checkbox-theme(
+@function checkbox-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -85,18 +85,18 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} hide-default
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
-/// @requires {mixin} igx-ripple
-/// @requires igx-ripple-theme
+/// @requires {mixin} ripple
+/// @requires ripple-theme
 /// @requires rem
 /// @requires em
 /// @requires var-get
-@mixin igx-checkbox($theme) {
-    @include igx-css-vars($theme);
+@mixin checkbox($theme) {
+    @include css-vars($theme);
 
     @include scale-in-out($start-scale: .9);
 
@@ -152,7 +152,7 @@
     $ripple-size: em(48px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $ripple-theme: igx-ripple-theme(
+    $ripple-theme: ripple-theme(
         $schema: $light-schema,
         $color: var-get($theme, 'fill-color')
     );
@@ -326,8 +326,8 @@
     }
 
     %cbx-ripple {
-        @include igx-ripple($ripple-theme);
-        @include igx-css-vars($ripple-theme);
+        @include ripple($ripple-theme);
+        @include css-vars($ripple-theme);
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
@@ -436,15 +436,15 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-checkbox-typography(
+/// @requires {mixin} type-style
+@mixin checkbox-typography(
     $type-scale,
     $categories: (label: 'subtitle-1')
 ) {
     $label: map.get($categories, 'label');
 
     %cbx-label {
-        @include igx-type-style($type-scale, $label) {
+        @include type-style($type-scale, $label) {
             margin-top: 0;
             margin-bottom: 0;
         }

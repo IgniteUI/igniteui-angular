@@ -1,8 +1,10 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { IgxAccordionModule } from '../../accordion/accordion.module';
 import { IgxDragDropModule } from "../../directives/drag-drop/drag-drop.directive";
 import { IgxExpansionPanelModule } from "../../expansion-panel/expansion-panel.module";
 import { IgxGridComponent } from "../grid/grid.component";
 import { IgxGridModule } from "../grid/grid.module";
+import { IgxListModule } from '../../list/list.component';
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import { IgxPivotGridComponent } from "./pivot-grid.component";
 import {
@@ -63,7 +65,7 @@ import { IgxPivotRowComponent } from "./pivot-row.component";
         IgxFilterPivotItemsPipe,
         IgxPivotDataSelectorComponent,
     ],
-    imports: [IgxGridModule, IgxExpansionPanelModule, IgxDragDropModule],
+    imports: [IgxGridModule, IgxExpansionPanelModule, IgxDragDropModule, IgxListModule, IgxAccordionModule],
     entryComponents: [IgxGridComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

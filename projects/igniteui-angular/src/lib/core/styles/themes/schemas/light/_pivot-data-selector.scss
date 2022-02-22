@@ -11,11 +11,11 @@
 /// @see $default-palette
 $light-pivot-data-selector: (
     background: (
-        igx-color: 'surface',
+        color: 'surface',
     ),
 
     header-color: (
-        igx-color: ('grays', 100)
+        color: ('grays', 100)
     )
 );
 

@@ -938,7 +938,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // move first chip over the second one
                 headerRow.onDimDragOver({
                     dragChip: {
-                        id: 'ProductCategory'
+                        id: 'ProductCategory',
+                        data: { pivotArea: 'row' }
                     },
                     owner: rowChip2,
                     originalEvent: {
@@ -953,7 +954,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // drop chip
                 headerRow.onDimDrop({
                     dragChip: {
-                        id: 'ProductCategory'
+                        id: 'ProductCategory',
+                        data: { pivotArea: 'row' }
                     },
                     owner: rowChip2
                 }, rowChipArea, PivotDimensionType.Row);
@@ -988,7 +990,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // move first chip over the second one
                 headerRow.onDimDragOver({
                     dragChip: {
-                        id: 'Country'
+                        id: 'Country',
+                        data: { pivotArea: 'column' }
                     },
                     owner: colChip2,
                     originalEvent: {
@@ -1003,7 +1006,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // drop chip
                 headerRow.onDimDrop({
                     dragChip: {
-                        id: 'Country'
+                        id: 'Country',
+                        data: { pivotArea: 'column' }
                     },
                     owner: colChip2
                 }, colChipArea, PivotDimensionType.Column);
@@ -1029,7 +1033,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // move first chip over the second one
                 headerRow.onDimDragOver({
                     dragChip: {
-                        id: 'UnitsSold'
+                        id: 'UnitsSold',
+                        data: { pivotArea: 'value' }
                     },
                     owner: valChip2,
                     originalEvent: {

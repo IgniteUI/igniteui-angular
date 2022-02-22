@@ -15,7 +15,7 @@
 
 /// @param {Map} $theme - The grid theme used to style the component.
 /// @param {Map} $palette - The palette map used as base for the component.
-/// @requires igx-color
+/// @requires color
 /// @requires rem
 /// @requires var-get
 @mixin excel-filtering($theme, $palette) {
@@ -48,7 +48,7 @@
         width: rem(320px);
         height: 100%;
         flex-grow: 1;
-        box-shadow: igx-elevation($elevation: 12);
+        box-shadow: elevation($elevation: 12);
         overflow: auto;
         min-width: rem(320px);
     }
@@ -79,8 +79,8 @@
         igx-icon {
             color: if(
                 $variant == 'indigo-design',
-                igx-color($palette, 'warn', 500),
-                igx-color($palette, 'secondary')
+                color($palette, 'warn', 500),
+                color($palette, 'secondary')
             );
         }
     }
@@ -93,18 +93,18 @@
         // TODO The border-radius should not be hardcoded.
         border-radius: rem(4px);
 
-        @include igx-button-group(igx-button-group-theme(
+        @include button-group(button-group-theme(
             $shadow: none,
             $schema: $dark-schema,
             $item-background: var-get($theme, 'filtering-row-background'),
-            $item-hover-background: igx-color($palette, 'grays', 100),
-            $item-selected-background: igx-color($palette, 'grays', 100),
-            $item-text-color: igx-color($palette, 'grays', 700),
-            $item-hover-text-color: igx-color($palette, 'grays', 800),
+            $item-hover-background: color($palette, 'grays', 100),
+            $item-selected-background: color($palette, 'grays', 100),
+            $item-text-color: color($palette, 'grays', 700),
+            $item-hover-text-color: color($palette, 'grays', 800),
             $item-selected-text-color: if(
                 $variant == 'indigo-design',
-                igx-contrast-color($palette, 'surface'),
-                igx-color($palette, 'secondary', 500)
+                contrast-color($palette, 'surface'),
+                color($palette, 'secondary', 500)
             ),
             $item-border-color: transparent,
             $item-selected-border-color: transparent
@@ -136,7 +136,7 @@
         display: flex;
         align-items: center;
         padding: rem(16px);
-        color: igx-color($palette, 'grays', 700);
+        color: color($palette, 'grays', 700);
     }
 
     %grid-excel-menu__header-actions {
@@ -185,7 +185,7 @@
         padding: rem(8px) rem(16px);
 
         header {
-            color: igx-color($palette, 'grays', 700);
+            color: color($palette, 'grays', 700);
             margin-bottom: rem(4px);
         }
 
@@ -202,7 +202,7 @@
         justify-content: space-between;
 
         header {
-            color: igx-color($palette, 'grays', 700);
+            color: color($palette, 'grays', 700);
             margin-#{$right}: auto;
         }
     }
@@ -215,8 +215,8 @@
         igx-icon {
             color: if(
                 $variant == 'indigo-design',
-                igx-color($palette, 'primary', 200),
-                igx-color($palette, 'secondary')
+                color($palette, 'primary', 200),
+                color($palette, 'secondary')
             );
         }
     }
@@ -226,7 +226,7 @@
         padding: rem(8px) rem(16px);
 
         header {
-            color: igx-color($palette, 'grays', 700);
+            color: color($palette, 'grays', 700);
             margin-bottom: rem(4px);
         }
     }
@@ -257,12 +257,12 @@
         justify-content: space-between;
         padding: rem(8px) rem(16px);
         cursor: pointer;
-        color: igx-color($palette, 'grays', 700);
+        color: color($palette, 'grays', 700);
         outline-style: none;
 
         &:hover,
         &:focus {
-            background: igx-color($palette, 'grays', 100);
+            background: color($palette, 'grays', 100);
         }
 
         @include if-rtl() {
@@ -273,7 +273,7 @@
     }
 
     %grid-excel-actions__action--disabled {
-        color: igx-color($palette, 'grays', 400);
+        color: color($palette, 'grays', 400);
         pointer-events: none;
     }
 
@@ -296,11 +296,11 @@
         igx-list,
         %igx-excel-filter__tree {
             @if $bootstrap-theme {
-                border-top: 1px dashed igx-color($palette, 'grays', 100);
-                border-bottom: 1px dashed igx-color($palette, 'grays', 100);
+                border-top: 1px dashed color($palette, 'grays', 100);
+                border-bottom: 1px dashed color($palette, 'grays', 100);
             } @else {
-                border-top: 1px dashed igx-color($palette, 'grays', 300);
-                border-bottom: 1px dashed igx-color($palette, 'grays', 300);
+                border-top: 1px dashed color($palette, 'grays', 300);
+                border-bottom: 1px dashed color($palette, 'grays', 300);
             }
         }
 
@@ -483,7 +483,7 @@
         width: 520px;
         min-width: 520px;
         background: var-get($theme, 'filtering-row-background');
-        box-shadow: igx-elevation($elevation: 12);
+        box-shadow: elevation($elevation: 12);
         border-radius: rem(4px);
     }
 
@@ -525,9 +525,9 @@
 
     %grid-excel-menu__secondary-header {
         @if $bootstrap-theme {
-            border-bottom: 1px solid igx-color($palette, 'grays', 100);
+            border-bottom: 1px solid color($palette, 'grays', 100);
         } @else {
-            border-bottom: 1px solid igx-color($palette, 'grays', 300);
+            border-bottom: 1px solid color($palette, 'grays', 300);
         }
     }
 
@@ -538,9 +538,9 @@
 
     %grid-excel-menu__secondary-footer {
         @if $bootstrap-theme {
-            border-top: 1px dashed igx-color($palette, 'grays', 100);
+            border-top: 1px dashed color($palette, 'grays', 100);
         } @else {
-            border-top: 1px dashed igx-color($palette, 'grays', 300);
+            border-top: 1px dashed color($palette, 'grays', 300);
         }
 
         %grid-excel-filter__apply,
@@ -601,7 +601,7 @@
 /// @access private
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(haeder-comfortable: 'overline', header-compact: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
+/// @requires {mixin} type-style
 @mixin excel-filtering-typography($type-scale, $categories: (
     header-comfortable: 'overline',
     header-compact: 'subtitle-1')
@@ -612,62 +612,62 @@
 
     %grid-excel-menu {
         %grid-excel-menu__header > h4 {
-            @include igx-type-style($type-scale, 'h6')
+            @include type-style($type-scale, 'h6')
         }
     }
 
     %grid-excel-menu__secondary {
         %grid-excel-menu__header > h4 {
-            @include igx-type-style($type-scale, 'h6');
+            @include type-style($type-scale, 'h6');
         }
     }
 
     %grid-excel-sort,
     %grid-excel-move {
         header {
-            @include igx-type-style($type-scale, 'overline');
+            @include type-style($type-scale, 'overline');
         }
     }
 
     %grid-excel-menu--cosy {
         %grid-excel-menu__header > h4 {
-            @include igx-type-style($type-scale, 'h6')
+            @include type-style($type-scale, 'h6')
         }
     }
 
     %grid-excel-menu--compact {
         %grid-excel-menu__header > h4 {
-            @include igx-type-style($type-scale, 'subtitle-1')
+            @include type-style($type-scale, 'subtitle-1')
         }
 
         %grid-excel-sort,
         %grid-excel-move {
             header {
-                @include igx-type-style($type-scale, 'body-2');
+                @include type-style($type-scale, 'body-2');
                 text-transform: capitalize;
             }
         }
 
         %grid-excel-actions__action {
             span {
-                @include igx-type-style($type-scale, 'body-2');
+                @include type-style($type-scale, 'body-2');
             }
         }
 
         %cbx-label {
-            @include igx-type-style($type-scale, 'body-2');
+            @include type-style($type-scale, 'body-2');
         }
     }
 
     %grid-excel-menu__secondary--cosy {
         %grid-excel-menu__header > h4 {
-            @include igx-type-style($type-scale, 'h6');
+            @include type-style($type-scale, 'h6');
         }
     }
 
     %grid-excel-menu__secondary--compact {
         %grid-excel-menu__header > h4 {
-            @include igx-type-style($type-scale, 'subtitle-1');
+            @include type-style($type-scale, 'subtitle-1');
         }
     }
 }
