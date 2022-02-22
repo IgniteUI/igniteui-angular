@@ -572,6 +572,9 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             fix.detectChanges();
 
             checkboxes = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
+            const addToFilterCheckbox = checkboxes.splice(1,1)[0];
+
+            expect(addToFilterCheckbox.checked).toBe(false, 'incorrect checkbox state')
             checkboxes.forEach(ch => expect(ch.checked).toBe(true, 'incorrect checkbox state'));
         }));
 
@@ -657,6 +660,22 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 .sort();
 
             expect(gridCellValues.length).toEqual(5);
+        }));
+
+        it('Should display message when search results are empty', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            tick(100);
+            fix.detectChanges();
+
+            let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent, 'igx-tree-grid');
+
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '77', fix);
+            tick(100);
+            fix.detectChanges();
+
+            const emptyTextEl = searchComponent.querySelector('article');
+            expect(emptyTextEl.innerText).toEqual('No matches');
         }));
     });
 
