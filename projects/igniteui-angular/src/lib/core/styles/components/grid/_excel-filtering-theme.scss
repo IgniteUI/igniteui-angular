@@ -111,7 +111,7 @@
         ));
 
 
-        @include igx-tree(igx-tree-theme(
+        @include tree(tree-theme(
             $background: igx-color($palette, 'surface'),
             $background-selected: igx-color($palette, 'surface'),
             $background-active:  igx-color($palette, 'surface'),
