@@ -865,6 +865,12 @@
             "name": "igx-elevation",
             "replaceWith": "elevation",
             "type": "variable"
+        },
+        {
+            "name": "igx-light-theme",
+            "replaceWith": "light-theme",
+            "type": "function"
         }
+
     ]
 }
