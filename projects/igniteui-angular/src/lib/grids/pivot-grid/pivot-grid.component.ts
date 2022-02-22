@@ -37,7 +37,7 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { PivotUtil } from './pivot-util';
-import { GridPagingMode, GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
+import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
 import { WatchChanges } from '../watch-changes';
 import { OverlaySettings } from '../../services/public_api';
 import {
@@ -534,6 +534,156 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public set rowDraggable(_val: boolean) {
     }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get allowAdvancedFiltering() {
+        return false;
+    }
+
+    public set allowAdvancedFiltering(_value) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get filterMode() {
+        return FilterMode.quickFilter;
+    }
+
+    public set filterMode(_value: FilterMode) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get allowFiltering() {
+        return false;
+    }
+
+    public set allowFiltering(_value) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get isFirstPage(): boolean {
+        return true;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get isLastPage(): boolean {
+        return true;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public nextPage(): void {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get page(): number {
+        return 0;
+    }
+
+    public set page(_val: number) {
+    }
+
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get paging(): boolean {
+        return false;
+    }
+
+    public set paging(_value: boolean) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public get perPage(): number {
+        return;
+    }
+
+    public set perPage(_val: number) {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get pinnedColumns(): IgxColumnComponent[] {
+        return [];
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public get unpinnedColumns(): IgxColumnComponent[] {
+       return super.unpinnedColumns;
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public get unpinnedDataView(): any[] {
+        return super.unpinnedDataView;
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public get unpinnedWidth() {
+        return super.unpinnedWidth;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get pinnedWidth() {
+        return 0;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public set summaryRowHeight(_value: number) {
+    }
+
+    public get summaryRowHeight(): number {
+        return 0;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get totalPages(): number {
+        return;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get transactions(): TransactionService<Transaction, State> {
+        return this._transactions;
+    }
+
+
 
     /**
      * @hidden @internal
