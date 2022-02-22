@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, QueryList } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -14,15 +14,13 @@ import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule } from '../hierarchical-grid/public_api';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid/public_api';
 import { GridSelectionMode } from '../common/enums';
-import { CellType, GridType, RowType } from '../common/grid.interface';
-import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
+import { GridType, RowType } from '../common/grid.interface';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../row.directive';
 
@@ -485,10 +483,10 @@ describe('Row Drag Tests #grid', () => {
         }));
         const verifyDragAndDropRowCellValues = (dragRowIndex: number, dropRowIndex: number) => {
             const dragRow = dragGrid.gridAPI.get_row_by_index(dragRowIndex);
-            const dragRowCells = (dragRow.cells as QueryList<CellType>).toArray();
+            const dragRowCells = dragRow.cells;
 
             const dropRow = dropGrid.gridAPI.get_row_by_index(dropRowIndex);
-            const dropRowCells = (dropRow.cells as QueryList<CellType>).toArray();
+            const dropRowCells = dropRow.cells;
             for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex++) {
                 expect(dropRowCells[cellIndex].value).toEqual(dragRowCells[cellIndex].value);
             }
@@ -956,13 +954,13 @@ describe('Row Drag Tests #hGrid', () => {
 
         rowDragDirective.onPointerDown(pointerDownEvent);
         rowDragDirective.onPointerMove(pointerMoveEvent);
-        verifyRowDragStartEvent(dragGrid, (rowToDrag as IgxHierarchicalRowComponent).grid.getRowByIndex(rowToDrag.index),
+        verifyRowDragStartEvent(dragGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
             rowToDrag.nativeElement, rowDragDirective, 1);
         // pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
         rowDragDirective.onPointerMove(pointerMoveToDropEvent);
         rowDragDirective.onPointerUp(pointerUpEvent);
         fixture.detectChanges();
-        verifyRowDragEndEvent(dragGrid, (rowToDrag as IgxHierarchicalRowComponent).grid.getRowByIndex(rowToDrag.index),
+        verifyRowDragEndEvent(dragGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
             rowToDrag.nativeElement, rowDragDirective, false, 1);
 
         // second level row
@@ -978,12 +976,12 @@ describe('Row Drag Tests #hGrid', () => {
 
         rowDragDirective.onPointerDown(pointerDownEvent);
         rowDragDirective.onPointerMove(pointerMoveEvent);
-        verifyRowDragStartEvent(childGrid as IgxGridBaseDirective, (rowToDrag as IgxHierarchicalRowComponent).grid.getRowByIndex(rowToDrag.index),
+        verifyRowDragStartEvent(childGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
             rowToDrag.nativeElement, rowDragDirective, 1);
         rowDragDirective.onPointerMove(pointerMoveToDropEvent);
         rowDragDirective.onPointerUp(pointerUpEvent);
         fixture.detectChanges();
-        verifyRowDragEndEvent(childGrid, (rowToDrag as IgxHierarchicalRowComponent).grid.getRowByIndex(rowToDrag.index),
+        verifyRowDragEndEvent(childGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
             rowToDrag.nativeElement, rowDragDirective, false, 1);
 
         // third level row
@@ -999,12 +997,12 @@ describe('Row Drag Tests #hGrid', () => {
 
         rowDragDirective.onPointerDown(pointerDownEvent);
         rowDragDirective.onPointerMove(pointerMoveEvent);
-        verifyRowDragStartEvent(nestedChildGrid, (rowToDrag as IgxHierarchicalRowComponent).grid.getRowByIndex(rowToDrag.index),
+        verifyRowDragStartEvent(nestedChildGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
             rowToDrag.nativeElement, rowDragDirective, 1);
         rowDragDirective.onPointerMove(pointerMoveToDropEvent);
         rowDragDirective.onPointerUp(pointerUpEvent);
         fixture.detectChanges();
-        verifyRowDragEndEvent(nestedChildGrid, (rowToDrag as IgxHierarchicalRowComponent).grid.getRowByIndex(rowToDrag.index),
+        verifyRowDragEndEvent(nestedChildGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
         rowToDrag.nativeElement, rowDragDirective, false, 1);
     }));
 
