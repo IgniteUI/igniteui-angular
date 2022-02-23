@@ -1010,11 +1010,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             });
 
             const childGrids = this.getChildGrids(true);
-            childGrids.forEach((grid) => {
-                if ((grid as IgxHierarchicalGridComponent).isPercentWidth) {
+            childGrids.forEach((grid: IgxHierarchicalGridComponent) => {
+                if (grid.isPercentWidth) {
                     grid.notifyChanges(true);
                 }
-                (grid as IgxHierarchicalGridComponent).updateScrollPosition();
+                grid.updateScrollPosition();
             });
         }
     }
@@ -1107,8 +1107,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         if (document.body.contains(this.nativeElement) && this.isPercentWidth) {
             this.reflow();
 
-            this.gridAPI.getChildGrids(false).forEach((grid) => {
-                (grid as IgxHierarchicalGridComponent).updateSizes();
+            this.gridAPI.getChildGrids(false).forEach((grid: IgxHierarchicalGridComponent) => {
+                grid.updateSizes();
             });
         }
     }
