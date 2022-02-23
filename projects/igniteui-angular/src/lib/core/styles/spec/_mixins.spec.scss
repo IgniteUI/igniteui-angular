@@ -35,7 +35,7 @@
     }
 
     @include it('should autoprefix web component themes like dockmanager with "igc"'){
-        $theme: igc-dock-manager-theme();
+        $theme: dock-manager-theme();
         $key: 'active-color';
 
         @include assert() {
@@ -95,11 +95,11 @@
 }
 
 /* stylelint-disable max-nesting-depth */
-@include describe('igx-palette-vars') {
+@include describe('palette-vars') {
     $primary: red;
     $secondary: green;
 
-    $my-palette: igx-palette(
+    $my-palette: palette(
         $primary: $primary,
         $secondary: $secondary,
     );
@@ -112,7 +112,7 @@
     @include it('should generate variables for all palette colors') {
         @include assert() {
             @include output() {
-                @include igx-palette-vars($my-palette);
+                @include palette-vars($my-palette);
             }
 
             @include contains() {
@@ -121,6 +121,36 @@
                 --igx-primary-l: #{$l};
                 --igx-primary-a: #{$a};
                 --igx-primary-500: #{var(--igx-primary-h), var(--igx-primary-s), var(--igx-primary-l)};
+            }
+        }
+    }
+}
+/* stylelint-enable max-nesting-depth */
+
+/* stylelint-disable max-nesting-depth */
+@include describe('palette-to-wc') {
+    $primary: red;
+    $secondary: green;
+
+    $igc-palette: palette(
+        $primary: $primary,
+        $secondary: $secondary,
+    );
+
+    @include it('should generate CSS variables for all palette colors prefixed with --igc') {
+        @include assert() {
+            @include output() {
+                @include palette-to-wc($igc-palette);
+            }
+
+            @include contains() {
+                --igc-primary-h: #{var(--igx-primary-h)};
+                --igc-primary-s: #{var(--igx-primary-s)};
+                --igc-primary-l: #{var(--igx-primary-l)};
+
+                --igc-gray-h: #{var(--igx-grays-h)};
+                --igc-gray-s: #{var(--igx-grays-s)};
+                --igc-gray-l: #{var(--igx-grays-l)};
             }
         }
     }

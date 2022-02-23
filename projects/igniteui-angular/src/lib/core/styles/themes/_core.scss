@@ -78,7 +78,7 @@
 /// @param {boolean} $enhanced-accesibility [false] - Switches component colors and other properties to more accessible values.
 /// @requires {mixin} igx-vhelper
 /// @requires {mixin} igx-print-layout
-@mixin igx-core(
+@mixin core(
     $print-layout: true,
     $direction: $direction,
     $enhanced-accessibility: $enhanced-accessibility
