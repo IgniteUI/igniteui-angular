@@ -109,6 +109,10 @@
             font-size: rem(14px);
             padding: $panel-padding;
             overflow-y: auto;
+
+            > igx-list {
+                height: auto;
+            }
         }
 
         %igx-expansion-panel__header-icon--start {
