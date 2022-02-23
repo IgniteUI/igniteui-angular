@@ -246,7 +246,6 @@ export interface GridServiceType {
     getParentRowId?(child: GridType): any;
     getChildGrids?(inDepth?: boolean): GridType[];
     getChildGrid?(path: IPathSegment[]): GridType;
-    endEditAll?(): void;
 
     unsetChildRowIsland?(rowIsland: GridType): void;
     registerChildRowIsland?(rowIsland: GridType): void;
