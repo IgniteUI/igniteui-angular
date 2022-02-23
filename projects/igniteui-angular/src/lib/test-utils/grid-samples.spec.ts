@@ -20,6 +20,7 @@ import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-s
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { ExpressionUI } from '../grids/filtering/excel-style/common';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
+import { GridColumnDataType } from '../data-operations/data-util';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -1215,6 +1216,9 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
         setTimeout(() => {
             const filteredData = this._filteringStrategy.filter(this.data, columnExprTree, null, null);
             const columnValues = filteredData.map(record => record[column.field]);
+            columnValues.sort(column.dataType !== GridColumnDataType.String ?
+                (a, b) => a - b :
+                undefined);
             done(columnValues);
             this.doneCallbackCounter++;
         }, 1000);
