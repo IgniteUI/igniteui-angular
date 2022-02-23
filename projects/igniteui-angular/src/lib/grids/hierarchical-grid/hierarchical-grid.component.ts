@@ -1001,7 +1001,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             cachedData.owner = args.owner;
 
             this.childLayoutList.forEach((layout) => {
-                const relatedGrid = (this.gridAPI as IgxHierarchicalGridAPIService).getChildGridByID(layout.key, args.context.$implicit.rowID);
+                const relatedGrid = this.gridAPI.getChildGridByID(layout.key, args.context.$implicit.rowID);
                 if (relatedGrid && relatedGrid.updateOnRender) {
                     // Detect changes if `expandChildren` has changed when the grid wasn't visible. This is for performance reasons.
                     relatedGrid.notifyChanges(true);

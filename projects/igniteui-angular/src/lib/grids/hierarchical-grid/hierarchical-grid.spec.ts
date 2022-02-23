@@ -217,7 +217,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         ]);
         expect(grandChildGrid).not.toBeNull();
 
-        const rowIsland1 = (hierarchicalGrid.gridAPI as IgxHierarchicalGridAPIService).getChildRowIsland('childData');
+        const rowIsland1 = hierarchicalGrid.gridAPI.getChildRowIsland('childData');
         const rowIsland2 = hierarchicalGrid.allLayoutList.find(layout => layout.id === 'igx-row-island-childData-childData');
         expect(rowIsland1.key).toBe('childData');
         expect(rowIsland2.key).toBe('childData');

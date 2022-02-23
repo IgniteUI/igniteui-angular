@@ -2992,7 +2992,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         protected viewRef: ViewContainerRef,
         private appRef: ApplicationRef,
         private moduleRef: NgModuleRef<any>,
-        private factoryResolver: ComponentFactoryResolver,
         private injector: Injector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
@@ -3447,7 +3446,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let dynamicFactory: ComponentFactory<any>;
         const factoryResolver = this.moduleRef
             ? this.moduleRef.componentFactoryResolver
-            : this.factoryResolver;
+            : this.resolver;
         try {
             dynamicFactory = factoryResolver.resolveComponentFactory(component);
         } catch (error) {
