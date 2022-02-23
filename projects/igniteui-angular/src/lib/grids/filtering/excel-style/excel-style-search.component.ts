@@ -399,7 +399,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             const anyFiltered = this.esf.listData.some(i => i.isFiltered);
             const anyUnfiltered = this.esf.listData.some(i => !i.isFiltered);
             selectAllBtn.indeterminate = anyFiltered && anyUnfiltered;
-            if (this.isHierarchical()) {
+            if (this.isHierarchical() && this.tree) {
                 this._hierarchicalSelectedItems = this.tree.nodes.map(n => n.data as FilterListItem).filter(item => item.isFiltered);
             }
 
