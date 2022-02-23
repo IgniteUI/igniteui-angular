@@ -275,7 +275,7 @@ export class IgxPivotDataSelectorComponent {
         this.dims = [
             ...this._grid.pivotConfiguration.columns,
             ...this._grid.pivotConfiguration.rows,
-            ...this._grid.pivotConfiguration.filters || [],
+            ...this._grid.pivotConfiguration.filters,
         ];
         this.values = this._grid.pivotConfiguration.values;
     }

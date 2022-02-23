@@ -135,7 +135,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get pivotConfiguration() {
-        return this._pivotConfiguration || { rows: null, columns: null, values: null, filters: null };
+        return {
+            rows: this._pivotConfiguration?.rows || [],
+            columns: this._pivotConfiguration?.columns || [],
+            values: this._pivotConfiguration?.values || [],
+            filters: this._pivotConfiguration?.filters || []
+        };
     }
 
     @Input()
@@ -424,7 +429,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected _defaultExpandState = false;
     private _data;
     private _filteredData;
-    private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
+    private _pivotConfiguration: IPivotConfiguration = { rows: [], columns: [], values: [], filters: [] };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
     private _superCompactMode = false;
 
