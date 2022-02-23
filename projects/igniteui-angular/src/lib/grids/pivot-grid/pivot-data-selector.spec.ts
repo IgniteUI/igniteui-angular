@@ -146,7 +146,7 @@ describe("Pivot data selector", () => {
         expect(expansionPanels[3].componentInstance.collapsed).toBeTrue();
     });
 
-    fit("should render a list of all row, column, filter, and value dimensions", () => {
+    it("should render a list of all row, column, filter, and value dimensions", () => {
         const valueList = Array.from(
             fixture.debugElement
                 .query(By.directive(IgxPivotDataSelectorComponent))
