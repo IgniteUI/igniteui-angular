@@ -272,11 +272,7 @@ export class IgxPivotDataSelectorComponent {
     @Input()
     public set grid(value: PivotGridType) {
         this._grid = value;
-        this.dims = [
-            ...this._grid.pivotConfiguration.columns,
-            ...this._grid.pivotConfiguration.rows,
-            ...this._grid.pivotConfiguration.filters,
-        ];
+        this.dims = this._grid.allDimensions;
         this.values = this._grid.pivotConfiguration.values;
     }
 

@@ -149,12 +149,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get pivotConfiguration() {
-        return {
-            rows: this._pivotConfiguration?.rows || [],
-            columns: this._pivotConfiguration?.columns || [],
-            values: this._pivotConfiguration?.values || [],
-            filters: this._pivotConfiguration?.filters || []
-        };
+        return this._pivotConfiguration || { rows: null, columns: null, values: null, filters: null };
     }
 
     @Input()
