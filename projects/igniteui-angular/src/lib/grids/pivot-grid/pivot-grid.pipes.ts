@@ -304,22 +304,7 @@ export class IgxPivotGridSortingPipe implements PipeTransform {
         let result: any[];
         const allDimensions = config.rows || [];
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        const expressions: ISortingExpression[] = [];
-        PivotUtil.flatten(enabledDimensions).forEach(x => {
-            if (x.sortDirection) {
-                expressions.push({
-                    dir: x.sortDirection,
-                    fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
-                });
-            } else {
-                expressions.push({
-                    dir: SortingDirection.None,
-                    fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
-                });
-            }
-        });
+        const expressions = PivotUtil.generateDimensionSortingExpressions(enabledDimensions);
         if (!expressions.length) {
             result = collection;
         } else {
