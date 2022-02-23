@@ -249,11 +249,12 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public onDimDragStart(event, area) {
         this.cdr.detectChanges();
         for (let chip of this.notificationChips) {
+            const parent = chip.nativeElement.parentElement;
             if (area.chipsList.toArray().indexOf(chip) === -1 &&
-                chip.nativeElement.parentElement.children.length > 0 &&
-                chip.nativeElement.parentElement.children.item(0).id !== 'empty') {
+                parent.children.length > 0 &&
+                parent.children.item(0).id !== 'empty') {
                 chip.nativeElement.hidden = false;
-                chip.nativeElement.scrollIntoView();
+                parent.parentElement.scrollTo({ left: chip.nativeElement.offsetLeft });
             }
         }
     }
