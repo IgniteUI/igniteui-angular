@@ -39,8 +39,8 @@ describe("Pivot data selector", () => {
         grid = fixture.componentInstance.pivotGrid;
         selector = fixture.componentInstance.dataSelector;
         pivotItems = [
-            ...grid.pivotConfiguration.columns,
             ...grid.pivotConfiguration.rows,
+            ...grid.pivotConfiguration.columns,
             ...grid.pivotConfiguration.filters,
             ...grid.pivotConfiguration.values,
         ];
