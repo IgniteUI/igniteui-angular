@@ -30,6 +30,7 @@ import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
+import { SortingDirection } from '../../../data-operations/sorting-strategy';
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]'
@@ -440,10 +441,23 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 return;
             }
 
-            this.uniqueValues = values.map(v => ({
-                value: v,
-                label: this.getFilterItemLabel(v)
+            const items = values.map(v => ({
+                value: v
             }));
+
+            this.uniqueValues = this.column.sortStrategy.sort(items, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
+            (obj, key) => {
+                let resolvedValue = obj[key];
+                if (this.column.dataType === GridColumnDataType.Time) {
+                    resolvedValue = new Date().setHours(
+                        resolvedValue.getHours(),
+                        resolvedValue.getMinutes(),
+                        resolvedValue.getSeconds(),
+                        resolvedValue.getMilliseconds());
+                }
+
+                return resolvedValue;
+            });
 
             this.renderValues();
             this.loadingEnd.emit();
