@@ -237,7 +237,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.unpinnedColumnCollection && this.unpinnedColumnCollection.length > 0) {
+        if (changes.unpinnedColumnCollection) {
             this.populateColumnDimensionsByLevel();
         }
     }
@@ -275,29 +275,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public getAreaHeight(area: IgxChipsAreaComponent) {
         const chips = area.chipsList;
         return chips && chips.length > 0 ? chips.first.nativeElement.clientHeight : 0;
-    }
-
-    /**
-    * @hidden
-    * @internal
-    */
-    public getAggregateList(val: IPivotValue): IPivotAggregator[] {
-        if (!val.aggregateList) {
-            let defaultAggr = this.getAggregatorsForValue(val);
-            const isDefault = defaultAggr.find(x => x.key === val.aggregate.key);
-            // resolve custom aggregations
-            if (!isDefault && this.grid.data[0][val.member] !== undefined) {
-                // if field exists, then we can apply default aggregations and add the custom one.
-                defaultAggr.unshift(val.aggregate);
-            } else if (!isDefault) {
-                // otherwise this is a custom aggregation that is not compatible
-                // with the defaults, since it operates on field that is not in the data
-                // leave only the custom one.
-                defaultAggr = [val.aggregate];
-            }
-            val.aggregateList = defaultAggr;
-        }
-        return val.aggregateList;
     }
 
     /**
@@ -346,7 +323,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
                 this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, undefined, false);
             }
         } else {
-            if (this.filterAreaDimensions.has(filter))  {
+            if (this.filterAreaDimensions.has(filter)) {
                 this.filterAreaDimensions.delete(filter)
                 this.grid.filteringService.hideESF();
             } else if (this.filterDropdownDimensions.size > 0) {
@@ -459,21 +436,10 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onChipSort(event, dimension: IPivotDimension, dimensionType: PivotDimensionType) {
-        if (!dimension.sortDirection) {
-            dimension.sortDirection = SortingDirection.None;
-        }
-        dimension.sortDirection = dimension.sortDirection + 1 > SortingDirection.Desc ?
-            SortingDirection.None : dimension.sortDirection + 1;
-        // apply same sort direction to children.
-        let dim = dimension;
-        while (dim.childLevel) {
-            dim.childLevel.sortDirection = dimension.sortDirection;
-            dim = dim.childLevel;
-        }
-        this.grid.pipeTrigger++;
-        if (dimensionType === PivotDimensionType.Column) {
-            this.grid.setupColumns();
-        }
+        const startDirection = dimension.sortDirection || SortingDirection.None;
+        const direction = startDirection + 1 > SortingDirection.Desc ?
+            SortingDirection.None : startDirection + 1;
+        this.grid.sortDimension(dimension, direction);
     }
 
     /**
@@ -481,6 +447,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onDimDragOver(event, dimension?: PivotDimensionType) {
+        if (!event.dragChip || !event.dragChip.data?.pivotArea) return;
         const typeMismatch = dimension !== undefined ? this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id
             || x.displayName === event.dragChip.id) :
             !this.grid.pivotConfiguration.values.find(x => x.member === event.dragChip.id || x.displayName === event.dragChip.id);
@@ -534,6 +501,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onValueDrop(event, area) {
+        if (!(event.dragChip && event.dragChip.data?.pivotArea) && !(event.dragData?.chip && !!event.dragData.chip.data.pivotArea)) return;
         //values can only be reordered
         const values = this.grid.pivotConfiguration.values;
         const dragId = event.dragChip?.id || event.dragData?.chip.id;
@@ -552,6 +520,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onDimDrop(event, area, dimensionType: PivotDimensionType) {
+        if (!(event.dragChip && event.dragChip.data?.pivotArea) && !(event.dragData?.chip && !!event.dragData.chip.data.pivotArea)) return;
         const dragId = event.dragChip?.id || event.dragData?.chip.id;
         const currentDim = this.grid.getDimensionsByType(dimensionType);
         const chipsArray = area.chipsList.toArray();
@@ -592,26 +561,11 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         return isColumn ? PivotDimensionType.Column : isRow ? PivotDimensionType.Row : PivotDimensionType.Filter;
     }
 
-    protected getAggregatorsForValue(value: IPivotValue): IPivotAggregator[] {
-        const dataType = value.dataType || this.grid.resolveDataTypes(this.grid.data[0][value.member]);
-        switch (dataType) {
-            case GridColumnDataType.Number:
-            case GridColumnDataType.Currency:
-                return IgxPivotNumericAggregate.aggregators();
-            case GridColumnDataType.Date:
-            case GridColumnDataType.DateTime:
-                return IgxPivotDateAggregate.aggregators();
-            case GridColumnDataType.Time:
-                return IgxPivotTimeAggregate.aggregators();
-            default:
-                return IgxPivotAggregate.aggregators();
-        }
-    }
-
     protected updateDropDown(value: IPivotValue, dropdown: IgxDropDownComponent, chip: IgxChipComponent) {
         this.value = value;
         dropdown.width = chip.nativeElement.clientWidth + 'px';
-        this.aggregateList = this.getAggregateList(value);
+        this.aggregateList = PivotUtil.getAggregateList(value, this.grid);
+        this.cdr.detectChanges();
         dropdown.open(this._subMenuOverlaySettings);
     }
 }

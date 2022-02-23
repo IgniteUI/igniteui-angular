@@ -51,9 +51,7 @@ export class IgxTotalSaleAggregate {
 })
 export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
-    public comfortable: DisplayDensity = DisplayDensity.comfortable;
-    public cosy: DisplayDensity = DisplayDensity.cosy;
-    public compact: DisplayDensity = DisplayDensity.compact;
+    public gridDensity = 'superCompact';
 
     public filterExpTree = new FilteringExpressionsTree(FilteringLogic.And);
 
@@ -78,7 +76,7 @@ export class PivotGridSampleComponent {
                 enabled: true
             },
             {
-                months: false,
+                months: true,
                 quarters: true
             }
         ),
@@ -111,11 +109,16 @@ export class PivotGridSampleComponent {
             this.dimensions[1]
         ],
         rows: [
-            this.dimensions[2],
             {
                 memberName: 'City',
                 enabled: true,
             },
+            this.dimensions[2],
+            {
+                memberName: 'SellerName',
+                enabled: true,
+                //filter: this.filterExpTree
+            }
         ],
         values: [
             {
@@ -163,11 +166,7 @@ export class PivotGridSampleComponent {
             }
         ],
         filters: [
-            {
-                memberName: 'SellerName',
-                enabled: true,
-                //filter: this.filterExpTree
-            }
+           
         ]
     };
 
@@ -273,7 +272,7 @@ export class PivotGridSampleComponent {
     }
 
     public setDensity(density: DisplayDensity) {
-        this.grid1.displayDensity = density;
+        this.gridDensity = density;
     }
 
     public autoSizeRow(ind) {
@@ -292,7 +291,7 @@ export class PivotGridSampleComponent {
     }
 
     public toggle(){
-        this.grid1.toggleDimension(this.dimensions[2]);
+        this.grid1.toggleDimension(this.pivotConfigHierarchy.filters[0]);
     }
 
     public move(){

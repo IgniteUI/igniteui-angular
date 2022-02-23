@@ -1,0 +1,35 @@
+@use '../../../base' as *;
+
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light pivot data selector schema.
+/// @type {Map}
+/// @see $default-palette
+$light-pivot-data-selector: (
+    background: (
+        color: 'surface',
+    ),
+
+    header-color: (
+        color: ('grays', 100)
+    )
+);
+
+/// Generates a fluent pivot data selector schema.
+/// @type {Map}
+/// @requires {Map} $light-pivot-data-selector
+$fluent-pivot-data-selector: $light-pivot-data-selector;
+
+/// Generates a bootstrap pivot data selector schema.
+/// @type {Map}
+/// @requires {Map} $light-pivot-data-selector
+$bootstrap-pivot-data-selector: $light-pivot-data-selector;
+
+/// Generates a indigo pivot data selector schema.
+/// @type {Map}
+/// @requires {Map} $light-pivot-data-selector
+$indigo-pivot-data-selector: $light-pivot-data-selector;

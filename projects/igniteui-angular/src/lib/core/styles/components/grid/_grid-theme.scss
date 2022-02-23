@@ -124,9 +124,9 @@
 /// @requires text-contrast
 /// @requires to-opaque
 /// @requires extend
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires round-borders
-@function igx-grid-theme(
+@function grid-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -265,7 +265,7 @@
     }
 
     @if $header-background and meta.type-of($header-background) == 'color' {
-        $header-background: to-opaque($header-background, igx-color($palette, 'surface'));
+        $header-background: to-opaque($header-background, color($palette, 'surface'));
     }
 
     @if not($header-text-color) and $header-background {
@@ -456,12 +456,12 @@
 
     @if not($grid-shadow) {
         $grid-elevation: map.get($grid-schema, 'grid-elevation');
-        $grid-shadow: igx-elevation($elevations, $grid-elevation);
+        $grid-shadow: elevation($elevations, $grid-elevation);
     }
 
     @if not($drag-shadow) {
         $drag-elevation: map.get($grid-schema, 'drag-elevation');
-        $drag-shadow: igx-elevation($elevations, $drag-elevation);
+        $drag-shadow: elevation($elevations, $drag-elevation);
     }
 
     @return extend($theme, (
@@ -577,15 +577,15 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} ellipsis
 /// @requires {mixin} excel-filtering
-/// @requires igx-color
-/// @requires igx-contrast-color
+/// @requires color
+/// @requires contrast-color
 /// @requires rem
 /// @requires var-get
-@mixin igx-grid($theme) {
-    @include igx-css-vars($theme);
+@mixin grid($theme) {
+    @include css-vars($theme);
 
     @include scale-in-ver-center();
 
@@ -621,7 +621,7 @@
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
     $grid-cell-pinned-style: 1px solid;
-    $grid-cell-pinned-border-color: igx-color($palette, 'grays', 300);
+    $grid-cell-pinned-border-color: color($palette, 'grays', 300);
 
     $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 
@@ -1051,7 +1051,7 @@
         }
 
         &%igx-grid__tr--ghost {
-            @include igx-css-vars((
+            @include css-vars((
                 name: 'igx-grid-row',
                 row-ghost-background: map.get($theme, 'row-ghost-background'),
                 row-drag-color: map.get($theme, 'row-drago-color')
@@ -1152,13 +1152,13 @@
         }
 
         %igx-icon--error {
-            color: igx-color($palette, 'grays', 500);
+            color: color($palette, 'grays', 500);
         }
     }
 
     %igx-grid__td--bool-true {
         %igx-icon--success {
-            color: igx-color($palette, 'grays', 700);
+            color: color($palette, 'grays', 700);
         }
     }
 
@@ -1442,7 +1442,7 @@
     %igx-grid__tr--deleted {
         %grid-cell-text {
             font-style: italic;
-            color: igx-color(map.get($theme, 'palette'), 'error');
+            color: color(map.get($theme, 'palette'), 'error');
             text-decoration: line-through;
         }
     }
@@ -1886,7 +1886,7 @@
 
     %grid-summaries-patch {
         @if $bootstrap-theme {
-            background: igx-color($palette, 'grays', 100);
+            background: color($palette, 'grays', 100);
         } @else {
             background: inherit;
         }
@@ -2595,7 +2595,7 @@
         }
 
         igx-prefix:focus {
-            color: igx-color(map.get($theme, 'palette'), 'secondary');
+            color: color(map.get($theme, 'palette'), 'secondary');
         }
 
         igx-suffix  {
@@ -2603,7 +2603,7 @@
                 outline-style: none;
 
                 &:focus {
-                    color: igx-color($palette, 'secondary');
+                    color: color($palette, 'secondary');
                 }
 
                 + igx-icon {
