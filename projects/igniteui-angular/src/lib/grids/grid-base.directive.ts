@@ -151,6 +151,7 @@ import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/gri
 import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
+import { IgxGridCellComponent } from './cell.component';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -4867,7 +4868,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.rowList.forEach((row) => {
             if (row.cells) {
-                row.cells.forEach((c) => {
+                row.cells.forEach((c: IgxGridCellComponent) => {
                     c.clearHighlight();
                 });
             }
@@ -7234,7 +7235,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (rebuildCache) {
             this.rowList.forEach((row) => {
                 if (row.cells) {
-                    row.cells.forEach((c) => {
+                    row.cells.forEach((c: IgxGridCellComponent) => {
                         c.highlightText(text, caseSensitiveResolved, exactMatchResolved);
                     });
                 }

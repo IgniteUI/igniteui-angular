@@ -97,7 +97,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         await wait();
         fixture.detectChanges();
 
-        const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
+        const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
         const childCell =  childGrid.gridAPI.get_cell_by_index(0, 'ID');
         GridFunctions.focusCell(fixture, childCell);
         fixture.detectChanges();
@@ -109,11 +109,11 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
             condition: IgxStringFilteringOperand.instance().condition('startsWith')
         };
         filteringExpressionsTree.filteringOperands.push(expression);
-        (childGrid as IgxHierarchicalGridComponent).filter('ProductName', null, filteringExpressionsTree);
+        childGrid.filter('ProductName', null, filteringExpressionsTree);
         await wait();
         fixture.detectChanges();
         expect(childGrid.rowList.length).toEqual(1);
-        expect((childGrid as IgxHierarchicalGridComponent).getCellByColumn(0, 'ID').selected).toBeTruthy();
+        expect(childGrid.getCellByColumn(0, 'ID').selected).toBeTruthy();
 
         const verticalScroll = fixture.componentInstance.hgrid.verticalScrollContainer;
         const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
@@ -128,7 +128,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.detectChanges();
 
         expect(childGrid.rowList.length).toEqual(1);
-        expect((childGrid as IgxHierarchicalGridComponent).getCellByColumn(0, 'ID').selected).toBeTruthy();
+        expect(childGrid.getCellByColumn(0, 'ID').selected).toBeTruthy();
     });
 
     it('should render correct data for child grid after scrolling and start index changes.', async () => {
@@ -140,24 +140,24 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         (secondRow.nativeElement.children[0] as HTMLElement).click();
         fixture.detectChanges();
 
-        const childGrid1 = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
+        const childGrid1 = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
         const expectedChildData1 = fixture.componentInstance.data[0].childData;
         expect(childGrid1.data).toBe(expectedChildData1);
-        expect((childGrid1 as IgxHierarchicalGridComponent).getCellByColumn(0, 'ID').value).toBe('00');
+        expect(childGrid1.getCellByColumn(0, 'ID').value).toBe('00');
 
-        const childGrid2 = hierarchicalGrid.gridAPI.getChildGrids(false)[1];
+        const childGrid2 = hierarchicalGrid.gridAPI.getChildGrids(false)[1] as IgxHierarchicalGridComponent;
         const expectedChildData2 = fixture.componentInstance.data[1].childData;
         expect(childGrid2.data).toBe(expectedChildData2);
-        expect((childGrid2 as IgxHierarchicalGridComponent).getCellByColumn(0, 'ID').value).toBe('10');
+        expect(childGrid2.getCellByColumn(0, 'ID').value).toBe('10');
 
         hierarchicalGrid.verticalScrollContainer.scrollNext();
 
         await wait(100);
         fixture.detectChanges();
         expect(childGrid1.data).toBe(expectedChildData1);
-        expect((childGrid1 as IgxHierarchicalGridComponent).getCellByColumn(0, 'ID').value).toBe('00');
+        expect(childGrid1.getCellByColumn(0, 'ID').value).toBe('00');
         expect(childGrid2.data).toBe(expectedChildData2);
-        expect((childGrid2 as IgxHierarchicalGridComponent).getCellByColumn(0, 'ID').value).toBe('10');
+        expect(childGrid2.getCellByColumn(0, 'ID').value).toBe('10');
     });
 
     it('should not lose scroll position after expanding/collapsing a row.', async () => {

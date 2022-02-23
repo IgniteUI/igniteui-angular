@@ -61,7 +61,7 @@ export interface CellType {
     column: ColumnType;
     row: RowType;
     grid: GridType;
-    id: { rowID: any; columnID: number; rowIndex: number };
+    id?: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
     readonly?: boolean;
     title?: any;

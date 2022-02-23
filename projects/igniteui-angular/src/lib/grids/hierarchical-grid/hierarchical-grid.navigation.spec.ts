@@ -11,6 +11,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs } from '../grid/public_api';
+import { IgxGridCellComponent } from '../cell.component';
 
 const DEBOUNCE_TIME = 60;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
@@ -99,9 +100,9 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
         // parent should scroll down so that cell in child is in view.
         const selectedCell = fixture.componentInstance.selectedCell;
-        const selectedCellElem = childGrid.gridAPI.get_cell_by_index(selectedCell.row.index, selectedCell.column.field);
+        const selectedCellElem = childGrid.gridAPI.get_cell_by_index(selectedCell.row.index, selectedCell.column.field) as IgxGridCellComponent;
         const gridOffsets = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
-        const rowOffsets = selectedCellElem.row.nativeElement.getBoundingClientRect();
+        const rowOffsets = selectedCellElem.intRow.nativeElement.getBoundingClientRect();
         expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
     }));
 
@@ -269,8 +270,8 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
        // check if child row is in view of parent.
        const gridOffsets = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
-       const selectedCellElem = childGrid.gridAPI.get_cell_by_index(selectedCell.row.index, selectedCell.column.field);
-       const rowOffsets = selectedCellElem.row.nativeElement.getBoundingClientRect();
+       const selectedCellElem = childGrid.gridAPI.get_cell_by_index(selectedCell.row.index, selectedCell.column.field) as IgxGridCellComponent;
+       const rowOffsets = selectedCellElem.intRow.nativeElement.getBoundingClientRect();
        expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
     }));
 

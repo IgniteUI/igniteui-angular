@@ -17,6 +17,8 @@ import {
 import { IgxGridSelectionModule } from '../selection/selection.module';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
+import { QueryList } from '@angular/core';
+import { CellType } from '../public_api';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
@@ -71,7 +73,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const firstChildRow = childGrid.gridAPI.get_row_by_index(0);
-            const fChildCell = firstChildRow.cells[0];
+            const fChildCell = (firstChildRow.cells as QueryList<CellType>).toArray()[0];
 
             // select child cell
             GridFunctions.focusCell(fix, fChildCell);

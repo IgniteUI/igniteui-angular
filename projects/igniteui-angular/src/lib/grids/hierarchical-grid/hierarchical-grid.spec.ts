@@ -13,6 +13,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { CellType, IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxGridCellComponent } from '../cell.component';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     let fixture;
@@ -22,8 +23,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
             ],
-            imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule]
+            imports: [NoopAnimationsModule, IgxHierarchicalGridModule]
         });
     }));
 
@@ -398,7 +398,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const masterGridFirstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
         expect(masterGridFirstRow.expanded).toBeFalsy();
 
-        const masterGridSecondCell = masterGridFirstRow.cells.find(c => c.columnIndex === 1);
+        const masterGridSecondCell = masterGridFirstRow.cells.find((c: IgxGridCellComponent) => c.columnIndex === 1);
         expect(masterGridSecondCell.editMode).toBeFalsy();
 
         masterGridSecondCell.setEditMode(true);
@@ -421,7 +421,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const childGridSecondRow = childGrid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
         expect(childGridSecondRow.expanded).toBeFalsy();
 
-        const childGridSecondCell = childGridSecondRow.cells.find(c => c.columnIndex === 1);
+        const childGridSecondCell = childGridSecondRow.cells.find((c: IgxGridCellComponent) => c.columnIndex === 1);
         expect(childGridSecondCell.editMode).toBeFalsy();
 
         childGridSecondCell.setEditMode(true);
@@ -450,7 +450,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const masterGridFirstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
         expect(masterGridFirstRow.expanded).toBeFalsy();
 
-        const masterGridSecondCell = masterGridFirstRow.cells.find(c => c.columnIndex === 1);
+        const masterGridSecondCell = masterGridFirstRow.cells.find((c: IgxGridCellComponent) => c.columnIndex === 1);
         expect(masterGridSecondCell.editMode).toBeFalsy();
 
         masterGridSecondCell.setEditMode(true);
@@ -491,7 +491,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const childGridSecondRow = childGrid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
         expect(childGridSecondRow.expanded).toBeFalsy();
 
-        const childGridSecondCell = childGridSecondRow.cells.find(c => c.columnIndex === 1);
+        const childGridSecondCell = childGridSecondRow.cells.find((c: IgxGridCellComponent) => c.columnIndex === 1);
         expect(childGridSecondCell.editMode).toBeFalsy();
 
         childGridSecondCell.setEditMode(true);
