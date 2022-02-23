@@ -36,10 +36,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $my-chart-theme: igx-bullet-graph-theme($brushes: (orange, blue, pink));
-///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($my-chart-theme);
-@function igx-bullet-graph-theme(
+///   $my-chart-theme: bullet-graph-theme($brushes: (orange, blue, pink));
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-chart-theme);
+@function bullet-graph-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -108,8 +108,8 @@
 /// Adds typography styles for the graph component.
 /// @access private
 /// @group typography
-/// @requires {mixin} igx-type-style
-@mixin igx-graph-typography() {
+/// @requires {mixin} type-style
+@mixin graph-typography() {
     igx-bullet-graph {
         --bullet-graph-font: var(--igx-font-family, inherit);
     }

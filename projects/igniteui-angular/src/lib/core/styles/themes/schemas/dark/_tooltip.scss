@@ -26,8 +26,8 @@ $dark-bootstrap-tooltip: $bootstrap-tooltip;
 /// Generates a dark indigo tooltip schema.
 /// @type {Map}
 ///
-/// @property {Map} background [igx-contrast-color: ('surface')] - The background color of the tooltip.
-/// @property {Map} text-color [text-color: (igx-color: 'surface')] - The text color of the tooltip.
+/// @property {Map} background [contrast-color: ('surface')] - The background color of the tooltip.
+/// @property {Map} text-color [text-color: (color: 'surface')] - The text color of the tooltip.
 ///
 /// @requires {function} extend
 /// @requires $indigo-tooltip
@@ -35,11 +35,11 @@ $dark-indigo-tooltip: extend(
     $indigo-tooltip,
     (
         background: (
-            igx-contrast-color: ('surface')
+            contrast-color: ('surface')
         ),
 
         text-color: (
-            igx-color: 'surface'
+            color: 'surface'
         )
     )
 );
