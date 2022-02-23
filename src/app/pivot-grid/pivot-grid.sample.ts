@@ -51,9 +51,7 @@ export class IgxTotalSaleAggregate {
 })
 export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
-    public comfortable: DisplayDensity = DisplayDensity.comfortable;
-    public cosy: DisplayDensity = DisplayDensity.cosy;
-    public compact: DisplayDensity = DisplayDensity.compact;
+    public gridDensity = 'superCompact';
 
     public filterExpTree = new FilteringExpressionsTree(FilteringLogic.And);
 
@@ -166,9 +164,6 @@ export class PivotGridSampleComponent {
                     downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 50
                 },
             }
-        ],
-        filters: [
-           
         ]
     };
 
@@ -274,7 +269,7 @@ export class PivotGridSampleComponent {
     }
 
     public setDensity(density: DisplayDensity) {
-        this.grid1.displayDensity = density;
+        this.gridDensity = density;
     }
 
     public autoSizeRow(ind) {

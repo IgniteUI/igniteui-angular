@@ -14,7 +14,7 @@
 /// @param {color} $label-color [null] - The color for date range separator label.
 /// @requires var-get
 /// @requires rem
-@function igx-date-range-picker-theme(
+@function date-range-picker-theme(
     $palette: null,
     $schema: $light-schema,
     $label-color: null
@@ -38,11 +38,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-date-range-picker($theme) {
-    @include igx-css-vars($theme);
+@mixin date-range-picker($theme) {
+    @include css-vars($theme);
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
@@ -116,8 +116,8 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-date-range-typography(
+/// @requires {mixin} type-style
+@mixin date-range-typography(
     $type-scale,
     $categories: (
         label: 'subtitle-1',
@@ -126,6 +126,6 @@
     $label: map.get($categories, 'label');
 
     %igx-date-range__label {
-        @include igx-type-style($type-scale, $label);
+        @include type-style($type-scale, $label);
     }
 }

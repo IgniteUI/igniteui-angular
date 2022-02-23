@@ -20,11 +20,11 @@
 /// @requires extend
 ///
 /// @example scss Change the background color
-///   $my-overlay-theme: igx-overlay-theme($background-color: rgba(yellow, .74));
-///   // Pass the theme to the igx-overlay component mixin
-///   igx-overlay($my-overlay-theme);
+///   $my-overlay-theme: overlay-theme($background-color: rgba(yellow, .74));
+///   // Pass the theme to the overlay component mixin
+///   overlay($my-overlay-theme);
 ///
-@function igx-overlay-theme(
+@function overlay-theme(
     $palette: null,
     $schema: $light-schema,
     $background-color: null
@@ -51,11 +51,11 @@
 
 ///
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires var-get
 ///
-@mixin igx-overlay($theme) {
-    @include igx-css-vars($theme);
+@mixin overlay($theme) {
+    @include css-vars($theme);
 
     %overlay-display {
         width: 0;

@@ -22,10 +22,10 @@
 /// @requires extend
 ///
 /// @example scss Change the background and icon colors in icon highlight
-///   $my-avatar-theme: igx-avatar-theme($icon-background: black, $icon-color: white);
-///   // Pass the theme to the igx-avatar component mixin
-///   @include igx-avatar($my-avatar-theme);
-@function igx-highlight-theme(
+///   $my-highlight-theme: highlight-theme($resting-background: black, $active-color: white);
+///   // Pass the theme to the highlight component mixin
+///   @include highlight($my-highlight-theme);
+@function highlight-theme(
     $palette: null,
     $schema: $light-schema,
     $resting-background: null,
@@ -65,11 +65,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-highlight($theme) {
-    @include igx-css-vars($theme);
+@mixin highlight($theme) {
+    @include css-vars($theme);
 
     %igx-highlight {
         color: var-get($theme, 'resting-color');

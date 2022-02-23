@@ -59,6 +59,76 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public disabled = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get addRowUI(): any {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get inEditMode(): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public set pinned(_value: boolean) {
+    }
+
+    public get pinned(): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public delete() {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public beginAddRow() {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public update(_value: any) {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public pin() {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public unpin() {
+        return false;
+    }
+
+    /**
     *  The pivot record data passed to the row component.
     *
     * ```typescript
@@ -89,13 +159,13 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     }
 
     public getCellClass(col: IgxColumnComponent) {
-        const configuration = this.grid.pivotConfiguration;
-        if (configuration.values.length === 1) {
-            return configuration.values[0].styles;
+        const values = this.grid.values;
+        if (values.length === 1) {
+            return values[0].styles;
         }
         const colName = col.field.split(this.grid.pivotKeys.columnDimensionSeparator);
         const measureName = colName[colName.length - 1];
-        return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
+        return values.find(v => v.member === measureName)?.styles;
     }
 
     public isCellActive(visibleColumnIndex) {

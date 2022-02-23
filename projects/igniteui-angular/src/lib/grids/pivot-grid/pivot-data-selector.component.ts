@@ -1,23 +1,27 @@
 import { useAnimation } from "@angular/animations";
 import {
+    ChangeDetectorRef,
     Component,
+    EventEmitter,
     HostBinding,
     Input,
+    Output,
     Renderer2
 } from "@angular/core";
 import { first } from "rxjs/operators";
 import { fadeIn, fadeOut } from "../../animations/fade";
 import { DisplayDensity } from "../../core/displayDensity";
-import { GridColumnDataType } from "../../data-operations/data-util";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
 import {
     IDragBaseEventArgs,
     IDragGhostBaseEventArgs,
+    IDragMoveEventArgs,
     IDropBaseEventArgs,
     IDropDroppedEventArgs
 } from "../../directives/drag-drop/drag-drop.directive";
 import { ISelectionEventArgs } from "../../drop-down/drop-down.common";
 import { IgxDropDownComponent } from "../../drop-down/drop-down.component";
+import { IgxExpansionPanelComponent } from '../../expansion-panel/expansion-panel.component';
 import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
@@ -27,16 +31,12 @@ import {
 } from "../../services/public_api";
 import { ColumnType, PivotGridType } from "../common/grid.interface";
 import {
-    IgxPivotAggregate,
-    IgxPivotDateAggregate,
-    IgxPivotTimeAggregate
-} from "./pivot-grid-aggregate";
-import {
     IPivotAggregator,
     IPivotDimension,
     IPivotValue,
     PivotDimensionType
 } from "./pivot-grid.interface";
+import { PivotUtil } from './pivot-util';
 
 interface IDataSelectorPanel {
     name: string;
@@ -50,16 +50,137 @@ interface IDataSelectorPanel {
     dragChannels: string[];
 }
 
+/**
+ * Pivot Data Selector provides means to configure the pivot state of the Pivot Grid via a vertical panel UI
+ *
+ * @igxModule IgxPivotGridModule
+ * @igxGroup Grids & Lists
+ * @igxKeywords data selector, pivot, grid
+ * @igxTheme pivot-data-selector-theme
+ * @remarks
+ * The Ignite UI Data Selector has a searchable list with the grid data columns,
+ * there are also four expandable areas underneath for filters, rows, columns, and values
+ * is used for grouping and aggregating simple flat data into a pivot table.
+ * @example
+ * ```html
+ * <igx-pivot-grid #grid1 [data]="data" [pivotConfiguration]="configuration">
+ * </igx-pivot-grid>
+ * <igx-pivot-data-selector [grid]="grid1"></igx-pivot-data-selector>
+ * ```
+ */
 @Component({
     selector: "igx-pivot-data-selector",
     templateUrl: "./pivot-data-selector.component.html",
 })
 export class IgxPivotDataSelectorComponent {
+
+    /**
+     * Gets/sets whether the columns panel is expanded
+     * Get
+     * ```typescript
+     *  const columnsPanelState: boolean = this.dataSelector.columnsExpanded;
+     * ```
+     * Set
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [columnsExpanded]="columnsPanelState"></igx-pivot-data-selector>
+     * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [(columnsExpanded)]="columnsPanelState"></igx-pivot-data-selector>
+     * ```
+     */
+    @Input()
+    public columnsExpanded = true;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public columnsExpandedChange = new EventEmitter<boolean>();
+    
+    /**
+     * Gets/sets whether the rows panel is expanded
+     * Get
+     * ```typescript
+     *  const rowsPanelState: boolean = this.dataSelector.rowsExpanded;
+     * ```
+     * Set
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [rowsExpanded]="rowsPanelState"></igx-pivot-data-selector>
+     * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [(rowsExpanded)]="rowsPanelState"></igx-pivot-data-selector>
+     * ```
+     */
+    @Input()
+    public rowsExpanded = true;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public rowsExpandedChange = new EventEmitter<boolean>();
+
+    /**
+     * Gets/sets whether the filters panel is expanded
+     * Get
+     * ```typescript
+     *  const filtersPanelState: boolean = this.dataSelector.filtersExpanded;
+     * ```
+     * Set
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [filtersExpanded]="filtersPanelState"></igx-pivot-data-selector>
+     * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [(filtersExpanded)]="filtersPanelState"></igx-pivot-data-selector>
+     * ```
+     */
+    @Input()
+    public filtersExpanded = true;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public filtersExpandedChange = new EventEmitter<boolean>();
+
+    /**
+     * Gets/sets whether the values panel is expanded
+     * Get
+     * ```typescript
+     *  const valuesPanelState: boolean = this.dataSelector.valuesExpanded;
+     * ```
+     * Set
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [valuesExpanded]="valuesPanelState"></igx-pivot-data-selector>
+     * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-pivot-data-selector [grid]="grid1" [(valuesExpanded)]="valuesPanelState"></igx-pivot-data-selector>
+     * ```
+     */
+    @Input()
+    public valuesExpanded = true;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public valuesExpandedChange = new EventEmitter<boolean>();
+
     private _grid: PivotGridType;
     private _dropDelta = 0;
 
+    /** @hidden @internal **/
     @HostBinding("class.igx-pivot-data-selector")
     public cssClass = "igx-pivot-data-selector";
+    /** @hidden @internal **/
     public dimensions: IPivotDimension[];
 
     private _subMenuPositionSettings: PositionSettings = {
@@ -103,7 +224,7 @@ export class IgxPivotDataSelectorComponent {
     /** @hidden @internal */
     public values: IPivotValue[];
 
-    constructor(private renderer: Renderer2) {}
+    constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
 
     /**
      * @hidden @internal
@@ -117,7 +238,7 @@ export class IgxPivotDataSelectorComponent {
             icon: "filter_list",
             itemKey: "memberName",
             sortable: false,
-            dragChannels: ["Filters", "Columns", "Rows"],
+            dragChannels: ["Filters", "Columns", "Rows"]
         },
         {
             name: "Columns",
@@ -127,7 +248,7 @@ export class IgxPivotDataSelectorComponent {
             icon: "view_column",
             itemKey: "memberName",
             sortable: true,
-            dragChannels: ["Filters", "Columns", "Rows"],
+            dragChannels: ["Filters", "Columns", "Rows"]
         },
         {
             name: "Rows",
@@ -137,7 +258,7 @@ export class IgxPivotDataSelectorComponent {
             icon: "table_rows",
             itemKey: "memberName",
             sortable: true,
-            dragChannels: ["Filters", "Columns", "Rows"],
+            dragChannels: ["Filters", "Columns", "Rows"]
         },
         {
             name: "Values",
@@ -148,7 +269,7 @@ export class IgxPivotDataSelectorComponent {
             itemKey: "member",
             displayKey: 'displayName',
             sortable: false,
-            dragChannels: ["Values"],
+            dragChannels: ["Values"]
         },
     ];
 
@@ -165,11 +286,7 @@ export class IgxPivotDataSelectorComponent {
     @Input()
     public set grid(value: PivotGridType) {
         this._grid = value;
-        this.dims = [
-            ...this._grid.pivotConfiguration.columns,
-            ...this._grid.pivotConfiguration.rows,
-            ...this._grid.pivotConfiguration.filters,
-        ];
+        this.dims = this._grid.allDimensions;
         this.values = this._grid.pivotConfiguration.values;
     }
 
@@ -196,28 +313,10 @@ export class IgxPivotDataSelectorComponent {
         )
             return;
 
-        if (!dimension.sortDirection) {
-            dimension.sortDirection = SortingDirection.None;
-        }
-
-        dimension.sortDirection =
-            dimension.sortDirection + 1 > SortingDirection.Desc
-                ? SortingDirection.None
-                : dimension.sortDirection + 1;
-        // apply same sort direction to children.
-        let dim = dimension;
-
-        while (dim.childLevel) {
-            dim.childLevel.sortDirection = dimension.sortDirection;
-            dim = dim.childLevel;
-        }
-
-        this.grid.pipeTrigger++;
-        this.grid.cdr.markForCheck();
-
-        if (dimensionType === PivotDimensionType.Column) {
-            this.grid.setupColumns();
-        }
+        const startDirection = dimension.sortDirection || SortingDirection.None;
+        const direction = startDirection + 1 > SortingDirection.Desc ?
+            SortingDirection.None : startDirection + 1;
+        this.grid.sortDimension(dimension, direction);
     }
 
     /**
@@ -365,7 +464,8 @@ export class IgxPivotDataSelectorComponent {
     ) {
         this.value = value;
         dropdown.width = "200px";
-        this.aggregateList = this.getAggregateList(value);
+        this.aggregateList = PivotUtil.getAggregateList(value, this.grid);
+        this.cdr.detectChanges();
         dropdown.open(this._subMenuOverlaySettings);
     }
 
@@ -390,53 +490,6 @@ export class IgxPivotDataSelectorComponent {
                 this.updateDropDown(value, dropdown);
             });
         }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected getAggregatorsForValue(value: IPivotValue): IPivotAggregator[] {
-        const dataType =
-            value.dataType ||
-            this.grid.resolveDataTypes(this.grid.data[0][value.member]);
-        switch (dataType) {
-            case GridColumnDataType.Number:
-            case GridColumnDataType.Currency:
-                return IgxPivotDateAggregate.aggregators();
-            case GridColumnDataType.Date:
-            case GridColumnDataType.DateTime:
-                return IgxPivotDateAggregate.aggregators();
-            case GridColumnDataType.Time:
-                return IgxPivotTimeAggregate.aggregators();
-            default:
-                return IgxPivotAggregate.aggregators();
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public getAggregateList(val: IPivotValue): IPivotAggregator[] {
-        if (!val.aggregateList) {
-            let defaultAggr = this.getAggregatorsForValue(val);
-            const isDefault = defaultAggr.find(
-                (x) => x.key === val.aggregate.key
-            );
-            // resolve custom aggregations
-            if (!isDefault && this.grid.data[0][val.member] !== undefined) {
-                // if field exists, then we can apply default aggregations and add the custom one.
-                defaultAggr.unshift(val.aggregate);
-            } else if (!isDefault) {
-                // otherwise this is a custom aggregation that is not compatible
-                // with the defaults, since it operates on field that is not in the data
-                // leave only the custom one.
-                defaultAggr = [val.aggregate];
-            }
-            val.aggregateList = defaultAggr;
-        }
-        return val.aggregateList;
     }
 
     /**
@@ -499,7 +552,7 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     public onPanelEntry(event: IDropBaseEventArgs, panel: string) {
-        this.dropAllowed = event.dragData.some(
+        this.dropAllowed = event.dragData.gridID === this.grid.id && event.dragData.selectorChannels?.some(
             (channel: string) => channel === panel
         );
     }
@@ -508,11 +561,11 @@ export class IgxPivotDataSelectorComponent {
      * @hidden
      * @internal
      */
-    public onItemDragMove(event: IDragBaseEventArgs) {
+    public onItemDragMove(event: IDragMoveEventArgs) {
         const clientRect =
             event.owner.element.nativeElement.getBoundingClientRect();
         this._dropDelta = Math.round(
-            (event.pageY - event.startY) / clientRect.height
+            (event.nextPageY - event.startY) / clientRect.height
         );
     }
 
@@ -556,6 +609,39 @@ export class IgxPivotDataSelectorComponent {
                 event.owner.element.nativeElement,
                 "igx-drag--push"
             );
+        }
+    }
+
+    public getPanelCollapsed(panelType: PivotDimensionType): boolean {
+        switch(panelType) {
+            case PivotDimensionType.Column:
+                return !this.columnsExpanded;
+            case PivotDimensionType.Filter:
+                return !this.filtersExpanded;
+            case PivotDimensionType.Row:
+                return !this.rowsExpanded;
+            default:
+                return !this.valuesExpanded;
+        }
+    }
+
+    public onCollapseChange(value: boolean, panelType: PivotDimensionType): void {
+        switch(panelType) {
+            case PivotDimensionType.Column:
+                this.columnsExpanded = !value;
+                this.columnsExpandedChange.emit(this.columnsExpanded);
+                break;
+            case PivotDimensionType.Filter:
+                this.filtersExpanded = !value;
+                this.filtersExpandedChange.emit(this.filtersExpanded);
+                break;
+            case PivotDimensionType.Row:
+                this.rowsExpanded = !value;
+                this.rowsExpandedChange.emit(this.rowsExpanded);
+                break;
+            default:
+                this.valuesExpanded = !value;
+                this.valuesExpandedChange.emit(this.valuesExpanded)
         }
     }
 }

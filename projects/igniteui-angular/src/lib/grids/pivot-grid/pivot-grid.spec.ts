@@ -4,6 +4,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree, FilteringLogic, IgxPivotGridComponent, IgxPivotRowDimensionHeaderGroupComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
+import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-strategy';
+import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
@@ -664,6 +666,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             it('should apply sorting for dimension via row chip', () => {
                 fixture.detectChanges();
                 const pivotGrid = fixture.componentInstance.pivotGrid;
+                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
                 rowChip.click();
@@ -681,6 +684,14 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     By.directive(IgxPivotRowDimensionHeaderComponent));
                 rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
                 expect(rowDimensionHeaders).toEqual(expectedOrder);
+
+                // should have emitted event
+                expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledTimes(2);
+                const expectedExpressions: ISortingExpression[] = [
+                    { dir: SortingDirection.Desc, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()},
+                    { dir: SortingDirection.Desc, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
+                ];
+                expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
             });
 
             it('should apply sorting for dimension via column chip', () => {
@@ -938,7 +949,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // move first chip over the second one
                 headerRow.onDimDragOver({
                     dragChip: {
-                        id: 'ProductCategory'
+                        id: 'ProductCategory',
+                        data: { pivotArea: 'row' }
                     },
                     owner: rowChip2,
                     originalEvent: {
@@ -953,7 +965,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // drop chip
                 headerRow.onDimDrop({
                     dragChip: {
-                        id: 'ProductCategory'
+                        id: 'ProductCategory',
+                        data: { pivotArea: 'row' }
                     },
                     owner: rowChip2
                 }, rowChipArea, PivotDimensionType.Row);
@@ -988,7 +1001,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // move first chip over the second one
                 headerRow.onDimDragOver({
                     dragChip: {
-                        id: 'Country'
+                        id: 'Country',
+                        data: { pivotArea: 'column' }
                     },
                     owner: colChip2,
                     originalEvent: {
@@ -1003,7 +1017,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // drop chip
                 headerRow.onDimDrop({
                     dragChip: {
-                        id: 'Country'
+                        id: 'Country',
+                        data: { pivotArea: 'column' }
                     },
                     owner: colChip2
                 }, colChipArea, PivotDimensionType.Column);
@@ -1029,7 +1044,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // move first chip over the second one
                 headerRow.onDimDragOver({
                     dragChip: {
-                        id: 'UnitsSold'
+                        id: 'UnitsSold',
+                        data: { pivotArea: 'value' }
                     },
                     owner: valChip2,
                     originalEvent: {
