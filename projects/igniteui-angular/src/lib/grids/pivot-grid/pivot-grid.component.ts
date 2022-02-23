@@ -663,7 +663,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     public get pinnedWidth() {
-        return 0;
+        return super.pinnedWidth;
     }
 
     /**
