@@ -63,6 +63,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
+import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -101,6 +102,19 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Output()
     public dimensionsChange = new EventEmitter<IDimensionsChange>();
+
+
+    /**
+     * Emitted when a dimension is sorted.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
+     *              (dimensionsSortingExpressionsChange)="dimensionsSortingExpressionsChange($event)"></igx-pivot-grid>
+     * ```
+     */
+    @Output()
+    public dimensionsSortingExpressionsChange = new EventEmitter<ISortingExpression[]>();
 
     /**
      * Emitted when the values collection is changed via the grid chip area.
@@ -1362,6 +1376,33 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.valuesChange.emit({ values: this.pivotConfiguration.values });
         this.reflow();
     }
+
+    /**
+     * Sort the dimension and its children in the provided direction.
+     * @example
+     * ```typescript
+     * this.grid.sortDimension(dimension, SortingDirection.Asc);
+     * ```
+     * @param value The value to be toggled.
+     */
+    public sortDimension(dimension: IPivotDimension, sortDirection: SortingDirection) {
+        const dimensionType = this.getDimensionType(dimension);
+        dimension.sortDirection = sortDirection;
+        // apply same sort direction to children.
+        let dim = dimension;
+        while (dim.childLevel) {
+            dim.childLevel.sortDirection = dimension.sortDirection;
+            dim = dim.childLevel;
+        }
+        const dimensionsSortingExpressions = PivotUtil.generateDimensionSortingExpressions(this.rowDimensions)
+        this.pipeTrigger++;
+        this.dimensionsSortingExpressionsChange.emit(dimensionsSortingExpressions);
+        if (dimensionType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
+        this.cdr.detectChanges();
+    }
+
 
     public getDimensionsByType(dimension: PivotDimensionType) {
         switch (dimension) {
