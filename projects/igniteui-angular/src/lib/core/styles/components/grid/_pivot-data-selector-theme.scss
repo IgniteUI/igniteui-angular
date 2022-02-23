@@ -105,6 +105,7 @@
 
         %igx-expanded-panel-margin {
             igx-expansion-panel[aria-expanded='true'] {
+                margin-top: 0;
                 margin-bottom: 0;
             }
         }
