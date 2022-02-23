@@ -438,7 +438,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected _defaultExpandState = false;
     private _data;
     private _filteredData;
-    private _pivotConfiguration: IPivotConfiguration = { rows: [], columns: [], values: [], filters: [] };
+    private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
     private _superCompactMode = false;
 
