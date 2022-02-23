@@ -177,8 +177,10 @@ export class IgxPivotDataSelectorComponent {
     private _grid: PivotGridType;
     private _dropDelta = 0;
 
+    /** @hidden @internal **/
     @HostBinding("class.igx-pivot-data-selector")
     public cssClass = "igx-pivot-data-selector";
+    /** @hidden @internal **/
     public dimensions: IPivotDimension[];
 
     private _subMenuPositionSettings: PositionSettings = {
