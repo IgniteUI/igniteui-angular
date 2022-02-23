@@ -279,25 +279,26 @@ describe('IgxTooltip', () => {
                 tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
             }));
 
-            it('IgxTooltip is initially hidden', () => {
+            it('IgxTooltip is initially hidden', fakeAsync(() => {
+                flush();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
-            });
-    
+            }));
+
             it('IgxTooltip is shown/hidden when hovering/unhovering its target', fakeAsync(() => {
                 hoverElement(button);
                 flush();
-    
+
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-    
+
                 unhoverElement(button);
                 flush();
-    
+
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
         });
 
         describe('Tooltip events', () => {
-        // configureTestSuite();
+            // configureTestSuite();
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
                 spyOn(tooltipTarget.tooltipShow, 'emit');
                 spyOn(tooltipTarget.tooltipHide, 'emit');
@@ -404,7 +405,7 @@ describe('IgxTooltip', () => {
         });
 
         describe('Tooltip touch', () => {
-        // configureTestSuite();
+            // configureTestSuite();
             it('IgxTooltip is shown/hidden when touching/untouching its target', fakeAsync(() => {
                 touchElement(button);
                 flush();
@@ -560,15 +561,9 @@ const unhoverElement = (element) => element.nativeElement.dispatchEvent(new Mous
 const touchElement = (element) => element.nativeElement.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
 
 const verifyTooltipVisibility = (tooltipNativeElement, tooltipTarget, shouldBeVisible: boolean) => {
-    if (shouldBeVisible) {
-        expect(tooltipNativeElement.classList.contains(TOOLTIP_CLASS)).toBe(true);
-        expect(tooltipNativeElement.classList.contains(HIDDEN_TOOLTIP_CLASS)).toBe(false);
-        expect(tooltipTarget.tooltipHidden).toBe(false);
-    } else {
-        expect(tooltipNativeElement.classList.contains(TOOLTIP_CLASS)).toBe(false);
-        expect(tooltipNativeElement.classList.contains(HIDDEN_TOOLTIP_CLASS)).toBe(true);
-        expect(tooltipTarget.tooltipHidden).toBe(true);
-    }
+    expect(tooltipNativeElement.classList.contains(TOOLTIP_CLASS)).toBe(shouldBeVisible);
+    expect(tooltipNativeElement.classList.contains(HIDDEN_TOOLTIP_CLASS)).not.toBe(shouldBeVisible);
+    expect(tooltipTarget.tooltipHidden).not.toBe(shouldBeVisible);
 };
 
 const verifyTooltipPosition = (tooltipNativeElement, actualTarget, shouldBeAligned: boolean) => {
