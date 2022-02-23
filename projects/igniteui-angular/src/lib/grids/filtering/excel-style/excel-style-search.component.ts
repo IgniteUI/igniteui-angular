@@ -498,7 +498,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         condition,
                         fieldName: this.esf.column.field,
                         ignoreCase: this.esf.column.filteringIgnoreCase,
-                        searchVal: this.esf.getFilterItemValue(element)
+                        searchVal: element.value
                     });
                 });
             } else {
@@ -516,7 +516,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         this.esf.column.dataType === GridColumnDataType.DateTime ?
                         selectedItems.map(d => d.value.toISOString()) : this.esf.column.dataType === GridColumnDataType.Time ?
                             selectedItems.map(e => e.value.toLocaleTimeString()) :
-                            selectedItems.map(e => this.esf.getFilterItemValue(e)))
+                            selectedItems.map(e => e.value))
                 });
 
                 if (blanksItem) {

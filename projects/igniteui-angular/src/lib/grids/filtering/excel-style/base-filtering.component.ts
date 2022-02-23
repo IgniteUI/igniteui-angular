@@ -41,6 +41,4 @@ export abstract class BaseFilteringComponent {
     public abstract onPin(): void;
     public abstract onHideToggle(): void;
     public abstract cancel(): void;
-    public abstract getFilterItemValue(item: FilterListItem): string;
-
 }

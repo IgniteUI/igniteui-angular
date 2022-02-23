@@ -1,8 +1,10 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { resolveNestedPath, parseDate } from '../core/utils';
+import { resolveNestedPath, parseDate, formatDate, formatCurrency } from '../core/utils';
 import { ColumnType, GridType } from '../grids/common/grid.interface';
 import { GridColumnDataType } from './data-util';
+import { SortingDirection } from './sorting-strategy';
+import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
@@ -11,15 +13,13 @@ const TimeType = 'time';
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridType): any[];
-    getUniqueColumnValues(
-        column: ColumnType,
-        tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]>;
-    shouldFormatFilterValues(column: ColumnType): boolean;
+    getFilterItems(column: ColumnType, tree: FilteringExpressionsTree) : Promise<IgxFilterItem[]>;
 }
 
-export class HierarchicalColumnValue {
-    public value: any;
-    public children?: HierarchicalColumnValue[];
+export interface IgxFilterItem {
+    value: any;
+    label?: string;
+    children?: IgxFilterItem[];
 }
 
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
@@ -69,59 +69,80 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         return true;
     }
 
-    public getUniqueColumnValues(
-            column: ColumnType,
-            tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]> {
-        const data = column.grid.gridAPI.filterDataByExpressions(tree);
-        const columnField = column.field;
-        const columnValues = data.map(record => {
-            let value = resolveNestedPath(record, columnField);
+    public getFilterItems(column: ColumnType, tree: FilteringExpressionsTree): Promise<IgxFilterItem[]> {
 
-            value = column.formatter && this.shouldFormatFilterValues(column) ?
-                column.formatter(value) :
+        let data = column.grid.gridAPI.filterDataByExpressions(tree);
+        data = column.grid.gridAPI.sortDataByExpressions(data,
+            [{ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase }]);
+
+        const columnField = column.field;
+        let filterItems: IgxFilterItem[] = data.map(record => {
+            let value = resolveNestedPath(record, columnField);
+            const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
+
+            value = applyFormatter ?
+                column.formatter(value, record) :
                 value;
 
-            return value;
+            return {
+                value,
+                label: this.getFilterItemLabel(column, value, !applyFormatter, record)
+            };
         });
-        const uniqueValues = this.generateUniqueValues(column, columnValues);
+        filterItems = this.getUniqueFilterItems(column, filterItems);
 
-        return Promise.resolve(uniqueValues);
+        return Promise.resolve(filterItems);
     }
 
-    protected generateUniqueValues(column: ColumnType, columnValues: any[]) {
-        let uniqueValues: any[];
-
-        if (column.dataType === GridColumnDataType.String && column.filteringIgnoreCase) {
-            const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
-                .reduce((map, val, i) => map.has(val) ? map : map.set(val, columnValues[i]), new Map());
-            uniqueValues = Array.from(filteredUniqueValues.values());
-        } else if (column.dataType === GridColumnDataType.DateTime) {
-            uniqueValues = Array.from(new Set(columnValues.map(v => v?.toLocaleString())));
-            uniqueValues.forEach((d, i) => uniqueValues[i] = d ? new Date(d) : d);
-        } else if (column.dataType === GridColumnDataType.Time) {
-            uniqueValues = Array.from(new Set(columnValues.map(v => {
-                if (v) {
-                    v = new Date(v);
-                    return new Date().setHours(v.getHours(), v.getMinutes(), v.getSeconds());
-                } else {
-                    return v;
-                }
-            })));
-            uniqueValues.forEach((d, i) => uniqueValues[i] = d ? new Date(d) : d);
-        } else if (column.dataType === GridColumnDataType.Date) {
-            const valuesMap = columnValues.reduce((map: Map<string, any>, val) =>  {
-                if (!val) {
-                    return map.set(val, val);
-                }
-
-                const date = new Date(val);
-                const key = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
-                return map.has(key) ? map : map.set(key, date);
-            }, new Map());
-            uniqueValues = Array.from(valuesMap.values());
-        } else {
-            uniqueValues = Array.from(new Set(columnValues));
+    protected getFilterItemLabel(column: ColumnType, value: any, applyFormatter: boolean, data: any) {
+        if (column.formatter) {
+            if (applyFormatter) {
+                return column.formatter(value, data);
+            }
+            return value;
         }
+
+        const { display, format, digitsInfo, currencyCode, timezone } = column.pipeArgs;
+        const locale = column.grid.locale;
+
+        switch (column.dataType) {
+            case GridColumnDataType.Date:
+            case GridColumnDataType.DateTime:
+            case GridColumnDataType.Time:
+                return formatDate(value, format, locale, timezone);
+            case GridColumnDataType.Currency:
+                return formatCurrency(value, currencyCode || getLocaleCurrencyCode(locale), display, digitsInfo, locale);
+            case GridColumnDataType.Number:
+                return formatNumber(value, locale, digitsInfo);
+            case GridColumnDataType.Percent:
+                return formatPercent(value, locale, digitsInfo);
+            default:
+                return value;
+        }
+    }
+
+    protected getUniqueFilterItems(column: ColumnType, filterItems: IgxFilterItem[]) {
+        const filteredUniqueValues = filterItems.reduce((map, item) => {
+            let key = item.value;
+
+            if (column.dataType === GridColumnDataType.String && column.filteringIgnoreCase) {
+                key = key?.toString().toLowerCase();
+            } else if (column.dataType === GridColumnDataType.DateTime) {
+                key = item.value?.toLocaleString();
+                item.value = key ? new Date(key) : key;
+            } else if (column.dataType === GridColumnDataType.Time) {
+                const date = key ? new Date(key) : key;
+                key = date ? new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds()) : key;
+                item.value = key ? new Date(key) : key;
+            } else if (column.dataType === GridColumnDataType.Date) {
+                const date = key ? new Date(key) : key;
+                key = date ? new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString() : key;
+                item.value = date;
+            }
+
+            return map.has(key) ? map : map.set(key, item)
+        }, new Map());
+        const uniqueValues = Array.from(filteredUniqueValues.values());
 
         return uniqueValues;
     }

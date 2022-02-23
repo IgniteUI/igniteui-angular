@@ -19,19 +19,17 @@ import {
     ViewRef
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { parseDate, PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
+import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
-import { HierarchicalColumnValue } from '../../../data-operations/filtering-strategy';
+import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
-import { SortingDirection } from '../../../data-operations/sorting-strategy';
-
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]'
@@ -187,7 +185,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     /**
      * @hidden @internal
      */
-    public uniqueValues: any[] | HierarchicalColumnValue[] = [];
+    public uniqueValues: IgxFilterItem[] = [];
     /**
      * @hidden @internal
      */
@@ -423,30 +421,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         return selectableExpressionsCount === this.expressionsList.length;
     }
 
-    // TODO Check if this is necessary
-    // private areExpressionsValuesInTheList() {
-    //     if (this.column.dataType === GridColumnDataType.Boolean) {
-    //         return true;
-    //     }
-
-    //     if (this.filterValues.size === 1) {
-    //         const firstValue = this.filterValues.values().next().value;
-
-    //         if (!firstValue && firstValue !== 0) {
-    //             return true;
-    //         }
-    //     }
-
-    //     for (const expression of this.uniqueValues) {
-    //         const value = this.getExpressionValue(expression);
-    //         if (this.filterValues.has(value)) {
-    //             return true;
-    //         }
-    //     }
-
-    //     return false;
-    // }
-
     private populateColumnData() {
         if (this.grid.uniqueColumnValuesStrategy) {
             this.cdr.detectChanges();
@@ -461,28 +435,27 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const expressionsTree: FilteringExpressionsTree = this.getColumnFilterExpressionsTree();
 
         const prevColumn = this.column;
-        this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (colVals: any[]) => {
+        this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (values: any[]) => {
             if (!this.column || this.column !== prevColumn) {
                 return;
             }
 
-            this.uniqueValues = colVals;
+            this.uniqueValues = values.map(v => ({
+                value: v,
+                label: this.getFilterItemLabel(v)
+            }));
 
             this.renderValues();
             this.loadingEnd.emit();
         });
     }
 
-    private shouldFormatValues() {
-        return this.column.formatter && this.grid.filterStrategy.shouldFormatFilterValues(this.column);
-    }
-
     private renderColumnValuesFromData() {
         const expressionsTree = this.getColumnFilterExpressionsTree();
-        const promise = this.grid.filterStrategy.getUniqueColumnValues(this.column, expressionsTree);
-        promise.then((colVals) => {
-            this.isHierarchical = colVals.length > 0 && colVals[0] instanceof HierarchicalColumnValue;
-            this.uniqueValues = colVals;
+        const promise = this.grid.filterStrategy.getFilterItems(this.column, expressionsTree);
+        promise.then((items) => {
+            this.isHierarchical = items.length > 0 && items.some(i => i.children && i.children.length > 0);
+            this.uniqueValues = items;
             this.renderValues();
             this.sortingChanged.emit();
         });
@@ -534,8 +507,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             this.addItems(shouldUpdateSelection);
         }
 
-        this.listData = this.sortFilterItems(this.listData);
-
         if (!this.isHierarchical && this.containsNullOrEmpty) {
             const blanksItem = this.generateBlanksItem(shouldUpdateSelection);
             this.listData.unshift(blanksItem);
@@ -550,29 +521,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         }
 
         this.listDataLoaded.emit();
-    }
-
-    private sortFilterItems(items: FilterListItem[]) {
-        if (!items) {
-            return undefined;
-        }
-
-        items.forEach(item =>
-            item.children = this.sortFilterItems(item.children));
-
-        return this.column.sortStrategy.sort(items, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
-            (obj, key) => {
-                let resolvedValue = obj[key];
-                if (this.column.dataType === GridColumnDataType.Time) {
-                    resolvedValue = new Date().setHours(
-                        resolvedValue.getHours(),
-                        resolvedValue.getMinutes(),
-                        resolvedValue.getSeconds(),
-                        resolvedValue.getMilliseconds());
-                }
-
-                return resolvedValue;
-            });
     }
 
     private getColumnFilterExpressionsTree() {
@@ -596,14 +544,15 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.selectAllSelected = true;
         this.selectAllIndeterminate = false;
         this.uniqueValues.forEach(element => {
+            const value = element.value;
             const filterListItem = new FilterListItem();
-            if (element !== undefined && element !== null && element !== '') {
+            if (value !== undefined && value !== null && value !== '') {
                 if (this.column.filteringExpressionsTree) {
-                    if (element === true && this.expressionsList.find(exp => exp.expression.condition.name === 'true')) {
+                    if (value === true && this.expressionsList.find(exp => exp.expression.condition.name === 'true')) {
                         filterListItem.isSelected = true;
                         filterListItem.isFiltered = true;
                         this.selectAllIndeterminate = true;
-                    } else if (element === false && this.expressionsList.find(exp => exp.expression.condition.name === 'false')) {
+                    } else if (value === false && this.expressionsList.find(exp => exp.expression.condition.name === 'false')) {
                         filterListItem.isSelected = true;
                         filterListItem.isFiltered = true;
                         this.selectAllIndeterminate = true;
@@ -615,8 +564,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                     filterListItem.isSelected = true;
                     filterListItem.isFiltered = true;
                 }
-                filterListItem.value = element;
-                filterListItem.label = element ?
+                filterListItem.value = value;
+                filterListItem.label = value ?
                     this.grid.resourceStrings.igx_grid_filter_true :
                     this.grid.resourceStrings.igx_grid_filter_false;
                 filterListItem.indeterminate = false;
@@ -635,18 +584,19 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.containsNullOrEmpty = this.uniqueValues.length > this.listData.length;
     }
 
-    private generateFilterListItems(values: any[] | HierarchicalColumnValue[], shouldUpdateSelection: boolean, parent?: FilterListItem) {
+    private generateFilterListItems(values: IgxFilterItem[], shouldUpdateSelection: boolean, parent?: FilterListItem) {
         let filterListItems = [];
-        const applyFormatter = !this.shouldFormatValues();
         values?.forEach(element => {
-            const value = this.isHierarchical ? element.value : element;
+            const value = element.value;
             const hasValue = value !== undefined && value !== null && value !== '';
 
             if (hasValue) {
                 const filterListItem = new FilterListItem();
                 filterListItem.parent = parent;
                 filterListItem.value = value;
-                filterListItem.label = this.getFilterItemLabel(value, applyFormatter);
+                filterListItem.label = element.label !== undefined ?
+                    element.label :
+                    this.getFilterItemLabel(value);
                 filterListItem.indeterminate = false;
                 filterListItem.isSelected = true;
                 filterListItem.isFiltered = true;
@@ -656,7 +606,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                     filterListItem.isFiltered = false;
 
                     if (shouldUpdateSelection) {
-                        const exprValue = this.getExpressionValue(filterListItem);
+                        const exprValue = this.getExpressionValue(value);
                         if (this.filterValues.has(exprValue)) {
                             filterListItem.isSelected = true;
                             filterListItem.isFiltered = true;
@@ -738,9 +688,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         }
     }
 
-    private getExpressionValue(element: FilterListItem): string {
-        let value = this.getFilterItemValue(element);
-
+    private getExpressionValue(value: any): string {
         if (this.column.dataType === GridColumnDataType.Date) {
             value = value ? new Date(value).toISOString() : value;
         } else if (this.column.dataType === GridColumnDataType.DateTime) {
@@ -750,18 +698,5 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         }
 
         return value;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public getFilterItemValue(item: FilterListItem) {
-        if (this.isHierarchical) {
-            return item.parent ?
-                `${this.getFilterItemValue(item.parent)}.[${item.value}]` :
-                `[${item.value}]`;
-        } else {
-            return item.value;
-        }
     }
 }

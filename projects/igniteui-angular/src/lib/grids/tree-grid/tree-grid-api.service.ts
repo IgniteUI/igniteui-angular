@@ -7,6 +7,8 @@ import { cloneArray, mergeObjects } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 import { ColumnType, GridType } from '../common/grid.interface';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { IgxDataRecordSorting } from '../common/strategy';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
@@ -233,6 +235,15 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         return data;
     }
 
+    public sortDataByExpressions(data: ITreeGridRecord[], expressions: ISortingExpression[]) {
+        const records: ITreeGridRecord[] = DataUtil.sort(
+            cloneArray(data),
+            expressions,
+            this.grid.sortStrategy ?? new IgxDataRecordSorting(),
+            this.grid);
+        return records.map(r => r.data);
+    }
+
     public filterTreeDataByExpressions(expressionsTree: IFilteringExpressionsTree): ITreeGridRecord[] {
         let records = this.grid.rootRecords;
 
@@ -314,7 +325,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
 
         for (const record of records) {
             if (!record.isFilteredOutParent) {
-                data.push(record.data);
+                data.push(record);
             }
             this.getFlatDataFromFilteredRecords(record.children, data);
         }

@@ -479,6 +479,10 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return data;
     }
 
+    public sortDataByExpressions(data: any[], expressions: ISortingExpression[]) {
+        return DataUtil.sort(cloneArray(data), expressions, this.grid.sortStrategy, this.grid);
+    }
+
     /**
      * Updates related row of provided grid's data source with provided new row value
      *

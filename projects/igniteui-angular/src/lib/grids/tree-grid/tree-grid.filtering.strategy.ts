@@ -1,7 +1,8 @@
 import { parseDate, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { BaseFilteringStrategy, HierarchicalColumnValue } from '../../data-operations/filtering-strategy';
+import { BaseFilteringStrategy, IgxFilterItem } from '../../data-operations/filtering-strategy';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
@@ -25,7 +26,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
             resolveNestedPath(hierarchicalRecord.data, fieldName);
 
         value = column?.formatter && this.shouldFormatFilterValues(column) ?
-            column.formatter(value) :
+            column.formatter(value, rec.data) :
             value && (isDate || isTime) ? parseDate(value) : value;
 
         return value;
@@ -70,32 +71,42 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return this.hierarchicalFilterFields && this.hierarchicalFilterFields.indexOf(field) !== -1;
     }
 
-    public override getUniqueColumnValues(
-        column: ColumnType,
-        tree: FilteringExpressionsTree) : Promise<any[] | HierarchicalColumnValue[]> {
-
+    public getFilterItems(column: ColumnType, tree: FilteringExpressionsTree): Promise<IgxFilterItem[]> {
         if (!this.isHierarchicalFilterField(column.field)) {
-            return super.getUniqueColumnValues(column, tree);
+            return super.getFilterItems(column, tree);
         }
 
-        const data = (column.grid.gridAPI as IgxTreeGridAPIService).filterTreeDataByExpressions(tree);
-        const columnValues = this.getHierarchicalColumnValues(data, column);
+        let data = (column.grid.gridAPI as IgxTreeGridAPIService).filterTreeDataByExpressions(tree);
+        data = DataUtil.treeGridSort(
+            data,
+            [{ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase }],
+            column.grid.sortStrategy,
+            null,
+            column.grid);
 
-        return Promise.resolve(columnValues);
+        const items = this.getHierarchicalFilterItems(data, column);
+
+
+        return Promise.resolve(items);
     }
 
-    private getHierarchicalColumnValues(records: ITreeGridRecord[], column: ColumnType) {
+    private getHierarchicalFilterItems(records: ITreeGridRecord[], column: ColumnType, parent?: IgxFilterItem): IgxFilterItem[] {
         return records?.map(record => {
             let value = resolveNestedPath(record.data, column.field);
+            const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
 
-            value = column.formatter && this.shouldFormatFilterValues(column) ?
-                column.formatter(value) :
+            value = applyFormatter ?
+                column.formatter(value, record.data) :
                 value;
 
-            const hierarchicalItem = new HierarchicalColumnValue();
-            hierarchicalItem.value = value;
-            hierarchicalItem.children = this.getHierarchicalColumnValues(record.children, column)
-            return hierarchicalItem;
+            const hierarchicalValue = parent ?
+                `${parent.value}${value ? `.[${value}]` : ''}` :
+                `[${value}]`
+
+            const filterItem: IgxFilterItem = { value: hierarchicalValue };
+            filterItem.label = this.getFilterItemLabel(column, value, !applyFormatter, record.data);
+            filterItem.children = this.getHierarchicalFilterItems(record.children, column, filterItem);
+            return filterItem;
         });
     }
 }
