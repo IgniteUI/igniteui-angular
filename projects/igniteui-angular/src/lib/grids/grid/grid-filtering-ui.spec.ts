@@ -5726,7 +5726,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
     describe('Load values on demand', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringESFLoadOnDemandComponent);
             grid = fix.componentInstance.grid;
@@ -5869,7 +5869,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 return newRec;
             });
             const dates = fix.componentInstance.data.filter(el => el.ReleaseDate).map(el => new Date(el.ReleaseDate)).sort((a, b) => a - b);
-            const grid = fix.componentInstance.grid;
             grid.locale = 'fr-FR';
             const datePipe = new DatePipe(grid.locale);
             const formatOptions = {
@@ -5917,7 +5916,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
                 return newRec;
             });
-            const grid = fix.componentInstance.grid;
             grid.locale = 'fr-FR';
             const datePipe = new DatePipe(grid.locale);
             grid.getColumnByName('ReleaseDate').formatter = ((value: any) => {
@@ -5950,7 +5948,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Verify date values are displayed in correct format according to column formatter after filtering', fakeAsync(() => {
-            const grid = fix.componentInstance.grid;
             grid.locale = 'fr-FR';
             const datePipe = new DatePipe(grid.locale);
             grid.getColumnByName('ReleaseDate').formatter = ((value: any) => {
