@@ -23,7 +23,6 @@
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
-
     %grid-excel-filter {
         display: block;
         width: rem(320px);
@@ -75,23 +74,23 @@
         border-radius: rem(4px);
 
         @include button-group(button-group-theme(
-            $shadow: none,
-            $schema: $dark-schema,
-            $item-background: var-get($theme, 'filtering-row-background'),
-            $item-hover-background: color($palette, 'grays', 100),
-            $item-selected-background: color($palette, 'grays', 100),
-            $item-text-color: color($palette, 'grays', 700),
-            $item-hover-text-color: color($palette, 'grays', 800),
-            $item-selected-text-color: if(
-                $variant == 'indigo-design',
-                contrast-color($palette, 'surface'),
-                color($palette, 'secondary', 500)
-            ),
-            $item-border-color: transparent,
-            $item-selected-border-color: transparent
-        ));
+                $shadow: none,
+                $schema: $dark-schema,
+                $item-background: var-get($theme, 'filtering-row-background'),
+                $item-hover-background: color($palette, 'grays', 100),
+                $item-selected-background: color($palette, 'grays', 100),
+                $item-text-color: color($palette, 'grays', 700),
+                $item-hover-text-color: color($palette, 'grays', 800),
+                $item-selected-text-color: if(
+                    $variant == 'indigo-design',
+                    contrast-color($palette, 'surface'),
+                    color($palette, 'secondary', 500)
+                ),
+                $item-border-color: transparent,
+                $item-selected-border-color: transparent
+            ));
 
-        igx-chips-area  {
+        igx-chips-area {
             padding: rem(16px) rem(16px) 0 rem(16px);
             gap: rem(8px);
         }
@@ -145,7 +144,8 @@
         margin-#{$left}: rem(16px);
     }
 
-    %grid-excel-sort {
+    %grid-excel-sort,
+    %grid-excel-move {
         display: block;
         padding: rem(8px) rem(16px);
 
@@ -158,6 +158,7 @@
             font-size: rem(18px);
             width: rem(18px);
             height: rem(18px);
+            justify-content: initial;
         }
     }
 
@@ -186,24 +187,7 @@
         }
     }
 
-    %grid-excel-move {
-        display: block;
-        padding: rem(8px) rem(16px);
-
-        header {
-            color: color($palette, 'grays', 700);
-            margin-bottom: rem(4px);
-        }
-    }
-
-    %grid-excel-move__buttons {
-        display: flex;
-        justify-content: space-between;
-
-        igx-icon {
-            justify-content: initial;
-        }
-
+    %grid-excel-move igx-buttongroup {
         @include if-rtl() {
             flex-direction: row-reverse;
 
@@ -254,7 +238,6 @@
         padding: rem(16px);
         gap: rem(16px);
 
-
         igx-list {
             flex-grow: 1;
             overflow: hidden;
@@ -272,7 +255,7 @@
     }
 
     %grid-excel-menu--cosy {
-        igx-chips-area  {
+        igx-chips-area {
             padding: rem(8px) rem(8px) 0 rem(8px);
         }
 
@@ -309,7 +292,7 @@
     }
 
     %grid-excel-menu--compact {
-        igx-chips-area  {
+        igx-chips-area {
             padding: rem(4px) rem(4px) 0 rem(4px);
             gap: rem(4px);
         }
@@ -319,7 +302,8 @@
             padding: rem(4px);
         }
 
-        %grid-excel-sort {
+        %grid-excel-sort,
+        %grid-excel-move {
             padding: rem(4px);
 
             @extend %grid-excel-action--compact;
@@ -329,14 +313,8 @@
             }
         }
 
-        %grid-excel-move__buttons {
-            width: rem(208px);
-        }
-
         %grid-excel-move {
-            @extend %grid-excel-action--compact;
             margin-bottom: 0;
-            padding: rem(4px);
         }
 
         %grid-excel-actions {
