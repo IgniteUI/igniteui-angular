@@ -21,10 +21,10 @@
 /// @requires extend
 ///
 /// @example scss Change the background and track colors
-///   $my-scrollbar-theme: igx-scrollbar-theme($thumb-background: black, $track-background: gray);
-///   // Pass the theme to the igx-scrollbar component mixin
-///   @include igx-scrollbar($my-scrollbar-theme);
-@function igx-scrollbar-theme(
+///   $my-scrollbar-theme: scrollbar-theme($thumb-background: black, $track-background: gray);
+///   // Pass the theme to the scrollbar component mixin
+///   @include scrollbar($my-scrollbar-theme);
+@function scrollbar-theme(
     $palette: null,
     $schema: $light-schema,
     $size: null,
@@ -54,11 +54,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-scrollbar($theme) {
-    @include igx-css-vars($theme);
+@mixin scrollbar($theme) {
+    @include css-vars($theme);
 
     %scrollbar-display {
         @if type-of(map.get($theme, 'size') == 'string') {

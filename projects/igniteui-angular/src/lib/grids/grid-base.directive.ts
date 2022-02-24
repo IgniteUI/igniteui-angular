@@ -2612,6 +2612,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public unpinnedRecords: any[];
 
+    /**
+     * @hidden @internal
+     */
     public rendered$ = this.rendered.asObservable().pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
     /** @hidden @internal */
@@ -2639,6 +2642,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     public _filteredUnpinnedData;
+    /**
+     * @hidden @internal
+     */
     public _destroyed = false;
     /**
      * @hidden @internal
@@ -2661,6 +2667,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public summaryPipeTrigger = 0;
 
+    /**
+    * @hidden @internal
+    */
     public EMPTY_DATA = [];
 
     public isPivot = false;
@@ -3178,6 +3187,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.gridAPI.crudService;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public _setupServices() {
         this.gridAPI.grid = this as any;
         this.crudService.grid = this as any;
@@ -3187,6 +3200,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.summaryService.grid = this as any;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
@@ -3551,7 +3568,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public _zoneBegoneListeners() {
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
-            this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
+            this.headerContainer?.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
             fromEvent(window, 'resize').pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
             resizeObservable(this.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
         });
@@ -6259,6 +6276,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         parent.children.reset(buffer);
     }
 
+    /**
+     * @hidden @internal
+     */
     protected setupColumns() {
         if (this.autoGenerate) {
             this.autogenerateColumns();

@@ -46,6 +46,7 @@
 @use '../components/drop-down/drop-down-component' as drop-down;
 @use '../components/expansion-panel/expansion-panel-component' as expansion-panel;
 @use '../components/grid/grid-component' as grid;
+@use '../components/grid/pivot-data-selector-component' as pivot-data-selector;
 @use '../components/grid-summary/grid-summary-component' as grid-summary;
 @use '../components/grid-toolbar/grid-toolbar-component' as grid-toolbar;
 @use '../components/highlight/highlight-component' as highlight;
@@ -77,7 +78,7 @@
 /// @param {boolean} $enhanced-accesibility [false] - Switches component colors and other properties to more accessible values.
 /// @requires {mixin} igx-vhelper
 /// @requires {mixin} igx-print-layout
-@mixin igx-core(
+@mixin core(
     $print-layout: true,
     $direction: $direction,
     $enhanced-accessibility: $enhanced-accessibility
@@ -148,6 +149,7 @@
     @include grid.component();
     @include grid-summary.component();
     @include grid-toolbar.component();
+    @include pivot-data-selector.component();
     @include highlight.component();
     @include icon.component();
     @include input-group.component();

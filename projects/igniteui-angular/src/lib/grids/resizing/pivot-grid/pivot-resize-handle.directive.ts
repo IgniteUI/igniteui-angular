@@ -47,7 +47,7 @@ export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
     public onDoubleClick() {
         this._dblClick = true;
         this.initResizeService();
-        this.rowHeaderGroup.grid.autoSizeRowDimension(this.rowHeaderGroup.parent.dimension);
+        this.rowHeaderGroup.grid.autoSizeRowDimension(this.rowHeaderGroup.parent.rootDimension);
     }
 
     /**
