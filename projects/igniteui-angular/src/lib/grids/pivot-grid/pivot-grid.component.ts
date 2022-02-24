@@ -1776,7 +1776,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     */
     public get excelStyleFilterMaxHeight() {
         // max 10 rows, row size depends on density
-        let maxHeight = this.renderedRowHeight * 10;
+        const maxHeight = this.renderedRowHeight * 10;
         return `${maxHeight}px`;
     }
 
@@ -1785,7 +1785,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     */
     public get excelStyleFilterMinHeight(): string {
         // min 5 rows, row size depends on density
-        let minHeight = this.renderedRowHeight * 5;
+        const minHeight = this.renderedRowHeight * 5;
         return `${minHeight}px`;
     }
 

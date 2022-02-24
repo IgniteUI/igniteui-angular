@@ -648,6 +648,8 @@ export interface PivotGridType extends GridType {
     valuesChange: EventEmitter<IValuesChange>;
     pivotKeys: IPivotKeys;
     hasMultipleValues: boolean;
+    excelStyleFilterMaxHeight: string;
+    excelStyleFilterMinHeight: string;
 }
 export interface GridSVGIcon {
     name: string;
