@@ -281,6 +281,7 @@ describe('IgxTooltip', () => {
 
             it('IgxTooltip is initially hidden', fakeAsync(() => {
                 flush();
+                fix.detectChanges();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
 
