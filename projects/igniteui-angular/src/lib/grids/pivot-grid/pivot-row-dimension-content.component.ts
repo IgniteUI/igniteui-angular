@@ -141,7 +141,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
 
     public get headerHeight() {
 
-        return this.rowSpan > 1 ? this.rowSpan * this.grid.rowHeight + (this.rowSpan - 1) : this.grid.rowHeight;
+        return this.rowSpan > 1 ? this.rowSpan * this.grid.rowHeight + ((this.rowSpan - 1) / window.devicePixelRatio) : this.grid.rowHeight;
     }
 
     protected extractFromDimensions() {
