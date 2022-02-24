@@ -3304,7 +3304,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
-            this.calculateGridSizes(false);
+            this.notifyChanges(true);
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
