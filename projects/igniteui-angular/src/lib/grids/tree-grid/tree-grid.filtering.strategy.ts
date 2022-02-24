@@ -71,7 +71,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return this.hierarchicalFilterFields && this.hierarchicalFilterFields.indexOf(field) !== -1;
     }
 
-    public getFilterItems(column: ColumnType, tree: FilteringExpressionsTree): Promise<IgxFilterItem[]> {
+    public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
         if (!this.isHierarchicalFilterField(column.field)) {
             return super.getFilterItems(column, tree);
         }

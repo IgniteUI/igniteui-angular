@@ -423,8 +423,9 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private populateColumnData() {
+        this.cdr.detectChanges();
+
         if (this.grid.uniqueColumnValuesStrategy) {
-            this.cdr.detectChanges();
             this.renderColumnValuesRemotely();
         } else {
             this.renderColumnValuesFromData();
@@ -465,12 +466,15 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private renderColumnValuesFromData() {
+        this.loadingStart.emit();
+
         const expressionsTree = this.getColumnFilterExpressionsTree();
         const promise = this.grid.filterStrategy.getFilterItems(this.column, expressionsTree);
         promise.then((items) => {
             this.isHierarchical = items.length > 0 && items.some(i => i.children && i.children.length > 0);
             this.uniqueValues = items;
             this.renderValues();
+            this.loadingEnd.emit();
             this.sortingChanged.emit();
         });
     }

@@ -23,7 +23,7 @@ export class FilterUtil {
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridType): any[];
-    getFilterItems(column: ColumnType, tree: FilteringExpressionsTree) : Promise<IgxFilterItem[]>;
+    getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree) : Promise<IgxFilterItem[]>;
 }
 
 export interface IgxFilterItem {
@@ -79,7 +79,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         return true;
     }
 
-    public getFilterItems(column: ColumnType, tree: FilteringExpressionsTree): Promise<IgxFilterItem[]> {
+    public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
 
         let data = column.grid.gridAPI.filterDataByExpressions(tree);
         data = column.grid.gridAPI.sortDataByExpressions(data,
