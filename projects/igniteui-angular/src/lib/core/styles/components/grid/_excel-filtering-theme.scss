@@ -277,6 +277,12 @@
         pointer-events: none;
     }
 
+    %igx-excel-filter__empty {
+        display: grid;
+        place-items: center;
+        height: 100%;
+    }
+
     %grid-excel-main {
         display: flex;
         flex-direction: column;

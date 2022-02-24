@@ -21,6 +21,10 @@
             @extend %igx-excel-filter__tree !optional;
         }
 
+        @include e(empty) {
+            @extend %igx-excel-filter__empty !optional;
+        }
+
         @include e(tree-alike) {
             @extend %igx-excel-filter__tree-alike !optional;
         }
