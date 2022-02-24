@@ -74,21 +74,21 @@
         border-radius: rem(4px);
 
         @include button-group(button-group-theme(
-                $shadow: none,
-                $schema: $dark-schema,
-                $item-background: var-get($theme, 'filtering-row-background'),
-                $item-hover-background: color($palette, 'grays', 100),
-                $item-selected-background: color($palette, 'grays', 100),
-                $item-text-color: color($palette, 'grays', 700),
-                $item-hover-text-color: color($palette, 'grays', 800),
-                $item-selected-text-color: if(
-                    $variant == 'indigo-design',
-                    contrast-color($palette, 'surface'),
-                    color($palette, 'secondary', 500)
-                ),
-                $item-border-color: transparent,
-                $item-selected-border-color: transparent
-            ));
+            $shadow: none,
+            $schema: $dark-schema,
+            $item-background: var-get($theme, 'filtering-row-background'),
+            $item-hover-background: color($palette, 'grays', 100),
+            $item-selected-background: color($palette, 'grays', 100),
+            $item-text-color: color($palette, 'grays', 700),
+            $item-hover-text-color: color($palette, 'grays', 800),
+            $item-selected-text-color: if(
+                $variant == 'indigo-design',
+                contrast-color($palette, 'surface'),
+                color($palette, 'secondary', 500)
+            ),
+            $item-border-color: transparent,
+            $item-selected-border-color: transparent
+        ));
 
         igx-chips-area {
             padding: rem(16px) rem(16px) 0 rem(16px);
