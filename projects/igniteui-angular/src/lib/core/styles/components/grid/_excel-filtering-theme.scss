@@ -112,14 +112,14 @@
 
 
         @include tree(tree-theme(
-            $background: igx-color($palette, 'surface'),
-            $background-selected: igx-color($palette, 'surface'),
-            $background-active:  igx-color($palette, 'surface'),
-            $background-active-selected: igx-color($palette, 'surface'),
-            $foreground: igx-contrast-color($palette, 'surface'),
-            $foreground-selected: igx-contrast-color($palette, 'surface'),
-            $foreground-active: igx-contrast-color($palette, 'surface'),
-            $foreground-active-selected: igx-contrast-color($palette, 'surface'),
+            $background: color($palette, 'surface'),
+            $background-selected: color($palette, 'surface'),
+            $background-active: color($palette, 'surface'),
+            $background-active-selected: color($palette, 'surface'),
+            $foreground: contrast-color($palette, 'surface'),
+            $foreground-selected: contrast-color($palette, 'surface'),
+            $foreground-active: contrast-color($palette, 'surface'),
+            $foreground-active-selected: contrast-color($palette, 'surface'),
         ));
 
         .igx-tree-node__wrapper {
@@ -305,7 +305,7 @@
         }
 
         %igx-excel-filter__tree {
-            background: igx-color($palette, 'surface');
+            background: color($palette, 'surface');
             overflow-y: auto;
             margin: 0 rem(-16px);
             flex: 1;
@@ -329,7 +329,7 @@
         }
 
         %igx-excel-filter__tree-alike {
-            background: igx-color($palette, 'surface');
+            background: color($palette, 'surface');
             display: flex;
             flex-direction: column;
             z-index: 1;
@@ -339,11 +339,11 @@
             display: flex;
             align-items: center;
             height: map.get($tree-node-height, 'comfortable');
-            background: igx-color($palette, 'surface');
+            background: color($palette, 'surface');
 
             &:hover,
             &:focus {
-                background: igx-color($palette, 'grays', 200);
+                background: color($palette, 'grays', 200);
             }
 
             > igx-checkbox {
