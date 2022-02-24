@@ -11,7 +11,7 @@ import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDef
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { FilteringStrategy } from '../data-operations/filtering-strategy';
+import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
 import { CellType, IgxGridComponent } from '../grids/grid/public_api';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
@@ -21,6 +21,7 @@ import { IgxActionStripComponent } from '../action-strip/action-strip.component'
 import { ExpressionUI } from '../grids/filtering/excel-style/common';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { GridColumnDataType } from '../data-operations/data-util';
+import { ColumnType } from '../grids/common/grid.interface';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -1191,6 +1192,14 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
     public filterable = true;
 
     public data = SampleTestData.personNameObjectJobCompany();
+}
+
+
+export class LoadOnDemandFilterStrategy extends FilteringStrategy {
+    public override getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
+        return new Promise(resolve => setTimeout(() =>
+            resolve(super.getFilterItems(column, tree)), 1000));
+    }
 }
 
 @Component({

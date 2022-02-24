@@ -42,7 +42,8 @@ import {
     CustomFilteringStrategyComponent,
     IgxGridExternalESFComponent,
     IgxGridExternalESFTemplateComponent,
-    IgxGridDatesFilteringComponent
+    IgxGridDatesFilteringComponent,
+    LoadOnDemandFilterStrategy
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
@@ -5725,12 +5726,40 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
     describe('Load values on demand', () => {
         let fix;
+        let grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringESFLoadOnDemandComponent);
+            grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
 
         it('Verify unique values are loaded correctly in ESF search component.', fakeAsync(() => {
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(400);
+            fix.detectChanges();
+
+            // Verify items in search have not loaded yet and that the loading indicator is visible.
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+
+            // Wait for items to load.
+            tick(650);
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
+
+        it('Verify unique values are loaded correctly in ESF search component when using filtering strategy.', fakeAsync(() => {
+            grid.uniqueColumnValuesStrategy = undefined;
+            grid.filterStrategy = new LoadOnDemandFilterStrategy();
+            fix.detectChanges();
+
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(400);
