@@ -164,9 +164,6 @@ export class PivotGridSampleComponent {
                     downFont1: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 50
                 },
             }
-        ],
-        filters: [
-           
         ]
     };
 

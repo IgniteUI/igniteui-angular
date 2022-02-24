@@ -11,7 +11,6 @@ import {
 import { first } from "rxjs/operators";
 import { fadeIn, fadeOut } from "../../animations/fade";
 import { DisplayDensity } from "../../core/displayDensity";
-import { GridColumnDataType } from "../../data-operations/data-util";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
 import {
     IDragBaseEventArgs,
@@ -32,11 +31,6 @@ import {
 } from "../../services/public_api";
 import { ColumnType, PivotGridType } from "../common/grid.interface";
 import {
-    IgxPivotAggregate,
-    IgxPivotDateAggregate,
-    IgxPivotTimeAggregate
-} from "./pivot-grid-aggregate";
-import {
     IPivotAggregator,
     IPivotDimension,
     IPivotValue,
@@ -56,6 +50,24 @@ interface IDataSelectorPanel {
     dragChannels: string[];
 }
 
+/**
+ * Pivot Data Selector provides means to configure the pivot state of the Pivot Grid via a vertical panel UI
+ *
+ * @igxModule IgxPivotGridModule
+ * @igxGroup Grids & Lists
+ * @igxKeywords data selector, pivot, grid
+ * @igxTheme pivot-data-selector-theme
+ * @remarks
+ * The Ignite UI Data Selector has a searchable list with the grid data columns,
+ * there are also four expandable areas underneath for filters, rows, columns, and values
+ * is used for grouping and aggregating simple flat data into a pivot table.
+ * @example
+ * ```html
+ * <igx-pivot-grid #grid1 [data]="data" [pivotConfiguration]="configuration">
+ * </igx-pivot-grid>
+ * <igx-pivot-data-selector [grid]="grid1"></igx-pivot-data-selector>
+ * ```
+ */
 @Component({
     selector: "igx-pivot-data-selector",
     templateUrl: "./pivot-data-selector.component.html",
@@ -165,8 +177,10 @@ export class IgxPivotDataSelectorComponent {
     private _grid: PivotGridType;
     private _dropDelta = 0;
 
+    /** @hidden @internal **/
     @HostBinding("class.igx-pivot-data-selector")
     public cssClass = "igx-pivot-data-selector";
+    /** @hidden @internal **/
     public dimensions: IPivotDimension[];
 
     private _subMenuPositionSettings: PositionSettings = {
@@ -272,11 +286,7 @@ export class IgxPivotDataSelectorComponent {
     @Input()
     public set grid(value: PivotGridType) {
         this._grid = value;
-        this.dims = [
-            ...this._grid.pivotConfiguration.columns,
-            ...this._grid.pivotConfiguration.rows,
-            ...this._grid.pivotConfiguration.filters,
-        ];
+        this.dims = this._grid.allDimensions;
         this.values = this._grid.pivotConfiguration.values;
     }
 

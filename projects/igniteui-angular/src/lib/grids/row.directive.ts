@@ -409,11 +409,19 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public ngAfterViewInit() {
         // If the template of the row changes, the forOf in it is recreated and is not detected by the grid and rows can't be scrolled.
         this._virtDirRow.changes.pipe(takeUntil(this.destroy$)).subscribe(() => this.grid.resetHorizontalVirtualization());
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
