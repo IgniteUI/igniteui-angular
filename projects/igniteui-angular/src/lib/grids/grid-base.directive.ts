@@ -1062,7 +1062,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted before the grid's data view is changed because of a data operation, rebinding, etc.
-     * 
+     *
      * @example
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanging)='handleDataChangingEvent()'></igx-grid>
@@ -1073,7 +1073,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
-     * 
+     *
      * @example
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanged)='handleDataChangedEvent()'></igx-grid>
@@ -1081,7 +1081,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public dataChanged = new EventEmitter<any>();
- 
+
 
     /**
      * @hidden @internal
@@ -4936,7 +4936,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get hasSummarizedColumns(): boolean {
-        return this.summaryService.hasSummarizedColumns;
+        const summarizedColumns = this.columnList.filter(col => col.hasSummary && !col.hidden);
+        return summarizedColumns.length > 0;
     }
 
     /**
