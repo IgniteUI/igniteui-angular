@@ -9,6 +9,7 @@ import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IgxDataRecordSorting } from '../common/strategy';
+import { FilterUtil } from '../../data-operations/filtering-strategy';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
@@ -252,7 +253,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
                 expressionsTree,
                 strategy: this.grid.filterStrategy ?? new TreeGridFilteringStrategy()
             };
-            records = DataUtil.filter(cloneArray(records), state, this.grid);
+            records = FilterUtil.filter(cloneArray(records), state, this.grid);
         }
 
         return records;

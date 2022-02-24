@@ -5,10 +5,20 @@ import { ColumnType, GridType } from '../grids/common/grid.interface';
 import { GridColumnDataType } from './data-util';
 import { SortingDirection } from './sorting-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
+import { IFilteringState } from './filtering-state.interface';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
 const TimeType = 'time';
+
+export class FilterUtil {
+    public static filter<T>(data: T[], state: IFilteringState, grid?: GridType): T[] {
+        if (!state.strategy) {
+            state.strategy = new FilteringStrategy();
+        }
+        return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree, grid);
+    }
+}
 
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
@@ -147,7 +157,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         return uniqueValues;
     }
 
-    public shouldFormatFilterValues(_column: ColumnType): boolean {
+    protected shouldFormatFilterValues(_column: ColumnType): boolean {
         return false;
     }
 
@@ -225,7 +235,7 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
         super();
     }
 
-    public shouldFormatFilterValues(column: ColumnType): boolean {
+    protected shouldFormatFilterValues(column: ColumnType): boolean {
         return !this.fields || this.fields.length === 0 || this.fields.some(f => f === column.field);
     }
 }

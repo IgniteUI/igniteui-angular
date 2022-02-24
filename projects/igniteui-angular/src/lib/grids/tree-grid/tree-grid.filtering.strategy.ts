@@ -122,7 +122,7 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
         super();
     }
 
-    public shouldFormatFilterValues(column: ColumnType): boolean {
+    protected shouldFormatFilterValues(column: ColumnType): boolean {
         return !this.fields || this.fields.length === 0 || this.fields.some(f => f === column.field);
     }
 }
