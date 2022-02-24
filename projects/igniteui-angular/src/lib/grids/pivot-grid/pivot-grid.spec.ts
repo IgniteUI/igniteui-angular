@@ -4,7 +4,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree, FilteringLogic, IgxPivotGridComponent, IgxPivotRowDimensionHeaderGroupComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
-import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-strategy';
+import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
