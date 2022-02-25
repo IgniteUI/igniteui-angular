@@ -101,7 +101,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
 
             const hierarchicalValue = parent ?
                 (value || value === 0) ? `${parent.value}.[${value}]` : value :
-                `[${value}]`
+                `[${value}]`;
 
             const filterItem: IgxFilterItem = { value: hierarchicalValue };
             filterItem.label = this.getFilterItemLabel(column, value, !applyFormatter, record.data);
