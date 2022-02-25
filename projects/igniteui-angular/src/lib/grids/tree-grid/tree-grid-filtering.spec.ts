@@ -676,7 +676,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tick(100);
             fix.detectChanges();
 
-            const emptyTextEl = searchComponent.querySelector('article');
+            const emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
             expect(emptyTextEl.innerText).toEqual('No matches');
         }));
     });
