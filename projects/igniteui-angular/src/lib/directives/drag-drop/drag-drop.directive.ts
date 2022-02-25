@@ -1,4 +1,4 @@
-﻿import {
+import {
     Directive,
     ElementRef,
     EventEmitter,
@@ -570,6 +570,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _ghostStartY;
     protected _ghostHostX = 0;
     protected _ghostHostY = 0;
+    protected _dynamicGhostRef;
 
     protected _pointerDownId = null;
     protected _clicked = false;
@@ -711,6 +712,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this._destroy.complete();
 
         if (this.ghost && this.ghostElement && this._removeOnDestroy) {
+            if (this._dynamicGhostRef) {
+                this._dynamicGhostRef.destroy();
+                this._dynamicGhostRef = null;
+            }
             this.ghostElement.parentNode.removeChild(this.ghostElement);
             this.ghostElement = null;
         }
@@ -1088,6 +1093,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             if (ghostDestroyArgs.cancel) {
                 return;
             }
+            if (this._dynamicGhostRef) {
+                this._dynamicGhostRef.destroy();
+                this._dynamicGhostRef = null;
+            }
             this.ghostElement.parentNode.removeChild(this.ghostElement);
             this.ghostElement = null;
         } else if (!this.ghost) {
@@ -1126,10 +1135,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             return;
         }
 
-        let dynamicGhostRef;
         if (this.ghostTemplate) {
-            dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
-            this.ghostElement = dynamicGhostRef.rootNodes[0];
+            this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            this.ghostElement = this._dynamicGhostRef.rootNodes[0];
         } else {
             this.ghostElement = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
         }
@@ -1155,8 +1163,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this.ghostCreate.emit(createEventArgs);
         if (createEventArgs.cancel) {
             this.ghostElement = null;
-            if (this.ghostTemplate && dynamicGhostRef) {
-                dynamicGhostRef.destroy();
+            if (this.ghostTemplate && this._dynamicGhostRef) {
+                this._dynamicGhostRef.destroy();
             }
             return;
         }
