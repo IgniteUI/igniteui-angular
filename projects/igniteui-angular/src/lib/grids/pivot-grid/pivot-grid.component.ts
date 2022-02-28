@@ -68,6 +68,7 @@ import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IPageEventArgs } from '../../paginator/paginator-interfaces';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
+import { FilterUtil } from '../../data-operations/filtering-strategy';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -956,7 +957,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
             advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
         };
-        const filtered = DataUtil.filter(data, state, this);
+        const filtered = FilterUtil.filter(data, state, this);
         const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
             filtered,
             [dim],
@@ -1975,7 +1976,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
                     advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
                 };
-                const filtered = DataUtil.filter(cloneArray(value.records), state, this);
+                const filtered = FilterUtil.filter(cloneArray(value.records), state, this);
                 if (filtered.length === 0) {
                     shouldGenerate = false;
                 }

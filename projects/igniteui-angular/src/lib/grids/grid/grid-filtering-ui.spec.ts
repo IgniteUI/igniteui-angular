@@ -42,11 +42,12 @@ import {
     CustomFilteringStrategyComponent,
     IgxGridExternalESFComponent,
     IgxGridExternalESFTemplateComponent,
-    IgxGridDatesFilteringComponent
+    IgxGridDatesFilteringComponent,
+    LoadOnDemandFilterStrategy
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
-import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { formatDate } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
@@ -3276,6 +3277,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
 
@@ -3307,6 +3310,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
 
@@ -3327,6 +3332,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Should not be able to exit custom dialog when press tab on apply button', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             tick();
@@ -5719,12 +5726,40 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
     describe('Load values on demand', () => {
         let fix;
+        let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringESFLoadOnDemandComponent);
+            grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
 
         it('Verify unique values are loaded correctly in ESF search component.', fakeAsync(() => {
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(400);
+            fix.detectChanges();
+
+            // Verify items in search have not loaded yet and that the loading indicator is visible.
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+
+            // Wait for items to load.
+            tick(650);
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
+
+        it('Verify unique values are loaded correctly in ESF search component when using filtering strategy.', fakeAsync(() => {
+            grid.uniqueColumnValuesStrategy = undefined;
+            grid.filterStrategy = new LoadOnDemandFilterStrategy();
+            fix.detectChanges();
+
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(400);
@@ -5834,7 +5869,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 return newRec;
             });
             const dates = fix.componentInstance.data.filter(el => el.ReleaseDate).map(el => new Date(el.ReleaseDate)).sort((a, b) => a - b);
-            const grid = fix.componentInstance.grid;
             grid.locale = 'fr-FR';
             const datePipe = new DatePipe(grid.locale);
             const formatOptions = {
@@ -5882,7 +5916,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
                 return newRec;
             });
-            const grid = fix.componentInstance.grid;
             grid.locale = 'fr-FR';
             const datePipe = new DatePipe(grid.locale);
             grid.getColumnByName('ReleaseDate').formatter = ((value: any) => {
@@ -5903,7 +5936,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
-            expect(listItems[1].innerText).toBe('No value!');
+            expect(listItems[1].innerText).toBe('(Blanks)');
             for (let i = 2; i < listItems.length; i++) {
                 const date = dates[i];
                 const label = date !== null && date !== undefined && date !== '' ? datePipe.transform(date, 'longDate') : 'No value!';
@@ -5915,7 +5948,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Verify date values are displayed in correct format according to column formatter after filtering', fakeAsync(() => {
-            const grid = fix.componentInstance.grid;
             grid.locale = 'fr-FR';
             const datePipe = new DatePipe(grid.locale);
             grid.getColumnByName('ReleaseDate').formatter = ((value: any) => {
@@ -5953,7 +5985,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
-            expect(listItems[1].innerText).toBe('No value!');
+            expect(listItems[1].innerText).toBe('(Blanks)');
             for (let i = 2; i < listItems.length; i++) {
                 const date = dates[i - 2];
                 const label = date !== null && date !== undefined && date !== '' ? datePipe.transform(date, 'longDate') : 'No value!';
@@ -5962,49 +5994,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
-        }));
-
-        it('Verify ESF list items when different date values produce same value label in the ESF list', fakeAsync(() => {
-            const grid = fix.componentInstance.grid;
-            grid.getColumnByName('ReleaseDate').formatter = ((value: any) => {
-                const pipe = new DatePipe(grid.locale);
-                const val = value !== null && value !== undefined && value !== '' ? pipe.transform(value, 'longTime') : 'No value!';
-                return val;
-            });
-            fix.detectChanges();
-
-            // Open excel style custom filtering dialog and wait a bit.
-            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
-            tick(1050);
-            fix.detectChanges();
-
-            // Verify items in search have loaded and that the loading indicator is not visible.
-            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            const uniqueValues = new Set<string>();
-            grid.data.forEach(r => {
-                const val = grid.getColumnByName('ReleaseDate').formatter(r.ReleaseDate);
-                uniqueValues.add(val);
-            });
-            // +1 stands for the Select All option
-            expect(listItems.length).toBe(uniqueValues.size + 1, 'incorrect rendered list items count');
-
-            const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
-            checkboxElements[0].click();
-            tick();
-            fix.detectChanges();
-
-            checkboxElements[2].click();
-            tick();
-            fix.detectChanges();
-
-            GridFunctions.clickApplyExcelStyleFiltering(fix);
-            fix.detectChanges();
-
-            expect(grid.filteredData.length).toEqual(1);
-            expect(grid.filteredData[0].Downloads).toEqual(254);
-
-            tick(1050);
-            fix.detectChanges();
         }));
 
         it('Done callback should be executed only once per column', fakeAsync(() => {
@@ -6126,7 +6115,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.columnList.get(1).hidden).toBeTruthy();
         }));
 
-        it('Column selection button should be visible/hidden when column is selectable/not selectable', () => {
+        it('Column selection button should be visible/hidden when column is selectable/not selectable', fakeAsync(() => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
@@ -6135,6 +6124,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const esf = fix.componentInstance.esf;
             esf.column = grid.getColumnByName('Downloads');
+            tick();
             fix.detectChanges();
 
             columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
@@ -6146,9 +6136,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
             expect(columnSelectionContainer).toBeNull();
-        });
+        }));
 
-        it('should select/deselect column when interact with the column selection item through esf menu', () => {
+        it('should select/deselect column when interact with the column selection item through esf menu', fakeAsync(() => {
             // Test in single multiple mode
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
@@ -6156,6 +6146,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             spyOn(grid.columnSelectionChanging, 'emit');
             const column = grid.getColumnByName('Downloads');
             fix.componentInstance.esf.column = column;
+            tick();
             fix.detectChanges();
 
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
@@ -6187,7 +6178,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
-        });
+        }));
 
     });
 });
@@ -6213,7 +6204,8 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     }));
 
     it('Should be able to set custom filtering strategy', () => {
-        expect(grid.filterStrategy).toBeUndefined();
+        expect(grid.filterStrategy).toBeDefined();
+        expect(grid.filterStrategy).toBeInstanceOf(FilteringStrategy);
         grid.filterStrategy = fix.componentInstance.strategy;
         fix.detectChanges();
 

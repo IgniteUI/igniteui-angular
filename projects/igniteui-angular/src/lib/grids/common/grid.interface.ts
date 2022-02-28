@@ -234,6 +234,7 @@ export interface GridServiceType {
     clear_sort(fieldName: string): void;
 
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
+    sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
 
     update_cell(cell: IgxCell): IGridEditEventArgs;
     update_row(row: IgxEditRow, value: any, event?: Event): IGridEditEventArgs;
