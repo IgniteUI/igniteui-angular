@@ -162,7 +162,7 @@
 </ng-template>
 
 <div [hidden]='true'>
-    <igx-grid-excel-style-filtering>
+    <igx-grid-excel-style-filtering [maxHeight]='excelStyleFilterMaxHeight' [minHeight]='excelStyleFilterMinHeight'>
         <div igxExcelStyleColumnOperations [hidden]='true'></div>
         <igx-excel-style-filter-operations>
             <igx-excel-style-search></igx-excel-style-search>
