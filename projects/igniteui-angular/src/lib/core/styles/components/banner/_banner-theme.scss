@@ -26,10 +26,10 @@
 /// @requires extend
 ///
 /// @example scss Change the background in banner
-///   $my-banner-theme: igx-banner-theme($banner-background: #000);
-///   // Pass the theme to the igx-banner component mixin
-///   @include igx-banner($my-banner-theme);
-@function igx-banner-theme(
+///   $my-banner-theme: banner-theme($banner-background: #000);
+///   // Pass the theme to the banner component mixin
+///   @include banner($my-banner-theme);
+@function banner-theme(
     $palette: null,
     $schema: $light-schema,
     $banner-background: null,
@@ -65,11 +65,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-banner($theme) {
-    @include igx-css-vars($theme);
+@mixin banner($theme) {
+    @include css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -160,14 +160,14 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(message: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-banner-typography($type-scale, $categories: (
+/// @requires {mixin} type-style
+@mixin banner-typography($type-scale, $categories: (
     message: 'body-2')
 ) {
     $message: map.get($categories, 'message');
 
     %igx-banner__text {
-        @include igx-type-style($type-scale, $message) {
+        @include type-style($type-scale, $message) {
             margin-top: 0;
             margin-bottom: 0;
         }

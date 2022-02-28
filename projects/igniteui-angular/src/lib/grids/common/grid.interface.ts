@@ -29,7 +29,7 @@ import { GridColumnDataType } from '../../data-operations/data-util';
 import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
 import { IColumnPipeArgs, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
-import { ISortingExpression, ISortingStrategy } from '../../data-operations/sorting-strategy';
+import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
@@ -234,6 +234,7 @@ export interface GridServiceType {
     clear_sort(fieldName: string): void;
 
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
+    sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
 
     update_cell(cell: IgxCell): IGridEditEventArgs;
     update_row(row: IgxEditRow, value: any, event?: Event): IGridEditEventArgs;
@@ -246,7 +247,6 @@ export interface GridServiceType {
     getParentRowId?(child: GridType): any;
     getChildGrids?(inDepth?: boolean): GridType[];
     getChildGrid?(path: IPathSegment[]): GridType;
-    endEditAll?(): void;
     // XXX: Fix type
     unsetChildRowIsland?(rowIsland: any): void;
 }
@@ -626,6 +626,7 @@ export interface HierarchicalGridType extends GridType {
 
 export interface PivotGridType extends GridType {
     pivotConfiguration: IPivotConfiguration;
+    allDimensions: IPivotDimension[],
     showPivotConfigurationUI: boolean;
     columnDimensions: IPivotDimension[];
     rowDimensions: IPivotDimension[];
@@ -640,6 +641,7 @@ export interface PivotGridType extends GridType {
     moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index? : number);
     getDimensionsByType(dimension: PivotDimensionType);
     toggleDimension(dimension: IPivotDimension);
+    sortDimension(dimension: IPivotDimension, sortDirection: SortingDirection);
     toggleValue(value: IPivotValue);
     moveValue(value: IPivotValue, index?: number);
     rowDimensionWidthToPixels(dim: IPivotDimension): number;
@@ -647,6 +649,8 @@ export interface PivotGridType extends GridType {
     valuesChange: EventEmitter<IValuesChange>;
     pivotKeys: IPivotKeys;
     hasMultipleValues: boolean;
+    excelStyleFilterMaxHeight: string;
+    excelStyleFilterMinHeight: string;
 }
 export interface GridSVGIcon {
     name: string;

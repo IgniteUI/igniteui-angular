@@ -1,20 +1,24 @@
 // generate schema:
 // npx typescript-json-schema migrations/common/schema/index.ts SelectorChanges -o migrations/common/schema/selector.schema.json --required
 
-export interface ThemePropertyChanges {
+export interface ThemeChanges {
     /** An array of changes to theme function properties */
-    changes: (ThemePropertyChange | ThemeVariableChange)[];
+    changes: ThemeChange[];
 }
-export interface ThemePropertyChange extends ChangeAction {
+
+export enum ThemeType {
+    Variable = 'variable',
+    Property = 'property',
+    Function = 'function',
+    Mixin = 'mixin'
+}
+export interface ThemeChange extends ChangeAction {
     /** Name of the theme property */
     name: string;
     /** Theming function this parameter belongs to */
-    owner: string;
-}
-
-export interface ThemeVariableChange extends ChangeAction {
-    /** Name of the theme variable */
-    name: string;
+    owner?: string;
+    /** The type of the change: variable, function, mixin */
+    type: ThemeType;
 }
 
 export interface SelectorChanges {

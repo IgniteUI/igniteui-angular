@@ -21,7 +21,7 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires text-contrast
 ///
 /// @example scss Change the title color
@@ -29,7 +29,7 @@
 ///   // Pass the theme to the igx-column-actions component mixin
 ///   @include igx-column-actions($column-actions-theme);
 ////
-@function igx-column-actions-theme(
+@function column-actions-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -62,17 +62,17 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-column-actions($theme) {
-    @include igx-css-vars($theme);
+@mixin column-actions($theme) {
+    @include css-vars($theme);
 
     %column-actions-display {
         display: flex;
         flex-flow: column nowrap;
         background: var-get($theme, 'background-color');
-        box-shadow: igx-elevation(map.get($theme, 'elevations'), 8);
+        box-shadow: elevation(map.get($theme, 'elevations'), 8);
         width: 100%;
         flex: 1 1 auto;
         min-width: rem(180px);
@@ -115,12 +115,12 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(title: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-column-actions-typography($type-scale, $categories: (title: 'subtitle-1')) {
+/// @requires {mixin} type-style
+@mixin column-actions-typography($type-scale, $categories: (title: 'subtitle-1')) {
     $title: map.get($categories, 'title');
 
     %column-actions-title {
-        @include igx-type-style($type-scale, $title) {
+        @include type-style($type-scale, $title) {
             margin: 0;
         }
     }

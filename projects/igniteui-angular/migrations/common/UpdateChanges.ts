@@ -6,7 +6,7 @@ import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics'
 import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
-    SelectorChanges, ThemePropertyChanges, ThemeVariableChange, ImportsChanges, MemberChanges, ThemePropertyChange
+    SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeChange, ThemeType
 } from './schema';
 import {
     getLanguageService, getRenamePositions, getIdentifierPositions, replaceMatch,
@@ -28,6 +28,11 @@ declare type TransformFunction = (args: BoundPropertyObject) => void;
 export interface BoundPropertyObject {
     value: string;
     bindingType: InputPropertyType;
+}
+
+interface AppliedChange {
+    overwrite: boolean,
+    fileContent: string
 }
 
 /* eslint-disable arrow-parens */
@@ -65,7 +70,7 @@ export class UpdateChanges {
     protected outputChanges: BindingChanges;
     protected inputChanges: BindingChanges;
     protected selectorChanges: SelectorChanges;
-    protected themePropsChanges: ThemePropertyChanges;
+    protected themeChanges: ThemeChanges;
     protected importsChanges: ImportsChanges;
     protected membersChanges: MemberChanges;
     protected conditionFunctions: Map<string, (...args) => any> = new Map<string, (...args) => any>();
@@ -144,7 +149,7 @@ export class UpdateChanges {
         this.classChanges = this.loadConfig('classes.json');
         this.outputChanges = this.loadConfig('outputs.json');
         this.inputChanges = this.loadConfig('inputs.json');
-        this.themePropsChanges = this.loadConfig('theme-props.json');
+        this.themeChanges = this.loadConfig('theme-changes.json');
         this.importsChanges = this.loadConfig('imports.json');
         this.membersChanges = this.loadConfig('members.json');
         this.serverHost = new ServerHost(this.host);
@@ -169,10 +174,11 @@ export class UpdateChanges {
         this.updateTsFiles();
         this.updateMembers();
         /** Sass files */
-        if (this.themePropsChanges && this.themePropsChanges.changes.length) {
+        if (this.themeChanges && this.themeChanges.changes.length) {
             for (const entryPath of this.sassFiles) {
                 this.updateThemeProps(entryPath);
                 this.updateSassVariables(entryPath);
+                this.updateSassFunctionsAndMixins(entryPath);
             }
         }
 
@@ -375,22 +381,24 @@ export class UpdateChanges {
     protected updateThemeProps(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
-        for (const change of this.themePropsChanges.changes) {
-            const _change = change as ThemePropertyChange;
-            if (fileContent.indexOf(_change.owner) !== -1) {
+        for (const change of this.themeChanges.changes) {
+            if (change.type !== ThemeType.Property) {
+                continue;
+            }
+            if (fileContent.indexOf(change.owner) !== -1) {
                 /** owner-func:( * ); */
-                const searchPattern = String.raw`${_change.owner}\([\s\S]+?\);`;
+                const searchPattern = String.raw`${change.owner}\([\s\S]+?\);`;
                 const matches = fileContent.match(new RegExp(searchPattern, 'g'));
                 if (!matches) {
                     continue;
                 }
                 for (const match of matches) {
-                    if (match.indexOf(_change.name) !== -1) {
-                        const name = _change.name.replace('$', '\\$');
-                        const replaceWith = _change.replaceWith?.replace('$', '\\$');
+                    if (match.indexOf(change.name) !== -1) {
+                        const name = change.name.replace('$', '\\$');
+                        const replaceWith = change.replaceWith?.replace('$', '\\$');
                         const reg = new RegExp(String.raw`^\s*${name}:`);
                         const existing = new RegExp(String.raw`${replaceWith}:`);
-                        const opening = `${_change.owner}(`;
+                        const opening = `${change.owner}(`;
                         const closing = /\s*\);$/.exec(match).pop();
                         const body = match.substr(opening.length, match.length - opening.length - closing.length);
 
@@ -399,8 +407,8 @@ export class UpdateChanges {
                             if (reg.test(param)) {
                                 const duplicate = !!replaceWith && arr.some(p => existing.test(p));
 
-                                if (!_change.remove && !duplicate) {
-                                    arr.push(param.replace(_change.name, _change.replaceWith));
+                                if (!change.remove && !duplicate) {
+                                    arr.push(param.replace(change.name, change.replaceWith));
                                 }
                             } else {
                                 arr.push(param);
@@ -422,7 +430,7 @@ export class UpdateChanges {
         }
     }
 
-    protected isNamedArgument(fileContent: string, i: number, occurrences: number[], change: ThemeVariableChange) {
+    protected isNamedArgument(fileContent: string, i: number, occurrences: number[], change: ThemeChange) {
         const openingBrackets = [];
         const closingBrackets = [];
         if (fileContent[(occurrences[i] + change.name.length)] !== ':'
@@ -446,13 +454,16 @@ export class UpdateChanges {
         let overwrite = false;
         const allowedStartCharacters = new RegExp('(\:|\,)\s?', 'g');
         const allowedEndCharacters = new RegExp('[;),: \r\n]', 'g');
-        for (const change of this.themePropsChanges.changes) {
+        for (const change of this.themeChanges.changes) {
+            if (change.type !== ThemeType.Variable) {
+                continue;
+            }
             if (!('owner' in change)) {
                 const occurrences = findMatches(fileContent, change.name);
                 for (let i = occurrences.length - 1; i >= 0; i--) {
                     const allowedStartEnd = fileContent[occurrences[i] - 1].match(allowedStartCharacters)
                         || fileContent[(occurrences[i] + change.name.length)].match(allowedEndCharacters);
-                    if (allowedStartEnd && !this.isNamedArgument(fileContent, i, occurrences, change as ThemeVariableChange)) {
+                    if (allowedStartEnd && !this.isNamedArgument(fileContent, i, occurrences, change as ThemeChange)) {
                         fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
                         overwrite = true;
                     }
@@ -462,6 +473,64 @@ export class UpdateChanges {
         if (overwrite) {
             this.host.overwrite(entryPath, fileContent);
         }
+    }
+
+    protected updateSassFunctionsAndMixins(entryPath: string) {
+        const aliases = this.getAliases(entryPath);
+        let fileContent = this.host.read(entryPath).toString();
+        let overwrite = false;
+        for (const change of this.themeChanges.changes) {
+            if (change.type !== ThemeType.Function && change.type !== ThemeType.Mixin) {
+                continue;
+            }
+            let occurrences: number[] = [];
+            if (aliases.length > 0 && !aliases.includes('*')) {
+                for (const alias of aliases) {
+                    occurrences = occurrences.concat(findMatches(fileContent, alias + '.' + change.name));
+                }
+                if (occurrences.length > 0) {
+                    ({ overwrite, fileContent } = this.tryReplaceScssFunctionWithAlias(occurrences, aliases, fileContent, change, overwrite));
+                }
+            } else {
+                occurrences = findMatches(fileContent, change.name);
+                if (occurrences.length > 0) {
+                    ({ overwrite, fileContent } = this.tryReplaceScssFunction(occurrences, fileContent, change, overwrite));
+                }
+            }
+        }
+        if (overwrite) {
+            this.host.overwrite(entryPath, fileContent);
+        }
+    }
+
+    protected getAliases(entryPath: string) {
+        let fileContent = this.host.read(entryPath).toString();
+        const allUses = [
+            `@use 'igniteui-angular/theming' as `,
+            `@use 'igniteui-angular/theme' as `,
+            `@use 'igniteui-angular/lib/core/styles/themes/index' as `
+        ]
+        let urls = [];
+        for (let i = 0; i < allUses.length; i++) {
+            if (fileContent.includes(allUses[i])) {
+                urls.push(allUses[i].substring(5, allUses[i].length - 4));
+            }
+        }
+
+        return this.formatAliases(urls, fileContent);
+    }
+
+    protected formatAliases(urls: string[], fileContent: string) {
+        let aliases = [];
+        for (const url of urls) {
+            const matcher = new RegExp(String.raw`@use\s+${escapeRegExp(url)}\s+as\s+(\w+)`, 'g');
+            const match = matcher.exec(fileContent);
+            if (match) {
+                aliases.push(match[1]); // access the first captured match
+            }
+        }
+
+        return aliases;
     }
 
     protected updateImports(entryPath: string) {
@@ -521,6 +590,33 @@ export class UpdateChanges {
         if (changes.size) {
             this.host.overwrite(entryPath, content);
         }
+    }
+
+    // TODO: combine both functions
+    private tryReplaceScssFunctionWithAlias(occurrences: number[], aliases: string[], fileContent: string, change: ThemeChange, overwrite: boolean): AppliedChange {
+        for (const alias of aliases) {
+            const aliasLength = alias.length + 1; // + 1 because of the dot - alias.member
+            for (let i = occurrences.length - 1; i >= 0; i--) {
+                const isOpenParenthesis = fileContent[occurrences[i] + aliasLength + change.name.length] === '(';
+                if (isOpenParenthesis) {
+                    fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
+                    overwrite = true;
+                }
+            }
+        }
+
+        return { overwrite, fileContent };
+    }
+    private tryReplaceScssFunction(occurrences: number[], fileContent: string, change: ThemeChange, overwrite: boolean): AppliedChange {
+        for (let i = occurrences.length - 1; i >= 0; i--) {
+            const isOpenParenthesis = fileContent[occurrences[i] + change.name.length] === '(';
+            if (isOpenParenthesis) {
+                fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
+                overwrite = true;
+            }
+        }
+
+        return { overwrite, fileContent };
     }
 
     private patchTsConfig(): void {

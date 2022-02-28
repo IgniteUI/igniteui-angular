@@ -89,6 +89,7 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: 'Boole filtresi',
     igx_grid_excel_currency_filter: 'Para birimi filtresi',
     igx_grid_excel_custom_filter: 'Özel filtre...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: 'Gelişmiş Filtreleme',
     igx_grid_advanced_filter_and_group: '"Ve" Grubu',
     igx_grid_advanced_filter_or_group: '"Veya" Grubu',
@@ -150,7 +151,13 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_row_drop_chip: 'Drop here to use as row',
     igx_grid_pivot_column_drop_chip: 'Drop here to use as column',
     igx_grid_pivot_filter_drop_chip: 'Drop here to use as filter',
-    igx_grid_pivot_value_drop_chip: 'Drop here to use as value'
+    igx_grid_pivot_value_drop_chip: 'Drop here to use as value',
+    igx_grid_pivot_selector_filters: 'Filters',
+    igx_grid_pivot_selector_rows: 'Rows',
+    igx_grid_pivot_selector_columns: 'Columns',
+    igx_grid_pivot_selector_values: 'Values',
+    igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
 };
 
 /**
