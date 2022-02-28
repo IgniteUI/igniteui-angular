@@ -269,35 +269,6 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        describe('Plain string toopltip input', () => {
-            // configureTestSuite();
-            beforeEach(waitForAsync(() => {
-                fix = TestBed.createComponent(IgxTooltipPlainStringComponent);
-                fix.detectChanges();
-                button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
-                tooltipTarget = fix.componentInstance.tooltipTarget;
-                tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
-            }));
-
-            it('IgxTooltip is initially hidden', fakeAsync(() => {
-                flush();
-                fix.detectChanges();
-                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
-            }));
-
-            it('IgxTooltip is shown/hidden when hovering/unhovering its target', fakeAsync(() => {
-                hoverElement(button);
-                flush();
-
-                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-
-                unhoverElement(button);
-                flush();
-
-                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
-            }));
-        });
-
         describe('Tooltip events', () => {
             // configureTestSuite();
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
@@ -471,6 +442,33 @@ describe('IgxTooltip', () => {
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
         });
+    });
+
+    describe('Plain string tooltip input', () => {
+        // configureTestSuite();
+        beforeEach(waitForAsync(() => {
+            fix = TestBed.createComponent(IgxTooltipPlainStringComponent);
+            fix.detectChanges();
+            button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
+            tooltipTarget = fix.componentInstance.tooltipTarget;
+            tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
+        }));
+
+        it('IgxTooltip is initially hidden', fakeAsync(() => {
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+        }));
+
+        it('IgxTooltip is shown/hidden when hovering/unhovering its target', fakeAsync(() => {
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
+            unhoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+        }));
     });
 
     describe('Multiple targets with single tooltip', () => {
