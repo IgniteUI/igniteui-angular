@@ -139,11 +139,6 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         return this.rowData.rowSpan || 1;
     }
 
-    public get headerHeight() {
-
-        return this.rowSpan > 1 ? this.rowSpan * this.grid.rowHeight + ((this.rowSpan - 1) / window.devicePixelRatio) : this.grid.rowHeight;
-    }
-
     protected extractFromDimensions() {
         const col = this.extractFromDimension(this.dimension, this.rowData);
         const prevDims = [];

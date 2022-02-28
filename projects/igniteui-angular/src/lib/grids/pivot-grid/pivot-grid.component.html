@@ -49,7 +49,7 @@
             </ng-template>
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>
-            <igx-pivot-row [style.min-height.px]="renderedRowHeight" [gridID]="id" [index]="rowIndex" [data]="rowData"
+            <igx-pivot-row [style.height.px]="renderedRowHeight" [gridID]="id" [index]="rowIndex" [data]="rowData"
                 [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-pivot-row>
@@ -139,6 +139,7 @@
                                              [dimension]='rowData.dimensions[dimIndex]'
                                              [rootDimension]='dim'
                                              [rowIndex]='rowIndex' [rowData]='rowData'
+                                             [style.height.px]="renderedRowHeight * (rowData.rowSpan || 1)"
                                              [density]="displayDensity" [width]="rowDimensionWidthToPixels(dim)">
             </igx-pivot-row-dimension-content>
         </ng-template>
