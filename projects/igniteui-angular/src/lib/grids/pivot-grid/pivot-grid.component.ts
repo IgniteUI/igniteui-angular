@@ -1772,6 +1772,24 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.values.length > 1;
     }
 
+    /**
+    * @hidden
+    */
+    public get excelStyleFilterMaxHeight() {
+        // max 10 rows, row size depends on density
+        const maxHeight = this.renderedRowHeight * 10;
+        return `${maxHeight}px`;
+    }
+
+    /**
+    * @hidden
+    */
+    public get excelStyleFilterMinHeight(): string {
+        // min 5 rows, row size depends on density
+        const minHeight = this.renderedRowHeight * 5;
+        return `${minHeight}px`;
+    }
+
     protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
         if (!groupColumn) return;
         groupColumn.hidden = state;
