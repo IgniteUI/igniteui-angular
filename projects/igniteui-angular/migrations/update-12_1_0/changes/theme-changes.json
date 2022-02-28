@@ -1,0 +1,11 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+        {
+            "name": "$color",
+            "replaceWith": "$icon-color",
+            "owner": "igx-action-strip-theme",
+            "type":"property"
+        }
+    ]
+}

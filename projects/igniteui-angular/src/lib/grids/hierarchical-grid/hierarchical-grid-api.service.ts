@@ -7,7 +7,7 @@ import { GridBaseAPIService } from '../api.service';
 @Injectable()
 export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> {
     protected childRowIslands: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();
-    protected childGrids:  Map<string, Map<any, GridType>> =
+    protected childGrids: Map<string, Map<any, GridType>> =
         new Map<string, Map<any, GridType>>();
 
     public registerChildRowIsland(rowIsland: IgxRowIslandComponent) {

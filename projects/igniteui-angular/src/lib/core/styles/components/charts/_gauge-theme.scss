@@ -37,10 +37,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $custom-gauge-theme: igx-linear-gauge-theme($brushes: (red, green, blue));
-///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($custom-gauge-theme);
-@function igx-linear-gauge-theme(
+///   $custom-gauge-theme: linear-gauge-theme($brushes: (red, green, blue));
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($custom-gauge-theme);
+@function linear-gauge-theme(
     $palette: null,
     $schema: $light-schema,
     $rest...
@@ -91,10 +91,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $custom-gauge-theme: igx-radial-gauge-theme($brushes: (red, green, blue));
-///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($custom-gauge-theme);
-@function igx-radial-gauge-theme(
+///   $custom-gauge-theme: radial-gauge-theme($brushes: (red, green, blue));
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($custom-gauge-theme);
+@function radial-gauge-theme(
     $palette: null,
     $schema: $light-schema,
     $rest...
@@ -124,8 +124,8 @@
 /// Adds typography styles for the linear-gauge component.
 /// @access private
 /// @group typography
-/// @requires {mixin} igx-type-style
-@mixin igx-gauge-typography() {
+/// @requires {mixin} type-style
+@mixin gauge-typography() {
     igx-linear-gauge {
         --linear-gauge-font: var(--igx-font-family, inherit);
     }

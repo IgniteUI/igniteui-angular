@@ -28,14 +28,14 @@ $dark-bootstrap-grid-toolbar: extend($bootstrap-grid-toolbar);
 
 /// Generates a dark indigo grid-toolbar schema.
 /// @type {Map}
-/// @property {Map} background-color [igx-color: 'surface'] - The toolbar background color.
+/// @property {Map} background-color [color: 'surface'] - The toolbar background color.
 /// @requires {function} extend
 /// @requires $indigo-grid-toolbar
 $dark-indigo-grid-toolbar: extend(
     $indigo-grid-toolbar,
     (
         background-color: (
-            igx-color: 'surface',
+            color: 'surface',
         )
     )
 );

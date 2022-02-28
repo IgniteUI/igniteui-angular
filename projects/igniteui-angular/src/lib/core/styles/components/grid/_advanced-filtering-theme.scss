@@ -10,7 +10,7 @@
 
 /// @param {Map} $theme - The grid theme used to style the component.
 /// @param {Map} $palette - The palette map used as base for the component.
-/// @requires igx-color
+/// @requires color
 /// @requires rem
 /// @requires var-get
 @mixin advanced-filtering($theme, $palette) {
@@ -28,12 +28,14 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
+    $bootstrap-theme: $variant == 'bootstrap';
+
     %advanced-filter {
         width: 660px;
         min-width: 660px;
         max-width: 720px;
         background-color: var-get($theme, 'filtering-row-background');
-        box-shadow: igx-elevation($elevation: 12);
+        box-shadow: elevation($elevation: 12);
         border-radius: rem(4px);
     }
 
@@ -41,10 +43,21 @@
         display: flex;
         align-items: center;
         padding: $vertical-space-comfortable;
-        color: igx-color($palette, 'grays', 700);
-        background-color: igx-color($palette, 'grays', 200);
+        color: color($palette, 'grays', 700);
+
+        @if $bootstrap-theme {
+            background-color: color($palette, 'grays', 100, .5);
+        } @else {
+            background-color: color($palette, 'grays', 100);
+        }
+
         user-select: none;
         cursor: grab;
+
+        h4,
+        .igx-typography__h6 {
+            margin-bottom: 0;
+        }
     }
 
     %advanced-filter__main {
@@ -140,12 +153,12 @@
 
         igx-icon {
             cursor: pointer;
-            color: igx-color($palette, 'grays', 500);
+            color: color($palette, 'grays', 500);
             outline-style: none;
 
             &:hover,
             &:focus {
-                color: igx-color($palette, 'grays', 800);
+                color: color($palette, 'grays', 800);
             }
         }
 
@@ -245,7 +258,7 @@
         padding: rem(16px);
         margin-#{$left}: rem(16px);
         border-radius: rem(4px);
-        border: 1px solid igx-color($palette, 'grays', 200);
+        border: 1px solid color($palette, 'grays', 200);
 
         > [igxButton] + [igxButton],
         igx-buttongroup + [igxButton],
@@ -268,19 +281,19 @@
     }
 
     %filter-con-menu__delete-btn {
-        color: igx-color($palette, 'error');
+        color: color($palette, 'error');
         @if $bootstrap-theme {
-            border-color: igx-color($palette, 'error');
+            border-color: color($palette, 'error');
         }
 
         &:hover,
         &:focus {
             @if $bootstrap-theme {
-                background: igx-color($palette, 'error');
-                border-color: igx-color($palette, 'error');
-                color: to-opaque(igx-color($palette, 'grays', 100));
+                background: color($palette, 'error');
+                border-color: color($palette, 'error');
+                color: to-opaque(color($palette, 'grays', 100));
             } @else {
-                color: igx-color($palette, 'error');
+                color: color($palette, 'error');
             }
         }
     }
@@ -290,7 +303,7 @@
         top: rem(-18px);
         #{$right}: rem(-18px);
         background-color: var-get($theme, 'filtering-row-background');
-        border: 1px solid igx-color($palette, 'grays', 200);
+        border: 1px solid color($palette, 'grays', 200);
 
         &:hover,
         &:focus {
@@ -308,7 +321,7 @@
     }
 
     %filter-empty__title {
-        color: igx-color($palette, 'grays', 500);
+        color: color($palette, 'grays', 500);
     }
 
     %advanced-filter--cosy {

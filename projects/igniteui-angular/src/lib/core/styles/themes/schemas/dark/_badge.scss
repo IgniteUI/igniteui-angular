@@ -1,3 +1,4 @@
+@use '../../../base' as *;
 @use '../light/badge' as *;
 
 ////
@@ -21,9 +22,17 @@ $dark-fluent-badge: $fluent-badge;
 
 /// Generates a dark bootstrap badge schema.
 /// @type {Map}
+/// @prop {Map} border-color [contrast-color: ('grays', 50)] - The border color used.
 /// @requires {function} extend
 /// @requires $bootstrap-badge
-$dark-bootstrap-badge: $bootstrap-badge;
+$dark-bootstrap-badge: extend(
+    $bootstrap-badge,
+    (
+        border-color: (
+            contrast-color: ('grays', 50)
+        ),
+    )
+);
 
 /// Generates a dark indigo badge schema.
 /// @type {Map}

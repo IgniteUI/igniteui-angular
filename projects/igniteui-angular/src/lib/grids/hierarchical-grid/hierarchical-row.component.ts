@@ -58,7 +58,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     }
 
     public get viewIndex(): number {
-        return this.index + (this.grid.paginator?.page || 0 ) * (this.grid.paginator?.perPage || 0);
+        return this.index + (this.grid.paginator?.page || 0) * (this.grid.paginator?.perPage || 0);
     }
 
     /**
@@ -80,7 +80,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     }
 
     public get hasChildren() {
-        return  !!this.grid.childLayoutKeys.length;
+        return !!this.grid.childLayoutKeys.length;
     }
 
     /**
@@ -91,10 +91,10 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         return this.grid && this.grid.highlightedRowID === this.key;
     }
 
-   /**
-    * @hidden
-    */
-   public expanderClick(event) {
+    /**
+     * @hidden
+     */
+    public expanderClick(event) {
         event.stopPropagation();
         this.toggle();
     }

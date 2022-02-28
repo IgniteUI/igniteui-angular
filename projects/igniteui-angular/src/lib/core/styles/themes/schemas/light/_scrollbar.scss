@@ -8,8 +8,8 @@
 
 /// Generates a light scrollbar schema.
 /// @type {Map}
-/// @property {Color} thumb-background [igx-color: ('grays', 400)] - The background color used for the thumb.
-/// @property {Color} track-background [igx-color: ('grays', 100)] - The background color used for the track.
+/// @property {Color} thumb-background [color: ('grays', 400)] - The background color used for the thumb.
+/// @property {Color} track-background [color: ('grays', 100)] - The background color used for the track.
 /// @property {String | Number} size [16px] - The size of the track.
 /// @see $default-palette
 $light-scrollbar: extend(
@@ -17,23 +17,28 @@ $light-scrollbar: extend(
         size: 16px,
 
         thumb-background: (
-            igx-color: ('grays', 400)
+            color: ('grays', 400)
         ),
 
         track-background: (
-            igx-color: ('grays', 100)
+            color: ('grays', 100)
         ),
     )
 );
 
 /// Generates a fluent scrollbar schema.
 /// @type {Map}
+/// @property {Color} thumb-background [color: ('grays', 300)] - The background color used for the thumb.
 /// @requires {function} extend
 /// @requires {Map} $light-scrollbar
 $fluent-scrollbar: extend(
     $light-scrollbar,
     (
         variant: 'fluent',
+
+        thumb-background: (
+            color: ('grays', 300)
+        ),
     )
 );
 
@@ -50,8 +55,8 @@ $bootstrap-scrollbar: extend(
 
 /// Generates an indigo scrollbar schema.
 /// @type {Map}
-/// @property {Map} thumb-background [igx-color: ('grays', 400)] - The background color used for the thumb.
-/// @property {Color} track-background [igx-color: ('grays', 200)] - The background color used for the track.
+/// @property {Map} thumb-background [color: ('grays', 400)] - The background color used for the thumb.
+/// @property {Color} track-background [color: ('grays', 200)] - The background color used for the track.
 /// @requires {function} extend
 /// @requires {Map} $light-scrollbar
 $indigo-scrollbar: extend(
@@ -60,11 +65,11 @@ $indigo-scrollbar: extend(
         variant: 'indigo-design',
 
         thumb-background: (
-            igx-color: ('grays', 400)
+            color: ('grays', 400)
         ),
 
         track-background: (
-            igx-color: ('grays', 200)
+            color: ('grays', 200)
         ),
     )
 );
