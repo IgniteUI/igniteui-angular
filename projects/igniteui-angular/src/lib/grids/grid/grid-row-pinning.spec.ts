@@ -1248,6 +1248,7 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(5).pin();
             grid.gridAPI.get_row_by_index(1).pin();
             await wait(DEBOUNCE_TIME);
+            fix.detectChanges();
 
             grid.navigateTo(26);
             await wait(DEBOUNCE_TIME);

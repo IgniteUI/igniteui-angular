@@ -210,7 +210,7 @@
 </igx-drop-down>
 
 <div [hidden]='true'>
-    <igx-grid-excel-style-filtering #esf>
+    <igx-grid-excel-style-filtering [maxHeight]='grid.excelStyleFilterMaxHeight' [minHeight]='grid.excelStyleFilterMinHeight' #esf>
         <div igxExcelStyleColumnOperations>
             <igx-chips-area #dropdownChips>
                 <igx-chip *ngFor="let filter of this.filterDropdownDimensions" [id]="filter.memberName"
