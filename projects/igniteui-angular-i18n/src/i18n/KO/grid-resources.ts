@@ -87,6 +87,7 @@ const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: '불린 필터',
     igx_grid_excel_currency_filter: '통화 필터',
     igx_grid_excel_custom_filter: '사용자 필터...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: '고급 필터링',
     igx_grid_advanced_filter_and_group: '그룹 "그리고"',
     igx_grid_advanced_filter_or_group: '그룹 "또는"',
