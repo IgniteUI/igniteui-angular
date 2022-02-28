@@ -87,6 +87,7 @@ const GridResourceStringsZHHANS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: '布尔筛选器',
     igx_grid_excel_currency_filter: '货币筛选器',
     igx_grid_excel_custom_filter: '自定义筛选器...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: '高级筛选',
     igx_grid_advanced_filter_and_group: '"And" 组',
     igx_grid_advanced_filter_or_group: '"Or" 组',

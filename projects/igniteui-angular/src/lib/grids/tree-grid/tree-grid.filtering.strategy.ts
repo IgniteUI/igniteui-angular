@@ -1,21 +1,43 @@
 import { parseDate, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { BaseFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { GridType } from '../common/grid.interface';
+import { BaseFilteringStrategy, IgxFilterItem } from '../../data-operations/filtering-strategy';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { ColumnType, GridType } from '../common/grid.interface';
+import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
+
+    constructor(public hierarchicalFilterFields?: string[]) {
+        super();
+    }
+
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): ITreeGridRecord[] {
         return this.filterImpl(data, expressionsTree, advancedExpressionsTree, undefined, grid);
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
+        const column = grid?.getColumnByName(fieldName);
         const hierarchicalRecord = rec as ITreeGridRecord;
-        let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
-        value = value && isDate ? parseDate(value) : value;
+        let value = this.isHierarchicalFilterField(fieldName) ?
+            this.getHierarchicalFieldValue(hierarchicalRecord, fieldName) :
+            resolveNestedPath(hierarchicalRecord.data, fieldName);
+
+        value = column?.formatter && this.shouldFormatFilterValues(column) ?
+            column.formatter(value, rec.data) :
+            value && (isDate || isTime) ? parseDate(value) : value;
+
         return value;
+    }
+
+    private getHierarchicalFieldValue(record: ITreeGridRecord, field: string) {
+        const value = resolveNestedPath(record.data, field);
+
+        return record.parent ?
+            `${this.getHierarchicalFieldValue(record.parent, field)}${value ? `.[${value}]` : ''}` :
+            `[${value}]`;
     }
 
     private filterImpl(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
@@ -44,6 +66,49 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         }
         return res;
     }
+
+    private isHierarchicalFilterField(field: string) {
+        return this.hierarchicalFilterFields && this.hierarchicalFilterFields.indexOf(field) !== -1;
+    }
+
+    public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
+        if (!this.isHierarchicalFilterField(column.field)) {
+            return super.getFilterItems(column, tree);
+        }
+
+        let data = (column.grid.gridAPI as IgxTreeGridAPIService).filterTreeDataByExpressions(tree);
+        data = DataUtil.treeGridSort(
+            data,
+            [{ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase }],
+            column.grid.sortStrategy,
+            null,
+            column.grid);
+
+        const items = this.getHierarchicalFilterItems(data, column);
+
+
+        return Promise.resolve(items);
+    }
+
+    private getHierarchicalFilterItems(records: ITreeGridRecord[], column: ColumnType, parent?: IgxFilterItem): IgxFilterItem[] {
+        return records?.map(record => {
+            let value = resolveNestedPath(record.data, column.field);
+            const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
+
+            value = applyFormatter ?
+                column.formatter(value, record.data) :
+                value;
+
+            const hierarchicalValue = parent ?
+                (value || value === 0) ? `${parent.value}.[${value}]` : value :
+                `[${value}]`;
+
+            const filterItem: IgxFilterItem = { value: hierarchicalValue };
+            filterItem.label = this.getFilterItemLabel(column, value, !applyFormatter, record.data);
+            filterItem.children = this.getHierarchicalFilterItems(record.children, column, filterItem);
+            return filterItem;
+        });
+    }
 }
 
 export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringStrategy {
@@ -57,21 +122,8 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
         super();
     }
 
-    /** @hidden */
-    public shouldApplyFormatter(fieldName: string): boolean {
-        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === fieldName);
-    }
-
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
-        const column = grid.getColumnByName(fieldName);
-        const hierarchicalRecord = rec as ITreeGridRecord;
-        let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
-
-        value = column.formatter && this.shouldApplyFormatter(fieldName) ?
-            column.formatter(value) :
-            value && (isDate || isTime) ? parseDate(value) : value;
-
-        return value;
+    protected shouldFormatFilterValues(column: ColumnType): boolean {
+        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === column.field);
     }
 }
 
