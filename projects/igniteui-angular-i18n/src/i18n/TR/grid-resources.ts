@@ -89,6 +89,7 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: 'Boole filtresi',
     igx_grid_excel_currency_filter: 'Para birimi filtresi',
     igx_grid_excel_custom_filter: 'Özel filtre...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: 'Gelişmiş Filtreleme',
     igx_grid_advanced_filter_and_group: '"Ve" Grubu',
     igx_grid_advanced_filter_or_group: '"Veya" Grubu',
