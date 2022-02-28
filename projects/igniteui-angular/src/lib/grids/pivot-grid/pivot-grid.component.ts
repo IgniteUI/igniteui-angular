@@ -1741,7 +1741,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
         return PivotUtil.flatten(this.pivotConfiguration.rows).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
             PivotUtil.flatten(this.pivotConfiguration.columns).indexOf(dimension) !== -1 ? PivotDimensionType.Column :
-                PivotUtil.flatten(this.pivotConfiguration.filters).indexOf(dimension) !== -1 ? PivotDimensionType.Filter : null;
+                (!!this.pivotConfiguration.filters && PivotUtil.flatten(this.pivotConfiguration.filters).indexOf(dimension) !== -1) ?
+                    PivotDimensionType.Filter : null;
     }
 
     protected getLargesContentWidth(contents: ElementRef[]): string {
