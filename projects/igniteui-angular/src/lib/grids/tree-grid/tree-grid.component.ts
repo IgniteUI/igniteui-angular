@@ -58,6 +58,7 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density'
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
+import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 
 let NEXT_ID = 0;
 
@@ -271,6 +272,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public loadingRows = new Set<any>();
 
+    protected _filterStrategy = new TreeGridFilteringStrategy();
     protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;

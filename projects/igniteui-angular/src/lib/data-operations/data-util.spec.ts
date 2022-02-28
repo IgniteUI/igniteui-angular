@@ -7,7 +7,7 @@ import { DataUtil } from './data-util';
 import { IGroupByResult } from './grouping-result.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
-import { FilteringStrategy } from './filtering-strategy';
+import { FilteringStrategy, FilterUtil } from './filtering-strategy';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from './filtering-expressions-tree';
 import { IFilteringState } from './filtering-state.interface';
 import { FilteringLogic } from './filtering-expression.interface';
@@ -355,7 +355,7 @@ const testFilter = () => {
                     searchVal: 3
                 }
             ];
-            const res = DataUtil.filter(data, state);
+            const res = FilterUtil.filter(data, state);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual([4]);
         });
@@ -384,12 +384,12 @@ const testFilter = () => {
                 }
             ];
 
-            let res = DataUtil.filter(data, state);
+            let res = FilterUtil.filter(data, state);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual(dataGenerator.getValuesForColumn(data, 'number'));
             (res[0] as { string: string }).string = 'ROW';
             // case-sensitive
-            res = DataUtil.filter(res, stateIgnoreCase);
+            res = FilterUtil.filter(res, stateIgnoreCase);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual([0]);
         });
@@ -405,7 +405,7 @@ const testFilter = () => {
                     searchVal: new Date()
                 }
             ];
-            const res = DataUtil.filter(data, state);
+            const res = FilterUtil.filter(data, state);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual([1, 2, 3, 4]);
         });
@@ -419,7 +419,7 @@ const testFilter = () => {
                     fieldName: 'boolean'
                 }
             ];
-            const res = DataUtil.filter(data, state);
+            const res = FilterUtil.filter(data, state);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual([0, 2, 4]);
         });
@@ -434,7 +434,7 @@ const testFilter = () => {
                     fieldName: 'boolean'
                 }
             ];
-            const res = DataUtil.filter(data, state);
+            const res = FilterUtil.filter(data, state);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual([0, 2]);
         });
