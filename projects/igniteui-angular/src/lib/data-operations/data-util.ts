@@ -117,13 +117,6 @@ export class DataUtil {
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
 
-    public static filter<T>(data: T[], state: IFilteringState, grid?: GridType): T[] {
-        if (!state.strategy) {
-            state.strategy = new FilteringStrategy();
-        }
-        return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree, grid);
-    }
-
     public static correctPagingState(state: IPagingState, length: number) {
         const maxPage = Math.ceil(length / state.recordsPerPage) - 1;
         if (!isNaN(maxPage) && state.index > maxPage) {

@@ -2,7 +2,7 @@ import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import {
     DefaultPivotGridRecordSortingStrategy,
     DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
@@ -255,7 +255,7 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
             return collection;
         }
 
-        const result = DataUtil.filter(cloneArray(collection, true), state, this.gridAPI.grid);
+        const result = FilterUtil.filter(cloneArray(collection, true), state, this.gridAPI.grid);
 
         return result;
     }
