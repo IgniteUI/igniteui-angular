@@ -712,12 +712,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this._destroy.complete();
 
         if (this.ghost && this.ghostElement && this._removeOnDestroy) {
+            this.ghostElement.parentNode.removeChild(this.ghostElement);
+            this.ghostElement = null;
+            
             if (this._dynamicGhostRef) {
                 this._dynamicGhostRef.destroy();
                 this._dynamicGhostRef = null;
             }
-            this.ghostElement.parentNode.removeChild(this.ghostElement);
-            this.ghostElement = null;
         }
     }
 
@@ -1093,12 +1094,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             if (ghostDestroyArgs.cancel) {
                 return;
             }
+            this.ghostElement.parentNode.removeChild(this.ghostElement);
+            this.ghostElement = null;
             if (this._dynamicGhostRef) {
                 this._dynamicGhostRef.destroy();
                 this._dynamicGhostRef = null;
             }
-            this.ghostElement.parentNode.removeChild(this.ghostElement);
-            this.ghostElement = null;
         } else if (!this.ghost) {
             this.element.nativeElement.style.transitionProperty = '';
             this.element.nativeElement.style.transitionDuration = '0.0s';
