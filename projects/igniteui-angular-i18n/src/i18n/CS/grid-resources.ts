@@ -89,6 +89,7 @@ const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: 'Booleovský filtr',
     igx_grid_excel_currency_filter: 'Filtr měn',
     igx_grid_excel_custom_filter: 'Vlastní filtr ...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: 'Pokročilé filtrování',
     igx_grid_advanced_filter_and_group: '"A" skupina',
     igx_grid_advanced_filter_or_group: '"Nebo" skupina',

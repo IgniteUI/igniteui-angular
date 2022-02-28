@@ -2,8 +2,7 @@ import { cloneValue } from '../../core/utils';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-strategy';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { PivotGridType } from '../common/grid.interface';
 import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
@@ -440,23 +439,5 @@ export class PivotUtil {
         }
     }
 
-    public static generateDimensionSortingExpressions(dimensions: IPivotDimension[]): ISortingExpression[] {
-        const expressions: ISortingExpression[] = [];
-        PivotUtil.flatten(dimensions).forEach(x => {
-            if (x.sortDirection) {
-                expressions.push({
-                    dir: x.sortDirection,
-                    fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
-                });
-            } else {
-                expressions.push({
-                    dir: SortingDirection.None,
-                    fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
-                });
-            }
-        });
-        return expressions;
-    }
+
 }
