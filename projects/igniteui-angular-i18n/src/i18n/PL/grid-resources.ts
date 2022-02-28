@@ -89,6 +89,7 @@ const GridResourceStringsPL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: 'Filtr logiczny',
     igx_grid_excel_currency_filter: 'Filtr walutowy',
     igx_grid_excel_custom_filter: 'Filtr niestandardowy...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: 'Zaawansowane filtrowanie',
     igx_grid_advanced_filter_and_group: '"I" grupuj',
     igx_grid_advanced_filter_or_group: '"Lub" grupuj',
