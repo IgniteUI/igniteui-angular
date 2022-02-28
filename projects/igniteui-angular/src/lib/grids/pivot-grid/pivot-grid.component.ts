@@ -68,6 +68,7 @@ import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IPageEventArgs } from '../../paginator/paginator-interfaces';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
+import { FilterUtil } from '../../data-operations/filtering-strategy';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -956,7 +957,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
             advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
         };
-        const filtered = DataUtil.filter(data, state, this);
+        const filtered = FilterUtil.filter(data, state, this);
         const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
             filtered,
             [dim],
@@ -1740,7 +1741,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected getDimensionType(dimension: IPivotDimension): PivotDimensionType {
         return PivotUtil.flatten(this.pivotConfiguration.rows).indexOf(dimension) !== -1 ? PivotDimensionType.Row :
             PivotUtil.flatten(this.pivotConfiguration.columns).indexOf(dimension) !== -1 ? PivotDimensionType.Column :
-                PivotUtil.flatten(this.pivotConfiguration.filters).indexOf(dimension) !== -1 ? PivotDimensionType.Filter : null;
+                (!!this.pivotConfiguration.filters && PivotUtil.flatten(this.pivotConfiguration.filters).indexOf(dimension) !== -1) ?
+                    PivotDimensionType.Filter : null;
     }
 
     protected getLargesContentWidth(contents: ElementRef[]): string {
@@ -1769,6 +1771,24 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     */
     public get hasMultipleValues() {
         return this.values.length > 1;
+    }
+
+    /**
+    * @hidden
+    */
+    public get excelStyleFilterMaxHeight() {
+        // max 10 rows, row size depends on density
+        const maxHeight = this.renderedRowHeight * 10;
+        return `${maxHeight}px`;
+    }
+
+    /**
+    * @hidden
+    */
+    public get excelStyleFilterMinHeight(): string {
+        // min 5 rows, row size depends on density
+        const minHeight = this.renderedRowHeight * 5;
+        return `${minHeight}px`;
     }
 
     protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
@@ -1957,7 +1977,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
                     advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
                 };
-                const filtered = DataUtil.filter(cloneArray(value.records), state, this);
+                const filtered = FilterUtil.filter(cloneArray(value.records), state, this);
                 if (filtered.length === 0) {
                     shouldGenerate = false;
                 }

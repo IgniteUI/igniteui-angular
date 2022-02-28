@@ -31,9 +31,13 @@ export class IgxGroupedTreeGridSorting extends IgxSorting {
     }
 
     protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
-        return obj.data[HIDDEN_FIELD_NAME] ?
-            super.getFieldValue(obj.data[HIDDEN_FIELD_NAME], key, isDate, isTime) :
-            super.getFieldValue(obj.data, key, isDate, isTime);
+        const data = obj.data[HIDDEN_FIELD_NAME] ?
+            obj.data.hasOwnProperty(key) ?
+                obj.data :
+                obj.data[HIDDEN_FIELD_NAME] :
+            obj.data;
+
+        return super.getFieldValue(data, key, isDate, isTime);
     }
 }
 
