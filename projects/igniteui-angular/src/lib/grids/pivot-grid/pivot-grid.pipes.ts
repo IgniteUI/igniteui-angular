@@ -2,18 +2,19 @@ import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { DefaultPivotGridRecordSortingStrategy } from '../../data-operations/pivot-sort-strategy';
+import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import {
-    DefaultPivotGridRecordSortingStrategy,
-    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
+    DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
 } from '../../data-operations/pivot-strategy';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IGridSortingStrategy } from '../common/strategy';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, IPivotValue } from './pivot-grid.interface';
+import { PivotSortUtil } from './pivot-sort-util';
 import { PivotUtil } from './pivot-util';
 
 /**
@@ -255,7 +256,7 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
             return collection;
         }
 
-        const result = DataUtil.filter(cloneArray(collection, true), state, this.gridAPI.grid);
+        const result = FilterUtil.filter(cloneArray(collection, true), state, this.gridAPI.grid);
 
         return result;
     }
@@ -304,22 +305,7 @@ export class IgxPivotGridSortingPipe implements PipeTransform {
         let result: any[];
         const allDimensions = config.rows || [];
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        const expressions: ISortingExpression[] = [];
-        PivotUtil.flatten(enabledDimensions).forEach(x => {
-            if (x.sortDirection) {
-                expressions.push({
-                    dir: x.sortDirection,
-                    fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
-                });
-            } else {
-                expressions.push({
-                    dir: SortingDirection.None,
-                    fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
-                });
-            }
-        });
+        const expressions = PivotSortUtil.generateDimensionSortingExpressions(enabledDimensions);
         if (!expressions.length) {
             result = collection;
         } else {

@@ -59,6 +59,76 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public disabled = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get addRowUI(): any {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get inEditMode(): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public set pinned(_value: boolean) {
+    }
+
+    public get pinned(): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public delete() {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public beginAddRow() {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public update(_value: any) {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public pin() {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public unpin() {
+        return false;
+    }
+
+    /**
     *  The pivot record data passed to the row component.
     *
     * ```typescript
