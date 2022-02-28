@@ -3,6 +3,7 @@
 @use '../../themes/schemas/dark' as *;
 @use '../button-group/button-group-component' as *;
 @use '../button-group/button-group-theme' as *;
+@use '../tree/tree-theme' as *;
 @use 'sass:map';
 
 ////
@@ -23,6 +24,24 @@
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
+    $tree-node-indent: (
+        comfortable: rem(16px),
+        cosy: rem(8px),
+        compact: rem(4px)
+    );
+
+    $tree-node-expander-size: rem(20px);
+    $tree-node-height: (
+        comfortable: rem(40px),
+        cosy: rem(32px),
+        compact: rem(24px)
+    );
+
+    $checkbox-indent: (
+        comfortable: calc(#{map.get($tree-node-indent, 'comfortable')} + #{$tree-node-expander-size} + #{rem(8px)}),
+        cosy: calc((#{map.get($tree-node-indent, 'cosy')} * 2) + #{$tree-node-expander-size}),
+        compact: calc((#{map.get($tree-node-indent, 'compact')} * 2) + #{$tree-node-expander-size}),
+    );
 
     %grid-excel-filter {
         display: block;
@@ -90,6 +109,22 @@
             $item-border-color: transparent,
             $item-selected-border-color: transparent
         ));
+
+
+        @include tree(tree-theme(
+            $background: color($palette, 'surface'),
+            $background-selected: color($palette, 'surface'),
+            $background-active: color($palette, 'surface'),
+            $background-active-selected: color($palette, 'surface'),
+            $foreground: contrast-color($palette, 'surface'),
+            $foreground-selected: contrast-color($palette, 'surface'),
+            $foreground-active: contrast-color($palette, 'surface'),
+            $foreground-active-selected: contrast-color($palette, 'surface'),
+        ));
+
+        .igx-tree-node__wrapper {
+            padding: 0;
+        }
 
         igx-chips-area  {
             padding: rem(16px) rem(16px) 0 rem(16px);
@@ -242,6 +277,12 @@
         pointer-events: none;
     }
 
+    %igx-excel-filter__empty {
+        display: grid;
+        place-items: center;
+        height: 100%;
+    }
+
     %grid-excel-main {
         display: flex;
         flex-direction: column;
@@ -250,19 +291,69 @@
         padding: rem(16px);
         gap: rem(16px);
 
-
         igx-list {
             flex-grow: 1;
             overflow: hidden;
             margin-left: -#{rem(16px)};
             margin-right: -#{rem(16px)};
             border: 0;
+        }
+
+        igx-list,
+        %igx-excel-filter__tree {
             @if $bootstrap-theme {
                 border-top: 1px dashed color($palette, 'grays', 100);
                 border-bottom: 1px dashed color($palette, 'grays', 100);
             } @else {
                 border-top: 1px dashed color($palette, 'grays', 300);
                 border-bottom: 1px dashed color($palette, 'grays', 300);
+            }
+        }
+
+        %igx-excel-filter__tree {
+            background: color($palette, 'surface');
+            overflow-y: auto;
+            margin: 0 rem(-16px);
+            flex: 1;
+
+            igx-icon {
+                width: $tree-node-expander-size;
+                height: $tree-node-expander-size;
+                font-size: $tree-node-expander-size;
+            }
+
+            > igx-checkbox,
+            .igx-tree-node__wrapper {
+                height: map.get($tree-node-height, 'comfortable');
+                min-height: map.get($tree-node-height, 'comfortable');
+            }
+
+            .igx-tree-node__toggle-button {
+                min-width: rem(20px);
+                margin-left: map.get($tree-node-indent, 'comfortable');
+            }
+        }
+
+        %igx-excel-filter__tree-alike {
+            background: color($palette, 'surface');
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+        }
+
+        %igx-excel-filter__tree-alike-item {
+            display: flex;
+            align-items: center;
+            height: map.get($tree-node-height, 'comfortable');
+            background: color($palette, 'surface');
+
+            &:hover,
+            &:focus {
+                background: color($palette, 'grays', 200);
+            }
+
+            > igx-checkbox {
+                margin-left: map.get($checkbox-indent, 'comfortable');
             }
         }
     }
@@ -301,6 +392,28 @@
         igx-list {
             margin-left: -#{rem(8px)};
             margin-right: -#{rem(8px)};
+        }
+
+        %igx-excel-filter__tree {
+            margin: 0 rem(-8px);
+
+            > igx-checkbox,
+            .igx-tree-node__wrapper {
+                height: map.get($tree-node-height, 'cosy');
+                min-height: map.get($tree-node-height, 'cosy');
+            }
+
+            .igx-tree-node__toggle-button {
+                margin-left: map.get($tree-node-indent, 'cosy');
+            }
+        }
+
+        %igx-excel-filter__tree-alike-item {
+            height: map.get($tree-node-height, 'cosy');
+
+            > igx-checkbox {
+                margin-left: map.get($checkbox-indent, 'cosy');
+            }
         }
     }
 
@@ -347,6 +460,28 @@
         igx-list {
             margin-left: -#{rem(4px)};
             margin-right: -#{rem(4px)};
+        }
+
+        %igx-excel-filter__tree {
+            margin: 0 rem(-4px);
+
+            igx-checkbox,
+            .igx-tree-node__wrapper {
+                height: map.get($tree-node-height, 'compact');
+                min-height: map.get($tree-node-height, 'compact');
+            }
+
+            .igx-tree-node__toggle-button {
+                margin: 0 map.get($tree-node-indent, 'compact');
+            }
+        }
+
+        %igx-excel-filter__tree-alike-item {
+            height: map.get($tree-node-height, 'compact');
+
+            > igx-checkbox {
+                margin-left: map.get($checkbox-indent, 'compact');
+            }
         }
     }
 

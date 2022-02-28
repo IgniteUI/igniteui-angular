@@ -25,7 +25,7 @@ export class IgxTreeGridSortingComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="800px">
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="1200px">
         <igx-column [field]="'ID'" dataType="number" [filterable]="true"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [filterable]="true"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date" [filterable]="true"></igx-column>
@@ -34,6 +34,34 @@ export class IgxTreeGridSortingComponent {
     `
 })
 export class IgxTreeGridFilteringComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="1200px">
+        <igx-column [field]="'ID'" dataType="number" [filterable]="true"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [filterable]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [filterable]="true"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [filterable]="true"></igx-column>
+
+        <ng-template igxExcelStyleHeaderIcon>
+            <igx-icon>filter_alt</igx-icon>
+        </ng-template>
+
+        <igx-grid-excel-style-filtering [minHeight]="'0px'" [maxHeight]="'500px'">
+            <igx-excel-style-column-operations>
+                <igx-excel-style-sorting></igx-excel-style-sorting>
+            </igx-excel-style-column-operations>
+            <igx-excel-style-filter-operations>
+                <igx-excel-style-search></igx-excel-style-search>
+            </igx-excel-style-filter-operations>
+        </igx-grid-excel-style-filtering>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridFilteringESFTemplatesComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }
