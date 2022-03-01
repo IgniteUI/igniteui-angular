@@ -5,7 +5,6 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe } from './hierarchical-grid.pipes';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
-import { IgxGridComponent } from '../grid/grid.component';
 
 /**
  * @hidden
