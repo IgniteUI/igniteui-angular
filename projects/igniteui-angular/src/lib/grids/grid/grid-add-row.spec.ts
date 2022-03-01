@@ -1,8 +1,8 @@
-import { IgxGridModule, IgxGridComponent, CellType } from './public_api';
+import { IgxGridModule, IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { DebugElement, QueryList } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxAddRowComponent, IgxGridRowEditingTransactionComponent

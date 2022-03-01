@@ -21,7 +21,6 @@ import {
 } from "../../directives/drag-drop/drag-drop.directive";
 import { ISelectionEventArgs } from "../../drop-down/drop-down.common";
 import { IgxDropDownComponent } from "../../drop-down/drop-down.component";
-import { IgxExpansionPanelComponent } from '../../expansion-panel/expansion-panel.component';
 import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
@@ -98,7 +97,7 @@ export class IgxPivotDataSelectorComponent {
      */
     @Output()
     public columnsExpandedChange = new EventEmitter<boolean>();
-    
+
     /**
      * Gets/sets whether the rows panel is expanded
      * Get
