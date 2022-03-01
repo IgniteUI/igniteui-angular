@@ -197,7 +197,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-<igx-hierarchical-grid #hrid gridCreated="'console.log(hgrid.hgridAPI.getChildGrids())'">
+<igx-hierarchical-grid #hgrid (gridCreated)="console.log(hgrid.hgridAPI.getChildGrids())">
 </igx-hierarchical-grid>
 `
         );
@@ -208,9 +208,10 @@ import {
     IgxHierarchicalGridComponent
 } from 'igniteui-angular';
 @Component({
-    selector: 'test.component'
+    selector: 'test.component',
+    templateUrl: 'test.component.html'
 })
-export class HGridBatchEditingSampleComponent implements OnInit {
+export class TestComponent {
     public get hasChildTransactions(): boolean {
         return this.childGrid.gridAPI.getChildGrids().length > 0;
     }
@@ -225,7 +226,7 @@ export class HGridBatchEditingSampleComponent implements OnInit {
                 tree.readContent('/testSrc/appPrefix/component/test.component.html')
             ).toEqual(
 `
-<igx-hierarchical-grid #hrid gridCreated="console.log(hgrid.gridAPI.getChildGrids())'">
+<igx-hierarchical-grid #hgrid (gridCreated)="console.log(hgrid.gridAPI.getChildGrids())">
 </igx-hierarchical-grid>
 `
             );
@@ -238,9 +239,10 @@ import {
     IgxHierarchicalGridComponent
 } from 'igniteui-angular';
 @Component({
-    selector: 'test.component'
+    selector: 'test.component',
+    templateUrl: 'test.component.html'
 })
-export class HGridBatchEditingSampleComponent implements OnInit {
+export class TestComponent {
     public get hasChildTransactions(): boolean {
         return this.childGrid.gridAPI.getChildGrids().length > 0;
     }
