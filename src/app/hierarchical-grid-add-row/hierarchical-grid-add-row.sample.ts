@@ -50,7 +50,7 @@ export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {
         const target = event.target;
         if (target.nodeName.toLowerCase() === 'igx-hierarchical-grid-cell') {
             const gridId = target.parentNode.parentNode.attributes['ng-reflect-grid-i-d'].value;
-            const grid = hierarchicalGrid.hgridAPI.getChildGrids(true)
+            const grid = hierarchicalGrid.gridAPI.getChildGrids(true)
                 .find(childGrid => childGrid.id === gridId) ||  hierarchicalGrid;
             const rowIndex = parseInt(target.attributes['data-rowindex'].value, 10);
             const row = grid.getRowByIndex(rowIndex);
