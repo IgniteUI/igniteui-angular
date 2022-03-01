@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "exclude": [
+
+        "dist",
+        "projects/igniteui-angular/migrations/",
+        "projects/igniteui-angular/schematics/",
+        "e2e",
+        "cypress",
+        "projects/igniteui-angular/cypress/"
+    ]
+}
