@@ -78,10 +78,6 @@
             @extend %grid-excel-move !optional;
         }
 
-        @include e(move-buttons) {
-            @extend %grid-excel-move__buttons !optional;
-        }
-
         @include e(actions) {
             @extend %grid-excel-actions !optional;
         }
