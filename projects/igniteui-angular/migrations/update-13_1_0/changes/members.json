@@ -1,0 +1,13 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "hgridAPI",
+            "replaceWith": "gridAPI",
+            "definedIn": [
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        }
+    ]
+}

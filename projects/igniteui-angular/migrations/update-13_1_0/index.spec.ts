@@ -193,4 +193,59 @@ describe(`Update to ${version}`, () => {
         );
     });
 
+    it('should rename hgridAPI to gridAPI for hierarchical grids', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+<igx-hierarchical-grid #hrid gridCreated="'console.log(hgrid.hgridAPI.getChildGrids())'">
+</igx-hierarchical-grid>
+`
+        );
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.ts`,
+            `
+import {
+    IgxHierarchicalGridComponent
+} from 'igniteui-angular';
+@Component({
+    selector: 'test.component'
+})
+export class HGridBatchEditingSampleComponent implements OnInit {
+    public get hasChildTransactions(): boolean {
+        return this.childGrid.gridAPI.getChildGrids().length > 0;
+    }
+}
+`
+        );
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(
+                tree.readContent('/testSrc/appPrefix/component/test.component.html')
+            ).toEqual(
+`
+<igx-hierarchical-grid #hrid gridCreated="console.log(hgrid.gridAPI.getChildGrids())'">
+</igx-hierarchical-grid>
+`
+            );
+
+            expect(
+                tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+            ).toEqual(
+                `
+import {
+    IgxHierarchicalGridComponent
+} from 'igniteui-angular';
+@Component({
+    selector: 'test.component'
+})
+export class HGridBatchEditingSampleComponent implements OnInit {
+    public get hasChildTransactions(): boolean {
+        return this.childGrid.gridAPI.getChildGrids().length > 0;
+    }
+`
+            );
+    });
+
 });
