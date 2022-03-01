@@ -5,6 +5,7 @@ import { FilteringExpressionsTree, FilteringLogic, IgxPivotGridComponent, IgxPiv
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
+import { DimensionValuesFilteringStrategy } from '../../data-operations/pivot-strategy';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
@@ -18,7 +19,7 @@ import { IgxPivotGridModule } from './pivot-grid.module';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
-const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
+
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 describe('IgxPivotGrid #pivotGrid', () => {
@@ -422,6 +423,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                expect(pivotGrid.filterStrategy).toBeInstanceOf(DimensionValuesFilteringStrategy);
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
@@ -1262,7 +1265,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const pivotRows = GridFunctions.getPivotRows(fixture);
-            const row = pivotRows[2].componentInstance;
             const rowHeaders = fixture.debugElement.queryAll(
                 By.directive(IgxPivotRowDimensionHeaderComponent));
             const firstDimCell = rowHeaders.find(x => x.componentInstance.column.header === 'All Cities');
@@ -1329,7 +1331,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
     describe('IgxPivotGrid Resizing #pivotGrid', () => {
         let fixture: ComponentFixture<any>;
-        let pivotGrid: IgxPivotGridComponent;
 
         configureTestSuite((() => {
             TestBed.configureTestingModule({
@@ -1346,8 +1347,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fixture.detectChanges();
-
-            pivotGrid = fixture.componentInstance.pivotGrid;
         }));
 
         it('should define grid with resizable columns.', fakeAsync(() => {

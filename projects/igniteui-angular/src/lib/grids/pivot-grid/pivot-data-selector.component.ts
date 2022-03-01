@@ -21,7 +21,6 @@ import {
 } from "../../directives/drag-drop/drag-drop.directive";
 import { ISelectionEventArgs } from "../../drop-down/drop-down.common";
 import { IgxDropDownComponent } from "../../drop-down/drop-down.component";
-import { IgxExpansionPanelComponent } from '../../expansion-panel/expansion-panel.component';
 import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
@@ -98,7 +97,7 @@ export class IgxPivotDataSelectorComponent {
      */
     @Output()
     public columnsExpandedChange = new EventEmitter<boolean>();
-    
+
     /**
      * Gets/sets whether the rows panel is expanded
      * Get
@@ -416,10 +415,7 @@ export class IgxPivotDataSelectorComponent {
             dimension?.findIndex((x) => x?.memberName === itemId) !== -1
                 ? dimension?.findIndex((x) => x.memberName === itemId)
                 : dimension?.length;
-        const dimensions = this.grid.pivotConfiguration.rows
-            .concat(this.grid.pivotConfiguration.columns)
-            .concat(this.grid.pivotConfiguration.filters)
-            .filter((x) => x && x.memberName === itemId);
+        const dimensions = this.grid.allDimensions.filter((x) => x && x.memberName === itemId);
 
         const reorder =
             dimensionState?.findIndex((item) => item.memberName === itemId) !==

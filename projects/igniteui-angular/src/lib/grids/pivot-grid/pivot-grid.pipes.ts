@@ -173,8 +173,6 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
 
         const enabledRows = config.rows?.filter(x => x.enabled);
         let groupData: IPivotGridGroupRecord[] = [];
-        let prevDim;
-        let prevDimRoot;
         let prevId;
         const index = enabledRows.indexOf(dim);
         for (let rec of data) {
@@ -188,8 +186,6 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
                 groupData = [];
             }
             groupData.push(rec);
-            prevDim = currentDim;
-            prevDimRoot = dim;
             prevId = id;
         }
         if (groupData.length > 0) {
@@ -275,7 +271,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
         collection: IPivotGridRecord[],
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy,
-        pipeTrigger: number
+        _pipeTrigger: number
     ): IPivotGridRecord[] {
         let result: IPivotGridRecord[];
 
@@ -300,8 +296,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
 })
 export class IgxPivotGridSortingPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
-    public transform(collection: any[], config: IPivotConfiguration, sorting: IGridSortingStrategy,
-        id: string, pipeTrigger: number, pinned?): any[] {
+    public transform(collection: any[], config: IPivotConfiguration, sorting: IGridSortingStrategy, _pipeTrigger: number): any[] {
         let result: any[];
         const allDimensions = config.rows || [];
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
