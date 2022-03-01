@@ -11,7 +11,6 @@ import { VirtualGridComponent, NoScrollsComponent,
     NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
-import { IgxGridCellComponent } from '../cell.component';
 import { CellType } from '../common/grid.interface';
 
 describe('IgxGrid - Cell component #grid', () => {
@@ -156,7 +155,6 @@ describe('IgxGrid - Cell component #grid', () => {
     });
 
     describe('Cells in virtualized grid ', () => {
-        let zone;
         let fix;
         let grid: IgxGridComponent;
 
@@ -166,7 +164,7 @@ describe('IgxGrid - Cell component #grid', () => {
                     VirtualGridComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () =>  new TestNgZone() }]
             });
         }));
 
@@ -427,7 +425,7 @@ describe('IgxGrid - Cell component #grid', () => {
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" [width]="'900px'" [height]="'500px'" rowSelection = "multiple" [moving]="true">
         <igx-column *ngFor="let c of columns" [field]="c.field"
                                               [header]="c.field"
-                                              [width]="c.width"                                             
+                                              [width]="c.width"
                                               [groupable]="true"
                                               [resizable]="true"
                                               [sortable]="true"
