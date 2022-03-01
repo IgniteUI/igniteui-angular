@@ -195,7 +195,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             rowID: rowId,
             rowIslandKey: ri.key
         };
-        const childGrid =  this.grid.hgridAPI.getChildGrid([pathSegment]);
+        const childGrid =  this.grid.gridAPI.getChildGrid([pathSegment]);
         const targetIndex = isNext ? 0 : childGrid.dataView.length - 1;
         const targetRec =  childGrid.dataView[targetIndex];
         if (!targetRec) {
@@ -267,7 +267,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 rowID: row.data.rowID,
                 rowIslandKey: riKey
             };
-            const childGrid =  this.grid.hgridAPI.getChildGrid([pathSegment]);
+            const childGrid =  this.grid.gridAPI.getChildGrid([pathSegment]);
             rowElem = childGrid.tfoot.nativeElement;
         }
         const gridBottom = this._getMinBottom(this.grid);
@@ -306,7 +306,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    private hasNextTarget(grid, index: number, isNext: boolean) {
+    private hasNextTarget(grid: GridType, index: number, isNext: boolean) {
         const targetRowIndex =  isNext ? index + 1 : index - 1;
         const hasTargetRecord = !!grid.dataView[targetRowIndex];
         if (hasTargetRecord) {

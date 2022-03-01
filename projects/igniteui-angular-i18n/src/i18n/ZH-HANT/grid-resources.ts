@@ -87,6 +87,7 @@ const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: '布林值篩選條件',
     igx_grid_excel_currency_filter: '貨幣篩選條件',
     igx_grid_excel_custom_filter: '自訂篩選條件...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: '進階篩選',
     igx_grid_advanced_filter_and_group: '“And” 群組',
     igx_grid_advanced_filter_or_group: '“Or” 群組',

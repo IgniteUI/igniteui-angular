@@ -61,7 +61,7 @@ export interface CellType {
     column: ColumnType;
     row: RowType;
     grid: GridType;
-    id: { rowID: any; columnID: number; rowIndex: number };
+    id?: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
     readonly?: boolean;
     title?: any;
@@ -234,6 +234,7 @@ export interface GridServiceType {
     clear_sort(fieldName: string): void;
 
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
+    sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
 
     update_cell(cell: IgxCell): IGridEditEventArgs;
     update_row(row: IgxEditRow, value: any, event?: Event): IGridEditEventArgs;
@@ -246,8 +247,9 @@ export interface GridServiceType {
     getParentRowId?(child: GridType): any;
     getChildGrids?(inDepth?: boolean): GridType[];
     getChildGrid?(path: IPathSegment[]): GridType;
-    // XXX: Fix type
-    unsetChildRowIsland?(rowIsland: any): void;
+
+    unsetChildRowIsland?(rowIsland: GridType): void;
+    registerChildRowIsland?(rowIsland: GridType): void;
 }
 
 
@@ -275,7 +277,6 @@ export interface GridType extends IGridDataBindable {
     dataCloneStrategy: IDataCloneStrategy;
 
     gridAPI: GridServiceType;
-
 
     filterMode: FilterMode;
 
@@ -434,7 +435,6 @@ export interface GridType extends IGridDataBindable {
     loadingRows?: Set<any>;
     parent?: GridType;
     highlightedRowID?: any;
-    hgridAPI?: GridServiceType;
     updateOnRender?: boolean;
     childLayoutKeys?: any[];
     childLayoutList?: QueryList<any>;
@@ -648,6 +648,8 @@ export interface PivotGridType extends GridType {
     valuesChange: EventEmitter<IValuesChange>;
     pivotKeys: IPivotKeys;
     hasMultipleValues: boolean;
+    excelStyleFilterMaxHeight: string;
+    excelStyleFilterMinHeight: string;
 }
 export interface GridSVGIcon {
     name: string;
