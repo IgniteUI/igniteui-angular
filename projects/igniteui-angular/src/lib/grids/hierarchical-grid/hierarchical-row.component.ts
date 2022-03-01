@@ -153,7 +153,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         if (grid.gridAPI.crudService.cellInEditMode) {
             grid.gridAPI.crudService.endEdit();
         }
-        grid.hgridAPI.getChildGrids(true).forEach(g => {
+        grid.gridAPI.getChildGrids(true).forEach(g => {
             if (g.gridAPI.crudService.cellInEditMode) {
                 g.gridAPI.crudService.endEdit();
             }

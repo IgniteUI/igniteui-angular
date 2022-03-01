@@ -563,7 +563,7 @@ export abstract class IgxBaseExporter {
                     rowIslandKey: island.key
                 };
 
-                const islandGrid = grid?.hgridAPI.getChildGrid([path]);
+                const islandGrid = grid?.gridAPI.getChildGrid([path]);
                 const keyRecordData = this.prepareIslandData(island, islandGrid, entry[island.key]) || [];
 
                 this.getAllChildColumnsAndData(island, keyRecordData, expansionStateVal, islandGrid);
@@ -681,7 +681,7 @@ export abstract class IgxBaseExporter {
                             rowIslandKey: childIsland.key
                         };
 
-                        const childIslandGrid = grid?.hgridAPI.getChildGrid([path]);
+                        const childIslandGrid = grid?.gridAPI.getChildGrid([path]);
                         const keyRecordData = this.prepareIslandData(island, childIslandGrid, rec[childIsland.key]) || [];
 
                         this.getAllChildColumnsAndData(childIsland, keyRecordData, islandExpansionStateVal, childIslandGrid);
