@@ -15,6 +15,9 @@ All notable changes for each version of this project will be documented in this 
 
     - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/pivot-grid/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxPivotGrid-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotgrid).
 
+- `IgxTreeGrid`
+    - Added support for tree filter items in the Excel Style filtering UI. Use the `TreeGridFilteringStrategy` constructor to specify which columns should display tree filter items.
+
 - `igxTooltipTarget` directive now allows specifying a plain text tooltip without adding an additional DOM element decorated with the `igxTooltip` directive. This is achieved via the newly introduced `tooltip` string input.
     ```html
     <button igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">
@@ -36,6 +39,7 @@ All notable changes for each version of this project will be documented in this 
         <igx-column field="Age"></igx-column>
     </igx-grid>
    ```
+   - **Breaking Change** - `getFilterItems` method is added to the `IFilteringStrategy` interface. Using the new method you could retrieve either list or tree filter items to be displayed for a column in the Excel Style filtering UI. If you have your own implementation of the `IFilteringStrategy` interface, you will need to implement the new method. Otherwise, you could derive from the `BaseFilteringStrategy` class or any of its sub-classes, which already implement the new method.
    - Exposed `dataChanging` and `dataChanged` events for the three grids that are re-emits of the corresponding `IgxForOf` events. These indicate the beginning and end of the input change triggering the actual data re-rendering which happens each time the data view changes. This happens after changes in either the data the grid is bound or the state affecting the operations which alter this data (e.g. sorting, filtering, group-by).
    - Scrolling with the mouse wheel over cells with templates that include scrollable containers now correctly scroll these inner containers before the grid body scrolls.
 

@@ -9,10 +9,6 @@ import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
-import {
-    CellType,
-    IgxColumnComponent
-} from '../grids/grid/public_api';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
@@ -24,7 +20,9 @@ import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxPivotRowComponent } from '../grids/pivot-grid/pivot-row.component';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../grids/row.directive';
-import { GridType, RowType } from '../grids/common/grid.interface';
+import { CellType, GridType, RowType } from '../grids/common/grid.interface';
+import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
+import { IgxColumnComponent } from '../grids/columns/column.component';
 
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -99,6 +97,7 @@ export const PAGER_CLASS = '.igx-page-nav';
 const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
 const RESIZE_AREA_CLASS = '.igx-grid-th__resize-handle';
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
+const TREE_NODE_TOGGLE = '.igx-tree-node__toggle-button';
 
 export class GridFunctions {
 
@@ -697,11 +696,25 @@ export class GridFunctions {
         return columnHeader.querySelector(ESF_FILTER_ICON_FILTERED);
     }
 
+    /**
+     * Gets the ESF tree node icon
+     */
+     public static getExcelFilterTreeNodeIcon(fix: ComponentFixture<any>, index: number) {
+        const treeNodeEl = fix.debugElement.queryAll(By.directive(IgxTreeNodeComponent))[index]?.nativeElement;
+        const expandIcon = treeNodeEl.querySelector(TREE_NODE_TOGGLE);
+        return expandIcon;
+    }
+
     public static clickExcelFilterIcon(fix: ComponentFixture<any>, columnField: string) {
         const filterIcon = GridFunctions.getExcelFilterIcon(fix, columnField);
         const filterIconFiltered = GridFunctions.getExcelFilterIconFiltered(fix, columnField);
         const icon = (filterIcon) ? filterIcon : filterIconFiltered;
         UIInteractions.simulateClickAndSelectEvent(icon);
+    }
+
+    public static clickExcelTreeNodeExpandIcon(fix: ComponentFixture<any>, index: number) {
+        const expandIcon = GridFunctions.getExcelFilterTreeNodeIcon(fix, index);
+        UIInteractions.simulateClickAndSelectEvent(expandIcon);
     }
 
     public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: GridType, columnField: string) {
@@ -1044,6 +1057,11 @@ export class GridFunctions {
     public static getExcelStyleSearchComponentListItems(fix, comp = null, grid = 'igx-grid'): HTMLElement[] {
         const searchComponent = comp ? comp : GridFunctions.getExcelStyleSearchComponent(fix, null, grid);
         return GridFunctions.sortNativeElementsVertically(Array.from(searchComponent.querySelectorAll('igx-list-item')));
+    }
+
+    public static getExcelStyleSearchComponentTreeNodes(fix, comp = null, grid = 'igx-tree-grid'): HTMLElement[] {
+        const searchComponent = comp ? comp : GridFunctions.getExcelStyleSearchComponent(fix, null, grid);
+        return GridFunctions.sortNativeElementsVertically(Array.from(searchComponent.querySelectorAll('igx-tree-node')));
     }
 
     public static getColumnHeaders(fix: ComponentFixture<any>): DebugElement[] {
