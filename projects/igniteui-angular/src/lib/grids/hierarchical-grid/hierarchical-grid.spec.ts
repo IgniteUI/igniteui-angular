@@ -1507,7 +1507,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         secondLevelGrid.primaryKey = 'ID';
         customFixture.detectChanges();
 
-        expect(GridFunctions.getRowEditingOverlay(customFixture)).toBeNull();
+        expect(GridFunctions.getRowEditingOverlay(customFixture)).toBeDefined();
 
         cellElem = secondLevelGrid.gridAPI.get_cell_by_index(0, 'ProductName');
         row = secondLevelGrid.gridAPI.get_row_by_index(0);
