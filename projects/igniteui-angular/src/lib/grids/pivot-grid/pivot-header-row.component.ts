@@ -14,7 +14,6 @@ import {
 import { first } from 'rxjs/operators';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
-import { GridColumnDataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
@@ -24,7 +23,6 @@ import { ColumnType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interfa
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';
-import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 
@@ -436,7 +434,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @hidden
     * @internal
     */
-    public onChipSort(event, dimension: IPivotDimension, dimensionType: PivotDimensionType) {
+    public onChipSort(_event, dimension: IPivotDimension) {
         const startDirection = dimension.sortDirection || SortingDirection.None;
         const direction = startDirection + 1 > SortingDirection.Desc ?
             SortingDirection.None : startDirection + 1;

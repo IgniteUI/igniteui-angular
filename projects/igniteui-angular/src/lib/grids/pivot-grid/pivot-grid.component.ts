@@ -923,7 +923,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public uniqueDimensionValuesStrategy(column: IgxColumnComponent, exprTree: IFilteringExpressionsTree,
         done: (uniqueValues: any[]) => void) {
-        const config = this.pivotConfiguration;
         const enabledDimensions = this.allDimensions.filter(x => x && x.enabled);
         const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === column.field);
         if (dim) {
@@ -1940,7 +1939,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected generateColumnHierarchy(fields: Map<string, any>, data, parent = null): IgxColumnComponent[] {
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         let columns = [];
         if (fields.size === 0) {
             this.values.forEach((value) => {
@@ -1969,7 +1967,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             const sorted = DataUtil.sort(cloneArray(entries, true), expressions, this.sortStrategy, this.gridAPI.grid);
             currentFields = new Map(sorted);
         }
-        currentFields.forEach((value, key) => {
+        currentFields.forEach((value) => {
             let shouldGenerate = true;
             if (value.dimension && value.dimension.filter) {
                 const state = {
