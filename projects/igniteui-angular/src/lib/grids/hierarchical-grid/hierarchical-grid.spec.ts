@@ -15,7 +15,7 @@ import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
 
-fdescribe('Basic IgxHierarchicalGrid #hGrid', () => {
+describe('Basic IgxHierarchicalGrid #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     configureTestSuite((() => {
