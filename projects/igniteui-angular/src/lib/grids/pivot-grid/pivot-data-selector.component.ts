@@ -416,10 +416,7 @@ export class IgxPivotDataSelectorComponent {
             dimension?.findIndex((x) => x?.memberName === itemId) !== -1
                 ? dimension?.findIndex((x) => x.memberName === itemId)
                 : dimension?.length;
-        const dimensions = this.grid.pivotConfiguration.rows
-            .concat(this.grid.pivotConfiguration.columns)
-            .concat(this.grid.pivotConfiguration.filters)
-            .filter((x) => x && x.memberName === itemId);
+        const dimensions = this.grid.allDimensions.filter((x) => x && x.memberName === itemId);
 
         const reorder =
             dimensionState?.findIndex((item) => item.memberName === itemId) !==
