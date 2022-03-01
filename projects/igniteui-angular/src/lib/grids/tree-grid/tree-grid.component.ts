@@ -395,8 +395,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
         // public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         protected transactionFactory: IgxHierarchicalTransactionFactory,
-        private _elementRef: ElementRef<HTMLElement>,
-        private _zone: NgZone,
+        _elementRef: ElementRef<HTMLElement>,
+        _zone: NgZone,
         @Inject(DOCUMENT) public document: any,
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
@@ -404,7 +404,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         protected viewRef: ViewContainerRef,
         appRef: ApplicationRef,
         moduleRef: NgModuleRef<any>,
-        factoryResolver: ComponentFactoryResolver,
         injector: Injector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
@@ -417,7 +416,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(selectionService, colResizingService, gridAPI, transactionFactory,
-            _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef,factoryResolver, injector, navigation,
+            _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef, injector, navigation,
             filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
     }
 
