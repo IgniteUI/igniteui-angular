@@ -3597,16 +3597,18 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             // Move 'ProductName' one step to the right. (should move)
-            GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
-            tick(100);
+            let moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
+            UIInteractions.simulateClickEvent(moveRight);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ID');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ProductName');
             expect(productNameCol.pinned).toBe(true);
 
             // Move 'ProductName' one step to the left. (should move)
-            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
-            tick(100);
+            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            UIInteractions.simulateClickEvent(moveLeft);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ID');
@@ -3617,11 +3619,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsDisabled(moveComponent.querySelectorAll('button')[0]);
 
             // Move 'ProductName' two steps to the right. (should move)
-            GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
-            tick(100);
+            moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
+            UIInteractions.simulateClickEvent(moveRight);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
-            GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
-            tick(100);
+            UIInteractions.simulateClickEvent(moveRight);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ID');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ProductName');
@@ -3641,11 +3644,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
-            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
-            tick(100);
+            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            UIInteractions.simulateClickEvent(moveLeft);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
-            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
-            tick(100);
+            UIInteractions.simulateClickEvent(moveLeft);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
@@ -6072,7 +6076,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Pin the 'General Information' group by pinning its child 'ProductName' column.
-            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             tick(100);
             fix.detectChanges();
             GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
@@ -6083,11 +6087,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.verifyColumnIsPinned(column, false, 7);
 
             // Try to pin the 'AnotherField' column by moving it to the left.
-            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
-            tick(100);
-            fix.detectChanges();
-            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
-            tick(200);
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            UIInteractions.simulateClickEvent(moveLeft);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             // Verify 'AnotherField' column is successfully pinned next to the column group.
