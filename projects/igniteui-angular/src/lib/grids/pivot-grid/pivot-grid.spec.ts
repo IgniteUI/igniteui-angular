@@ -40,6 +40,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
         }));
+
         it('should show empty template when there are no dimensions and values', () => {
             // whole pivotConfiguration is undefined
             const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
@@ -847,8 +848,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Bulgaria-UnitsSold').value).toBe(2);
                 expect(pivotGrid.gridAPI.get_cell_by_index(0, 'USA-UnitsSold').value).toBe(3);
                 expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Uruguay-UnitsSold').value).toBe(2);
-
             });
+
             it('should allow showing custom aggregations via pivot configuration.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration.values = [];
