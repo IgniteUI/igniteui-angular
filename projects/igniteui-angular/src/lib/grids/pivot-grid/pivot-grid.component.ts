@@ -70,7 +70,7 @@ import { IPageEventArgs } from '../../paginator/paginator-interfaces';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
-import { FilterUtil } from '../../data-operations/filtering-strategy';
+import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -460,6 +460,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected _defaultExpandState = false;
+    protected _filterStrategy: IFilteringStrategy = new DimensionValuesFilteringStrategy();
     private _data;
     private _filteredData;
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
@@ -845,7 +846,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         viewRef: ViewContainerRef,
         appRef: ApplicationRef,
         moduleRef: NgModuleRef<any>,
-        factoryResolver: ComponentFactoryResolver,
         injector: Injector,
         navigation: IgxPivotGridNavigationService,
         filteringService: IgxFilteringService,
@@ -869,7 +869,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             viewRef,
             appRef,
             moduleRef,
-            factoryResolver,
             injector,
             navigation,
             filteringService,
@@ -1858,7 +1857,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     protected autogenerateColumns() {
         let columns = [];
-        this.filterStrategy = this.filterStrategy ?? new DimensionValuesFilteringStrategy();
         const data = this.gridAPI.filterDataByExpressions(this.filteringExpressionsTree);
         this.dimensionDataColumns = this.generateDimensionColumns();
         let fieldsMap;

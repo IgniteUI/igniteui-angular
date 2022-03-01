@@ -533,11 +533,8 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
             currentDim.findIndex(x => x.memberName === event.owner.id) : currentDim.length;
         const targetIndex = this._dropPos === DropPosition.AfterDropTarget ? chipIndex + 1 : chipIndex;
         if (isNewChip) {
-            const allDims = this.grid.pivotConfiguration.rows
-                .concat(this.grid.pivotConfiguration.columns)
-                .concat(this.grid.pivotConfiguration.filters);
-            // chip moved from external collection
-            const dim = allDims.find(x => x && x.memberName === dragId);
+            // chip moved from an external collection
+            const dim = this.grid.allDimensions.find(x => x && x.memberName === dragId);
             if (!dim) {
                 // you have dragged something that is not a dimension
                 return;
