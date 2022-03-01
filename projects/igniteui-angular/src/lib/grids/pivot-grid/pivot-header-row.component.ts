@@ -170,7 +170,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public get maxContainerHeight() {
-        return this.totalDepth > 1 ? this.totalDepth * this.grid.renderedRowHeight : undefined;
+        return this.totalDepth * this.grid.renderedRowHeight;
     }
 
     /**
