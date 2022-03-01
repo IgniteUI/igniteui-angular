@@ -741,8 +741,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public isIndexOutsideView(index: number) {
         const targetNode = index >= this.state.startIndex && index <= this.state.startIndex + this.state.chunkSize ?
-        this._embeddedViews.map(view =>
-            view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling)[index - this.state.startIndex] : null;
+            this._embeddedViews.map(view =>
+                view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling)[index - this.state.startIndex] : null;
         const rowHeight = this.getSizeAt(index);
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const containerOffset = -(this.scrollPosition - this.sizesCache[this.state.startIndex]);
@@ -1420,8 +1420,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (Math.abs(sizeDiff) > 0 && this.scrollPosition > 0) {
             this.recalcUpdateSizes();
             const offset = this.igxForScrollOrientation === 'horizontal' ?
-             parseInt(this.dc.instance._viewContainer.element.nativeElement.style.left, 10) :
-             parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+                parseInt(this.dc.instance._viewContainer.element.nativeElement.style.left, 10) :
+                parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const newSize = this.sizesCache[this.state.startIndex] - offset;
             this.scrollPosition = newSize;
             if (this.scrollPosition !== newSize) {
@@ -1622,9 +1622,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     protected getItemSize(item) {
         let size = 0;
-        const dimension = this.igxForSizePropName  || 'height';
+        const dimension = this.igxForSizePropName || 'height';
         if (this.igxForScrollOrientation === 'vertical') {
-            size =  this._getItemSize(item, dimension);
+            size = this._getItemSize(item, dimension);
             if (item && item.summaries) {
                 size = item.max;
             } else if (item && item.groups && item.height) {
