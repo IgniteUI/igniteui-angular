@@ -206,7 +206,7 @@ describe('igxGridEditingActions #grid ', () => {
             row.toggle();
             fixture.detectChanges();
 
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[1];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[1];
 
             const childRow = childGrid.gridAPI.get_row_by_index(0);
             const rowElem = childRow.nativeElement;
@@ -224,7 +224,7 @@ describe('igxGridEditingActions #grid ', () => {
             row.expanded = !row.expanded;
             fixture.detectChanges();
 
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const childRow = childGrid.gridAPI.get_row_by_index(0);
 
             actionStripRoot.show(row);
