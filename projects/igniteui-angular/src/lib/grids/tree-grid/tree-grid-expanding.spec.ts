@@ -1202,7 +1202,7 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         treeGrid = fix.componentInstance.treeGrid;
     }));
 
-    it('Hide banner with collapsing a node, using UI', fakeAsync(() => {
+    it('Do not hide banner with collapsing a node, using UI', fakeAsync(() => {
         const rows = TreeGridFunctions.getAllRows(fix);
 
         const cell = treeGrid.getCellByColumn(1, 'Name');
@@ -1216,15 +1216,15 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         indicatorDiv.triggerEventHandler('click', new Event('click'));
         fix.detectChanges();
         tick(16);
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should hide');
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should not hide');
 
         indicatorDiv.triggerEventHandler('click', new Event('click'));
         fix.detectChanges();
         tick(16);
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not show again');
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should still be shown');
     }));
 
-    it('Hide banner with collapsing a node, using API', fakeAsync(() => {
+    it('Do not hide banner with collapsing a node, using API', fakeAsync(() => {
         const cell = treeGrid.getCellByColumn(1, 'Name');
         cell.editMode = true;
         tick(16);
@@ -1234,12 +1234,12 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should hide');
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should not hide');
 
         treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not show again');
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should still be shown');
     }));
 
     // The following tests were written,
