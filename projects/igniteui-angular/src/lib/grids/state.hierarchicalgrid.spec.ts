@@ -12,7 +12,6 @@ import { IgxHierarchicalGridModule } from './hierarchical-grid/public_api';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { GridSelectionMode } from './common/enums';
-import { wait } from '../test-utils/ui-interactions.spec';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
 
