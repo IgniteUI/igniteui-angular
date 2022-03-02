@@ -26,14 +26,9 @@ $dark-fluent-checkbox: extend($fluent-checkbox, (
 
 /// Generates a dark bootstrap checkbox schema.
 /// @type {Map}
-/// @prop {Color} tick-color [color: ('grays', 900)] - The checked mark color.
 /// @requires {function} extend
 /// @requires $bootstrap-checkbox
-$dark-bootstrap-checkbox: extend($bootstrap-checkbox, (
-    tick-color: (
-        color: ('grays', 900)
-    )
-));
+$dark-bootstrap-checkbox: $bootstrap-checkbox;
 
 /// Generates a dark indigo checkbox schema.
 /// @type {Map}
