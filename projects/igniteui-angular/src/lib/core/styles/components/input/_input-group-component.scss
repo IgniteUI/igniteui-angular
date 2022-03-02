@@ -614,6 +614,7 @@
             @include e(bundle) {
                 @extend %form-group-bundle--focus !optional;
 
+                &:focus-within,
                 &:hover {
                     @extend %form-group-bundle--fluent--focus !optional;
                 }

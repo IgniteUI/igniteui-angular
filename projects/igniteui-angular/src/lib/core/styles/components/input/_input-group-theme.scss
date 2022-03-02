@@ -737,7 +737,7 @@
 
     %form-group-bundle--fluent--focus {
         border-color: var-get($theme, 'focused-border-color');
-        box-shadow: none;
+        box-shadow: 0 0 0 1px var-get($theme, 'focused-border-color');
     }
 
     %form-group-bundle--fluent--hover-disabled,
