@@ -1,4 +1,3 @@
-import { trigger } from '@angular/animations';
 import { Component, ViewChild } from '@angular/core';
 import {
     IgxPivotNumericAggregate,
@@ -14,7 +13,6 @@ import {
     IgxStringFilteringOperand,
     PivotDimensionType
 } from 'igniteui-angular';
-import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 export class IgxTotalSaleAggregate {
     public static totalSale: PivotAggregation = (members, data: any) =>
@@ -262,7 +260,7 @@ export class PivotGridSampleComponent {
         this.grid1.notifyDimensionChange(isColumnChange);
     }
 
-    public dimensionChange(event: IDimensionsChange) {
+    public dimensionChange() {
         const allDims = this.pivotConfigHierarchy.rows.concat(this.pivotConfigHierarchy.columns).concat(this.pivotConfigHierarchy.filters);
         const allEnabled = allDims.filter(x => x && x.enabled);
         this.selected = allEnabled;

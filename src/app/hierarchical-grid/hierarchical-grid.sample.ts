@@ -52,7 +52,7 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
     }
 
     public enableSummary() {
-        const childGrid = this.hGrid2.hgridAPI.getChildGrids(false)[0];
+        const childGrid = this.hGrid2.gridAPI.getChildGrids(false)[0];
         this.hGrid2.getColumnByName('ID').hasSummary = true;
         if (childGrid) {
             childGrid.getColumnByName('ID').hasSummary = true;

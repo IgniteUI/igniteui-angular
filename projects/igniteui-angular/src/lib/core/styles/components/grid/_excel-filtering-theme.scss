@@ -110,7 +110,6 @@
             $item-selected-border-color: transparent
         ));
 
-
         @include tree(tree-theme(
             $background: color($palette, 'surface'),
             $background-selected: color($palette, 'surface'),
@@ -180,7 +179,8 @@
         margin-#{$left}: rem(16px);
     }
 
-    %grid-excel-sort {
+    %grid-excel-sort,
+    %grid-excel-move {
         display: block;
         padding: rem(8px) rem(16px);
 
@@ -193,6 +193,7 @@
             font-size: rem(18px);
             width: rem(18px);
             height: rem(18px);
+            justify-content: initial;
         }
     }
 
@@ -221,20 +222,7 @@
         }
     }
 
-    %grid-excel-move {
-        display: block;
-        padding: rem(8px) rem(16px);
-
-        header {
-            color: color($palette, 'grays', 700);
-            margin-bottom: rem(4px);
-        }
-    }
-
-    %grid-excel-move__buttons {
-        display: flex;
-        justify-content: space-between;
-
+    %grid-excel-move igx-buttongroup {
         @include if-rtl() {
             flex-direction: row-reverse;
 
@@ -359,7 +347,7 @@
     }
 
     %grid-excel-menu--cosy {
-        igx-chips-area  {
+        igx-chips-area {
             padding: rem(8px) rem(8px) 0 rem(8px);
         }
 
@@ -418,7 +406,7 @@
     }
 
     %grid-excel-menu--compact {
-        igx-chips-area  {
+        igx-chips-area {
             padding: rem(4px) rem(4px) 0 rem(4px);
             gap: rem(4px);
         }
@@ -428,7 +416,8 @@
             padding: rem(4px);
         }
 
-        %grid-excel-sort {
+        %grid-excel-sort,
+        %grid-excel-move {
             padding: rem(4px);
 
             @extend %grid-excel-action--compact;
@@ -439,9 +428,7 @@
         }
 
         %grid-excel-move {
-            @extend %grid-excel-action--compact;
             margin-bottom: 0;
-            padding: rem(4px);
         }
 
         %grid-excel-actions {

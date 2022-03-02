@@ -9,11 +9,6 @@ import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
-import {
-    CellType,
-    IgxColumnComponent,
-    IgxGridBaseDirective
-} from '../grids/grid/public_api';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
@@ -25,8 +20,9 @@ import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxPivotRowComponent } from '../grids/pivot-grid/pivot-row.component';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../grids/row.directive';
-import { GridType, RowType } from '../grids/common/grid.interface';
+import { CellType, GridType, RowType } from '../grids/common/grid.interface';
 import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
+import { IgxColumnComponent } from '../grids/columns/column.component';
 
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -124,7 +120,7 @@ export class GridFunctions {
         return fix.debugElement.query(By.css(GRID_CONTENT_CLASS));
     }
 
-    public static getGridHeader(grid: IgxGridBaseDirective): IgxGridHeaderRowComponent {
+    public static getGridHeader(grid: GridType): IgxGridHeaderRowComponent {
         return grid.theadRow;
     }
 
@@ -169,7 +165,7 @@ export class GridFunctions {
     /**
      * Focus the grid header
      */
-    public static focusHeader(fix: ComponentFixture<any>, grid: IgxGridBaseDirective) {
+    public static focusHeader(fix: ComponentFixture<any>, grid: GridType) {
         this.getGridHeader(grid).nativeElement.focus();
         fix.detectChanges();
     }
@@ -177,7 +173,7 @@ export class GridFunctions {
     /**
      * Focus the first cell in the grid
      */
-    public static focusFirstCell(fix: ComponentFixture<any>, grid: IgxGridBaseDirective) {
+    public static focusFirstCell(fix: ComponentFixture<any>, grid: GridType) {
         this.getGridHeader(grid).nativeElement.focus();
         fix.detectChanges();
         this.getGridContent(fix).triggerEventHandler('focus', null);
@@ -311,13 +307,13 @@ export class GridFunctions {
         expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
     }
 
-    public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
+    public static verifyUnpinnedAreaWidth(grid: GridType, expectedWidth: number, includeScrolllWidth = true) {
         const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollSize)) :
             Math.abs(expectedWidth - grid.unpinnedWidth);
         expect(tolerans).toBeLessThanOrEqual(1);
     }
 
-    public static verifyPinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number) {
+    public static verifyPinnedAreaWidth(grid: GridType, expectedWidth: number) {
         const tolerans = Math.abs(expectedWidth - grid.pinnedWidth);
         expect(tolerans).toBeLessThanOrEqual(1);
     }
@@ -721,7 +717,7 @@ export class GridFunctions {
         UIInteractions.simulateClickAndSelectEvent(expandIcon);
     }
 
-    public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: IgxGridBaseDirective, columnField: string) {
+    public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: GridType, columnField: string) {
         const event = { stopPropagation: () => { }, preventDefault: () => { } };
         const header = grid.getColumnByName(columnField).headerCell;
         header.onFilteringIconClick(event);
@@ -729,7 +725,7 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
-    public static clickExcelFilterIconFromCodeAsync(fix: ComponentFixture<any>, grid: IgxGridBaseDirective, columnField: string) {
+    public static clickExcelFilterIconFromCodeAsync(fix: ComponentFixture<any>, grid: GridType, columnField: string) {
         const event = { stopPropagation: () => { }, preventDefault: () => { } };
         const header = grid.getColumnByName(columnField).headerCell;
         header.onFilteringIconClick(event);
@@ -954,7 +950,7 @@ export class GridFunctions {
     /**
      * Click the filter chip for the provided column in order to open the filter row for it.
      */
-    public static clickFilterCellChipUI(fix, columnField: string, forGrid?: IgxGridBaseDirective) {
+    public static clickFilterCellChipUI(fix, columnField: string, forGrid?: GridType) {
         const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerGroup = headerGroups.find((hg) => {
             const col: IgxColumnComponent = hg.componentInstance.column;
@@ -1072,7 +1068,7 @@ export class GridFunctions {
         return fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
     }
 
-    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>, forGrid?: IgxGridBaseDirective): DebugElement {
+    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>, forGrid?: GridType): DebugElement {
         return this.getColumnHeaders(fix).find((header) => {
             const col = header.componentInstance.column;
             return col.field === columnField && (forGrid ? forGrid === col.grid : true);
@@ -1085,7 +1081,7 @@ export class GridFunctions {
         return groupHeaders;
     }
 
-    public static getColumnGroupHeader(header: string, fix: ComponentFixture<any>, forGrid?: IgxGridBaseDirective): DebugElement {
+    public static getColumnGroupHeader(header: string, fix: ComponentFixture<any>, forGrid?: GridType): DebugElement {
         const headers = this.getColumnGroupHeaders(fix);
         const head = headers.find((gr) => {
             const col = gr.componentInstance.column;

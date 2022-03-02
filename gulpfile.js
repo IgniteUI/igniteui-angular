@@ -188,7 +188,7 @@ function typedocBuildExportFn(cb) {
         "--tags",
         "--params",
         "--tsconfig",
-        path.join(__dirname,"tsconfig.json")],
+        path.join(__dirname,"tsconfig.typedoc.json")],
         { stdio: 'inherit', shell: true });
     cb();
 }
