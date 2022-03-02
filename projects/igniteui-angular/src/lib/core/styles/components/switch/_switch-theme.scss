@@ -36,7 +36,9 @@
 /// @param {Color} $border-disabled-color [null] - The border color of the switch when it is disabled.
 /// @param {Color} $border-on-color [null] - The border color when the switch is on.
 /// @param {Color} $border-on-hover-color [null] - The border color when the switch is on and hovered.
-/// @param {Color} $focus-outline-color [null] - TThe focus outlined color.
+/// @param {Color} $focus-outline-color [null] - The focus outlined color.
+/// @param {Color} $focus-outline-color-focused [null] - The focus outlined color for focused state.
+/// @param {Color} $focus-fill-color [null] - The focus fill color.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -78,6 +80,8 @@
     $border-on-color: null,
     $border-on-hover-color: null,
     $focus-outline-color: null,
+    $focus-outline-color-focused: null,
+    $focus-fill-color: null
 ) {
     $name: 'igx-switch';
     $switch-schema: ();
@@ -146,6 +150,8 @@
         border-on-color: $border-on-color,
         border-on-hover-color: $border-on-hover-color,
         focus-outline-color: $focus-outline-color,
+        focus-outline-color-focused: $focus-outline-color-focused,
+        focus-fill-color: $focus-fill-color
     ));
 }
 
@@ -183,21 +189,21 @@
     $switch-thumb-width: map.get((
         material: 20px,
         fluent: 12px,
-        bootstrap: 8px,
+        bootstrap: 11px,
         indigo-design: 8px
     ), $variant);
 
     $switch-on-offset: map.get((
         material: 1px,
         fluent: math.div($switch-thumb-width, 2),
-        bootstrap: math.div($switch-thumb-width, 2),
+        bootstrap: 5px,
         indigo-design: 7px
     ), $variant);
 
     $switch-off-offset: map.get((
         material: -1px,
         fluent: math.div($switch-thumb-width, 3),
-        bootstrap: math.div($switch-thumb-width, 3),
+        bootstrap: math.div($switch-thumb-width, 4),
         indigo-design: math.div($switch-thumb-width, 3),
     ), $variant);
 
@@ -279,9 +285,11 @@
             border: 2px solid var-get($theme, 'border-color');
         }
 
-        &:hover,
-        &:focus {
-            border-color: var-get($theme, 'border-hover-color');
+        @if $variant != 'bootstrap' {
+            &:hover,
+            &:focus {
+                border-color: var-get($theme, 'border-hover-color');
+            }
         }
     }
 
@@ -319,8 +327,10 @@
             transform: translateX(#{rem(-1 * $switch-off-offset)});
         }
 
-        &:hover {
-            box-shadow: $thumb-hover-shadow;
+        @if $variant != 'bootstrap' {
+            &:hover {
+                box-shadow: $thumb-hover-shadow;
+            }
         }
     }
 
@@ -375,8 +385,12 @@
 
         @if $variant == 'bootstrap' {
             %switch-composite {
-                border-radius: var-get($theme, 'border-radius-thumb');
-                box-shadow: 0 0 0 2px var-get($theme, 'focus-outline-color');
+                border-color: var-get($theme, 'focus-fill-color');
+                box-shadow: 0 0 0 4px var-get($theme, 'focus-outline-color');
+            }
+
+            %switch-composite-thumb {
+                background: var-get($theme, 'focus-fill-color');
             }
         }
 
@@ -389,9 +403,32 @@
     }
 
     %igx-switch--focused-checked {
+        @if $variant == 'bootstrap' {
+            %switch-composite {
+                border-color: var-get($theme, 'border-on-color');
+            }
+
+            %switch-composite-thumb--x {
+                background: var-get($theme, 'thumb-on-color');
+            }
+        }
+
         @if $variant == 'indigo-design' {
             %switch-composite {
                 box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color-focused');
+            }
+        }
+    }
+
+    %igx-switch--disabled-checked {
+        @if $variant == 'bootstrap' {
+            %switch-composite--x {
+                background: var-get($theme, 'focus-fill-color');
+                border-color: var-get($theme, 'focus-fill-color');
+            }
+
+            %switch-composite-thumb--x {
+                background: var-get($theme, 'thumb-on-color');
             }
         }
     }
