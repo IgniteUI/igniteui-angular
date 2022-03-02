@@ -564,9 +564,6 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         const fieldFilterIndex = filteringTree.findIndex(fieldName);
-        // if (fieldFilterIndex > -1) {
-        //     filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
-        // }
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         grid.filteringExpressionsTree = filteringTree;
     }
@@ -589,8 +586,12 @@ export class IgxFilteringService implements OnDestroy {
         const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
             null : conditionOrExpressionsTree as IFilteringOperation;
 
-        const newExpressionsTree: FilteringExpressionsTree = createNewTree ?
-            new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName) : filteringState as FilteringExpressionsTree;
+        let newExpressionsTree = filteringState as FilteringExpressionsTree;
+
+        if (createNewTree) {
+            newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName)
+            newExpressionsTree.filteringOperands = [...filteringState.filteringOperands];
+        }
 
         if (condition) {
             const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
@@ -598,7 +599,6 @@ export class IgxFilteringService implements OnDestroy {
             expressionsTree.filteringOperands.push(newExpression);
         }
 
-        // no expressions tree found for this field
         if (expressionsTree) {
             if (insertAtIndex > -1) {
                 newExpressionsTree.filteringOperands[insertAtIndex] = expressionsTree;
