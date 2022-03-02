@@ -146,8 +146,9 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
         const config = grid.pivotConfiguration;
         const allDimensions = grid.allDimensions;
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
-        return PivotUtil.extractValueFromDimension(dim, rec);
+        const dim :IPivotDimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
+        const value = dim.childLevel ? this._getDimensionValueHierarchy(dim, rec).map(x => `[` + x +`]`).join('.') : PivotUtil.extractValueFromDimension(dim, rec);
+        return value;
     }
 
     public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
@@ -179,5 +180,16 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
             });
         });
         return items;
+    }
+
+    private _getDimensionValueHierarchy(dim: IPivotDimension, rec: any) : string[] {
+        let path = [];
+        let value = PivotUtil.extractValueFromDimension(dim, rec);
+        path.push(value);
+        if (dim.childLevel) {
+            const childVals = this._getDimensionValueHierarchy(dim.childLevel, rec);
+            path = path.concat(childVals);
+        }
+        return path;
     }
 }

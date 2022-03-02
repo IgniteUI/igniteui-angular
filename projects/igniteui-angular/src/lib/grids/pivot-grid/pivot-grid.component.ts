@@ -1932,16 +1932,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
         currentFields.forEach((value) => {
             let shouldGenerate = true;
-            if (value.dimension && value.dimension.filter) {
-                const state = {
-                    expressionsTree: value.dimension.filter.filteringOperands[0],
-                    strategy: this.filterStrategy || new DimensionValuesFilteringStrategy(),
-                    advancedFilteringExpressionsTree: this.advancedFilteringExpressionsTree
-                };
-                const filtered = FilterUtil.filter(cloneArray(value.records), state, this);
-                if (filtered.length === 0) {
-                    shouldGenerate = false;
-                }
+            if (data.length === 0) {
+                shouldGenerate = false;
             }
             if (shouldGenerate && (value.children == null || value.children.length === 0 || value.children.size === 0)) {
                 const col = this.createColumnForDimension(value, data, parent, this.hasMultipleValues);
