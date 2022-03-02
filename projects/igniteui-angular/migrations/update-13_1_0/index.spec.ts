@@ -194,6 +194,7 @@ describe(`Update to ${version}`, () => {
     });
 
     it('should rename hgridAPI to gridAPI for hierarchical grids', async () => {
+        pending('set up tests for migrations through lang service');
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
