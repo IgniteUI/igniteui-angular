@@ -537,14 +537,19 @@ export class IgxFilteringService implements OnDestroy {
         insertAtIndex = -1,
         createNewTree = false): FilteringExpressionsTree {
 
-        const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+        let expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
             conditionOrExpressionsTree as IFilteringExpressionsTree : null;
         const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
             null : conditionOrExpressionsTree as IFilteringOperation;
-        const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
 
         const newExpressionsTree: FilteringExpressionsTree = createNewTree ?
             new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName) : filteringState as FilteringExpressionsTree;
+
+        if (condition) {
+            const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
+            expressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
+            expressionsTree.filteringOperands.push(newExpression);
+        }
 
         // no expressions tree found for this field
         if (expressionsTree) {
@@ -553,11 +558,6 @@ export class IgxFilteringService implements OnDestroy {
             } else {
                 newExpressionsTree.filteringOperands.push(expressionsTree);
             }
-        } else if (condition) {
-            // create expressions tree for this field and add the new expression to it
-            const newExprTree: FilteringExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
-            newExprTree.filteringOperands.push(newExpression);
-            newExpressionsTree.filteringOperands.push(newExprTree);
         }
 
         return newExpressionsTree;
