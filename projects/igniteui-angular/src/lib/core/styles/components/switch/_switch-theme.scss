@@ -189,14 +189,14 @@
     $switch-thumb-width: map.get((
         material: 20px,
         fluent: 12px,
-        bootstrap: 11px,
+        bootstrap: 10px,
         indigo-design: 8px
     ), $variant);
 
     $switch-on-offset: map.get((
         material: 1px,
         fluent: math.div($switch-thumb-width, 2),
-        bootstrap: 5px,
+        bootstrap: 4px,
         indigo-design: 7px
     ), $variant);
 
