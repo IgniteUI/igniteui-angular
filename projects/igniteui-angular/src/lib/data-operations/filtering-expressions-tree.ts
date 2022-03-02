@@ -128,7 +128,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
                 if (this.isFilteringExpressionsTreeForColumn(expr, fieldName)) {
                     return i;
                 }
-            } else {
+            } else if (expr) {
                 if ((expr as IFilteringExpression).fieldName === fieldName) {
                     return i;
                 }
