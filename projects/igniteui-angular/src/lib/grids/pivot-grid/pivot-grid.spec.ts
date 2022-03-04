@@ -456,7 +456,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(treeItems[4].innerText).toBe('Components');
             });
 
-            it('should filter rows via excel style filtering dimension chip.', async() => {
+            it('should filter rows via excel style filtering dimension chip.', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
@@ -472,7 +472,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
                 const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-tree-grid');
-                debugger;
                 // uncheck Accessories
                 checkboxes[4].click();
                 fixture.detectChanges();
@@ -688,6 +687,130 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(filtersChip).not.toBeUndefined();
             });
 
+            it('should show complex tree and allow filtering for Date dimension', async () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration.rows = [new IgxPivotDateDimension(
+                    {
+                        memberName: 'Date',
+                        enabled: true
+                    },
+                    {
+                        months: true,
+                        quarters: true,
+                        years: true,
+                        fullDate: true,
+                        total: true
+                    }
+                )];
+
+                pivotGrid.pipeTrigger++;
+                pivotGrid.setupColumns();
+                fixture.detectChanges();
+
+                const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+                const rowChip = headerRow.querySelector('igx-chip[id="AllPeriods"]');
+                const filterIcon = rowChip.querySelectorAll('igx-icon')[2];
+                filterIcon.click();
+                await wait(100);
+                fixture.detectChanges();
+
+                const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
+
+                // expand tree hierarchy
+                GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 0);
+                await wait(100);
+                fixture.detectChanges();
+                // should show correct tree items
+                let treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
+
+                expect(treeItems.length).toBe(4);
+                expect(treeItems[0].querySelector('.igx-tree-node__content').textContent).toBe('All Periods');
+                expect(treeItems[1].querySelector('.igx-tree-node__content').textContent).toBe('2021');
+                expect(treeItems[2].querySelector('.igx-tree-node__content').textContent).toBe('2019');
+                expect(treeItems[3].querySelector('.igx-tree-node__content').textContent).toBe('2020');
+
+
+                // expand tree hierarchy 2021
+                GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 1);
+                await wait(100);
+                fixture.detectChanges();
+
+                treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
+
+                expect(treeItems.length).toBe(7);
+                expect(treeItems[0].querySelector('.igx-tree-node__content').textContent).toBe('All Periods');
+                expect(treeItems[1].querySelector('.igx-tree-node__content').textContent).toBe('2021');
+                expect(treeItems[2].querySelector('.igx-tree-node__content').textContent).toBe('Q1');
+                expect(treeItems[3].querySelector('.igx-tree-node__content').textContent).toBe('Q2');
+                expect(treeItems[4].querySelector('.igx-tree-node__content').textContent).toBe('Q4');
+                expect(treeItems[5].querySelector('.igx-tree-node__content').textContent).toBe('2019');
+                expect(treeItems[6].querySelector('.igx-tree-node__content').textContent).toBe('2020');
+
+                // expand tree hierarchy Q1
+                GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 2);
+                await wait(100);
+                fixture.detectChanges();
+
+                treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
+                expect(treeItems.length).toBe(8);
+                expect(treeItems[0].querySelector('.igx-tree-node__content').textContent).toBe('All Periods');
+                expect(treeItems[1].querySelector('.igx-tree-node__content').textContent).toBe('2021');
+                expect(treeItems[2].querySelector('.igx-tree-node__content').textContent).toBe('Q1');
+                expect(treeItems[3].querySelector('.igx-tree-node__content').textContent).toBe('January');
+                expect(treeItems[4].querySelector('.igx-tree-node__content').textContent).toBe('Q2');
+                expect(treeItems[5].querySelector('.igx-tree-node__content').textContent).toBe('Q4');
+                expect(treeItems[6].querySelector('.igx-tree-node__content').textContent).toBe('2019');
+                expect(treeItems[7].querySelector('.igx-tree-node__content').textContent).toBe('2020');
+
+                // expand tree hierarchy January
+                GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 3);
+                await wait(100);
+                fixture.detectChanges();
+
+                treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
+                expect(treeItems.length).toBe(9);
+                expect(treeItems[0].querySelector('.igx-tree-node__content').textContent).toBe('All Periods');
+                expect(treeItems[1].querySelector('.igx-tree-node__content').textContent).toBe('2021');
+                expect(treeItems[2].querySelector('.igx-tree-node__content').textContent).toBe('Q1');
+                expect(treeItems[3].querySelector('.igx-tree-node__content').textContent).toBe('January');
+                expect(treeItems[4].querySelector('.igx-tree-node__content').textContent).toBe('01/01/2021');
+                expect(treeItems[5].querySelector('.igx-tree-node__content').textContent).toBe('Q2');
+                expect(treeItems[6].querySelector('.igx-tree-node__content').textContent).toBe('Q4');
+                expect(treeItems[7].querySelector('.igx-tree-node__content').textContent).toBe('2019');
+                expect(treeItems[8].querySelector('.igx-tree-node__content').textContent).toBe('2020');
+
+
+                const checkBoxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
+                // uncheck Q1
+                checkBoxes[3].click();
+                fixture.detectChanges();
+
+                // uncheck Q2
+                checkBoxes[6].click();
+                fixture.detectChanges();
+
+                // uncheck 2019
+                checkBoxes[8].click();
+                fixture.detectChanges();
+
+                // uncheck 2020
+                checkBoxes[9].click();
+                fixture.detectChanges();
+
+                // Click 'apply' button to apply filter.
+                GridFunctions.clickApplyExcelStyleFiltering(fixture, excelMenu, 'igx-pivot-grid');
+                fixture.detectChanges();
+
+                // check rows
+                const rows = pivotGrid.rowList.toArray();
+                expect(rows.length).toBe(5);
+                const expectedHeaders = ['All Periods', '2021', 'Q4', 'December', '12/08/2021'];
+                const rowHeaders = fixture.debugElement.queryAll(
+                    By.directive(IgxPivotRowDimensionHeaderComponent));
+                const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
+                expect(rowDimensionHeaders).toEqual(expectedHeaders);
+            });
+
             it('should apply sorting for dimension via row chip', () => {
                 fixture.detectChanges();
                 const pivotGrid = fixture.componentInstance.pivotGrid;
@@ -713,8 +836,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // should have emitted event
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledTimes(2);
                 const expectedExpressions: ISortingExpression[] = [
-                    { dir: SortingDirection.Desc, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()},
-                    { dir: SortingDirection.Desc, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
+                    { dir: SortingDirection.Desc, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance() },
+                    { dir: SortingDirection.Desc, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance() },
                 ];
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
             });
