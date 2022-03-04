@@ -589,7 +589,7 @@ export class IgxFilteringService implements OnDestroy {
         let newExpressionsTree = filteringState as FilteringExpressionsTree;
 
         if (createNewTree) {
-            newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName)
+            newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName);
             newExpressionsTree.filteringOperands = [...filteringState.filteringOperands];
         }
 
