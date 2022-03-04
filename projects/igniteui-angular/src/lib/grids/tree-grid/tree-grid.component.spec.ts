@@ -91,22 +91,18 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 expect(grid.rowList.length).toEqual(6);
         }));
 
-        /**
-         * reenable after resolving the auto-sizing issues for #4809
-         */
-        xit(`should render 11 records if height is 100% and parent container\'s height is unset and
-            display density is changed`, fakeAsync(() => {
-                grid.height = '100%';
-                fix.componentInstance.density = DisplayDensity.compact;
-                tick(16);
-                fix.detectChanges();
-                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                const defaultHeightNum = parseInt(defaultHeight, 10);
-                expect(defaultHeight).not.toBeFalsy();
-                expect(defaultHeightNum).toBeGreaterThan(300);
-                expect(defaultHeightNum).toBeLessThanOrEqual(330);
-                expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-                expect(grid.rowList.length).toEqual(11);
+        it(`should render 11 records if height is 100% and parent container\'s height is unset and display density is changed`, fakeAsync(() => {
+            grid.height = '100%';
+            fix.componentInstance.density = DisplayDensity.compact;
+            tick(16);
+            fix.detectChanges();
+            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeFalsy();
+            expect(defaultHeightNum).toBeGreaterThan(300);
+            expect(defaultHeightNum).toBeLessThanOrEqual(330);
+            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
+            expect(grid.rowList.length).toEqual(11);
         }));
 
         it('should display horizontal scroll bar when column width is set in %', () => {

@@ -110,7 +110,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberName: 'Quarters',
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
-                return recordValue ? `Q` + Math.floor((new Date(recordValue).getMonth() + 1) / 3) : rec['Quarters'];
+                return recordValue ? `Q` + Math.ceil((new Date(recordValue).getMonth() + 1) / 3) : rec['Quarters'];
             },
             enabled: true,
             childLevel: monthDimension
@@ -137,5 +137,5 @@ export class IgxPivotDateDimension implements IPivotDimension {
     }
 
     /** @hidden @internal */
-    public memberFunction = (data) => this.resourceStrings.igx_grid_pivot_date_dimension_total;
+    public memberFunction = (_data) => this.resourceStrings.igx_grid_pivot_date_dimension_total;
 }

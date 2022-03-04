@@ -1,11 +1,11 @@
-import { Element } from '@angular/compiler';
 import {
-  Rule,
-  SchematicContext,
-  Tree
+    Rule,
+    SchematicContext,
+    Tree
 } from '@angular-devkit/schematics';
-import { UpdateChanges } from '../common/UpdateChanges';
+import { Element } from '@angular/compiler';
 import { nativeImport } from '../common/import-helper.js';
+import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 
 const version = '13.1.0';
@@ -75,8 +75,6 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
           addChange(file.url, new FileChange(startTag.start, removePropTxt, repTxt, 'replace'));
         });
     });
-    applyChanges();
-    changes.clear();
 
     Array.from(gridsToMigrate).map(node => getSourceOffset(node as Element)).forEach(offset => {
       const { startTag, file } = offset;
@@ -84,6 +82,13 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     });
   }
 
+  const _import = new RegExp(`@import ('|")~igniteui-angular\/lib\/core\/styles\/themes\/index('|");`, 'g');
+  for (const path of update.sassFiles) {
+    const fileContent = host.read(path).toString();
+    const replacedString = fileContent.replace(_import, `@use "igniteui-angular/theming" as igniteui;`);
+    host.overwrite(path, replacedString);
+  }
   applyChanges();
+  update.applyChanges();
   changes.clear();
 };

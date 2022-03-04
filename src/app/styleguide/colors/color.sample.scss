@@ -1,5 +1,5 @@
-@import '../../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
-@import '../../../styles/variables';
+@use '../../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities' as *;
+@use '../../../styles/variables' as *;
 
 .sample-wrapper {
     display: grid;
@@ -33,7 +33,7 @@
 }
 
 .color-title {
-    @include igx-type-style($type-scale, 'h6');
+    @include type-style($type-scale, 'h6');
     text-transform: capitalize;
     line-height: 3rem;
     padding: 8px 16px;
@@ -48,17 +48,17 @@
 .color-container {
     overflow: hidden;
     border-radius: rem(8px);
-    border: 1px solid igx-color($color: 'grays', $variant: 400);
+    border: 1px solid color($color: 'grays', $variant: 400);
     margin: 8px 0;
 }
 
-@include igx-color-classes(
+@include color-classes(
     $palette: $palette,
     $prop: 'background',
     $prefix: 'bg'
 );
 
-@include igx-color-classes(
+@include color-classes(
     $palette: $palette,
     $prop: 'color',
     $prefix: 'color'

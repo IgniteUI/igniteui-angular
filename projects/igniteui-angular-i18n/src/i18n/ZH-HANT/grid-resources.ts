@@ -87,6 +87,7 @@ const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: '布林值篩選條件',
     igx_grid_excel_currency_filter: '貨幣篩選條件',
     igx_grid_excel_custom_filter: '自訂篩選條件...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: '進階篩選',
     igx_grid_advanced_filter_and_group: '“And” 群組',
     igx_grid_advanced_filter_or_group: '“Or” 群組',
@@ -150,7 +151,13 @@ const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_row_drop_chip: 'Drop here to use as row',
     igx_grid_pivot_column_drop_chip: 'Drop here to use as column',
     igx_grid_pivot_filter_drop_chip: 'Drop here to use as filter',
-    igx_grid_pivot_value_drop_chip: 'Drop here to use as value'
+    igx_grid_pivot_value_drop_chip: 'Drop here to use as value',
+    igx_grid_pivot_selector_filters: 'Filters',
+    igx_grid_pivot_selector_rows: 'Rows',
+    igx_grid_pivot_selector_columns: 'Columns',
+    igx_grid_pivot_selector_values: 'Values',
+    igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
 };
 
 /**
