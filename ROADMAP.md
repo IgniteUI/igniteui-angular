@@ -28,7 +28,7 @@
 
 # Previous Milestone
 
-## Milestone 20 (Due by Feb, 2022)
+## Milestone 20 (Released March 2nd, 2022)
 
 1. **[DONE]** Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
 2. **[DONE]** igx-tree-grid:excel-style filtering should show children of parent elements returned from the filter [#10342](https://github.com/IgniteUI/igniteui-angular/issues/10342)
