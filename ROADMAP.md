@@ -12,6 +12,7 @@
 6. Checkbox size and disabled state in Bootstrap [#11096](https://github.com/IgniteUI/igniteui-angular/issues/11096)
 7. [Pivot] Integrate ESF in tree view [#11049](https://github.com/IgniteUI/igniteui-angular/issues/11049) 
 8. Rework default sorting/filtering strategy's and their methods to be grid agnostic [#10922](https://github.com/IgniteUI/igniteui-angular/issues/10922)
+9. Validator service for igxGrid editing [#6501](https://github.com/IgniteUI/igniteui-angular/issues/6501)
 
 ## Going down the road
 
