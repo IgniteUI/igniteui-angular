@@ -55,5 +55,5 @@ jobs:
             github-token: ${{ github.token }}
       - name:
         run: |
-            build:typedoc:en:production
-            build:sassdoc:en:production
+            npm run build:typedoc:en:production
+            npm run build:sassdoc:en:production
