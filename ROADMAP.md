@@ -5,16 +5,13 @@
 ## Milestone 21 (Due by May, 2022)
 
 1. Improve sorting experience for users [#9674](https://github.com/IgniteUI/igniteui-angular/issues/9674)
-2. Template grid excel filter footer [#10183](https://github.com/IgniteUI/igniteui-angular/issues/10183)
-3. Grid summary custom templating [#7981](https://github.com/IgniteUI/igniteui-angular/issues/7981)
-4. Tabs component does not support RTL [#5904](https://github.com/IgniteUI/igniteui-angular/issues/5904)
-5. Column moving feature on grid level [#10176](https://github.com/IgniteUI/igniteui-angular/issues/10176)
-6. Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205)
-7. Pivot Grid background color [#11158](https://github.com/IgniteUI/igniteui-angular/issues/11158)
-8. Fluent inputs styles [#11145](https://github.com/IgniteUI/igniteui-angular/issues/11145)
-9. Checkbox size and disabled state in Bootstrap [#11096](https://github.com/IgniteUI/igniteui-angular/issues/11096)
-10. [Pivot] Integrate ESF in tree view [#11049](https://github.com/IgniteUI/igniteui-angular/issues/11049) 
-11. Rework default sorting/filtering strategy's and their methods to be grid agnostic [#10922](https://github.com/IgniteUI/igniteui-angular/issues/10922)
+2. Template grid excel filter footer [#10183](https://github.com/IgniteUI/igniteui-angular/issues/10183) 
+3. Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205)
+4. Pivot Grid background color [#11158](https://github.com/IgniteUI/igniteui-angular/issues/11158)
+5. Fluent inputs styles [#11145](https://github.com/IgniteUI/igniteui-angular/issues/11145)
+6. Checkbox size and disabled state in Bootstrap [#11096](https://github.com/IgniteUI/igniteui-angular/issues/11096)
+7. [Pivot] Integrate ESF in tree view [#11049](https://github.com/IgniteUI/igniteui-angular/issues/11049) 
+8. Rework default sorting/filtering strategy's and their methods to be grid agnostic [#10922](https://github.com/IgniteUI/igniteui-angular/issues/10922)
 
 ## Going down the road
 
