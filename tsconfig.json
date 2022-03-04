@@ -31,7 +31,10 @@
     "exclude": [
         "dist",
         "projects/igniteui-angular/migrations/",
-        "projects/igniteui-angular/schematics/"
+        "projects/igniteui-angular/schematics/",
+        "projects/igniteui-angular/cypress/",
+        "cypress/",
+        "e2e/"
     ],
     "typedocOptions": {
         "out": "dist/igniteui-angular/docs/typescript",
