@@ -2,7 +2,7 @@
 <header>
     {{ esf.grid.resourceStrings.igx_grid_excel_filter_moving_header }}
 </header>
-<section class="igx-excel-filter__move-buttons">
+<igx-buttongroup [multiSelection]="false">
     <button [displayDensity]="esf.grid.displayDensity"
         igxButton
         [disabled]="canNotMoveLeft"
@@ -25,5 +25,5 @@
         </span>
         <igx-icon>arrow_forwards</igx-icon>
     </button>
-</section>
+</igx-buttongroup>
 </ng-container>
