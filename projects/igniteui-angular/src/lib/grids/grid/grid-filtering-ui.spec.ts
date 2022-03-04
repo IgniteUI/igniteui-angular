@@ -3597,7 +3597,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
         }));
 
-        it('display dansity is properly applied on the column selection container', fakeAsync(() => {
+        it('display density is properly applied on the column selection container', fakeAsync(() => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
@@ -4196,6 +4196,94 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             verifyExcelStyleFilterAvailableOptions(fix,
                 ['Select All', '20', '254'],
                 [true, true, true]);
+        }));
+
+        it('Should correctly modify existing filters.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+                    'NetAdvantage', 'Some other item with Script'],
+                [true, true, true, true, true, true]);
+            toggleExcelStyleFilteringItems(fix, true, 1, 5);
+            expect(grid.rowList.length).toBe(3);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '20', '127', '254'],
+                [true, true, true, true]);
+            toggleExcelStyleFilteringItems(fix, true, 2);
+            expect(grid.rowList.length).toBe(2);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'Ignite UI for Angular', 'Ignite UI for JavaScript'],
+                [true, true, true]);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '20', '127', '254'],
+                [null, true, false, true]);
+            toggleExcelStyleFilteringItems(fix, true, 1, 2, 3);
+            expect(grid.rowList.length).toBe(1);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '20', '127', '254'],
+                [null, false, true, false]);
+        }));
+
+        it('Should correctly modify the first one of the existing filters.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+                    'NetAdvantage', 'Some other item with Script'],
+                [true, true, true, true, true, true]);
+            toggleExcelStyleFilteringItems(fix, true, 1, 5);
+            expect(grid.rowList.length).toBe(3);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '20', '127', '254'],
+                [true, true, true, true]);
+            toggleExcelStyleFilteringItems(fix, true, 2);
+            expect(grid.rowList.length).toBe(2);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'Ignite UI for Angular', 'Ignite UI for JavaScript'],
+                [true, true, true]);
+            toggleExcelStyleFilteringItems(fix, true, 1);
+            expect(grid.rowList.length).toBe(1);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '254'],
+                [true, true]);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'Ignite UI for Angular', 'Ignite UI for JavaScript'],
+                [null, false, true]);
         }));
 
         it('Should display the ESF based on the filterIcon within the grid', async () => {
@@ -6401,8 +6489,6 @@ const verifyExcelStyleFilterAvailableOptions = (fix, labels: string[], checked: 
     const checkboxElements: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
 
     expect(labelElements.length).toBe(labels.length, 'incorrect rendered list items count');
-    expect(labelElements.length).toBeGreaterThan(2);
-    expect(checkboxElements.length).toBeGreaterThan(2);
     labels.forEach((l, index) => {
         expect(l).toEqual(labelElements[index].innerText);
     });
