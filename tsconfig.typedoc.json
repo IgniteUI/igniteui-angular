@@ -1,7 +1,6 @@
 {
     "extends": "./tsconfig.json",
     "exclude": [
-
         "dist",
         "projects/igniteui-angular/migrations/",
         "projects/igniteui-angular/schematics/",
