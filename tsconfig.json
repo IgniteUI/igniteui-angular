@@ -36,15 +36,6 @@
         "cypress/",
         "e2e/"
     ],
-    "typedocOptions": {
-        "out": "dist/igniteui-angular/docs/typescript",
-        "exclude": "**/*.spec.ts",
-        "theme":  "node_modules/ig-typedoc-theme/dist",
-        "excludePrivate": true,
-        "excludeProtected": true,
-        "name": "Ignite UI for Angular",
-        "readme": "none"
-    },
     "angularCompilerOptions": {
         "generateDeepReexports": true,
         "strictTemplates": true,
