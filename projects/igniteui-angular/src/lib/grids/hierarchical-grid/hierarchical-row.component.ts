@@ -109,6 +109,8 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         if (this.added) {
             return;
         }
+        // K.D. 28 Feb, 2022 #10634 Don't trigger endEdit/commit upon row expansion state change
+        // this.endEdit(this.grid.rootGrid);
         this.grid.gridAPI.set_row_expansion_state(this.key, !this.expanded);
         this.grid.cdr.detectChanges();
     }
@@ -149,6 +151,13 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
 
     // TODO: consider moving into CRUD
     protected endEdit(grid: GridType) {
-        grid.hgridAPI.endEditAll();
+        if (grid.gridAPI.crudService.cellInEditMode) {
+            grid.gridAPI.crudService.endEdit();
+        }
+        grid.gridAPI.getChildGrids(true).forEach(g => {
+            if (g.gridAPI.crudService.cellInEditMode) {
+                g.gridAPI.crudService.endEdit();
+            }
+        });
     }
 }

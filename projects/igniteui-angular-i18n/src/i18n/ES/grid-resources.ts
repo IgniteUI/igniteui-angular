@@ -87,6 +87,7 @@ const GridResourceStringsES_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: 'Filtro booleano',
     igx_grid_excel_currency_filter: 'Filtro divisa',
     igx_grid_excel_custom_filter: 'Filtro personalizado...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: 'Filtro Avanzado',
     igx_grid_advanced_filter_and_group: 'Grupo "Y"',
     igx_grid_advanced_filter_or_group: '"Grupo "O"',

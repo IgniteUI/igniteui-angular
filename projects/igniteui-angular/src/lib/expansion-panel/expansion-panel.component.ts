@@ -101,13 +101,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      * ```
      */
     @Input()
-    public get collapsed(): boolean {
-        return this._collapsed;
-    }
-    public set collapsed(value) {
-        this._collapsed = value;
-        this.collapsedChange.emit(this._collapsed);
-    }
+    public collapsed = true;
 
     /**
      * @hidden
@@ -197,8 +191,6 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
 
-    private _collapsed = true;
-
     constructor(private cdr: ChangeDetectorRef, protected builder: AnimationBuilder, private elementRef?: ElementRef) {
         super(builder);
     }
@@ -239,6 +231,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
             () => {
                 this.contentCollapsed.emit({ event: evt, owner: this });
                 this.collapsed = true;
+                this.collapsedChange.emit(true);
                 this.cdr.markForCheck();
             }
         );
@@ -264,6 +257,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
             return;
         }
         this.collapsed = false;
+        this.collapsedChange.emit(false);
         this.cdr.detectChanges();
         this.playOpenAnimation(
             this.body?.element,

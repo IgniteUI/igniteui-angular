@@ -12,6 +12,7 @@ import { IFilteringState } from '../../data-operations/filtering-state.interface
 import { DatePipe } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
+import { FilterUtil } from '../../data-operations/filtering-strategy';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -520,7 +521,7 @@ export abstract class IgxBaseExporter {
                     strategy: grid.filterStrategy
                 };
 
-                data = DataUtil.filter(data, filteringState, grid);
+                data = FilterUtil.filter(data, filteringState, grid);
             }
 
             if (hasSorting && !this.options.ignoreSorting) {
@@ -562,7 +563,7 @@ export abstract class IgxBaseExporter {
                     rowIslandKey: island.key
                 };
 
-                const islandGrid = grid?.hgridAPI.getChildGrid([path]);
+                const islandGrid = grid?.gridAPI.getChildGrid([path]);
                 const keyRecordData = this.prepareIslandData(island, islandGrid, entry[island.key]) || [];
 
                 this.getAllChildColumnsAndData(island, keyRecordData, expansionStateVal, islandGrid);
@@ -594,7 +595,7 @@ export abstract class IgxBaseExporter {
                         strategy: islandGrid.filterStrategy
                     };
 
-                    data = DataUtil.filter(data, filteringState, islandGrid);
+                    data = FilterUtil.filter(data, filteringState, islandGrid);
                 }
 
                 if (hasSorting && !this.options.ignoreSorting) {
@@ -624,7 +625,7 @@ export abstract class IgxBaseExporter {
                         strategy: island.filterStrategy
                     };
 
-                    data = DataUtil.filter(data, filteringState, island);
+                    data = FilterUtil.filter(data, filteringState, island);
                 }
 
                 if (hasSorting && !this.options.ignoreSorting) {
@@ -680,7 +681,7 @@ export abstract class IgxBaseExporter {
                             rowIslandKey: childIsland.key
                         };
 
-                        const childIslandGrid = grid?.hgridAPI.getChildGrid([path]);
+                        const childIslandGrid = grid?.gridAPI.getChildGrid([path]);
                         const keyRecordData = this.prepareIslandData(island, childIslandGrid, rec[childIsland.key]) || [];
 
                         this.getAllChildColumnsAndData(childIsland, keyRecordData, islandExpansionStateVal, childIslandGrid);
@@ -721,7 +722,7 @@ export abstract class IgxBaseExporter {
                     strategy: grid.filterStrategy
                 };
 
-                gridData = DataUtil.filter(gridData, filteringState, grid);
+                gridData = FilterUtil.filter(gridData, filteringState, grid);
             }
 
             if (hasSorting && !this.options.ignoreSorting) {

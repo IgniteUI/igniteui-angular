@@ -4,7 +4,6 @@ import { first, takeUntil } from 'rxjs/operators';
 
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { ColumnDisplayOrder } from '../common/enums';
-import { ElasticPositionStrategy } from '../../services/overlay/position/elastic-position-strategy';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';

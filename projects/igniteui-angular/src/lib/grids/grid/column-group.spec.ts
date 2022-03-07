@@ -976,7 +976,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
 
         it('column pinning - Verify pin a not fully visble group', () => {
-            const ci = fixture.componentInstance;
             expect(grid.pinnedColumns.length).toEqual(0);
             expect(grid.unpinnedColumns.length).toEqual(16);
 

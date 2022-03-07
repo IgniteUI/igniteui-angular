@@ -438,4 +438,6 @@ export class PivotUtil {
                 return IgxPivotAggregate.aggregators();
         }
     }
+
+
 }

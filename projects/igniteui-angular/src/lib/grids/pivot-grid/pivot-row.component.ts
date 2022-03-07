@@ -11,7 +11,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxRowDirective } from '../row.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IPivotDimension, IPivotDimensionData, IPivotGridRecord } from './pivot-grid.interface';
+import { IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 
 
@@ -56,6 +56,76 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      */
     public get viewIndex(): number {
         return this.index;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public disabled = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get addRowUI(): any {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get inEditMode(): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public set pinned(_value: boolean) {
+    }
+
+    public get pinned(): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public delete() {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public beginAddRow() {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public update(_value: any) {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public pin() {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public unpin() {
+        return false;
     }
 
     /**

@@ -247,8 +247,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const summaryItemHeight = fixture.debugElement.query(By.css('.igx-grid__tfoot'))
                 .query(By.css('.igx-grid-summary__item')).nativeElement;
             const summaryRowHeight = fixture.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement;
-            
-            
+
+
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(51);
@@ -1418,25 +1418,25 @@ describe('IgxGrid Component Tests #grid', () => {
             const rows = grid.rowList.toArray();
             // verify default number formatting
             let expectedValue = '2,760';
-            expect(rows[0].cells.toArray()[3].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[3] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = '1,098';
-            expect(rows[5].cells.toArray()[3].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[5].cells.toArray()[3] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = '7,898';
-            expect(rows[7].cells.toArray()[3].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[7].cells.toArray()[3] as any).element.nativeElement.textContent).toBe(expectedValue);
             // verify formatter function formatting
             expectedValue = '2.76e+3';
-            expect(rows[0].cells.toArray()[5].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[5] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = '1.098e+3';
-            expect(rows[5].cells.toArray()[5].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[5].cells.toArray()[5] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = '7.898e+3';
-            expect(rows[7].cells.toArray()[5].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[7].cells.toArray()[5] as any).element.nativeElement.textContent).toBe(expectedValue);
             // verify date formatting
             expectedValue = 'Mar 21, 2005';
-            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             // verify summaries formatting
             let avgValue;
             let earliestValue;
@@ -1474,11 +1474,11 @@ describe('IgxGrid Component Tests #grid', () => {
             // verify cells formatting
             const rows = grid.rowList.toArray();
             let expectedValue = 'Mar 21, 2005';
-            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
 
             // verify summaries formatting
             let avgValue;
@@ -1517,11 +1517,11 @@ describe('IgxGrid Component Tests #grid', () => {
             // verify cells formatting
             const rows = grid.rowList.toArray();
             let expectedValue = 'Mar 21, 2005';
-            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
 
             // verify summaries formatting
             let avgValue;
@@ -1559,11 +1559,11 @@ describe('IgxGrid Component Tests #grid', () => {
 
             let rows = grid.rowList.toArray();
             let expectedValue = 'Mar 21, 2005';
-            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             // verify summaries formatting
             let avgValue;
             let earliestValue;
@@ -1602,11 +1602,11 @@ describe('IgxGrid Component Tests #grid', () => {
 
             rows = grid.rowList.toArray();
             expectedValue = '21. März 2005';
-            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = '15. Januar 2008';
-            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
             expectedValue = '20. November 2010';
-            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
 
             // verify summaries formatting
             summaries = fixture.debugElement.queryAll(By.css('.igx-grid-summary'));
@@ -2245,7 +2245,9 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
             await wait(100);
-            grid.cdr.detectChanges();
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             expect(headers.length).toBe(4);
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
@@ -2264,7 +2266,9 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
             await wait(100);
-            grid.cdr.detectChanges();
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const paging = fix.debugElement.query(By.css('igx-page-nav'));
@@ -2307,7 +2311,9 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
             await wait(100);
-            grid.cdr.detectChanges();
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const expectedHeight = grid.nativeElement.offsetHeight
                 - grid.theadRow.nativeElement.offsetHeight
