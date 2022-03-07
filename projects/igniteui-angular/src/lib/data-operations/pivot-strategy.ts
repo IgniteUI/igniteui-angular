@@ -162,7 +162,8 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
             PivotDimensionType.Column,
             grid.pivotKeys
         );
-        const items: IgxFilterItem[] = this._getFilterItems(allValuesHierarchy, grid.pivotKeys);
+        const isNoop = grid.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy || grid.pivotConfiguration.rowStrategy instanceof NoopPivotDimensionsStrategy;
+        const items: IgxFilterItem[] = !isNoop ? this._getFilterItems(allValuesHierarchy, grid.pivotKeys) : [{value : ''}];
         return Promise.resolve(items);
     }
 
