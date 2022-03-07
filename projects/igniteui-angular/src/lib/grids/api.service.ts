@@ -400,7 +400,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
         expandedStates.set(rowID, expanded);
         grid.expansionStates = expandedStates;
-        this.crudService.endEdit(false);
+        // K.D. 28 Feb, 2022 #10634 Don't trigger endEdit/commit upon row expansion state change
+        // this.crudService.endEdit(false);
     }
 
     public get_rec_by_id(rowID) {
