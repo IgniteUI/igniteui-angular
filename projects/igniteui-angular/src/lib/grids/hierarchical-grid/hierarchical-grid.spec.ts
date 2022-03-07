@@ -1,7 +1,7 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IGridCreatedEventArgs, IgxHierarchicalGridAPIService, IgxHierarchicalGridModule } from './public_api';
+import { IGridCreatedEventArgs, IgxHierarchicalGridModule } from './public_api';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -298,6 +298,76 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     });
 
+    it('should be able to prevent exiting of edit mode when a row is toggled #10634', async () => {
+        hierarchicalGrid.primaryKey = 'ID';
+        hierarchicalGrid.rowEditable = true;
+        hierarchicalGrid.rowToggle.subscribe((e) => {
+            e.cancel = true;
+        });
+        fixture.detectChanges();
+        wait();
+
+        const masterGridFirstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+        expect(masterGridFirstRow.expanded).toBe(false);
+
+        const masterGridSecondCell = masterGridFirstRow.cells.find((c: IgxGridCellComponent) => c.columnIndex === 1);
+        expect(masterGridSecondCell.editMode).toBe(false);
+
+        masterGridSecondCell.setEditMode(true);
+        fixture.detectChanges();
+        wait();
+
+        expect(masterGridSecondCell.editMode).toBe(true);
+
+        UIInteractions.simulateClickAndSelectEvent(masterGridFirstRow.expander);
+        fixture.detectChanges();
+        wait();
+
+        expect(masterGridFirstRow.expanded).toBe(false);
+        expect(masterGridSecondCell.editMode).toBe(true);
+
+        hierarchicalGrid.rowToggle.subscribe((e) => {
+            e.cancel = false;
+        });
+        UIInteractions.simulateClickAndSelectEvent(masterGridFirstRow.expander);
+        fixture.detectChanges();
+        wait();
+
+        expect(masterGridFirstRow.expanded).toBe(true);
+        expect(masterGridSecondCell.editMode).toBe(true);
+
+        const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+        expect(childGrid).toBeDefined();
+
+        childGrid.primaryKey = 'ID';
+        childGrid.rowEditable = true;
+        childGrid.rowToggle.subscribe((e) => {
+            e.cancel = true;
+        });
+        fixture.detectChanges();
+        wait();
+
+        childGrid.columnList.find(c => c.index === 1).editable = true;
+        const childGridSecondRow = childGrid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
+        expect(childGridSecondRow.expanded).toBe(false);
+
+        const childGridSecondCell = childGridSecondRow.cells.find((c: IgxGridCellComponent) => c.columnIndex === 1);
+        expect(childGridSecondCell.editMode).toBe(false);
+
+        childGridSecondCell.setEditMode(true);
+        fixture.detectChanges();
+        wait();
+
+        expect(childGridSecondCell.editMode).toBe(true);
+
+        UIInteractions.simulateClickAndSelectEvent(childGridSecondRow.expander);
+        fixture.detectChanges();
+        wait();
+
+        expect(childGrid.gridAPI.crudService.cellInEditMode).toBe(true);
+        expect(childGridSecondRow.inEditMode).toBe(true);
+    });
+
     it('should render correctly when display density is changed', fakeAsync(() => {
         const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
@@ -396,46 +466,46 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         wait();
 
         const masterGridFirstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
-        expect(masterGridFirstRow.expanded).toBeFalsy();
+        expect(masterGridFirstRow.expanded).toBe(false);
 
         const masterGridSecondCell = masterGridFirstRow.cells.find((c: IgxGridCellComponent) => c.columnIndex === 1);
-        expect(masterGridSecondCell.editMode).toBeFalsy();
+        expect(masterGridSecondCell.editMode).toBe(false);
 
         masterGridSecondCell.setEditMode(true);
         fixture.detectChanges();
         wait();
 
-        expect(masterGridSecondCell.editMode).toBeTruthy();
+        expect(masterGridSecondCell.editMode).toBe(true);
 
         UIInteractions.simulateClickAndSelectEvent(masterGridFirstRow.expander);
         fixture.detectChanges();
         wait();
 
-        expect(masterGridFirstRow.expanded).toBeTruthy();
-        expect(masterGridSecondCell.editMode).toBeFalsy();
+        expect(masterGridFirstRow.expanded).toBe(true);
+        expect(masterGridSecondCell.editMode).toBe(true);
 
         const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
         expect(childGrid).toBeDefined();
 
         childGrid.columnList.find(c => c.index === 1).editable = true;
         const childGridSecondRow = childGrid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
-        expect(childGridSecondRow.expanded).toBeFalsy();
+        expect(childGridSecondRow.expanded).toBe(false);
 
         const childGridSecondCell = childGridSecondRow.cells.find((c: IgxGridCellComponent) => c.columnIndex === 1);
-        expect(childGridSecondCell.editMode).toBeFalsy();
+        expect(childGridSecondCell.editMode).toBe(false);
 
         childGridSecondCell.setEditMode(true);
         fixture.detectChanges();
         wait();
 
-        expect(childGridSecondCell.editMode).toBeTruthy();
+        expect(childGridSecondCell.editMode).toBe(true);
 
         UIInteractions.simulateClickAndSelectEvent(masterGridFirstRow.expander);
         fixture.detectChanges();
         wait();
 
-        expect(childGrid.gridAPI.crudService.cellInEditMode).toBeFalsy();
-        expect(childGridSecondRow.inEditMode).toBeFalsy();
+        expect(childGrid.gridAPI.crudService.cellInEditMode).toBe(true);
+        expect(childGridSecondRow.inEditMode).toBe(false);
     });
 
     it('child grid width should be recalculated if parent no longer shows scrollbar.', async () => {
@@ -569,7 +639,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(child2.data).toBe(fixture.componentInstance.data[0].childData2);
 
         expect(child1.getCellByColumn(0, 'ID').value).toBe(11);
-        expect(child1.getCellByColumnVisibleIndex(0, 0).column.field).toBe('ID');
+        expect(child1.getColumnByVisibleIndex(0).field).toBe('ID');
         expect(child1.getCellByColumn(0, 'ProductName').value).toBe('Child1 Name');
 
         expect(child2.getCellByColumn(0, 'Col1').value).toBe('Child2 Col1');
@@ -1437,7 +1507,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         secondLevelGrid.primaryKey = 'ID';
         customFixture.detectChanges();
 
-        expect(GridFunctions.getRowEditingOverlay(customFixture)).toBeNull();
+        expect(GridFunctions.getRowEditingOverlay(customFixture)).toBeDefined();
 
         cellElem = secondLevelGrid.gridAPI.get_cell_by_index(0, 'ProductName');
         row = secondLevelGrid.gridAPI.get_row_by_index(0);
