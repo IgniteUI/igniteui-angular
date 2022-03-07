@@ -120,12 +120,12 @@
                 'igx-grid__tr-container--active': isDetailActive(rowIndex)
             }">
                 <div class="igx-grid__hierarchical-indent" style='display: flex;'>
-                        <ng-container *ngIf="this.groupingExpressions.length > 0">
-                                <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
-                        </ng-container>
-                        <ng-template
-                    [ngTemplateOutlet]='detailTemplate.first'
-                    [ngTemplateOutletContext]='getDetailsContext(rowData, rowIndex)'>
+                    <ng-container *ngIf="this.groupingExpressions.length > 0">
+                        <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
+                    </ng-container>
+                    <ng-template
+                        [ngTemplateOutlet]='detailTemplate.first'
+                        [ngTemplateOutletContext]='getDetailsContext(rowData, rowIndex)'>
                     </ng-template>
                 </div>
             </div>
