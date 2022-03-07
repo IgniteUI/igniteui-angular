@@ -788,7 +788,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get selectedRows(): any[] {
-        if (!this.selectionService.getSelectedRows()) {
+        if (this.selectionService.getSelectedRows().length === 0) {
             return [];
         }
         const selectedRowIds = [];
