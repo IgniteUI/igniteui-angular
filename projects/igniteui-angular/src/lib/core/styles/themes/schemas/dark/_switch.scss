@@ -48,6 +48,10 @@ $dark-fluent-switch: extend($fluent-switch, $base-dark-switch, (
         color: ('grays', 200)
     ),
 
+    track-on-hover-color:(
+        color: ('primary', 100)
+    ),
+
     track-disabled-color: (
         color: ('grays', 200)
     ),
