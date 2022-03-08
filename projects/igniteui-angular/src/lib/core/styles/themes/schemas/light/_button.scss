@@ -447,6 +447,8 @@ $bootstrap-base-button: extend(
 /// @prop {Color} hover-background [transparent] - The hover background color of a flat button.
 /// @prop {Map} focus-background [color: ('grays', 100)] - The focus background color of a flat button.
 /// @prop {Number} border-radius [.2] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Map} disabled-foreground [contrast-color: ('primary', 500, .65)] - The disabled foreground color of the button.
+
 /// @requires {Map} $material-flat-button
 /// @requires {Map} $bootstrap-base-button
 /// @requires {function} extend
@@ -471,6 +473,10 @@ $bootstrap-flat-button: extend(
         focus-background: (
             color: ('grays', 200)
         ),
+
+        disabled-foreground: (
+            color: ('primary', 500, .65)
+        ),
     )
 );
 
@@ -481,7 +487,8 @@ $bootstrap-flat-button: extend(
 /// @prop {Map} hover-background [color: ('primary', 500)] - The hover background color of an outlined button.
 /// @prop {Map} focus-background [color: ('primary', 500)] - The focus background color of an outlined button.
 /// @prop {Map} border-color [color: ('primary', 500)] - The border color of an outlined button.
-/// @prop {Map} disabled-border-color [color: ('primary', 500), lighten: 35%] - The disabled focused border color of the button.
+/// @prop {Map} disabled-border-color [color: ('primary', 500, .65)] - The disabled focused border color of the button.
+/// @prop {Map} disabled-foreground [contrast-color: ('primary', 500, .65)] - The disabled foreground color of the button.
 /// @prop {Map} shadow-color [color: ('primary', 200)] - The shadow color of the button.
 /// @prop {Number} border-radius [.2] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $material-outlined-button
@@ -515,8 +522,12 @@ $bootstrap-outlined-button: extend(
             color: ('primary', 500)
         ),
 
+        disabled-foreground: (
+            color: ('primary', 500, .65)
+        ),
+
         disabled-border-color: (
-            color: ('primary', 50)
+            color: ('primary', 500, .65)
         ),
 
         shadow-color: (
@@ -532,6 +543,8 @@ $bootstrap-outlined-button: extend(
 /// @prop {Map} hover-background [color: ('primary', 600)] - The hover background color of an raised button.
 /// @prop {Map} focus-background [color: ('primary', 600)] - The focus background color of an raised button.
 /// @prop {Map} shadow-color [color: ('primary', 200)] - The shadow color of the button.
+/// @prop {Map} disabled-foreground [contrast-color: ('primary', 900)] - The disabled foreground color of the button.
+/// @prop {Map} disabled-background [color: ('primary', 500, .65)] - The disabled background color of the button.
 /// @prop {Number} border-radius [.2] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $material-raised-button
 /// @requires {Map} $bootstrap-base-button
@@ -563,6 +576,14 @@ $bootstrap-raised-button: extend(
         shadow-color: (
             color: ('primary', 200)
         ),
+
+        disabled-foreground: (
+            contrast-color: ('primary', 900)
+        ),
+
+        disabled-background: (
+            color: ('primary', 500, .65)
+        ),
     )
 );
 
@@ -573,6 +594,8 @@ $bootstrap-raised-button: extend(
 /// @prop {Map} background [color: ('primary', 500)] - The background color of a raised button.
 /// @prop {Map} hover-background [color: ('primary', 600)] - The hover background color of an raised button.
 /// @prop {Map} focus-background [color: ('primary', 600)] - The focus background color of an raised button.
+/// @prop {Map} disabled-foreground [contrast-color: ('primary', 900)] - The disabled foreground color of the button.
+/// @prop {Map} disabled-background [color: ('primary', 500, .65)] - The disabled background color of the button.
 /// @requires {Map} $material-fab-button
 /// @requires {Map} $bootstrap-base-button
 /// @requires {Map} $bootstrap-raised-button
@@ -602,6 +625,14 @@ $bootstrap-fab-button: extend(
         focus-background: (
             color: ('primary', 600)
         ),
+
+        disabled-foreground: (
+            contrast-color: ('primary', 900)
+        ),
+
+        disabled-background: (
+            color: ('primary', 500, .65)
+        ),
     )
 );
 
@@ -611,6 +642,7 @@ $bootstrap-fab-button: extend(
 /// @prop {Map} focus-background [color: ('primary', 600)] - The focus background color of an icon button.
 /// @prop {Map} focus-foreground [contrast-color: ('primary', 600)] - The focus text color of an icon button.
 /// @prop {Map} shadow-color [color: ('primary', 200)] - The shadow color of the button.
+/// @prop {Map} disabled-foreground [contrast-color: ('grays', 800, .65)] - The disabled foreground color of the button.
 /// @prop {Number} border-radius [.2] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $material-icon-button
 /// @requires {Map} $bootstrap-base-button
@@ -639,6 +671,10 @@ $bootstrap-icon-button: extend(
 
         shadow-color: (
             color: ('primary', 200)
+        ),
+
+        disabled-foreground: (
+            contrast-color: ('primary', 800, .65)
         ),
     )
 );
