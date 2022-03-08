@@ -19,7 +19,7 @@ import { IgxPivotGridModule } from './pivot-grid.module';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
-const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
+
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 describe('IgxPivotGrid #pivotGrid', () => {
@@ -40,6 +40,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
         }));
+
         it('should show empty template when there are no dimensions and values', () => {
             // whole pivotConfiguration is undefined
             const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
@@ -847,8 +848,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Bulgaria-UnitsSold').value).toBe(2);
                 expect(pivotGrid.gridAPI.get_cell_by_index(0, 'USA-UnitsSold').value).toBe(3);
                 expect(pivotGrid.gridAPI.get_cell_by_index(0, 'Uruguay-UnitsSold').value).toBe(2);
-
             });
+
             it('should allow showing custom aggregations via pivot configuration.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration.values = [];
@@ -1265,7 +1266,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const pivotRows = GridFunctions.getPivotRows(fixture);
-            const row = pivotRows[2].componentInstance;
             const rowHeaders = fixture.debugElement.queryAll(
                 By.directive(IgxPivotRowDimensionHeaderComponent));
             const firstDimCell = rowHeaders.find(x => x.componentInstance.column.header === 'All Cities');
@@ -1332,7 +1332,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
     describe('IgxPivotGrid Resizing #pivotGrid', () => {
         let fixture: ComponentFixture<any>;
-        let pivotGrid: IgxPivotGridComponent;
 
         configureTestSuite((() => {
             TestBed.configureTestingModule({
@@ -1349,8 +1348,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fixture.detectChanges();
-
-            pivotGrid = fixture.componentInstance.pivotGrid;
         }));
 
         it('should define grid with resizable columns.', fakeAsync(() => {

@@ -137,5 +137,5 @@ export class IgxPivotDateDimension implements IPivotDimension {
     }
 
     /** @hidden @internal */
-    public memberFunction = (data) => this.resourceStrings.igx_grid_pivot_date_dimension_total;
+    public memberFunction = (_data) => this.resourceStrings.igx_grid_pivot_date_dimension_total;
 }
