@@ -62,6 +62,10 @@
                     (change)="onSwitchChange($event)">Open in outlet</igx-switch>
             </div>
             <div>
+                <igx-switch class="settings" [(ngModel)]="hasAnimation" name="outlet" [value]="hasAnimation"
+                    (change)="onSwitchChange($event)">Has animation</igx-switch>
+            </div>
+            <div>
                 <igx-input-group>
                     <input igxInput name="dropDownItems" type="number" [(ngModel)]="itemsCount">
                     <label igxLabel for="dropDownItems">Drop down items</label>
