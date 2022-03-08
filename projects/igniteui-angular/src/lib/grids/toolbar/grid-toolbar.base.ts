@@ -121,7 +121,6 @@ export abstract class BaseToolbarDirective implements OnDestroy {
         }
         toggleRef.toggle({ ...this.overlaySettings, ...{ target: anchorElement, outlet: this.grid.outlet,
             excludeFromOutsideClick: [anchorElement] }});
-
     }
 
     /** @hidden @internal */
@@ -155,37 +154,37 @@ export abstract class BaseToolbarDirective implements OnDestroy {
  */
  @Directive()
  export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirective {
-     @Input()
-     public hideFilter = false;
+    @Input()
+    public hideFilter = false;
 
-     @Input()
-     public filterCriteria = '';
+    @Input()
+    public filterCriteria = '';
 
-     @Input()
-     public columnDisplayOrder: ColumnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
+    @Input()
+    public columnDisplayOrder: ColumnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
 
-     @Input()
-     public columnsAreaMaxHeight = '100%';
+    @Input()
+    public columnsAreaMaxHeight = '100%';
 
-     @Input()
-     public uncheckAllText: string;
+    @Input()
+    public uncheckAllText: string;
 
-     @Input()
-     public checkAllText: string;
+    @Input()
+    public checkAllText: string;
 
-     @Input()
-     public indentetion = 30;
+    @Input()
+    public indentetion = 30;
 
     @Input()
     public buttonText: string;
 
     protected columnActionsUI: IgxColumnActionsComponent;
 
-     public checkAll() {
-         this.columnActionsUI.checkAllColumns();
-     }
+    public checkAll() {
+        this.columnActionsUI.checkAllColumns();
+    }
 
-     public uncheckAll() {
-         this.columnActionsUI.uncheckAllColumns();
-     }
+    public uncheckAll() {
+        this.columnActionsUI.uncheckAllColumns();
+    }
  }
