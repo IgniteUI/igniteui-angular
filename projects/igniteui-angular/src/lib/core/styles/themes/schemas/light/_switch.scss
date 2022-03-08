@@ -121,6 +121,10 @@ $fluent-switch: extend(
             color: ('grays', 800),
         ),
 
+        track-on-hover-color:(
+            color: ('primary', 900)
+        ),
+
         border-disabled-color:(
             color: ('grays', 300),
         ),
