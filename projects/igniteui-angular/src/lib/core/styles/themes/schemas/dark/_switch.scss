@@ -32,7 +32,6 @@ $dark-switch: extend($light-switch, $base-dark-switch);
 /// @property {Map} border-disabled-color [color: ('grays', 200)] - The border color of the disabled switch.
 /// @property {Color} track-on-disabled-color [color: ('grays', 200)] - The color of the track when the switch is on and disabled.
 /// @property {Color} track-on-hover-color [color: ('primary', 200)] - The color of the track when the switch is on and hovered.
-/// @property {Map} thumb-on-color [color: ('grays', 900)] - The color of the thumb when the switch is on.
 /// @property {Map} thumb-off-color [color: ('grays', 500)] - The color of the thumb when the switch is off.
 /// @property {Map} thumb-disabled-color [color: ('grays', 200)] - The color of the thumb when the switch is disabled.
 ///
@@ -46,10 +45,6 @@ $dark-fluent-switch: extend($fluent-switch, $base-dark-switch, (
 
     thumb-off-color: (
         color: ('grays', 500)
-    ),
-
-    thumb-on-color: (
-        color: ('grays', 900)
     ),
 
     border-on-hover-color:(
