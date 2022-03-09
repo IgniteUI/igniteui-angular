@@ -86,9 +86,8 @@
                     (dragMove)="onItemDragMove($event)"
                     (dragEnd)="onItemDragEnd($event)"
                     (dropped)="onItemDropped($event, panel.type)"
-                    *igxFor="
+                    *ngFor="
                         let item of this.grid[panel.dataKey];
-                        scrollOrientation: 'vertical';
                         let index
                     "
                     [id]="item[panel.itemKey]"
