@@ -23,7 +23,6 @@
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
-
     %grid-excel-filter {
         display: block;
         width: rem(320px);
@@ -141,7 +140,8 @@
         margin-#{$left}: rem(16px);
     }
 
-    %grid-excel-sort {
+    %grid-excel-sort,
+    %grid-excel-move {
         display: block;
         padding: rem(8px) rem(16px);
 
@@ -154,6 +154,7 @@
             font-size: rem(18px);
             width: rem(18px);
             height: rem(18px);
+            justify-content: initial;
         }
     }
 
@@ -182,20 +183,7 @@
         }
     }
 
-    %grid-excel-move {
-        display: block;
-        padding: rem(8px) rem(16px);
-
-        header {
-            color: igx-color($palette, 'grays', 700);
-            margin-bottom: rem(4px);
-        }
-    }
-
-    %grid-excel-move__buttons {
-        display: flex;
-        justify-content: space-between;
-
+    %grid-excel-move igx-buttongroup {
         @include if-rtl() {
             flex-direction: row-reverse;
 
@@ -301,7 +289,8 @@
             padding: rem(4px);
         }
 
-        %grid-excel-sort {
+        %grid-excel-sort,
+        %grid-excel-move {
             padding: rem(4px);
 
             @extend %grid-excel-action--compact;
@@ -312,9 +301,7 @@
         }
 
         %grid-excel-move {
-            @extend %grid-excel-action--compact;
             margin-bottom: 0;
-            padding: rem(4px);
         }
 
         %grid-excel-actions {
