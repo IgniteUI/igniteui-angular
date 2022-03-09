@@ -947,7 +947,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         if (this.editable && editMode && !this.intRow.deleted) {
             if (editableCell) {
-                editableArgs = this.grid.crudService.updateCell(false, event);
+                if (this.grid.rowEditable && editableCell?.id !== this.cellID && this.row) {
+                    this.grid.crudService.endEdit(true, event);
+                } else {
+                    editableArgs = this.grid.crudService.updateCell(false, event);
+                }
 
                 /* This check is related with the following issue #6517:
                  * when edit cell that belongs to a column which is sorted and press tab,
