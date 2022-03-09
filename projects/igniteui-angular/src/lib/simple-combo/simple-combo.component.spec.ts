@@ -929,6 +929,21 @@ describe('IgxSimpleCombo', () => {
             expect(combo.close).toHaveBeenCalledTimes(1);
         });
 
+        it('should retain selection after blurring', () => {
+            combo.open();
+            fixture.detectChanges();
+            const item1 = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
+            expect(item1).toBeDefined();
+
+            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.selection.length).toBe(1);
+        });
+
         it('should scroll to top when opened and there is no selection', () => {
             combo.deselect();
             fixture.detectChanges();
