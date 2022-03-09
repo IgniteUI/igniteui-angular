@@ -2958,15 +2958,7 @@ describe('igxOverlay', () => {
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
-
             expect(wrapperElement).toBeDefined();
-            const styles = css(wrapperElement);
-            const backgroundColorCssCustomProperty =
-                '--background-color: var(--igx-overlay-background-color, hsla(var(--igx-grays-500), 0.54));';
-            const backgroundCSS = 'background: var(--background-color);';
-            expect(styles.findIndex((e) => e.indexOf(backgroundColorCssCustomProperty) > -1))
-                .toBeGreaterThan(-1);
-            expect(styles.findIndex((e) => e.indexOf(backgroundCSS) > -1)).toBeGreaterThan(-1);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -2987,13 +2979,8 @@ describe('igxOverlay', () => {
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
-            const styles = css(wrapperElement);
-            const backgroundColorCssCustomProperty =
-                '--background-color: var(--igx-overlay-background-color, hsla(var(--igx-grays-500), 0.54));';
-            const backgroundCSS = 'background: var(--background-color);';
-            expect(styles.findIndex((e) => e.indexOf(backgroundColorCssCustomProperty) > -1))
-                .toBeGreaterThan(-1);
-            expect(styles.findIndex((e) => e.indexOf(backgroundCSS) > -1)).toBeGreaterThan(-1);
+
+            fixture.componentInstance.overlay.detachAll();
         }));
 
         it('Should allow interaction only for the shown component when is modal.', fakeAsync(() => {
