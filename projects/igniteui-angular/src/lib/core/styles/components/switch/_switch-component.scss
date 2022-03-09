@@ -1,5 +1,5 @@
-@use '../../base' as *;
-@use 'sass:string';
+@use "../../base" as *;
+@use "sass:string";
 
 ////
 /// @group components
@@ -60,7 +60,7 @@
         }
 
         @include m(focused) {
-            @extend  %igx-switch--focused !optional;
+            @extend %igx-switch--focused !optional;
 
             @include e(ripple) {
                 @extend %switch-ripple--focused !optional;
@@ -68,7 +68,7 @@
         }
 
         @include mx(focused, checked) {
-            @extend  %igx-switch--focused-checked !optional;
+            @extend %igx-switch--focused-checked !optional;
         }
 
         @include m(checked) {
@@ -94,6 +94,10 @@
                     @extend %switch-ripple--pressed !optional;
                 }
             }
+        }
+
+        @include mx(disabled, checked) {
+            @extend %igx-switch--disabled-checked !optional;
         }
 
         @include m(disabled) {
