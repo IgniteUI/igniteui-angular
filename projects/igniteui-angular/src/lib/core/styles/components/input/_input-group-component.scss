@@ -257,10 +257,6 @@
             @include e(textarea) {
                 @extend %form-group-textarea--cosy !optional;
             }
-
-            @include e(hint) {
-                @extend %form-group-hint--cosy !optional;
-            }
         }
 
         @include m(compact) {
@@ -284,10 +280,6 @@
 
             @include e(textarea) {
                 @extend %form-group-textarea--compact !optional;
-            }
-
-            @include e(hint) {
-                @extend %form-group-hint--compact !optional;
             }
         }
 
@@ -614,6 +606,7 @@
             @include e(bundle) {
                 @extend %form-group-bundle--focus !optional;
 
+                &:focus-within,
                 &:hover {
                     @extend %form-group-bundle--fluent--focus !optional;
                 }
@@ -634,6 +627,7 @@
             @include e(bundle) {
                 @extend %form-group-bundle-success--fluent !optional;
 
+                &:focus-within,
                 &:hover {
                     @extend %form-group-bundle-success--fluent--hover !optional;
                 }
@@ -648,6 +642,7 @@
             @include e(bundle) {
                 @extend %form-group-bundle-error--fluent !optional;
 
+                &:focus-within,
                 &:hover {
                     @extend %form-group-bundle-error--fluent--hover !optional;
                 }
@@ -887,10 +882,6 @@
         @include mx(disabled, bootstrap) {
             @include e(bundle) {
                 @extend %form-group-display--disabled-bootstrap !optional;
-            }
-
-            @include e(label) {
-                @extend %bootstrap-label--disabled !optional;
             }
 
             @include e(input) {
