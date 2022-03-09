@@ -28,10 +28,13 @@ $dark-switch: extend($light-switch, $base-dark-switch);
 /// Generates a dark fluent switch schema based on a mix of $fluent-switch and $base-dark-switch.
 /// @type {Map}
 /// @property {Map} border-color [color: ('grays', 500)] - The border color of the switch.
-/// @property {Map} border-hover-color [color: ('grays', 800)] - The border color of the switch on hover.
+/// @property {Map} border-on-hover-color [color('primary', 200)] - The border color of the on-switch.
 /// @property {Map} border-disabled-color [color: ('grays', 200)] - The border color of the disabled switch.
-/// @property {Map} track-disabled-color [color: ('grays', 200)] - The color of the track when the switch is disabled.
-/// @property {Map} thumb-on-color [color: ('grays', 900)] - The color of the thumb when the switch is on.
+/// @property {Color} track-on-disabled-color [color: ('grays', 200)] - The color of the track when the switch is on and disabled.
+/// @property {Color} track-on-hover-color [color: ('primary', 200)] - The color of the track when the switch is on and hovered.
+/// @property {Map} thumb-off-color [color: ('grays', 500)] - The color of the thumb when the switch is off.
+/// @property {Map} thumb-disabled-color [color: ('grays', 200)] - The color of the thumb when the switch is disabled.
+///
 /// @requires {function} extend
 /// @requires $fluent-switch
 /// @requires $base-dark-switch
@@ -40,20 +43,28 @@ $dark-fluent-switch: extend($fluent-switch, $base-dark-switch, (
         color: ('grays', 500)
     ),
 
-    border-hover-color:(
-        color: ('grays', 800)
+    thumb-off-color: (
+        color: ('grays', 500)
+    ),
+
+    border-on-hover-color:(
+        color: ('primary', 200)
+    ),
+
+    track-on-hover-color:(
+        color: ('primary', 200)
     ),
 
     border-disabled-color:(
         color: ('grays', 200)
     ),
 
-    track-disabled-color: (
+    thumb-disabled-color: (
         color: ('grays', 200)
     ),
 
-    thumb-on-color: (
-        color: ('grays', 900)
+    track-on-disabled-color:(
+        color: ('grays', 200)
     ),
 ));
 
