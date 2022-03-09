@@ -5,10 +5,17 @@ import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { DefaultSortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
 import { IComboFilteringOptions } from './combo.component';
 
+/** @hidden */
+@Pipe({
+    name: 'comboClean'
+})
+export class IgxComboCleanPipe implements PipeTransform {
+    public transform(collection: any[]) {
+        return collection.filter(e => !!e);
+    }
+}
 
-/**
- * @hidden
- */
+/** @hidden */
 @Pipe({
     name: 'comboFiltering'
 })
@@ -33,9 +40,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
     }
 }
 
-/**
- * @hidden
- */
+/** @hidden */
 @Pipe({ name: 'comboGrouping' })
 export class IgxComboGroupingPipe implements PipeTransform {
 
