@@ -291,6 +291,21 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(value[1]).toBeFalse();
         });
 
+        it('should collapse row', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+
+            expect(pivotGrid.rowList.length).toEqual(5);
+            expect(pivotGrid.expansionStates.size).toEqual(0);
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-row-dimension-content');
+            const header = headerRow.querySelector('igx-pivot-row-dimension-header');
+            const expander = header.querySelectorAll('igx-icon')[0];
+            expander.click();
+            fixture.detectChanges();
+            expect(pivotGrid.rowList.length).toEqual(1);
+            expect(pivotGrid.expansionStates.size).toEqual(1);
+            expect(pivotGrid.expansionStates.get('All')).toBeFalse();
+        });
+
         it('should display aggregations when no row dimensions are enabled', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             pivotGrid.pivotConfiguration.columns = [
