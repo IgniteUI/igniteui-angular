@@ -736,8 +736,9 @@
     }
 
     %form-group-bundle--fluent--focus {
+        caret-color: var-get($theme, 'focused-text-color');
         border-color: var-get($theme, 'focused-border-color');
-        box-shadow: none;
+        box-shadow: 0 0 0 1px var-get($theme, 'focused-border-color');
     }
 
     %form-group-bundle--fluent--hover-disabled,
@@ -751,9 +752,17 @@
         border-color: var-get($theme, 'error-secondary-color');
     }
 
+    %form-group-bundle-error--fluent--hover {
+        box-shadow: 0 0 0 1px var-get($theme, 'error-secondary-color');
+    }
+
     %form-group-bundle-success--fluent--hover,
     %form-group-bundle-success--fluent {
         border-color: var-get($theme, 'success-secondary-color');
+    }
+
+    %form-group-bundle-success--fluent--hover {
+        box-shadow: 0 0 0 1px var-get($theme, 'success-secondary-color');
     }
 
     %fluent-input {
