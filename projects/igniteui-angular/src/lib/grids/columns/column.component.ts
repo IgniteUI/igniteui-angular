@@ -1270,7 +1270,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    this.grid.pagingMode === 1 && this.grid.paginator.page !== 0 ? index = index + this.grid.paginator.perPage *
+                    this.grid.pagingMode === 1 && this.grid.paginator.page !== 0 ? index + this.grid.paginator.perPage *
                         this.grid.paginator.page : index = this.grid.dataRowList.first.index + index;
                     const cell = new IgxGridCell(this.grid as any, index, this.field);
                     return cell;
