@@ -395,21 +395,23 @@
 
     %igx-switch--focused {
         @if $variant == 'fluent' {
-            position: relative;
-            $focus-outline-offset-top: rem(2px);
-            $focus-outline-offset-left: rem(2px);
+            %switch-composite {
+                position: relative;
+                $focus-outline-offset-top: rem(2px);
+                $focus-outline-offset-left: rem(2px);
 
-            &::after {
-                content: '';
-                position: absolute;
-                top: -$focus-outline-offset-top;
-                left: -$focus-outline-offset-left;
-                box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
-                width: calc(100% + (#{$focus-outline-offset-left} * 2));
-                height: calc(100% + (#{$focus-outline-offset-top} * 2));
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: -$focus-outline-offset-top;
+                    left: -$focus-outline-offset-left;
+                    box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
+                    width: calc(100% + (#{$focus-outline-offset-left} * 2));
+                    height: calc(100% + (#{$focus-outline-offset-top} * 2));
+                }
             }
         }
-        
+
         @if $variant == 'bootstrap' {
             %switch-composite {
                 border-color: var-get($theme, 'focus-fill-color');
