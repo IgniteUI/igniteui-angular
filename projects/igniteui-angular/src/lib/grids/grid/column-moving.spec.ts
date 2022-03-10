@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -51,10 +51,11 @@ describe('IgxGrid - Column Moving #grid', () => {
             grid.moving = true;
         }));
 
-        it('Should be able to reorder columns.', (() => {
+        it('Should be able to reorder columns.', fakeAsync(() => {
             let columnsList = grid.columnList;
             grid.moveColumn(columnsList.get(0), columnsList.get(2));
-
+            tick();
+            fixture.detectChanges();
             expect(columnsList.get(0).field).toEqual('Name');
             expect(columnsList.get(1).field).toEqual('LastName');
             expect(columnsList.get(2).field).toEqual('ID');

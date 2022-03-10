@@ -138,17 +138,18 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 3);
         });
 
-        it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', () => {
+        it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', fakeAsync(() => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
 
             // Move tree-column
             const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             const targetColumn = treeGrid.columnList.filter(c => c.field === 'HireDate')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn);
+            tick();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
-        });
+        }));
 
         it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', (async () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
@@ -251,17 +252,18 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
         });
 
-        it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', () => {
+        it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', fakeAsync(() => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
             // Move tree-column
             const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             const targetColumn = treeGrid.columnList.filter(c => c.field === 'JobTitle')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn);
+            tick();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
-        });
+        }));
 
         it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', (async () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
@@ -1282,17 +1284,18 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 3);
         });
 
-        it('(API) Should transform a non-tree column into a tree column when moving it first and both are part of the same group', () => {
+        it('(API) Should transform a non-tree column into a tree column when moving it first and both are part of the same group', fakeAsync(() => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
 
             // Move tree-column
             const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             const targetColumn = treeGrid.columnList.filter(c => c.field === 'Name')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn);
+            tick();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'Name', 4);
-        });
+        }));
 
         it('(UI) Should transform a non-tree column into a tree column when moving it first within a group', (async () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
@@ -1310,17 +1313,18 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'Name', 4);
         }));
 
-        it('(API) Should transform a non-tree column of a column group to a tree column when its group is moved first', () => {
+        it('(API) Should transform a non-tree column of a column group to a tree column when its group is moved first', fakeAsync(() => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
 
             // Move group-column
             const sourceColumn = treeGrid.columnList.filter(c => c.header === 'General Information')[0];
             const targetColumn = treeGrid.columnList.filter(c => c.header === 'Additional Information')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn);
+            tick();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'HireDate', 4);
-        });
+        }));
 
         it('(UI) Should transform a non-tree column of a column group to a tree column when its group is moved first', (async () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
@@ -1557,7 +1561,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(wrongChipPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
         });
 
-        it('pinned chip should always be in the first column', () => {
+        it('pinned chip should always be in the first column', fakeAsync(() => {
             const rowToPin = treeGrid.getRowByIndex(0);
             const primaryKey = treeGrid.primaryKey;
 
@@ -1566,11 +1570,12 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const thirdColumnField = treeGrid.columnList.get(2).field;
 
             treeGrid.moveColumn(treeGrid.columnList.get(2), treeGrid.columnList.get(0), DropPosition.BeforeDropTarget);
+            tick();
             fix.detectChanges();
 
             const pinnedChipExpectedPosition = treeGrid.gridAPI.get_cell_by_index(1, thirdColumnField);
             expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(1);
-        });
+        }));
 
         it('should expand/collapse a pinned row with children', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
