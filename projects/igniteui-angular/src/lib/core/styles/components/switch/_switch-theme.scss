@@ -450,25 +450,19 @@
     }
 
     %igx-switch--disabled-checked {
-        @if $variant == 'bootstrap' {
+        @if $variant != 'indigo-design' {
             %switch-composite--x {
-                background: var-get($theme, 'focus-fill-color');
-                border-color: var-get($theme, 'focus-fill-color');
-            }
-
-            %switch-composite-thumb--x {
-                background: var-get($theme, 'thumb-on-color');
-            }
-        }
-
-        @if $variant == 'fluent' {
-            %switch-composite--x {
-                border-color: var-get($theme, 'border-disabled-color');
                 background: var-get($theme, 'track-on-disabled-color');
             }
 
             %switch-composite-thumb--x {
                 background: var-get($theme, 'thumb-on-disabled-color');
+            }
+        }
+
+        @if $variant == 'bootstrap' or $variant == 'fluent'{
+            %switch-composite--x {
+                border-color: var-get($theme, 'track-on-disabled-color');
             }
         }
     }

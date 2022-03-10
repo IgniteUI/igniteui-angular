@@ -11,14 +11,16 @@
 /// Generates a light switch schema.
 /// @type {Map}
 ///
-/// @property {Map} thumb-on-color [color: ('secondary', 500)] - The color of the thumb when the switch is on.
-/// @property {Map} track-on-color [color: ('secondary', 200)] - The color of the track when the switch is on.
-/// @property {Map} thumb-off-color [color: ('grays', 200)] - The color of the thumb when the switch is off.
-/// @property {Map} track-off-color [color: ('grays', 600)] - The color of the track when the switch is off.
-/// @property {Map} thumb-disabled-color [color: ('grays', 400)] - The color of the thumb when the switch is disabled.
-/// @property {Map} track-disabled-color [color: ('grays', 300)] - The color of the track when the switch is disabled.
-/// @property {Map} label-color [color: ('grays', 900)] - The color of the switch label
-/// @property {Map} label-disabled-color [color: ('grays', 400)] - The color of the switch label when the switch is disabled
+/// @property {Color} thumb-on-color [color: ('secondary', 500)] - The color of the thumb when the switch is on.
+/// @property {Color} track-on-color [color: ('secondary', 200)] - The color of the track when the switch is on.
+/// @property {Color} thumb-off-color [color: ('grays', 50)] - The color of the thumb when the switch is off.
+/// @property {Color} track-off-color [color: ('grays', 500)] - The color of the track when the switch is off.
+/// @property {Color} thumb-disabled-color [color: ('grays', 200)] - The color of the thumb when the switch is disabled.
+/// @property {Color} thumb-on-disabled-color [color: ('secondary', 100)] - The color of the thumb when the switch is on and disabled.
+/// @property {Color} track-disabled-color [color: ('grays', 300)] - The color of the track when the switch is disabled.
+/// @property {Color} track-on-disabled-color [color: ('secondary', 50)] - The color of the track when the switch is on and disabled.
+/// @property {Color} label-color [color: ('grays', 900)] - The color of the switch label
+/// @property {Color} label-disabled-color [color: ('grays', 400)] - The color of the switch label when the switch is disabled
 /// @property {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
 /// @property {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
 /// @property {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
@@ -58,19 +60,27 @@ $light-switch: extend(
         ),
 
         thumb-off-color: (
-            color: ('grays', 200)
+            color: ('grays', 50)
         ),
 
         track-disabled-color: (
-            color: ('grays', 300, .54)
+            color: ('grays', 300)
+        ),
+
+        track-on-disabled-color: (
+            color: ('secondary', 50)
         ),
 
         track-off-color: (
-            color: ('grays', 600)
+            color: ('grays', 500)
         ),
 
         thumb-disabled-color: (
-            color: ('grays', 400),
+            color: ('grays', 200),
+        ),
+
+        thumb-on-disabled-color: (
+            color: ('secondary', 100),
         ),
 
         label-color: (
@@ -86,21 +96,22 @@ $light-switch: extend(
 /// Generates a fluent switch schema.
 /// @type {Map}
 ///
-/// @property {Map} border-color [color('grays', 700)] - The border color of the switch.
-/// @property {Map} border-hover-color [color('grays', 800)] - The border color of the switch on hover.
-/// @property {Map} border-disabled-color [color('grays', 400)] - The border color of the disabled switch.
-/// @property {Map} border-on-color [color('primary', 500)] - The border color of the on-switch.
-/// @property {Map} border-on-hover-color [color('primary', 800)] - The border color of the on-switch.
+/// @property {Color} border-color [color('grays', 700)] - The border color of the switch.
+/// @property {Color} border-hover-color [color('grays', 800)] - The border color of the switch on hover.
+/// @property {Color} border-disabled-color [color('grays', 400)] - The border color of the disabled switch.
+/// @property {Color} border-on-color [color('primary', 500)] - The border color of the on-switch.
+/// @property {Color} border-on-hover-color [color('primary', 800)] - The border color of the on-switch.
 ///
 /// @property {Color} thumb-on-color [color: ('grays', 50)] - The color of the thumb when the switch is on.
-/// @property {Map} thumb-off-color [color: ('grays', 700)] - The color of the thumb when the switch is off.
-/// @property {Map} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
+/// @property {Color} thumb-off-color [color: ('grays', 700)] - The color of the thumb when the switch is off.
+/// @property {Color} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
 /// @property {Color} track-off-color [transparent] - The color of the track when the switch is off.
 /// @property {Color} track-on-hover-color [color: ('primary', 800)] - The color of the track when the switch is on and hovered.
 /// @property {Color} track-on-disabled-color [color: ('grays', 400)] - The color of the track when the switch is on and disabled.
 /// @property {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
-/// @property {Color} thumb-disabled-color [color: ('grays', 100)] - The color of the thumb when the switch is on and disabled.
-/// @property {Map} focus-outline-color [color: ('grays', 800)] - The focus outlined color.
+/// @property {Color} thumb-disabled-color [color: ('grays', 400)] - The color of the thumb when the switch is disabled.
+/// @property {Color} thumb-on-disabled-color [color: ('grays', 100)] - The color of the thumb when the switch is on and disabled.
+/// @property {Color} focus-outline-color [color: ('grays', 800)] - The focus outlined color.
 ///
 /// @property {Number} border-radius-track [10px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
 ///
@@ -155,6 +166,10 @@ $fluent-switch: extend(
             color: ('grays', 400)
         ),
 
+        thumb-disabled-color:(
+            color: ('grays', 400)
+        ),
+
         thumb-on-disabled-color:(
             color: ('grays', 100)
         ),
@@ -169,13 +184,15 @@ $fluent-switch: extend(
 
 /// Generates a bootstrap switch schema.
 /// @type {Map}
-/// @property {Map} focus-outline-color [color: ('primary', 100)] - The focus outlined color.
-/// @property {Map} focus-fill-color [color: ('primary', 200)] - The focus fill color.
-/// @property {Map} border-color [color('grays', 400)] - The border color of the switch.
-/// @property {Map} border-disabled-color [color: ('grays', 300)] - The border color of the disabled switch.
-/// @property {Map} thumb-off-color [color: ('grays', 400)] - The color of the thumb when the switch is off.
-/// @property {Map} thumb-disabled-color [color: ('grays', 300)] - The color of the thumb when the switch is disabled.
-/// @property {Map} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
+/// @property {Color} focus-outline-color [color: ('primary', 100)] - The focus outlined color.
+/// @property {Color} focus-fill-color [color: ('primary', 200)] - The focus fill color.
+/// @property {Color} border-color [color('grays', 400)] - The border color of the switch.
+/// @property {Color} border-disabled-color [color: ('grays', 300)] - The border color of the disabled switch.
+/// @property {Color} thumb-off-color [color: ('grays', 400)] - The color of the thumb when the switch is off.
+/// @property {Color} thumb-disabled-color [color: ('grays', 300)] - The color of the thumb when the switch is disabled.
+/// @property {Color} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
+/// @property {Color} track-on-disabled-color [color: ('primary', 200)] - The color of the track when the switch is on and disabled.
+/// @property {Color} thumb-on-disabled-color [color: ('grays', 50)] - The color of the thumb when the switch is on and disabled.
 /// @property {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
 /// @property {Number} border-radius-track [32px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
 /// @property {Number} border-radius-thumb [32px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
@@ -213,34 +230,40 @@ $bootstrap-switch: extend(
             color: ('grays', 300),
         ),
 
+        thumb-on-disabled-color: (
+            color: ('grays', 50)
+        ),
+
         track-on-color: (
             color: ('primary', 500),
         ),
 
-        track-disabled-color: transparent,
+        track-on-disabled-color:(
+            color: ('primary', 200)
+        )
     )
 );
 
 /// Generates an indigo switch schema.
 /// @type {Map}
 ///
-/// @property {Map} thumb-on-color [color: ('grays', 50)] - The color of the thumb when the switch is on.
-/// @property {Map} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
-/// @property {Map} thumb-off-color [color: ('grays', 600)] - The color of the thumb when the switch is off.
+/// @property {Color} thumb-on-color [color: ('grays', 50)] - The color of the thumb when the switch is on.
+/// @property {Color} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
+/// @property {Color} thumb-off-color [color: ('grays', 600)] - The color of the thumb when the switch is off.
 /// @property {Color} track-off-color [transparent] - The color of the track when the switch is off.
-/// @property {Map} thumb-disabled-color [color: ('grays', 300)] - The color of the thumb when the switch is disabled.
+/// @property {Color} thumb-disabled-color [color: ('grays', 300)] - The color of the thumb when the switch is disabled.
 /// @property {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
 ///
-/// @property {Map} border-color [color: ('grays', 600)] - The border color of the switch.
-/// @property {Map} border-hover-color [color: ('grays', 600)] - The border color of the switch on hover.
-/// @property {Map} border-disabled-color [color: ('grays', 300)] - The border color of the disabled switch.
-/// @property {Map} border-on-color [color: ('primary', 500)] - The border color of the on-switch.
-/// @property {Map} border-on-hover-color [color: ('primary', 500)] - The border color of the  on-switch.
-/// @property {Map} label-disabled-color [color: ('grays', 300)] - The color of the switch label when the switch is disabled
+/// @property {Color} border-color [color: ('grays', 600)] - The border color of the switch.
+/// @property {Color} border-hover-color [color: ('grays', 600)] - The border color of the switch on hover.
+/// @property {Color} border-disabled-color [color: ('grays', 300)] - The border color of the disabled switch.
+/// @property {Color} border-on-color [color: ('primary', 500)] - The border color of the on-switch.
+/// @property {Color} border-on-hover-color [color: ('primary', 500)] - The border color of the  on-switch.
+/// @property {Color} label-disabled-color [color: ('grays', 300)] - The color of the switch label when the switch is disabled
 /// @property {Number} border-radius-track [8px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
 /// @property {Number} border-radius-thumb [1] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
-/// @property {Map} focus-outline-color [color: ('grays', 300)] - The focus outlined color.
-/// @property {Map} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
+/// @property {Color} focus-outline-color [color: ('grays', 300)] - The focus outlined color.
+/// @property {Color} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
 ///
 /// @requires {function} extend
 /// @requires $light-switch
