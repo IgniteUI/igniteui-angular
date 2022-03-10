@@ -133,7 +133,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', pivotGrid.theadRow.nativeElement);
         fixture.detectChanges();
-        
+
         const secondHeader = fixture.debugElement.queryAll(
             By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`))[1];
         GridFunctions.verifyHeaderIsFocused(secondHeader.parent);
@@ -190,5 +190,33 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         GridFunctions.verifyHeaderIsFocused(secondHeader.parent);
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
+    });
+
+    it('should allow navigating within the cells of the body', () => {
+        const cell = pivotGrid.rowList.first.cells.first;
+        GridFunctions.focusFirstCell(fixture, pivotGrid);
+        fixture.detectChanges();
+        expect(pivotGrid.navigation.activeNode.row).toBeUndefined();
+        expect(pivotGrid.navigation.activeNode.column).toBeUndefined();
+
+        UIInteractions.simulateClickAndSelectEvent(cell.nativeElement);
+        fixture.detectChanges();
+
+        GridFunctions.focusFirstCell(fixture, pivotGrid);
+        fixture.detectChanges();
+        expect(pivotGrid.navigation.activeNode.row).toBeDefined();
+        expect(pivotGrid.navigation.activeNode.column).toBeDefined();
+
+        let  activeCells = fixture.debugElement.queryAll(By.css(`.igx-grid__td--active`));
+        expect(activeCells.length).toBe(1);
+        expect(cell.column.field).toEqual('Stanley-UnitsSold');
+
+        const gridContent = GridFunctions.getGridContent(fixture);
+        UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent);
+        fixture.detectChanges();
+
+        activeCells = fixture.debugElement.queryAll(By.css(`.igx-grid__td--active`));
+        expect(activeCells.length).toBe(1);
+        expect(activeCells[0].componentInstance.column.field).toEqual('Stanley-UnitPrice')
     });
 });

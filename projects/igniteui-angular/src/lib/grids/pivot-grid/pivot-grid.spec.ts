@@ -759,6 +759,87 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(filtersChip).not.toBeUndefined();
             });
 
+            it('should do nothing on filtering pointer down', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration.filters = [
+                    {
+                        memberName: 'Date',
+                        enabled: true
+                    },
+                    {
+                        memberName: 'ProductCategory',
+                        enabled: true
+                    }
+                ];
+
+                pivotGrid.pivotConfiguration.rows = [{
+                    memberName: 'SellerName',
+                    enabled: true
+                }];
+                pivotGrid.pipeTrigger++;
+                pivotGrid.setupColumns();
+                fixture.detectChanges();
+
+                const headerRow = fixture.debugElement.queryAll(
+                    By.directive(IgxPivotHeaderRowComponent))[0].componentInstance;
+                const filtersChip = headerRow.nativeElement.querySelector('igx-chip[id="Date"]');
+                expect(filtersChip).not.toBeUndefined();
+                const filterIcon = filtersChip.querySelectorAll('igx-icon')[1];
+                spyOn(headerRow, "onFilteringIconPointerDown");
+
+                filterIcon.dispatchEvent(new Event('pointerdown'));
+                fixture.detectChanges();
+
+                expect(headerRow.onFilteringIconPointerDown).toHaveBeenCalledTimes(1);
+            });
+
+            it('should correctly remove chip from filters dropdown', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration = {
+                    columns: [],
+                    rows: [
+                        {
+                        memberName: 'SellerName',
+                        enabled: true
+                        }
+                    ],
+                    filters: [
+                        {
+                            memberName: 'Date',
+                            enabled: true
+                        },
+                        {
+                            memberName: 'ProductCategory',
+                            enabled: true
+                        },
+                        {
+                            memberName: 'Country',
+                            enabled: true
+                        }
+                    ]
+                };
+                pivotGrid.pipeTrigger++;
+                pivotGrid.setupColumns();
+                fixture.detectChanges();
+
+                const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+                const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[4];
+                expect(dropdownIcon).not.toBeUndefined();
+                expect(headerRow.querySelector('igx-badge').innerText).toBe('2');
+                dropdownIcon.click();
+                fixture.detectChanges();
+
+                const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[0];
+                const chip = excelMenu.querySelectorAll('igx-chip')[0];
+                const removeIcon = chip.querySelectorAll('igx-icon')[1];
+                removeIcon.click();
+                fixture.detectChanges();
+
+                const filtersChip = headerRow.querySelector('igx-chip[id="Date"]');
+                expect(filtersChip).toBeDefined();
+                expect(headerRow.querySelector('igx-chip[id="ProductCategory"]')).toBeNull();
+            });
+
             it('should apply sorting for dimension via row chip', () => {
                 fixture.detectChanges();
                 const pivotGrid = fixture.componentInstance.pivotGrid;
@@ -1119,6 +1200,13 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     owner: colChip2
                 }, colChipArea, PivotDimensionType.Column);
                 pivotGrid.cdr.detectChanges();
+
+                headerRow.onDimDragLeave({
+                    owner: colChip2
+                });
+                expect((colChip2.nativeElement.previousElementSibling as any).style.visibility).toBe('hidden');
+                expect((colChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
+
                 //check chip order is updated.
                 expect(colChipArea.chipsList.toArray()[0].id).toBe(colChip2.id);
                 expect(colChipArea.chipsList.toArray()[1].id).toBe(colChip1.id);
