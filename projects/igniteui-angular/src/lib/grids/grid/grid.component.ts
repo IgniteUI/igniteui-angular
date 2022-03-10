@@ -859,7 +859,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     owner: tmlpOutlet,
                     index: this.dataView.indexOf(rowData),
                     templateID: {
-                        type:'detailRow',
+                        type: 'detailRow',
                         id: rowID
                     }
                 };
@@ -868,7 +868,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 return {
                     $implicit: rowData.detailsData,
                     templateID: {
-                        type:'detailRow',
+                        type: 'detailRow',
                         id: rowID
                     },
                     index: this.dataView.indexOf(rowData)
@@ -1049,7 +1049,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (this.dataView.length >= this.virtualizationState.startIndex + this.virtualizationState.chunkSize) {
             row = this.createRow(index);
         } else {
-            if (!(index < this.virtualizationState.startIndex) && !(index > this.virtualizationState.startIndex + this.virtualizationState.chunkSize)) {
+            if (!(index < this.virtualizationState.startIndex) &&
+                !(index > this.virtualizationState.startIndex + this.virtualizationState.chunkSize)
+            ) {
                 row = this.createRow(index);
             }
         }
@@ -1088,7 +1090,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public allRows(): RowType[] {
         return this.dataView.map((rec, index) => {
-            this.pagingMode === 1 && this.paginator.page !== 0 ? index = index + this.paginator.perPage * this.paginator.page : index = this.dataRowList.first.index + index;
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            this.pagingMode === 1 && this.paginator.page !== 0 ? index = index + this.paginator.perPage * this.paginator.page :
+                index = this.dataRowList.first.index + index;
             return this.createRow(index);
         });
     }
