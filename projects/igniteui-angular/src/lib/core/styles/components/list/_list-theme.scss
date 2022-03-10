@@ -312,10 +312,6 @@
         overflow: hidden;
         z-index: 0;
         border-radius: var-get($theme, 'border-radius');
-
-        @if $bootstrap-theme {
-            border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
-        }
     }
 
     %igx-list--empty {
@@ -354,6 +350,14 @@
         border-radius: var-get($theme, 'item-border-radius');
         color: var-get($theme, 'item-text-color');
         background: var-get($theme, 'item-background');
+
+        @if $bootstrap-theme {
+            border-bottom: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
+
+            &:last-of-type {
+                border-bottom: none;
+            }
+        }
 
         &:hover {
             color: var-get($theme, 'item-text-color-hover');

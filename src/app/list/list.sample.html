@@ -12,12 +12,10 @@
                         <p igxListLineTitle>Cras justo odio</p>
                         <igx-badge igxListAction value="14"></igx-badge>
                     </igx-list-item>
-                    <igx-divider></igx-divider>
                     <igx-list-item>
                         <p igxListLineTitle>Dapibus ac facilisis in </p>
                         <igx-badge igxListAction value="2"></igx-badge>
                     </igx-list-item>
-                    <igx-divider></igx-divider>
                     <igx-list-item>
                         <p igxListLineTitle>Morbi leo risus </p>
                         <igx-badge igxListAction value="1"></igx-badge>
@@ -38,7 +36,6 @@
                                 <igx-checkbox igxListAction></igx-checkbox>
                                 <igx-icon igxListAction>info</igx-icon>
                             </igx-list-item>
-                            <igx-divider *ngIf="!last"></igx-divider>
                         </ng-template>
                     </igx-list>
                 </igx-card>
@@ -74,7 +71,6 @@
                                 <span igxListLine>Custom text content</span>
                                 <igx-icon igxListAction>more_horiz</igx-icon>
                             </igx-list-item>
-                            <igx-divider></igx-divider>
                         </ng-template>
                         <igx-list-item [isHeader]="true">Icon | Title | Subtitle | Action icon  </igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
@@ -85,7 +81,6 @@
                                 <igx-icon igxListAction>more_horiz</igx-icon>
                                 <igx-icon igxListAction>info</igx-icon>
                             </igx-list-item>
-                            <igx-divider *ngIf="!last"></igx-divider>
                         </ng-template>
                     </igx-list>
                 </igx-card>
@@ -104,7 +99,6 @@
                                 <p igxListLineSubTitle>{{employee.position}}</p>
                                 <igx-icon igxListAction>more_horiz</igx-icon>
                             </igx-list-item>
-                            <igx-divider *ngIf="!last"></igx-divider>
                         </ng-template>
                     </igx-list>
                 </igx-card>
@@ -142,7 +136,6 @@
                                 <p igxListLineSubTitle>{{employee.description}}</p>
                                 <igx-icon igxListAction>more_horiz</igx-icon>
                             </igx-list-item>
-                            <igx-divider *ngIf="!last"></igx-divider>
                         </ng-template>
                     </igx-list>
                 </igx-card>
@@ -160,7 +153,6 @@
                                 <p igxListLineTitle>{{employee.position}}</p>
                                 <igx-checkbox igxListAction></igx-checkbox>
                             </igx-list-item>
-                            <igx-divider *ngIf="!last"></igx-divider>
                         </ng-template>
                     </igx-list>
                 </igx-card>
