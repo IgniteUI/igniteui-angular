@@ -1290,11 +1290,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      */
     public get cells(): CellType[] {
-        // TODO calclulate index for remote data scenarios
-        // check indexes in this.dataRowList.first and this.dataRowList.last
         return this.grid.dataView
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
+                    this.grid.pagingMode === 1 && this.grid.paginator.page !== 0 ? index = index + this.grid.paginator.perPage * this.grid.paginator.page : index = this.grid.dataRowList.first.index + index;
                     const cell = new IgxGridCell(this.grid as any, index, this.field);
                     return cell;
                 }
