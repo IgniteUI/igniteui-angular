@@ -859,7 +859,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     owner: tmlpOutlet,
                     index: this.dataView.indexOf(rowData),
                     templateID: {
-                        type:'detailRow',
+                        type: 'detailRow',
                         id: rowID
                     }
                 };
@@ -868,7 +868,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 return {
                     $implicit: rowData.detailsData,
                     templateID: {
-                        type:'detailRow',
+                        type: 'detailRow',
                         id: rowID
                     },
                     index: this.dataView.indexOf(rowData)
@@ -1042,10 +1042,24 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param index
      */
     public getRowByIndex(index: number): RowType {
+        let row: RowType;
         if (index < 0) {
             return undefined;
         }
-        return this.createRow(index);
+        if (this.dataView.length >= this.virtualizationState.startIndex + this.virtualizationState.chunkSize) {
+            row = this.createRow(index);
+        } else {
+            if (!(index < this.virtualizationState.startIndex) &&
+                !(index > this.virtualizationState.startIndex + this.virtualizationState.chunkSize)
+            ) {
+                row = this.createRow(index);
+            }
+        }
+
+        if (this.gridAPI.grid.pagingMode === 1 && this.gridAPI.grid.page !== 0) {
+            row.index = index + this.paginator.perPage * this.paginator.page;
+        }
+        return row;
     }
 
     /**
@@ -1075,7 +1089,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => this.createRow(index));
+        return this.dataView.map((rec, index) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            this.pagingMode === 1 && this.paginator.page !== 0 ? index = index + this.paginator.perPage * this.paginator.page :
+                index = this.dataRowList.first.index + index;
+            return this.createRow(index);
+        });
     }
 
     /**
@@ -1114,7 +1133,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.field === columnField);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            return new IgxGridCell(this, rowIndex, columnField);
+            if (this.pagingMode === 1 && this.gridAPI.grid.page !== 0) {
+                row.index = rowIndex + this.paginator.perPage * this.paginator.page;
+            }
+            return new IgxGridCell(this, row.index, columnField);
         }
     }
 
@@ -1156,7 +1178,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         let rec: any;
 
         if (index < 0 || index >= this.dataView.length) {
-            if (index >= this.dataView.length){
+            if (this.pagingMode === 1 && this.paginator.page !== 0) {
+                rec = data ?? this.dataView[index - this.paginator.perPage * this.paginator.page];
+            } else if (index >= this.dataView.length) {
                 const virtIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
                 rec = data ?? this.dataView[virtIndex];
             }

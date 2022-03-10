@@ -494,5 +494,23 @@ describe('IgxGrid - Grid Paging #grid', () => {
         grid = fix.componentInstance.grid;
         expect(grid.paginator.totalPages).toBe(4);
     }));
+
+    it('should get correct rowIndex in remote paging', fakeAsync(() => {
+        fix = TestBed.createComponent(RemotePagingComponent);
+        fix.detectChanges();
+        tick();
+
+        grid = fix.componentInstance.grid;
+        expect(grid.paginator.totalPages).toBe(4);
+        const page = (index: number) => grid.page = index;
+        const desiredPageIndex = 2;
+        page(2);
+        fix.detectChanges();
+        tick();
+        expect(grid.page).toBe(desiredPageIndex);
+
+        expect(grid.getRowByIndex(0).cells[1].value).toBe('Debra Morton');
+        expect(grid.getRowByIndex(0).viewIndex).toBe(6);
+    }));
 });
 
