@@ -3096,6 +3096,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
 
             moveLeft.click();
+            tick();
             fix.detectChanges();
 
             expect(grid.columnList.get(2).field).toBe('ProductName');
@@ -5621,6 +5622,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
 
             moveLeft.click();
+            tick();
             fix.detectChanges();
 
             expect(grid.columnList.get(2).field).toBe('ProductName');
