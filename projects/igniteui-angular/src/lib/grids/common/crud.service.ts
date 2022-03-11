@@ -533,7 +533,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
             this.createCell(cell);
             if (this.rowEditing) {
-                if (this.row && !this.sameRow(this.cell?.id?.rowID)) {
+                if (this.row && !this.sameRow(cell?.cellID?.rowID)) {
                     this.rowEditingBlocked = this.endEdit(true, event);
                     if (this.rowEditingBlocked) {
                         return true;
