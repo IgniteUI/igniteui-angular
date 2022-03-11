@@ -47,9 +47,9 @@ import {
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { formatDate } from '../../core/utils';
+import { IgxCalendarComponent } from '../../calendar/calendar.component';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -3597,16 +3597,18 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             // Move 'ProductName' one step to the right. (should move)
-            GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
-            tick(100);
+            let moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
+            UIInteractions.simulateClickEvent(moveRight);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ID');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ProductName');
             expect(productNameCol.pinned).toBe(true);
 
             // Move 'ProductName' one step to the left. (should move)
-            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
-            tick(100);
+            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            UIInteractions.simulateClickEvent(moveLeft);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ID');
@@ -3617,11 +3619,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsDisabled(moveComponent.querySelectorAll('button')[0]);
 
             // Move 'ProductName' two steps to the right. (should move)
-            GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
-            tick(100);
+            moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
+            UIInteractions.simulateClickEvent(moveRight);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
-            GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
-            tick(100);
+            UIInteractions.simulateClickEvent(moveRight);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ID');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ProductName');
@@ -3641,11 +3644,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
-            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
-            tick(100);
+            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            UIInteractions.simulateClickEvent(moveLeft);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
-            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
-            tick(100);
+            UIInteractions.simulateClickEvent(moveLeft);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
@@ -3763,7 +3767,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
         }));
 
-        it('display dansity is properly applied on the column selection container', fakeAsync(() => {
+        it('display density is properly applied on the column selection container', fakeAsync(() => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
@@ -4348,8 +4352,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
             fix.detectChanges();
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', 'False', 'True'],
-                [null, true, true, false]);
+                ['Select All', '(Blanks)', 'False'],
+                [true, true, true]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
@@ -4364,6 +4368,94 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             verifyExcelStyleFilterAvailableOptions(fix,
                 ['Select All', '20', '254'],
                 [true, true, true]);
+        }));
+
+        it('Should correctly modify existing filters.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+                    'NetAdvantage', 'Some other item with Script'],
+                [true, true, true, true, true, true]);
+            toggleExcelStyleFilteringItems(fix, true, 1, 5);
+            expect(grid.rowList.length).toBe(3);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '20', '127', '254'],
+                [true, true, true, true]);
+            toggleExcelStyleFilteringItems(fix, true, 2);
+            expect(grid.rowList.length).toBe(2);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'Ignite UI for Angular', 'Ignite UI for JavaScript'],
+                [true, true, true]);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '20', '127', '254'],
+                [null, true, false, true]);
+            toggleExcelStyleFilteringItems(fix, true, 1, 2, 3);
+            expect(grid.rowList.length).toBe(1);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '20', '127', '254'],
+                [null, false, true, false]);
+        }));
+
+        it('Should correctly modify the first one of the existing filters.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+                    'NetAdvantage', 'Some other item with Script'],
+                [true, true, true, true, true, true]);
+            toggleExcelStyleFilteringItems(fix, true, 1, 5);
+            expect(grid.rowList.length).toBe(3);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '20', '127', '254'],
+                [true, true, true, true]);
+            toggleExcelStyleFilteringItems(fix, true, 2);
+            expect(grid.rowList.length).toBe(2);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'Ignite UI for Angular', 'Ignite UI for JavaScript'],
+                [true, true, true]);
+            toggleExcelStyleFilteringItems(fix, true, 1);
+            expect(grid.rowList.length).toBe(1);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '254'],
+                [true, true]);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'Ignite UI for Angular', 'Ignite UI for JavaScript'],
+                [null, false, true]);
         }));
 
         it('Should display the ESF based on the filterIcon within the grid', async () => {
@@ -6072,7 +6164,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Pin the 'General Information' group by pinning its child 'ProductName' column.
-            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             tick(100);
             fix.detectChanges();
             GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
@@ -6083,11 +6175,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.verifyColumnIsPinned(column, false, 7);
 
             // Try to pin the 'AnotherField' column by moving it to the left.
-            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
-            tick(100);
-            fix.detectChanges();
-            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
-            tick(200);
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            UIInteractions.simulateClickEvent(moveLeft);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             // Verify 'AnotherField' column is successfully pinned next to the column group.
@@ -6592,8 +6683,6 @@ const verifyExcelStyleFilterAvailableOptions = (fix, labels: string[], checked: 
     const checkboxElements: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
 
     expect(labelElements.length).toBe(labels.length, 'incorrect rendered list items count');
-    expect(labelElements.length).toBeGreaterThan(2);
-    expect(checkboxElements.length).toBeGreaterThan(2);
     labels.forEach((l, index) => {
         expect(l).toEqual(labelElements[index].innerText);
     });
