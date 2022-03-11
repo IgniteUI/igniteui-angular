@@ -84,7 +84,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         it('should paginate data API', () => {
             fix.detectChanges();
 
-         // Goto page 3 through API and listen for event
+            // Goto page 3 through API and listen for event
             spyOn(grid.pagingDone, 'emit');
             grid.paginate(2);
 
@@ -196,6 +196,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             expect(GridFunctions.getGridPaginator(grid)).toBeNull();
             expect(grid.nativeElement.querySelectorAll('.igx-paginator > select').length).toEqual(0);
         });
+
 
         it('change paging pages per page API', (async () => {
             fix.detectChanges();
@@ -493,6 +494,24 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
         grid = fix.componentInstance.grid;
         expect(grid.paginator.totalPages).toBe(4);
+    }));
+
+    it('should get correct rowIndex in remote paging', fakeAsync(() => {
+        fix = TestBed.createComponent(RemotePagingComponent);
+        fix.detectChanges();
+        tick();
+
+        grid = fix.componentInstance.grid;
+        expect(grid.paginator.totalPages).toBe(4);
+        const page = (index: number) => grid.page = index;
+        let desiredPageIndex = 2;
+        page(2);
+        fix.detectChanges();
+        tick();
+        expect(grid.page).toBe(desiredPageIndex);
+
+        expect(grid.getRowByIndex(0).cells[1].value).toBe('Debra Morton')
+        expect(grid.getRowByIndex(0).viewIndex).toBe(6);
     }));
 });
 
