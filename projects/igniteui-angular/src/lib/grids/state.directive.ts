@@ -381,7 +381,7 @@ export class IgxGridStateDirective {
                     childGrid = grid;
                     grid = grid.parent;
                 }
-                return grid.hgridAPI.getParentRowId(childGrid);
+                return grid.gridAPI.getParentRowId(childGrid);
             }
         }
     };

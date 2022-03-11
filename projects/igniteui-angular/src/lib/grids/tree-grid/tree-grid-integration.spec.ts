@@ -25,7 +25,6 @@ import { DropPosition } from '../moving/moving.service';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxGridTransaction } from '../common/types';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
@@ -443,8 +442,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(cell.editMode).toBeFalsy();
-            expect(banner.parent.attributes['aria-hidden']).toEqual('true');
+            // K.D. 01 Mar, 2022 #10634 Don't trigger endEdit/commit upon row expansion state change
+            expect(cell.editMode).toBe(true);
+            expect(banner.parent.attributes['aria-hidden']).toEqual('false');
 
             // Edit parent row cell
             cell.editMode = true;
@@ -458,8 +458,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(cell.editMode).toBeFalsy();
-            expect(banner.parent.attributes['aria-hidden']).toEqual('true');
+            // K.D. 01 Mar, 2022 #10634 Don't trigger endEdit/commit upon row expansion state change
+            expect(cell.editMode).toBe(true);
+            expect(banner.parent.attributes['aria-hidden']).toEqual('false');
         });
 
         it('should hide banner when edited child row is being expanded/collapsed', () => {
@@ -481,8 +482,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(childCell.editMode).toBeFalsy();
-            expect(banner.parent.attributes['aria-hidden']).toEqual('true');
+            expect(childCell.editMode).toBe(false);
+            // K.D. 28 Feb, 2022 #10634 Don't trigger endEdit/commit upon row expansion state change
+            expect(banner.parent.attributes['aria-hidden']).toEqual('false');
 
             // Edit child row cell
             const parentCell = grid.getCellByColumn(3, 'Name');
@@ -498,8 +500,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(parentCell.editMode).toBeFalsy();
-            expect(banner.parent.attributes['aria-hidden']).toEqual('true');
+            expect(parentCell.editMode).toBe(false);
+            // K.D. 01 Mar, 2022 #10634 Don't trigger endEdit/commit upon row expansion state change
+            expect(banner.parent.attributes['aria-hidden']).toEqual('false');
         });
 
         it('TAB navigation should not leave the edited row and the banner.', async () => {

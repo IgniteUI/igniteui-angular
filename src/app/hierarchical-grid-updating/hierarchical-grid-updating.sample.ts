@@ -91,7 +91,7 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
     }
 
     public deleteRow() {
-        const grid = this.rowIsland1.hgridAPI.getChildGrids()[0];
+        const grid = this.rowIsland1.gridAPI.getChildGrids()[0];
         grid.deleteRow(grid.data[0]['OrderID']);
     }
 

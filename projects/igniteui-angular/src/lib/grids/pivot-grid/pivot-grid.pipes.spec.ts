@@ -1,6 +1,5 @@
 import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxNumberSummaryOperand } from '../summaries/grid-summary';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 import { IPivotConfiguration } from './pivot-grid.interface';

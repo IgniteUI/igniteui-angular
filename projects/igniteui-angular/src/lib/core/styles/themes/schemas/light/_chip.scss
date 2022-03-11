@@ -176,19 +176,19 @@ $fluent-chip: extend(
         ),
 
         hover-selected-text-color: (
-            contrast-color: ('primary', 500)
+            contrast-color: ('primary', 600)
         ),
 
         hover-selected-background: (
-            color: ('primary', 500),
+            color: ('primary', 600),
         ),
 
         focus-selected-text-color: (
-            contrast-color: ('primary', 500)
+            contrast-color: ('primary', 800)
         ),
 
         focus-selected-background:(
-            color: ('primary', 500),
+            color: ('primary', 800),
         ),
     )
 );
@@ -337,11 +337,11 @@ $indigo-chip: extend(
         ),
 
         focus-selected-text-color: (
-            contrast-color: ('primary', 400)
+            contrast-color: ('primary', 500)
         ),
 
         focus-selected-background: (
-            color: ('primary', 400)
+            color: ('primary', 500)
         ),
     )
 );

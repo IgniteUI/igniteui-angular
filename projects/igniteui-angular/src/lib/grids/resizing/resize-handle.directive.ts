@@ -10,9 +10,7 @@ import {
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { ColumnType } from '../common/grid.interface';
-import { PivotRowHeaderGroupType } from '../pivot-grid/pivot-grid.interface';
 import { IgxColumnResizingService } from './resizing.service';
-import { IgxPivotColumnResizingService } from './pivot-grid/pivot-resizing.service'
 
 
 /**

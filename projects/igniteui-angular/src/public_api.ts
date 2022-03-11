@@ -42,6 +42,7 @@ export * from './lib/data-operations/filtering-expressions-tree';
 export * from './lib/data-operations/filtering-condition';
 export * from './lib/data-operations/filtering-state.interface';
 export * from './lib/data-operations/filtering-strategy';
+export * from './lib/data-operations/pivot-sort-strategy';
 export * from './lib/data-operations/pivot-strategy';
 export * from './lib/data-operations/groupby-expand-state.interface';
 export * from './lib/data-operations/groupby-record.interface';
