@@ -568,26 +568,26 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     it('should update aria-activeDescendants when navigating around', () => {
         hierarchicalGrid.cellSelection = 'single';
-        expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual('igx-hierarchical-grid-0');
+        expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
 
         let cellElem = (hierarchicalGrid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
         UIInteractions.simulatePointerOverElementEvent('pointerdown', cellElem.nativeElement);
         fixture.detectChanges();
-        expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual('igx-hierarchical-grid-0_0_1');
+        expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(`${hierarchicalGrid.id}_0_1`);
 
         const row1 = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row1.expander);
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.getChildGrids()[0];
-        expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual('igx-hierarchical-grid-1');
+        expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(childGrid.id);
 
         cellElem = (childGrid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
         UIInteractions.simulatePointerOverElementEvent('pointerdown', cellElem.nativeElement);
         fixture.detectChanges();
 
-        expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual('igx-hierarchical-grid-0');
-        expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual('igx-hierarchical-grid-1_0_1');
+        expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
+        expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(`${childGrid.id}_0_1`);
     });
 });
 
