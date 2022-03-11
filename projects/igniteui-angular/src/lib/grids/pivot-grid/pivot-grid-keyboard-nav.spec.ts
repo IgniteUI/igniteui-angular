@@ -192,7 +192,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         expect(activeCells.length).toBe(1);
     });
 
-    it('should allow navigating within the cells of the body', () => {
+    it('should allow navigating within the cells of the body', async () => {
         const cell = pivotGrid.rowList.first.cells.first;
         GridFunctions.focusFirstCell(fixture, pivotGrid);
         fixture.detectChanges();
@@ -213,6 +213,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
         const gridContent = GridFunctions.getGridContent(fixture);
         UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent);
+        await wait(30);
         fixture.detectChanges();
 
         activeCells = fixture.debugElement.queryAll(By.css(`.igx-grid__td--active`));
