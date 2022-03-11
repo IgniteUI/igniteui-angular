@@ -92,7 +92,7 @@ $fluent-checkbox: extend(
 /// @type {Map}
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and fill colors.
 /// @prop {Map} empty-color [color: ('grays', 500)] - The unchecked border color.
-/// @prop {Map} disabled-color [color: ('grays', 300)] - The disabled border and fill colors.
+/// @prop {Map} disabled-color [color: ('primary', 200)] - The disabled border and fill colors.
 /// @prop {Number} border-radius [4px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-ripple [4px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 /// @property {Map} focus-outline-color [color: ('primary', 200)] - The focus outlined color.
@@ -119,7 +119,7 @@ $bootstrap-checkbox: extend(
         ),
 
         disabled-color: (
-            color: ('grays', 300)
+            color: ('primary', 200)
         ),
     )
 );
