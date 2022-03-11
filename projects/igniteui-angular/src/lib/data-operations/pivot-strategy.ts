@@ -5,7 +5,6 @@ import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 import { FilteringStrategy, IgxFilterItem } from './filtering-strategy';
 import { cloneArray } from '../core/utils';
 import { IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { IFilteringExpression } from './filtering-expression.interface';
 
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: NoopPivotDimensionsStrategy = null;
@@ -143,7 +142,6 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
 
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false,
         grid?: PivotGridType): any {
-        const config = grid.pivotConfiguration;
         const allDimensions = grid.allDimensions;
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
         const dim :IPivotDimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
