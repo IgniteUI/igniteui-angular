@@ -22,6 +22,8 @@
 /// @param {Color} $hover-foreground [null] - The hover text color of the button.
 /// @param {Color} $focus-background [null] - The focus background color of the button.
 /// @param {Color} $focus-foreground [null] - The focus text color of the button.
+/// @param {Color} $active-background [null] - The active background of the button.
+/// @param {Color} $active-foreground [null] - The active text color of the button.
 /// @param {Number} $border-radius [null] - The border radius of the button.
 /// @param {Color} $border-color [null] - The border color of the button.
 /// @param {Color} $shadow-color [null] - The shadow color of the button.
@@ -60,6 +62,9 @@
 
     $focus-background: null,
     $focus-foreground: null,
+
+    $active-background: null,
+    $active-foreground: null,
 
     $border-radius: null,
     $border-color: null,
@@ -159,6 +164,9 @@
                 focus-background: $focus-background,
                 focus-foreground: $focus-foreground,
 
+                active-background: $active-background,
+                active-foreground: $active-foreground,
+
                 border-radius: $_border-radius,
                 border-color: $border-color,
 
@@ -224,7 +232,13 @@
     $button-floating-width: rem(56px);
     $button-floating-height: $button-floating-width;
 
-    $button-icon-width: rem(36px, 16px);
+    $button-icon-width: map.get((
+        material: rem(36px, 16px),
+        fluent: rem(32px, 16px),
+        bootstrap: rem(36px, 16px),
+        indigo-design: rem(36px, 16px),
+    ), $variant);
+
     $button-icon-height: $button-icon-width;
     $button-icon-font-size: rem(24px, 24px);
     $button-icon-padding: 0;
@@ -322,7 +336,13 @@
         compact: rem(4px)
     );
 
-    $icon-in-button-size: rem(18px);
+    $icon-sizes: map.get((
+        material: rem(18px),
+        fluent: rem(16px),
+        bootstrap: rem(18px),
+        indigo-design: rem(18px),
+    ), $variant);
+    $icon-in-button-size: $icon-sizes;
 
     $raised-shadow: map.get((
         material: var-get($raised-theme, 'resting-shadow'),
@@ -504,14 +524,21 @@
 
         &:focus,
         &:active {
-            color: var-get($raised-theme, 'focus-foreground');
-            background: var-get($raised-theme, 'focus-background');
-
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
             }
+        }
+
+        &:focus {
+            color: var-get($raised-theme, 'focus-foreground');
+            background: var-get($raised-theme, 'focus-background');
+        }
+
+        &:active {
+            color: var-get($raised-theme, 'active-foreground');
+            background: var-get($raised-theme, 'active-background');
         }
     }
 
@@ -551,14 +578,21 @@
 
         &:focus,
         &:active {
-            color: var-get($fab-theme, 'focus-foreground');
-            background: var-get($fab-theme, 'focus-background');
-
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
             }
+        }
+
+        &:focus {
+            color: var-get($raised-theme, 'focus-foreground');
+            background: var-get($raised-theme, 'focus-background');
+        }
+
+        &:active {
+            color: var-get($raised-theme, 'active-foreground');
+            background: var-get($raised-theme, 'active-background');
         }
 
         @include icon-w-margin(
@@ -600,17 +634,57 @@
         background: var-get($icon-theme, 'background');
         border-radius: var-get($icon-theme, 'border-radius');
 
+        @if $variant == 'fluent' {
+            border: 1px solid transparent;
+        }
+
         &:hover {
-            transition: $button-transition;
+            @if $variant != 'fluent' {
+                transition: $button-transition;
+            }
+
             color: var-get($icon-theme, 'hover-foreground');
             background: var-get($icon-theme, 'hover-background');
         }
 
+        &:focus {
+            color: var-get($icon-theme, 'focus-foreground');
+
+            @if $variant != 'fluent' {
+                background: var-get($icon-theme, 'focus-background');
+            }
+
+            &:hover {
+                color: var-get($icon-theme, 'hover-foreground');
+                background: var-get($icon-theme, 'hover-background');
+            }
+
+            &:active {
+                color: var-get($icon-theme, 'active-foreground');
+                background: var-get($icon-theme, 'active-background');
+            }
+        }
+
+        &:active {
+            color: var-get($icon-theme, 'active-foreground');
+            background: var-get($icon-theme, 'active-background');
+        }
+
+        &:focus-visible {
+            color: var-get($icon-theme, 'focus-foreground');
+
+            @if $variant == 'fluent' {
+                border: rem(1px) solid var-get($icon-theme, 'border-color') ;
+            }
+
+            &:hover {
+                color: var-get($icon-theme, 'hover-foreground');
+                background: var-get($icon-theme, 'hover-background');
+            }
+        }
+
         &:focus,
         &:active {
-            color: var-get($icon-theme, 'focus-foreground');
-            background: var-get($icon-theme, 'focus-background');
-
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($icon-theme, 'shadow-color'), $icon-shadow;
             } @else {
@@ -624,6 +698,12 @@
         box-shadow: none;
         color: var-get($flat-theme, 'disabled-foreground');
         background: transparent;
+
+        @if $variant == 'fluent' {
+            %igx-button--icon {
+                background: var-get($flat-theme, 'disabled-background');
+            }
+        }
 
         &%igx-button--raised,
         &%igx-button--fab {
