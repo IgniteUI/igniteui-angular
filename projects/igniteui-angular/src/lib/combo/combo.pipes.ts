@@ -6,10 +6,17 @@ import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { IComboFilteringOptions } from './combo.component';
 
+/** @hidden */
+@Pipe({
+    name: 'comboClean'
+})
+export class IgxComboCleanPipe implements PipeTransform {
+    public transform(collection: any[]) {
+        return collection.filter(e => !!e);
+    }
+}
 
-/**
- * @hidden
- */
+/** @hidden */
 @Pipe({
     name: 'comboFiltering'
 })
@@ -24,8 +31,8 @@ export class IgxComboFilteringPipe implements PipeTransform {
         } else {
             const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
             if (displayKey != null) {
-                return collection.filter(e => filteringOptions.caseSensitive ? e[displayKey].includes(searchTerm) :
-                    e[displayKey].toString().toLowerCase().includes(searchTerm));
+                return collection.filter(e => filteringOptions.caseSensitive ? e[displayKey]?.includes(searchTerm) :
+                    e[displayKey]?.toString().toLowerCase().includes(searchTerm));
             } else {
                 return collection.filter(e => filteringOptions.caseSensitive ? e.includes(searchTerm) :
                     e.toString().toLowerCase().includes(searchTerm));
@@ -34,12 +41,8 @@ export class IgxComboFilteringPipe implements PipeTransform {
     }
 }
 
-/**
- * @hidden
- */
-@Pipe({
-    name: 'comboGrouping'
-})
+/** @hidden */
+@Pipe({ name: 'comboGrouping' })
 export class IgxComboGroupingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
