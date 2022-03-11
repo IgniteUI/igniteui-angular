@@ -101,7 +101,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                     })
                 }
             });
-            
         }
         this.applyAggregates(rec, columns, values, pivotKeys);
     }
@@ -122,10 +121,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
             }
         }
         return leafs;
-    }
-
-    private isLeaf(record, pivotKeys) {
-        return !(record[pivotKeys.records] && record[pivotKeys.records].some(r => r[pivotKeys.records]));
     }
 }
 
