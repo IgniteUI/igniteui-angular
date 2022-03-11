@@ -483,27 +483,35 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.columnDimensions.length).toEqual(0);
         });
 
-        it('should change display density', () => {
+        it('should change display density', fakeAsync(() => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const minWidthComf = '80';
+            const minWidthSupercompact = '56';
             const cellHeightComf = 50;
-            const minWidthCompact = '56';
-            const cellHeightCompact = 32;
+            const cellHeightSuperCompact = 24;
 
-            expect(pivotGrid.displayDensity).toBe('comfortable')
-            let dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
-            let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthComf);
-            expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightComf);
-
-            pivotGrid.displayDensity = 'compact';
+            pivotGrid.superCompactMode = true;
+            tick();
             fixture.detectChanges();
 
             expect(pivotGrid.displayDensity).toBe('compact')
+            let dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+            let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthSupercompact);
+            expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightSuperCompact);
+
+            pivotGrid.superCompactMode = false;
+            fixture.detectChanges();
+
+            pivotGrid.displayDensity = 'comfortable';
+            tick();
+            fixture.detectChanges();
+
+            expect(pivotGrid.displayDensity).toBe('comfortable')
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthCompact);
-            expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightCompact);
-        });
+            expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthComf);
+            expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightComf);
+        }));
 
         it('should render correct grid with noop strategies', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
@@ -976,11 +984,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const filtersChip = headerRow.nativeElement.querySelector('igx-chip[id="Date"]');
                 expect(filtersChip).not.toBeUndefined();
                 const filterIcon = filtersChip.querySelectorAll('igx-icon')[1];
-                spyOn(headerRow, "onFilteringIconPointerDown");
 
+                spyOn(headerRow, 'onFilteringIconPointerDown').and.callThrough();
                 filterIcon.dispatchEvent(new Event('pointerdown'));
-                fixture.detectChanges();
-
                 expect(headerRow.onFilteringIconPointerDown).toHaveBeenCalledTimes(1);
             });
 
@@ -1139,6 +1145,52 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expectedOrder = [492, 282, 267, 100, undefined, undefined, undefined];
                 columnValues = pivotGrid.dataView.map(x => x['Bulgaria-UnitsSold']);
                 expect(columnValues).toEqual(expectedOrder);
+            });
+
+            it('should sort date values', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.height = '700px';
+                pivotGrid.width = '1000px';
+                pivotGrid.pivotConfiguration.columns = [
+                    {
+                        memberName: 'Date',
+                        enabled: true,
+                        dataType: 'date'
+                    }
+                ];
+                pivotGrid.pivotConfiguration.rows = [
+                    {
+                        memberName: 'AllSeller',
+                        memberFunction: () => 'All Sellers',
+                        enabled: true,
+                        childLevel: {
+                            enabled: true,
+                            memberName: 'SellerName'
+                        }
+                    }
+                ];
+                pivotGrid.notifyDimensionChange(true);
+                fixture.detectChanges();
+
+                const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+                const colChip = headerRow.querySelector('igx-chip[id="Date"]');
+
+                // sort
+                colChip.click();
+                fixture.detectChanges();
+
+                let colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+                let expected = ['01/05/2019', '01/06/2020', '02/19/2020', '05/12/2020', '01/01/2021', '04/07/2021', '12/08/2021']
+                expect(colHeaders).toEqual(expected);
+
+                // sort
+                colChip.click();
+                fixture.detectChanges();
+
+                colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+                expected = ['12/08/2021', '04/07/2021', '01/01/2021', '05/12/2020', '02/19/2020', '01/06/2020', '01/05/2019'];
+                expect(colHeaders).toEqual(expected);
+
             });
 
             it('should allow changing default aggregation via value chip drop-down.', () => {
