@@ -343,15 +343,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         event.stopPropagation();
         event.preventDefault();
         let dim = dimension;
-        let col;
-        while (dim) {
-            col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
-            if (col) {
-                break;
-            } else {
-                dim = dim.childLevel;
-            }
-        }
+        const col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
         this.grid.filteringService.toggleFilterDropdown(event.target, col);
     }
 
@@ -369,15 +361,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
      */
     public onFiltersAreaDropdownClick(event, dimension?, shouldReattach = true) {
         let dim = dimension || this.filterDropdownDimensions.values().next().value;
-        let col;
-        while (dim) {
-            col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
-            if (col) {
-                break;
-            } else {
-                dim = dim.childLevel;
-            }
-        }
+        const col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
         if (shouldReattach) {
             this.dropdownChips.chipsList.forEach(chip => {
                 chip.selected = false

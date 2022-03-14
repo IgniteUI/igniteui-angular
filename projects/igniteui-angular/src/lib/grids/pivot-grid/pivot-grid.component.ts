@@ -2032,13 +2032,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
     * @hidden @internal
     */
-    public getPropName(dim: IPivotDimension) {
-        return !!dim ?? dim.memberName + this.pivotKeys.rowDimensionSeparator + 'height';
-    }
-
-    /**
-    * @hidden @internal
-    */
     @ViewChild('emptyPivotGridTemplate', { read: TemplateRef, static: true })
     public defaultEmptyPivotGridTemplate: TemplateRef<any>;
 
