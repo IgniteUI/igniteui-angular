@@ -525,21 +525,18 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 this.grid.tbody.nativeElement.focus();
             }
         } else {
-
-            this.createCell(cell);
             if (this.rowEditing) {
                 // TODO rowData
-                if (this.row && !this.sameRow(this.cell?.id?.rowID)) {
+                if (this.row && !this.sameRow(cell?.cellID?.rowID)) {
                     this.rowEditingBlocked = this.endEdit(true, event);
                     if (this.rowEditingBlocked) {
                         return true;
                     }
 
-                    // If enters here, @endEdit clears the new reference of the cell edit.
-                    this.createCell(cell);
                     this.rowEditingBlocked = false;
                     this.endRowEdit();
                 }
+                this.createCell(cell);
 
                 const canceled = this.beginRowEdit(event);
                 if (!canceled) {
@@ -547,6 +544,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 }
 
             } else {
+                this.createCell(cell);
                 this.beginCellEdit(event);
             }
         }
