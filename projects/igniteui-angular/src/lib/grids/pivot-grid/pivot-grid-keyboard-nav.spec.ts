@@ -52,6 +52,16 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         GridFunctions.verifyHeaderIsFocused(secondCell.parent);
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
+
+        // should do nothing if wrong key is pressed
+        UIInteractions.simulateClickAndSelectEvent(firstCell);
+        fixture.detectChanges();
+        GridFunctions.verifyHeaderIsFocused(firstCell.parent);
+        activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+        expect(activeCells.length).toBe(1);
+        UIInteractions.triggerKeyDownEvtUponElem('h', firstCell.nativeElement);
+        fixture.detectChanges();
+        GridFunctions.verifyHeaderIsFocused(firstCell.parent);
     });
 
     it('should not go outside of the boundaries of the row dimensions content', () => {
@@ -117,6 +127,39 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         GridFunctions.verifyHeaderIsFocused(lastCell.parent);
         const activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
+    });
+
+    it('should allow navigating from any to first row headers(Ctrl + ArrowUp)', () => {
+        // Ctrl + arrowup
+        let allGroups = fixture.debugElement.queryAll(
+            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const thirdCell = allGroups.filter(x => x.componentInstance.column.field === 'ProductCategory')[2]
+        UIInteractions.simulateClickAndSelectEvent(thirdCell);
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', thirdCell.nativeElement, true, false, false, true);
+        fixture.detectChanges();
+
+        allGroups = fixture.debugElement.queryAll(
+            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const firstCell = allGroups[0];
+        GridFunctions.verifyHeaderIsFocused(firstCell.parent);
+        let activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+        expect(activeCells.length).toBe(1);
+
+        // just arrow up
+        UIInteractions.simulateClickAndSelectEvent(thirdCell);
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', thirdCell.nativeElement, true, false, false, false);
+        fixture.detectChanges();
+        allGroups = fixture.debugElement.queryAll(
+            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const secondCell = allGroups.filter(x => x.componentInstance.column.field === 'ProductCategory')[1];
+        GridFunctions.verifyHeaderIsFocused(secondCell.parent);
+        activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+        expect(activeCells.length).toBe(1);
+
     });
 
     it('should allow navigating between column headers', () => {
