@@ -378,6 +378,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
+        if (value === null || value === undefined || value === '') {
+            // we can accept null, undefined and empty strings as empty display values
+            return true;
+        }
         const searchValue = this.searchValue || this.comboInput.value;
         return !!searchValue && value.toString().toLowerCase().includes(searchValue.trim().toLowerCase());
     };
@@ -411,7 +415,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
     }
 
-    protected createDisplayText(newSelection: any[], oldSelection: any[]): any {
+    protected createDisplayText(newSelection: any[], oldSelection: any[]): string {
         if (this.isRemote) {
             return this.getRemoteSelection(newSelection, oldSelection);
         }
@@ -452,7 +456,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return null;
         }
 
-        return this.displayKey ? element[this.displayKey] : element;
+        const elementVal = this.displayKey ? element[this.displayKey] : element;
+        return (elementVal === 0 ? '0' : elementVal) || '';
     }
 
     private clearAndClose(): void {
