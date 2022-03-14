@@ -536,14 +536,15 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                     this.rowEditingBlocked = false;
                     this.endRowEdit();
                 }
+                    this.createCell(cell);
+
+                    const canceled = this.beginRowEdit(event);
+                    if (!canceled) {
+                        this.beginCellEdit(event);
+                    }
+
+                } else {
                 this.createCell(cell);
-
-                const canceled = this.beginRowEdit(event);
-                if (!canceled) {
-                    this.beginCellEdit(event);
-                }
-
-            } else {
                 this.beginCellEdit(event);
             }
         }
