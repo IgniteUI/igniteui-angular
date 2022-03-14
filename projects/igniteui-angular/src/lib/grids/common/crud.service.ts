@@ -544,6 +544,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 }
 
             } else {
+                this.createCell(cell);
                 this.beginCellEdit(event);
             }
         }
