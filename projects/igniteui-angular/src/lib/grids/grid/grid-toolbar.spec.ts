@@ -1,9 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { GridFunctions } from "../../test-utils/grid-functions.spec";
+import { By } from "@angular/platform-browser";
 
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
@@ -170,6 +172,24 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(defaultFiltSettings).not.toEqual(instance.advancedFiltAction.overlaySettings);
             expect(defaultExportSettings).not.toEqual(instance.exporterAction.overlaySettings);
         });
+
+        it('should initialize input property columnsAreaMaxHeight properly', fakeAsync(() => {
+            expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('100%');
+
+            instance.pinningAction.columnsAreaMaxHeight = '10px';
+            fixture.detectChanges();
+
+            expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('10px');
+
+            const pinningButton = GridFunctions.getColumnPinningButton(fixture);
+            pinningButton.click();
+            tick();
+            fixture.detectChanges()
+            const element = fixture.debugElement.query(By.css('.igx-column-actions__columns'));
+            expect(element.attributes.style).toBe('max-height: 10px;');
+
+            expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('10px');
+        }));
     });
 });
 
