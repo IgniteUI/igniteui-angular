@@ -11,7 +11,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
 import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxPivotDateAggregate, IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IPivotGridRecord, PivotDimensionType } from './pivot-grid.interface';
@@ -423,7 +423,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
-            it('should show excel style filtering via dimension chip.', () => {
+            it('should show excel style filtering via dimension chip.', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 expect(pivotGrid.filterStrategy).toBeInstanceOf(DimensionValuesFilteringStrategy);
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
@@ -433,35 +433,51 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 filterIcon.click();
+                await wait(100);
                 fixture.detectChanges();
                 const esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
+
                 const checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
-                // should show and should display correct checkboxes.
+                // should show Select All checkbox
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).toBeUndefined();
                 expect((checkBoxes[0].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Select All');
-                expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Accessories');
-                expect((checkBoxes[2].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Bikes');
-                expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Clothing');
-                expect((checkBoxes[4].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Components');
+
+                // expand tree hierarchy
+                GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 0);
+                await wait(100);
+                fixture.detectChanges();
+                // should show correct tree items
+                const treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
+                expect(treeItems.length).toBe(5);
+
+                expect(treeItems[1].innerText).toBe('Clothing');
+                expect(treeItems[2].innerText).toBe('Bikes');
+                expect(treeItems[3].innerText).toBe('Accessories');
+                expect(treeItems[4].innerText).toBe('Components');
             });
 
-            it('should filter rows via excel style filtering dimension chip.', () => {
+            it('should filter rows via excel style filtering dimension chip.', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
                 const filterIcon = rowChip.querySelectorAll('igx-icon')[2];
                 filterIcon.click();
+                await wait(100);
+                fixture.detectChanges();
+
+                // expand tree hierarchy
+                GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 0);
+                await wait(100);
                 fixture.detectChanges();
 
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
-                const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
-
+                const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-tree-grid');
                 // uncheck Accessories
-                checkboxes[1].click();
+                checkboxes[4].click();
                 fixture.detectChanges();
 
                 // uncheck Bikes
-                checkboxes[2].click();
+                checkboxes[3].click();
                 fixture.detectChanges();
 
                 // Click 'apply' button to apply filter.
@@ -478,12 +494,13 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(rowDimensionHeaders).toEqual(expectedHeaders);
             });
 
-            it('should filter columns via excel style filtering dimension chip.', () => {
+            it('should filter columns via excel style filtering dimension chip.', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="Country"]');
                 const filterIcon = rowChip.querySelectorAll('igx-icon')[2];
                 filterIcon.click();
+                await wait(100);
                 fixture.detectChanges();
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
                 const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
@@ -493,7 +510,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
 
                 // uncheck Uruguay
-                checkboxes[2].click();
+                checkboxes[3].click();
                 fixture.detectChanges();
 
 
@@ -507,7 +524,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(colHeaders).toEqual(expected);
             });
 
-            it('should show filters chips', () => {
+            it('should show filters chips', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration.filters = [{
                     memberName: 'SellerName',
@@ -523,19 +540,20 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 filterIcon.click();
+                await wait(100);
                 fixture.detectChanges();
                 const esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
                 const checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
                 // should show and should display correct checkboxes.
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).toBeUndefined();
                 expect((checkBoxes[0].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Select All');
-                expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('David');
+                expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Stanley');
                 expect((checkBoxes[2].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Elisa');
-                expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('John');
-                expect((checkBoxes[4].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Larry');
+                expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Lydia');
+                expect((checkBoxes[4].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('David');
             });
 
-            it('should show filters in chips dropdown button', () => {
+            it('should show filters in chips dropdown button', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration.filters = [
                     {
@@ -556,6 +574,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 dropdownIcon.click();
+                await wait(100);
                 fixture.detectChanges();
 
                 const chips = excelMenu.querySelectorAll('igx-chip');
@@ -569,10 +588,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // should show and should display correct checkboxes.
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).toBeUndefined();
                 expect((checkBoxes[0].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Select All');
-                expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('David');
+                expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Stanley');
                 expect((checkBoxes[2].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Elisa');
-                expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('John');
-                expect((checkBoxes[4].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Larry');
+                expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Lydia');
+                expect((checkBoxes[4].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('David');
 
                 // switch to the `ProductCategory` filters
                 const chipAreaElement = fixture.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
@@ -582,18 +601,19 @@ describe('IgxPivotGrid #pivotGrid', () => {
                         id: chips[1].id
                     }
                 });
+                await wait(500);
                 fixture.detectChanges();
 
                 esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
                 checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
                 expect((checkBoxes[0].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Select All');
-                expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Accessories');
+                expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Clothing');
                 expect((checkBoxes[2].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Bikes');
-                expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Clothing');
+                expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Accessories');
                 expect((checkBoxes[4].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Components');
             });
 
-            it('should be able to filter from chips dropdown button', () => {
+            it('should be able to filter from chips dropdown button', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration.filters = [
                     {
@@ -614,16 +634,16 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 dropdownIcon.click();
+                await wait(100);
                 fixture.detectChanges();
 
                 const checkBoxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
-
                 // uncheck David
-                checkBoxes[1].click();
+                checkBoxes[4].click();
                 fixture.detectChanges();
 
-                // uncheck Elisa
-                checkBoxes[5].click();
+                // uncheck Lydia
+                checkBoxes[3].click();
                 fixture.detectChanges();
 
                 // Click 'apply' button to apply filter.
@@ -667,6 +687,130 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(filtersChip).not.toBeUndefined();
             });
 
+            it('should show complex tree and allow filtering for Date dimension', async () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration.rows = [new IgxPivotDateDimension(
+                    {
+                        memberName: 'Date',
+                        enabled: true
+                    },
+                    {
+                        months: true,
+                        quarters: true,
+                        years: true,
+                        fullDate: true,
+                        total: true
+                    }
+                )];
+
+                pivotGrid.pipeTrigger++;
+                pivotGrid.setupColumns();
+                fixture.detectChanges();
+
+                const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+                const rowChip = headerRow.querySelector('igx-chip[id="AllPeriods"]');
+                const filterIcon = rowChip.querySelectorAll('igx-icon')[2];
+                filterIcon.click();
+                await wait(100);
+                fixture.detectChanges();
+
+                const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
+
+                // expand tree hierarchy
+                GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 0);
+                await wait(100);
+                fixture.detectChanges();
+                // should show correct tree items
+                let treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
+
+                expect(treeItems.length).toBe(4);
+                expect(treeItems[0].querySelector('.igx-tree-node__content').textContent).toBe('All Periods');
+                expect(treeItems[1].querySelector('.igx-tree-node__content').textContent).toBe('2021');
+                expect(treeItems[2].querySelector('.igx-tree-node__content').textContent).toBe('2019');
+                expect(treeItems[3].querySelector('.igx-tree-node__content').textContent).toBe('2020');
+
+
+                // expand tree hierarchy 2021
+                GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 1);
+                await wait(100);
+                fixture.detectChanges();
+
+                treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
+
+                expect(treeItems.length).toBe(7);
+                expect(treeItems[0].querySelector('.igx-tree-node__content').textContent).toBe('All Periods');
+                expect(treeItems[1].querySelector('.igx-tree-node__content').textContent).toBe('2021');
+                expect(treeItems[2].querySelector('.igx-tree-node__content').textContent).toBe('Q1');
+                expect(treeItems[3].querySelector('.igx-tree-node__content').textContent).toBe('Q2');
+                expect(treeItems[4].querySelector('.igx-tree-node__content').textContent).toBe('Q4');
+                expect(treeItems[5].querySelector('.igx-tree-node__content').textContent).toBe('2019');
+                expect(treeItems[6].querySelector('.igx-tree-node__content').textContent).toBe('2020');
+
+                // expand tree hierarchy Q1
+                GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 2);
+                await wait(100);
+                fixture.detectChanges();
+
+                treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
+                expect(treeItems.length).toBe(8);
+                expect(treeItems[0].querySelector('.igx-tree-node__content').textContent).toBe('All Periods');
+                expect(treeItems[1].querySelector('.igx-tree-node__content').textContent).toBe('2021');
+                expect(treeItems[2].querySelector('.igx-tree-node__content').textContent).toBe('Q1');
+                expect(treeItems[3].querySelector('.igx-tree-node__content').textContent).toBe('January');
+                expect(treeItems[4].querySelector('.igx-tree-node__content').textContent).toBe('Q2');
+                expect(treeItems[5].querySelector('.igx-tree-node__content').textContent).toBe('Q4');
+                expect(treeItems[6].querySelector('.igx-tree-node__content').textContent).toBe('2019');
+                expect(treeItems[7].querySelector('.igx-tree-node__content').textContent).toBe('2020');
+
+                // expand tree hierarchy January
+                GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 3);
+                await wait(100);
+                fixture.detectChanges();
+
+                treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
+                expect(treeItems.length).toBe(9);
+                expect(treeItems[0].querySelector('.igx-tree-node__content').textContent).toBe('All Periods');
+                expect(treeItems[1].querySelector('.igx-tree-node__content').textContent).toBe('2021');
+                expect(treeItems[2].querySelector('.igx-tree-node__content').textContent).toBe('Q1');
+                expect(treeItems[3].querySelector('.igx-tree-node__content').textContent).toBe('January');
+                expect(treeItems[4].querySelector('.igx-tree-node__content').textContent).toBe('01/01/2021');
+                expect(treeItems[5].querySelector('.igx-tree-node__content').textContent).toBe('Q2');
+                expect(treeItems[6].querySelector('.igx-tree-node__content').textContent).toBe('Q4');
+                expect(treeItems[7].querySelector('.igx-tree-node__content').textContent).toBe('2019');
+                expect(treeItems[8].querySelector('.igx-tree-node__content').textContent).toBe('2020');
+
+
+                const checkBoxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
+                // uncheck Q1
+                checkBoxes[3].click();
+                fixture.detectChanges();
+
+                // uncheck Q2
+                checkBoxes[6].click();
+                fixture.detectChanges();
+
+                // uncheck 2019
+                checkBoxes[8].click();
+                fixture.detectChanges();
+
+                // uncheck 2020
+                checkBoxes[9].click();
+                fixture.detectChanges();
+
+                // Click 'apply' button to apply filter.
+                GridFunctions.clickApplyExcelStyleFiltering(fixture, excelMenu, 'igx-pivot-grid');
+                fixture.detectChanges();
+
+                // check rows
+                const rows = pivotGrid.rowList.toArray();
+                expect(rows.length).toBe(5);
+                const expectedHeaders = ['All Periods', '2021', 'Q4', 'December', '12/08/2021'];
+                const rowHeaders = fixture.debugElement.queryAll(
+                    By.directive(IgxPivotRowDimensionHeaderComponent));
+                const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
+                expect(rowDimensionHeaders).toEqual(expectedHeaders);
+            });
+
             it('should apply sorting for dimension via row chip', () => {
                 fixture.detectChanges();
                 const pivotGrid = fixture.componentInstance.pivotGrid;
@@ -692,8 +836,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // should have emitted event
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledTimes(2);
                 const expectedExpressions: ISortingExpression[] = [
-                    { dir: SortingDirection.Desc, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()},
-                    { dir: SortingDirection.Desc, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
+                    { dir: SortingDirection.Desc, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance() },
+                    { dir: SortingDirection.Desc, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance() },
                 ];
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
             });

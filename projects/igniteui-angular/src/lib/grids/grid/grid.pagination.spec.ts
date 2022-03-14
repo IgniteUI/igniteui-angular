@@ -84,7 +84,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         it('should paginate data API', () => {
             fix.detectChanges();
 
-         // Goto page 3 through API and listen for event
+            // Goto page 3 through API and listen for event
             spyOn(grid.pagingDone, 'emit');
             grid.paginate(2);
 
@@ -196,6 +196,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             expect(GridFunctions.getGridPaginator(grid)).toBeNull();
             expect(grid.nativeElement.querySelectorAll('.igx-paginator > select').length).toEqual(0);
         });
+
 
         it('change paging pages per page API', (async () => {
             fix.detectChanges();

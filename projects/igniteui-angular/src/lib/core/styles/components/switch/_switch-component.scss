@@ -71,6 +71,10 @@
             @extend  %igx-switch--focused-checked !optional;
         }
 
+        @include mx(disabled, checked) {
+            @extend %igx-switch--disabled-checked !optional;
+        }
+
         @include m(checked) {
             @include e(composite) {
                 @extend %switch-composite--x !optional;
