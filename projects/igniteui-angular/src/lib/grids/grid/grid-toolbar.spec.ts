@@ -7,7 +7,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from "../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
 
-
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';
 const TOOLBAR_ACTIONS_TAG = 'igx-grid-toolbar-actions';
