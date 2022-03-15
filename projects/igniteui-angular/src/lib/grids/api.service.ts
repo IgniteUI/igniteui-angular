@@ -10,6 +10,7 @@ import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
+import { FilterUtil } from '../data-operations/filtering-strategy';
 
 /**
  * @hidden
@@ -420,7 +421,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
         expandedStates.set(rowID, expanded);
         grid.expansionStates = expandedStates;
-        this.crudService.endEdit(false);
+        // K.D. 28 Feb, 2022 #10634 Don't trigger endEdit/commit upon row expansion state change
+        // this.crudService.endEdit(false);
     }
 
     public get_rec_by_id(rowID) {
@@ -524,10 +526,14 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         if (expressionsTree.filteringOperands.length) {
             const state = { expressionsTree, strategy: this.grid.filterStrategy };
-            data = DataUtil.filter(cloneArray(data), state, this.grid);
+            data = FilterUtil.filter(cloneArray(data), state, this.grid);
         }
 
         return data;
+    }
+
+    public sortDataByExpressions(data: any[], expressions: ISortingExpression[]) {
+        return DataUtil.sort(cloneArray(data), expressions, this.grid.sortStrategy, this.grid);
     }
 
     /**

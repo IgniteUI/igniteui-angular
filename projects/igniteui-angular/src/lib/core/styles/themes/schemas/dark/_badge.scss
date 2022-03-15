@@ -22,14 +22,14 @@ $dark-fluent-badge: $fluent-badge;
 
 /// Generates a dark bootstrap badge schema.
 /// @type {Map}
-/// @prop {Map} border-color [igx-contrast-color: ('grays', 50)] - The border color used.
+/// @prop {Map} border-color [contrast-color: ('grays', 50)] - The border color used.
 /// @requires {function} extend
 /// @requires $bootstrap-badge
 $dark-bootstrap-badge: extend(
     $bootstrap-badge,
     (
         border-color: (
-            igx-contrast-color: ('grays', 50)
+            contrast-color: ('grays', 50)
         ),
     )
 );

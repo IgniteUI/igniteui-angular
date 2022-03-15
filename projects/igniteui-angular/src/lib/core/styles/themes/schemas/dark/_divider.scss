@@ -9,11 +9,11 @@
 
 /// Generates a base dark divider schema.
 /// @type {Map}
-/// @property {Map} color [igx-color: ('grays', 100)] - The color used for the divider.
+/// @property {Map} color [color: ('grays', 100)] - The color used for the divider.
 ///
 $base-dark-divider: (
     color: (
-        igx-color: ('grays', 100)
+        color: ('grays', 100)
     )
 );
 

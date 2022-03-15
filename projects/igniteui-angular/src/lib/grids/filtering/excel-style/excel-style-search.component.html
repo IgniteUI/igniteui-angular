@@ -20,16 +20,16 @@
     </igx-icon>
 </igx-input-group>
 
-<igx-list #list [displayDensity]="esf.displayDensity" [isLoading]="isLoading">
+<igx-list #list [displayDensity]="esf.displayDensity" [isLoading]="isLoading" *ngIf="!isHierarchical()">
     <div style="overflow: hidden; position: relative;">
         <igx-list-item
         *igxFor="let item of displayedListData scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
             <igx-checkbox
                 [value]="item"
                 [tabindex]="-1"
-                [checked]="item.isSelected"
+                [checked]="item?.isSelected"
                 [disableRipple]="true"
-                [indeterminate]="item.indeterminate"
+                [indeterminate]="item?.indeterminate"
                 [disableTransitions]="true"
                 (change)="onCheckboxChange($event)">
                 {{ item.label }}
@@ -43,7 +43,87 @@
             </ng-container>
         </div>
     </ng-template>
+
+    <ng-template igxEmptyList>
+        <ng-container *ngTemplateOutlet="emptySearch"></ng-container>
+    </ng-template>
 </igx-list>
+
+<div class="igx-excel-filter__tree" *ngIf="isHierarchical()">
+    <div class="igx-excel-filter__tree-alike" *ngIf="!isTreeEmpty()">
+        <div class="igx-excel-filter__tree-alike-item">
+            <igx-checkbox #selectAllCheckbox
+                          [value]="selectAllItem"
+                          [checked]="selectAllItem?.isSelected"
+                          [disableRipple]="true"
+                          [indeterminate]="selectAllItem?.indeterminate"
+                          [disableTransitions]="true"
+                          (change)="onSelectAllCheckboxChange($event)">
+                {{ selectAllItem.label }}
+            </igx-checkbox>
+        </div>
+        <div class="igx-excel-filter__tree-alike-item" *ngIf="searchValue">
+            <igx-checkbox #addToCurrentFilterCheckbox
+                          [value]="addToCurrentFilterItem"
+                          [checked]="addToCurrentFilterItem.isSelected"
+                          [disableRipple]="true"
+                          [disableTransitions]="true">
+
+                {{ addToCurrentFilterItem.label }}
+            </igx-checkbox>
+        </div>
+    </div>
+
+    <igx-tree #tree [displayDensity]="esf.displayDensity" selection="Cascading"  (nodeSelection)="onNodeSelectionChange($event)">
+        <igx-tree-node [data]="item" *ngFor="let item of displayedListData;" [selected]="item.isSelected">
+            <div>{{item.label}}</div>
+            <igx-tree-node [data]="childLevel1" *ngFor="let childLevel1 of item.children" [selected]="childLevel1.isSelected">
+                <div>{{childLevel1.label}}</div>
+                <igx-tree-node [data]="childLevel2" *ngFor="let childLevel2 of childLevel1.children" [selected]="childLevel2.isSelected">
+                    <div>{{childLevel2.label}}</div>
+                    <igx-tree-node [data]="childLevel3" *ngFor="let childLevel3 of childLevel2.children" [selected]="childLevel3.isSelected">
+                        <div>{{childLevel3.label}}</div>
+                        <igx-tree-node [data]="childLevel4" *ngFor="let childLevel4 of childLevel3.children" [selected]="childLevel4.isSelected">
+                            <div>{{childLevel4.label}}</div>
+                            <igx-tree-node [data]="childLevel5" *ngFor="let childLevel5 of childLevel4.children" [selected]="childLevel5.isSelected">
+                                <div>{{childLevel5.label}}</div>
+                                <igx-tree-node [data]="childLevel6" *ngFor="let childLevel6 of childLevel5.children" [selected]="childLevel6.isSelected">
+                                    <div>{{childLevel6.label}}</div>
+                                    <igx-tree-node [data]="childLevel7" *ngFor="let childLevel7 of childLevel6.children" [selected]="childLevel7.isSelected">
+                                        <div>{{childLevel7.label}}</div>
+                                        <igx-tree-node [data]="childLevel8" *ngFor="let childLevel8 of childLevel7.children" [selected]="childLevel8.isSelected">
+                                            <div>{{childLevel8.label}}</div>
+                                            <igx-tree-node [data]="childLevel9" *ngFor="let childLevel9 of childLevel8.children" [selected]="childLevel9.isSelected">
+                                                <div>{{childLevel9.label}}</div>
+                                            </igx-tree-node>
+                                        </igx-tree-node>
+                                    </igx-tree-node>
+                                </igx-tree-node>
+                            </igx-tree-node>
+                        </igx-tree-node>
+                    </igx-tree-node>
+                </igx-tree-node>
+            </igx-tree-node>
+        </igx-tree-node>
+    </igx-tree>
+
+    <ng-template igxDataLoading>
+        <div class="igx-excel-filter__loading">
+            <ng-container *ngTemplateOutlet="valuesLoadingTemplate">
+            </ng-container>
+        </div>
+    </ng-template>
+
+    <ng-template [ngIf]="isTreeEmpty()">
+        <ng-container *ngTemplateOutlet="emptySearch"></ng-container>
+    </ng-template>
+</div>
+
+<ng-template #emptySearch>
+    <div class="igx-excel-filter__empty">
+        {{esf.grid?.resourceStrings.igx_grid_excel_no_matches}}
+    </div>
+</ng-template>
 
 <ng-template #defaultExcelStyleLoadingValuesTemplate>
     <igx-circular-bar [indeterminate]="true">

@@ -1290,11 +1290,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      */
     public get cells(): CellType[] {
-        // TODO calclulate index for remote data scenarios
-        // check indexes in this.dataRowList.first and this.dataRowList.last
         return this.grid.dataView
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
+                    this.grid.pagingMode === 1 && this.grid.paginator.page !== 0 ? index = index + this.grid.paginator.perPage * this.grid.paginator.page : index = this.grid.dataRowList.first.index + index;
                     const cell = new IgxGridCell(this.grid as any, index, this.field);
                     return cell;
                 }
@@ -1790,7 +1789,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public getGridTemplate(isRow: boolean): string {
         if (isRow) {
-            const rowsCount = this.grid.multiRowLayoutRowSize;
+            const rowsCount = !this.grid.isPivot ? this.grid.multiRowLayoutRowSize : this.children.length - 1;
             return `repeat(${rowsCount},1fr)`;
         } else {
             return this.getColumnSizesString(this.children);
@@ -2312,23 +2311,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Returns the width and padding of a header cell.
      */
     public getHeaderCellWidths() {
-        const range = this.grid.document.createRange();
-
-        // We do not cover cases where there are children with width 100% and etc,
-        // because then we try to get new column size, based on header content, which is sized based on column size...
-        const headerWidth = this.platform.getNodeSizeViaRange(range,
-            this.headerCell.nativeElement,
-            this.headerGroup.nativeElement);
-
-        const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.nativeElement);
-        const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
-            parseFloat(headerStyle.borderRightWidth);
-
-        // Take into consideration the header group element, since column pinning applies borders to it if its not a columnGroup.
-        const headerGroupStyle = this.grid.document.defaultView.getComputedStyle(this.headerGroup.nativeElement);
-        const borderSize = !this.parent ? parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth) : 0;
-
-        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize) };
+        return this.grid.getHeaderCellWidth(this.headerCell.nativeElement);
     }
 
     /**

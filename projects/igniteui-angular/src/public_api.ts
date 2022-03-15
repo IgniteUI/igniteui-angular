@@ -42,6 +42,8 @@ export * from './lib/data-operations/filtering-expressions-tree';
 export * from './lib/data-operations/filtering-condition';
 export * from './lib/data-operations/filtering-state.interface';
 export * from './lib/data-operations/filtering-strategy';
+export * from './lib/data-operations/pivot-sort-strategy';
+export * from './lib/data-operations/pivot-strategy';
 export * from './lib/data-operations/groupby-expand-state.interface';
 export * from './lib/data-operations/groupby-record.interface';
 export * from './lib/data-operations/groupby-state.interface';
@@ -111,6 +113,7 @@ export * from './lib/date-common/public_api';
 export * from './lib/grids/column-actions/column-actions-base.directive';
 export * from './lib/grids/column-actions/column-actions.component';
 export * from './lib/tree/public_api';
+export * from './lib/grids/pivot-grid/public_api';
 
 /**
  * Exporter services, classes, interfaces and enums
@@ -134,3 +137,4 @@ export { IChipResourceStrings } from './lib/core/i18n/chip-resources';
 export { IActionStripResourceStrings } from './lib/core/i18n/action-strip-resources';
 export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';
+export { GridSelectionRange } from './lib/grids/common/types';

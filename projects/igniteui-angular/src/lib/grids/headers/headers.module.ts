@@ -37,6 +37,7 @@ export { IgxGridHeaderRowComponent } from './grid-header-row.component';
         IgxGridHeaderGroupComponent,
         IgxGridHeaderRowComponent,
         IgxHeaderGroupWidthPipe,
+        SortingIndexPipe,
         IgxHeaderGroupStylePipe
     ]
 })

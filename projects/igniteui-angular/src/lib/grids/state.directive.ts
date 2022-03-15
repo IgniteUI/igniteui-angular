@@ -6,8 +6,10 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IPagingState } from '../data-operations/paging-state.interface';
 import { GridColumnDataType } from '../data-operations/data-util';
-import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
-    IgxStringFilteringOperand, IFilteringOperation} from '../data-operations/filtering-condition';
+import {
+    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+    IgxStringFilteringOperand, IFilteringOperation, IgxDateTimeFilteringOperand
+} from '../data-operations/filtering-condition';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
@@ -381,7 +383,7 @@ export class IgxGridStateDirective {
                     childGrid = grid;
                     grid = grid.parent;
                 }
-                return grid.hgridAPI.getParentRowId(childGrid);
+                return grid.gridAPI.getParentRowId(childGrid);
             }
         }
     };
@@ -551,8 +553,10 @@ export class IgxGridStateDirective {
                 let dataType: string;
                 if (this.currGrid.columnList.length > 0) {
                     dataType = this.currGrid.columnList.find(c => c.field === expr.fieldName).dataType;
-                } else {
+                } else if (this.state.columns) {
                     dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;
+                } else {
+                    return null;
                 }
                 // when ESF, values are stored in Set.
                 // First those values are converted to an array before returning string in the stringifyCallback
@@ -584,6 +588,9 @@ export class IgxGridStateDirective {
                 break;
             case GridColumnDataType.Date:
                 filters = IgxDateFilteringOperand.instance();
+                break;
+            case GridColumnDataType.DateTime:
+                filters = IgxDateTimeFilteringOperand.instance();
                 break;
             case GridColumnDataType.String:
             default:

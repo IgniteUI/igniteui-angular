@@ -86,6 +86,7 @@ export interface IGridResourceStrings {
     igx_grid_excel_boolean_filter?: string;
     igx_grid_excel_currency_filter?: string;
     igx_grid_excel_custom_filter?: string;
+    igx_grid_excel_no_matches?: string;
     igx_grid_advanced_filter_title?: string;
     igx_grid_advanced_filter_and_group?: string;
     igx_grid_advanced_filter_or_group?: string;
@@ -130,6 +131,30 @@ export interface IGridResourceStrings {
     igx_grid_actions_unpin_label?: string;
     igx_grid_actions_jumpUp_label?: string;
     igx_grid_actions_jumpDown_label?: string;
+    igx_grid_pivot_date_dimension_total?: string;
+    igx_grid_pivot_aggregate_count?: string;
+    igx_grid_pivot_aggregate_min?: string;
+    igx_grid_pivot_aggregate_max?: string;
+    igx_grid_pivot_aggregate_sum?: string;
+    igx_grid_pivot_aggregate_avg?: string;
+    igx_grid_pivot_aggregate_date_latest?: string;
+    igx_grid_pivot_aggregate_date_earliest?: string;
+    igx_grid_pivot_aggregate_time_latest?: string;
+    igx_grid_pivot_aggregate_time_earliest?: string;
+    igx_grid_pivot_empty_row_drop_area?: string;
+    igx_grid_pivot_empty_column_drop_area?: string;
+    igx_grid_pivot_empty_filter_drop_area?: string;
+    igx_grid_pivot_empty_value_drop_area?: string;
+    igx_grid_pivot_row_drop_chip?: string;
+    igx_grid_pivot_column_drop_chip?: string;
+    igx_grid_pivot_filter_drop_chip?: string;
+    igx_grid_pivot_value_drop_chip?: string;
+    igx_grid_pivot_empty_message?: string;
+    igx_grid_pivot_selector_filters?: string;
+    igx_grid_pivot_selector_rows?: string;
+    igx_grid_pivot_selector_columns?: string;
+    igx_grid_pivot_selector_values?: string;
+    igx_grid_pivot_selector_panel_empty?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -220,6 +245,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_boolean_filter: 'Boolean filter',
     igx_grid_excel_currency_filter: 'Currency filter',
     igx_grid_excel_custom_filter: 'Custom filter...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: 'Advanced Filtering',
     igx_grid_advanced_filter_and_group: '"And" Group',
     igx_grid_advanced_filter_or_group: '"Or" Group',
@@ -263,5 +289,29 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_actions_pin_label: 'Pin',
     igx_grid_actions_unpin_label: 'Unpin',
     igx_grid_actions_jumpUp_label: 'Jump up',
-    igx_grid_actions_jumpDown_label: 'Jump down'
+    igx_grid_actions_jumpDown_label: 'Jump down',
+    igx_grid_pivot_date_dimension_total: 'All Periods',
+    igx_grid_pivot_aggregate_count: 'Count',
+    igx_grid_pivot_aggregate_min: 'Minimum',
+    igx_grid_pivot_aggregate_max: 'Maximum',
+    igx_grid_pivot_aggregate_sum: 'Sum',
+    igx_grid_pivot_aggregate_avg: 'Average',
+    igx_grid_pivot_aggregate_date_latest: 'Latest Date',
+    igx_grid_pivot_aggregate_date_earliest: 'Earliest Date',
+    igx_grid_pivot_aggregate_time_latest: 'Latest Time',
+    igx_grid_pivot_aggregate_time_earliest: 'Earliest Time',
+    igx_grid_pivot_empty_row_drop_area: 'Drop Row Fields here.',
+    igx_grid_pivot_empty_column_drop_area: 'Drop Column Fields here.',
+    igx_grid_pivot_empty_filter_drop_area: 'Drop Filter Fields here.',
+    igx_grid_pivot_empty_value_drop_area: 'Drop Value Fields here.',
+    igx_grid_pivot_row_drop_chip: 'Drop here to use as row',
+    igx_grid_pivot_column_drop_chip: 'Drop here to use as column',
+    igx_grid_pivot_filter_drop_chip: 'Drop here to use as filter',
+    igx_grid_pivot_value_drop_chip: 'Drop here to use as value',
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.',
+    igx_grid_pivot_selector_filters: 'Filters',
+    igx_grid_pivot_selector_rows: 'Rows',
+    igx_grid_pivot_selector_columns: 'Columns',
+    igx_grid_pivot_selector_values: 'Values',
+    igx_grid_pivot_selector_panel_empty: 'Drop Items Here',
 };

@@ -1,7 +1,7 @@
 @use '../base' as *;
 @use '../../base' as *;
 
-$bootstrap_h1: igx-type-style(
+$bootstrap_h1: type-style(
     $font-size: rem(40px),
     $font-weight: 500,
     $line-height: rem(48px),
@@ -10,7 +10,7 @@ $bootstrap_h1: igx-type-style(
     $margin-bottom: rem(8px)
 );
 
-$bootstrap_h2: igx-type-style(
+$bootstrap_h2: type-style(
     $font-size: rem(32px),
     $font-weight: 500,
     $line-height: rem(38.4px),
@@ -19,7 +19,7 @@ $bootstrap_h2: igx-type-style(
     $margin-bottom: rem(8px)
 );
 
-$bootstrap_h3: igx-type-style(
+$bootstrap_h3: type-style(
     $font-size: rem(28px),
     $font-weight: 500,
     $line-height: rem(33.6px),
@@ -28,7 +28,7 @@ $bootstrap_h3: igx-type-style(
     $margin-bottom: rem(8px)
 );
 
-$bootstrap_h4: igx-type-style(
+$bootstrap_h4: type-style(
     $font-size: rem(24px),
     $font-weight: 500,
     $line-height: rem(28.8px),
@@ -37,7 +37,7 @@ $bootstrap_h4: igx-type-style(
     $margin-bottom: rem(8px)
 );
 
-$bootstrap_h5: igx-type-style(
+$bootstrap_h5: type-style(
     $font-size: rem(20px),
     $font-weight: 500,
     $line-height: rem(24px),
@@ -46,7 +46,7 @@ $bootstrap_h5: igx-type-style(
     $margin-bottom: rem(8px)
 );
 
-$bootstrap_h6: igx-type-style(
+$bootstrap_h6: type-style(
     $font-size: rem(16px),
     $font-weight: 500,
     $line-height: rem(19.2px),
@@ -55,7 +55,7 @@ $bootstrap_h6: igx-type-style(
     $margin-bottom: rem(8px)
 );
 
-$bootstrap_body-1: igx-type-style(
+$bootstrap_body-1: type-style(
     $font-size: rem(16px),
     $font-weight: 400,
     $line-height: rem(24px),
@@ -64,7 +64,7 @@ $bootstrap_body-1: igx-type-style(
     $margin-bottom: 0
 );
 
-$bootstrap_body-2: igx-type-style(
+$bootstrap_body-2: type-style(
     $font-size: rem(14.4px),
     $font-weight: 400,
     $line-height: rem(24px),
@@ -73,7 +73,7 @@ $bootstrap_body-2: igx-type-style(
     $margin-bottom: 0
 );
 
-$bootstrap_subtitle-1: igx-type-style(
+$bootstrap_subtitle-1: type-style(
     $font-size: rem(14px),
     $font-weight: 400,
     $line-height: rem(24px),
@@ -82,7 +82,7 @@ $bootstrap_subtitle-1: igx-type-style(
     $margin-bottom: 0
 );
 
-$bootstrap_subtitle-2: igx-type-style(
+$bootstrap_subtitle-2: type-style(
     $font-size: rem(14.4px),
     $font-weight: 400,
     $line-height: rem(21.6px),
@@ -91,7 +91,7 @@ $bootstrap_subtitle-2: igx-type-style(
     $margin-bottom: 0
 );
 
-$bootstrap_button: igx-type-style(
+$bootstrap_button: type-style(
     $font-size: rem(16px),
     $font-weight: 500,
     $line-height: rem(24px),
@@ -100,7 +100,7 @@ $bootstrap_button: igx-type-style(
     $margin-bottom: 0
 );
 
-$bootstrap_caption: igx-type-style(
+$bootstrap_caption: type-style(
     $font-size: rem(12px),
     $font-weight: 400,
     $letter-spacing: rem(.4px),
@@ -108,7 +108,7 @@ $bootstrap_caption: igx-type-style(
     $text-transform: none
 );
 
-$bootstrap_overline: igx-type-style(
+$bootstrap_overline: type-style(
     $font-size: rem(10px),
     $font-weight: 400,
     $letter-spacing: rem(1.5px),
@@ -116,7 +116,7 @@ $bootstrap_overline: igx-type-style(
     $text-transform: uppercase
 );
 
-$bootstrap_weekday: igx-type-style(
+$bootstrap_weekday: type-style(
     $font-size: rem(13px),
     $font-weight: 400,
     $line-height: normal,
@@ -125,7 +125,7 @@ $bootstrap_weekday: igx-type-style(
     $margin-bottom: 0
 );
 
-$_bootstrap-scale: igx-type-scale(
+$_bootstrap-scale: type-scale(
     $_meta: (variant: 'bootstrap'),
     $h1: $bootstrap_h1,
     $h2: $bootstrap_h2,
