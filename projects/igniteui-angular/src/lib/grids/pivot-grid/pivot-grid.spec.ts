@@ -1957,15 +1957,15 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            //80.07419999999999
-            UIInteractions.simulateMouseEvent('mousemove', resizer, -400, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, -400, 5);
+            UIInteractions.simulateMouseEvent('mousemove', resizer, -100, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, -100, 5);
             fixture.detectChanges();
 
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(parseFloat(rowHeaders[0].componentInstance.column.width)).toBeLessThan(150);
             expect(parseFloat(rowHeaders[3].componentInstance.column.width)).toBeLessThan(150);
-            expect(pivotGrid.pivotConfiguration.rows[0].width).toEqual('8.15%');
+            // less than 10%
+            expect(parseFloat(pivotGrid.pivotConfiguration.rows[0].width)).toBeLessThan(10);
 
 
             rowHeaders = dimensionContents[1].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
