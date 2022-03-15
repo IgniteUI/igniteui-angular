@@ -1944,8 +1944,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
             let dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
 
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            expect(rowHeaders[0].componentInstance.column.width).toEqual('196.4px');
-            expect(rowHeaders[3].componentInstance.column.width).toEqual('196.4px');
+            expect(parseFloat(rowHeaders[0].componentInstance.column.width)).toBeGreaterThan(150);
+            expect(parseFloat(rowHeaders[3].componentInstance.column.width)).toBeGreaterThan(150);
+            expect(pivotGrid.pivotConfiguration.rows[0].width).toEqual('20%');
 
             const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[3]).nativeElement;
 
@@ -1962,8 +1963,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
 
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            expect(parseFloat(rowHeaders[0].componentInstance.column.width)).toEqual(80.033);
-            expect(parseFloat(rowHeaders[3].componentInstance.column.width)).toEqual(80.033);
+            expect(parseFloat(rowHeaders[0].componentInstance.column.width)).toBeLessThan(150);
+            expect(parseFloat(rowHeaders[3].componentInstance.column.width)).toBeLessThan(150);
+            expect(pivotGrid.pivotConfiguration.rows[0].width).toEqual('8.15%');
+
 
             rowHeaders = dimensionContents[1].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(rowHeaders[0].componentInstance.column.width).toEqual('200px');
@@ -1972,6 +1975,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
         it('Should not expand columns if collapsed after sorting', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.width = '1600px';
+            fixture.detectChanges();
             pivotGrid.pivotConfiguration.columns = [
                 pivotGrid.pivotConfiguration.rows[1]
             ];
@@ -1980,7 +1985,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
 
             expect(pivotGrid.columns.length).toBe(16);
-            expect(pivotGrid.rowList.first.cells.length).toBe(10);
+            expect(pivotGrid.rowList.first.cells.length).toBe(8);
 
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             const header = headerRow.querySelector('igx-grid-header-group');
