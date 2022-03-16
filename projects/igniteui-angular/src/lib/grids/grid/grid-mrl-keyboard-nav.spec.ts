@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule, IGridCellEventArgs } from './public_api';
@@ -965,7 +965,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         });
 
         describe('Column Moving Integration', () => {
-            it('tab navigation should follow correct sequence if a column is moved.', () => {
+            it('tab navigation should follow correct sequence if a column is moved.', fakeAsync(() => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
                     // row span 3
@@ -996,6 +996,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const col1 = grid.getColumnByName('group3');
                 const col2 = grid.getColumnByName('group1');
                 grid.moveColumn(col2, col1);
+                tick();
                 fix.detectChanges();
 
                 // check visible indexes are correct
@@ -1006,7 +1007,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(grid.getCellByColumn(0, 'City').column.visibleIndex).toBe(4);
                 expect(grid.getCellByColumn(0, 'ContactTitle').column.visibleIndex).toBe(5);
                 expect(grid.getCellByColumn(0, 'PostalCode').column.visibleIndex).toBe(6);
-            });
+            }));
         });
 
         describe('Pinning integration', () => {
