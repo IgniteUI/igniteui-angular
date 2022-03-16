@@ -1,7 +1,7 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
-    OnInit, AfterViewInit, ContentChildren, forwardRef
+    OnInit, AfterViewInit, ContentChildren
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -30,7 +30,6 @@ import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.comp
 import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
-import { GridBaseAPIService } from '../api.service';
 
 let NEXT_ID = 0;
 
@@ -67,8 +66,8 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridNavigationService,
         IgxGridSummaryService,
         IgxGridSelectionService,
-        { provide: GridBaseAPIService, useClass: IgxGridAPIService },
-        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxGridComponent) },
+        { provide: IGX_GRID_SERVICE_BASE, useClass: IgxGridAPIService },
+        { provide: IGX_GRID_BASE, useExisting: IgxGridComponent },
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService,
