@@ -8,8 +8,26 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body class="igx-typography">
-  <igx-grid id="grid1" moving="true" paging="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-    <igx-grid-toolbar class="igx-grid-toolbar">
+    <!-- <app-wrapper>
+        <app-child-standalone id="childComp">
+            <button onclick="changeText()">Change from child</button>
+        </app-child-standalone>
+    </app-wrapper>
+
+    <template id="tmpl">
+        <p>my templated content</p>
+        <p>{{value}}</p>
+    </template>
+    <script>
+        let changeText = () => {
+            childComp.text = 'Changed directly from child through ng-content.';
+        }
+        childComp.template = tmpl;
+    </script> -->
+
+  <!-- IgxGridComponent -->
+  <igx-grid id="grid1" moving="true" paging="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+    <igx-grid-toolbar>
       <igx-grid-toolbar-title>My new toolbar</igx-grid-toolbar-title>
       <igx-grid-toolbar-actions>
         <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -18,43 +36,41 @@
       </igx-grid-toolbar-actions>
     </igx-grid-toolbar>
 
-    <!-- <igx-column field="ProductID" dataType="number"></igx-column>
+    <!-- <igx-column field="ProductID" data-type="number"></igx-column>
     <igx-column field="ProductName"></igx-column>
     <igx-column field="CategoryName"></igx-column>
-    <igx-column field="InStock" dataType="number"></igx-column>
-    <igx-column field="ImageUrl">
+    <igx-column field="InStock" data-type="number"></igx-column>
+    <igx-column field="ImageUrl"></igx-column> -->
 
-    </igx-column>
-
-    <igx-paginator class="igx-paginator"></igx-paginator> -->
+    <igx-paginator per-page="10"></igx-paginator>
   </igx-grid>
 
+  <script src="assets/data/nw-products.js"></script>
+  <script>
+    grid1.data = northwindProducts;
+  </script>
+  <!-- END IgxGridComponent -->
+
+  <!-- IgxTreeGridComponent -->
   <igx-tree-grid id="treegrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
   </igx-tree-grid>
 
-  <igx-hierarchical-grid id="hgrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-  </igx-hierarchical-grid>
+  <script src="assets/data/tree-grid-ds.js"></script>
+  <script>
+    treegrid1.data = treeGridDS;
+  </script>
+  <!-- END IgxTreeGridComponent -->
 
+  <!-- <igx-hierarchical-grid id="hgrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+  </igx-hierarchical-grid> -->
+
+  <!-- IgxPivotGridComponent -->
   <igx-pivot-grid id="pivotgrid1" default-expand-state="true" row-selection="single"></igx-pivot-grid>
 
-  <!-- <igc-paginator></igc-paginator> -->
-  <script src="assets/data/nw-products.js"></script>
-  <script src="assets/data/tree-grid-ds.js"></script>
-  <script src="assets/data/projects-hgrid.js"></script>
   <script src="assets/data/pivot-data.js"></script>
   <script>
-    let grid = document.getElementById('grid1');
-    grid.data = northwindProducts;
-
-    let treegrid = document.getElementById('treegrid1');
-    treegrid.data = treeGridDS;
-
-    let hgrid = document.getElementById('hgrid1');
-    hgrid.data = hgridData;
-
-    let pivotgrid = document.getElementById('pivotgrid1');
     const clear = (el) => el === 0 || Boolean(el);
-    pivotgrid.pivotConfiguration = {
+    pivotgrid1.pivotConfiguration = {
         columns: [
             {
                 memberName: 'Country',
@@ -138,7 +154,14 @@
             }
         ]
     };
-    pivotgrid.data = pivotData;
+    pivotgrid1.data = pivotData;
   </script>
+  <!-- END IgxPivotGridComponent -->
+
+  <script src="assets/data/projects-hgrid.js"></script>
+  <!-- <script>
+    let hgrid = document.getElementById('hgrid1');
+    hgrid.data = hgridData;
+  </script> -->
 </body>
 </html>

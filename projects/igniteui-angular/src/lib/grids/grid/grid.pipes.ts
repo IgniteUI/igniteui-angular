@@ -94,8 +94,8 @@ export class IgxGridPagingPipe implements PipeTransform {
             data: DataUtil.page(cloneArray(collection.data), state, total),
             metadata: DataUtil.page(cloneArray(collection.metadata), state, total)
         };
-        if (this.grid.paginator && this.grid.paginator.page !== state.index) {
-            this.grid.paginator.page = state.index;
+        if (this.grid.paginator && this.grid.page !== state.index) {
+            this.grid.page = state.index;
         }
         this.grid.pagingState = state;
         return result;

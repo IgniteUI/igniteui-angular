@@ -13,7 +13,7 @@ import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from 
 import { IgxIconService } from '../../icon/public_api';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarActionsDirective } from './common';
-import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { GridType } from '../common/grid.interface';
 import { IgxToolbarToken } from './token';
 
 
@@ -49,16 +49,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
      * information check the toolbar topic.
      */
     @Input()
-    public get grid() {
-        if (this._grid) {
-            return this._grid;
-        }
-        return this.api.grid;
-    }
-
-    public set grid(value: GridType) {
-        this._grid = value;
-    }
+    public grid: GridType;
 
     /** Returns the native DOM element of the toolbar component */
     public get nativeElement() {
@@ -103,7 +94,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
 
     constructor(
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Inject(IGX_GRID_SERVICE_BASE) private api: GridServiceType,
         private iconService: IgxIconService,
         private element: ElementRef<HTMLElement>
     ) {
