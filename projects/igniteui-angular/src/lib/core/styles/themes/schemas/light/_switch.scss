@@ -100,18 +100,18 @@ $light-switch: extend(
 /// @property {Color} border-hover-color [color('grays', 800)] - The border color of the switch on hover.
 /// @property {Color} border-disabled-color [color('grays', 400)] - The border color of the disabled switch.
 /// @property {Color} border-on-color [color('primary', 500)] - The border color of the on-switch.
-/// @property {Color} border-on-hover-color [color('primary', 800)] - The border color of the on-switch.
+/// @property {Color} border-on-hover-color [color('primary', 900)] - The border color of the on-switch.
 ///
 /// @property {Color} thumb-on-color [color: ('grays', 50)] - The color of the thumb when the switch is on.
 /// @property {Color} thumb-off-color [color: ('grays', 700)] - The color of the thumb when the switch is off.
 /// @property {Color} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
 /// @property {Color} track-off-color [transparent] - The color of the track when the switch is off.
-/// @property {Color} track-on-hover-color [color: ('primary', 800)] - The color of the track when the switch is on and hovered.
+/// @property {Color} track-on-hover-color [color: ('primary', 900)] - The color of the track when the switch is on and hovered.
 /// @property {Color} track-on-disabled-color [color: ('grays', 400)] - The color of the track when the switch is on and disabled.
 /// @property {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
 /// @property {Color} thumb-disabled-color [color: ('grays', 400)] - The color of the thumb when the switch is disabled.
 /// @property {Color} thumb-on-disabled-color [color: ('grays', 100)] - The color of the thumb when the switch is on and disabled.
-/// @property {Color} focus-outline-color [color: ('grays', 800)] - The focus outlined color.
+/// @property {Color} focus-outline-color [color: ('grays', 700)] - The focus outlined color.
 ///
 /// @property {Number} border-radius-track [10px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
 ///
@@ -125,7 +125,7 @@ $fluent-switch: extend(
         variant: 'fluent',
 
         focus-outline-color: (
-            color: ('grays', 800)
+            color: ('grays', 700)
         ),
 
         border-color: (
@@ -151,11 +151,11 @@ $fluent-switch: extend(
         ),
 
         track-on-hover-color:(
-            color: ('primary', 800)
+            color: ('primary', 900)
         ),
 
         border-on-hover-color:(
-            color: ('primary', 800)
+            color: ('primary', 900)
         ),
 
         thumb-on-color: (

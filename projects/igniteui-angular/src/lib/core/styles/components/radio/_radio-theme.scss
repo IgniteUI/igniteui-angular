@@ -203,13 +203,13 @@
     %radio-composite--x {
         &::before {
             border: $border-width $border-style var-get($theme, 'fill-color');
+            background: var-get($theme, 'fill-color');
+            transform: $scale;
 
             @if $bootstrap-theme {
                 border-color: var-get($theme, 'fill-hover-border-color');
+                background: var-get($theme, 'fill-hover-border-color');
             }
-
-            background: var-get($theme, 'fill-color-hover');
-            transform: $scale;
         }
 
         &::after {
@@ -223,7 +223,7 @@
 
     %igx-radio-hover__composite {
         &::before {
-            background: var-get($theme, 'fill-color-hover');
+            background: var-get($theme, 'hover-color');
             transform: $radio-hover-scale;
         }
     }
