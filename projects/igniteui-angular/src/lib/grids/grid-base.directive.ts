@@ -1859,8 +1859,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use `page` property form `paginator` component instead
-     *
      * Gets/Sets the current page index.
      *
      *
@@ -1885,8 +1883,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use `perPage` property from `paginator` component instead
-     *
      * Gets/Sets the number of visible items per page.
      *
      *
@@ -4708,7 +4704,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param val
      */
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     public paginate(val: number): void {
         this.paginator?.paginate(val);
     }
