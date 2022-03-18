@@ -280,6 +280,46 @@
                 }
             }
         }
+
+        @if $variant == 'fluent' {
+            %cbx-composite-mark {
+                stroke: transparent;
+            }
+
+            %cbx-composite {
+                background: transparent;
+
+                &::after {
+                    background: transparent;
+                }
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: calc($size/2 - 6px);
+                    left: calc($size/2 - 6px);
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 2px;
+                    border: 5px solid var-get($theme, 'fill-color');
+                    background: var-get($theme, 'fill-color');
+                    z-index: 1;
+                }
+            }
+
+            %cbx-composite--x--disabled {
+                background: transparent;
+        
+                &::after {
+                    background: transparent;
+                }
+
+                &::before {
+                    border-color: var-get($theme, 'disabled-color');
+                    background: var-get($theme, 'disabled-color');
+                }
+            }
+        }
     }
 
     %cbx-composite-mark--x {
