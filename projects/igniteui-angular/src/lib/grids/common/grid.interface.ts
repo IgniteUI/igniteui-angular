@@ -109,6 +109,12 @@ export interface RowType {
     unpin?: () => void;
 }
 
+export interface IgxColumn {
+    field: string;
+    header?: string;
+    dataType?: GridColumnDataType;
+}
+
 export interface ColumnType {
     grid: GridType;
     children: QueryList<ColumnType>;

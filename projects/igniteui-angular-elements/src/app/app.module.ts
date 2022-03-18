@@ -17,7 +17,6 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { WrapperComponent } from './wrapper/wrapper.component';
 // import { ChildStandaloneComponent } from './wrapper/child-standalone/child-standalone.component';
-import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
@@ -38,11 +37,11 @@ export class AppModule {
     // const child = createCustomElement(ChildStandaloneComponent, { injector: this.injector });
     // customElements.define("app-child-standalone", child);
 
-    const grid = createCustomElement(IgxGridComponent, { injector: this.injector });
+    const grid = createCustomElement<IgxGridComponent>(IgxGridComponent, { injector: this.injector });
     customElements.define("igx-grid", grid);
 
-    const treegrid = createCustomElement(IgxTreeGridComponent, { injector: this.injector });
-    customElements.define("igx-tree-grid", treegrid);
+    // const treegrid = createCustomElement(IgxTreeGridComponent, { injector: this.injector });
+    // customElements.define("igx-tree-grid", treegrid);
 
     // const hgrid = createCustomElement(IgxHierarchicalGridComponent, { injector: this.injector });
     // customElements.define("igx-hierarchical-grid", hgrid);
@@ -62,8 +61,8 @@ export class AppModule {
     // const toolbarHiding = createCustomElement(IgxGridToolbarHidingComponent, { injector: this.injector });
     // customElements.define("igx-grid-toolbar-hiding", toolbarHiding);
 
-    const column = createCustomElement(IgxColumnComponent, { injector: this.injector });
-    customElements.define("igx-column", column);
+    // const column = createCustomElement(IgxColumnComponent, { injector: this.injector });
+    // customElements.define("igx-column", column);
   }
 
 }

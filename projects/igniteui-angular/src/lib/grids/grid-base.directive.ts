@@ -123,7 +123,7 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { ColumnType, GridServiceType, GridType, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
+import { ColumnType, GridServiceType, GridType, IgxColumn, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
@@ -4268,6 +4268,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get showDragIcons(): boolean {
         return this.rowDraggable && this.columnList.length > this.hiddenColumnsCount;
+    }
+
+    @Input()
+    public set column(config: IgxColumn) {
+        const columns = this.columnList.toArray();
+        const newColumn = new IgxColumnComponent(this, this.cdr, this.platform);
+
+        for (const prop in config) {
+            newColumn[prop] = config[prop];
+        }
+        columns.push(newColumn);
+
+        this.columnList.reset(columns);
+        this.onColumnsChanged(this.columnList);
     }
 
     /**
