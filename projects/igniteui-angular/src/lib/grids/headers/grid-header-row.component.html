@@ -67,8 +67,8 @@
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
                     [column]="column"
-                    [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                    [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+                    [style.min-width]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                    [style.flex-basis]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
                 </igx-grid-header-group>
             </ng-container>
         </ng-container>
@@ -86,8 +86,8 @@
                 [ngClass]="column.headerGroupClasses"
                 [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
                 [column]="column"
-                [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+                [style.min-width]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.flex-basis]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
             </igx-grid-header-group>
         </ng-template>
 
@@ -98,8 +98,8 @@
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
                     [column]="column"
-                    [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                    [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                    [style.min-width]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                    [style.flex-basis]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                     [style.left]="column.rightPinnedOffset">
                 </igx-grid-header-group>
             </ng-container>

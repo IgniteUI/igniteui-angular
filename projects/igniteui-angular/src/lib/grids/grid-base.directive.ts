@@ -190,6 +190,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Input()
     public autoGenerate = false;
 
+    @Input()
+    public autoSizeColumns = false;
+
     /**
      * Controls whether columns moving is enabled in the grid.
      *
@@ -3570,6 +3573,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
             this.headerContainer?.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
+            if (this.autoSizeColumns) {
+                this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                    this.cdr.detectChanges();
+                    this.autoSizeColumnsInView();
+                });
+            }
             fromEvent(window, 'resize').pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
             resizeObservable(this.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
         });
@@ -3607,6 +3616,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.paginator.perPage = this._perPage !== DEFAULT_ITEMS_PER_PAGE ? this._perPage : this.paginator.perPage;
                 this.paginator.totalRecords = this.totalRecords ? this.totalRecords : this.paginator.totalRecords;
                 this.paginator.overlaySettings = { outlet: this.outlet };
+            }
+            if (this.autoSizeColumns) {
+               this.autoSizeColumnsInView();
             }
             this._rendered = true;
         });
@@ -5098,7 +5110,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
                 const colWidth = curr.width;
-                const widthValue = parseInt(colWidth, 10);
+                let widthValue = parseInt(colWidth, 10);
+                if(isNaN(widthValue)) {
+                    widthValue = MINIMUM_COLUMN_WIDTH;
+                }
                 const currWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1 ?
                     widthValue / 100 * computedWidth :
                     widthValue;
@@ -6886,6 +6901,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    protected autoSizeColumnsInView() {
+        if(!this.autoSizeColumns) return;
+        const vState = this.headerContainer.state;
+        for (let i = vState.startIndex; i < vState.startIndex + vState.chunkSize; i++) {
+            const col = this.visibleColumns[i];
+            if (!col.autoSize && col.headerCell) {
+                const cellsContentWidths = [];
+                col._cells.forEach((cell) => cellsContentWidths.push(cell.nativeElement.offsetWidth));
+                cellsContentWidths.push(col.headerCell.nativeElement.offsetWidth);
+                col.autoSize = Math.max(...cellsContentWidths);
+                col.resetCaches();
+            }
+        }
+    }
+
     protected extractDataFromColumnsSelection(source: any[], formatters = false, headers = false): any[] {
         let record = {};
         const selectedData = [];
@@ -7094,6 +7124,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.run(() => {
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
+                this.autoSizeColumnsInView();
             });
         });
 

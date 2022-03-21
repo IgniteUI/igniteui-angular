@@ -450,8 +450,18 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @WatchColumnChanges()
     @Input()
     public get width(): string {
+        if((this.grid as any).autoSizeColumns) {
+            if(!this.autoSize) {
+                return 'fit-content';
+            } else {
+                return this.autoSize + 'px';
+            }
+           
+        }
         return this.widthSetByUser ? this._width : this.defaultWidth;
     }
+
+    public autoSize: number;
 
     /**
      * Sets the `width` of the column.
@@ -2399,11 +2409,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         if (isPercentageWidth) {
             this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
-        } else if (!colWidth) {
+        } else if (!colWidth || ((this.grid as any).autoSizeColumns) && !this.autoSize) {
             // no width
             this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
-            this._calcWidth = this.width;
+            this._calcWidth = parseInt(this.width);
         }
         this.calcPixelWidth = parseFloat(this._calcWidth);
     }
