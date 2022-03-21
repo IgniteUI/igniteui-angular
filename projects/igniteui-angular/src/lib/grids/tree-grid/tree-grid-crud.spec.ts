@@ -367,11 +367,12 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyRowsCount(fix, 3, 10);
             });
 
-            it('should support updating a child tree-cell through the treeGrid API', () => {
+            it('should support updating a child tree-cell through the treeGrid API', fakeAsync(() => {
                 // Test prerequisites: move 'Age' column so it becomes the tree-column
                 const sourceColumn = treeGrid.columnList.filter(c => c.field === 'Age')[0];
                 const targetColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                tick();
                 fix.detectChanges();
 
                 verifyCellValue(fix, 6, 'Age', '25');
@@ -383,13 +384,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 verifyCellValue(fix, 6, 'Age', '18');
                 verifyRowsCount(fix, 3, 10);
-            });
+            }));
 
-            it('should support updating a child tree-cell through the cellObject API', () => {
+            it('should support updating a child tree-cell through the cellObject API', fakeAsync(() => {
                 // Test prerequisites: move 'Age' column so it becomes the tree-column
                 const sourceColumn = treeGrid.columnList.filter(c => c.field === 'Age')[0];
                 const targetColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                tick();
                 fix.detectChanges();
 
 
@@ -402,7 +404,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 verifyCellValue(fix, 6, 'Age', '18');
                 verifyRowsCount(fix, 3, 10);
-            });
+            }));
         });
 
         describe('Primary/Foreign key', () => {
@@ -514,11 +516,12 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 4, 8); // Root rows count increment with 1 due to the row update.
             });
 
-            it('should support updating a child tree-cell through the treeGrid API', () => {
+            it('should support updating a child tree-cell through the treeGrid API', fakeAsync(() => {
                 // Test prerequisites: move 'Name' column so it becomes the tree-column
                 const sourceColumn = treeGrid.columnList.filter(c => c.field === 'Name')[0];
                 const targetColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                tick();
                 fix.detectChanges();
 
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
@@ -530,13 +533,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
-            });
+            }));
 
-            it('should support updating a child tree-cell through the cellObject API', () => {
+            it('should support updating a child tree-cell through the cellObject API', fakeAsync(() => {
                 // Test prerequisites: move 'Name' column so it becomes the tree-column
                 const sourceColumn = treeGrid.columnList.filter(c => c.field === 'Name')[0];
                 const targetColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                tick();
                 fix.detectChanges();
 
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
@@ -548,7 +552,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
-            });
+            }));
         });
     });
 
