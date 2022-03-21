@@ -785,19 +785,21 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
             }));
 
-            it('Should keep the expand/collapse icon in the first column, even when moving a column in first place.', () => {
+            it('Should keep the expand/collapse icon in the first column, even when moving a column in first place.', fakeAsync(() => {
                 grid.moveColumn(grid.columnList.last, grid.columnList.first);
+                tick();
                 fix.detectChanges();
 
                 expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
-            });
+            }));
 
-            it('Should keep the expand/collapse icon in the first column, even when moving a column out of first place.', () => {
+            it('Should keep the expand/collapse icon in the first column, even when moving a column out of first place.', fakeAsync(() => {
                 grid.moveColumn(grid.columnList.first, grid.columnList.last);
+                tick();
                 fix.detectChanges();
 
                 expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
-            });
+            }));
         });
 
         describe('Cell Selection', () => {
