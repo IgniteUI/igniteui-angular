@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridModule } from './public_api';
@@ -10,6 +10,9 @@ import { BaseToolbarColumnActionsDirective } from '../toolbar/grid-toolbar.base'
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';
 const TOOLBAR_ACTIONS_TAG = 'igx-grid-toolbar-actions';
+const TOOLBAR_PINNING_TAG = 'igx-grid-toolbar-pinning';
+const TOOLBAR_HIDING_TAG = 'igx-grid-toolbar-hiding';
+const TOOLBAR_ADVANCED_FILTERING_TAG = 'igx-grid-toolbar-advanced-filtering';
 const TOOLBAR_EXPORTER_TAG = 'igx-grid-toolbar-exporter';
 
 const DATA = [
@@ -118,6 +121,23 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             fixture = TestBed.createComponent(ToolbarActionsComponent);
             fixture.detectChanges();
             instance = fixture.componentInstance;
+        }));
+
+        it('the buttons type should be set to "button"', fakeAsync(() => {
+            tick();
+            fixture.detectChanges();
+
+            const pinningButtonType = $(TOOLBAR_PINNING_TAG).querySelector('button').getAttributeNode('type').value;
+            const hidingButtonType = $(TOOLBAR_HIDING_TAG).querySelector('button').getAttributeNode('type').value;
+            const advancedFilteringButtonType = $(TOOLBAR_ADVANCED_FILTERING_TAG).querySelector('button').getAttributeNode('type').value;
+            const exporterButtonType = $(TOOLBAR_EXPORTER_TAG).querySelector('button').getAttributeNode('type').value;
+
+            const expectedButtonType = 'button';
+
+            expect(pinningButtonType).toBe(expectedButtonType);
+            expect(hidingButtonType).toBe(expectedButtonType);
+            expect(advancedFilteringButtonType).toBe(expectedButtonType);
+            expect(exporterButtonType).toBe(expectedButtonType);
         }));
 
         it('toolbar exporter props', () => {
