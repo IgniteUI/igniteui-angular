@@ -586,10 +586,11 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 GridFunctions.verifyUnpinnedAreaWidth(grid, scrBarMainSection.nativeElement.offsetWidth, false);
             });
 
-            it('should pin an unpinned column when drag/drop it among pinned columns.', () => {
+            it('should pin an unpinned column when drag/drop it among pinned columns.', fakeAsync(() => {
 
                 // move 'ID' column to the pinned area
                 grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('ContactName'), DropPosition.BeforeDropTarget);
+                tick();
                 fix.detectChanges();
 
                 // verify column is pinned at the correct place
@@ -597,7 +598,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.pinnedColumns[1].field).toEqual('ID');
                 expect(grid.pinnedColumns[2].field).toEqual('ContactName');
                 expect(grid.getColumnByName('ID').pinned).toBeTruthy();
-            });
+            }));
 
             it('should correctly pin columns with their summaries to end.', () => {
 

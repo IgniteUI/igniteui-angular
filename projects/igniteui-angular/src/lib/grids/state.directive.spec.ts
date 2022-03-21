@@ -443,7 +443,7 @@ describe('IgxGridState - input properties #grid', () => {
         expect(grid.pinnedRows[0].key).toBe(1);
         expect(grid.pinnedRows[1].key).toBe(3);
     });
-    
+
     it('setState should correctly restore grid moving state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
@@ -460,7 +460,7 @@ describe('IgxGridState - input properties #grid', () => {
         expect(grid.moving).toBeFalsy();
         gridState = state.getState(true, 'moving');
         expect(gridState).toBe(movingState);
-        
+
     });
 
     it('setState should correctly restore grid moving state from object', () => {
@@ -470,7 +470,7 @@ describe('IgxGridState - input properties #grid', () => {
         const state = fix.componentInstance.state;
         const movingState = '{"moving":false}';
         const initialState = '{"moving":true}';
-        const movingStateObject = JSON.parse(movingState);        
+        const movingStateObject = JSON.parse(movingState);
 
         let gridState = state.getState(true, 'moving');
         expect(gridState).toBe(initialState);
@@ -590,6 +590,31 @@ describe('IgxGridState - input properties #grid', () => {
         gridState = state.getState(true, 'expansion');
         expect(gridState).toBe(expansionState);
     });
+
+    // fit('createExpressionsTreeFromObject should return null when columns are still not resolved', () => {
+    //     const fix = TestBed.createComponent(IgxGridStateComponent);
+    //     fix.detectChanges();
+    //     fix.componentInstance.ngOnInit();
+    //     fix.detectChanges();
+    //     const grid  = fix.componentInstance.grid;
+    //     // grid.columnList = new QueryList<IgxColumnComponent>();
+    //     const state = fix.componentInstance.state;
+    //     // eslint-disable-next-line max-len
+    //
+    //     const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"is-true"},"searchVal":null,"ignoreCase":true},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"greater-than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
+    //     const initialState = '{"advancedFiltering":{}}';
+    //     const advFilteringStateObject = JSON.parse(advFilteringState);
+    //
+    //     let gridState = state.getState(true, 'advancedFiltering');
+    //     expect(gridState).toBe(initialState);
+    //
+    //     state.setState(advFilteringStateObject);
+    //     gridState = state.getState(false, 'advancedFiltering') as IGridState;
+    //
+    //     let areColumnsResolved = grid.columnList.length > 0 || !!gridState.columns
+    //
+    //     expect(areColumnsResolved).toBe(false);
+    // });
 });
 
 class HelperFunctions {

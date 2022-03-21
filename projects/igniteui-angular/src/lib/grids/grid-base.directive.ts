@@ -4937,7 +4937,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get hasSummarizedColumns(): boolean {
-        return this.summaryService.hasSummarizedColumns;
+        const summarizedColumns = this.columnList.filter(col => col.hasSummary && !col.hidden);
+        return summarizedColumns.length > 0;
     }
 
     /**
@@ -6219,12 +6220,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
-        const list = this.columnList.toArray();
-        this._reorderColumns(from, to, pos, list);
-        const newList = this._resetColumnList(list);
-        this.columnList.reset(newList);
-        this.columnList.notifyOnChanges();
-        this._columns = this.columnList.toArray();
+        Promise.resolve().then(() => {
+            const list = this.columnList.toArray();
+            this._reorderColumns(from, to, pos, list);
+            const newList = this._resetColumnList(list);
+            this.columnList.reset(newList);
+            this.columnList.notifyOnChanges();
+            this._columns = this.columnList.toArray();
+        });
     }
 
     /**
