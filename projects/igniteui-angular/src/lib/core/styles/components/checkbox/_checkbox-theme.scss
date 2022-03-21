@@ -294,10 +294,10 @@
                 }
 
                 &::before {
-                    content: "";
+                    content: '';
                     position: absolute;
-                    top: calc($size/2 - 6px);
-                    left: calc($size/2 - 6px);
+                    top: calc($size / 2 - 6px);
+                    left: calc($size / 2 - 6px);
                     width: 10px;
                     height: 10px;
                     border-radius: 2px;
