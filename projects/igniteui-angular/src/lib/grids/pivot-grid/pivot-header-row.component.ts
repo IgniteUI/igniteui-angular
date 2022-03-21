@@ -273,7 +273,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public getAreaHeight(area: IgxChipsAreaComponent) {
         const chips = area.chipsList;
-        return chips && chips.length > 0 ? chips.first.nativeElement.clientHeight : 0;
+        return chips && chips.length > 0 ? chips.first.nativeElement.offsetHeight : 0;
     }
 
     /**
