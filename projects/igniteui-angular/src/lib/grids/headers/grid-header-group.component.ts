@@ -29,10 +29,7 @@ const Z_INDEX = 9999;
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header-group',
-    templateUrl: './grid-header-group.component.html',
-    providers: [
-        IgxColumnResizingService
-    ]
+    templateUrl: './grid-header-group.component.html'
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
 
