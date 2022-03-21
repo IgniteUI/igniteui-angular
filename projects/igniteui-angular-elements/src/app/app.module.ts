@@ -46,8 +46,8 @@ export class AppModule {
     // const hgrid = createCustomElement(IgxHierarchicalGridComponent, { injector: this.injector });
     // customElements.define("igx-hierarchical-grid", hgrid);
 
-    // const pivot = createCustomElement(IgxPivotGridComponent, { injector: this.injector });
-    // customElements.define("igx-pivot-grid", pivot);
+    const pivot = createCustomElement(IgxPivotGridComponent, { injector: this.injector });
+    customElements.define("igx-pivot-grid", pivot);
 
     const pager = createCustomElement(IgxPaginatorComponent, { injector: this.injector });
     customElements.define("igx-paginator", pager);

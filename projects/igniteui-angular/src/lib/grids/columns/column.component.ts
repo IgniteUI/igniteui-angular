@@ -423,7 +423,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public disablePinning = false;
     /**
      * @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.
-     * 
+     *
      * Sets/gets whether the column is movable.
      * Default value is `false`.
      *
@@ -1293,7 +1293,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this.grid.dataView
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
-                    this.grid.pagingMode === 1 && this.grid.paginator.page !== 0 ? index = index + this.grid.paginator.perPage * this.grid.paginator.page : index = this.grid.dataRowList.first.index + index;
+                    this.grid.pagingMode === 1 && this.grid.page !== 0 ? index = index + this.grid.perPage * this.grid.page : index = this.grid.dataRowList.first.index + index;
                     const cell = new IgxGridCell(this.grid as any, index, this.field);
                     return cell;
                 }
