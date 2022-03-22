@@ -374,6 +374,7 @@
         <div class="igx-excel-filter__clear">
             <button
                 igxButton="flat"
+                type="button"
                 [displayDensity]="displayDensity"
                 (click)="onClearButtonClick($event)">
                     {{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}
@@ -382,6 +383,7 @@
         <div class="igx-excel-filter__cancel">
             <button
                 igxButton="flat"
+                type="button"
                 [displayDensity]="displayDensity"
                 (click)="cancelChanges()">
                     {{ grid.resourceStrings.igx_grid_excel_cancel }}
@@ -390,6 +392,7 @@
         <div class="igx-excel-filter__apply">
             <button
                 igxButton="raised"
+                type="button"
                 [displayDensity]="displayDensity"
                 (click)="onApplyButtonClick($event)">
                 {{ grid.resourceStrings.igx_grid_excel_apply }}
