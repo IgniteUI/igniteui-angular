@@ -771,6 +771,10 @@
         background: transparent;
 
         @if $variant == 'fluent' {
+            &%igx-button--outlined {
+                background: var-get($flat-theme, 'disabled-background');
+            }
+
             %igx-button--icon {
                 background: var-get($flat-theme, 'disabled-background');
             }

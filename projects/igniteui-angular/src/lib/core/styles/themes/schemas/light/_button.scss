@@ -12,8 +12,8 @@
 /// @prop {Color} shadow-color [transparent] - The shadow color of the button.
 /// @prop {Color} border-color [transparent] - The outline color of the button.
 /// @prop {Color} disabled-border-color [transparent] - The disabled border color of the button.
-/// @prop {Color} disabled-background [color: ('grays', 300)] - The disabled background color of the button.
-/// @prop {Color} disabled-foreground [color: ('grays', 500)] - The disabled foreground color of the button.
+/// @prop {Map} disabled-background [color: ('grays', 300)] - The disabled background color of the button.
+/// @prop {Map} disabled-foreground [color: ('grays', 500)] - The disabled foreground color of the button.
 $material-base-button: (
     variant: 'material',
 
@@ -256,12 +256,22 @@ $light-button: (
 /// @type {Map}
 /// @requires {Map} $material-base-button
 /// @requires {Map} $flat-elevation-button
+/// @prop {Map} disabled-background [color: ('grays', 200)] - The disabled background color of the button.
+/// @prop {Map} disabled-foreground [color: ('grays', 400)] - The disabled foreground color of the button.
 /// @requires {function} extend
 $fluent-base-button: extend(
     $material-base-button,
     $flat-elevation-button,
     (
         variant: 'fluent',
+
+        disabled-background: (
+            color: ('grays', 200)
+        ),
+
+        disabled-foreground: (
+            color: ('grays', 400)
+        ),
     )
 );
 
@@ -310,6 +320,8 @@ $fluent-flat-button: extend(
 /// @prop {Map} focus-foreground [color: ('grays', 900)] - The focus text color of an outlined button.
 /// @prop {Map} active-background [color: ('grays', 100)] - The active background color of an outlined button.
 /// @prop {Map} active-foreground [color: ('grays', 900)] - The active text color of an outlined button.
+/// @prop {Map} disabled-background [color: ('grays', 200)] - The disabled background color of the button.
+/// @prop {Map} disabled-foreground [color: ('grays', 400, .5)] - The disabled foreground color of the button.
 /// @prop {Number} border-radius [.1] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $material-outlined-button
 /// @requires {Map} $fluent-base-button
@@ -350,6 +362,14 @@ $fluent-outlined-button: extend(
 
         active-foreground: (
             contrast-color: ('grays', 300)
+        ),
+
+        disabled-background: (
+            color: ('grays', 200)
+        ),
+
+        disabled-foreground: (
+            color: ('grays', 400, .5)
         ),
     )
 );
