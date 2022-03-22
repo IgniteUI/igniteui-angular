@@ -15,8 +15,19 @@ $dark-radio: $light-radio;
 
 /// Generates a dark fluent radio schema.
 /// @type {Map}
+/// @property {Map} fill-hover-border-color [color: ('primary', 200)] - The text color used for the label text.
+/// @property {Map} fill-color-hover [color: ('primary', 200)] - The checked border and dot colors on hover.
+/// @requires {function} extend
 /// @requires $fluent-radio
-$dark-fluent-radio: $fluent-radio;
+$dark-fluent-radio: extend($fluent-radio, (
+    fill-hover-border-color: (
+        color: ('primary', 200)
+    ),
+
+    fill-color-hover: (
+        color: ('primary', 200)
+    ),
+));
 
 /// Generates a dark bootstrap radio schema.
 /// @type {Map}
