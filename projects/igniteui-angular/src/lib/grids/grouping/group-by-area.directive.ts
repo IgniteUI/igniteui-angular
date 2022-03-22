@@ -115,7 +115,6 @@ export abstract class IgxGroupByAreaDirective {
         if (!this.grid.getColumnByName(id).groupable) {
             return;
         }
-
         if (this.grid.groupingExpressions) {
             this.updateGroupSorting(id);
         } else {

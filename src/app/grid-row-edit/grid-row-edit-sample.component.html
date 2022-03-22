@@ -41,7 +41,7 @@
                     Row
                 </label>
                 <select [(ngModel)]="update_row">
-                    <option *ngFor="let row of gridRowEditTransaction.data" [value]="row[gridRowEditTransaction.primaryKey]">{{
+                    <option *ngFor="let row of data" [value]="row[gridRowEditTransaction.primaryKey]">{{
                         row[gridRowEditTransaction.primaryKey] }}</option>
                 </select>
             </div>
@@ -102,8 +102,8 @@
             <igx-column width="100px" field="Discontinued2" header="PINNED DISCONTINUED" [dataType]="'boolean'" [hidden]="hideFlag" [pinned]="pinFlag" [sortable]="true"></igx-column>
             <igx-column-group header="Column Group 1">
                 <igx-column width="100px" field="ReorderLevel2" header="ReorderLevel2" [dataType]="'number'" [hasSummary]="summaryFlag" [editable]="true"></igx-column>
-                <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'number'" [hasSummary]="summaryFlag" [hidden]="hideFlag" [editable]="true"></igx-column>
-                <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'number'" [filterable]="true" [hasSummary]="summaryFlag" [pinned]="pinFlag" [sortable]="true" [editable]="true">
+                <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'string'" [hasSummary]="summaryFlag" [hidden]="hideFlag" [editable]="true"></igx-column>
+                <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'string'" [filterable]="true" [hasSummary]="summaryFlag" [pinned]="pinFlag" [sortable]="true" [editable]="true">
                 </igx-column>
             </igx-column-group>
             <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'" [hasSummary]="summaryFlag" [editable]="true" [sortable]="true">
