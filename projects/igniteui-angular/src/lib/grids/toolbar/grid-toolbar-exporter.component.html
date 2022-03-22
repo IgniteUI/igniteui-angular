@@ -1,5 +1,5 @@
 <button [title]="grid?.resourceStrings.igx_grid_toolbar_exporter_button_tooltip" [disabled]="isExporting"
-    igxButton="outlined" [displayDensity]="grid.displayDensity" igxRipple #btn (click)="toggle(btn, toggleRef)">
+    igxButton="outlined" type="button" [displayDensity]="grid.displayDensity" igxRipple #btn (click)="toggle(btn, toggleRef)">
 
     <igx-icon>import_export</igx-icon>
     <span #ref>
