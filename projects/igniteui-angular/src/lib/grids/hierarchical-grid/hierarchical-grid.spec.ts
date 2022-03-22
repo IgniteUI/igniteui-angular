@@ -1,19 +1,19 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { CellType, IgxHierarchicalGridModule } from './public_api';
-import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxRowIslandComponent, IGridCreatedEventArgs } from './row-island.component';
-import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxChildGridRowComponent } from './child-grid-row.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
-import { GridSelectionMode } from '../common/enums';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { GridSelectionMode } from '../common/enums';
+import { IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
+import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { CellType, IgxHierarchicalGridModule } from './public_api';
+import { IGridCreatedEventArgs, IgxRowIslandComponent } from './row-island.component';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     let fixture;
@@ -501,7 +501,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         hierarchicalGrid.cellSelection = 'single';
         expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
 
-        let cellElem = (hierarchicalGrid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
+        let cellElem = hierarchicalGrid.gridAPI.get_row_by_index(0).cells.toArray()[1];
         UIInteractions.simulatePointerOverElementEvent('pointerdown', cellElem.nativeElement);
         fixture.detectChanges();
         expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(`${hierarchicalGrid.id}_0_1`);
@@ -510,10 +510,10 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         UIInteractions.simulateClickAndSelectEvent(row1.expander);
         fixture.detectChanges();
 
-        const childGrid = hierarchicalGrid.getChildGrids()[0];
+        const childGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
         expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(childGrid.id);
 
-        cellElem = (childGrid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
+        cellElem = childGrid.gridAPI.get_row_by_index(0).cells.toArray()[1];
         UIInteractions.simulatePointerOverElementEvent('pointerdown', cellElem.nativeElement);
         fixture.detectChanges();
 
