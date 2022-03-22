@@ -296,13 +296,12 @@
                 &::before {
                     content: '';
                     position: absolute;
-                    top: calc($size / 2 - 6px);
-                    left: calc($size / 2 - 6px);
-                    width: 10px;
-                    height: 10px;
-                    border-radius: 2px;
-                    border: 5px solid var-get($theme, 'fill-color');
-                    background: var-get($theme, 'fill-color');
+                    top: calc($size / 2 - rem(6px));
+                    left: calc($size / 2 - rem(6px));
+                    width: rem(10px);
+                    height: rem(10px);
+                    border-radius: rem(2px);
+                    border: rem(5px) solid var-get($theme, 'fill-color');
                     z-index: 1;
                 }
             }
