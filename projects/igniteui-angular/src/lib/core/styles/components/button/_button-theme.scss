@@ -775,7 +775,7 @@
                 background: var-get($flat-theme, 'disabled-background');
             }
 
-            %igx-button--icon {
+            &%igx-button--icon {
                 background: var-get($flat-theme, 'disabled-background');
             }
         }
