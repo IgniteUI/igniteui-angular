@@ -449,6 +449,7 @@
         color: var-get($flat-theme, 'foreground');
         border-radius: var-get($flat-theme, 'border-radius');
 
+
         &:hover {
             background: var-get($flat-theme, 'hover-background');
             color: var-get($flat-theme, 'hover-foreground');
@@ -456,9 +457,23 @@
 
         &:focus,
         &:active {
-            background: var-get($flat-theme, 'focus-background');
-            color: var-get($flat-theme, 'focus-foreground');
+            @if($variant != 'fluent') {
+                background: var-get($flat-theme, 'focus-background');
+                color: var-get($flat-theme, 'focus-foreground');
+            }
             box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
+        }
+
+        @if($variant == 'fluent') {
+            border: rem(1px) solid transparent;
+
+            &:active {
+                color: var-get($flat-theme, 'active-foreground');
+            }
+
+            &:focus-visible {
+                border-color: var-get($flat-theme, 'border-color');
+            }
         }
     }
 
@@ -486,9 +501,32 @@
 
         &:focus,
         &:active {
-            background: var-get($outlined-theme, 'focus-background');
+            @if($variant != 'fluent') {
+                background: var-get($outlined-theme, 'focus-background');
+            }
             color: var-get($outlined-theme, 'focus-foreground');
             box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+        }
+
+        @if($variant == 'fluent') {
+            &:active {
+                background: var-get($outlined-theme, 'active-background');
+                color: var-get($outlined-theme, 'active-foreground');
+            }
+
+            &:focus-visible {
+                &::after {
+                    $outline-btn-indent: rem(2px);
+                    content: '';
+                    position: absolute;
+                    top: $outline-btn-indent;
+                    left: $outline-btn-indent;
+                    pointer-events: none;
+                    width: calc(100% - (#{$outline-btn-indent} * 2));
+                    height: calc(100% - (#{$outline-btn-indent} * 2));
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'border-color');
+                }
+            }
         }
     }
 
@@ -539,6 +577,22 @@
         &:active {
             color: var-get($raised-theme, 'active-foreground');
             background: var-get($raised-theme, 'active-background');
+        }
+
+        @if($variant == 'fluent') {
+            &:focus-visible {
+                &::after {
+                    $outline-btn-indent: rem(3px);
+                    content: '';
+                    position: absolute;
+                    top: $outline-btn-indent;
+                    left: $outline-btn-indent;
+                    pointer-events: none;
+                    width: calc(100% - (#{$outline-btn-indent} * 2));
+                    height: calc(100% - (#{$outline-btn-indent} * 2));
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'border-color');
+                }
+            }
         }
     }
 
@@ -593,6 +647,23 @@
         &:active {
             color: var-get($raised-theme, 'active-foreground');
             background: var-get($raised-theme, 'active-background');
+        }
+
+        @if($variant == 'fluent') {
+            &:focus-visible {
+                &::after {
+                    $outline-btn-indent: rem(3px);
+                    content: '';
+                    position: absolute;
+                    top: $outline-btn-indent;
+                    left: $outline-btn-indent;
+                    pointer-events: none;
+                    border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$outline-btn-indent});
+                    width: calc(100% - (#{$outline-btn-indent} * 2));
+                    height: calc(100% - (#{$outline-btn-indent} * 2));
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'border-color');
+                }
+            }
         }
 
         @include icon-w-margin(
