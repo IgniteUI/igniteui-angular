@@ -2266,7 +2266,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Moving: selection should not change when move columns inside selected range', () => {
+        it('Moving: selection should not change when move columns inside selected range', fakeAsync(() => {
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
             const secondCell = grid.gridAPI.get_cell_by_index(4, 'HireDate');
             GridSelectionFunctions.selectCellsRangeNoWait(fix, firstCell, secondCell);
@@ -2282,6 +2282,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.moveColumn(grid.getColumnByName('ParentID'), grid.getColumnByName('HireDate'));
+            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
@@ -2291,6 +2292,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             grid.moveColumn(grid.getColumnByName('ParentID'), grid.getColumnByName('ID'), DropPosition.BeforeDropTarget);
+            tick();
             fix.detectChanges();
             const newSelectedData = [
                 { ID: 317, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
@@ -2300,7 +2302,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
-        });
+        }));
 
         it('Summaries: selection range should not change when enable/disable summaries', (async () => {
             grid.height = '600px';

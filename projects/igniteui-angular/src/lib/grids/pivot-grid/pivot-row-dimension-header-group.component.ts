@@ -102,12 +102,6 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
             false;
     }
 
-    public get activeGroup() {
-        const nav = this.grid.navigation;
-        const node = nav.activeNode;
-        return node ? nav.isRowHeaderActive && node.row === this.rowIndex && node.column === this.visibleIndex : false;
-    }
-
     protected get activeNode() {
         this.grid.navigation.isRowHeaderActive = true;
         return {

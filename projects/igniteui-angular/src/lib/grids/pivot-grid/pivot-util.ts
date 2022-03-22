@@ -290,49 +290,6 @@ export class PivotUtil {
         return parentFields.join('-');
     }
 
-    public static getTotalLvl(rec, pivotKeys: IPivotKeys) {
-        let total = 0;
-        Object.keys(rec).forEach(key => {
-            if (key.indexOf(pivotKeys.rowDimensionSeparator + pivotKeys.level) !== -1 &&
-                key.indexOf(pivotKeys.level + pivotKeys.rowDimensionSeparator) === -1 &&
-                key.indexOf(pivotKeys.records) === -1) {
-                total += rec[key] || 0;
-            }
-        });
-        return total;
-    }
-
-    public static flattenColumnHierarchy(hierarchies: any, values: IPivotValue[], pivotKeys: IPivotKeys) {
-        const flatData = [];
-        hierarchies.forEach((h, key) => {
-            const obj = {};
-            const multipleValues = values.length > 1;
-            for (const value of values) {
-                if (h[pivotKeys.aggregations]) {
-                    if (multipleValues) {
-                        obj[key + pivotKeys.columnDimensionSeparator + value.member] = h[pivotKeys.aggregations][value.member];
-                    } else {
-                        obj[key] = h[pivotKeys.aggregations][value.member];
-                    }
-                }
-                obj[pivotKeys.records] = h[pivotKeys.records];
-                flatData.push(obj);
-                if (h[pivotKeys.children]) {
-                    const records = this.flattenColumnHierarchy(h[pivotKeys.children], values, pivotKeys);
-                    for (const record of records) {
-                        delete record[pivotKeys.records];
-                        const childKeys = Object.keys(record);
-                        for (const childKey of childKeys) {
-                            obj[childKey] = record[childKey];
-                        }
-                    }
-                }
-            }
-        });
-
-        return flatData;
-    }
-
     public static buildExpressionTree(config: IPivotConfiguration) {
         const allDimensions = (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);

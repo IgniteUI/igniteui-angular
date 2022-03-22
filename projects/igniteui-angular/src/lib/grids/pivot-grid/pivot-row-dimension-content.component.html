@@ -12,7 +12,7 @@
 </div>
 
 <ng-template #headerTemplate let-column>
-    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{dimension.level}}'>
+    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel()}}'>
         <igx-icon [attr.draggable]=" false" (click)="toggleRowDimension($event)">
             {{ getExpandState() ? 'expand_more' : 'chevron_right'}}</igx-icon>
         {{column.header}}
@@ -21,7 +21,7 @@
 
 <ng-template #headerDefaultTemplate let-column>
 
-    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{dimension.level}}'>
+    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel()}}'>
         <igx-icon style='flex-shrink: 0;' [attr.draggable]=" false">
         </igx-icon>
         {{column.header}}
