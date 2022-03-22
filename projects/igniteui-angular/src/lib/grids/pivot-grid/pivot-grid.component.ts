@@ -788,7 +788,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get selectedRows(): any[] {
-        if (!this.selectionService.getSelectedRows()) {
+        if (this.selectionService.getSelectedRows().length === 0) {
             return [];
         }
         const selectedRowIds = [];
@@ -2027,13 +2027,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             cols.push(ref.instance);
         });
         return cols;
-    }
-
-    /**
-    * @hidden @internal
-    */
-    public getPropName(dim: IPivotDimension) {
-        return !!dim ?? dim.memberName + this.pivotKeys.rowDimensionSeparator + 'height';
     }
 
     /**
