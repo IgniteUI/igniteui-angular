@@ -1464,6 +1464,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     @Input()
     public igxGridForOfUniqueSizeCache = false;
 
+    @Input()
+    public igxGridForOfVariableSizes = true;
+
     public get igxGridForOf() {
         return this.igxForOf;
     }
@@ -1492,6 +1495,12 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     protected get itemsDimension() {
         return this.igxForSizePropName || 'height';
+    }
+
+    public recalcUpdateSizes() {
+        if (this.igxGridForOfVariableSizes) {
+            super.recalcUpdateSizes();
+        }
     }
 
     /**
