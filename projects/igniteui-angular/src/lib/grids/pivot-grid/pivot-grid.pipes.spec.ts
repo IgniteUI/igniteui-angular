@@ -1,7 +1,7 @@
 import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
-import { IgxPivotNumericAggregate } from './pivot-grid-aggregate';
+import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
@@ -291,6 +291,37 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86, 'All-USA-UnitsSold': 296, 'All-USA-UnitPrice': 49.57, 'All-Uruguay-UnitsSold': 456, 'All-Uruguay-UnitPrice': 68.33, 'All-UnitsSold': 1526, 'All-UnitPrice': 146.76 },
             { 'All-Uruguay-UnitsSold': 68, 'All-Uruguay-UnitPrice': 3.56, 'All-UnitsSold': 68, 'All-UnitPrice': 3.56 }, { 'All-USA-UnitsSold': 293, 'All-USA-UnitPrice': 85.58, 'All-UnitsSold': 293, 'All-UnitPrice': 85.58 },
             { 'All-USA-UnitsSold': 240, 'All-USA-UnitPrice': 18.13, 'All-UnitsSold': 240, 'All-UnitPrice': 18.13 }]);
+    });
+
+    it('should return correct values for each pivot aggregation type', () => {
+        // check each aggregator has correct aggregations
+        expect(IgxPivotAggregate.aggregators().map(x => x.key)).toEqual(['COUNT']);
+        expect(IgxPivotNumericAggregate.aggregators().map(x => x.key)).toEqual(['COUNT', 'MIN', 'MAX', 'SUM', 'AVG']);
+        expect(IgxPivotDateAggregate.aggregators().map(x => x.key)).toEqual(['COUNT', 'LATEST', 'EARLIEST']);
+        expect(IgxPivotTimeAggregate.aggregators().map(x => x.key)).toEqual(['COUNT', 'LATEST', 'EARLIEST']);
+
+        // check aggregations are applied correctly
+        expect(IgxPivotAggregate.count([1, 2, 3])).toEqual(3);
+
+        expect(IgxPivotNumericAggregate.count([1, 2, 3])).toEqual(3);
+        expect(IgxPivotNumericAggregate.min([1, 2, 3])).toEqual(1);
+        expect(IgxPivotNumericAggregate.max([1, 2, 3])).toEqual(3);
+        expect(IgxPivotNumericAggregate.sum([1, 2, 3])).toEqual(6);
+        expect(IgxPivotNumericAggregate.average([1, 2, 3])).toEqual(2);
+
+        expect(IgxPivotDateAggregate.latest(['01/01/2021', '01/01/2022', '02/01/2021'])).toEqual('01/01/2022');
+        expect(IgxPivotDateAggregate.earliest(['01/01/2021', '01/01/2022', '02/01/2021'])).toEqual('01/01/2021');
+
+
+        expect(IgxPivotTimeAggregate.latestTime(['01/01/2021 8:00', '01/01/2021 1:00', '01/01/2021 22:00'])).toEqual(new Date('01/01/2021 22:00'));
+        expect(IgxPivotTimeAggregate.earliestTime(['01/01/2021 8:00', '01/01/2021 1:00', '01/01/2021 22:00'])).toEqual(new Date('01/01/2021 1:00'));
+
+        // check localization can be changed
+        IgxPivotTimeAggregate.resourceStrings = {
+            igx_grid_pivot_aggregate_time_earliest: 'Earliest Custom Time'
+        };
+
+        expect(IgxPivotTimeAggregate.aggregators().find(x => x.key === 'EARLIEST').label).toEqual('Earliest Custom Time');
     });
 
     it('allow setting NoopPivotDimensionsStrategy for rows/columns', () => {
