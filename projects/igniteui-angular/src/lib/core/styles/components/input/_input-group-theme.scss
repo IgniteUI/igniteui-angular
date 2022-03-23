@@ -283,6 +283,7 @@
 
     $hint-padding-top: rem(6px, map.get($base-scale-size, 'comfortable'));
     $hint--box-margin: rem(12px, map.get($base-scale-size, 'comfortable'));
+    $fluent-focus-border: rem(2px);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -656,6 +657,18 @@
         %form-group-bundle--fluent {
             height: rem(40px);
         }
+
+        %form-group-bundle--fluent--focus {
+            igx-prefix,
+            [igxPrefix] {
+                padding-#{$left}: calc((rem(8px, map.get($base-scale-size, 'cosy'))) - (#{$fluent-focus-border} / 2));
+            }
+
+            igx-suffix,
+            [igxSuffix] {
+                padding-#{$right}: calc((rem(8px, map.get($base-scale-size, 'cosy'))) - (#{$fluent-focus-border} / 2));
+            }
+        }
     }
 
     %igx-input-group-fluent-search--cosy {
@@ -690,6 +703,18 @@
 
         %form-group-bundle--fluent {
             height: rem(32px);
+        }
+
+        %form-group-bundle--fluent--focus {
+            igx-prefix,
+            [igxPrefix] {
+                padding-#{$left}: calc((rem(8px, map.get($base-scale-size, 'compact'))) - (#{$fluent-focus-border} / 2));
+            }
+
+            igx-suffix,
+            [igxSuffix] {
+                padding-#{$right}: calc((rem(8px, map.get($base-scale-size, 'compact'))) - (#{$fluent-focus-border} / 2));
+            }
         }
     }
 
@@ -743,6 +768,23 @@
         height: rem(48px);
     }
 
+    %form-group-bundle--fluent--focus {
+        %form-group-bundle-main--fluent,
+        igx-prefix,
+        [igxPrefix] {
+            padding-#{$left}: calc((rem(8px, map.get($base-scale-size, 'comfortable'))) - (#{$fluent-focus-border} / 2));
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            padding-#{$right}: calc((rem(8px, map.get($base-scale-size, 'comfortable'))) - (#{$fluent-focus-border} / 2));
+        }
+
+        %form-group-bundle-main--file { 
+            padding-left: rem(8px);
+        }
+    }
+
     %form-group-bundle--fluent--hover {
         border-color: var-get($theme, 'hover-border-color');
         box-shadow: none;
@@ -759,20 +801,21 @@
         background: var-get($theme, 'border-disabled-background');
     }
 
-    %form-group-bundle-error--fluent {
+    %form-group-bundle-error--fluent,
+    %form-group-bundle-error--fluent--hover,
+    %form-group-bundle-error--fluent--focus {
         border-color: var-get($theme, 'error-secondary-color');
     }
 
-    %form-group-bundle-error--fluent--hover {
-        border: rem(2px) solid var-get($theme, 'error-secondary-color');
-    }
-
-    %form-group-bundle-success--fluent {
+    %form-group-bundle-success--fluent,
+    %form-group-bundle-success--fluent--hover,
+    %form-group-bundle-success--fluent--focus {
         border-color: var-get($theme, 'success-secondary-color');
     }
 
-    %form-group-bundle-success--fluent--hover {
-        border: rem(2px) solid var-get($theme, 'success-secondary-color');
+    %form-group-bundle-error--fluent--focus,
+    %form-group-bundle-success--fluent--focus {
+        border-width: $fluent-focus-border;
     }
 
     %fluent-input {
