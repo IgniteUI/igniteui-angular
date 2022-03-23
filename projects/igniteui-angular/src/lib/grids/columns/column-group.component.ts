@@ -342,13 +342,18 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     public get width() {
-        const width = `${this.children.reduce((acc, val) => {
-            if (val.hidden) {
-                return acc;
-            }
-            return acc + parseInt(val.calcWidth, 10);
-        }, 0)}`;
-        return width + 'px';
+        if (!this.calcPixelWidth) {
+            const width = `${this.children.reduce((acc, val) => {
+                if (val.hidden) {
+                    return acc;
+                }
+                return acc + parseInt(val.calcWidth, 10);
+            }, 0)}`;
+
+            this.calcPixelWidth = +width;
+        }
+
+        return this.calcPixelWidth + 'px';
     }
 
     public set width(val) { }
