@@ -617,6 +617,12 @@
             }
         }
 
+        @include mx(textarea, fluent) {
+            @include e(bundle) {
+                @extend %form-group-bundle-textarea--fluent !optional;
+            }
+        }
+
         @include mx(required, fluent) {
             @include e(bundle) {
                 @extend %form-group-bundle-required--fluent !optional;

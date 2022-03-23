@@ -652,6 +652,10 @@
             @extend %form-group-suffix-fluent--cosy;
             outline-style: none;
         }
+
+        %form-group-bundle--fluent {
+            height: rem(40px);
+        }
     }
 
     %igx-input-group-fluent-search--cosy {
@@ -682,6 +686,10 @@
         [igxSuffix] {
             @extend %form-group-suffix-fluent--compact;
             outline-style: none;
+        }
+
+        %form-group-bundle--fluent {
+            height: rem(32px);
         }
     }
 
@@ -718,6 +726,10 @@
         }
     }
 
+    %form-group-bundle-textarea--fluent {
+        height: rem(84px);
+    }
+
     // Bundle
     %form-group-bundle--fluent {
         padding: 0;
@@ -728,6 +740,7 @@
         background: var-get($theme, 'border-background');
         position: relative;
         align-items: stretch;
+        height: rem(48px);
     }
 
     %form-group-bundle--fluent--hover {
@@ -737,8 +750,7 @@
 
     %form-group-bundle--fluent--focus {
         caret-color: var-get($theme, 'focused-text-color');
-        border-color: var-get($theme, 'focused-border-color');
-        box-shadow: 0 0 0 1px var-get($theme, 'focused-border-color');
+        border: rem(2px) solid var-get($theme, 'focused-border-color');
     }
 
     %form-group-bundle--fluent--hover-disabled,
@@ -747,22 +759,20 @@
         background: var-get($theme, 'border-disabled-background');
     }
 
-    %form-group-bundle-error--fluent--hover,
     %form-group-bundle-error--fluent {
         border-color: var-get($theme, 'error-secondary-color');
     }
 
     %form-group-bundle-error--fluent--hover {
-        box-shadow: 0 0 0 1px var-get($theme, 'error-secondary-color');
+        border: rem(2px) solid var-get($theme, 'error-secondary-color');
     }
 
-    %form-group-bundle-success--fluent--hover,
     %form-group-bundle-success--fluent {
         border-color: var-get($theme, 'success-secondary-color');
     }
 
     %form-group-bundle-success--fluent--hover {
-        box-shadow: 0 0 0 1px var-get($theme, 'success-secondary-color');
+        border: rem(2px) solid var-get($theme, 'success-secondary-color');
     }
 
     %fluent-input {
