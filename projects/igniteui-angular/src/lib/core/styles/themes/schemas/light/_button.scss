@@ -539,6 +539,7 @@ $bootstrap-outlined-button: extend(
 /// @type {Map}
 /// @prop {Color} hover-foreground [contrast-color: ('primary', 600)] - The hover text color of an raised button.
 /// @prop {Color} focus-foreground [contrast-color: ('primary', 600)] - The focus text color of an raised button.
+/// @prop {Map} foreground [contrast-color: ('primary', 600)] - The idle text color of an outlined button.
 /// @prop {Map} background [color: ('primary', 500)] - The background color of a raised button.
 /// @prop {Map} hover-background [color: ('primary', 600)] - The hover background color of an raised button.
 /// @prop {Map} focus-background [color: ('primary', 600)] - The focus background color of an raised button.
@@ -558,6 +559,10 @@ $bootstrap-raised-button: extend(
         ),
 
         focus-foreground: (
+            contrast-color: ('primary', 600)
+        ),
+
+        foreground: (
             contrast-color: ('primary', 600)
         ),
 
