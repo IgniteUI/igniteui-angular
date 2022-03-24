@@ -11,6 +11,7 @@
 
 :host ::ng-deep {
     .hamburger {
+        color: var(--igc-surface-500-contrast);
         margin-right: rem(16px);
 
         [dir='rtl'] & {
