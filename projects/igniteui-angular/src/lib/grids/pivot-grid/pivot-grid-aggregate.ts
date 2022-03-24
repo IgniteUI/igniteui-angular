@@ -173,7 +173,7 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
      *
      * @memberof IgxPivotDateAggregate
      */
-    public static latest(members: number[]) {
+    public static latest(members: any[]) {
         return IgxDateSummaryOperand.latest(members);
     }
 
@@ -186,7 +186,7 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
      *
      * @memberof IgxPivotDateAggregate
      */
-    public static earliest(members: number[]) {
+    public static earliest(members: any[]) {
         return IgxDateSummaryOperand.earliest(members);
     }
 }
@@ -225,7 +225,7 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
      *
      * @memberof IgxPivotTimeAggregate
      */
-    public static latestTime(members: number[]) {
+    public static latestTime(members: any[]) {
         return IgxTimeSummaryOperand.latestTime(members);
     }
 
@@ -238,7 +238,7 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
      *
      * @memberof IgxPivotTimeAggregate
      */
-    public static earliestTime(members: number[]) {
+    public static earliestTime(members: any[]) {
         return IgxTimeSummaryOperand.earliestTime(members);
     }
 }

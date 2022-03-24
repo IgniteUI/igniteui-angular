@@ -1,9 +1,10 @@
 
-import { PivotGridType } from '../grids/common/grid.interface';
+import { ColumnType, PivotGridType } from '../grids/common/grid.interface';
 import { DEFAULT_PIVOT_KEYS, IPivotDimension, IPivotDimensionStrategy, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
-import { FilteringStrategy } from './filtering-strategy';
+import { FilteringStrategy, IgxFilterItem } from './filtering-strategy';
 import { cloneArray } from '../core/utils';
+import { IFilteringExpressionsTree } from './filtering-expressions-tree';
 
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: NoopPivotDimensionsStrategy = null;
@@ -100,7 +101,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                     })
                 }
             });
-            
         }
         this.applyAggregates(rec, columns, values, pivotKeys);
     }
@@ -122,10 +122,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         }
         return leafs;
     }
-
-    private isLeaf(record, pivotKeys) {
-        return !(record[pivotKeys.records] && record[pivotKeys.records].some(r => r[pivotKeys.records]));
-    }
 }
 
 export class DimensionValuesFilteringStrategy extends FilteringStrategy {
@@ -141,10 +137,53 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
 
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false,
         grid?: PivotGridType): any {
-        const config = grid.pivotConfiguration;
         const allDimensions = grid.allDimensions;
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
-        return PivotUtil.extractValueFromDimension(dim, rec);
+        const dim :IPivotDimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
+        const value = dim.childLevel ? this._getDimensionValueHierarchy(dim, rec).map(x => `[` + x +`]`).join('.') : PivotUtil.extractValueFromDimension(dim, rec);
+        return value;
+    }
+
+    public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
+        const grid = (column.grid as any);
+        const enabledDimensions = grid.allDimensions.filter(x => x && x.enabled);
+        let data = column.grid.gridAPI.filterDataByExpressions(tree);
+        const dim = enabledDimensions.find(x => x.memberName === column.field);
+        const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
+            data,
+            [dim],
+            PivotDimensionType.Column,
+            grid.pivotKeys
+        );
+        const isNoop = grid.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy || grid.pivotConfiguration.rowStrategy instanceof NoopPivotDimensionsStrategy;
+        const items: IgxFilterItem[] = !isNoop ? this._getFilterItems(allValuesHierarchy, grid.pivotKeys) : [{value : ''}];
+        return Promise.resolve(items);
+    }
+
+    private _getFilterItems(hierarchy: Map<string, any>, pivotKeys: IPivotKeys) : IgxFilterItem[] {
+        const items:  IgxFilterItem[] = [];
+        hierarchy.forEach((value) => {
+            const val = value.value;
+            const path = val.split(pivotKeys.columnDimensionSeparator);
+            const hierarchicalValue = path.length > 1 ? path.map(x => `[` + x +`]`).join('.') : val;
+            const text = path[path.length -1];
+            items.push({
+                value: hierarchicalValue,
+                label: text,
+                children: this._getFilterItems(value.children, pivotKeys)
+            });
+        });
+        return items;
+    }
+
+    private _getDimensionValueHierarchy(dim: IPivotDimension, rec: any) : string[] {
+        let path = [];
+        let value = PivotUtil.extractValueFromDimension(dim, rec);
+        path.push(value);
+        if (dim.childLevel) {
+            const childVals = this._getDimensionValueHierarchy(dim.childLevel, rec);
+            path = path.concat(childVals);
+        }
+        return path;
     }
 }

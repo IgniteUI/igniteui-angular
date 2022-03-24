@@ -93,9 +93,9 @@ $fluent_subtitle-2: type-style(
 
 $fluent_button: type-style(
     $font-size: rem(14px),
-    $font-weight: 600,
+    $font-weight: 400,
     $line-height: rem(14px),
-    $text-transform: none,
+    $text-transform: capitalize,
     $margin-top: 0,
     $margin-bottom: 0
 );

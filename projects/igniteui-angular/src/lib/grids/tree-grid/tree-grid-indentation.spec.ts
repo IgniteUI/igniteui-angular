@@ -169,7 +169,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(9), rows[9], 1);
         }));
 
-        it('should change cell content alignment of tree-column with number dataType when it is no longer tree-column', () => {
+        it('should change cell content alignment of tree-column with number dataType when it is no longer tree-column', fakeAsync(() => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
 
@@ -177,6 +177,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             let targetColumn = treeGrid.columnList.filter(c => c.field === 'Age')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+            tick();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
@@ -185,11 +186,12 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             // Moving 'ID' column
             targetColumn = treeGrid.columnList.filter(c => c.field === 'Name')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+            tick();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
-        });
+        }));
     });
 
     describe('Primary/Foreign key', () => {
@@ -334,16 +336,16 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             let targetColumn = treeGrid.columnList.filter(c => c.field === 'Age')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+            tick();
             fix.detectChanges();
-            tick(16);
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
             verifyCellsContentAlignment(fix, 'ID', false); // Verify cells of 'ID' are right-aligned.
 
             // Moving 'ID' column
             targetColumn = treeGrid.columnList.filter(c => c.field === 'ParentID')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+            tick();
             fix.detectChanges();
-            tick(16);
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
         }));
