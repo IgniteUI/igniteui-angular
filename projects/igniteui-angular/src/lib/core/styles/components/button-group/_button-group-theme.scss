@@ -219,6 +219,7 @@
 
         &[igxButton] {
             border-radius: 0;
+            border-color: var-get($theme, 'item-border-color');
         }
 
         &:not(:nth-child(0)) {
