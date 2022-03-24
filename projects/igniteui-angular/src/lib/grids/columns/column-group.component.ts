@@ -342,16 +342,22 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     get width() {
-        const width = `${this.children.reduce((acc, val) => {
-            if (val.hidden) {
-                return acc;
-            }
-            return acc + parseInt(val.calcWidth, 10);
-        }, 0)}`;
-        return width + 'px';
+        if (this._width === '') {
+            this._width = `${this.children.reduce((acc, val) => {
+                if (val.hidden) {
+                    return acc;
+                }
+                return acc + val.calcPixelWidth;
+            }, 0)}px`;
+        }
+
+        return this._width;
     }
 
-    set width(val) { }
+    @Input()
+    set width(val) {
+        this._width = val;
+    }
 
     /**
      * @hidden
