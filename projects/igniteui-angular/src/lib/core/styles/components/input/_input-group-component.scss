@@ -755,7 +755,7 @@
                 @extend %form-group-bundle-error--indigo !optional;
 
                 &:hover {
-                    @extend %form-group-bundle-error--fluent--hover !optional;
+                    @extend %form-group-bundle-error--indigo--hover !optional;
                 }
             }
         }
