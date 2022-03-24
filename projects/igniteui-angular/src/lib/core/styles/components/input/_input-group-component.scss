@@ -601,10 +601,6 @@
         }
 
         @include mx(file, fluent) {
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--file !optional;
-            }
-
             @include e(label) {
                 @extend %fluent-label-filled !optional;
             }
@@ -617,12 +613,6 @@
 
             @include e(label) {
                 @extend %fluent-label-focused !optional;
-            }
-        }
-
-        @include mx(textarea, fluent) {
-            @include e(bundle) {
-                @extend %form-group-bundle-textarea--fluent !optional;
             }
         }
 

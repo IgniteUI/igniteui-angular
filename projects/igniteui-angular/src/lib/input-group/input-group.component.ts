@@ -99,12 +99,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     @HostBinding('class.igx-input-group--focused')
     public isFocused = false;
 
-    /** @hidden */
-    @HostBinding('class.igx-input-group--textarea')
-    public get isTextArea() {
-        return this.input.isTextArea;
-    }
-
     /**
      * @hidden @internal
      * When truthy, disables the `IgxInputGroupComponent`.
