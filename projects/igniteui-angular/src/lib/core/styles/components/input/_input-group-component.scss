@@ -569,24 +569,24 @@
                 @extend %fluent-input-disabled !optional;
 
                 &:hover {
-                    @extend %fluent-input-disabled !optional
-            }
+                    @extend %fluent-input-disabled !optional;
+                }
 
                 &:focus {
-                    @extend %fluent-input-disabled !optional
-            }
+                    @extend %fluent-input-disabled !optional;
+                }
             }
 
             @include e(file-input) {
                 @extend %fluent-input-disabled !optional;
 
                 &:hover {
-                    @extend %fluent-input-disabled !optional
-            }
+                    @extend %fluent-input-disabled !optional;
+                }
 
                 &:focus {
-                    @extend %fluent-input-disabled !optional
-            }
+                    @extend %fluent-input-disabled !optional;
+                }
             }
 
             @include e(label) {

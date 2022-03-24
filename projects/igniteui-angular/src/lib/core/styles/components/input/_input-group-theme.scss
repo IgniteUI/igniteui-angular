@@ -768,7 +768,15 @@
         height: rem(48px);
     }
 
+    %form-group-bundle--fluent--hover {
+        border-color: var-get($theme, 'hover-border-color');
+        box-shadow: none;
+    }
+
     %form-group-bundle--fluent--focus {
+        caret-color: var-get($theme, 'focused-text-color');
+        border: rem(2px) solid var-get($theme, 'focused-border-color');
+
         %form-group-bundle-main--fluent,
         igx-prefix,
         [igxPrefix] {
@@ -783,16 +791,6 @@
         %form-group-bundle-main--file { 
             padding-left: rem(8px);
         }
-    }
-
-    %form-group-bundle--fluent--hover {
-        border-color: var-get($theme, 'hover-border-color');
-        box-shadow: none;
-    }
-
-    %form-group-bundle--fluent--focus {
-        caret-color: var-get($theme, 'focused-text-color');
-        border: rem(2px) solid var-get($theme, 'focused-border-color');
     }
 
     %form-group-bundle--fluent--hover-disabled,
