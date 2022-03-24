@@ -14,7 +14,7 @@
 }
 
 .display-density {
-    grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
+    grid-template-columns: repeat(auto-fill, minmax(450px, 2fr));
 }
 
 .button-sample {
