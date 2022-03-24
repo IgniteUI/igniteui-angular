@@ -2187,7 +2187,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         // Filtering + Moving
         it('should move chip under the correct column when column is moved and filter row should open for correct column.',
-            () => {
+            fakeAsync(() => {
                 grid.filter('ProductName', 'Angular', IgxStringFilteringOperand.instance().condition('contains'));
                 fix.detectChanges();
 
@@ -2195,6 +2195,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 const stringCol = grid.getColumnByName('ProductName');
                 const numberCol = grid.getColumnByName('Downloads');
                 grid.moveColumn(stringCol, numberCol);
+                tick();
                 fix.detectChanges();
 
                 // check UI in filter cell is correct after moving
@@ -2202,7 +2203,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 expect(GridFunctions.getChipText(filteringCells[2])).toEqual('Angular');
                 expect(GridFunctions.getChipText(filteringCells[1])).toEqual('Filter');
-            });
+            }));
 
         // Filtering + Hiding
         it('should not display filter cell for hidden columns and chips should show under correct column.', fakeAsync(() => {
@@ -3095,6 +3096,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
 
             moveLeft.click();
+            tick();
             fix.detectChanges();
 
             expect(grid.columnList.get(2).field).toBe('ProductName');
@@ -5708,6 +5710,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
 
             moveLeft.click();
+            tick();
             fix.detectChanges();
 
             expect(grid.columnList.get(2).field).toBe('ProductName');

@@ -21,7 +21,7 @@
 </ng-template>
 
 <ng-template #uploadButton>
-    <igx-prefix *ngIf="isFileType">
+    <igx-prefix *ngIf="isFileType" class="igx-prefix--upload">
         <button
             igxButton="raised"
             (click)="uploadButtonHandler()"
