@@ -70,6 +70,14 @@
             @extend %igx-button--icon !optional;
         }
 
+        @include mx(cosy, icon) {
+            @extend %igx-button--icon-cosy !optional;
+        }
+
+        @include mx(compact, icon) {
+            @extend %igx-button--icon-compact !optional;
+        }
+
         // DISABLED BUTTON
         @include m(disabled) {
             @extend %igx-button--disabled !optional;
