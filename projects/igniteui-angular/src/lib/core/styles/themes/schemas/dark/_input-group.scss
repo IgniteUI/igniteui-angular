@@ -86,23 +86,12 @@ $dark-fluent-input-group: extend(
 
 /// Generates a dark bootstrap input-group schema based on a mix of $bootstrap-input-group and $base-dark-input-group.
 /// @type {Map}
-/// @prop {Color} input-prefix-background [color: ('grays', 100)] - The background color of an input prefix of type line, box, border and fluent.
-/// @prop {Color} input-suffix-background [ color: ('grays', 100)] - The background color of an input suffix of type line, box, border and fluent.
 /// @requires {function} extend
 /// @requires $bootstrap-input-group
 /// @requires $base-dark-input-group
 $dark-bootstrap-input-group: extend(
     $base-dark-input-group,
     $bootstrap-input-group,
-    (
-        input-prefix-background: (
-            color: ('grays', 100)
-        ),
-
-        input-suffix-background: (
-            color: ('grays', 100)
-        ),
-    )
 );
 
 /// Generates an dark indigo input-group schema
