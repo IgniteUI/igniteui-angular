@@ -205,7 +205,7 @@ $light-input-group: extend(
 /// @prop {Map} hover-border-color [color: ('grays', 800)] - The hover input border for input groups of type border and fluent.
 /// @prop {Map} disabled-border-color [color: ('grays', 100)] - The disabled border color for input groups of type border and fluent.
 ///
-/// @prop {Map} focused-border-color [color: ('info')] - The focused input border color for input groups of type border and fluent.
+/// @prop {Map} focused-border-color [color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
 /// @prop {Map} border-disabled-background [color: ('grays', 100)] - The background color of an input group of type border in the disabled state.
 ///
 /// @prop {Color} search-disabled-background [color: ('grays', 100)] - The background color of an input group of type search in the disabled state.
@@ -241,7 +241,7 @@ $fluent-input-group: extend(
         ),
 
         focused-border-color: (
-            color: ('info')
+            color: ('primary', 500)
         ),
 
         disabled-border-color: (
