@@ -570,7 +570,7 @@
 
     %form-group-bundle--border-compact {
         padding: 0 0 0 rem(16px, map.get($base-scale-size, 'compact'));
-        
+
         igx-suffix,
         [igxSuffix] {
             padding-right: rem(16px, map.get($base-scale-size, 'compact'));
@@ -1711,6 +1711,7 @@
         border: 1px solid var-get($theme, 'border-color');
         font-size: map.get($bootstrap-font-size, 'comfortable');
         padding: map.get($bootstrap-padding, 'comfortable');
+        transition: box-shadow .15s ease-out, border .15s ease-out;
     }
 
     %bootstrap-file-input {
@@ -1723,17 +1724,17 @@
 
     %bootstrap-input--focus {
         border: 1px solid var-get($theme, 'focused-secondary-color');
-        box-shadow: 0 0 0 rem(3px) var-get($theme, 'focused-secondary-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'focused-secondary-color');
     }
 
     %bootstrap-input--success {
         border: 1px solid var-get($theme, 'success-secondary-color');
-        box-shadow: 0 0 0 rem(3px) var-get($theme, 'success-secondary-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-secondary-color');
     }
 
     %bootstrap-input--error {
         border: 1px solid var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-secondary-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-secondary-color');
     }
 
     %bootstrap-input--disabled {
