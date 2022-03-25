@@ -5964,7 +5964,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 console.warn('The record cannot be added as a child to an unspecified record.');
                 return;
             }
-            index = 0;
+            index = null;
         } else {
             // find the index of the record with that PK
             index = this.gridAPI.get_rec_index_by_id(rowID, this.dataView);
