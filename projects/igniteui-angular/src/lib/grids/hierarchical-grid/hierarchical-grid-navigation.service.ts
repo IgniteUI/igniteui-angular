@@ -305,8 +305,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     private clearActivation() {
         // clear if previous activation exists.
-        if (this.activeNode) {
-            this.activeNode.row = null;
+        if (this.activeNode && Object.keys(this.activeNode).length) {
+            this.activeNode = Object.assign({});
         }
     }
 
