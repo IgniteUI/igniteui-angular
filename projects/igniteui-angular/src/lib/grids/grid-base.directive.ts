@@ -2718,6 +2718,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected _columnConfig: IgxColumn[] = [];
+    /**
+     * @hidden
+     */
     protected _pinnedColumns: IgxColumnComponent[] = [];
     /**
      * @hidden
@@ -4034,6 +4038,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._rendered ? this._columns : [];
     }
 
+    @Input()
+    public set columns(config: IgxColumn []) {
+        this._columnConfig = config;
+        if (this._rendered) {
+            this.configToColumns(config);
+            this.onColumnsChanged(this.columnList);
+        }
+    }
+
     /**
      * Gets an array of the pinned `IgxColumnComponent`s.
      *
@@ -4268,20 +4281,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get showDragIcons(): boolean {
         return this.rowDraggable && this.columnList.length > this.hiddenColumnsCount;
-    }
-
-    @Input()
-    public set column(config: IgxColumn) {
-        const columns = this.columnList.toArray();
-        const newColumn = new IgxColumnComponent(this, this.cdr, this.platform);
-
-        for (const prop in config) {
-            newColumn[prop] = config[prop];
-        }
-        columns.push(newColumn);
-
-        this.columnList.reset(columns);
-        this.onColumnsChanged(this.columnList);
     }
 
     /**
@@ -6338,6 +6337,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.autoGenerate) {
             this.autogenerateColumns();
         }
+        if (!this.columnList.length && this._columnConfig.length) {
+            this.configToColumns(this._columnConfig);
+        }
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
@@ -7079,6 +7081,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.detectChanges();
         colSum += this.featureColumnsWidth();
         return colSum;
+    }
+
+    private configToColumns(config: IgxColumn []) {
+        const columns: IgxColumnComponent [] = [];
+
+        config.forEach(column => {
+            const newColumn = new IgxColumnComponent(this, this.cdr, this.platform);
+            for (const prop in column) {
+                newColumn[prop] = column[prop];
+            }
+            columns.push(newColumn);
+        });
+
+        this.columnList.reset(columns);
     }
 
     /**

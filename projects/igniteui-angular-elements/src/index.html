@@ -45,17 +45,26 @@
     <igx-paginator per-page="10"></igx-paginator>
   </igx-grid>
 
-  <button onclick="addColumns()">Add columns</button>
+  <button onclick="changeColumns()">Change columns</button>
 
   <script src="assets/data/nw-products.js"></script>
   <script>
     grid1.data = northwindProducts;
+    let columns = [
+        { field: 'ProductID', header: 'Product Id', dataType: 'number' },
+        { field: 'ProductName', sortable: true },
+        { field: 'CategoryName', sortable: true, groupable: true },
+        { field: 'InStock', dataType: 'number' }
+    ];
+    grid1.columns = columns;
 
-    function addColumns() {
-        grid1.column = {field: 'ProductID', dataType: 'number'};
-        grid1.column = {field: 'ProductName'};
-        grid1.column = {field: 'CategoryName'};
-        grid1.column = {field: 'InStock', dataType: 'number'};
+    function changeColumns() {
+        let columns = [
+            { field: 'ProductID', dataType: 'number' },
+            { field: 'ProductName' },
+            { field: 'CategoryName' }
+        ];
+        grid1.columns = columns;
     }
   </script>
   <!-- END IgxGridComponent -->
