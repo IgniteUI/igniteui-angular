@@ -17,7 +17,7 @@ import { GridSelectionMode } from '../common/enums';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
-fdescribe('IgxTreeGrid Component Tests #tGrid', () => {
+describe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     let fix;
