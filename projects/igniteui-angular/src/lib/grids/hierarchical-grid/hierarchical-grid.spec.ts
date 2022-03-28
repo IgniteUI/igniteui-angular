@@ -565,6 +565,30 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(row1.expanded).toBe(false);
         expect(row2.expanded).toBe(true);
     });
+
+    it('should update aria-activeDescendants when navigating around', () => {
+        hierarchicalGrid.cellSelection = 'single';
+        expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
+
+        let cellElem = (hierarchicalGrid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
+        UIInteractions.simulatePointerOverElementEvent('pointerdown', cellElem.nativeElement);
+        fixture.detectChanges();
+        expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(`${hierarchicalGrid.id}_0_1`);
+
+        const row1 = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+        UIInteractions.simulateClickAndSelectEvent(row1.expander);
+        fixture.detectChanges();
+
+        const childGrid = hierarchicalGrid.getChildGrids()[0];
+        expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(childGrid.id);
+
+        cellElem = (childGrid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
+        UIInteractions.simulatePointerOverElementEvent('pointerdown', cellElem.nativeElement);
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
+        expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(`${childGrid.id}_0_1`);
+    });
 });
 
 describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
