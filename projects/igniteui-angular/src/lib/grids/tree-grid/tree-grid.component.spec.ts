@@ -15,8 +15,9 @@ import {
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
-describe('IgxTreeGrid Component Tests #tGrid', () => {
+fdescribe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     let fix;
@@ -32,7 +33,9 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 IgxTreeGridSummariesTransactionsComponent
             ],
             imports: [
-                NoopAnimationsModule, IgxTreeGridModule]
+                NoopAnimationsModule,
+                IgxTreeGridModule
+            ]
         }).compileComponents();
     }));
 
@@ -123,14 +126,31 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridAutoGenerateComponent);
             grid = fix.componentInstance.treeGrid;
+            fix.detectChanges();
         }));
 
         it('should auto-generate columns', fakeAsync(/** height/width setter rAF */() => {
-            fix.detectChanges();
             const expectedColumns = ['ID', 'ParentID', 'Name', 'JobTitle', 'Age'];
 
             expect(grid.columnList.map(c => c.field)).toEqual(expectedColumns);
         }));
+    });
+
+    describe('Auto-generated columns excluding childDataKey', () => {
+        beforeEach(waitForAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridComponent);
+            grid = fix.componentInstance;
+            grid.data = SampleTestData.employeeAllTypesTreeData();
+            grid.autoGenerate = true;
+            grid.childDataKey = "Employees";
+            fix.detectChanges();
+        }));
+
+        it('should auto-generate columns without childDataKey', () => {
+            const expectedColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
+
+            expect(grid.columnList.map(c => c.field)).toEqual(expectedColumns);
+        });
     });
 
     describe('Loading Template', () => {
