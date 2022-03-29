@@ -518,7 +518,7 @@ export interface GridType extends IGridDataBindable {
     clearGrouping?(field: string): void;
     groupBy?(expression: IGroupingExpression | Array<IGroupingExpression>): void;
     resolveOutlet?(): IgxOverlayOutletDirective;
-
+    updateColumns(columns: ColumnType[]): void;
     getSelectedRanges(): GridSelectionRange[];
     deselectAllColumns(): void;
     deselectColumns(columns: string[] | ColumnType[]): void;
