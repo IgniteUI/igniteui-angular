@@ -41,21 +41,17 @@
     $excluded: ();
 
     @include palette-vars($palette, $contrast: true);
-
-    @if $wc {
-        @include palette-to-wc($palette);
-    }
-    
     @include elevation-vars($elevations);
 
     @if $wc {
+        @include palette-to-wc($palette);
         @include elevations-to-wc($elevations);
-    } 
+    }
 
     @if $elevation == false {
         :root {
             --igx-elevation-factor: 0;
-    
+
             @if $wc {
                 --igc-elevation-factor: var(--igx-elevation-factor);
             }
@@ -297,9 +293,7 @@
     @if is-used('igx-grid', $exclude) {
         @include grid(grid-theme(
             $schema: $schema,
-            $drop-area-border-radius: $roundness,
-            $grid-shadow: if($elevation == false, none, null),
-            $drag-shadow: if($elevation == false, none, null),
+            $drop-area-border-radius: $roundness
         ));
     }
 
