@@ -155,6 +155,7 @@ import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
+import { ColumnType } from './common/column.interface';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -3556,7 +3557,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._setupServices();
         this._setupListeners();
         this.rowListDiffer = this.differs.find([]).create(null);
-        this.columnListDiffer = this.differs.find([]).create(null);
+        // compare based on field, not on object ref.
+        this.columnListDiffer = this.differs.find([]).create((index, col: ColumnType) => col.field);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
     }
@@ -6413,7 +6415,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const list = this.columnList.toArray();
         this._reorderColumns(from, to, pos, list);
         const newList = this._resetColumnList(list);
-        this.columnList.reset(newList);
+        this.updateColumns(newList);
+    }
+
+
+    /**
+     * Update internal column's collection.
+     * @hidden
+     */
+    public updateColumns(newColumns:IgxColumnComponent[]) {
+        // update internal collections to retain order.
+        this._pinnedColumns = newColumns
+            .filter((c) => c.pinned);
+        this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
+        this.columnList.reset(newColumns);
         this.columnList.notifyOnChanges();
         this._columns = this.columnList.toArray();
     }
@@ -6936,7 +6951,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.hasColumnGroups ? this.columnList.filter((c) => !c.pinned) :
             this.columnList.filter((c) => !c.pinned)
-                .sort((a, b) => a.index - b.index);
+                .sort((a, b) => this._unpinnedColumns.findIndex(x => x.field === a.field) - this._unpinnedColumns.findIndex(x => x.field === b.field));
     }
 
     protected extractDataFromSelection(source: any[], formatters = false, headers = false, columnData?: any[]): any[] {
