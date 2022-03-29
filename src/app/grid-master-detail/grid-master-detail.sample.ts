@@ -11,6 +11,9 @@ import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'pro
     templateUrl: 'grid-master-detail.sample.html'
 })
 export class GridMasterDetailSampleComponent implements OnInit {
+    @ViewChild(IgxGridStateDirective, { static: true })
+    public state!: IgxGridStateDirective;
+
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public data: Array<any>;
     public expState = [];
@@ -66,14 +69,11 @@ export class GridMasterDetailSampleComponent implements OnInit {
         this.grid1.toggleRow(this.data[0]);
     }
 
-    @ViewChild(IgxGridStateDirective, { static: true })
-    public state!: IgxGridStateDirective;
-
     public saveState() {
         const state = this.state.getState() as string;
         window.sessionStorage.setItem('grid-state', state);
       }
-    
+
       public restoreState() {
         const state = window.sessionStorage.getItem('grid-state');
         this.state.setState(state as string);

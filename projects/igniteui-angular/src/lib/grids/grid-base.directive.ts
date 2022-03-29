@@ -443,17 +443,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *  <igx-grid #grid [data]="localData" [dataCloneStrategy]="customCloneStrategy"></igx-grid>
      * ```
      */
-     @Input()
-     public get dataCloneStrategy(): IDataCloneStrategy {
-         return this._dataCloneStrategy;
-     }
+    @Input()
+    public get dataCloneStrategy(): IDataCloneStrategy {
+        return this._dataCloneStrategy;
+    }
 
-     public set dataCloneStrategy(strategy: IDataCloneStrategy) {
+    public set dataCloneStrategy(strategy: IDataCloneStrategy) {
         if (strategy) {
             this._dataCloneStrategy = strategy;
             this._transactions.cloneStrategy = strategy;
         }
-     }
+    }
 
     /**
      * Emitted when a cell is clicked.
@@ -1040,8 +1040,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanging)='handleDataChangingEvent()'></igx-grid>
      * ```
      */
-     @Output()
-     public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+    @Output()
+    public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
 
     /**
      * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
@@ -6190,6 +6190,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+
+    /**
+     * Update internal column's collection.
+     *
+     * @hidden
+     */
+    public updateColumns(newColumns: IgxColumnComponent[]) {
+        // update internal collections to retain order.
+        this._pinnedColumns = newColumns
+            .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
+        this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
+        this.columnList.reset(newColumns);
+        this.columnList.notifyOnChanges();
+        this._columns = this.columnList.toArray();
+    }
+
     /**
      * Enters add mode by spawning the UI at the specified index.
      *
@@ -6416,21 +6432,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._reorderColumns(from, to, pos, list);
         const newList = this._resetColumnList(list);
         this.updateColumns(newList);
-    }
-
-
-    /**
-     * Update internal column's collection.
-     * @hidden
-     */
-    public updateColumns(newColumns:IgxColumnComponent[]) {
-        // update internal collections to retain order.
-        this._pinnedColumns = newColumns
-        .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
-        this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
-        this.columnList.reset(newColumns);
-        this.columnList.notifyOnChanges();
-        this._columns = this.columnList.toArray();
     }
 
     /**
@@ -6948,10 +6949,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected reinitPinStates() {
         this._pinnedColumns = this.columnList
-            .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
+            .filter((c) => c.pinned)
+            .sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.hasColumnGroups ? this.columnList.filter((c) => !c.pinned) :
             this.columnList.filter((c) => !c.pinned)
-                .sort((a, b) => this._unpinnedColumns.findIndex(x => x.field === a.field) - this._unpinnedColumns.findIndex(x => x.field === b.field));
+                .sort((a, b) =>
+                    this._unpinnedColumns.findIndex(x => x.field === a.field) -
+                    this._unpinnedColumns.findIndex(x => x.field === b.field));
     }
 
     protected extractDataFromSelection(source: any[], formatters = false, headers = false, columnData?: any[]): any[] {
