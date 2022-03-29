@@ -6426,7 +6426,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public updateColumns(newColumns:IgxColumnComponent[]) {
         // update internal collections to retain order.
         this._pinnedColumns = newColumns
-            .filter((c) => c.pinned);
+        .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this.columnList.reset(newColumns);
         this.columnList.notifyOnChanges();
