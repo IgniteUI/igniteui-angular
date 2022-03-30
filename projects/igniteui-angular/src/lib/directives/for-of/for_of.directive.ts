@@ -337,6 +337,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         if (this.igxForScrollOrientation === 'horizontal' && this.scrollComponent) {
             this.scrollComponent.nativeElement.scrollLeft = val;
+            if (this.scrollComponent.nativeElement.scrollLeft !== val) {
+                // RTL - need to scroll with negative value
+                this.scrollComponent.nativeElement.scrollLeft = -val;
+            }
         } else if (this.scrollComponent) {
             this.scrollComponent.nativeElement.scrollTop = val;
         }
@@ -614,7 +618,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     public scrollNext() {
-        const scr = Math.ceil(this.scrollPosition);
+        const scr = Math.abs(Math.ceil(this.scrollPosition));
         const endIndex = this.getIndexAt(scr + parseInt(this.igxForContainerSize, 10), this.sizesCache);
         this.scrollTo(endIndex);
     }
