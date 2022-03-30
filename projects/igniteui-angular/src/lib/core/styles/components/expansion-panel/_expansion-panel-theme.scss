@@ -245,7 +245,7 @@
 ) {
     $title: map.get($categories, 'title');
     $description: map.get($categories, 'description');
-    $body: map.get($categories, '$body');
+    $body: map.get($categories, 'body');
 
     %igx-expansion-panel__header-title {
         @include type-style($type-scale, $title) {
