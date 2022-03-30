@@ -1126,7 +1126,7 @@
 ) {
     $header-year: map.get($categories, 'header-year');
     $header-date: map.get($categories, 'header-date');
-    $weekday-label: map.get($categories, 'weekday-labels');
+    $weekday-label: map.get($categories, 'weekday-label');
     $picker-date: map.get($categories, 'picker-date');
     $content: map.get($categories, 'content');
 
