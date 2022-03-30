@@ -1028,9 +1028,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             return;
         }
         const prevStartIndex = this.state.startIndex;
+        const scrLeft = event.target.scrollLeft;
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllElements(event.target.scrollLeft);
-        this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        const scrollOffset = this.fixedUpdateAllElements(Math.abs(event.target.scrollLeft));
+        if (scrLeft < 0) {
+            // RTL
+            this.dc.instance._viewContainer.element.nativeElement.style.left = scrollOffset + 'px';
+        } else {
+            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        }
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1625,8 +1631,14 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             return;
         }
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllElements(scrollAmount);
-        this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        const scrollOffset = this.fixedUpdateAllElements(Math.abs(scrollAmount));
+        if (scrollAmount < 0) {
+            // RTL
+            this.dc.instance._viewContainer.element.nativeElement.style.left = scrollOffset + 'px';
+        } else {
+            // LTR
+            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        }
     }
 
     protected getItemSize(item) {

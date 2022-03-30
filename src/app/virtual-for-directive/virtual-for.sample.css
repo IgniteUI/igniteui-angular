@@ -27,6 +27,10 @@
     flex-direction: column;
     padding: 16px 8px 0;
 }
+.list-container > .igx-display-container {
+    flex-direction: row;
+    overflow: visible;
+}
 
 .item-container {
     display: flex;
