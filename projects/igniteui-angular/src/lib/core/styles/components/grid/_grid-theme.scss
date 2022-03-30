@@ -1769,15 +1769,8 @@
 
     %igx-grid-th--filtrable-sortable {
         .sort-icon {
-            &:hover {
-                opacity: 1;
-            }
+            opacity: 1;
         }
-    }
-
-    .sort-icon {
-        opacity: 0;
-        transition: all 250ms ease-in-out;
     }
 
     %grid-cell-header-icons--cosy {
