@@ -26,7 +26,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 
 
-describe('IgxGrid Component Tests #grid', () => {
+fdescribe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
 
@@ -1113,19 +1113,20 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
         });
 
-        it(`should render pixel height when one is set and parent container's height is unset`, () => {
+        it(`should render pixel height when one is set and parent container's height is unset`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-            fix.detectChanges();
             fix.componentInstance.data = fix.componentInstance.fullData;
             fix.componentInstance.grid.height = '700px';
             fix.detectChanges();
+            // Height setter executes in a RAF
+            tick();
 
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             expect(defaultHeight).not.toBeFalsy();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
             expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
-        });
+        }));
 
         it(`should render all records exactly if height is 100% and parent container's height is unset and
             there are fewer than 10 records in the data view`, fakeAsync(() => {
