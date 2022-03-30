@@ -33,10 +33,8 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
     public hgridState = [];
     public columns;
     public childColumns;
-
-    public evenCondition = (row: RowType) =>  parseInt(row.data['ID'], 0) % 2 === 0;
     public rowClasses = {
-        activeRow: this.evenCondition,
+        activeRow: (row: RowType) => parseInt(row.data['ID'], 2) % 2 === 0
     };
 
     constructor(private cdr: ChangeDetectorRef) {
