@@ -124,32 +124,36 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
     describe('Auto-generated columns', () => {
         beforeEach(waitForAsync(() => {
-            fix = TestBed.createComponent(IgxTreeGridAutoGenerateComponent);
-            grid = fix.componentInstance.treeGrid;
-            fix.detectChanges();
-        }));
-
-        it('should auto-generate columns', fakeAsync(/** height/width setter rAF */() => {
-            const expectedColumns = ['ID', 'ParentID', 'Name', 'JobTitle', 'Age'];
-
-            expect(grid.columnList.map(c => c.field)).toEqual(expectedColumns);
-        }));
-    });
-
-    describe('Auto-generated columns excluding childDataKey', () => {
-        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridComponent);
             grid = fix.componentInstance;
-            grid.data = SampleTestData.employeeAllTypesTreeData();
-            grid.autoGenerate = true;
-            grid.childDataKey = "Employees";
-            fix.detectChanges();
         }));
 
-        it('should auto-generate columns without childDataKey', () => {
-            const expectedColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
+        it('should auto-generate all columns', () => {
+            grid.data = SampleTestData.employeePrimaryForeignKeyTreeData();
+            grid.autoGenerate = true;
+            grid.primaryKey = 'ID';
+            grid.foreignKey = 'ParentID';
+            fix.detectChanges();
+
+            const expectedColumns = [...Object.keys(grid.data[0])];
 
             expect(grid.columnList.map(c => c.field)).toEqual(expectedColumns);
+            // Verify that records are also rendered by checking the first record cell
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
+        });
+
+        it('should auto-generate columns without childDataKey', () => {
+            grid.data = SampleTestData.employeeAllTypesTreeData();
+            grid.autoGenerate = true;
+            grid.childDataKey ='Employees';
+            fix.detectChanges();
+
+            const expectedColumns = [...Object.keys(grid.data[0])].filter(col => col !== grid.childDataKey);
+
+            // Employees shouldn't be in the columns
+            expect(grid.columnList.map(c => c.field)).toEqual(expectedColumns);
+            // Verify that records are also rendered by checking the first record cell
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
         });
     });
 
