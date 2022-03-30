@@ -6677,12 +6677,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected autogenerateColumns() {
         const data = this.gridAPI.get_data();
-        const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const fields = this.generateDataFields(data);
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = factory.create(this.viewRef.injector);
+            const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.injector, ngModuleRef: this.moduleRef });
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);
             ref.changeDetectorRef.detectChanges();
