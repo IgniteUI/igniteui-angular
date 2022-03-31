@@ -21,10 +21,11 @@
 /// @param {Color} $fill-color [null] - The checked border and fill colors.
 /// @param {Color} $tick-color [null] - The checked mark color.
 /// @param {Color} $disabled-color [null] - The disabled border and fill colors.
+/// @param {Color} $disabled-indeterminate-color [null] - The disabled border and fill colors in indeterminate state.
 /// @param {Color} $disabled-color-label [null] - The disabled label color.
 /// @param {border-radius} $border-radius [null] - The border radius used for checkbox component.
 /// @param {border-radius} $border-radius-ripple [null] - The border radius used for checkbox ripple.
-/// @param {Color} $focus-outline-color [null] - TThe focus outlined color.
+/// @param {Color} $focus-outline-color [null] - The focus outlined color.
 /// Set to light when the surrounding area is dark.
 ///
 /// @requires $default-palette
@@ -46,6 +47,7 @@
     $fill-color: null,
     $tick-color: null,
     $disabled-color: null,
+    $disabled-indeterminate-color: null,
     $disabled-color-label: null,
     $border-radius-ripple: null,
     $focus-outline-color: null
@@ -77,6 +79,7 @@
         fill-color: $fill-color,
         tick-color: $tick-color,
         disabled-color: $disabled-color,
+        disabled-indeterminate-color: $disabled-indeterminate-color,
         disabled-color-label: $disabled-color-label,
         border-radius: $border-radius,
         border-radius-ripple: $border-radius-ripple,
@@ -103,7 +106,7 @@
     // If updating the WIDTH of the checkbox here, please update it in the grid theme as well.
     // It is under the name of $cbx-size
     $size: em(20px);
-    $size-bs: em(14px);
+    $size-bs: em(16px);
     $checkbox-radius: math.div($size, 2);
 
     $variant: map.get($theme, variant);
@@ -135,7 +138,7 @@
     $mark-stroke: map.get((
         material: 3,
         fluent: 1,
-        bootstrap: 2,
+        bootstrap: 3,
         indigo-design: 3,
     ), $variant);
 
@@ -229,31 +232,19 @@
         background: transparent;
 
         @if $bootstrap-theme {
-            %cbx-composite-mark {
-                stroke: var-get($theme, 'empty-color');
-            }
+            border-color: var-get($theme, 'disabled-color-label');
         }
     }
 
     %cbx-composite--x--disabled {
-        @if $bootstrap-theme {
-            background: transparent;
-        } @else {
+        background: var-get($theme, 'disabled-color');
+
+        &::after {
             background: var-get($theme, 'disabled-color');
         }
 
-        &::after {
-            @if $bootstrap-theme {
-                background: transparent;
-            } @else {
-                background: var-get($theme, 'disabled-color');
-            }
-        }
-
         @if $bootstrap-theme {
-            %cbx-composite-mark--x {
-                stroke: var-get($theme, 'empty-color');
-            }
+            border-color: var-get($theme, 'disabled-color');
         }
     }
 
@@ -278,6 +269,55 @@
         %cbx-composite-mark {
             top: $mark-offset;
             left: $mark-offset;
+        }
+
+        @if $variant == 'material' {
+            %cbx-composite--x--disabled {
+                border: var-get($theme, 'disabled-indeterminate-color');
+        
+                &::after {
+                    background: var-get($theme, 'disabled-indeterminate-color');
+                }
+            }
+        }
+
+        @if $variant == 'fluent' {
+            %cbx-composite-mark {
+                stroke: transparent;
+            }
+
+            %cbx-composite {
+                background: transparent;
+
+                &::after {
+                    background: transparent;
+                }
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: calc($size / 2 - rem(6px));
+                    left: calc($size / 2 - rem(6px));
+                    width: rem(10px);
+                    height: rem(10px);
+                    border-radius: rem(2px);
+                    border: rem(5px) solid var-get($theme, 'fill-color');
+                    z-index: 1;
+                }
+            }
+
+            %cbx-composite--x--disabled {
+                background: transparent;
+        
+                &::after {
+                    background: transparent;
+                }
+
+                &::before {
+                    border-color: var-get($theme, 'disabled-color');
+                    background: var-get($theme, 'disabled-color');
+                }
+            }
         }
     }
 

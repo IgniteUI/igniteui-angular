@@ -108,40 +108,45 @@ $dark-button: (
 /// @requires {Map} $material-base-button
 /// @requires {function} extend
 $fluent-base-button-dark: extend(
-    $fluent-base-button,
-    $material-base-button-dark,
+    (
+        disabled-background: (
+            color: ('grays', 50)
+        ),
+
+        disabled-foreground: (
+            color: ('grays', 100)
+        ),
+    )
 );
 
-/// @prop {Map} hover-foreground [color: ('primary', 200)] - The text color of a flat button on hover.
-/// @prop {Map} focus-background [color: ('grays', 100, .3)] - The focus background color of a flat button.
 /// @requires {Map} $fluent-flat-button
 /// @requires {Map} $fluent-base-button-dark
 /// @requires {function} extend
 $fluent-flat-button-dark: extend(
     $fluent-flat-button,
-    $fluent-base-button-dark,
-    (
-        hover-foreground: (
-            color: ('primary', 200)
-        ),
-
-        focus-background: (
-            color:('grays', 100, .3)
-        ),
-    )
+    $fluent-base-button-dark
 );
 
 /// @requires {Map} $fluent-raised-button
 /// @requires {Map} $fluent-base-button-dark
 /// @requires {function} extend
-$fluent-raised-button-dark: extend($fluent-raised-button, $fluent-base-button-dark);
+$fluent-raised-button-dark: extend(
+    $fluent-raised-button,
+    $fluent-base-button-dark,
+    ()
+);
 
 /// @requires {Map} $fluent-fab-button
 /// @requires {Map} $fluent-base-button-dark
 /// @requires {function} extend
-$fluent-fab-button-dark: extend($fluent-fab-button, $fluent-base-button-dark);
+$fluent-fab-button-dark: extend(
+    $fluent-fab-button,
+    $fluent-base-button-dark,
+    ()
+);
 
-/// @prop {Map} focus-background [color: ('grays', 100, .2)] - The focus background color of a icon button.
+/// @prop {Map} hover-background [color: ('grays', 50)] - The hover background color of an icon button.
+/// @prop {Map} active-background [color: ('grays', 100, .8)] - The active background color of a raised button.
 /// @requires {Map} $fluent-icon-button
 /// @requires {Map} $fluent-base-button-dark
 /// @requires {function} extend
@@ -149,14 +154,19 @@ $fluent-icon-button-dark: extend(
     $fluent-icon-button,
     $fluent-base-button-dark,
     (
-        focus-background: (
-            color:('grays', 100, .2)
+        hover-background: (
+            color: ('grays', 50)
+        ),
+
+        active-background: (
+            color: ('grays', 100, .8)
         ),
     )
 );
 
-/// @prop {Map} hover-foreground [color: ('grays', 100, .3)] - The text color of a outlined button on hover.
-/// @prop {Map} focus-background [color: ('grays', 100, .3)] - The focus background color of a outlined button.
+/// @prop {Map} hover-foreground [color: ('grays', 50)] - The text color of a outlined button on hover.
+/// @prop {Map} active-background [color: ('grays', 100, .8)] - The active background color of a raised button.
+/// @prop {Map} active-foreground [contrast-color: ('grays' 100)] - The active text color of a raised button.
 /// @prop {Map} border-color [color: ('grays', 100)] - The border color of an outlined button.
 /// @requires {Map} $fluent-outlined-button
 /// @requires {Map} $fluent-base-button-dark
@@ -165,12 +175,16 @@ $fluent-outlined-button-dark: extend(
     $fluent-outlined-button,
     $fluent-base-button-dark,
     (
-        focus-background: (
-            color:('grays', 100, .3)
+        hover-background: (
+            color:('grays', 50)
         ),
 
-        hover-background: (
-            color:('grays', 100, .3)
+        active-background: (
+            color: ('grays', 100, .8)
+        ),
+
+        active-foreground: (
+            contrast-color: ('grays', 100)
         ),
 
         border-color: (

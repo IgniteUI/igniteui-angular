@@ -3,16 +3,16 @@
         <h4 class="sample-title">Flat Buttons</h4>
         <div class="buttons-sample">
             <div class="button-sample">
-                <button igxButton="flat" igxRipple>Flat</button>
+                <button igxButton="flat">Flat</button>
             </div>
             <div class="button-sample red-sox-button">
-                <span type="button" igxButton="flat" igxRipple="white">Red Sox</span>
+                <span type="button" igxButton="flat">Red Sox</span>
             </div>
             <div class="button-sample smoky-black-button">
-                <input type="button" igxButton="flat" igxRipple="white" value="Input" />
+                <input type="button" igxButton="flat" value="Input" />
             </div>
             <div class="button-sample">
-                <button igxButton="flat" disabled>native disabled</button>
+                <button igxButton="flat" disabled>native</button>
             </div>
             <div class="button-sample red-sox-button">
                 <button igxButton="flat" [disabled]="true">Red Sox</button>
@@ -27,13 +27,13 @@
         <h4 class="sample-title">Raised Buttons</h4>
         <div class="buttons-sample">
             <div class="button-sample">
-                <button igxButton="raised" igxRipple>Raised</button>
+                <button igxButton="raised">Raised</button>
             </div>
             <div class="button-sample red-sox-button">
-                <button igxButton="raised" igxRipple="white">Red Sox</button>
+                <button igxButton="raised">Red Sox</button>
             </div>
             <div class="button-sample smoky-black-button">
-                <input type="submit" igxButton="raised" igxRipple="white" value="Input" />
+                <input type="submit" igxButton="raised" value="Input" />
             </div>
             <div class="button-sample">
                 <button igxButton="raised" [disabled]="true">Raised</button>
@@ -51,13 +51,13 @@
         <h4 class="sample-title">Outlined Buttons</h4>
         <div class="buttons-sample">
             <div class="button-sample">
-                <button igxButton="outlined" igxRipple>Outlined</button>
+                <button igxButton="outlined">Outlined</button>
             </div>
             <div class="button-sample red-sox-button">
-                <button igxButton="outlined" igxRipple="white">Red Sox</button>
+                <button igxButton="outlined">Red Sox</button>
             </div>
             <div class="button-sample smoky-black-button">
-                <button igxButton="outlined" igxRipple="white">Celtics</button>
+                <button igxButton="outlined">Celtics</button>
             </div>
             <div class="button-sample">
                 <button igxButton="outlined" [disabled]="true">Outlined</button>
@@ -75,22 +75,22 @@
         <h4 class="sample-title">Floating Action Buttons</h4>
         <div class="buttons-sample">
             <div class="button-sample">
-                <button igxRipple igxButton="fab">
+                <button igxButton="fab">
                     <igx-icon>favorite</igx-icon>
                 </button>
             </div>
             <div class="button-sample red-sox-button">
-                <button igxButton="fab" igxRipple="white">
+                <button igxButton="fab">
                     <igx-icon>edit</igx-icon>
                 </button>
             </div>
             <div class="button-sample smoky-black-button">
-                <button igxButton="fab" igxRipple="white">
+                <button igxButton="fab">
                     <igx-icon>add</igx-icon>
                 </button>
             </div>
             <div class="button-sample">
-                <button igxButton="fab" igxRipple="white" [disabled]="true">
+                <button igxButton="fab" [disabled]="true">
                     <igx-icon>favorite</igx-icon>
                 </button>
             </div>
@@ -111,32 +111,32 @@
         <h4 class="sample-title">Icon Buttons</h4>
         <div class="buttons-sample">
             <div class="button-sample">
-                <button igxButton="icon" igxRipple [igxRippleCentered]="true">
+                <button igxButton="icon">
                     <igx-icon>search</igx-icon>
                 </button>
             </div>
             <div class="button-sample red-sox-button">
-                <button igxButton="icon" igxRipple="white" [igxRippleCentered]="true">
+                <button igxButton="icon">
                     <igx-icon>favorite</igx-icon>
                 </button>
             </div>
             <div class="button-sample smoky-black-button">
-                <button igxButton="icon" igxRipple="white" [igxRippleCentered]="true">
+                <button igxButton="icon">
                     <igx-icon>more_vert</igx-icon>
                 </button>
             </div>
             <div class="button-sample">
-                <button igxButton="icon" igxRipple [igxRippleCentered]="true" [disabled]="true">
+                <button igxButton="icon" [disabled]="true">
                     <igx-icon>search</igx-icon>
                 </button>
             </div>
             <div class="button-sample red-sox-button">
-                <button igxButton="icon" igxRipple="white" [igxRippleCentered]="true" [disabled]="true">
+                <button igxButton="icon" [disabled]="true">
                     <igx-icon>favorite</igx-icon>
                 </button>
             </div>
             <div class="button-sample smoky-black-button">
-                <button igxButton="icon" igxRipple="white" [igxRippleCentered]="true" [disabled]="true">
+                <button igxButton="icon" [disabled]="true">
                     <igx-icon>more_vert</igx-icon>
                 </button>
             </div>
@@ -151,28 +151,35 @@
         </div>
         <div class="buttons-sample">
             <div class="button-sample">
-                <button igxButton="flat" igxRipple [displayDensity]="density">Flat</button>
+                <button igxButton="flat" [displayDensity]="density">
+                    <igx-icon>face</igx-icon>
+                    <span>Flat</span>
+                </button>
             </div>
             <div class="button-sample">
-                <button igxButton="outlined" igxRipple [displayDensity]="density">Outlined</button>
-            </div>
-            <div class="button-sample">
-                <button igxButton="outlined" igxRipple [displayDensity]="density">
+                <button igxButton="outlined" [displayDensity]="density">
                     <span>Outlined</span>
                     <igx-icon>face</igx-icon>
                 </button>
             </div>
             <div class="button-sample">
-                <button igxButton="raised" igxRipple [displayDensity]="density">Raised</button>
+                <button igxButton="outlined" [displayDensity]="density">
+                    <igx-icon>face</igx-icon>
+                    <span>Outlined</span>
+                    <igx-icon>face</igx-icon>
+                </button>
             </div>
             <div class="button-sample">
-                <button igxButton="raised" igxRipple [displayDensity]="density">
+                <button igxButton="raised" [displayDensity]="density">Raised</button>
+            </div>
+            <div class="button-sample">
+                <button igxButton="raised" [displayDensity]="density">
                     <igx-icon>face</igx-icon>
                     <span>Raised</span>
                 </button>
             </div>
             <div class="button-sample">
-                <button igxRipple igxButton="fab" [displayDensity]="density">
+                <button igxButton="fab" [displayDensity]="density">
                     <span>FAB</span>
                     <igx-icon>face</igx-icon>
                 </button>

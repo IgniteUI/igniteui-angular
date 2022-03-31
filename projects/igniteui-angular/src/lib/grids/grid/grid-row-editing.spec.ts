@@ -1401,7 +1401,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 ['Count', 'Earliest', 'Latest'], ['10', 'Jan 1, 1901', 'Dec 25, 2025']);
         }));
 
-        it(`Moving: Should exit edit mode when moving a column`, () => {
+        it(`Moving: Should exit edit mode when moving a column`, fakeAsync(() => {
             grid.moving = true;
             const column = grid.columnList.filter(c => c.field === 'ProductName')[0];
             const targetColumn = grid.columnList.filter(c => c.field === 'ProductID')[0];
@@ -1417,14 +1417,14 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toEqual(true);
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
             grid.moveColumn(column, targetColumn);
-
+            tick();
             fix.detectChanges();
 
             expect(cell.editMode).toBeFalsy();
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(false);
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
-        });
+        }));
 
         it(`Pinning: Should exit edit mode when pinning/unpinning a column`, () => {
             spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
