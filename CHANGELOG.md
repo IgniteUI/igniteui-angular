@@ -46,6 +46,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxToast`
     - **Breaking Changes** - The toast deprecated `position` property have been removed. We suggest using `positionSettings` property instead.
 
+### New palette
+
+A new fluent light and dark palettes that use the default fluent colors - `$light-fluent-palette` and `$dark-fluent-palette`.
+
 ## 13.0.5
 
 ### New Features
