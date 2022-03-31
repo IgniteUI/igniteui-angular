@@ -134,6 +134,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             grid.primaryKey = 'ID';
             grid.foreignKey = 'ParentID';
             fix.detectChanges();
+            // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
+            fix.detectChanges();
 
             const expectedColumns = [...Object.keys(grid.data[0])];
 
@@ -146,6 +148,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             grid.data = SampleTestData.employeeAllTypesTreeData();
             grid.autoGenerate = true;
             grid.childDataKey ='Employees';
+            fix.detectChanges();
+            // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
             fix.detectChanges();
 
             const expectedColumns = [...Object.keys(grid.data[0])].filter(col => col !== grid.childDataKey);
