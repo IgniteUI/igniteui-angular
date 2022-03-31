@@ -6780,7 +6780,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected _shouldAutoSize(renderedHeight) {
         this.tbody.nativeElement.style.display = 'none';
-        let res = !this.nativeElement.parentElement ||
+        const res = !this.nativeElement.parentElement ||
             this.nativeElement.parentElement.clientHeight === 0 ||
             this.nativeElement.parentElement.clientHeight === renderedHeight ||
             // If grid causes the parent container to extend (for example when container is flex)
