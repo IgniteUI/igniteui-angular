@@ -26,7 +26,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 
 
-fdescribe('IgxGrid Component Tests #grid', () => {
+describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
 
