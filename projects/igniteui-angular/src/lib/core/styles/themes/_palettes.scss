@@ -56,7 +56,7 @@ $default-palette: palette($primary: #09f, $secondary: #e41c77) !default;
 /// @access private
 $default-dark-palette: palette(
     $primary: color($default-palette, 'primary'),
-    $secondary: color($default-palette, 'secondary'),
+    $secondary: #72da67,
     $grays: #fff,
     $surface: #222,
 ) !default;
@@ -239,8 +239,8 @@ $dark-fluent-excel-palette: $fluent-excel-dark-palette;
 
 /// @access private
 $fluent-word-palette: palette(
-    $primary: #0078d4,
-    $secondary: #0078d4,
+    $primary: #2b579a,
+    $secondary: #2b579a,
     $success: #107c10,
     $warn: #797673,
     $error: #a80000,
@@ -286,6 +286,56 @@ $light-fluent-word-palette: $fluent-word-palette;
 /// @access public
 /// @group palettes
 $dark-fluent-word-palette: $fluent-word-dark-palette;
+
+/// @access private
+$fluent-palette: palette(
+    $primary: #0078d4,
+    $secondary: #0078d4,
+    $success: #107c10,
+    $warn: #797673,
+    $error: #a80000,
+    $variant: 'fluent'
+) !default;
+
+/// @access private
+$fluent-dark-palette: palette(
+    $primary: color($fluent-palette, 'primary'),
+    $secondary: color($fluent-palette, 'secondary'),
+    $success: color($fluent-palette, 'success'),
+    $warn: color($fluent-palette, 'warn'),
+    $error: color($fluent-palette, 'error'),
+    $surface: #222,
+    $grays: #fff,
+    $variant: 'fluent'
+) !default;
+
+/// Light Fluent Word palette
+/// @type Map
+/// @prop {Color} primary [#0078d4] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#0078d4] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#797673] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#a80000] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$light-fluent-palette: $fluent-palette;
+
+/// Dark Fluent Word palette
+/// @type Map
+/// @prop {Color} primary [#0078d4] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#0078d4] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#797673] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#a80000] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$dark-fluent-palette: $fluent-dark-palette;
 
 /// @access private
 $bootstrap-palette: palette(
