@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, Injectable,
     OnInit, ViewChild, TemplateRef
 } from '@angular/core';
-import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, flush, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -2232,7 +2232,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         }));
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
             fix.detectChanges();
         }));

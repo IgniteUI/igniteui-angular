@@ -7,7 +7,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import {
     IgxTreeGridWrappedInContComponent,
-    IgxTreeGridAutoGenerateComponent,
     IgxTreeGridDefaultLoadingComponent,
     IgxTreeGridCellSelectionComponent,
     IgxTreeGridSummariesTransactionsComponent
@@ -27,7 +26,6 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWrappedInContComponent,
-                IgxTreeGridAutoGenerateComponent,
                 IgxTreeGridDefaultLoadingComponent,
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSummariesTransactionsComponent
@@ -41,11 +39,10 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
-            fix.detectChanges();
-            tick(16);
             grid = fix.componentInstance.treeGrid;
+            fix.detectChanges();
         }));
 
         it('should render 10 records if height is unset and parent container\'s height is unset', () => {
@@ -57,47 +54,50 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.rowList.length).toBeGreaterThanOrEqual(10);
         });
 
-        it('should match width and height of parent container when width/height are set in %', fakeAsync(() => {
+        it('should match width and height of parent container when width/height are set in %', () => {
             fix.componentInstance.outerWidth = 800;
             fix.componentInstance.outerHeight = 600;
             grid.width = '50%';
             grid.height = '50%';
             fix.detectChanges();
-            tick(16);
+            // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
+            fix.detectChanges();
 
             expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
             expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
             expect(grid.rowList.length).toBeGreaterThan(0);
-        }));
+        });
 
-        it('should render 10 records if height is 100% and parent container\'s height is unset', fakeAsync(() => {
+        it('should render 10 records if height is 100% and parent container\'s height is unset', () => {
             grid.height = '600px';
-            tick(16);
+            fix.detectChanges();
+            // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
             fix.detectChanges();
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             expect(defaultHeight).not.toBeNull();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
             expect(grid.rowList.length).toBeGreaterThanOrEqual(10);
-        }));
+        });
 
         it(`should render all records exactly if height is 100% and parent container\'s height is unset and
-            there are fewer than 10 records in the data view`, (async () => {
+            there are fewer than 10 records in the data view`, () => {
                 grid.height = '100%';
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 1);
                 fix.detectChanges();
-                await wait(100);
+                // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
                 fix.detectChanges();
                 const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
                 expect(defaultHeight).toBeFalsy();
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
                 expect(grid.rowList.length).toEqual(6);
-        }));
+        });
 
-        it(`should render 11 records if height is 100% and parent container\'s height is unset and display density is changed`, fakeAsync(() => {
+        it(`should render 11 records if height is 100% and parent container\'s height is unset and display density is changed`, () => {
             grid.height = '100%';
             fix.componentInstance.density = DisplayDensity.compact;
-            tick(16);
+            fix.detectChanges();
+            // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
             fix.detectChanges();
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
@@ -106,7 +106,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(defaultHeightNum).toBeLessThanOrEqual(330);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
             expect(grid.rowList.length).toEqual(11);
-        }));
+        });
 
         it('should display horizontal scroll bar when column width is set in %', () => {
             fix.detectChanges();
@@ -120,9 +120,29 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(horizontalScroll.children[0].offsetWidth).toBeGreaterThanOrEqual(799);
             expect(horizontalScroll.children[0].offsetWidth).toBeLessThanOrEqual(801);
         });
+
+        it('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync(() => {
+            // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+            const container = fix.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
+            expect(container.getAttribute('role')).toBe(null);
+
+            //Filter grid so no results are available and grid is empty
+            grid.filter('Name', '111', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fix.detectChanges();
+            fix.detectChanges();
+            expect(container.getAttribute('role')).toMatch('row');
+
+            // clear grid data and check if attribute is now 'row'
+            grid.clearFilter();
+            fix.componentInstance.clearData();
+            fix.detectChanges();
+            tick();
+
+            expect(container.getAttribute('role')).toMatch('row');
+        }));
     });
 
-    xdescribe('Auto-generated columns', () => {
+    describe('Auto-generated columns', () => {
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridComponent);
             grid = fix.componentInstance;
@@ -177,32 +197,6 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         });
     });
 
-    it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
-        const fixture = TestBed.createComponent(IgxTreeGridAutoGenerateComponent);
-        grid = fixture.componentInstance.treeGrid;
-
-        fixture.detectChanges();
-        tick(100);
-        // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
-        const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
-        expect(container.getAttribute('role')).toBe(null);
-
-        //Filter grid so no results are available and grid is empty
-        grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
-        grid.markForCheck();
-        fixture.detectChanges();
-        expect(container.getAttribute('role')).toMatch('row');
-
-        // clear grid data and check if attribute is now 'row'
-        grid.clearFilter();
-        fixture.componentInstance.clearData();
-        fixture.detectChanges();
-        tick(100);
-
-        expect(container.getAttribute('role')).toMatch('row');
-
-    }));
-
     describe('Hide All', () => {
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
@@ -213,7 +207,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         it('should not render rows, paging and headers group when all cols are hidden', fakeAsync(() => {
             grid.rowSelection = GridSelectionMode.multiple;
             grid.rowDraggable = true;
-            tick(30);
+            tick();
             fix.detectChanges();
 
             let fixEl = fix.nativeElement; let gridEl = grid.nativeElement;
@@ -232,7 +226,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(verticalScrollBar).toBeNull();
 
             grid.columnList.forEach((col) => col.hidden = true);
-            tick(30);
+            tick();
             fix.detectChanges();
             fixEl = fix.nativeElement;
             gridEl = grid.nativeElement;
