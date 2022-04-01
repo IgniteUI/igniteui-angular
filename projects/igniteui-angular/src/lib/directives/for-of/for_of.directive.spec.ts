@@ -170,6 +170,32 @@ describe('IgxForOf directive -', () => {
 
             expect(parseInt(displayContainer.style.left, 10)).toEqual(0);
         });
+
+        it('should allow scroll in rtl direction.', () => {
+            fix.debugElement.nativeElement.dir = 'rtl';
+            fix.detectChanges();
+
+            fix.componentInstance.width = '500px';
+            fix.componentInstance.cols = [
+                { field: '1', width: 100 },
+                { field: '2', width: 200 },
+                { field: '3', width: 200 },
+                { field: '4', width: 200 },
+                { field: '5', width: 300 }
+            ];
+            fix.componentRef.hostView.detectChanges();
+            fix.detectChanges();
+
+            fix.componentInstance.scrollLeft(-50);
+            fix.detectChanges();
+            expect(parseInt(displayContainer.style.left, 10)).toEqual(50);
+
+            fix.componentInstance.scrollLeft(-250);
+            fix.detectChanges();
+            const state = fix.componentInstance.childVirtDirs.toArray()[0].state;
+            expect(state.startIndex).toBe(1);
+        });
+
     });
 
     describe('vertical virtual component', () => {
