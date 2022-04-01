@@ -4,7 +4,7 @@ $typeface: $indigo-typeface;
 $type-scale: $indigo-type-scale;
 
 $legacy-support: false;
-$direction: rtl;
+$direction: ltr;
 
 $igx-background-color: darken(igx-color($palette, 'surface'), 5%);
 $igx-foreground-color: igx-color($palette, 'grays', 900);
