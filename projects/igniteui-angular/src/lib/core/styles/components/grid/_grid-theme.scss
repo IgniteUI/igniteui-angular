@@ -603,7 +603,7 @@
     ), $variant);
 
     $group-row-spacer: (
-        comfortable: rem(16px),
+        comfortable: rem(12px),
         cosy: rem(8px),
         compact: rem(4px)
     );
@@ -2094,12 +2094,12 @@
         display: block;
         padding-bottom: map.get($group-row-spacer, 'comfortable');
 
-        &:last-of-type {
-            padding-bottom: 0;
+        &:first-of-type {
+            padding-top: 0 !important;
         }
 
-        &:first-of-type {
-            padding-top: 0;
+        &:last-of-type {
+            padding-bottom: 0 !important;
         }
 
         &[aria-expanded='true'] {
@@ -2108,7 +2108,9 @@
 
         &[class*='level']:not([class*='-0']) {
             padding-top: map.get($group-row-spacer, 'comfortable');
+            padding-bottom: 0;
         }
+
 
         %igx-grid__drag-indicator {
             cursor: default;
@@ -2154,6 +2156,7 @@
 
         &[class*='level']:not([class*='-0']) {
             padding-top: map.get($group-row-spacer, 'cosy');
+            padding-bottom: 0;
         }
 
         %igx-grid__group-row-inner {
@@ -2166,6 +2169,7 @@
 
         &[class*='level']:not([class*='-0']) {
             padding-top: map.get($group-row-spacer, 'compact');
+            padding-bottom: 0;
         }
 
         %igx-grid__group-row-inner {
