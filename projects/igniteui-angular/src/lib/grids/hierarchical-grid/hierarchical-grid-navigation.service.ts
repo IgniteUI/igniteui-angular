@@ -1,8 +1,8 @@
-import { IgxGridNavigationService } from '../grid-navigation.service';
-import { first } from 'rxjs/operators';
-import { SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { Injectable } from '@angular/core';
+import { first } from 'rxjs/operators';
+import { NAVIGATION_KEYS, SUPPORTED_KEYS } from '../../core/utils';
 import { GridType, IPathSegment, RowType } from '../common/grid.interface';
+import { IActiveNode, IgxGridNavigationService } from '../grid-navigation.service';
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
@@ -301,8 +301,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     private clearActivation() {
         // clear if previous activation exists.
-        if (this.activeNode) {
-            this.activeNode.row = null;
+        if (this.activeNode && Object.keys(this.activeNode).length) {
+            this.activeNode = Object.assign({} as IActiveNode);
         }
     }
 
