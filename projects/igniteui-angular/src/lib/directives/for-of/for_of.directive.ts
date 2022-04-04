@@ -339,13 +339,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         if (this.igxForScrollOrientation === 'horizontal' && this.scrollComponent) {
             this.scrollComponent.nativeElement.scrollLeft = val;
-            if (this.scrollComponent.nativeElement.scrollLeft !== val) {
-                // RTL - need to scroll with negative value
-                this.scrollComponent.nativeElement.scrollLeft = -val;
-            }
         } else if (this.scrollComponent) {
             this.scrollComponent.nativeElement.scrollTop = val;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected get isRTL() {
+        const dir = window.getComputedStyle(this.dc.instance._viewContainer.element.nativeElement).getPropertyValue('direction');
+        return dir === 'rtl';
     }
 
     protected get sizesCache(): number[] {
@@ -606,7 +610,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             return;
         }
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.scrollPosition = nextScroll;
+            this.scrollPosition = this.isRTL ? -nextScroll : nextScroll;
         } else {
             const maxVirtScrollTop = this._virtHeight - containerSize;
             if (nextScroll > maxVirtScrollTop) {
@@ -652,7 +656,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public scrollNextPage() {
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.scrollPosition += parseInt(this.igxForContainerSize, 10);
+            this.scrollPosition += this.isRTL ? -parseInt(this.igxForContainerSize, 10) : parseInt(this.igxForContainerSize, 10);
         } else {
             this.addScrollTop(parseInt(this.igxForContainerSize, 10));
         }
@@ -667,7 +671,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public scrollPrevPage() {
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.scrollPosition -= parseInt(this.igxForContainerSize, 10);
+            this.scrollPosition -= this.isRTL ? -parseInt(this.igxForContainerSize, 10) : parseInt(this.igxForContainerSize, 10);
         } else {
             const containerSize = (parseInt(this.igxForContainerSize, 10));
             this.addScrollTop(-containerSize);
