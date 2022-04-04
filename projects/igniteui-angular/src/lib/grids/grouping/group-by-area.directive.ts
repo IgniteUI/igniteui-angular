@@ -107,7 +107,7 @@ export abstract class IgxGroupByAreaDirective {
 
     public handleKeyDown(id: string, event: KeyboardEvent) {
         if (this.platform.isActivationKey(event)) {
-            this.updateSorting(id);
+            this.updateGroupSorting(id);
         }
     }
 
@@ -115,11 +115,7 @@ export abstract class IgxGroupByAreaDirective {
         if (!this.grid.getColumnByName(id).groupable) {
             return;
         }
-        if (this.grid.groupingExpressions) {
-            this.updateGroupSorting(id);
-        } else {
-            this.updateSorting(id);
-        }
+        this.updateGroupSorting(id);
     }
 
      public onDragDrop(event) {
@@ -162,16 +158,10 @@ export abstract class IgxGroupByAreaDirective {
         return newExpressions;
     }
 
-    protected updateSorting(id: string) {
-        const expr = this.grid.sortingExpressions.find(e => e.fieldName === id);
-        expr.dir = 3 - expr.dir;
-        this.grid.sort(expr);
-    }
-
     protected updateGroupSorting(id: string) {
         const expr = this.grid.groupingExpressions.find(e => e.fieldName === id);
         expr.dir = 3 - expr.dir;
-        this.grid.sortGrouping(expr);
+        this.grid.pipeTrigger++;
     }
 
     protected expressionsChanged() {
