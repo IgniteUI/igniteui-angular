@@ -91,7 +91,7 @@
         height: 100%;
         background: var-get($theme, 'filtering-row-background');
         // TODO The border-radius should not be hardcoded.
-        border-radius: rem(4px);
+        border-radius: border-radius(rem(4px));
 
         @include button-group(button-group-theme(
             $shadow: none,
@@ -477,7 +477,7 @@
         min-width: 520px;
         background: var-get($theme, 'filtering-row-background');
         box-shadow: elevation($elevation: 12);
-        border-radius: rem(4px);
+        border-radius: border-radius(rem(4px));
     }
 
     %grid-excel-menu__secondary--cosy {

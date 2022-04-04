@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/tabs' as *;
 
 ////
 /// @group schemas
@@ -30,11 +29,11 @@
 /// @property {Number} border-radius [0] - The border radius used for tabs. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
-/// @requires {Map} $default-shape-tabs
 /// @see $default-palette
 $light-tabs: extend(
-    $default-shape-tabs,
     (
+        variant: 'material',
+
         item-text-color: (
             color: ('grays', 700)
         ),
@@ -92,7 +91,10 @@ $light-tabs: extend(
         ),
 
         border-color: transparent,
+
         border-color--hover: transparent,
+
+        border-radius: rem(0)
     )
 );
 
@@ -111,8 +113,12 @@ $light-tabs: extend(
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-tabs
-/// @requires {Map} $fluent-shape-tabs
-$fluent-tabs: extend($light-tabs, $fluent-shape-tabs);
+$fluent-tabs: extend(
+    $light-tabs,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap tabs schema.
 /// @type {Map}
@@ -130,10 +136,8 @@ $fluent-tabs: extend($light-tabs, $fluent-shape-tabs);
 /// @property {Number} border-radius [4px] - The border radius used for tabs. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-tabs
-/// @requires {Map} $bootstrap-shape-tabs
 $bootstrap-tabs: extend(
     $light-tabs,
-    $bootstrap-shape-tabs,
     (
         variant: 'bootstrap',
 
@@ -180,6 +184,8 @@ $bootstrap-tabs: extend(
         indicator-color: (
             color: ('grays', 400)
         ),
+
+        border-radius: rem(4px)
     )
 );
 

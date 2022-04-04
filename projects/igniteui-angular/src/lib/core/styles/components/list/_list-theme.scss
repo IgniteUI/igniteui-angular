@@ -53,7 +53,6 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires round-borders
 /// @requires luminance
 ///
 /// @example scss Change the list background color
@@ -100,14 +99,6 @@
     }
 
     $theme: apply-palette($list-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($list-schema, 'border-radius')), 0, 24px
-    );
-
-    $item-border-radius: round-borders(
-        if($item-border-radius, $item-border-radius, map.get($list-schema, 'item-border-radius')), 0, 24px
-    );
 
     @if not($header-background) and $background {
         $header-background: $background;
@@ -311,7 +302,7 @@
         height: 100%;
         overflow: hidden;
         z-index: 0;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
     }
 
     %igx-list--empty {
@@ -347,7 +338,7 @@
         display: flex;
         flex-flow: column wrap;
         justify-content: center;
-        border-radius: var-get($theme, 'item-border-radius');
+        border-radius: border-radius(var-get($theme, 'item-border-radius'));
         color: var-get($theme, 'item-text-color');
         background: var-get($theme, 'item-background');
 
@@ -444,7 +435,7 @@
         align-items: center;
         position: relative;
         padding: map.get($list-item-padding, 'comfortable');
-        border-radius: var-get($theme, 'item-border-radius');
+        border-radius: border-radius(var-get($theme, 'item-border-radius'));
         background: inherit;
         z-index: 2;
     }

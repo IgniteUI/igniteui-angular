@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/card' as *;
 @use '../elevation/card' as *;
 
 ////
@@ -18,14 +17,12 @@
 /// @prop {Map} outline-color [color: ('grays', 400, .54)] - The outline color of an outlined type card.
 /// @prop {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [8] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} border-radius [.17] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [4px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
-/// @requires {Map} $default-shape-card
 /// @requires {Map} $default-elevation-card
 /// @see $default-palette
 $light-card: extend(
-    $default-shape-card,
     $default-elevation-card,
     (
         variant: 'material',
@@ -52,7 +49,9 @@ $light-card: extend(
 
         outline-color: (
             color: ('grays', 400, .54)
-        )
+        ),
+
+        border-radius: rem(4px)
     )
 );
 
@@ -65,11 +64,9 @@ $light-card: extend(
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-card
-/// @requires {Map} $fluent-shape-card
 /// @requires {Map} $fluent-elevation-card
 $fluent-card: extend(
     $light-card,
-    $fluent-shape-card,
     $fluent-elevation-card,
     (
         variant: 'fluent',
@@ -77,6 +74,8 @@ $fluent-card: extend(
         outline-color: (
             color: ('grays', 200)
         ),
+
+        border-radius: rem(2px)
     )
 );
 
@@ -93,11 +92,9 @@ $fluent-card: extend(
 /// @prop {Number} border-radius [4px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-card
-/// @requires {Map} $bootstrap-shape-card
 /// @requires {Map} $bootstrap-elevation-card
 $bootstrap-card: extend(
     $light-card,
-    $bootstrap-shape-card,
     $bootstrap-elevation-card,
     (
         variant: 'bootstrap',
@@ -140,11 +137,9 @@ $bootstrap-card: extend(
 /// @prop {Number} border-radius [3px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-card
-/// @requires {Map} $indigo-shape-card
 /// @requires {Map} $indigo-elevation-card
 $indigo-card: extend(
     $light-card,
-    $indigo-shape-card,
     $indigo-elevation-card,
     (
         variant: 'indigo-design',
@@ -168,6 +163,7 @@ $indigo-card: extend(
         actions-text-color: (
             color: ('grays', 600)
         ),
+
+        border-radius: rem(3px)
     )
 );
-

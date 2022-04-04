@@ -842,29 +842,13 @@ $p-test: palette(#fff, #000);
     @return ($max - $min) * $factor + $min;
 }
 
-/// If the value is unitless, returns value or list of values between 0 and 1
-/// where the 0 is the minimum and 1 is the maximum
-/// If the value is NOT unitless return the value or list of values with the unit you pass
+/// Returns a middle value between an upper and lower bound
 /// @access private
-@function round-borders($value, $min: 0, $max: 0) {
-    @if meta.type-of($value) == 'number' and math.is-unitless($value) {
-
-        @if $value < 0 or $value > 1 {
-            @return $value;
-        }
-
-        @return math.round(fraction-clamp($value, $min, $max));
-    }
-
-    @if meta.type-of($value) == 'list' and list.length($value) <= 4 {
-        $result: ();
-        @each $i in $value {
-            $result: list.append($result, round-borders($i, $min, $max), auto);
-        }
-        @return $result;
-    }
-
-    @return $value;
+/// @param {Number} $radius - A preferred value
+/// @param {Number} $min - A minimum value
+/// @param {Number} $max - A maximum allowed value
+@function border-radius($radius, $min: rem(0), $max: $radius) {
+    @return clamp($min, calc(var(--igx-radius-factor) * #{$radius}), $max);
 }
 
 /// A thin wrapper around Sass' color scale function
