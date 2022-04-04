@@ -1,5 +1,6 @@
 .wrapper {
     margin: 24px;
+    display: flex;
 }
 .separator {
     padding-top: 5px;
