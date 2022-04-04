@@ -19,10 +19,10 @@ export class IgxGridSortingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
-    public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
+    public transform(collection: any[], sortExpressions: ISortingExpression[], groupExpressions: IGroupingExpression[], sorting: IGridSortingStrategy,
         id: string, pipeTrigger: number, pinned?): any[] {
         let result: any[];
-
+        const expressions = groupExpressions.concat(sortExpressions);
         if (!expressions.length) {
             result = collection;
         } else {
