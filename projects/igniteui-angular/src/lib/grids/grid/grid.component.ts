@@ -1162,14 +1162,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         let row: RowType;
         let rec: any;
 
-        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.paginator.page !== 0) {
-            rec = data ?? this.dataView[index - this.paginator.perPage * this.paginator.page];
-        } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
-            const virtIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
-            rec = data ?? this.dataView[virtIndex];
-        } else {
-            rec = data ?? this.dataView[index];
-        }
+        const dataIndex = this._getResolvedDataIndex(index);
+        rec = data ?? this.dataView[dataIndex];
 
         if (rec && this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this as any, index, rec);
