@@ -92,6 +92,7 @@
 /// @prop {Map} root-summaries-text-color [contrast-color: ('grays', 300)] - The text color of the summary groups located the footer.
 /// @prop {Map} row-drag-color [color: ('grays', 200))] - The color of the drag handle.
 /// @prop {Map} row-ghost-background [color: ('primary', 50))] - The background color of the dragged row.
+/// @prop {String} grouped-row-gap [] - The gap/padding between grouped rows.
 /// @prop {number} grid-elevation [2] - The elevation level, between 0-24, to be used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation level, between 0-24, to be used for movable elements (ex. column header).
 /// @prop {Number} drop-area-border-radius [1] - The border radius used for drop-area. Can be a fraction between 0 and 1, pixels, or percent.
@@ -104,6 +105,8 @@ $light-grid: extend(
     $default-elevation-grid,
     (
         variant: 'material',
+
+        grouped-row-gap: 8px,
 
         grouparea-color: (
             color: ('grays', 500)
@@ -448,6 +451,8 @@ $fluent-grid: extend(
     (
         variant: 'fluent',
 
+        grouped-row-gap: 4px,
+
         filtering-background-or: (
             color: ('error', 500, .5),
         ),
@@ -576,6 +581,8 @@ $bootstrap-grid: extend(
     $bootstrap-shape-grid,
     (
         variant: 'bootstrap',
+
+        grouped-row-gap: 12px,
 
         grouparea-background: (
             color: 'surface'

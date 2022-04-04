@@ -110,6 +110,8 @@
 /// @param {Color} $root-summaries-background [null] - The background color of the summary groups located the footer.
 /// @param {Color} $root-summaries-text-color [null] - The text color of the summary results located the footer.
 ///
+/// @param {padding} $grouped-row-gap [null] - The gap/padding between grouped rows in comfortable mode.
+///
 /// @param {Color} $row-highlight [null] - The grid row highlight indication color.
 /// @param {box-shadow} $grid-shadow [null] - The shadow of the grid.
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
@@ -233,6 +235,7 @@
 
     $cell-selected-within-background: null,
     $cell-selected-within-text-color: null,
+    $grouped-row-gap: null,
 ) {
     $name: 'igx-grid';
     $selector: 'igx-grid, igx-hierarchical-grid, igx-pivot-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary';
@@ -573,6 +576,7 @@
 
         cell-selected-within-background: $cell-selected-within-background,
         cell-selected-within-text-color: $cell-selected-within-text-color,
+        grouped-row-gap: $grouped-row-gap,
     ));
 }
 
@@ -602,11 +606,12 @@
         indigo-design: rem(20px),
     ), $variant);
 
-    $group-row-spacer: (
-        comfortable: rem(12px),
-        cosy: rem(8px),
-        compact: rem(4px)
-    );
+    $grouped-row-gap: map.get((
+        material: var-get($theme, 'grouped-row-gap'),
+        fluent: var-get($theme, 'grouped-row-gap'),
+        bootstrap: var-get($theme, 'grouped-row-gap'),
+        indigo-design: var-get($theme, 'grouped-row-gap'),
+    ), $variant);
 
     $cbx-bs-size: rem(14px);
 
@@ -804,7 +809,7 @@
         grid-row: 3;
         display: flex;
         overflow: hidden;
-        //padding: 0 map.get($group-row-spacer, 'comfortable') 0 map.get($group-row-spacer, 'comfortable');
+        //padding: 0 $grouped-row-gap 0 $grouped-row-gap;
         //position: relative;
         //
         //&::before,
@@ -813,11 +818,11 @@
         //    position: absolute;
         //    top: 0;
         //    height: 100%;
-        //    width: map.get($group-row-spacer, 'comfortable');
+        //    width: $grouped-row-gap;
         //    background: var-get($theme, 'header-background');
         //    border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         //
-        //    @if(map.get($group-row-spacer, 'comfortable') == 0) {
+        //    @if($grouped-row-gap == 0) {
         //        display: none;
         //    }
         //}
@@ -919,7 +924,7 @@
         z-index: 10001;
 
         //%grid-summaries {
-        //    padding: 0 map.get($group-row-spacer, 'comfortable');
+        //    padding: 0 $grouped-row-gap;
         //}
     }
 
@@ -1180,8 +1185,8 @@
         //    position: absolute;
         //    top: 0;
         //    height: calc(100% + var-get($theme, 'pinned-border-width'));
-        //    #{$left}: -map.get($group-row-spacer, 'comfortable');
-        //    width: map.get($group-row-spacer, 'comfortable');
+        //    #{$left}: -$grouped-row-gap;
+        //    width: $grouped-row-gap;
         //    border-bottom: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
         //}
     }
@@ -2092,7 +2097,7 @@
     // Group by section
     %igx-grid__group-row {
         display: block;
-        padding-bottom: map.get($group-row-spacer, 'comfortable');
+        padding-bottom: $grouped-row-gap;
 
         &:first-of-type {
             padding-top: 0 !important;
@@ -2107,7 +2112,7 @@
         }
 
         &[class*='level']:not([class*='-0']) {
-            padding-top: map.get($group-row-spacer, 'comfortable');
+            padding-top: $grouped-row-gap;
             padding-bottom: 0;
         }
 
@@ -2152,10 +2157,10 @@
     }
 
     %igx-grid__group-row--cosy {
-        padding-bottom: map.get($group-row-spacer, 'cosy');
+        padding-bottom: $grouped-row-gap;
 
         &[class*='level']:not([class*='-0']) {
-            padding-top: map.get($group-row-spacer, 'cosy');
+            padding-top: $grouped-row-gap;
             padding-bottom: 0;
         }
 
@@ -2165,10 +2170,10 @@
     }
 
     %igx-grid__group-row--compact {
-        padding-bottom: map.get($group-row-spacer, 'compact');
+        padding-bottom: $grouped-row-gap;
 
         &[class*='level']:not([class*='-0']) {
-            padding-top: map.get($group-row-spacer, 'compact');
+            padding-top: $grouped-row-gap;
             padding-bottom: 0;
         }
 
