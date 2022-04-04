@@ -24,7 +24,6 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Change the tooltip background
 ///   $my-tooltip-theme: tooltip-theme($background: magenta);
@@ -50,10 +49,6 @@
     }
 
     $theme: apply-palette($tooltip-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($tooltip-schema, 'border-radius')), 0, 16px
-    );
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -81,7 +76,7 @@
         flex-flow: column wrap;
         background: var-get($theme, 'background');
         color: var-get($theme, 'text-color');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         margin: 0 auto;
     }
 
