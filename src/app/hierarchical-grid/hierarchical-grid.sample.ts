@@ -10,7 +10,7 @@ import {
 
 @Component({
     selector: 'app-hierarchical-grid-sample',
-    styleUrls: ['hierarchical-grid.sample.css'],
+    styleUrls: ['hierarchical-grid.sample.scss'],
     templateUrl: 'hierarchical-grid.sample.html'
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
@@ -33,6 +33,9 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
     public hgridState = [];
     public columns;
     public childColumns;
+    public rowClasses = {
+        activeRow: (row: RowType) => parseInt(row.data['ID'], 2) % 2 === 0
+    };
 
     constructor(private cdr: ChangeDetectorRef) {
         this.displayDensities = [
