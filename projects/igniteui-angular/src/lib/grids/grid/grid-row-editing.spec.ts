@@ -1091,7 +1091,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             row.delete();
             fix.detectChanges();
             expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
-            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(2);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(1);
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(true);
         });
     });
@@ -2071,7 +2071,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.componentInstance.buttons.last.element.nativeElement.click();
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
-            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(2);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(1);
         }));
 
         it('Empty template', fakeAsync(/** height/width setter rAF */() => {
