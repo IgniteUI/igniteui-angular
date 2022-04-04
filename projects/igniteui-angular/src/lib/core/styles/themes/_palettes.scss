@@ -317,7 +317,7 @@ $fluent-dark-palette: palette(
     $variant: 'fluent'
 ) !default;
 
-/// Light Fluent Word palette
+/// Light Fluent palette
 /// @type Map
 /// @prop {Color} primary [#0078d4] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#0078d4] - The 500 variant of the `secondary` color (default).
@@ -331,7 +331,7 @@ $fluent-dark-palette: palette(
 /// @group palettes
 $light-fluent-palette: $fluent-palette;
 
-/// Dark Fluent Word palette
+/// Dark Fluent palette
 /// @type Map
 /// @prop {Color} primary [#0078d4] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#0078d4] - The 500 variant of the `secondary` color (default).
