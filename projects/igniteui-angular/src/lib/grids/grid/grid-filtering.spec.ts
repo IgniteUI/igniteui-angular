@@ -456,13 +456,13 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const today = SampleTestData.todayFullDate;
 
         // Equals 11:15:35
-        grid.filter('ReleaseDate', cal.timedelta(today, 'hour', 1),
+        grid.filter('ReleaseDateTime', cal.timedelta(today, 'hour', 1),
             IgxDateTimeFilteringOperand.instance().condition('equals'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
         // Does not equal 11:15:35
-        grid.filter('ReleaseDate', cal.timedelta(today, 'hour', 1),
+        grid.filter('ReleaseDateTime', cal.timedelta(today, 'hour', 1),
             IgxDateTimeFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
@@ -513,6 +513,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
     }));
+
     it('should correctly filter by \'date\' filtering conditions when dates are ISO 8601 strings', fakeAsync(() => {
         const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.today;
