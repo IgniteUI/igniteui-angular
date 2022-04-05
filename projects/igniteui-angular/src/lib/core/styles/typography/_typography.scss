@@ -333,9 +333,9 @@
 /// @see $material-typeface
 /// @see $material-type-scale
 @mixin typography($font-family: $material-typeface, $type-scale: $material-type-scale, $wc: false) {
-    @include _typography($font-family, $material-type-scale, $prefix: 'igx');
+    @include _typography($font-family, $type-scale, $prefix: 'igx');
 
     @if $wc {
-        @include _typography($font-family, $material-type-scale, $prefix: 'igc');
+        @include _typography($font-family, $type-scale, $prefix: 'igc');
     }
 }
