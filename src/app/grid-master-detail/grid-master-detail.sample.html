@@ -1,9 +1,12 @@
 <div class="wrapper">
-    <button igxButton="outlined" (click)="saveState()">SAVE STATE</button>
-    <button igxButton="raised" (click)="restoreState()">RESTORE STATE</button>
-    <igx-grid igxGridState #grid1 [data]="data" [width]="'820px'" [height]="'700px'" [autoGenerate]='false' [moving]="true">
+    <div class="buttons">
+        <button igxButton="outlined" (click)="saveState()">SAVE STATE</button>
+        <button igxButton="raised" (click)="restoreState()">RESTORE STATE</button>
+    </div>
+    <igx-grid igxGridState #grid1 [data]="data" [width]="'820px'" [height]="'700px'" [autoGenerate]='false'>
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
-            [hidden]='c.hidden' [sortable]="true" [movable]='true' [groupable]="true" [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
+            [hidden]='c.hidden'  
+            [dataType]='c.dataType' [movable]="true">
         </igx-column>
         <!-- <igx-column-layout field='group2'>
             <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'"></igx-column>
@@ -27,10 +30,9 @@
         </ng-template>
     </igx-grid>
     <br />
-
-    <button igxButton="raised" (click)="grid1.expandAll()">Expand All</button>
-    <button igxButton="raised" (click)="grid1.collapseAll()">Collapse All</button>
-    <button igxButton="raised" (click)="expandFirstRow()">Expand first</button>
-    <button igxButton="raised" (click)="collapseFirstRow()">Collapse first</button>
-    <button igxButton="raised" (click)="toggleFirstRow()">Toggle first</button>
 </div>
+<button igxButton="raised" (click)="grid1.expandAll()">Expand All</button>
+<button igxButton="raised" (click)="grid1.collapseAll()">Collapse All</button>
+<button igxButton="raised" (click)="expandFirstRow()">Expand first</button>
+<button igxButton="raised" (click)="collapseFirstRow()">Collapse first</button>
+<button igxButton="raised" (click)="toggleFirstRow()">Toggle first</button>
