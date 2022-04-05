@@ -230,6 +230,10 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
 
                 this.validateInputData(target);
 
+                if (typeof searchVal === 'string') {
+                    searchVal = new Date(searchVal);
+                }
+
                 return target < searchVal;
             }
         }, {
@@ -242,6 +246,10 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
                 }
 
                 this.validateInputData(target);
+
+                if (typeof searchVal === 'string') {
+                    searchVal = new Date(searchVal);
+                }
 
                 return target > searchVal;
             }
