@@ -455,7 +455,8 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
      * @hidden @internal
      */
     public endRowTransaction(commit: boolean, event?: Event): IGridEditEventArgs {
-        if (this.row && this.row.getClassName() === IgxAddRow.name) {
+        const isAddRow = this.row && this.row.getClassName() === IgxAddRow.name;
+        if (isAddRow) {
             this.grid.rowAdded.pipe(first()).subscribe((addRowArgs: IRowDataEventArgs) => {
                 const rowData = addRowArgs.data;
                 const pinnedIndex = this.grid.pinnedRecords.findIndex(x => x[this.primaryKey] === rowData[this.primaryKey]);
@@ -473,10 +474,12 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
             return args;
         }
 
-        this.endAddRow();
-        if (commit) {
-            this.grid.rowAddedNotifier.next({ data: args.newValue });
-            this.grid.rowAdded.emit({ data: args.newValue });
+        if (isAddRow) {
+            this.endAddRow();
+            if (commit) {
+                this.grid.rowAddedNotifier.next({ data: args.newValue });
+                this.grid.rowAdded.emit({ data: args.newValue });
+            }
         }
 
         return args;
