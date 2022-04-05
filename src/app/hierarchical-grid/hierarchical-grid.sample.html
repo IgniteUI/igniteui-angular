@@ -6,10 +6,10 @@
             style="display: block; width: 500px"></igx-buttongroup>
     </div>
     <button igxButton="raised" (click)="getState()">Get state</button>
-    <igx-hierarchical-grid [batchEditing]="true" #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" [hasChildrenKey]='"hasChild"' class="hgrid"
+    <igx-hierarchical-grid [batchEditing]="true" #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" class="hgrid"
         [displayDensity]="density" [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]="true"
         [rowDraggable]="true" [height]="'600px'" [width]="'800px'" [expandChildren]="rootExpanded"
-        #hGrid>
+        #hGrid [rowClasses]="rowClasses">
 
         <igx-grid-toolbar>
             <app-grid-search-box [grid]="grid1"></app-grid-search-box>
