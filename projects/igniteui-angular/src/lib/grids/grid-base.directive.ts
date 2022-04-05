@@ -6887,6 +6887,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
+     */
+     protected _getResolvedDataIndex(index: number): number {
+        let newIndex = index;
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.paginator.page !== 0) {
+            newIndex = index - this.paginator.perPage * this.paginator.page;
+        } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
+            newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
+        }
+        return newIndex;
+    }
+
+    /**
+     * @hidden
      */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: (args: any) => void = null) {
         this._columnGroups = this.columnList.some(col => col.columnGroup);

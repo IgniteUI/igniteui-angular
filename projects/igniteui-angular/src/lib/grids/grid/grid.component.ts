@@ -1177,18 +1177,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        let rec: any;
-
-        if (index < 0 || index >= this.dataView.length) {
-            if (this.pagingMode === 1 && this.paginator.page !== 0) {
-                rec = data ?? this.dataView[index - this.paginator.perPage * this.paginator.page];
-            } else if (index >= this.dataView.length) {
-                const virtIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
-                rec = data ?? this.dataView[virtIndex];
-            }
-        } else {
-            rec = data ?? this.dataView[index];
-        }
+        const dataIndex = this._getResolvedDataIndex(index);
+        const rec = data ?? this.dataView[dataIndex];
 
         if (rec && this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this, index, rec);
