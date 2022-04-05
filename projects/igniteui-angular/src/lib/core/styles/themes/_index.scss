@@ -41,16 +41,20 @@
     $excluded: ();
 
     @include palette-vars($palette, $contrast: true);
+    @include elevation-vars($elevations);
 
     @if $wc {
         @include palette-to-wc($palette);
+        @include elevations-to-wc($elevations);
     }
 
-    @if $elevation {
-        @include elevation-vars($elevations);
+    @if $elevation == false {
+        :root {
+            --igx-elevation-factor: 0;
 
-        @if $wc {
-            @include elevations-to-wc($elevations);
+            @if $wc {
+                --igc-elevation-factor: var(--igx-elevation-factor);
+            }
         }
     }
 
@@ -81,25 +85,20 @@
     @if is-used('igx-badge', $exclude) {
         @include badge(badge-theme(
             $schema: $schema,
-            $border-radius: $roundness,
-            $shadow: if($elevation == false, none, null),
+            $border-radius: $roundness
         ));
     }
 
     @if is-used('igx-bottom-nav', $exclude) {
         @include bottom-nav(bottom-nav-theme(
             $schema: $schema,
-            $shadow: if($elevation == false, none, null),
         ));
     }
 
     @if is-used('igx-button', $exclude) {
         @include button(button-theme(
             $schema: $schema,
-            $border-radius: $roundness,
-            $resting-shadow: if($elevation == false, none, null),
-            $hover-shadow: if($elevation == false, none, null),
-            $focus-shadow: if($elevation == false, none, null),
+            $border-radius: $roundness
         ));
     }
 
@@ -107,7 +106,6 @@
         @include button-group(button-group-theme(
             $schema: $schema,
             $border-radius: $roundness,
-            $shadow: if($elevation == false, 'none', null),
         ));
     }
 
@@ -129,24 +127,21 @@
     @if is-used('igx-card', $exclude) {
         @include card(card-theme(
             $schema: $schema,
-            $border-radius: $roundness,
-            $resting-shadow: if($elevation == false, none, null),
-            $hover-shadow: if($elevation == false, none, null),
+            $border-radius: $roundness
         ));
     }
 
     @if is-used('igx-carousel', $exclude) {
         @include carousel(carousel-theme(
             $schema: $schema,
-            $border-radius: $roundness,
-            $button-shadow: if($elevation == false, none, null),
+            $border-radius: $roundness
         ));
     }
 
     @if is-used('igx-splitter', $exclude) {
         @include splitter(splitter-theme(
             $schema: $schema,
-            $border-radius: $roundness,
+            $border-radius: $roundness
         ));
     }
 
@@ -233,8 +228,7 @@
     @if is-used('igx-chip', $exclude) {
         @include chip(chip-theme(
             $schema: $schema,
-            $border-radius: $roundness,
-            $ghost-shadow: if($elevation == false, none, null),
+            $border-radius: $roundness
         ));
     }
 
@@ -266,8 +260,7 @@
     @if is-used('igx-dialog', $exclude) {
         @include dialog(dialog-theme(
             $schema: $schema,
-            $border-radius: $roundness,
-            $shadow: if($elevation == false, none, null),
+            $border-radius: $roundness
         ));
     }
 
@@ -286,8 +279,7 @@
     @if is-used('igx-drop-down', $exclude) {
         @include drop-down(drop-down-theme(
             $schema: $schema,
-            $border-radius: $roundness,
-            $shadow: if($elevation == false, none, null),
+            $border-radius: $roundness
         ));
     }
 
@@ -301,9 +293,7 @@
     @if is-used('igx-grid', $exclude) {
         @include grid(grid-theme(
             $schema: $schema,
-            $drop-area-border-radius: $roundness,
-            $grid-shadow: if($elevation == false, none, null),
-            $drag-shadow: if($elevation == false, none, null),
+            $drop-area-border-radius: $roundness
         ));
     }
 
@@ -342,10 +332,7 @@
             $schema: $schema,
             $box-border-radius: $roundness,
             $border-border-radius: $roundness,
-            $search-border-radius: $roundness,
-            $search-resting-shadow: if($elevation == false, none, null),
-            $search-hover-shadow: if($elevation == false, none, null),
-            $search-disabled-shadow: if($elevation == false, none, null),
+            $search-border-radius: $roundness
         ));
     }
 
@@ -359,8 +346,7 @@
 
     @if is-used('igx-navbar', $exclude) {
         @include navbar(navbar-theme(
-            $schema: $schema,
-            $shadow: if($elevation == false, none, null),
+            $schema: $schema
         ));
     }
 
@@ -368,8 +354,7 @@
         @include navdrawer(navdrawer-theme(
             $schema: $schema,
             $border-radius: $roundness,
-            $item-border-radius: $roundness,
-            $shadow: if($elevation == false, none, null),
+            $item-border-radius: $roundness
         ));
     }
 
@@ -418,8 +403,7 @@
     @if is-used('igx-snackbar', $exclude) {
         @include snackbar(snackbar-theme(
             $schema: $schema,
-            $border-radius: $roundness,
-            $shadow: if($elevation == false, none, null),
+            $border-radius: $roundness
         ));
     }
 
@@ -428,17 +412,13 @@
             $schema: $schema,
             $border-radius-track: $roundness,
             $border-radius-thumb: $roundness,
-            $border-radius-ripple: $roundness,
-            $resting-shadow: if($elevation == false, none, null),
-            $hover-shadow: if($elevation == false, none, null),
-            $disabled-shadow: if($elevation == false, none, null),
+            $border-radius-ripple: $roundness
         ));
     }
 
     @if is-used('igx-tabs', $exclude) {
         @include tabs(tabs-theme(
-            $schema: $schema,
-            $disable-shadow: if($elevation == false, true, false),
+            $schema: $schema
         ));
     }
 
@@ -466,9 +446,7 @@
         @include time-picker(time-picker-theme(
             $schema: $schema,
             $border-radius: $roundness,
-            $active-item-border-radius: $roundness,
-            $modal-shadow: if($elevation == false, none, null),
-            $dropdown-shadow: if($elevation == false, none, null),
+            $active-item-border-radius: $roundness
         ));
     }
 
