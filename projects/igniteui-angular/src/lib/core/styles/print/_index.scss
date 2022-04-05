@@ -17,7 +17,12 @@
 
         * {
             -webkit-print-color-adjust: exact;
+            // Fix shadows if you print to PDF using chrome START
+            -webkit-filter: opacity(1);
+            filter: opacity(1);
+            // Fix shadows if you print to PDF using chrome END
             color-adjust: exact;
+            text-shadow: none !important;
         }
 
         a[href^='http']::after {
@@ -36,14 +41,6 @@
             filter: grayscale(100%); /* future-proof */
         }
 
-        // Force full page print
-        // A4 print size 3508px x 2480px
-        .igx-A4-print {
-            width: 100% !important;
-            height: 100% !important;
-            page-break-after: always;
-        }
-
         igx-circular-bar,
         igx-linear-bar,
         .igx-carousel__indicators,
@@ -51,6 +48,7 @@
         .igx-carousel__arrow--next,
         .igx-ripple,
         .igx-grid__tbody-scrollbar,
+        igx-switch__ripple,
         igx-virtual-helper, {
             display: none !important;
         }
