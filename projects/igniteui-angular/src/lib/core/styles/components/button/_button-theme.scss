@@ -30,6 +30,7 @@
 /// @param {Color} $resting-shadow [null] - The shadow of the button in its idle state.
 /// @param {Color} $hover-shadow [null] - The shadow of the button in its hover state.
 /// @param {Color} $focus-shadow [null] - The shadow of the button in its focus state.
+/// @param {Color} $active-shadow [null] - The shadow of the button in its focus state.
 /// @param {Color} $disabled-background [null] - The disabled background color of the button.
 /// @param {Color} $disabled-foreground [null] - The disabled text color of the button.
 /// @param {Color} $disabled-border-color [null] - The disabled border color of the button.
@@ -74,6 +75,7 @@
     $resting-shadow: null,
     $hover-shadow: null,
     $focus-shadow: null,
+    $active-shadow: null,
 
     $disabled-background: null,
     $disabled-foreground: null,
@@ -112,6 +114,7 @@
         $_resting-shadow: $resting-shadow;
         $_hover-shadow: $hover-shadow;
         $_focus-shadow: $focus-shadow;
+        $_active-shadow: $active-shadow;
 
         @if not($variant) {
             $variant: map.get($_schema, 'variant');
@@ -152,6 +155,11 @@
             $_focus-shadow: elevation($elevations, $focus-elevation);
         }
 
+        @if not($_active-shadow) {
+            $active-elevation: map.get($_schema, 'active-elevation');
+            $_active-shadow: elevation($elevations, $active-elevation);
+        }
+
         $themes: map.merge($themes, (
             $_name: extend(apply-palette($_schema, $palette), (
                 name: $name,
@@ -175,6 +183,7 @@
                 resting-shadow: $_resting-shadow,
                 hover-shadow: $_hover-shadow,
                 focus-shadow: $_focus-shadow,
+                active-shadow: $_active-shadow,
 
                 disabled-background: $disabled-background,
                 disabled-foreground: $disabled-foreground,
@@ -408,6 +417,13 @@
         indigo-design: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color')
     ), $variant);
 
+    $raised-shadow--active: map.get((
+        material: var-get($raised-theme, 'active-shadow'),
+        fluent: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'),
+        bootstrap: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'),
+        indigo-design: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color')
+    ), $variant);
+
     $fab-shadow: map.get((
         material: var-get($fab-theme, 'resting-shadow'),
         fluent: var-get($fab-theme, 'resting-shadow'),
@@ -424,6 +440,13 @@
 
     $fab-shadow--focus: map.get((
         material: var-get($fab-theme, 'focus-shadow'),
+        fluent:  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+        bootstrap: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+        indigo-design: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
+    ), $variant);
+
+    $fab-shadow--active: map.get((
+        material: var-get($fab-theme, 'active-shadow'),
         fluent:  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
         bootstrap: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
         indigo-design: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
@@ -603,12 +626,19 @@
             box-shadow: $raised-shadow--hover;
         }
 
-        &:focus,
-        &:active {
+        &:focus {
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
+            }
+        }
+
+        &:active {
+            @if $variant == 'material' or  $variant == 'fluent' {
+                box-shadow: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--active;
+            } @else {
+                box-shadow: $raised-shadow--active;
             }
         }
 
@@ -678,12 +708,19 @@
             box-shadow: $fab-shadow;
         }
 
-        &:focus,
-        &:active {
+        &:focus {
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
+            }
+        }
+
+        &:active {
+            @if $variant == 'material' or  $variant == 'fluent' {
+                box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--active;
+            } @else {
+                box-shadow: $raised-shadow--active;
             }
         }
 
