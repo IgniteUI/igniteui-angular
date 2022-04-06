@@ -13,7 +13,7 @@ import { ICellPosition } from '../common/events';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
 
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
-const GRID_MRL_BLOCK_CLASS = GRID_MRL_BLOCK;
+const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
 
 describe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCETIME = 60;
