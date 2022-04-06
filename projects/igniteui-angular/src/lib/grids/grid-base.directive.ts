@@ -4233,6 +4233,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    protected _getResolvedDataIndex(index: number): number {
+        let newIndex = index;
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.paginator.page !== 0) {
+            newIndex = index - this.paginator.perPage * this.paginator.page;
+        } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
+            newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
+        }
+        return newIndex;
+    }
+
+    /**
      * Places a column before or after the specified target column.
      *
      * @example
@@ -5964,18 +5978,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 console.warn('The record cannot be added as a child to an unspecified record.');
                 return;
             }
-            index = 0;
+            index = null;
         } else {
             // find the index of the record with that PK
             index = this.gridAPI.get_rec_index_by_id(rowID, this.dataView);
-            rowID = index;
             if (index === -1) {
                 console.warn('No row with the specified ID was found.');
                 return;
             }
         }
+
+        this._addRowForIndex(index, asChild);
+    }
+
+    protected _addRowForIndex(index: number, asChild?: boolean) {
         if (!this.dataView.length) {
-            this.beginAddRowForIndex(rowID, asChild);
+            this.beginAddRowForIndex(index, asChild);
             return;
         }
         // check if the index is valid - won't support anything outside the data view
@@ -5987,13 +6005,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.verticalScrollContainer.chunkLoad
                     .pipe(first(), takeUntil(this.destroy$))
                     .subscribe(() => {
-                        this.beginAddRowForIndex(rowID, asChild);
+                        this.beginAddRowForIndex(index, asChild);
                     });
                 this.navigateTo(index);
                 this.notifyChanges(true);
                 return;
             }
-            this.beginAddRowForIndex(rowID, asChild);
+            this.beginAddRowForIndex(index, asChild);
         } else {
             console.warn('The row with the specified PK or index is outside of the current data view.');
         }
@@ -6014,7 +6032,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (index === 0) {
             return this.beginAddRowById(null);
         }
-        return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index - 1, this.dataView));
+        return this._addRowForIndex(index - 1);
     }
 
     /**
