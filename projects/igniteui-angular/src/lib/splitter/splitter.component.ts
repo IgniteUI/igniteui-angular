@@ -430,7 +430,6 @@ export class IgxSplitBarComponent {
                             event.preventDefault();
                             this.moveStart.emit(this.pane);
                             this.moving.emit(10);
-                            this.movingEnd.emit(-10);
                         }
                     }
                     break;
@@ -445,7 +444,6 @@ export class IgxSplitBarComponent {
                             event.preventDefault();
                             this.moveStart.emit(this.pane);
                             this.moving.emit(-10);
-                            this.movingEnd.emit(-10);
                         }
                     }
                     break;
@@ -460,7 +458,6 @@ export class IgxSplitBarComponent {
                             event.preventDefault();
                             this.moveStart.emit(this.pane);
                             this.moving.emit(10);
-                            this.movingEnd.emit(-10);
                         }
                     }
                     break;
@@ -475,7 +472,6 @@ export class IgxSplitBarComponent {
                             event.preventDefault();
                             this.moveStart.emit(this.pane);
                             this.moving.emit(-10);
-                            this.movingEnd.emit(-10);
                         }
                     }
                     break;

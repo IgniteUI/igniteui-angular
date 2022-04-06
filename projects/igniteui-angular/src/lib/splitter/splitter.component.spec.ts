@@ -445,6 +445,7 @@ describe('IgxSplitter pane collapse', () => {
         splitterBarComponent.nativeElement.focus();
         UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
         fixture.detectChanges();
+        splitterBarComponent.context.movingEnd.emit(-10);
 
         const pane1_size = pane1.size;
         const pane2_size = pane2.size;
