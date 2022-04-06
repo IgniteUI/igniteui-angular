@@ -9,7 +9,7 @@ import { IPinningConfig } from '../grid.common';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import {
     CELL_PINNED_CLASS,
-    GRID_MRL_BLOCK_CLASS,
+    GRID_MRL_BLOCK,
     GRID_SCROLL_CLASS,
     GridFunctions,
     GridSelectionFunctions,
@@ -708,13 +708,13 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeTruthy();
 
                 expect(row.children[1].classList.contains(`${CELL_PINNED_CLASS}-first`)).toBeTruthy();
-                expect(row.children[1].classList.contains(GRID_MRL_BLOCK_CLASS)).toBeTruthy();
+                expect(row.children[1].classList.contains(GRID_MRL_BLOCK)).toBeTruthy();
                 expect(parseInt((row.children[1] as any).style.left, 10)).toEqual(-408);
 
                 // check correct headers have left border
                 const firstPinnedHeader = grid.headerGroupsList.find(group => group.isPinned);
                 // The first child of the header is the <div> wrapping the MRL block
-                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(GRID_MRL_BLOCK_CLASS)).toBeTrue();
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(GRID_MRL_BLOCK)).toBeTrue();
                 expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(`${HEADER_PINNED_CLASS}-first`)).toBeTrue();
             }));
 

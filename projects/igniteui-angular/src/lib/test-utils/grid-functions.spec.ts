@@ -93,7 +93,7 @@ const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const TREE_NODE_TOGGLE = '.igx-tree-node__toggle-button';
 
 export const GRID_SCROLL_CLASS = '.igx-grid__scroll';
-export const GRID_MRL_BLOCK_CLASS = 'igx-grid__mrl-block';
+export const GRID_MRL_BLOCK = 'igx-grid__mrl-block';
 export const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
 export const HEADER_PINNED_CLASS = 'igx-grid-th--pinned';
 export const GRID_HEADER_CLASS = '.igx-grid-thead__wrapper';
@@ -2022,7 +2022,7 @@ export class GridFunctions {
     public static verifyDOMMatchesLayoutSettings(grid: GridType, row: RowType, colSettings) {
         const firstRowCells = (row.cells as QueryList<CellType>).toArray();
         const rowElem = row.nativeElement;
-        const mrlBlocks = rowElem.querySelectorAll(`.${GRID_MRL_BLOCK_CLASS}`);
+        const mrlBlocks = rowElem.querySelectorAll(`.${GRID_MRL_BLOCK}`);
 
         colSettings.forEach((groupSetting, index) => {
             // check group has rendered block

@@ -10,13 +10,13 @@ import { wait, UIInteractions, waitForSelectionChange } from '../../test-utils/u
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { GridFunctions, GRID_MRL_BLOCK_CLASS } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
 import { CellType } from '../common/grid.interface';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
-const CELL_BLOCK = `.${GRID_MRL_BLOCK_CLASS}`;
+const CELL_BLOCK = `.${GRID_MRL_BLOCK}`;
 
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
