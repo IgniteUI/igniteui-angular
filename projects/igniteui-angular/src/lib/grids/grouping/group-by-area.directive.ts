@@ -51,7 +51,7 @@ export abstract class IgxGroupByAreaDirective {
 
     /** The parent grid containing the component. */
     @Input()
-    public grid: FlatGridType & GridType;
+    public grid: FlatGridType | GridType;
 
     /**
      * The group-by expressions provided by the parent grid.
@@ -159,9 +159,10 @@ export abstract class IgxGroupByAreaDirective {
     }
 
     protected updateGroupSorting(id: string) {
-        const expr = this.grid.groupingExpressions.find(e => e.fieldName === id);
+        const expr = this.expressions.find(e => e.fieldName === id);
         expr.dir = 3 - expr.dir;
         this.grid.pipeTrigger++;
+        this.grid.notifyChanges();
     }
 
     protected expressionsChanged() {

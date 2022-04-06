@@ -153,7 +153,8 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
      * @hidden
      */
     public get disabled() {
-        if (this.grid.groupingExpressions.length && this.grid.groupingExpressions.map(g => g.fieldName).includes(this.column.field)) {
+        const groupArea = this.grid.groupArea || this.grid.treeGroupArea;
+        if (groupArea?.expressions && groupArea.expressions.length && groupArea.expressions.map(g => g.fieldName).includes(this.column.field)) {
             return true;
         }
         return false;

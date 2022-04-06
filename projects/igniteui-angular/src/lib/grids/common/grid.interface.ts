@@ -36,6 +36,7 @@ import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
+import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -444,6 +445,7 @@ export interface GridType extends IGridDataBindable {
     records?: Map<any, ITreeGridRecord>;
     processedExpandedFlatData?: any[] | null;
     processedRecords?: Map<any, ITreeGridRecord>;
+    treeGroupArea?: IgxTreeGridGroupByAreaComponent;
 
     activeNodeChange: EventEmitter<IActiveNodeChangeEventArgs>;
     gridKeydown: EventEmitter<IGridKeydownEventArgs>;
