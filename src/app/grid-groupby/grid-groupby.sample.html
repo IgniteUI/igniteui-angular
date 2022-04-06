@@ -4,6 +4,9 @@
     <br />
     <igx-switch (change)="toggleSummaryPosition()">Toggle Summary Position</igx-switch>
     <br />
+    <button igxButton="raised" (click)="sortingOp= sortingOp.mode ==='single' ? {mode: 'multiple'} : {mode: 'single'}">
+        {{ sortingOp.mode}}</button> - Sorting mode
+    <br />
     <button igxButton="raised" (click)="grid1.showSummaryOnCollapse = !grid1.showSummaryOnCollapse">
         {{ grid1.showSummaryOnCollapse }}</button> - Show summary on collapse
     <br />
@@ -28,7 +31,7 @@
             style="display: block; width: 500px"></igx-buttongroup>
     </div>
     <igx-grid #grid1 [data]="data" [allowFiltering]="true" [moving]="true" [cellSelection]="'single'" [width]="'1200px'"
-        [hideGroupedColumns]="hideGroupedColumns" [height]="'700px'" [(groupingExpansionState)]='expState'
+        [hideGroupedColumns]="hideGroupedColumns" [height]="'700px'" [(groupingExpansionState)]='expState' [sortingOptions]="sortingOp"
         [summaryCalculationMode]="summaryMode" [summaryPosition]="position" [rowDraggable]="true">
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
             [hidden]='c.hidden' [sortable]="true" [groupable]='c.groupable' [pinned]='!!c.pinned'
