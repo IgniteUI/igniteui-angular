@@ -238,8 +238,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 columns: [],
                 rows: [
                     {
-                    memberName: 'SellerName',
-                    enabled: true
+                        memberName: 'SellerName',
+                        enabled: true
                     }
                 ],
                 filters: [
@@ -530,12 +530,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             pivotGrid.data = [
                 {
-                  AllProducts: 'All Products', All: 2127, 'Bulgaria': 774, 'USA': 829, 'Uruguay': 524, 'AllProducts_records': [
-                    { ProductCategory: 'Clothing', All: 1523, 'Bulgaria': 774, 'USA': 296, 'Uruguay': 456, },
-                    { ProductCategory: 'Bikes', All: 68, 'Uruguay': 68 },
-                    { ProductCategory: 'Accessories', All: 293, 'USA': 293 },
-                    { ProductCategory: 'Components', All: 240, 'USA': 240 }
-                  ]
+                    AllProducts: 'All Products', All: 2127, 'Bulgaria': 774, 'USA': 829, 'Uruguay': 524, 'AllProducts_records': [
+                        { ProductCategory: 'Clothing', All: 1523, 'Bulgaria': 774, 'USA': 296, 'Uruguay': 456, },
+                        { ProductCategory: 'Bikes', All: 68, 'Uruguay': 68 },
+                        { ProductCategory: 'Accessories', All: 293, 'USA': 293 },
+                        { ProductCategory: 'Components', All: 240, 'USA': 240 }
+                    ]
                 }
             ];
 
@@ -543,34 +543,34 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 columnStrategy: NoopPivotDimensionsStrategy.instance(),
                 rowStrategy: NoopPivotDimensionsStrategy.instance(),
                 columns: [
-                  {
-                    memberName: 'Country',
-                    enabled: true
-                  },
+                    {
+                        memberName: 'Country',
+                        enabled: true
+                    },
                 ]
                 ,
                 rows: [
-                  {
-                    memberFunction: () => 'All',
-                    memberName: 'AllProducts',
-                    enabled: true,
-                    width: '25%',
-                    childLevel: {
-                      memberName: 'ProductCategory',
-                      enabled: true
+                    {
+                        memberFunction: () => 'All',
+                        memberName: 'AllProducts',
+                        enabled: true,
+                        width: '25%',
+                        childLevel: {
+                            memberName: 'ProductCategory',
+                            enabled: true
+                        }
                     }
-                  }
                 ],
                 values: [
-                  {
-                    member: 'UnitsSold',
-                    aggregate: {
-                      aggregator: IgxPivotNumericAggregate.sum,
-                      key: 'sum',
-                      label: 'Sum'
+                    {
+                        member: 'UnitsSold',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'sum',
+                            label: 'Sum'
+                        },
+                        enabled: true
                     },
-                    enabled: true
-                  },
                 ],
                 filters: null
             };
@@ -2275,9 +2275,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
             //should do nothing if value is not present in the configuration
             pivotGrid.moveValue({
                 member: 'NotPresent',
-                enabled:true,
+                enabled: true,
                 aggregate: {
-                    aggregator: () => {},
+                    aggregator: () => { },
                     key: 'Test',
                     label: 'test'
                 }
@@ -2307,6 +2307,53 @@ describe('IgxPivotGrid #pivotGrid', () => {
             valueCols = pivotGrid.columns.filter(x => x.level === 1);
             expect(valueCols[0].header).toBe('UnitsSold');
             expect(valueCols[1].header).toBe('Amount of Sale');
+        });
+
+        it('should allow changing the whole pivotConfiguration object', () => {
+            pivotGrid.pivotConfiguration = {
+                columns: [
+                    {
+                        memberName: 'City',
+                        enabled: true
+                    }
+                ],
+                rows: [
+                    {
+                        memberName: 'ProductCategory',
+                        enabled: true
+                    }],
+                values: [
+                    {
+                        member: 'UnitsSold',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'SUM',
+                            label: 'Sum'
+                        },
+                        enabled: true
+                    }
+                ]
+            };
+            fixture.detectChanges();
+
+            //check rows
+            const rows = pivotGrid.rowList.toArray();
+                expect(rows.length).toBe(4);
+                const expectedHeaders = ['Accessories', 'Bikes', 'Clothing', 'Components'];
+                const rowHeaders = fixture.debugElement.queryAll(
+                    By.directive(IgxPivotRowDimensionHeaderComponent));
+                const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
+                expect(rowDimensionHeaders).toEqual(expectedHeaders);
+
+            // check columns
+            let colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+            let expected = ['Plovdiv', 'New York', 'Ciudad de la Costa', 'London', 'Yokohama', 'Sofia'];
+            expect(colHeaders).toEqual(expected);
+
+            // check data
+            let pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            expect(pivotRecord.aggregationValues.get('London')).toBe(293);
+
         });
     });
 });
