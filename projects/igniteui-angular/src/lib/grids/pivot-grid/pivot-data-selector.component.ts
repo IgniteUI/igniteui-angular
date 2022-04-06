@@ -219,9 +219,13 @@ export class IgxPivotDataSelectorComponent {
     /** @hidden @internal */
     public dropAllowed: boolean;
     /** @hidden @internal */
-    public dims: IPivotDimension[];
+    public get dims() : IPivotDimension[] {
+        return this._grid.allDimensions;
+    };
     /** @hidden @internal */
-    public values: IPivotValue[];
+    public get values(): IPivotValue[] {
+        return this._grid.pivotConfiguration.values;
+    };
 
     constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
 
@@ -285,8 +289,6 @@ export class IgxPivotDataSelectorComponent {
     @Input()
     public set grid(value: PivotGridType) {
         this._grid = value;
-        this.dims = this._grid.allDimensions;
-        this.values = this._grid.pivotConfiguration.values;
     }
 
     /**
