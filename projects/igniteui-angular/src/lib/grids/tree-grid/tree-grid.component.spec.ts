@@ -150,7 +150,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             // When doing pure unit tests, the grid doesn't get removed after the test, because it overrides
             // the element ID and the testbed cannot find it to remove it.
-            // The testbed is looking up components by [^root], so working around this by forcing root id
+            // The testbed is looking up components by [id^=root], so working around this by forcing root id
             grid.id = 'root';
         }));
 
