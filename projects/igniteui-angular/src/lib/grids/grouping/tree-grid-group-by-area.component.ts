@@ -108,38 +108,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     }
 
     protected expressionsChanged() {
-        this.updateSortingExpressions();
         this.updateColumnsVisibility();
-    }
-
-    private updateSortingExpressions() {
-        const sortingExpressions = this.grid.sortingExpressions;
-        let changed = false;
-
-        this.expressions.forEach((expr, index) => {
-            const sortingIndex = sortingExpressions.findIndex(s => s.fieldName === expr.fieldName);
-
-            if (sortingIndex > -1) {
-                if (sortingIndex !== index) {
-                    const sortExpr = sortingExpressions.splice(sortingIndex, 1)[0];
-                    sortExpr.dir = expr.dir;
-                    sortingExpressions.splice(index, 0, sortExpr);
-                    changed = true;
-                } else if (sortingExpressions[sortingIndex].dir !== expr.dir) {
-                    sortingExpressions[sortingIndex].dir = expr.dir;
-                    changed = true;
-                }
-            } else {
-                const exprCopy = { ...expr };
-                sortingExpressions.splice(index, 0, exprCopy);
-                changed = true;
-            }
-
-        });
-
-        if (changed) {
-            this.grid.sortingExpressions = [...sortingExpressions];
-        }
     }
 
     private updateColumnsVisibility() {
