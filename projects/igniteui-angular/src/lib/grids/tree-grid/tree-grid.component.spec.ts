@@ -143,20 +143,24 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Auto-generated columns', () => {
-        let element;
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridComponent);
             grid = fix.componentInstance;
             grid.autoGenerate = true;
-            element = grid.nativeElement;
-        }));
 
-        afterEach(() => {
             // When doing pure unit tests, the grid doesn't get removed after the test, because it overrides
             // the element ID and the testbed cannot find it to remove it.
-            grid.ngOnDestroy();
-            element.remove();
-        });
+            // The testbed is looking up components by [^root], so working around this by forcing root id
+            grid.id = 'root';
+        }));
+
+        // afterEach(() => {
+        //     // When doing pure unit tests, the grid doesn't get removed after the test, because it overrides
+        //     // the element ID and the testbed cannot find it to remove it.
+        //     // this is needed when we don't force a root id
+        //     grid.ngOnDestroy();
+        //     element.remove();
+        // });
 
         it('should auto-generate all columns', () => {
             grid.data = SampleTestData.employeePrimaryForeignKeyTreeData();
