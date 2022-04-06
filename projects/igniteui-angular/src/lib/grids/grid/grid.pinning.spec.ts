@@ -575,9 +575,9 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(row.children[3].getAttribute('aria-describedby')).toBe(grid.id + '_ContactName');
 
                 // check scrollbar DOM
-                const scrBarStartSection = fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}-start`));
-                const scrBarMainSection = fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}-main`));
-                const scrBarEndSection = fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}-end`));
+                const scrBarStartSection = fix.debugElement.query(By.css(`${GRID_SCROLL_CLASS}-start`));
+                const scrBarMainSection = fix.debugElement.query(By.css(`${GRID_SCROLL_CLASS}-main`));
+                const scrBarEndSection = fix.debugElement.query(By.css(`${GRID_SCROLL_CLASS}-end`));
 
                 // The default pinned-border-width in px
                 expect(scrBarStartSection.nativeElement.offsetWidth).toEqual(grid.featureColumnsWidth());

@@ -15,6 +15,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { SAFE_DISPOSE_COMP_ID } from '../../test-utils/grid-functions.spec';
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();
@@ -151,7 +152,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             // When doing pure unit tests, the grid doesn't get removed after the test, because it overrides
             // the element ID and the testbed cannot find it to remove it.
             // The testbed is looking up components by [id^=root], so working around this by forcing root id
-            grid.id = 'root';
+            grid.id = SAFE_DISPOSE_COMP_ID;
         }));
 
         // afterEach(() => {

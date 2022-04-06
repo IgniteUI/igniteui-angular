@@ -24,6 +24,7 @@ import { FilteringLogic } from '../../data-operations/filtering-expression.inter
 import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
+import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -165,7 +166,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const gridHeader = fix.debugElement.query(By.css(THEAD_CLASS));
             const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
-            const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            const gridScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
             let gridBodyHeight;
 
             expect(grid.rowList.length).toEqual(1);
@@ -1654,7 +1655,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columnList.get(1).width).toEqual('150px');
             expect(grid.columnList.get(2).width).toEqual('150px');
 
-            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            const hScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
             expect(hScroll.nativeElement.hidden).toBe(true);
 
             grid.columnList.get(0).width = '70%';
@@ -1683,7 +1684,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(16);
 
             const grid = fix.componentInstance.grid;
-            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            const hScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
             expect(hScroll.nativeElement.hidden).toBe(true);
             grid.columnList.get(0).width = '70%';
             fix.detectChanges();
@@ -1713,7 +1714,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(16);
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
-            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            const hScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
             grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
             grid.columnList.get(0).width = '70%';
@@ -1743,7 +1744,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
             const grid = fix.componentInstance.grid;
-            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            const hScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
             fix.detectChanges();
             grid.columnList.get(0).width = '50%';
             grid.columnList.get(1).width = '100px';
