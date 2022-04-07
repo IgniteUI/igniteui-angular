@@ -184,6 +184,8 @@ describe('IgxGridState - input properties #grid', () => {
 
     it('setState should correctly restore grid columns state from string containing a dateTime column', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
+        let lastDateCol = { field: 'LastDate', header: 'Last date', width: '110px', dataType: 'dateTime', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false };
+        fix.componentInstance.columns.push(lastDateCol);
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         grid.getCellByColumn(0, 'LastDate').value = new Date('2021-06-05T23:59');
@@ -755,7 +757,6 @@ export class IgxGridStateComponent {
         { field: 'ProductName', header: 'Prodyct Name', width: '150px', dataType: 'string', pinned: false, selectable: false, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true },
         { field: 'InStock', header: 'In Stock', width: '140px', dataType: 'boolean', pinned: false, sortable: false, filterable: true, groupable: false, hasSummary: true, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: true },
         { field: 'OrderDate', header: 'Date ordered', width: '110px', dataType: 'date', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
-        { field: 'LastDate', header: 'Last date', width: '110px', dataType: 'dateTime', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
         /* eslint-enable max-len */
       ];
 }
