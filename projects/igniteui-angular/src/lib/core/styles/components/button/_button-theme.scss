@@ -22,10 +22,16 @@
 /// @param {Color} $hover-foreground [null] - The hover text color of the button.
 /// @param {Color} $focus-background [null] - The focus background color of the button.
 /// @param {Color} $focus-foreground [null] - The focus text color of the button.
+/// @param {Color} $focus-visible-background [null] - The focus-visible background color of the button.
+/// @param {Color} $focus-visible-foreground [null] - The focus-visible text color of the button.
 /// @param {Color} $active-background [null] - The active background of the button.
 /// @param {Color} $active-foreground [null] - The active text color of the button.
 /// @param {Number} $border-radius [null] - The border radius of the button.
 /// @param {Color} $border-color [null] - The border color of the button.
+/// @param {Color} $hover-border-color [null] - The hover border color of the button.
+/// @param {Color} $focus-border-color [null] - The focus border color of the button.
+/// @param {Color} $focus-visible-border-color [null] - The focus-visible border color of the button.
+/// @param {Color} $active-border-color [null] - The active border color of the button.
 /// @param {Color} $shadow-color [null] - The shadow color of the button.
 /// @param {Color} $resting-shadow [null] - The shadow of the button in its idle state.
 /// @param {Color} $hover-shadow [null] - The shadow of the button in its hover state.
@@ -64,11 +70,18 @@
     $focus-background: null,
     $focus-foreground: null,
 
+    $focus-visible-background: null,
+    $focus-visible-foreground: null,
+
     $active-background: null,
     $active-foreground: null,
 
     $border-radius: null,
     $border-color: null,
+    $hover-border-color: null,
+    $focus-border-color: null,
+    $focus-visible-border-color: null,
+    $active-border-color: null,
 
     $shadow-color: null,
 
@@ -128,16 +141,28 @@
             $hover-background: lighten-color($background, 5%);
         }
 
-        @if not($focus-background) and $background {
-            $focus-background: lighten-color($background, 5%);
-        }
-
         @if not($hover-foreground) and $hover-background {
             $hover-foreground: text-contrast($hover-background);
         }
 
+        @if not($focus-background) and $background {
+            $focus-background: lighten-color($background, 5%);
+        }
+
         @if not($focus-foreground) and $focus-background {
             $focus-foreground: text-contrast($focus-background);
+        }
+
+        @if not($focus-visible-background) and $focus-background {
+            $focus-visible-background: $focus-background;
+        }
+
+        @if not($focus-visible-foreground) and $focus-foreground {
+            $focus-visible-foreground: $focus-foreground;
+        }
+
+        @if not($focus-visible-border-color) and $focus-border-color {
+            $focus-visible-border-color: $focus-border-color;
         }
 
         @if not($_resting-shadow) {
@@ -172,11 +197,18 @@
                 focus-background: $focus-background,
                 focus-foreground: $focus-foreground,
 
+                focus-visible-background: $focus-visible-background,
+                focus-visible-foreground: $focus-visible-foreground,
+
                 active-background: $active-background,
                 active-foreground: $active-foreground,
 
                 border-radius: $_border-radius,
                 border-color: $border-color,
+                hover-border-color: $hover-border-color,
+                focus-border-color: $focus-border-color,
+                focus-visible-border-color: $focus-visible-border-color,
+                active-border-color: $active-border-color,
 
                 shadow-color: $shadow-color,
 
@@ -207,7 +239,6 @@
 @mixin button($theme) {
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
-    $button-border: 1px solid transparent;
     $button-width: rem(88px);
 
     $variant: map.get($theme, variant);
@@ -424,7 +455,7 @@
         min-width: $button-width;
         padding: map.get($button-padding, 'comfortable');
         min-height: map.get($button-size, 'comfortable');
-        border: none;
+        border: rem(1px) solid var-get($flat-theme, 'border-color');
         cursor: pointer;
         user-select: none;
         outline-style: none;
@@ -472,30 +503,47 @@
         color: var-get($flat-theme, 'foreground');
         border-radius: var-get($flat-theme, 'border-radius');
 
-
         &:hover {
             background: var-get($flat-theme, 'hover-background');
             color: var-get($flat-theme, 'hover-foreground');
+            border-color: var-get($flat-theme, 'hover-border-color');
         }
 
-        &:focus,
-        &:active {
-            @if($variant != 'fluent') {
-                background: var-get($flat-theme, 'focus-background');
-                color: var-get($flat-theme, 'focus-foreground');
-            }
+        &:focus {
+            background: var-get($flat-theme, 'focus-background');
+            color: var-get($flat-theme, 'focus-foreground');
             box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
+            border-color: var-get($flat-theme, 'focus-border-color');
         }
 
-        @if($variant == 'fluent') {
-            border: rem(1px) solid transparent;
+        &:active {
+            background: var-get($flat-theme, 'active-background');
+            color: var-get($flat-theme, 'active-foreground');
+            box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
+            border-color: var-get($flat-theme, 'active-border-color');
+        }
+
+        &:focus-visible {
+            background: var-get($flat-theme, 'focus-visible-background');
+            color: var-get($flat-theme, 'focus-visible-foreground');
+            border-color: var-get($flat-theme, 'focus-visible-border-color');
+
+            &:hover {
+                background: var-get($flat-theme, 'hover-background');
+                color: var-get($flat-theme, 'hover-foreground');
+            }
 
             &:active {
+                background: var-get($flat-theme, 'active-background');
                 color: var-get($flat-theme, 'active-foreground');
             }
+        }
 
+        @if($variant == 'bootstrap') {
+            &:focus,
+            &:active,
             &:focus-visible {
-                border-color: var-get($flat-theme, 'border-color');
+                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
             }
         }
     }
@@ -503,40 +551,62 @@
     %igx-button--outlined {
         background: var-get($outlined-theme, 'background');
         color: var-get($outlined-theme, 'foreground');
+        border-color: var-get($outlined-theme, 'border-color');
         border-radius: var-get($outlined-theme, 'border-radius');
         padding: map.get($outlined-button-padding, 'comfortable');
 
-        @if $variant != 'indigo-design' {
-            border: $button-border;
-            border-color: var-get($outlined-theme, 'border-color');
-        } @else {
-            border: {
-                width: 2px;
-                style: solid;
-                color: var-get($outlined-theme, 'border-color');
-            }
+        @if $variant == 'indigo-design' {
+            border-width: rem(2px);
         }
 
         &:hover {
             background: var-get($outlined-theme, 'hover-background');
             color: var-get($outlined-theme, 'hover-foreground');
+            border-color: var-get($outlined-theme, 'hover-border-color');
         }
 
-        &:focus,
-        &:active {
-            @if($variant != 'fluent') {
-                background: var-get($outlined-theme, 'focus-background');
-            }
+        &:focus {
+            background: var-get($outlined-theme, 'focus-background');
             color: var-get($outlined-theme, 'focus-foreground');
+            border-color: var-get($outlined-theme, 'focus-border-color');
+
+            @if($variant == 'bootstrap') {
+                &:hover {
+                    background: var-get($outlined-theme, 'hover-background');
+                    color: var-get($outlined-theme, 'hover-foreground');
+                }
+                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+            } @else if($variant == 'indigo-design') {
+                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+            }
+        }
+
+        &:active {
+            background: var-get($outlined-theme, 'active-background');
+            color: var-get($outlined-theme, 'active-foreground');
+            border-color: var-get($outlined-theme, 'active-border-color');
             box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
         }
 
-        @if($variant == 'fluent') {
+        &:focus-visible {
+            background: var-get($outlined-theme, 'focus-visible-background');
+            color: var-get($outlined-theme, 'focus-visible-foreground');
+            border-color: var-get($outlined-theme, 'focus-visible-border-color');
+
+            &:hover {
+                background: var-get($outlined-theme, 'hover-background');
+                color: var-get($outlined-theme, 'hover-foreground');
+                border-color: var-get($outlined-theme, 'hover-border-color');
+            }
+
             &:active {
                 background: var-get($outlined-theme, 'active-background');
                 color: var-get($outlined-theme, 'active-foreground');
+                border-color: var-get($outlined-theme, 'active-border-color');
             }
+        }
 
+        @if($variant == 'fluent') {
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(2px);
@@ -547,7 +617,7 @@
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
                 }
             }
         }
@@ -580,10 +650,15 @@
         &:hover {
             color: var-get($raised-theme, 'hover-foreground');
             background: var-get($raised-theme, 'hover-background');
+            border-color: var-get($raised-theme, 'hover-border-color');
             box-shadow: $raised-shadow--hover;
         }
 
         &:focus {
+            color: var-get($raised-theme, 'focus-foreground');
+            background: var-get($raised-theme, 'focus-background');
+            border-color: var-get($raised-theme, 'focus-border-color');
+
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--focus;
             } @else {
@@ -592,6 +667,10 @@
         }
 
         &:active {
+            color: var-get($raised-theme, 'active-foreground');
+            background: var-get($raised-theme, 'active-background');
+            border-color: var-get($raised-theme, 'active-border-color');
+
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--active;
             } @else {
@@ -599,14 +678,22 @@
             }
         }
 
-        &:focus {
-            color: var-get($raised-theme, 'focus-foreground');
-            background: var-get($raised-theme, 'focus-background');
-        }
+        &:focus-visible {
+            background: var-get($raised-theme, 'focus-visible-background');
+            color: var-get($raised-theme, 'focus-visible-foreground');
+            border-color: var-get($raised-theme, 'focus-visible-border-color');
 
-        &:active {
-            color: var-get($raised-theme, 'active-foreground');
-            background: var-get($raised-theme, 'active-background');
+            &:hover {
+                color: var-get($raised-theme, 'hover-foreground');
+                background: var-get($raised-theme, 'hover-background');
+                border-color: var-get($raised-theme, 'hover-border-color');
+            }
+
+            &:active {
+                color: var-get($raised-theme, 'active-foreground');
+                background: var-get($raised-theme, 'active-background');
+                border-color: var-get($raised-theme, 'active-border-color');
+            }
         }
 
         @if($variant == 'fluent') {
@@ -620,7 +707,7 @@
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($raised-theme, 'focus-visible-border-color');
                 }
             }
         }
@@ -632,7 +719,6 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        border: $button-border;
         outline: none;
         cursor: pointer;
         transition: $button-transition;
@@ -651,16 +737,22 @@
         white-space: nowrap;
         color: var-get($fab-theme, 'foreground');
         background: var-get($fab-theme, 'background');
+        border-color: var-get($flat-theme, 'border-color');
         box-shadow: $fab-shadow;
         border-radius: var-get($fab-theme, 'border-radius');
 
         &:hover {
             color: var-get($fab-theme, 'hover-foreground');
             background: var-get($fab-theme, 'hover-background');
+            border-color: var-get($flat-theme, 'hover-border-color');
             box-shadow: $fab-shadow;
         }
 
         &:focus {
+            color: var-get($fab-theme, 'focus-foreground');
+            background: var-get($fab-theme, 'focus-background');
+            border-color: var-get($flat-theme, 'focus-border-color');
+
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--focus;
             } @else {
@@ -669,6 +761,10 @@
         }
 
         &:active {
+            color: var-get($fab-theme, 'active-foreground');
+            background: var-get($fab-theme, 'active-background');
+            border-color: var-get($flat-theme, 'active-border-color');
+
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--active;
             } @else {
@@ -676,14 +772,22 @@
             }
         }
 
-        &:focus {
-            color: var-get($raised-theme, 'focus-foreground');
-            background: var-get($raised-theme, 'focus-background');
-        }
+        &:focus-visible {
+            background: var-get($fab-theme, 'focus-visible-background');
+            color: var-get($fab-theme, 'focus-visible-foreground');
+            border-color: var-get($fab-theme, 'focus-visible-border-color');
 
-        &:active {
-            color: var-get($raised-theme, 'active-foreground');
-            background: var-get($raised-theme, 'active-background');
+            &:hover {
+                color: var-get($fab-theme, 'hover-foreground');
+                background: var-get($fab-theme, 'hover-background');
+                border-color: var-get($fab-theme, 'hover-border-color');
+            }
+
+            &:active {
+                color: var-get($fab-theme, 'active-foreground');
+                background: var-get($fab-theme, 'active-background');
+                border-color: var-get($fab-theme, 'active-border-color');
+            }
         }
 
         @if($variant == 'fluent') {
@@ -698,7 +802,7 @@
                     border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$outline-btn-indent});
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($fab-theme, 'border-color');
                 }
             }
         }
@@ -741,10 +845,7 @@
         color: var-get($icon-theme, 'foreground');
         background: var-get($icon-theme, 'background');
         border-radius: var-get($icon-theme, 'border-radius');
-
-        @if $variant == 'fluent' {
-            border: 1px solid transparent;
-        }
+        border-color: var-get($icon-theme, 'border-color');
 
         &:hover {
             @if $variant != 'fluent' {
@@ -753,41 +854,48 @@
 
             color: var-get($icon-theme, 'hover-foreground');
             background: var-get($icon-theme, 'hover-background');
+            border-color: var-get($icon-theme, 'hover-border-color');
         }
 
         &:focus {
             color: var-get($icon-theme, 'focus-foreground');
-
-            @if $variant != 'fluent' {
-                background: var-get($icon-theme, 'focus-background');
-            }
+            background: var-get($icon-theme, 'focus-background');
+            border-color: var-get($icon-theme, 'focus-border-color');
 
             &:hover {
                 color: var-get($icon-theme, 'hover-foreground');
                 background: var-get($icon-theme, 'hover-background');
+                border-color: var-get($icon-theme, 'hover-border-color');
             }
 
             &:active {
                 color: var-get($icon-theme, 'active-foreground');
                 background: var-get($icon-theme, 'active-background');
+                border-color: var-get($icon-theme, 'active-border-color');
             }
         }
 
         &:active {
             color: var-get($icon-theme, 'active-foreground');
             background: var-get($icon-theme, 'active-background');
+            border-color: var-get($flat-theme, 'active-border-color');
         }
 
         &:focus-visible {
-            color: var-get($icon-theme, 'focus-foreground');
-
-            @if $variant == 'fluent' {
-                border: rem(1px) solid var-get($icon-theme, 'border-color') ;
-            }
+            color: var-get($icon-theme, 'focus-visible-foreground');
+            background: var-get($icon-theme, 'focus-visible-background');
+            border-color: var-get($icon-theme, 'focus-visible-border-color') ;
 
             &:hover {
                 color: var-get($icon-theme, 'hover-foreground');
                 background: var-get($icon-theme, 'hover-background');
+                border-color: var-get($icon-theme, 'focus-visible-border-color');
+            }
+
+            &:active {
+                color: var-get($icon-theme, 'active-foreground');
+                background: var-get($icon-theme, 'active-background');
+                border-color: var-get($icon-theme, 'focus-visible-border-color');
             }
         }
 
@@ -802,29 +910,11 @@
     }
 
     %igx-button--disabled {
+        background: var-get($flat-theme, 'disabled-background');
+        color: var-get($flat-theme, 'disabled-foreground');
+        border-color: var-get($flat-theme, 'disabled-border-color');
         pointer-events: none;
         box-shadow: none;
-        color: var-get($flat-theme, 'disabled-foreground');
-        background: transparent;
-
-        @if $variant == 'fluent' {
-            &%igx-button--outlined {
-                background: var-get($flat-theme, 'disabled-background');
-            }
-
-            &%igx-button--icon {
-                background: var-get($flat-theme, 'disabled-background');
-            }
-        }
-
-        &%igx-button--raised,
-        &%igx-button--fab {
-            background: var-get($flat-theme, 'disabled-background');
-        }
-
-        &%igx-button--outlined {
-            border-color: var-get($flat-theme, 'disabled-border-color');
-        }
 
         &:focus {
             box-shadow: none;
