@@ -223,8 +223,7 @@ export class IgxGridStateDirective {
                         newColumns.push(ref.instance);
                     }
                 });
-                context.currGrid.columnList.reset(newColumns);
-                context.currGrid.columnList.notifyOnChanges();
+                context.grid.updateColumns(newColumns);
             }
         },
         groupBy: {

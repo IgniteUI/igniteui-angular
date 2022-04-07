@@ -1,13 +1,20 @@
 .wrapper {
     margin: 24px;
     display: flex;
+    flex-direction: column;
 }
+
+.wrapper .buttons {
+    display: flex;
+    flex-direction: row;
+}
+
 .separator {
     padding-top: 5px;
     padding-bottom: 15px;
 }
 
-.categoryStyle{
+.categoryStyle {
     font-weight: 600;
 }
 

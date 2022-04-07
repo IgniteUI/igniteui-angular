@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, IgxGridStateDirective } from 'igniteui-angular';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
 
 @Component({
@@ -11,6 +11,9 @@ import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'pro
     templateUrl: 'grid-master-detail.sample.html'
 })
 export class GridMasterDetailSampleComponent implements OnInit {
+    @ViewChild(IgxGridStateDirective, { static: true })
+    public state!: IgxGridStateDirective;
+
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public data: Array<any>;
     public expState = [];
@@ -65,4 +68,14 @@ export class GridMasterDetailSampleComponent implements OnInit {
     public toggleFirstRow() {
         this.grid1.toggleRow(this.data[0]);
     }
+
+    public saveState() {
+        const state = this.state.getState() as string;
+        window.sessionStorage.setItem('grid-state', state);
+      }
+
+      public restoreState() {
+        const state = window.sessionStorage.getItem('grid-state');
+        this.state.setState(state as string);
+      }
 }
