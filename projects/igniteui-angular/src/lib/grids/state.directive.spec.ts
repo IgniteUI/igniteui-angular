@@ -201,7 +201,8 @@ describe('IgxGridState - input properties #grid', () => {
 
     it('setState should correctly restore grid columns state from string containing a dateTime column', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
-        let lastDateCol = { field: 'LastDate', header: 'Last date', width: '110px', dataType: 'dateTime', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false };
+        const lastDateCol = { field: 'LastDate', header: 'Last date', width: '110px', dataType: 'dateTime', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true,
+            sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false };
         fix.componentInstance.columns.push(lastDateCol);
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
