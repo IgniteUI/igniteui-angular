@@ -182,6 +182,27 @@ describe('IgxGridState - input properties #grid', () => {
         expect(gridState).toBe(filteringState);
     });
 
+    it('setState should correctly restore grid columns state from string containing a dateTime column', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.grid;
+        grid.getCellByColumn(0, 'LastDate').value = new Date('2021-06-05T23:59');
+        fix.detectChanges();
+        const state = fix.componentInstance.state;
+
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"equals","isUnary":false,"iconName":"equals"},"fieldName":"LastDate","ignoreCase":true,"searchVal":"2021-06-05T20:59:00.000Z"}],"operator":1,"fieldName":"LastDate"}],"operator":0,"type":0}}';
+        const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
+
+        let gridState = state.getState(true, 'filtering');
+        expect(gridState).toBe(initialState);
+
+        state.setState(filteringState);
+        gridState = state.getState(false, 'filtering') as IGridState;
+        HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
+        gridState = state.getState(true, 'filtering');
+        expect(gridState).toBe(filteringState);
+    });
+
     it('setState should correctly restore grid filtering state from  with null date values', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
@@ -734,6 +755,7 @@ export class IgxGridStateComponent {
         { field: 'ProductName', header: 'Prodyct Name', width: '150px', dataType: 'string', pinned: false, selectable: false, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true },
         { field: 'InStock', header: 'In Stock', width: '140px', dataType: 'boolean', pinned: false, sortable: false, filterable: true, groupable: false, hasSummary: true, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: true },
         { field: 'OrderDate', header: 'Date ordered', width: '110px', dataType: 'date', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
+        { field: 'LastDate', header: 'Last date', width: '110px', dataType: 'dateTime', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
         /* eslint-enable max-len */
       ];
 }
