@@ -35,6 +35,9 @@
 /// @prop {Map} hover-border-color [color: ('grays', 900)] - The hover input border for input groups of type border and fluent.
 /// @prop {Map} focused-border-color [color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
 /// @prop {Map} disabled-border-color [color: ('grays', 500, .12)] - The disabled border color for input groups of type border and fluent.
+/// @prop {Map} $success-border-color [color: ('success', 500)] - The border color for success state bootstrap input groups.
+/// @prop {Map} $warning-border-color [color: ('warn', 500)] - The border color for warning state bootstrap input groups.
+/// @prop {Map} $error-border-color [color: ('error', 500)] - The border color for error state bootstrap input groups.
 ///
 /// @prop {Map} box-background [color: ('grays', 200)] - The background color of an input group of type box.
 /// @prop {Map} box-disabled-background [color: ('grays', 100)] - The background color of an input group of type box in the disabled state.
@@ -194,6 +197,18 @@ $light-input-group: extend(
 
         disabled-placeholder-color: (
             color: ('grays', 400)
+        ),
+
+        success-border-color: (
+            color: ('success', 500)
+        ),
+
+        warning-border-color: (
+            color: ('warn', 500)
+        ),
+
+        error-border-color: (
+            color: ('error', 500)
         ),
     )
 );
