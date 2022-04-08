@@ -36,9 +36,6 @@
 /// @param {Color} $hover-border-color [null] - The hover input border for input groups of type border and fluent.
 /// @param {Color} $focused-border-color [null] - The focused input border color for input groups of type border and fluent.
 /// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border and fluent.
-/// @param {Color} $success-border-color [null] - The border color for success state for bootstrap input group.
-/// @param {Color} $warning-border-color [null] - The border color for warning state for bootstrap input group.
-/// @param {Color} $error-border-color [null] - The border color for error state for bootstrap input group.
 ///
 /// @param {Color} $box-background [null] - The background color of an input group of type box.
 /// @param {Color} $box-disabled-background [null] - The background color of an input group of type box in the disabled state.
@@ -56,6 +53,9 @@
 /// @param {Color} $success-secondary-color [null] - The success color used in the valid state.
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
 /// @param {Color} $error-secondary-color [null] - The error color used in the error state.
+///
+/// @param {Color} $success-border-color [null] - The border color for success state for bootstrap input group.
+/// @param {Color} $error-border-color [null] - The border color for error state for bootstrap input group.
 ///
 /// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
 /// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
@@ -103,9 +103,6 @@
     $border-color: null,
     $hover-border-color: null,
     $focused-border-color: null,
-    $success-border-color: null,
-    $warning-border-color: null,
-    $error-border-color: null,
     $disabled-border-color: null,
 
     $box-background: null,
@@ -123,6 +120,9 @@
     $success-secondary-color: null,
     $warning-secondary-color: null,
     $error-secondary-color: null,
+
+    $success-shadow-color: null,
+    $error-shadow-color: null,
 
     $placeholder-color: null,
     $disabled-placeholder-color: null,
@@ -213,9 +213,6 @@
         border-color: $border-color,
         hover-border-color: $hover-border-color,
         focused-border-color: $focused-border-color,
-        success-border-color: $success-border-color,
-        warning-border-color: $warning-border-color,
-        error-border-color: $error-border-color,
         disabled-border-color: $disabled-border-color,
 
         box-background: $box-background,
@@ -234,6 +231,10 @@
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
         error-secondary-color: $error-secondary-color,
+
+        success-shadow-color: $success-shadow-color,
+        error-shadow-color: $error-shadow-color,
+
         placeholder-color: $placeholder-color,
         disabled-placeholder-color: $disabled-placeholder-color,
 
@@ -1756,13 +1757,13 @@
     }
 
     %bootstrap-input--success {
-        border: rem(1px) solid var-get($theme, 'success-border-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-secondary-color');
+        border: rem(1px) solid var-get($theme, 'success-secondary-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
     }
 
     %bootstrap-input--error {
-        border: rem(1px) solid var-get($theme, 'error-border-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-secondary-color');
+        border: rem(1px) solid var-get($theme, 'error-secondary-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
     }
 
     %bootstrap-input--disabled {
