@@ -131,7 +131,7 @@ export abstract class IgxGroupByAreaDirective {
             if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
                 const groupingExpression = {
                     fieldName: column.field,
-                    dir: SortingDirection.Asc,
+                    dir: this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir || SortingDirection.Asc,
                     ignoreCase: column.sortingIgnoreCase,
                     strategy: column.sortStrategy,
                     groupingComparer: column.groupingComparer
