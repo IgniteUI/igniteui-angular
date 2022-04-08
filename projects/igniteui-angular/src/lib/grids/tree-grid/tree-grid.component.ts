@@ -633,7 +633,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (index === null || index < 0) {
             return this.beginAddRowById(null, asChild);
         }
-        return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index, this.dataView), asChild);
+        return this._addRowForIndex(index - 1, asChild);
     }
 
     /**

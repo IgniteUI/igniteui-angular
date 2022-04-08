@@ -979,7 +979,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             if (changes && this.columnList.length > 0) {
                 changes.forEachAddedItem((rec) => {
                     const col = this.getColumnByName(rec.item.fieldName);
-                    col.hidden = true;
+                    if (col) {
+                        col.hidden = true;
+                    }
                 });
                 changes.forEachRemovedItem((rec) => {
                     const col = this.getColumnByName(rec.item.fieldName);
