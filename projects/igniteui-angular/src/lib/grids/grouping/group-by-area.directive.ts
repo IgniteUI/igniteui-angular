@@ -190,6 +190,6 @@ export class IgxGroupByMetaPipe implements PipeTransform {
 
     public transform(key: string, grid: GridType) {
         const column = grid.getColumnByName(key);
-        return { groupable: column.groupable, title: column.header || key };
+        return { groupable: column?.groupable, title: column?.header || key };
     }
 }
