@@ -3733,7 +3733,7 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
         </igx-grid>
     `
 })
-export class GridGroupByCaseSensitiveComponent extends DataParent {
+export class GridGroupByCaseSensitiveComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
