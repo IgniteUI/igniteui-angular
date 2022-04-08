@@ -655,7 +655,7 @@ export class IgxGridNavigationService {
         if (shift && alt && this.isToggleKey(key) && !column.columnGroup && column.groupable) {
             direction = direction ? SortingDirection.Desc : SortingDirection.Asc;
             if (key.includes('right')) {
-                (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false });
+                (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: column.sortingIgnoreCase });
             } else {
                 (this.grid as any).clearGrouping(column.field);
             }
