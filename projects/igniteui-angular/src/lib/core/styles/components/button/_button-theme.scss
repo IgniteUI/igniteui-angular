@@ -617,8 +617,22 @@
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
                 }
+
+                /* stylelint-disable */
+                &:hover {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
+                    }
+                }
+
+                &:active {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                    }
+                }
+                /* stylelint-enable */
             }
         }
     }
@@ -707,8 +721,22 @@
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($raised-theme, 'focus-visible-border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
                 }
+
+                /* stylelint-disable */
+                &:hover {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
+                    }
+                }
+
+                &:active {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                    }
+                }
+                /* stylelint-enable */
             }
         }
     }
@@ -802,8 +830,22 @@
                     border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$outline-btn-indent});
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($fab-theme, 'border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
                 }
+
+                /* stylelint-disable */
+                &:hover {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
+                    }
+                }
+
+                &:active {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                    }
+                }
+                /* stylelint-enable */
             }
         }
 
