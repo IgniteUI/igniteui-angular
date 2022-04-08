@@ -895,6 +895,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
+    protected generateDataFields(data: any[]): string[] {
+        return super.generateDataFields(data).filter(field => field !== this.childDataKey);
+    }
+
     protected transactionStatusUpdate(event: StateUpdateEvent) {
         let actions = [];
         if (event.origin === TransactionEventOrigin.REDO) {
