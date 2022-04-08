@@ -97,19 +97,11 @@ $dark-palette: $default-dark-palette;
 /// @see $light-palette
 $light-material-palette: $light-palette;
 
-/// Dark material palette
-/// @type Map
-/// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
-/// @prop {Color} secondary [#72da67] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
-/// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
-/// @access private
-$dark-material-palette: palette(
-    $primary: #09f,
-    $secondary: #72da67,
-    $grays: #fff,
-    $surface: #222,
-);
+/// An alias of $dark-palette
+/// @group palettes
+/// @alias dark-palette
+/// @see $dark-palette
+$dark-material-palette: $default-dark-palette;
 
 /// @access private
 $green-palette: palette(
@@ -200,7 +192,7 @@ $fluent-excel-palette: palette(
     $primary: #217346,
     $secondary: #217346,
     $success: #107c10,
-    $warn: #797673, 
+    $warn: #797673,
     $error: #a80000,
     $variant: 'fluent'
 ) !default;
