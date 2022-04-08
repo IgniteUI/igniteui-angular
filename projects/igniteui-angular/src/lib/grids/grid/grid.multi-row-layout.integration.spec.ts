@@ -9,7 +9,7 @@ import { ViewChild, Component } from '@angular/core';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
 
@@ -941,7 +941,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 600, 5);
             fixture.detectChanges();
 
-            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('250px 250px 150px 100px 100px 200px');
         });
 
@@ -981,7 +981,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
             fixture.detectChanges();
 
-            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('250px 250px 100px 100px 100px 200px');
         });
 
@@ -1021,7 +1021,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
             fixture.detectChanges();
 
-            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 300px 100px 100px 100px 200px');
         });
 
@@ -1061,7 +1061,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
             fixture.detectChanges();
 
-            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('300px 200px 100px 100px 100px 200px');
         });
 
@@ -1089,7 +1089,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.columnList.get(7).width).toEqual('200px');
             expect(grid.columnList.get(7).cells[0].value).toEqual('Alfreds Futterkiste');
 
-            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 700px 100px 100px 200px');
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
@@ -1131,7 +1131,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             // City
             expect(grid.columnList.get(5).cells[0].value).toEqual('Berlin');
 
-            let groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            let groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 700px 100px 100px 200px');
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
@@ -1149,7 +1149,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             // Small misalignment in the third column occurs when cols are being intersected.
-            groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 650px 50px 100px 200px');
         });
     });

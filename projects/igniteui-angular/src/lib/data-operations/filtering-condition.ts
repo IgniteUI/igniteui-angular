@@ -389,13 +389,9 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     }
 }
 
-export class IgxDateTimeFilteringOperand extends IgxDateFilteringOperand {
+export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     protected constructor() {
         super();
-        let index = this.operations.indexOf(this.condition('equals'));
-        this.operations.splice(index, 1);
-        index = this.operations.indexOf(this.condition('doesNotEqual'));
-        this.operations.splice(index, 1);
         this.operations = [{
             name: 'equals',
             isUnary: false,
@@ -431,6 +427,172 @@ export class IgxDateTimeFilteringOperand extends IgxDateFilteringOperand {
                     targetp.hours !== searchp.hours ||
                     targetp.minutes !== searchp.minutes ||
                     targetp.seconds !== searchp.seconds;
+            }
+        }, {
+            name: 'before',
+            isUnary: false,
+            iconName: 'is-before',
+            logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
+                return target < searchVal;
+            }
+        }, {
+            name: 'after',
+            isUnary: false,
+            iconName: 'is-after',
+            logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
+                return target > searchVal;
+            }
+        }, {
+            name: 'today',
+            isUnary: true,
+            iconName: 'today',
+            logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
+                const d = IgxDateTimeFilteringOperand.getDateParts(target, 'yMd');
+                const now = IgxDateTimeFilteringOperand.getDateParts(new Date(), 'yMd');
+                return d.year === now.year &&
+                    d.month === now.month &&
+                    d.day === now.day;
+            }
+        }, {
+            name: 'yesterday',
+            isUnary: true,
+            iconName: 'yesterday',
+            logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
+                const td = IgxDateTimeFilteringOperand.getDateParts(target, 'yMd');
+                const y = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
+                const yesterday = IgxDateTimeFilteringOperand.getDateParts(y, 'yMd');
+                return td.year === yesterday.year &&
+                    td.month === yesterday.month &&
+                    td.day === yesterday.day;
+            }
+        }, {
+            name: 'thisMonth',
+            isUnary: true,
+            iconName: 'this-month',
+            logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
+                const d = IgxDateTimeFilteringOperand.getDateParts(target, 'yM');
+                const now = IgxDateTimeFilteringOperand.getDateParts(new Date(), 'yM');
+                return d.year === now.year &&
+                    d.month === now.month;
+            }
+        }, {
+            name: 'lastMonth',
+            isUnary: true,
+            iconName: 'last-month',
+            logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
+                const d = IgxDateTimeFilteringOperand.getDateParts(target, 'yM');
+                const now = IgxDateTimeFilteringOperand.getDateParts(new Date(), 'yM');
+                if (!now.month) {
+                    now.month = 11;
+                    now.year -= 1;
+                } else {
+                    now.month--;
+                }
+                return d.year === now.year &&
+                    d.month === now.month;
+            }
+        }, {
+            name: 'nextMonth',
+            isUnary: true,
+            iconName: 'next-month',
+            logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
+                const d = IgxDateTimeFilteringOperand.getDateParts(target, 'yM');
+                const now = IgxDateTimeFilteringOperand.getDateParts(new Date(), 'yM');
+                if (now.month === 11) {
+                    now.month = 0;
+                    now.year += 1;
+                } else {
+                    now.month++;
+                }
+                return d.year === now.year &&
+                    d.month === now.month;
+            }
+        }, {
+            name: 'thisYear',
+            isUnary: true,
+            iconName: 'this-year',
+            logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
+                const d = IgxDateTimeFilteringOperand.getDateParts(target, 'y');
+                const now = IgxDateTimeFilteringOperand.getDateParts(new Date(), 'y');
+                return d.year === now.year;
+            }
+        }, {
+            name: 'lastYear',
+            isUnary: true,
+            iconName: 'last-year',
+            logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
+                const d = IgxDateTimeFilteringOperand.getDateParts(target, 'y');
+                const now = IgxDateTimeFilteringOperand.getDateParts(new Date(), 'y');
+                return d.year === now.year - 1;
+            }
+        }, {
+            name: 'nextYear',
+            isUnary: true,
+            iconName: 'next-year',
+            logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
+                const d = IgxDateTimeFilteringOperand.getDateParts(target, 'y');
+                const now = IgxDateTimeFilteringOperand.getDateParts(new Date(), 'y');
+                return d.year === now.year + 1;
             }
         }].concat(this.operations);
     }
