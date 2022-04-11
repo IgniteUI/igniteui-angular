@@ -653,9 +653,15 @@ export class IgxGridNavigationService {
             return;
         }
         if (shift && alt && this.isToggleKey(key) && !column.columnGroup && column.groupable) {
-            direction = direction ? SortingDirection.Desc : SortingDirection.Asc;
+            direction = direction || SortingDirection.Asc;
             if (key.includes('right')) {
-                (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: column.sortingIgnoreCase });
+                (this.grid as any).groupBy({
+                    fieldName: column.field,
+                    dir: direction,
+                    ignoreCase: column.sortingIgnoreCase,
+                    strategy: column.sortStrategy,
+                    groupingComparer: column.groupingComparer,
+                });
             } else {
                 (this.grid as any).clearGrouping(column.field);
             }
