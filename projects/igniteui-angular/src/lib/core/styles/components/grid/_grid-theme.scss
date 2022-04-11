@@ -1828,6 +1828,9 @@
 
     %igx-grid-th--filtrable-sortable {
         .sort-icon {
+            cursor: pointer;
+            opacity: .7;
+
             &:hover {
                 opacity: 1;
             }
@@ -1835,7 +1838,6 @@
     }
 
     .sort-icon {
-        opacity: 0;
         transition: all 250ms ease-in-out;
     }
 

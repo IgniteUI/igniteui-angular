@@ -15,7 +15,7 @@ import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '..
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
-import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionFunctions, GridFunctions, GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
@@ -2946,7 +2946,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const groupArea = grid.groupArea;
         const gridHeader = grid.theadRow;
         const gridFooter = grid.tfoot;
-        const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+        const gridScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
 
         let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
             - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)

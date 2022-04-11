@@ -54,6 +54,9 @@
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
 /// @param {Color} $error-secondary-color [null] - The error color used in the error state.
 ///
+/// @param {Color} $success-border-color [null] - The border color for success state for bootstrap input group.
+/// @param {Color} $error-border-color [null] - The border color for error state for bootstrap input group.
+///
 /// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
 /// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
 /// @param {border-radius} $search-border-radius [null] - The border radius used for search input.
@@ -117,6 +120,9 @@
     $success-secondary-color: null,
     $warning-secondary-color: null,
     $error-secondary-color: null,
+
+    $success-shadow-color: null,
+    $error-shadow-color: null,
 
     $placeholder-color: null,
     $disabled-placeholder-color: null,
@@ -225,6 +231,10 @@
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
         error-secondary-color: $error-secondary-color,
+
+        success-shadow-color: $success-shadow-color,
+        error-shadow-color: $error-shadow-color,
+
         placeholder-color: $placeholder-color,
         disabled-placeholder-color: $disabled-placeholder-color,
 
@@ -477,6 +487,11 @@
         box-shadow: inset 0 -2px 0 0 var-get($theme, 'error-secondary-color');
     }
 
+    %form-group-bundle-error--indigo--hover {
+        border-color: var-get($theme, 'error-secondary-color');
+        box-shadow: 0 0 0 1px var-get($theme, 'error-secondary-color');
+    }
+
     %form-group-helper--indigo--disabled {
         color: var-get($theme, 'disabled-text-color');
     }
@@ -570,7 +585,7 @@
 
     %form-group-bundle--border-compact {
         padding: 0 0 0 rem(16px, map.get($base-scale-size, 'compact'));
-        
+
         igx-suffix,
         [igxSuffix] {
             padding-right: rem(16px, map.get($base-scale-size, 'compact'));
@@ -728,7 +743,7 @@
     }
 
     %form-group-bundle-required--fluent {
-        &::after {
+        &::before {
             content: '*';
             position: absolute;
             top: rem(-8px);
@@ -738,7 +753,7 @@
     }
 
     %fluent-label + %form-group-bundle-required--fluent {
-        &::after {
+        &::before {
             display: none;
         }
     }
@@ -763,7 +778,15 @@
     %form-group-bundle--fluent--focus {
         caret-color: var-get($theme, 'focused-text-color');
         border-color: var-get($theme, 'focused-border-color');
-        box-shadow: 0 0 0 1px var-get($theme, 'focused-border-color');
+
+        &::after {
+            pointer-events: none;
+            position: absolute;
+            content: '';
+            width: 100%;
+            height: 100%;
+            border: rem(1px) solid var-get($theme, 'focused-border-color');
+        }
     }
 
     %form-group-bundle--fluent--hover-disabled,
@@ -772,22 +795,28 @@
         background: var-get($theme, 'border-disabled-background');
     }
 
+    %form-group-bundle-error--fluent,
     %form-group-bundle-error--fluent--hover,
-    %form-group-bundle-error--fluent {
+    %form-group-bundle-error--fluent--focus {
         border-color: var-get($theme, 'error-secondary-color');
     }
 
-    %form-group-bundle-error--fluent--hover {
-        box-shadow: 0 0 0 1px var-get($theme, 'error-secondary-color');
-    }
-
+    %form-group-bundle-success--fluent,
     %form-group-bundle-success--fluent--hover,
-    %form-group-bundle-success--fluent {
+    %form-group-bundle-success--fluent--focus {
         border-color: var-get($theme, 'success-secondary-color');
     }
 
-    %form-group-bundle-success--fluent--hover {
-        box-shadow: 0 0 0 1px var-get($theme, 'success-secondary-color');
+    %form-group-bundle-success--fluent--focus {
+        &::after {
+            border: rem(1px) solid var-get($theme, 'success-secondary-color');
+        }
+    }
+
+    %form-group-bundle-error--fluent--focus {
+        &::after {
+            border: rem(1px) solid var-get($theme, 'error-secondary-color');
+        }
     }
 
     %fluent-input {
@@ -1711,34 +1740,35 @@
         border: 1px solid var-get($theme, 'border-color');
         font-size: map.get($bootstrap-font-size, 'comfortable');
         padding: map.get($bootstrap-padding, 'comfortable');
+        transition: box-shadow .15s ease-out, border .15s ease-out;
     }
 
     %bootstrap-file-input {
         width: calc(100% - #{2 * nth(map.get($bootstrap-padding, 'comfortable'), 2)});
         height: inherit;
         border-radius: var-get($theme, 'box-border-radius');
-        border: 1px solid var-get($theme, 'border-color');
+        border: rem(1px) solid var-get($theme, 'border-color');
         padding: map.get($bootstrap-padding, 'comfortable');
     }
 
     %bootstrap-input--focus {
-        border: 1px solid var-get($theme, 'focused-secondary-color');
-        box-shadow: 0 0 0 rem(3px) var-get($theme, 'focused-secondary-color');
+        border: rem(1px) solid var-get($theme, 'focused-border-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'focused-secondary-color');
     }
 
     %bootstrap-input--success {
-        border: 1px solid var-get($theme, 'success-secondary-color');
-        box-shadow: 0 0 0 rem(3px) var-get($theme, 'success-secondary-color');
+        border: rem(1px) solid var-get($theme, 'success-secondary-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
     }
 
     %bootstrap-input--error {
-        border: 1px solid var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-secondary-color');
+        border: rem(1px) solid var-get($theme, 'error-secondary-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
     }
 
     %bootstrap-input--disabled {
         background: var-get($theme, 'border-disabled-background');
-        border: 1px solid var-get($theme, 'disabled-border-color');
+        border: rem(1px) solid var-get($theme, 'disabled-border-color');
         box-shadow: none;
     }
 
