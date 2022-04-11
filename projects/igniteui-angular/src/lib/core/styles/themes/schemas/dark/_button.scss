@@ -141,12 +141,17 @@ $fluent-base-button-dark: extend(
     )
 );
 
+/// @type {Map}
+/// @prop {Color} disabled-background [transparent] - The disabled background color an outlined button.
 /// @requires {Map} $fluent-flat-button
 /// @requires {Map} $fluent-base-button-dark
 /// @requires {function} extend
 $fluent-flat-button-dark: extend(
     $fluent-flat-button,
-    $fluent-base-button-dark
+    $fluent-base-button-dark,
+    (
+        disabled-background: transparent
+    )
 );
 
 /// @requires {Map} $fluent-raised-button
@@ -167,6 +172,7 @@ $fluent-fab-button-dark: extend(
 
 /// @prop {Map} hover-background [color: ('grays', 50)] - The hover background color of an icon button.
 /// @prop {Map} active-background [color: ('grays', 100, .8)] - The active background color of an icon button.
+/// @prop {Map} disabled-border-color [color: ('grays', 50)] - The disabled focused border color of an icon button.
 /// @requires {Map} $fluent-icon-button
 /// @requires {Map} $fluent-base-button-dark
 /// @requires {function} extend
@@ -180,6 +186,10 @@ $fluent-icon-button-dark: extend(
 
         active-background: (
             color: ('grays', 100, .8)
+        ),
+
+        disabled-border-color: (
+            color: ('grays', 50)
         ),
     )
 );
@@ -296,6 +306,7 @@ $indigo-base-button-dark: extend(
 
 /// @type {Map}
 /// @prop {Map} foreground [color: ('grays', 600, .8)] - The idle text color of a outlined button.
+/// @prop {Color} disabled-background [transparent] - The disabled background color an outlined button.
 /// @requires {Map} $indigo-base-button-dark
 /// @requires {Map} $indigo-flat-button
 /// @requires {function} extend
@@ -306,6 +317,8 @@ $indigo-flat-button-dark: extend(
         foreground: (
             color: ('grays', 600, .8),
         ),
+
+        disabled-background: transparent
     )
 );
 
@@ -343,6 +356,7 @@ $indigo-raised-button-dark: extend(
 /// @prop {Map} foreground [color: ('grays', 500)] - The idle text color of a outlined button.
 /// @prop {Map} border-color [color: ('grays', 300)] - The border color of an outlined button.
 /// @prop {Map} shadow-color [color: ('grays', 200, .8)] - The shadow color of an outlined button.
+/// @prop {Color} disabled-background [transparent] - The disabled background color an outlined button.
 /// @requires {Map} $indigo-base-button-dark
 /// @requires {Map} $indigo-outlined-button
 /// @requires {function} extend
@@ -361,14 +375,24 @@ $indigo-outlined-button-dark: extend(
         shadow-color: (
             color: ('grays', 200, .8),
         ),
+
+
+        disabled-background: transparent
     )
 );
 
 /// @type {Map}
+/// @prop {Color} disabled-background [transparent] - The disabled background color an outlined button.
 /// @requires {Map} $indigo-base-button-dark
 /// @requires {Map} $indigo-icon-button
 /// @requires {function} extend
-$indigo-icon-button-dark: extend($indigo-icon-button, $indigo-base-button-dark);
+$indigo-icon-button-dark: extend(
+    $indigo-icon-button,
+    $indigo-base-button-dark,
+    (
+        disabled-background: transparent
+    )
+);
 
 /// @type {Map}
 /// @prop {Color} foreground [color: ('grays', 900) - The idle text color of a fab button.

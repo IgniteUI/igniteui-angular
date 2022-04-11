@@ -570,16 +570,6 @@
             background: var-get($flat-theme, 'focus-visible-background');
             color: var-get($flat-theme, 'focus-visible-foreground');
             border-color: var-get($flat-theme, 'focus-visible-border-color');
-
-            &:hover {
-                background: var-get($flat-theme, 'hover-background');
-                color: var-get($flat-theme, 'hover-foreground');
-            }
-
-            &:active {
-                background: var-get($flat-theme, 'active-background');
-                color: var-get($flat-theme, 'active-foreground');
-            }
         }
 
         @if($variant == 'bootstrap') {
