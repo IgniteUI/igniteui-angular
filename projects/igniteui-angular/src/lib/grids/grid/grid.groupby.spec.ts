@@ -3243,6 +3243,29 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(groupRows.length).toEqual(3);
         }));
 
+    it('should respect current sorting direction when grouping', (async () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+
+        grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Desc });
+
+        const firstColumn = fix.debugElement.query(By.directive(IgxColumnMovingDragDirective));
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstColumn.nativeElement, 75, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 110, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 100, 30);
+        await wait(50);
+        UIInteractions.simulatePointerEvent('pointerup', firstColumn.nativeElement, 100, 30);
+        await wait(50);
+        fix.detectChanges();
+
+        expect(grid.groupingExpressions[0].dir).toEqual(2);
+    }));
+
     it('should update grouping expression when sorting a column first then grouping by it and changing sorting for it again',
         fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
@@ -3743,7 +3766,7 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
         </igx-grid>
     `
 })
-export class GridGroupByCaseSensitiveComponent extends DataParent {
+export class GridGroupByCaseSensitiveComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
