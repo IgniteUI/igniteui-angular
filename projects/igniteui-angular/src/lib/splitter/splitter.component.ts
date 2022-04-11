@@ -154,7 +154,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
     public set type(value) {
         this._type = value;
-        this.resetPaneSizes(true);
+        this.resetPaneSizes(this.panes?.filter(x => !x.collapsed).length > 1);
     }
 
     /**
@@ -290,7 +290,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     private resetPaneSizes(isTypeChanged) {
         if (this.panes) {
             // if type is changed runtime, should reset sizes.
-            this.panes.forEach(x => x.size = isTypeChanged ? x.previousSize : 'auto');
+            this.panes.forEach(x => x.size = isTypeChanged  ? x.previousSize : 'auto');
         }
     }
 
