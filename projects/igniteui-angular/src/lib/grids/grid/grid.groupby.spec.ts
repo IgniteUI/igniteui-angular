@@ -762,6 +762,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
+        expect(grid.sortingExpressions.length).toBe(1);
+
         grid.groupBy({
             fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
         });
@@ -769,6 +771,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         const groupRows = grid.groupsRowList.toArray();
         // verify group order
         checkGroups(groupRows, [null, '', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']);
+        expect(grid.sortingExpressions.length).toBe(0);
+        expect(grid.groupingExpressions.length).toBe(1);
     }));
 
     it('should allow grouping of already sorted column', waitForAsync(() => {
