@@ -18,6 +18,7 @@ import { GridSelectionMode, FilterMode } from '../common/enums';
 import { IActiveNodeChangeEventArgs } from '../common/events';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { ISortingStrategy } from '../../data-operations/sorting-strategy';
 
 const DEBOUNCETIME = 30;
 
@@ -701,6 +702,27 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             header = GridFunctions.getColumnHeader('HireDate', fix);
             GridFunctions.verifyHeaderIsFocused(header.parent);
         }));
+
+        it('Group by: Should respect column properties when grouping with keyboard', () => {
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc });
+
+            let sortStrategy: ISortingStrategy;
+            const comparer = (a: string, b: string) => (a.toLowerCase() === b.toLowerCase() ? 0 : -1);
+
+            const column = grid.getColumnByName('ID');
+            column.groupable = true;
+            column.sortingIgnoreCase = false;
+            column.sortStrategy = sortStrategy;
+            column.groupingComparer = comparer;
+
+            (grid.navigation as any).performHeaderKeyCombination(column, 'arrowright', true, false, true);
+
+            expect(grid.groupingExpressions[0].fieldName).toEqual(column.field);
+            expect(grid.groupingExpressions[0].dir).toEqual(2);
+            expect(grid.groupingExpressions[0].ignoreCase).toEqual(false);
+            expect(grid.groupingExpressions[0].strategy).toBeUndefined();
+            expect(grid.groupingExpressions[0].groupingComparer).toEqual(comparer);
+        });
     });
 
     describe('MRL Headers Navigation', () => {
