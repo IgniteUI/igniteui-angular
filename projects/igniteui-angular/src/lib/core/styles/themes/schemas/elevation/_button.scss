@@ -8,40 +8,49 @@
 /// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} active-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
 $flat-elevation-button: (
     resting-elevation: 0,
     hover-elevation: 0,
     focus-elevation: 0,
+    active-elevation: 0,
 );
 
 /// @type Map
 /// @prop {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [4] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} focus-elevation [8] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} active-elevation [8] - The elevation level, between 0-24, to be used for the focus state.
+
 $material-raised-elevation: (
     resting-elevation: 2,
     hover-elevation: 4,
     focus-elevation: 8,
+    active-elevation: 8,
 );
 
 /// @type Map
 /// @prop {Number} resting-elevation [6] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [12] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} focus-elevation [12] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} active-elevation [12] - The elevation level, between 0-24, to be used for the focus state.
 $material-fab-elevation: (
     resting-elevation: 6,
     hover-elevation: 12,
-    focus-elevation: 12
+    focus-elevation: 12,
+    active-elevation: 12,
 );
 
 /// @type Map
 /// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} focus-elevation [6] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} active-elevation [6] - The elevation level, between 0-24, to be used for the focus state.
 $material-ib-elevation: (
     resting-elevation: 0,
     hover-elevation: 0,
-    focus-elevation: 6
+    focus-elevation: 6,
+    active-elevation: 6,
 );
 
 /// @type Map
