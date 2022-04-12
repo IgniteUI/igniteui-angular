@@ -24,7 +24,7 @@
 
     %date-picker {
         box-shadow: elevation($elevation: 24);
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         background: var-get($theme, 'content-background');
         overflow: hidden;
 

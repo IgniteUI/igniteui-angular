@@ -228,7 +228,7 @@
         cursor: grabbing;
         box-shadow: elevation($elevations, 24);
         border: 1px solid color($color: 'grays', $variant: 100);
-        border-radius: rem(2px);
+        border-radius: border-radius(rem(2px));
         z-index: 10;
 
         igx-icon {

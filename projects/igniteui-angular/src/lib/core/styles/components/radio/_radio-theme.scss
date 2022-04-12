@@ -131,7 +131,7 @@
     ), $variant);
 
     $border-style: solid;
-    $border-radius: 50% 50%;
+    $border-radius: border-radius(50%);
 
     $transition: all .2s ease-in;
 
@@ -312,7 +312,7 @@
         left: calc(50% - #{$ripple-radius});
         width: $ripple-size;
         height: $ripple-size;
-        border-radius: $ripple-radius;
+        border-radius: border-radius(math.div($ripple-size, 2));
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);

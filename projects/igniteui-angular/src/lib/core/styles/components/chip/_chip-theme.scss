@@ -105,10 +105,6 @@
 
     $theme: apply-palette($chip-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($chip-schema, 'border-radius')), 0, 16px
-    );
-
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
     }
@@ -520,7 +516,7 @@
         border-width: 1px;
         border-style: solid;
         border-color: var-get($theme, 'border-color');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         user-select: none;
         overflow: hidden;
         cursor: pointer;

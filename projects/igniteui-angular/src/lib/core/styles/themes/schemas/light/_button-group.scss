@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/button-group' as *;
 @use '../elevation/button-group' as *;
 
 ////
@@ -27,13 +26,11 @@
 /// @prop {Map} item-selected-hover-background [color: ('grays', 500, 8)] - The background color for a selected item in hover or focus state in the button group.
 /// @prop {Map} idle-shadow-color [transparent] - The outline color of button group items.
 /// @prop {Number} elevation [2] - The elevation level, between 0-24, to be used for the button group shadow.
-/// @prop {Number} border-radius [.2] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [4px] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires {Map} $default-shape-button-group
 /// @requires {Map} $default-elevation-button-group
 /// @see $default-palette
 $light-button-group: extend(
-    $default-shape-button-group,
     $default-elevation-button-group,
     (
         variant: 'material',
@@ -87,6 +84,8 @@ $light-button-group: extend(
         item-disabled-border: (
             color: ('grays', 400),
         ),
+
+        border-radius: rem(4px)
     )
 );
 
@@ -106,11 +105,9 @@ $light-button-group: extend(
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-button-group
-/// @requires {Map} $fluent-shape-button-group
 /// @requires {Map} $fluent-elevation-button-group
 $fluent-button-group: extend(
     $light-button-group,
-    $fluent-shape-button-group,
     $fluent-elevation-button-group,
     (
         variant: 'fluent',
@@ -142,6 +139,8 @@ $fluent-button-group: extend(
         disabled-background-color: (
             color: ('grays', 50)
         ),
+
+        border-radius: rem(2px)
     )
 );
 
@@ -163,11 +162,9 @@ $fluent-button-group: extend(
 /// @prop {Number} border-radius [4px] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-button-group
-/// @requires {Map} $bootstrap-shape-button-group
 /// @requires {Map} $bootstrap-elevation-button-group
 $bootstrap-button-group: extend(
     $light-button-group,
-    $bootstrap-shape-button-group,
     $bootstrap-elevation-button-group,
     (
         variant: 'bootstrap',
@@ -242,11 +239,9 @@ $bootstrap-button-group: extend(
 /// @prop {Number} border-radius [8px] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-button-group
-/// @requires {Map} $indigo-shape-button-group
 /// @requires {Map} $indigo-elevation-button-group
 $indigo-button-group: extend(
     $light-button-group,
-    $indigo-shape-button-group,
     $indigo-elevation-button-group,
     (
         variant: 'indigo-design',
@@ -306,5 +301,7 @@ $indigo-button-group: extend(
         item-disabled-border: (
             color: ('grays', 300)
         ),
+
+        border-radius: rem(8px)
     )
 );

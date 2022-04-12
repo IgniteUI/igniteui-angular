@@ -58,7 +58,7 @@
     %igx-ripple-display {
         display: block;
         position: absolute;
-        border-radius: 50%;
+        border-radius: border-radius(50%);
         background: var-get($theme, 'color');
         pointer-events: none;
         transform-origin: center;

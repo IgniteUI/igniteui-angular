@@ -34,7 +34,6 @@
 /// @requires extend
 /// @requires elevation
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Change the previous/next button colors
 ///   $my-carousel-theme: carousel-theme(
@@ -75,10 +74,6 @@
     }
 
     $theme: apply-palette($carousel-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($carousel-schema, 'border-radius')),0 ,36px
-    );
 
     @if not($button-shadow) {
         $button-elevation: map.get($carousel-schema, 'button-elevation');
@@ -166,9 +161,9 @@
         height: 46px;
         cursor: pointer;
         @if $not-bootstrap-theme {
-            border-radius: 50%;
+            border-radius: border-radius(50%);
         } @else {
-            border-radius: var-get($theme, 'border-radius');
+            border-radius: border-radius(var-get($theme, 'border-radius'));
         }
 
         outline-style: none;
@@ -276,7 +271,7 @@
             opacity: .7;
         }
 
-        border-radius: 50%;
+        border-radius: border-radius(50%);
         transition: all .15s $ease-out-quad;
 
         &::after {
@@ -327,7 +322,7 @@
         height: inherit;
         overflow: hidden;
         outline-style: none;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         min-height: 300px;
         min-width: 300px;
     }
