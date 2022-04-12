@@ -27,7 +27,7 @@ import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
-import { IColumnPipeArgs, MRLResizeColumnInfo } from '../columns/interfaces';
+import { IColumnPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
@@ -444,6 +444,7 @@ export interface GridType extends IGridDataBindable {
     records?: Map<any, ITreeGridRecord>;
     processedExpandedFlatData?: any[] | null;
     processedRecords?: Map<any, ITreeGridRecord>;
+    treeGroupArea?: any;
 
     activeNodeChange: EventEmitter<IActiveNodeChangeEventArgs>;
     gridKeydown: EventEmitter<IGridKeydownEventArgs>;
@@ -499,6 +500,7 @@ export interface GridType extends IGridDataBindable {
     filteringExpressionsTreeChange: EventEmitter<IFilteringExpressionsTree>;
     advancedFilteringExpressionsTree: IFilteringExpressionsTree;
     advancedFilteringExpressionsTreeChange: EventEmitter<IFilteringExpressionsTree>;
+    sortingOptions: ISortingOptions;
 
     batchEditing: boolean;
     groupingExpansionState?: IGroupByExpandState[];
@@ -606,7 +608,6 @@ export interface FlatGridType extends GridType {
     toggleGroup(groupRow: IGroupByRecord): void;
     clearGrouping(field: string): void;
     groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void;
-    sortGrouping(expression: IGroupingExpression | Array<IGroupingExpression>): void;
 }
 
 /**

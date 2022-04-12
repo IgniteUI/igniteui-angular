@@ -146,7 +146,7 @@ import { ConnectedPositioningStrategy } from '../services/overlay/position/conne
 import { ContainerPositionStrategy } from '../services/overlay/position/container-position-strategy';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
 import { Action, StateUpdateEvent, TransactionEventOrigin } from '../services/transaction/transaction';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
+import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { IGridSortingStrategy } from './common/strategy';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridHeaderComponent } from './headers/grid-header.component';
@@ -4543,15 +4543,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (expression instanceof Array) {
             for (const each of expression) {
-                if (each.dir === SortingDirection.None) {
-                    this.gridAPI.remove_grouping_expression(each.fieldName);
-                }
                 this.gridAPI.prepare_sorting_expression([sortingState], each);
             }
         } else {
-            if (expression.dir === SortingDirection.None) {
-                this.gridAPI.remove_grouping_expression(expression.fieldName);
-            } else if (this._sortingOptions.mode === 'single') {
+            if (this._sortingOptions.mode === 'single') {
                 this.columns.forEach((col) => {
                  if (!(col.field === expression.fieldName)) {
                     this.clearSort(col.field);

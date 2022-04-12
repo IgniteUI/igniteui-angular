@@ -365,14 +365,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this._groupingExpressions = cloneArray(value);
         this.groupingExpressionsChange.emit(this._groupingExpressions);
         if (this._gridAPI.grid) {
-            /* grouping should work in conjunction with sorting
-            and without overriding separate sorting expressions */
+            debugger;
+            /* grouping and sorting are working separate from each other */
             this._applyGrouping();
-            this._gridAPI.arrange_sorting_expressions();
             this.notifyChanges();
-        } else {
-            // setter called before grid is registered in grid API service
-            this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
         }
         if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columnList) {
             const groupedCols: IgxColumnComponent[] = [];
@@ -1239,7 +1235,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     protected _applyGrouping() {
-        this._gridAPI.sort_multiple(this._groupingExpressions);
+        this._gridAPI.sort_groupBy_multiple(this._groupingExpressions);
     }
 
     private _setupNavigationService() {
