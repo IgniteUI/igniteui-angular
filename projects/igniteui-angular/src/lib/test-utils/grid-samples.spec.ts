@@ -1070,7 +1070,7 @@ export class CustomFilter extends IgxFilteringOperand {
     </igx-grid>`
 })
 export class IgxGridFilteringComponent extends BasicGridComponent {
-    @ViewChild('esf', {read: IgxGridExcelStyleFilteringComponent}) 
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent })
     public esf: IgxGridExcelStyleFilteringComponent;
 
     public customFilter = CustomFilter.instance();
