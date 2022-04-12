@@ -27,6 +27,8 @@ $material-base-button-dark: extend(
 /// @type {Map}
 /// @prop {Map} hover-background [color: ('secondary', 500, .12)] - The hover background color of a flat button.
 /// @prop {Map} focus-background [color: ('secondary', 400, .24)] - The focus background color of a flat button.
+/// @prop {Map} focus-visible-background [color: ('secondary', 400, .24)] - The focus-visible background color of a flat button.
+/// @prop {Color} disabled-background [transparent] - The disabled background color a flat button.
 /// @requires {Map} $material-base-button-dark
 /// @requires {Map} $material-flat-button
 /// @requires {function} extend
@@ -41,11 +43,20 @@ $material-flat-button-dark: extend(
         focus-background: (
             color: ('secondary', 400, .24),
         ),
+
+        focus-visible-background: (
+            color: ('secondary', 400, .24),
+        ),
+
+        disabled-background: transparent,
     )
 );
 
 /// @type {Map}
-/// @prop {Map} hover-background [color: ('grays', 300)] - The hover background color of an icon button.
+/// @prop {Map} hover-background [color: ('grays', 100, .5)] - The hover background color of an icon button.
+/// @prop {Map} focus-background [color: ('grays', 200, .8)] - The focus background color of a icon button.
+/// @prop {Map} focus-visible-background [color: ('grays', 200, .8)] - The focus-visible background color of a icon button.
+/// @prop {Color} disabled-background [transparent] - The disabled background color a icon button.
 /// @requires {Map} $material-base-button-dark
 /// @requires {Map} $material-icon-button
 /// @requires {function} extend
@@ -60,6 +71,12 @@ $material-icon-button-dark: extend(
         focus-background: (
             color: ('grays', 200, .8)
         ),
+
+        focus-visible-background: (
+            color: ('grays', 200, .8)
+        ),
+
+        disabled-background: transparent,
     )
 );
 
@@ -76,7 +93,8 @@ $material-fab-button-dark: extend($material-fab-button, $material-base-button-da
 
 /// @requires {Map} $material-outlined-button
 /// @requires {Map} $material-base-button-dark
-/// @prop {Map} disabled-border-color [color: ('grays', 100, .3)] - The disabled focused border color of the button.
+/// @prop {Map} disabled-border-color [color: ('grays', 100, .3)] - The disabled focused border color of an outlined button.
+/// @prop {Color} disabled-background [transparent] - The disabled background color an outlined button.
 /// @requires {function} extend
 $material-outlined-button-dark: extend(
     $material-outlined-button,
@@ -85,6 +103,8 @@ $material-outlined-button-dark: extend(
         disabled-border-color: (
             color: ('grays', 100, .3)
         ),
+
+        disabled-background: transparent,
     )
 );
 
@@ -106,6 +126,8 @@ $dark-button: (
 
 /// @type {Map}
 /// @requires {Map} $material-base-button
+/// @prop {Map} disabled-background [color: ('primary', 50)] - The disabled background color of the button.
+/// @prop {Map} disabled-foreground [color: ('primary', 100)] - The disabled foreground color of the button.
 /// @requires {function} extend
 $fluent-base-button-dark: extend(
     (
@@ -119,12 +141,17 @@ $fluent-base-button-dark: extend(
     )
 );
 
+/// @type {Map}
+/// @prop {Color} disabled-background [transparent] - The disabled background color an outlined button.
 /// @requires {Map} $fluent-flat-button
 /// @requires {Map} $fluent-base-button-dark
 /// @requires {function} extend
 $fluent-flat-button-dark: extend(
     $fluent-flat-button,
-    $fluent-base-button-dark
+    $fluent-base-button-dark,
+    (
+        disabled-background: transparent
+    )
 );
 
 /// @requires {Map} $fluent-raised-button
@@ -132,8 +159,7 @@ $fluent-flat-button-dark: extend(
 /// @requires {function} extend
 $fluent-raised-button-dark: extend(
     $fluent-raised-button,
-    $fluent-base-button-dark,
-    ()
+    $fluent-base-button-dark
 );
 
 /// @requires {Map} $fluent-fab-button
@@ -141,12 +167,12 @@ $fluent-raised-button-dark: extend(
 /// @requires {function} extend
 $fluent-fab-button-dark: extend(
     $fluent-fab-button,
-    $fluent-base-button-dark,
-    ()
+    $fluent-base-button-dark
 );
 
 /// @prop {Map} hover-background [color: ('grays', 50)] - The hover background color of an icon button.
-/// @prop {Map} active-background [color: ('grays', 100, .8)] - The active background color of a raised button.
+/// @prop {Map} active-background [color: ('grays', 100, .8)] - The active background color of an icon button.
+/// @prop {Map} disabled-border-color [color: ('grays', 50)] - The disabled focused border color of an icon button.
 /// @requires {Map} $fluent-icon-button
 /// @requires {Map} $fluent-base-button-dark
 /// @requires {function} extend
@@ -161,12 +187,16 @@ $fluent-icon-button-dark: extend(
         active-background: (
             color: ('grays', 100, .8)
         ),
+
+        disabled-border-color: (
+            color: ('grays', 50)
+        ),
     )
 );
 
-/// @prop {Map} hover-foreground [color: ('grays', 50)] - The text color of a outlined button on hover.
-/// @prop {Map} active-background [color: ('grays', 100, .8)] - The active background color of a raised button.
-/// @prop {Map} active-foreground [contrast-color: ('grays' 100)] - The active text color of a raised button.
+/// @prop {Map} hover-foreground [color: ('grays', 50)] - TThe hover text color of an outlined button.
+/// @prop {Map} active-background [color: ('grays', 100, .8)] - The active background color of an outlined button.
+/// @prop {Map} active-foreground [contrast-color: ('grays' 100)] - The active text color of an outlined button.
 /// @prop {Map} border-color [color: ('grays', 100)] - The border color of an outlined button.
 /// @requires {Map} $fluent-outlined-button
 /// @requires {Map} $fluent-base-button-dark
@@ -232,18 +262,12 @@ $bootstrap-outlined-button-dark: extend(
 );
 
 /// @type {Map}
-/// @prop {Map} focus-background [color: ('grays', 100, .3)] - The focus background color of a flat button.
 /// @requires {Map} $bootstrap-base-button-dark
 /// @requires {Map} $bootstrap-flat-button
 /// @requires {function} extend
 $bootstrap-flat-button-dark: extend(
     $bootstrap-base-button-dark,
     $bootstrap-flat-button,
-    (
-        focus-background: (
-            color: ('grays', 100, .3)
-        ),
-    )
 );
 
 
@@ -282,6 +306,7 @@ $indigo-base-button-dark: extend(
 
 /// @type {Map}
 /// @prop {Map} foreground [color: ('grays', 600, .8)] - The idle text color of a outlined button.
+/// @prop {Color} disabled-background [transparent] - The disabled background color an outlined button.
 /// @requires {Map} $indigo-base-button-dark
 /// @requires {Map} $indigo-flat-button
 /// @requires {function} extend
@@ -292,6 +317,8 @@ $indigo-flat-button-dark: extend(
         foreground: (
             color: ('grays', 600, .8),
         ),
+
+        disabled-background: transparent
     )
 );
 
@@ -299,6 +326,7 @@ $indigo-flat-button-dark: extend(
 /// @prop {Color} foreground [color: ('grays', 900)] - The idle text color of a raised button.
 /// @prop {Color} hover-foreground [color: ('grays', 900)] - The hover text color of a raised button.
 /// @prop {Color} focus-foreground [color: ('grays', 900)] - The focus text color of a raised button.
+/// @prop {Color} focus-visible-foreground [color: ('grays', 900)] - The focus-visible text color of a raised button.
 /// @requires {Map} $indigo-base-button-dark
 /// @requires {Map} $indigo-raised-button
 /// @requires {function} extend
@@ -317,13 +345,18 @@ $indigo-raised-button-dark: extend(
         focus-foreground: (
             color: ('grays', 900)
         ),
+
+        focus-visible-foreground: (
+            color: ('grays', 900)
+        ),
     )
 );
 
 /// @type {Map}
-/// @prop {Map} foreground [color: ('grays', 600, .8)] - The idle text color of a outlined button.
+/// @prop {Map} foreground [color: ('grays', 500)] - The idle text color of a outlined button.
 /// @prop {Map} border-color [color: ('grays', 300)] - The border color of an outlined button.
-/// @prop {Map} shadow-color [color: ('grays', 200, .8)] - The shadow color of the button.
+/// @prop {Map} shadow-color [color: ('grays', 200, .8)] - The shadow color of an outlined button.
+/// @prop {Color} disabled-background [transparent] - The disabled background color an outlined button.
 /// @requires {Map} $indigo-base-button-dark
 /// @requires {Map} $indigo-outlined-button
 /// @requires {function} extend
@@ -342,19 +375,30 @@ $indigo-outlined-button-dark: extend(
         shadow-color: (
             color: ('grays', 200, .8),
         ),
+
+
+        disabled-background: transparent
     )
 );
 
 /// @type {Map}
+/// @prop {Color} disabled-background [transparent] - The disabled background color an outlined button.
 /// @requires {Map} $indigo-base-button-dark
 /// @requires {Map} $indigo-icon-button
 /// @requires {function} extend
-$indigo-icon-button-dark: extend($indigo-icon-button, $indigo-base-button-dark);
+$indigo-icon-button-dark: extend(
+    $indigo-icon-button,
+    $indigo-base-button-dark,
+    (
+        disabled-background: transparent
+    )
+);
 
 /// @type {Map}
-/// @prop {Color} foreground [color: ('grays', 900) - The idle text color of a raised button.
-/// @prop {Color} hover-foreground [color: ('grays', 900)] - The hover text color of a raised button.
-/// @prop {Color} focus-foreground [color: ('grays', 900)] - The focus text color of a raised button.
+/// @prop {Color} foreground [color: ('grays', 900) - The idle text color of a fab button.
+/// @prop {Color} hover-foreground [color: ('grays', 900)] - The hover text color of a fab button.
+/// @prop {Color} focus-foreground [color: ('grays', 900)] - The focus text color of a fab button.
+/// @prop {Color} focus-visible-foreground [color: ('grays', 900)] - The focus-visible text color of a fab button.
 /// @requires {Map} $indigo-base-button-dark
 /// @requires {Map} $indigo-fab-button
 /// @requires {function} extend
@@ -371,6 +415,10 @@ $indigo-fab-button-dark: extend(
         ),
 
         focus-foreground: (
+            color: ('grays', 900)
+        ),
+
+        focus-visible-foreground: (
             color: ('grays', 900)
         ),
     )
