@@ -847,7 +847,7 @@
                     top: $outline-btn-indent;
                     left: $outline-btn-indent;
                     pointer-events: none;
-                    border-radius: calc(border-radius(#{var-get($fab-theme, 'border-radius')}) - #{$outline-btn-indent});
+                    border-radius: calc(#{border-radius(#{var-get($fab-theme, 'border-radius')})} - #{$outline-btn-indent});
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
                     box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
