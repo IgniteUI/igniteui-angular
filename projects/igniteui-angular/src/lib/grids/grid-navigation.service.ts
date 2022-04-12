@@ -357,10 +357,6 @@ export class IgxGridNavigationService {
                     });
                 break;
             case 'tab':
-                const args = this.grid.crudService.cellEdit(event);
-                if (args.cancel && args.oldValue !== args.newValue) {
-                    break;
-                }
                 this.handleEditing(shift, event);
                 break;
             case 'end':
