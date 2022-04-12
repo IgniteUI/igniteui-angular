@@ -1,5 +1,3 @@
-@use 'grid-print';
-
 /// Defines printing styles for all components in the library.
 /// @group print
 /// @requires {mixin} igx-grid-print
@@ -11,16 +9,20 @@
             min-height: 100vh;
             min-width: 100vw;
             margin: 0;
+        }
+
+        app-root {
             display: block;
         }
 
         * {
-            background: transparent !important;
-            background-color: transparent !important;
-            color: #000 !important;
-            box-shadow: none !important;
-            text-shadow: none !important;
             -webkit-print-color-adjust: exact;
+            // Fix shadows if you print to PDF using chrome START
+            -webkit-filter: opacity(1);
+            filter: opacity(1);
+            // Fix shadows if you print to PDF using chrome END
+            color-adjust: exact;
+            text-shadow: none !important;
         }
 
         a[href^='http']::after {
@@ -28,35 +30,36 @@
             color: blue;
         }
 
-        .igx-no-print,
-        igx-nav-drawer {
+        .igx-no-print {
             display: none !important;
         }
 
-        @include grid-print.layout();
+        // Forcing Grayscale Printing
+        .igx-bw-print {
+            // CSS3 filter, at the moment Webkit only. Prefix it for future implementations
+            -webkit-filter: grayscale(100%);
+            filter: grayscale(100%); /* future-proof */
+        }
 
-        .igx-bottom-nav__menu,
-        .igx-button-group,
-        .igx-ripple,
-        igx-slider,
-        igx-snackbar,
-        igx-input-group,
-        igx-checkbox,
-        igx-radio,
-        .igx-tooltip--desktop,
-        igx-toast,
-        igx-navbar,
-        igx-virtual-helper,
-        [igx-button],
-        igx-switch,
-        .igx-grid__tbody-scrollbar,
-        .igx-grid__cbx-selection,
         igx-circular-bar,
         igx-linear-bar,
         .igx-carousel__indicators,
         .igx-carousel__arrow--prev,
-        .igx-carousel__arrow--next {
+        .igx-carousel__arrow--next,
+        .igx-ripple,
+        .igx-grid__tbody-scrollbar,
+        igx-switch__ripple,
+        igx-virtual-helper, {
             display: none !important;
+        }
+
+        igx-grid {
+            .igx-grid-th__title,
+            .igx-grid__td-text {
+                white-space: unset !important;
+                text-overflow: initial !important;
+                overflow: visible !important;
+            }
         }
     }
 }

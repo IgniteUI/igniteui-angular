@@ -1,0 +1,5 @@
+@use '../../themes' as *;
+
+@include core();
+@include typography($font-family: $fluent-typeface, $type-scale: $fluent-type-scale);
+@include fluent-light-theme($light-fluent-palette);

@@ -53,6 +53,9 @@
 /// @prop {Map} warning-secondary-color [color: ('warn')] - The warning color used in the warning state.
 /// @prop {Map} error-secondary-color [color: ('error')] - The error color used in the error state.
 ///
+/// @prop {Map} $success-shadow-color [color: ('success', 500, .38)] - The shadow/border color for success state for bootstrap input group.
+/// @prop {Map} $error-shadow-color [color: ('error', 500, .38)] - The shadow/border color for error state for bootstrap input group.
+///
 /// @prop {Map} placeholder-color [color: ('grays', 500)] - The placeholder color of an input group.
 /// @prop {Map} disabled-placeholder-color [color: ('grays', 400)] - The disabled placeholder color of an input group.
 ///
@@ -195,6 +198,14 @@ $light-input-group: extend(
         disabled-placeholder-color: (
             color: ('grays', 400)
         ),
+
+        success-shadow-color: (
+            color: ('success', 500, .38)
+        ),
+
+        error-shadow-color: (
+            color: ('error', 500, .38)
+        ),
     )
 );
 
@@ -276,6 +287,10 @@ $fluent-input-group: extend(
 /// @prop {Color} input-prefix-background [color: ('grays', 300)] - The background color of an input prefix of type line, box, border and fluent.
 /// @prop {Color} input-suffix-background [ color: ('grays', 300)] - The background color of an input suffix of type line, box, border and fluent.
 /// @prop {Number} box-border-radius [.2] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Map} focused-secondary-color [ color: ('primary', 500, .38)] - The label color in the focused state.
+/// @prop {Map} success-secondary-color [color: ('success', 500)] - The success color used in the valid state.
+/// @prop {Map} warning-secondary-color [color: ('warn', 500)] - The warning color used in the warning state.
+/// @prop {Map} error-secondary-color [color: ('error')] - The error color used in the error state.
 /// @prop {Number} border-border-radius [.2] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [.2] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
@@ -286,6 +301,22 @@ $bootstrap-input-group: extend(
     $bootstrap-shape-input-group,
     (
         variant: 'bootstrap',
+
+        focused-secondary-color: (
+            color: ('primary', 500, .38)
+        ),
+
+        success-secondary-color: (
+            color: ('success', 500)
+        ),
+
+        warning-secondary-color: (
+            color: ('warn', 500)
+        ),
+
+        error-secondary-color: (
+            color: ('error', 500)
+        ),
 
         border-color: (
             color: ('grays', 400)
@@ -313,7 +344,7 @@ $bootstrap-input-group: extend(
 
         disabled-border-color: (
             color: ('grays', 300)
-        )
+        ),
     )
 );
 

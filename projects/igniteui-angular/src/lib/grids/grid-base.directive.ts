@@ -3353,7 +3353,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._setupServices();
         this._setupListeners();
         this.rowListDiffer = this.differs.find([]).create(null);
-        this.columnListDiffer = this.differs.find([]).create(null);
+        // compare based on field, not on object ref.
+        this.columnListDiffer = this.differs.find([]).create((index, col: ColumnType) => col.field);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
     }
@@ -4258,6 +4259,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get showDragIcons(): boolean {
         return this.rowDraggable && this.columnList.length > this.hiddenColumnsCount;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected _getResolvedDataIndex(index: number): number {
+        let newIndex = index;
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.paginator.page !== 0) {
+            newIndex = index - this.paginator.perPage * this.paginator.page;
+        } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
+            newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
+        }
+        return newIndex;
     }
 
     /**
@@ -6253,14 +6268,25 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
-        Promise.resolve().then(() => {
-            const list = this.columnList.toArray();
-            this._reorderColumns(from, to, pos, list);
-            const newList = this._resetColumnList(list);
-            this.columnList.reset(newList);
-            this.columnList.notifyOnChanges();
-            this._columns = this.columnList.toArray();
-        });
+        const list = this.columnList.toArray();
+        this._reorderColumns(from, to, pos, list);
+        const newList = this._resetColumnList(list);
+        this.updateColumns(newList);
+    }
+
+
+    /**
+     * Update internal column's collection.
+     * @hidden
+     */
+    public updateColumns(newColumns:IgxColumnComponent[]) {
+        // update internal collections to retain order.
+        this._pinnedColumns = newColumns
+        .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
+        this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
+        this.columnList.reset(newColumns);
+        this.columnList.notifyOnChanges();
+        this._columns = this.columnList.toArray();
     }
 
     /**
@@ -6778,7 +6804,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.hasColumnGroups ? this.columnList.filter((c) => !c.pinned) :
             this.columnList.filter((c) => !c.pinned)
-                .sort((a, b) => a.index - b.index);
+                .sort((a, b) => this._unpinnedColumns.findIndex(x => x.field === a.field) - this._unpinnedColumns.findIndex(x => x.field === b.field));
     }
 
     protected extractDataFromSelection(source: any[], formatters = false, headers = false, columnData?: any[]): any[] {

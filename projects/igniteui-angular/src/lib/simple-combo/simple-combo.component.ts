@@ -312,6 +312,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
+    public onFocus(): void {
+        this._internalFilter = this.comboInput.value || '';
+    }
+
+    /** @hidden @internal */
     public getEditElement(): HTMLElement {
         return this.comboInput.nativeElement;
     }
