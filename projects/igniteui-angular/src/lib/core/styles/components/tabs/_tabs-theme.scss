@@ -47,7 +47,6 @@
 /// @requires extend
 /// @requires elevation
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Set a custom background color
 ///   $my-tabs-theme: tabs-theme(
@@ -85,10 +84,6 @@
     } @else {
         $tabs-schema: $schema;
     }
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($tabs-schema, 'border-radius')), 0, 6px
-    );
 
     $theme: apply-palette($tabs-schema, $palette);
 
@@ -376,8 +371,8 @@
 
         @if $bootstrap-theme {
             border: 1px solid transparent;
-            border-top-left-radius: var-get($theme, 'border-radius');
-            border-top-right-radius: var-get($theme, 'border-radius');
+            border-top-left-radius: border-radius(var-get($theme, 'border-radius'));
+            border-top-right-radius: border-radius(var-get($theme, 'border-radius'));
         }
 
         @if $indigo-theme {

@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/calendar' as *;
 
 ////
 /// @group schemas
@@ -31,7 +30,6 @@
 /// @prop {Map} month-hover-background [color: ('grays', 200)] - The month hover text color.
 /// @prop {Map} month-current-text-color [color: ('secondary', 500)]- The text color for the current/selected month.
 /// @prop {Map} month-hover-current-text-color [color: ('secondary', 500)]- The text color for the current/selected month on hover.
-/// @prop {Number} month-border-radius [1] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @prop {Map} date-selected-background [color: ('secondary', 500)] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [contrast-color: ('secondary', 500)] - The text color for the selected date.
@@ -52,13 +50,12 @@
 /// @prop {Map} week-number-color [color: ('grays', 500)] - The text color of the week number column.
 /// @prop {Map} week-number-background [color: ('grays', 200)] - The background color of the week number column.
 ///
-/// @prop {Number} border-radius [.2] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} date-border-radius [1] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [4px] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} date-border-radius [20px] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} month-border-radius [20px] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires {Map} $default-shape-calendar
 /// @see $default-palette
 $light-calendar: extend(
-    $default-shape-calendar,
     (
         variant: 'material',
 
@@ -179,6 +176,12 @@ $light-calendar: extend(
         week-number-background: (
             color: ('grays', 200),
         ),
+
+        border-radius: rem(4px),
+
+        date-border-radius: rem(20px),
+
+        month-border-radius: rem(20px)
     )
 );
 
@@ -194,10 +197,8 @@ $light-calendar: extend(
 /// @prop {Number} month-border-radius [0] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-calendar
-/// @requires {Map} $fluent-shape-calendar
 $fluent-calendar: extend(
     $light-calendar,
-    $fluent-shape-calendar,
     (
         variant: 'fluent',
 
@@ -216,6 +217,12 @@ $fluent-calendar: extend(
         date-selected-text-color: (
             contrast-color: ('primary', 100)
         ),
+
+        border-radius: rem(0),
+
+        date-border-radius: rem(0),
+
+        month-border-radius: rem(0)
     )
 );
 
@@ -253,10 +260,8 @@ $fluent-calendar: extend(
 /// @prop {Number} month-border-radius [4px] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-calendar
-/// @requires {Map} $bootstrap-shape-calendar
 $bootstrap-calendar: extend(
     $light-calendar,
-    $bootstrap-shape-calendar,
     (
         variant: 'bootstrap',
 
@@ -351,6 +356,12 @@ $bootstrap-calendar: extend(
         week-number-background: (
             color: ('grays', 300, .5),
         ),
+
+        border-radius: rem(4px),
+
+        date-border-radius: rem(4px),
+
+        month-border-radius: rem(4px)
     )
 );
 
@@ -369,14 +380,12 @@ $bootstrap-calendar: extend(
 /// @prop {Map} month-hover-text-color [color: ('primary', 500)] - The month hover text color.
 ///
 /// @prop {Number} border-radius [3px] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} date-border-radius [1] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} month-border-radius [1] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} date-border-radius [20px] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} month-border-radius [20px] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-calendar
-/// @requires {Map} $indigo-shape-calendar
 $indigo-calendar: extend(
     $light-calendar,
-    $indigo-shape-calendar,
     (
         variant: 'indigo-design',
 
@@ -419,5 +428,7 @@ $indigo-calendar: extend(
         month-hover-text-color: (
             color: ('primary', 500)
         ),
+
+        border-radius: rem(3px)
     )
 );

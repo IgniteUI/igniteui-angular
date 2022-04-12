@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/snackbar' as *;
 @use '../elevation/snackbar' as *;
 
 ////
@@ -14,15 +13,15 @@
 /// @property {Map} text-color [contrast-color: ('grays', 900)] - The text color used in the snackbar.
 /// @property {Map} button-color [color: ('secondary', 500)] - The button color used in the snackbar.
 /// @property {Number} elevation [4] - The elevation level, between 0-24, to be used in the snackbar.
-/// @prop {Number} border-radius [.17] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [4px] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires {Map} $default-shape-snackbar
 /// @requires {Map} $default-elevation-snackbar
 /// @see $default-palette
 $light-snackbar: extend(
-    $default-shape-snackbar,
     $default-elevation-snackbar,
     (
+        variant: 'material',
+
         background: (
             color: ('grays', 900, .9)
         ),
@@ -34,6 +33,8 @@ $light-snackbar: extend(
         button-color: (
             color: ('secondary', 500)
         ),
+
+        border-radius: rem(4px)
     )
 );
 
@@ -42,8 +43,14 @@ $light-snackbar: extend(
 /// @prop {Number} border-radius [2px] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $light-snackbar
-/// @requires $fluent-shape-snackbar
-$fluent-snackbar: extend($light-snackbar, $fluent-shape-snackbar);
+$fluent-snackbar: extend(
+    $light-snackbar,
+    (
+        variant: 'fluent',
+
+        border-radius: rem(2px)
+    )
+);
 
 /// Generates a bootstrap snackbar schema.
 /// @type {Map}
@@ -51,16 +58,15 @@ $fluent-snackbar: extend($light-snackbar, $fluent-shape-snackbar);
 /// @property {Map} text-color [contrast-color: ('surface')] - The text color used in the snackbar.
 /// @property {Map} button-color [color: ('primary', 500)] - The button color used in the snackbar.
 /// @property {Number} elevation [10] - The elevation level, between 0-24, to be used in the snackbar.
-/// @prop {Number} border-radius [.17] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $light-snackbar
-/// @requires {Map} $bootstrap-shape-snackbar
 /// @requires {Map} $bootstrap-elevation-snackbar
 $bootstrap-snackbar: extend(
     $light-snackbar,
-    $bootstrap-shape-snackbar,
     $bootstrap-elevation-snackbar,
     (
+        variant: 'bootstrap',
+
         background: (
             color: ('surface')
         ),
@@ -85,11 +91,11 @@ $bootstrap-snackbar: extend(
 ///
 /// @requires {function} extend
 /// @requires $light-snackbar
-/// @requires $indigo-shape-snackbar
 $indigo-snackbar: extend(
     $light-snackbar,
-    $indigo-shape-snackbar,
     (
+        variant: 'indigo-design',
+
         background: (
             color: ('grays', 700, .9)
         ),
@@ -100,7 +106,8 @@ $indigo-snackbar: extend(
 
         button-color: (
             contrast-color: ('grays', 700),
-        )
+        ),
+
+        border-radius: rem(6px)
     )
 );
-

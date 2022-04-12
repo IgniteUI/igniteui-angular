@@ -1,43 +1,33 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
-    AfterViewChecked,
-    Component,
+    AfterViewChecked, ChangeDetectorRef, Component,
     ContentChild,
     ContentChildren,
     ElementRef,
     HostBinding,
-    HostListener,
-    Input,
-    NgModule,
-    QueryList,
-    Inject,
-    Optional,
-    OnDestroy,
-    ChangeDetectorRef,
+    HostListener, Inject, Input,
+    NgModule, OnDestroy, Optional, QueryList
 } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import {
+    DisplayDensity, DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
+} from '../core/displayDensity';
+import { IInputResourceStrings } from '../core/i18n/input-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
+import { mkenum, PlatformUtil } from '../core/utils';
+import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
     IgxInputDirective,
-    IgxInputState,
+    IgxInputState
 } from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxIconModule } from '../icon/public_api';
 import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
 import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
-import {
-    DisplayDensity,
-    IDisplayDensityOptions,
-    DisplayDensityToken,
-    DisplayDensityBase
-} from '../core/displayDensity';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
-import { IInputResourceStrings } from '../core/i18n/input-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
 
-import { mkenum, PlatformUtil } from '../core/utils';
-import { Subject, Subscription } from 'rxjs';
 
 const IgxInputGroupTheme = mkenum({
     Material: 'material',
@@ -457,6 +447,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
             if(cssProp !== '') {
                 Promise.resolve().then(() => {
                     this._theme$.next(cssProp);
+                    this.cdr.markForCheck();
                 });
             }
         }
