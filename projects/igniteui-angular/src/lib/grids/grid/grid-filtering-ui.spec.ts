@@ -4081,37 +4081,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             verifyFilteringExpression(operands[1], 'ProductName', 'empty', null);
         }));
 
-        it('Should define isSelected and isFiltered of "(Blanks)" items when no records meet specified filter criteria', fakeAsync(() => {
-            const DOWNLOADS_FIELD = 'Downloads';
-            const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
-            const fieldFilteringExpressionsTree = new FilteringExpressionsTree(
-                FilteringLogic.And,
-                DOWNLOADS_FIELD
-            );
-            fieldFilteringExpressionsTree.filteringOperands.push({
-                condition: IgxNumberFilteringOperand.instance().condition('equals'),
-                fieldName: DOWNLOADS_FIELD,
-                ignoreCase: true,
-                searchVal: new Set([]),
-            });
-            gridFilteringExpressionsTree.filteringOperands.push(fieldFilteringExpressionsTree);
-            grid.filteringExpressionsTree = gridFilteringExpressionsTree;
-
-            tick();
-            fix.detectChanges();
-
-            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
-            tick(100);
-            fix.detectChanges();
-
-            const filterListItems = fix.componentInstance.esf.listData;
-
-            for (let i = 1; i < filterListItems.length; i++) {
-                expect(filterListItems[i].isSelected).toBeDefined();
-                expect(filterListItems[i].isFiltered).toBeDefined();
-            }
-        }));
-
         it('should not display search scrollbar when not needed for the current display density', (async () => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
@@ -6027,6 +5996,41 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify 'AnotherField' column is successfully pinned next to the column group.
             GridFunctions.verifyColumnIsPinned(column, true, 8);
+        }));
+
+        it('Should define isSelected and isFiltered of "(Blanks)" items when no records meet specified filter criteria', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+
+            const DOWNLOADS_FIELD = 'Downloads';
+            const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const fieldFilteringExpressionsTree = new FilteringExpressionsTree(
+                FilteringLogic.And,
+                DOWNLOADS_FIELD
+            );
+            fieldFilteringExpressionsTree.filteringOperands.push({
+                condition: IgxNumberFilteringOperand.instance().condition('equals'),
+                fieldName: DOWNLOADS_FIELD,
+                ignoreCase: true,
+                searchVal: new Set([]),
+            });
+            gridFilteringExpressionsTree.filteringOperands.push(fieldFilteringExpressionsTree);
+            grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+
+            const filterListItems = fix.componentInstance.esf.listData;
+
+            for (let i = 1; i < filterListItems.length; i++) {
+                expect(filterListItems[i].isSelected).toBeDefined();
+                expect(filterListItems[i].isFiltered).toBeDefined();
+            }
         }));
     });
 
