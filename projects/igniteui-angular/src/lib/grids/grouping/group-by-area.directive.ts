@@ -16,7 +16,7 @@ import { DisplayDensity } from '../../core/displayDensity';
 import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { FlatGridType, GridType } from '../common/grid.interface';
+import { GridType } from '../common/grid.interface';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 
 /**
@@ -51,7 +51,7 @@ export abstract class IgxGroupByAreaDirective {
 
     /** The parent grid containing the component. */
     @Input()
-    public grid: FlatGridType & GridType;
+    public grid: GridType;
 
     /**
      * The group-by expressions provided by the parent grid.
@@ -115,11 +115,7 @@ export abstract class IgxGroupByAreaDirective {
         if (!this.grid.getColumnByName(id).groupable) {
             return;
         }
-        if (this.grid.groupingExpressions) {
-            this.updateGroupSorting(id);
-        } else {
-            this.updateSorting(id);
-        }
+        this.updateSorting(id);
     }
 
      public onDragDrop(event) {
@@ -134,7 +130,7 @@ export abstract class IgxGroupByAreaDirective {
             if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
                 const groupingExpression = {
                     fieldName: column.field,
-                    dir: SortingDirection.Asc,
+                    dir: this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir || SortingDirection.Asc,
                     ignoreCase: column.sortingIgnoreCase,
                     strategy: column.sortStrategy,
                     groupingComparer: column.groupingComparer
@@ -168,12 +164,6 @@ export abstract class IgxGroupByAreaDirective {
         this.grid.sort(expr);
     }
 
-    protected updateGroupSorting(id: string) {
-        const expr = this.grid.groupingExpressions.find(e => e.fieldName === id);
-        expr.dir = 3 - expr.dir;
-        this.grid.sortGrouping(expr);
-    }
-
     protected expressionsChanged() {
     }
 
@@ -199,6 +189,6 @@ export class IgxGroupByMetaPipe implements PipeTransform {
 
     public transform(key: string, grid: GridType) {
         const column = grid.getColumnByName(key);
-        return { groupable: column.groupable, title: column.header || key };
+        return { groupable: !!column?.groupable, title: column?.header || key };
     }
 }

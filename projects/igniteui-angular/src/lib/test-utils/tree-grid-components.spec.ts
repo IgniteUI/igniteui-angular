@@ -575,6 +575,9 @@ export class IgxTreeGridWrappedInContComponent {
         return false;
     }
 
+    public clearData(){
+        this.data = [];
+    }
 }
 
 @Component({
@@ -770,21 +773,6 @@ export class IgxTreeGridSelectionWithTransactionComponent {
 export class IgxTreeGridFKeySelectionWithTransactionComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
-}
-
-@Component({
-    template: `
-    <igx-tree-grid #treeGrid [data]="data" [autoGenerate]="true" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px">
-    </igx-tree-grid>
-    `
-})
-export class IgxTreeGridAutoGenerateComponent {
-    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
-    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
-
-    public clearData(){
-        this.data = [];
-    }
 }
 
 @Component({

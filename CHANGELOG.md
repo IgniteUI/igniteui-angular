@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.2.0 
+
+### New palette
+
+A new fluent light and dark palettes that use the default fluent colors - `$light-fluent-palette` and `$dark-fluent-palette`.
+
 ## 13.1.0
 
 ### New Features

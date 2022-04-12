@@ -89,7 +89,10 @@ There are several ways to localize components' string resources:
 
 2. Using npm package:
 We've created new repository which will hold the resource strings for languages different than English:
-https://github.com/IgniteUI/igniteui-angular-i18n
+https://github.com/IgniteUI/igniteui-angular-i18n 
+
+**NOTE** The localization repo has been moved to live inside the `igniteui-angular` repository under `./projects/igniteui-angular-i18n`  
+
 A npm package should be published each time we release new version of IgniteUI for Angular. Its version should correspond to the version of the igniteui-angular npm package.
 One could localize an application by importing the corresponding localized resource strings from the localization package (`igniteui-angular-i18n`) and use the methods described in the previous bullet to localize the whole application or part of it.
 Example:
@@ -98,7 +101,7 @@ _import { IgxResouceStringsJA } from ‘igniteui-angular-i18n’;_
 And then:
 _Changei18n(IgxResouceStringsJA);_
 
-###Resource strings keys naming convention
+### Resource strings keys naming convention
 Each key in the `IResourceStrings` (and `IGridResourceStrings`, `ITimePickerResourceStrings`, etc.) is prefixed with components' selector and followed by the resource string key. Having components' selectors as prefixes allows us to have same resource strings keys for more than one component.
 Example: _igx_grid_groupByArea_message_.
 
@@ -122,11 +125,9 @@ When fixing a bug you need to follow these guidelines:
 1. Leave a comment above your change in the format `<initials> <date> <Issue Number|Issue Link> <Comment for the change>`
    * e.g. `K.D. June 28th, 2016 #1234 Adding this comment as an example`
    * e.g. `K.D. June 28th, 2016 https://github.com/IgniteUI/ignite-ui/issues/1234 Adding this comment as an example`
-2. Write unit tests that cover your change. The test should fail prior to your change and pass after it
-3. Run JSHint, JSCS, Unit tests and make sure they all pass
-4. Pull request your changes and reference the issue. Use the following title/description format.
-   * Title: `<Issue Number> <Change Title>` Description: `closes <Issue Number> <Longer Description>`
-   * e.g. Title: `#123 Changing foo to bar` Description: `closes #123`
+2. Write unit tests that cover your change. The test should fail prior to your change and pass after it. Make sure that it really fails when it should!
+3. Run lint and tests and make sure they all pass
+4. Pull request your changes and reference the issue. Use the enforced commit message format with applicable type, scope, etc.
 5. Don't forget to make the necessary status updates, as described in the workflow section.
 
 When bug fixes are applicable to multiple branches, there will be additional steps between 3 and 4. So if let’s say we have a 5.2.x, 5.3.x, and a master branch the process will look like this:
@@ -143,10 +144,10 @@ When bug fixes are applicable to multiple branches, there will be additional ste
 # New feature development
 In order to contribute code to a new feature, you need to follow these guidelines.
 
-1. Work on implementation in your fork
-2. Follow a test-driven development process (TDD) to ensure full code coverage, or make sure that you include unit tests that cover all of the newly added code
+1. Work on implementation in your fork/branch.
+2. Follow a test-driven development process (TDD) to ensure full code coverage.
 3. Document all newly added public methods, inputs, outputs and properties.
-4. Make sure all static code analysis and tests pass before opening a pull request
+4. Make sure all static code analysis and tests pass before opening a pull request.
 5. Reference the issue you've been working on in your commit message and pull request title/description.
 6. Don't forget to make the necessary status updates, as described in the workflow section.
 
