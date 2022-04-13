@@ -86,8 +86,8 @@
     %igx-banner {
         padding-inline-start: 0;
         padding-inline-end: map.get($banner-padding, 'comfortable');
-        padding-top: map.get($banner-padding, 'comfortable');
-        padding-bottom: map.get($banner-padding, 'comfortable');
+        padding-block-start: map.get($banner-padding, 'comfortable');
+        padding-block-end: map.get($banner-padding, 'comfortable');
         background: var-get($theme, 'banner-background');
         align-items: center;
         position: relative;
@@ -105,13 +105,13 @@
     }
 
     %igx-banner__border-top {
-        border-top: 1px solid var-get($theme, 'banner-border-color');
-        top: -1px
+        border-block-start: 1px solid var-get($theme, 'banner-border-color');
+        inset-block-start: -1px
     }
 
     %igx-banner__border-bottom {
-        border-bottom: 1px solid var-get($theme, 'banner-border-color');
-        top: 0;
+        border-block-end: 1px solid var-get($theme, 'banner-border-color');
+        inset-block-start: 0;
     }
 
     %igx-banner__text {
@@ -120,7 +120,7 @@
         margin-inline-start: rem(24);
 
         > * {
-            margin-top: 0 !important;
+            margin-block-start: 0 !important;
         }
     }
 
@@ -164,8 +164,8 @@
 
     %igx-banner__text {
         @include type-style($type-scale, $message) {
-            margin-top: 0;
-            margin-bottom: 0;
+            margin-block-start: 0;
+            margin-block-end: 0;
         }
     }
 }
