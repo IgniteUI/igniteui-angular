@@ -4290,8 +4290,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected _getResolvedDataIndex(index: number): number {
         let newIndex = index;
-        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.paginator.page !== 0) {
-            newIndex = index - this.paginator.perPage * this.paginator.page;
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.page !== 0) {
+            newIndex = index - this.perPage * this.page;
         } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
             newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
         }
@@ -7114,14 +7114,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private configToColumns(config: IgxColumn []) {
+        const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const columns: IgxColumnComponent [] = [];
 
         config.forEach(column => {
-            const newColumn = new IgxColumnComponent(this, this.cdr, this.platform);
+            const newColumn = factory.create(this.viewRef.injector);
             for (const prop in column) {
-                newColumn[prop] = column[prop];
+                newColumn.instance[prop] = column[prop];
             }
-            columns.push(newColumn);
+            newColumn.changeDetectorRef.detectChanges();
+            columns.push(newColumn.instance);
         });
 
         this.columnList.reset(columns);
