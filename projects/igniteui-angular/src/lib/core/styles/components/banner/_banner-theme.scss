@@ -70,10 +70,6 @@
 /// @requires var-get
 @mixin banner($theme) {
     @include css-vars($theme);
-
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $banner-padding: (
         comfortable: rem(8),
         cosy: rem(8),
@@ -88,8 +84,8 @@
     }
 
     %igx-banner {
-        padding-#{$right}: map.get($banner-padding, 'comfortable');
-        padding-#{$left}: 0;
+        padding-inline-start: 0;
+        padding-inline-end: map.get($banner-padding, 'comfortable');
         padding-top: map.get($banner-padding, 'comfortable');
         padding-bottom: map.get($banner-padding, 'comfortable');
         background: var-get($theme, 'banner-background');
@@ -104,7 +100,7 @@
         width: rem(40);
         min-width: rem(40);
         height: rem(40);
-        margin-#{$left}: rem(16);
+        margin-inline-start: rem(16);
         color: var-get($theme, 'banner-illustration-color');
     }
 
@@ -121,7 +117,7 @@
     %igx-banner__text {
         color: var-get($theme, 'banner-message-color');
         flex: 1 0 0%;
-        margin-#{$left}: rem(24);
+        margin-inline-start: rem(24);
 
         > * {
             margin-top: 0 !important;
@@ -139,7 +135,7 @@
     %igx-banner__message {
         min-width: rem(220);
         flex: 1 0 0%;
-        margin-#{$right}: rem(90);
+        margin-inline-end: rem(90);
     }
 
     %igx-banner__row {
