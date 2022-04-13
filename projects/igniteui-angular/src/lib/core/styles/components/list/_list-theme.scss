@@ -263,7 +263,7 @@
         cosy: rem(8px),
         compact: rem(4px)
     );
-
+    
     $list-item-padding: (
         comfortable: rem(8px) rem(16px),
         cosy: rem(4px) rem(8px),
@@ -418,7 +418,7 @@
         color: var-get($theme, 'item-action-color');
 
         > * {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
 
         &:empty {
@@ -457,11 +457,11 @@
         color: var-get($theme, 'item-thumbnail-color');
 
         > igx-icon {
-            @include if-ltr() {
+            [dir='ltr'] & {
                 margin: map.get($list-icon-margin, 'comfortable');
             }
 
-            @include if-rtl() {
+            [dir='rtl'] & {
                 margin: map.get($list-icon-margin-rtl, 'comfortable');
             }
         }
@@ -478,43 +478,43 @@
     }
 
     %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
-        @include if-ltr() {
+        [dir='ltr'] & {
             margin: map.get($list-line-margin, 'comfortable');
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             margin: map.get($list-line-margin-rtl, 'comfortable');
         }
     }
 
     %igx-list__item-thumbnail--cosy:not(:empty) + %igx-list__item-lines {
-        @include if-ltr() {
+        [dir='ltr'] & {
             margin: map.get($list-line-margin, 'cosy');
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             margin: map.get($list-line-margin-rtl, 'cosy');
         }
     }
 
     %igx-list__item-thumbnail--compact:not(:empty) + %igx-list__item-lines {
-        @include if-ltr() {
+        [dir='ltr'] & {
             margin: map.get($list-line-margin, 'compact');
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             margin: map.get($list-line-margin-rtl, 'compact');
         }
     }
 
     %igx-list__item-thumbnail--cosy {
-        @include if-ltr() {
+        [dir='ltr'] & {
             > igx-icon {
                 margin: map.get($list-icon-margin, 'cosy');
             }
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             > igx-icon {
                 margin: map.get($list-icon-margin-rtl, 'cosy');
             }
@@ -522,13 +522,13 @@
     }
 
     %igx-list__item-thumbnail--compact {
-        @include if-ltr() {
+        [dir='ltr'] & {
             > igx-icon {
                 margin: map.get($list-icon-margin, 'compact');
             }
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             > igx-icon {
                 margin: map.get($list-icon-margin-rtl, 'compact');
             }
@@ -537,18 +537,18 @@
 
     %igx-list__item-actions--cosy {
         > * {
-            margin-#{$left}: rem(6px);
+            margin-inline-start: rem(6px);
         }
     }
 
     %igx-list__item-actions--compact {
         > * {
-            margin-#{$left}: rem(4px);
+            margin-inline-start: rem(4px);
         }
     }
 
     %igx-list__item-lines + %igx-list__item-actions {
-        margin-#{$left}: rem(8px);
+        margin-inline-start: rem(8px);
     }
 
     %igx-list-item-content--active {
