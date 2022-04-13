@@ -40,8 +40,8 @@ export class AppModule {
     const grid = createCustomElement<IgxGridComponent>(IgxGridComponent, { injector: this.injector });
     customElements.define("igx-grid", grid);
 
-    // const treegrid = createCustomElement(IgxTreeGridComponent, { injector: this.injector });
-    // customElements.define("igx-tree-grid", treegrid);
+    const treegrid = createCustomElement(IgxTreeGridComponent, { injector: this.injector });
+    customElements.define("igx-tree-grid", treegrid);
 
     // const hgrid = createCustomElement(IgxHierarchicalGridComponent, { injector: this.injector });
     // customElements.define("igx-hierarchical-grid", hgrid);

@@ -70,12 +70,19 @@
   <!-- END IgxGridComponent -->
 
   <!-- IgxTreeGridComponent -->
-  <igx-tree-grid id="treegrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
+  <igx-tree-grid id="treegrid1" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
   </igx-tree-grid>
 
   <script src="assets/data/tree-grid-ds.js"></script>
   <script>
     treegrid1.data = treeGridDS;
+    columns = [
+        { field: 'id', header: 'Product Id', dataType: 'number' },
+        { field: 'tasks', sortable: true },
+        { field: 'start', dataType: 'date', sortable: true, groupable: true },
+        { field: 'finish', dataType: 'date' }
+    ];
+    treegrid1.columns = columns;
   </script>
   <!-- END IgxTreeGridComponent -->
 
