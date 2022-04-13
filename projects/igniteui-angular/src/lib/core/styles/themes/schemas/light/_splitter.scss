@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/splitter' as *;
 
 ////
 /// @group schemas
@@ -14,15 +13,15 @@
 /// @property {Map} bar-color [color: ('grays', 200)] - The background color of the bar.
 /// @property {Map} handle-color [color: ('grays', 400)] - The color for the bar drag handle.
 /// @property {Map} expander-color [color: ('grays', 400)] - The color for the arrow expander's.
-/// @property {Number} border-radius [1] - The border radius used for splitter. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Number} border-radius [2px] - The border radius used for splitter. Can be a fraction between 0 and 1, pixels, or percent.
 /// @property {Map} focus-color [color: ('secondary', 500)] - The color used for focused splitter bar.
 /// @property {Number} size [4px] - The size of the splitter, it's width for vertical and height for horizontal splitter.
 /// @requires {function} extend
-/// @requires {Map} $round-shape-splitter
 /// @see $default-palette
 $light-splitter: extend(
-    $round-shape-splitter,
     (
+        variant: 'material',
+
         bar-color: (
             color: ('grays', 200)
         ),
@@ -39,14 +38,22 @@ $light-splitter: extend(
             color: ('grays', 400)
         ),
 
-        size: 4px
+        size: 4px,
+
+        border-radius: rem(2px)
     )
 );
 
 /// Generates a fluent splitter schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires {Map} $light-splitter
-$fluent-splitter: $light-splitter;
+$fluent-splitter: extend(
+    $light-splitter,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap splitter schema.
 /// @type {Map}

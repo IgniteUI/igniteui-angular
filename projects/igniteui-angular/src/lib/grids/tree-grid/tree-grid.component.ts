@@ -867,7 +867,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        const rec: any = data ?? this.dataView[index];
+        const dataIndex = this._getResolvedDataIndex(index);
+        const rec: any = data ?? this.dataView[dataIndex];
 
         if (this.isSummaryRow(rec)) {
             row = new IgxSummaryRow(this as any, index, rec.summaries, GridInstanceType.TreeGrid);
@@ -893,6 +894,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public get hasGroupableColumns(): boolean {
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
+    }
+
+    protected generateDataFields(data: any[]): string[] {
+        return super.generateDataFields(data).filter(field => field !== this.childDataKey);
     }
 
     protected transactionStatusUpdate(event: StateUpdateEvent) {

@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.2.0 
+
+### New palette
+
+A new fluent light and dark palettes that use the default fluent colors - `$light-fluent-palette` and `$dark-fluent-palette`.
+
 ## 13.1.0
 
 ### New Features
@@ -28,6 +34,10 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxExcelExporterService`
     - Added support for exporting the grids' headers by default when the data is empty. This behavior can be controlled by the `alwaysExportHeaders` option of the IgxExcelExporterOptions object.
+
+- **Theming**
+    - Added `--igx-radius-factor` property to allow for easier update of all components' roundness. Its value can be any decimal fraction between 0 and 1. By default the value is set to 1.
+    - Added `--igx-elevation-factor` property to allow for easier update of all components' shadows at runtime.
 
 ### General
 

@@ -323,6 +323,21 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.columnList.length).toEqual(10);
         });
 
+        it('There shouldn\'t be any errors when the grid is grouped by a column that isn\'t defined', () => {
+            fixture = TestBed.createComponent(ColumnGroupTestComponent);
+            fixture.componentInstance.hideGroupedColumns = true;
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+
+            expect(() => {
+                grid.groupBy({
+                    fieldName: 'NonExistentFieldName', dir: SortingDirection.Desc, ignoreCase: false,
+                    strategy: DefaultSortingStrategy.instance()
+                });
+                fixture.detectChanges();
+            }).not.toThrow();
+        });
+
         it('should set title attribute on column group header spans', () => {
             fixture = TestBed.createComponent(ColumnGroupTestComponent);
             fixture.detectChanges();
