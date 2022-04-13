@@ -156,7 +156,7 @@
         padding: $dialog-title-padding;
 
         @if $bootstrap-theme {
-            border-block-end: 1px solid var-get($theme, 'border-color');
+            border-bottom: 1px solid var-get($theme, 'border-color');
         }
     }
 
@@ -190,7 +190,7 @@
         padding: $dialog-actions-padding;
 
         @if $bootstrap-theme {
-            border-block-start: 1px solid var-get($theme, 'border-color');
+            border-top: 1px solid var-get($theme, 'border-color');
         }
 
         button + button {

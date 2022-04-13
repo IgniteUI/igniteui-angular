@@ -260,7 +260,7 @@
         position: relative;
 
         igx-input-group {
-            margin-block-start: -16px !important;
+            margin-top: -16px !important;
         }
     }
 
@@ -288,7 +288,7 @@
             position: absolute;
             width: 100%;
             inset-inline-start: 0;
-            inset-block-end: 0;
+            bottom: 0;
         }
     }
 

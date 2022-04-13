@@ -74,18 +74,18 @@
         align-items: center;
         color: var-get($theme, 'label-color');
         margin: 0 rem(8px);
-        padding-block-start: rem(18px, map.get($base-scale-size, 'comfortable'));
+        padding-top: rem(18px, map.get($base-scale-size, 'comfortable'));
     }
 
     %igx-date-range-picker--cosy {
         %igx-date-range-picker__label {
-            padding-block-start: rem(18px, map.get($base-scale-size, 'cosy'));
+            padding-top: rem(18px, map.get($base-scale-size, 'cosy'));
         }
     }
 
     %igx-date-range-picker--compact {
         %igx-date-range-picker__label {
-            padding-block-start: rem(18px, map.get($base-scale-size, 'compact'));
+            padding-top: rem(18px, map.get($base-scale-size, 'compact'));
         }
     }
 
