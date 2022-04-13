@@ -154,7 +154,7 @@
         min-height: map.get($grid-toolbar-height, 'comfortable');
         position: relative;
         padding-block: 0;
-        padding-inline: map.get($grid-toolbar-padding, 'confortable');
+        padding-inline: map.get($grid-toolbar-padding, 'comfortable');
 
         [igxButton] {
             margin-inline-start: map.get($grid-toolbar-spacer, 'comfortable');
