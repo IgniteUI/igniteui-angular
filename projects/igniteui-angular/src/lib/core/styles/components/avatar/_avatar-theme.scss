@@ -45,10 +45,6 @@
 
     $theme: apply-palette($avatar-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($avatar-schema, 'border-radius')), 0, 16px
-    );
-
     @if not($color) and $background {
         $color: text-contrast($background);
     }
@@ -103,7 +99,7 @@
         color: var-get($theme, 'color');
         background: var-get($theme, 'background');
         vertical-align: middle;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         outline-style: none;
         flex-shrink: 0;
 

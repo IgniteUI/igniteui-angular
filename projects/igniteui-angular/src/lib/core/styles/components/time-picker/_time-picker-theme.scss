@@ -39,7 +39,6 @@
 /// @requires text-contrast
 /// @requires elevation
 /// @requires extend
-/// @requires round-borders
 ///
 /// @example scss Change the background and text colors in  time picker
 ///   $my-time-picker-theme: time-picker-theme(
@@ -81,14 +80,6 @@
     }
 
     $theme: apply-palette($time-picker-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($time-picker-schema, 'border-radius')), 0, 20px
-    );
-
-    $active-item-border-radius: round-borders(
-        if($active-item-border-radius, $active-item-border-radius, map.get($time-picker-schema, 'active-item-border-radius')), 0, 20px
-    );
 
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);
@@ -177,7 +168,7 @@
         flex-flow: column nowrap;
         max-width: rem(340px);
         min-width: rem(320px);
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         box-shadow: var-get($theme, 'modal-shadow');
         overflow: hidden;
     }
@@ -268,7 +259,7 @@
     %time-picker__item {
         width: rem(54px);
         padding: rem(5px) rem(10px);
-        border-radius: var-get($theme, 'active-item-border-radius');
+        border-radius: border-radius(var-get($theme, 'active-item-border-radius'));
         height: rem(48px);
         display: flex;
         justify-content: center;
@@ -375,4 +366,3 @@
         }
     }
 }
-

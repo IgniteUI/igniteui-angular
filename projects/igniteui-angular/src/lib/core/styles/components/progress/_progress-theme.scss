@@ -28,7 +28,6 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires round-borders
 ///
 /// @example scss Change the stripes color
 ///   $my-progress-linear-theme: progress-linear-theme(
@@ -60,10 +59,6 @@
     }
 
     $theme: apply-palette($linear-bar-schema, $palette);
-
-    $track-border-radius: round-borders(
-        if($track-border-radius, $track-border-radius, map.get($linear-bar-schema, 'track-border-radius')), 0, 8px
-    );
 
     @return extend($theme, (
         name: $name,
@@ -130,7 +125,7 @@
         height: $bar-height;
         background: var-get($theme, 'track-color');
         overflow: hidden;
-        border-radius: var-get($theme, 'track-border-radius');
+        border-radius: border-radius(var-get($theme, 'track-border-radius'));
         z-index: 0;
     }
 
@@ -201,7 +196,6 @@
     %linear-indicator--success {
         background-color: var-get($theme, 'fill-color-success');
     }
-
 
     %linear-value {
         margin: $value-margin;

@@ -295,6 +295,15 @@
     @include elevation-vars($elevations, $prefix: 'igc');
 }
 
+/// Returns a middle value between an upper and lower bound
+/// @access private
+/// @param {Number} $radius - A preferred value
+/// @param {Number} $min - A minimum value
+/// @param {Number} $max - A maximum allowed value
+@mixin border-radius($radius, $min: rem(0), $max: $radius) {
+    border-radius: clamp($min, calc(var(--igx-radius-factor) * $radius), $max);
+}
+
 /// Generates CSS class names for all colors from
 /// for a given property and color palette, with
 /// optional prefix and suffix attached to the class name.
