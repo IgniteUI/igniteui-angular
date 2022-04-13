@@ -285,8 +285,7 @@
         igx-list {
             flex-grow: 1;
             overflow: hidden;
-            margin-inline-start: -#{rem(16px)};
-            margin-inline-end: -#{rem(16px)};
+            margin-inline: -#{rem(16px)};
             border: 0;
         }
 

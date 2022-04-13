@@ -571,6 +571,15 @@
     ));
 }
 
+@mixin _filtering-scroll-mask($theme, $dir) {
+    display: block;
+    position: absolute;
+    width: rem(10px);
+    content: '';
+    inset-block: rem(-2px);
+    background: linear-gradient(to #{$dir}, var-get($theme, 'filtering-row-background'), transparent);
+}
+
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires {mixin} ellipsis
@@ -1301,7 +1310,7 @@
             color: var-get($theme, 'expand-icon-hover-color')
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
         }
     }
@@ -2336,7 +2345,7 @@
             }
         }
 
-        [dir='rlt'] & {
+        [dir='rtl'] & {
             transform: scaleX(-1);
         }
     }
@@ -2513,8 +2522,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding-inline-end: 8px;
-        margin-inline-start: 8px;
+        padding-inline-end: rem(8px);
+        margin-inline-start: rem(8px);
         cursor: pointer;
         visibility: visible;
 
@@ -2656,50 +2665,57 @@
         }
     }
 
-    %filtering-scroll-mask {
-        display: block;
-        position: absolute;
-        content: '';
-        top: -2px;
-        bottom: -2px;
-        width: 10px;
-    }
-
     %igx-grid__filtering-scroll-start {
-        width: 24px;
-        height: 24px;
+        width: rem(24px);
+        height: rem(24px);
         position: relative;
         overflow: visible;
-        margin: 0 8px;
+        margin: 0 rem(8px);
         z-index: 1;
 
         &::after {
-            @extend %filtering-scroll-mask;
+            @include _filtering-scroll-mask($theme, right);
             inset-inline-start: calc(100% + 6px);
-            background: linear-gradient(to end, var-get($theme, 'filtering-row-background'), transparent);
         }
 
         [dir='rtl'] & {
             transform: scaleX(-1);
+
+            &::after {
+                content: initial;
+            }
+
+            &::before {
+                @include _filtering-scroll-mask($theme, right);
+                inset-inline-end: calc(100% + 6px);
+            }
         }
     }
 
     %igx-grid__filtering-scroll-end {
-        width: 24px;
-        height: 24px;
+        width: rem(24px);
+        height: rem(24px);
         position: relative;
         overflow: visible;
-        margin: 0 8px;
+        margin: 0 rem(8px);
         z-index: 1;
 
         &::before {
-            @extend %filtering-scroll-mask;
+            @include _filtering-scroll-mask($theme, left);
             inset-inline-end: calc(100% + 6px);
-            background: linear-gradient(to start, var-get($theme, 'filtering-row-background'), transparent);
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
+
+            &::before {
+                content: initial;
+            }
+
+            &::after {
+                @include _filtering-scroll-mask($theme, left);
+                inset-inline-start: calc(100% + 6px);
+            }
         }
     }
 
@@ -2769,7 +2785,7 @@
             min-width: $hierarchical-action-icon;
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
         }
 
