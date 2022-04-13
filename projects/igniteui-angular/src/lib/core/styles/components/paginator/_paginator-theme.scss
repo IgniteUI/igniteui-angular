@@ -79,9 +79,6 @@
         compact: rem(44px)
     );
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     %igx-paginator {
         display: flex;
         justify-content: space-between;
@@ -126,7 +123,7 @@
     }
 
     %igx-page-size__label {
-        margin-#{$right}: 8px;
+        margin-inline-end: rem(8px);
         @include ellipsis();
     }
 
@@ -143,7 +140,7 @@
         flex: 1;
 
         > * {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
 
         @include if-rtl() {

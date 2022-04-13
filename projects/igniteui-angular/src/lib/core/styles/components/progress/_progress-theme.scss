@@ -98,6 +98,13 @@
         indigo-design: 45deg,
     ), $variant);
 
+    $gradient-orientation-rtl: map.get((
+        material: 45deg,
+        fluent: 45deg,
+        bootstrap: -45deg,
+        indigo-design: -45deg,
+    ), $variant);
+
     $background-size: map.get((
         material: rem(40px) rem(40px),
         fluent: rem(40px) rem(40px),
@@ -109,7 +116,6 @@
     $value-fs: em(14px, 16px);
     $value-fw: 600;
     $value-margin: 0;
-    $animation-direction: if-ltr(normal, reverse);
 
     %linear-display {
         position: relative;
@@ -158,10 +164,33 @@
         }
 
         background-size: $background-size;
+
+        [dir='rtl'] & {
+            @if $variant != 'indigo-design' {
+                background-image: linear-gradient(
+                    $gradient-orientation-rtl,
+                    $stripe-color 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    $stripe-color 50%,
+                    $stripe-color 75%,
+                    transparent 75%,
+                    transparent
+                );
+            } @else {
+                background-image: linear-gradient(
+                    $gradient-orientation-rtl,
+                    transparent 25%,
+                    $stripe-color 25%,
+                    $stripe-color 75%,
+                    transparent 75%,
+                );
+            }
+        }
     }
 
     %linear-indicator--indeterminate {
-        @include animation(indeterminate-bar 2s cubic-bezier(0, .085, .68, .53) #{$animation-direction} infinite);
+        @include animation(indeterminate-bar 2s cubic-bezier(0, .085, .68, .53) normal infinite);
 
         width: 100% !important;
 
@@ -169,11 +198,20 @@
             position: absolute;
             content: '';
             top: 0;
+            // This needs to stay "left" in the [dir='rtl'] otherwise the animation is incorrect.
             left: -200%;
             width: 100%;
             height: inherit;
             background-color: inherit;
             transform-origin: top right;
+        }
+
+        [dir='rtl'] & {
+            animation-direction: reverse;
+
+            &::before {
+                transform-origin: top left;
+            }
         }
     }
 
@@ -327,7 +365,6 @@
     $palette: map.get($theme, 'palette');
     $circular-value-fs: rem(32px, 16px);
     $circular-value-fw: 600;
-    $animation-direction: if-ltr(normal, reverse);
 
     %circular-display {
         display: inline-flex;
@@ -344,8 +381,12 @@
     }
 
     %circular-display--indeterminate {
-        @include animation(rotate-center 3s linear #{$animation-direction} infinite);
+        @include animation(rotate-center 3s linear normal infinite);
         transform-origin: 50% 50%;
+
+        [dir='rtl'] & {
+            animation-direction: reverse;
+        }
     }
 
     %circular-inner {
@@ -369,7 +410,11 @@
 
     %circular-outer--indeterminate {
         stroke-dasharray: 289;
-        @include animation(indeterminate-accordion 1.5s cubic-bezier(0, .085, .68, .53) #{$animation-direction} infinite);
+        @include animation(indeterminate-accordion 1.5s cubic-bezier(0, .085, .68, .53) normal infinite);
+
+        [dir='rtl'] & {
+            animation-direction: reverse;
+        }
     }
 
     %circular-text {
