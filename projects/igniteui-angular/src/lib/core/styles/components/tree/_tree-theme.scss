@@ -100,9 +100,6 @@
 @mixin tree($theme) {
     @include css-vars($theme);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $variant: map.get($theme, variant);
     $indigo-theme: $variant == 'indigo-design';
 

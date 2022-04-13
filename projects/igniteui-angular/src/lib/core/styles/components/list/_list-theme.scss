@@ -255,9 +255,6 @@
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $list-empty-padding: (
         comfortable: rem(16px),
         cosy: rem(8px),
