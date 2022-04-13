@@ -109,8 +109,8 @@
         position: fixed;
         justify-content: center;
         align-items: center;
-        left: 0;
-        right: 0;
+        inset-inline-start: 0;
+        inset-inline-end: 0;
         height: $menu-height;
         background: var-get($theme, 'background');
         overflow: hidden;
@@ -118,14 +118,14 @@
     }
 
     %igx-bottom-nav-menu--top {
-        top: 0;
+        inset-block-start: 0;
         bottom: inherit;
         box-shadow: var-get($theme, 'shadow');
     }
 
     %igx-bottom-nav-menu--bottom {
         top: inherit;
-        bottom: 0;
+        inset-block-end: 0;
         box-shadow: var-get($theme, 'shadow');
     }
 
@@ -161,7 +161,7 @@
 
     %igx-tab-label {
         @include ellipsis();
-        padding-top: 4px;
+        padding-block-start: rem(4px);
         max-width: 100%;
         text-align: center;
         transform: translateZ(0);
