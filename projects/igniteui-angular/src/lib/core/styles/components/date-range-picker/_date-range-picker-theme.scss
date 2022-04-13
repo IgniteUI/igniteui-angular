@@ -43,8 +43,6 @@
 /// @requires var-get
 @mixin date-range-picker($theme) {
     @include css-vars($theme);
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
 
     $base-scale-size: (
         'comfortable': rem(16px),
@@ -76,18 +74,18 @@
         align-items: center;
         color: var-get($theme, 'label-color');
         margin: 0 rem(8px);
-        padding-top: rem(18px, map.get($base-scale-size, 'comfortable'));
+        padding-block-start: rem(18px, map.get($base-scale-size, 'comfortable'));
     }
 
     %igx-date-range-picker--cosy {
         %igx-date-range-picker__label {
-            padding-top: rem(18px, map.get($base-scale-size, 'cosy'));
+            padding-block-start: rem(18px, map.get($base-scale-size, 'cosy'));
         }
     }
 
     %igx-date-range-picker--compact {
         %igx-date-range-picker__label {
-            padding-top: rem(18px, map.get($base-scale-size, 'compact'));
+            padding-block-start: rem(18px, map.get($base-scale-size, 'compact'));
         }
     }
 
@@ -97,10 +95,10 @@
         padding: 0 rem(16px) rem(16px) rem(16px);
 
         > * {
-            margin-#{$right}: rem(8px);
+            margin-inline-end: rem(8px);
 
             &:last-of-type {
-                margin-#{$right}: 0;
+                margin-inline-end: 0;
             }
         }
 

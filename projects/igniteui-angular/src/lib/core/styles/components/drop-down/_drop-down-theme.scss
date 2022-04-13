@@ -240,9 +240,6 @@
         compact: 0 rem(8px)
     );
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     %igx-drop-down {
         position: absolute;
     }
@@ -263,7 +260,7 @@
         position: relative;
 
         igx-input-group {
-            margin-top: -16px !important;
+            margin-block-start: -16px !important;
         }
     }
 
@@ -290,8 +287,8 @@
         igx-divider {
             position: absolute;
             width: 100%;
-            #{$left}: 0;
-            bottom: 0;
+            inset-inline-start: 0;
+            inset-block-end: 0;
         }
     }
 
@@ -323,7 +320,7 @@
     %igx-drop-down__inner {
         display: block;
         @include ellipsis();
-        margin-#{$right}: auto;
+        margin-inline-end: auto;
     }
 
     %igx-drop-down__item--cosy {
@@ -357,35 +354,35 @@
     }
 
     %igx-drop-down__prefix {
-        margin-#{$right}: map.get($prefix-margin, 'comfortable');
+        margin-inline-end: map.get($prefix-margin, 'comfortable');
     }
 
     %igx-drop-down__suffix {
         + igx-suffix,
         + [igxSuffix] {
-            margin-#{$left}: map.get($suffix-margin, 'comfortable');
+            margin-inline-start: map.get($suffix-margin, 'comfortable');
         }
     }
 
     %igx-drop-down__prefix--cosy {
-        margin-#{$right}: map.get($prefix-margin, 'cosy');
+        margin-inline-end: map.get($prefix-margin, 'cosy');
     }
 
     %igx-drop-down__suffix--cosy {
         + igx-suffix,
         + [igxSuffix] {
-            margin-#{$left}: map.get($suffix-margin, 'cosy');
+            margin-inline-start: map.get($suffix-margin, 'cosy');
         }
     }
 
     %igx-drop-down__prefix--compact {
-        margin-#{$right}: map.get($prefix-margin, 'compact');
+        margin-inline-end: map.get($prefix-margin, 'compact');
     }
 
     %igx-drop-down__suffix--compact {
         + igx-suffix,
         + [igxSuffix] {
-            margin-#{$left}: map.get($suffix-margin, 'compact');
+            margin-inline-start: map.get($suffix-margin, 'compact');
         }
     }
 
