@@ -766,9 +766,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             blanks.isSelected = false;
             blanks.isFiltered = false;
             if (shouldUpdateSelection && this.filterValues.has(null)) {
-                    blanks.isSelected = true;
-                    blanks.isFiltered = true;
-                }
+                blanks.isSelected = true;
+                blanks.isFiltered = true;
             }
         } else {
             blanks.isSelected = true;
