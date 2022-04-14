@@ -1343,9 +1343,14 @@
         background-clip: border-box !important;
     }
 
-    // %igx-grid__td--tree-cell {
-    //     overflow: hidden;
-    // }
+    // This is no longer being extended and is left
+    // here for reference purposes only. It seems setting
+    // overflow: hidden on the cell prevents drag and selection
+    // of the cell.
+    // See github issue #9821
+    %igx-grid__td--tree-cell {
+        overflow: hidden;
+    }
 
     %grid-cell-text {
         @include ellipsis();
