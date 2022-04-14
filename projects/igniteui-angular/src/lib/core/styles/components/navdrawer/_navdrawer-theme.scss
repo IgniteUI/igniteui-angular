@@ -199,6 +199,10 @@
     %aside--collapsed--right {
         transform: translate3d(300px, 0, 0);
         box-shadow: none;
+
+        [dir='rtl'] & {
+            transform: translate3d(-300px, 0, 0);
+        }
     }
 
     %igx-nav-drawer__aside--collapsed {
@@ -209,11 +213,9 @@
     }
 
     %aside--collapsed {
-        @include if-ltr() {
-            transform: translate3d(-300px, 0, 0);
-        }
+        transform: translate3d(-300px, 0, 0);
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: translate3d(300px, 0, 0);
         }
 
