@@ -25,17 +25,17 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires text-contrast
 ///
 /// @example scss Change the toolbar background color
-///   $my-toolbar-theme: igx-grid-toolbar-theme(
+///   $my-toolbar-theme: grid-toolbar-theme(
 ///     $background-color: black
 ///   );
-///   // Pass the theme to the igx-grid-filtering component mixin
-///   @include igx-grid-toolbar($my-toolbar-theme);
+///   // Pass the theme to the grid-toolbar component mixin
+///   @include grid-toolbar($my-toolbar-theme);
 
-@function igx-grid-toolbar-theme(
+@function grid-toolbar-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -103,14 +103,14 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
-/// @requires igx-color
+/// @requires {mixin} css-vars
+/// @requires color
 /// @requires {mixin} ellipsis
 /// @requires rem
 /// @requires em
 /// @requires var-get
-@mixin igx-grid-toolbar($theme) {
-    @include igx-css-vars($theme);
+@mixin grid-toolbar($theme) {
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
@@ -153,9 +153,9 @@
         font-size: $grid-toolbar-fs;
 
         @if $bootstrap-theme {
-            border-bottom: 1px solid igx-color(map.get($theme, 'palette'), 'grays', 100);
+            border-bottom: 1px solid color(map.get($theme, 'palette'), 'grays', 100);
         } @else {
-            border-bottom: 1px solid igx-color(map.get($theme, 'palette'), 'grays', 300);
+            border-bottom: 1px solid color(map.get($theme, 'palette'), 'grays', 300);
         }
 
         background: var-get($theme, 'background-color');
@@ -289,22 +289,22 @@
             border-radius: 0;
 
             &:first-child > div {
-                background: igx-color(map.get($theme, 'palette'), 'secondary');
+                background: color(map.get($theme, 'palette'), 'secondary');
             }
         }
     }
 
     %igx-grid-toolbar__adv-filter--filtered {
-        border-color: igx-color(map.get($theme, 'palette'), 'secondary') !important;
+        border-color: color(map.get($theme, 'palette'), 'secondary') !important;
 
         @if $bootstrap-theme {
             border-width: 2px;
-            border-color: igx-color(map.get($theme, 'palette'), 'primary', 800) !important;
-            color: igx-color(map.get($theme, 'palette'), 'primary', 800);
+            border-color: color(map.get($theme, 'palette'), 'primary', 800) !important;
+            color: color(map.get($theme, 'palette'), 'primary', 800);
 
             &:hover,
             &:focus {
-                background: igx-color(map.get($theme, 'palette'), 'primary', 800);
+                background: color(map.get($theme, 'palette'), 'primary', 800);
             }
         }
     }
@@ -318,7 +318,7 @@
         background: var-get($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
-        box-shadow: igx-elevation($elevation: 8);
+        box-shadow: elevation($elevation: 8);
     }
 
     %igx-grid-toolbar__dd-list-items {

@@ -21,19 +21,19 @@ $dark-fluent-avatar: $fluent-avatar;
 
 /// Generates a dark bootstrap avatar schema.
 /// @type {Map}
-/// @prop {Map} background [igx-color: ('grays', 200)]- The background color of the avatar.
-/// @prop {Map} color [igx-contrast-color: ('grays', 200)] - The text/icon color of the avatar.
+/// @prop {Map} background [color: ('grays', 200)]- The background color of the avatar.
+/// @prop {Map} color [contrast-color: ('grays', 200)] - The text/icon color of the avatar.
 /// @requires {function} extend
 /// @requires $bootstrap-avatar
 $dark-bootstrap-avatar: extend(
     $bootstrap-avatar,
     (
         background: (
-            igx-color: ('grays', 200)
+            color: ('grays', 200)
         ),
 
         color: (
-            igx-contrast-color: ('grays', 200)
+            contrast-color: ('grays', 200)
         ),
     )
 );

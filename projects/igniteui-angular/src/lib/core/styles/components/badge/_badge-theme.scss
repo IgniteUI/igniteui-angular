@@ -27,19 +27,18 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires text-contrast
 /// @requires rem
-/// @requires round-borders
 ///
 /// @example scss Change the text and icon colors in a badge
-///   $my-badge-theme: igx-badge-theme($icon-color: black, $background-color: white);
-///   // IE Supported theme - Pass the theme to the igx-badge component mixin
-///   @include igx-badge($my-badge-theme);
+///   $my-badge-theme: badge-theme($icon-color: black, $background-color: white);
+///   // IE Supported theme - Pass the theme to the badge component mixin
+///   @include badge($my-badge-theme);
 ///
 ///   // Theming using css variables (not supported in IE11):
-///   @include igx-css-vars($my-badge-theme);
-@function igx-badge-theme(
+///   @include css-vars($my-badge-theme);
+@function badge-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -65,10 +64,6 @@
 
     $theme: apply-palette($badge-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($badge-schema, 'border-radius')), 0, 11px
-    );
-
     @if not($icon-color) and $background-color {
         $icon-color: text-contrast($background-color);
     }
@@ -79,7 +74,7 @@
 
     @if not($shadow) {
         $elevation: map.get($badge-schema, 'elevation');
-        $shadow: igx-elevation($elevations, $elevation);
+        $shadow: elevation($elevations, $elevation);
     }
 
     @return extend($theme, (
@@ -96,15 +91,14 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
-/// @requires igx-color
+/// @requires {mixin} css-vars
+/// @requires color
 /// @requires rem
 /// @requires var-get
-@mixin igx-badge($theme) {
-    @include igx-css-vars($theme);
+@mixin badge($theme) {
+    @include css-vars($theme);
 
     $palette: map.get($theme, 'palette');
-
     $badge-width: 22px;
     $badge-height: $badge-width;
 
@@ -127,7 +121,7 @@
         color: var-get($theme, 'text-color');
         line-height: 1;
         background: var-get($theme, 'background-color');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         box-shadow: var-get($theme, 'shadow');
         border-width: var-get($theme, 'border-width');
         border-color: var-get($theme, 'border-color');
@@ -152,19 +146,19 @@
     }
 
     %igx-badge--success {
-        background: igx-color($palette, 'success');
+        background: color($palette, 'success');
     }
 
     %igx-badge--info {
-        background: igx-color($palette, 'info');
+        background: color($palette, 'info');
     }
 
     %igx-badge--warn {
-        background: igx-color($palette, 'warn');
+        background: color($palette, 'warn');
     }
 
     %igx-badge--error {
-        background: igx-color($palette, 'error');
+        background: color($palette, 'error');
     }
 
     %igx-badge--hidden {

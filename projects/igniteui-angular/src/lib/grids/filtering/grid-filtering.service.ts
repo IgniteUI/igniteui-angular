@@ -168,15 +168,13 @@ export class IgxFilteringService implements OnDestroy {
         const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
         const filteringTree = grid.filteringExpressionsTree;
-        const columnFilteringExpressionsTree = grid.filteringExpressionsTree.find(field) as IFilteringExpressionsTree;
+        const columnFilteringExpressionsTree = filteringTree.find(field) as IFilteringExpressionsTree;
         conditionOrExpressionTree = conditionOrExpressionTree ?? columnFilteringExpressionsTree;
         const fieldFilterIndex = filteringTree.findIndex(field);
-        if (fieldFilterIndex > -1) {
-            filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
-        }
+
         const newFilteringTree: FilteringExpressionsTree =
             this.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree,
-                filteringIgnoreCase, fieldFilterIndex, true);
+            filteringIgnoreCase, fieldFilterIndex, true);
 
         const eventArgs: IFilteringEventArgs = {
             owner: grid,
@@ -519,15 +517,11 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         const fieldFilterIndex = filteringTree.findIndex(fieldName);
-        if (fieldFilterIndex > -1) {
-            filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
-        }
-
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         grid.filteringExpressionsTree = filteringTree;
     }
 
-    /** Modifies the filteringState object to contain the newly added fitering conditions/expressions.
+    /** Modifies the filteringState object to contain the newly added filtering conditions/expressions.
      * If createNewTree is true, filteringState will not be modified (because it directly affects the grid.filteringExpressionsTree),
      * but a new object is created and returned.
      */
@@ -540,29 +534,29 @@ export class IgxFilteringService implements OnDestroy {
         insertAtIndex = -1,
         createNewTree = false): FilteringExpressionsTree {
 
-        const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
-        const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+        let expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
             conditionOrExpressionsTree as IFilteringExpressionsTree : null;
         const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
             null : conditionOrExpressionsTree as IFilteringOperation;
-        const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
 
-        const newExpressionsTree: FilteringExpressionsTree = createNewTree ?
-            new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName) : filteringState as FilteringExpressionsTree;
+        let newExpressionsTree = filteringState as FilteringExpressionsTree;
 
-        if (oldExpressionsTreeIndex === -1) {
-            // no expressions tree found for this field
-            if (expressionsTree) {
-                if (insertAtIndex > -1) {
-                    newExpressionsTree.filteringOperands.splice(insertAtIndex, 0, expressionsTree);
-                } else {
-                    newExpressionsTree.filteringOperands.push(expressionsTree);
-                }
-            } else if (condition) {
-                // create expressions tree for this field and add the new expression to it
-                const newExprTree: FilteringExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
-                newExprTree.filteringOperands.push(newExpression);
-                newExpressionsTree.filteringOperands.push(newExprTree);
+        if (createNewTree) {
+            newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName);
+            newExpressionsTree.filteringOperands = [...filteringState.filteringOperands];
+        }
+
+        if (condition) {
+            const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
+            expressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
+            expressionsTree.filteringOperands.push(newExpression);
+        }
+
+        if (expressionsTree) {
+            if (insertAtIndex > -1) {
+                newExpressionsTree.filteringOperands[insertAtIndex] = expressionsTree;
+            } else {
+                newExpressionsTree.filteringOperands.push(expressionsTree);
             }
         }
 
@@ -580,7 +574,7 @@ export class IgxFilteringService implements OnDestroy {
             if (expressionsTree.operator === FilteringLogic.Or) {
                 const andOperatorsCount = this.getChildAndOperatorsCount(expressionsTree);
 
-                // having more that 'And' and operator in the sub-tree means that the filter could not be represented without parentheses.
+                // having more than one 'And' operator in the sub-tree means that the filter could not be represented without parentheses.
                 return andOperatorsCount > 1;
             }
 

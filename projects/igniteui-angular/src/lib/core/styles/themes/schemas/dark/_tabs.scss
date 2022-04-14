@@ -9,15 +9,15 @@
 
 /// Generates a base dark tabs schema.
 /// @type {Map}
-/// @property {Map} item-hover-background [igx-color: ('grays', 100, .5)] - The background used for the tabs on hover.
-/// @property {Map} item-active-background [igx-color: ('grays', 100, .5)] - The color used for the active/focused tab background.
+/// @property {Map} item-hover-background [color: ('grays', 100, .5)] - The background used for the tabs on hover.
+/// @property {Map} item-active-background [color: ('grays', 100, .5)] - The color used for the active/focused tab background.
 $base-dark-tabs: (
     item-hover-background: (
-        igx-color: ('grays', 100, .5)
+        color: ('grays', 100, .5)
     ),
 
     item-active-background: (
-        igx-color: ('grays', 100, .5)
+        color: ('grays', 100, .5)
     ),
 );
 
@@ -38,12 +38,12 @@ $dark-fluent-tabs: extend($fluent-tabs, $base-dark-tabs);
 
 /// Generates a dark bootstrap tabs schema based on a mix of $bootstrap-tabs and $base-dark-tabs.
 /// @type {Map}
-/// @prop {Map} item-background [igx-color: ('primary', 400)] - The background color used for the tabs header.
+/// @prop {Map} item-background [color: ('primary', 400)] - The background color used for the tabs header.
 /// @requires {function} extend
 /// @requires $bootstrap-tabs
 $dark-bootstrap-tabs: extend($bootstrap-tabs, (
     item-hover-color: (
-        igx-color: ('primary', 400)
+        color: ('primary', 400)
     ),
 ));
 

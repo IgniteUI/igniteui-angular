@@ -23,7 +23,7 @@
 ///   $my-ripple-theme: igx-ripple-theme($color: yellow);
 ///   // Pass the theme to the igx-ripple component mixin
 ///   igx-ripple($my-ripple-theme);
-@function igx-ripple-theme(
+@function ripple-theme(
     $palette: null,
     $schema: $light-schema,
     $color: null
@@ -50,15 +50,15 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires var-get
-@mixin igx-ripple($theme) {
-    @include igx-css-vars($theme);
+@mixin ripple($theme) {
+    @include css-vars($theme);
 
     %igx-ripple-display {
         display: block;
         position: absolute;
-        border-radius: 50%;
+        border-radius: border-radius(50%);
         background: var-get($theme, 'color');
         pointer-events: none;
         transform-origin: center;

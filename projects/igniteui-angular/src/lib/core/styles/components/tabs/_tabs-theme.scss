@@ -45,17 +45,16 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Set a custom background color
-///   $my-tabs-theme: igx-tabs-theme(
+///   $my-tabs-theme: tabs-theme(
 ///      $item-background: orange
 ///    );
-///   // Pass the theme to the igx-tabs component mixin
-///   @include igx-tabs($my-tabs-theme);
-@function igx-tabs-theme(
+///   // Pass the theme to the tabs component mixin
+///   @include tabs($my-tabs-theme);
+@function tabs-theme(
     $palette: null,
     $schema: $light-schema,
     $item-text-color: null,
@@ -86,17 +85,13 @@
         $tabs-schema: $schema;
     }
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($tabs-schema, 'border-radius')), 0, 6px
-    );
-
     $theme: apply-palette($tabs-schema, $palette);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'boostrap';
 
-    $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 1));
-    $buttons-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 4));
+    $tab-area-shadow: if($disable-shadow == true, none, elevation($elevation: 1));
+    $buttons-shadow: if($disable-shadow == true, none, elevation($elevation: 4));
 
     @if not($item-text-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {
@@ -207,15 +202,15 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} ellipsis
-/// @requires igx-ripple-theme
-/// @requires {mixin} igx-ripple
-/// @requires igx-elevation
+/// @requires ripple-theme
+/// @requires {mixin} ripple
+/// @requires elevation
 /// @requires rem
 /// @requires var-get
-@mixin igx-tabs($theme) {
-    @include igx-css-vars($theme);
+@mixin tabs($theme) {
+    @include css-vars($theme);
 
     $variant: map.get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
@@ -229,11 +224,11 @@
 
     $item-padding: rem(11px) rem(16px);
 
-    $tabs-ripple-theme: igx-ripple-theme(
+    $tabs-ripple-theme: ripple-theme(
         $schema: $light-schema,
         $color: var-get($theme, 'tab-ripple-color')
     );
-    $button-ripple-theme: igx-ripple-theme(
+    $button-ripple-theme: ripple-theme(
         $schema: $light-schema,
         $color: var-get($theme, 'button-ripple-color')
     );
@@ -295,7 +290,7 @@
     }
 
     %tabs-header-scroll {
-        display: flex;       
+        display: flex;
         height: 100%;
     }
 
@@ -340,12 +335,13 @@
             display: none;
         }
 
+
+        @include ripple($button-ripple-theme);
+        @include css-vars($button-ripple-theme);
+
         @include if-rtl() {
             transform: scaleX(-1);
         }
-
-        @include igx-ripple($button-ripple-theme);
-        @include igx-css-vars($button-ripple-theme);
     }
 
     %tabs-header-item {
@@ -375,8 +371,8 @@
 
         @if $bootstrap-theme {
             border: 1px solid transparent;
-            border-top-left-radius: var-get($theme, 'border-radius');
-            border-top-right-radius: var-get($theme, 'border-radius');
+            border-top-left-radius: border-radius(var-get($theme, 'border-radius'));
+            border-top-right-radius: border-radius(var-get($theme, 'border-radius'));
         }
 
         @if $indigo-theme {
@@ -423,8 +419,8 @@
             }
         }
 
-        @include igx-ripple($tabs-ripple-theme);
-        @include igx-css-vars($tabs-ripple-theme);
+        @include ripple($tabs-ripple-theme);
+        @include css-vars($tabs-ripple-theme);
     }
 
     %tabs-header-item--selected {
@@ -580,12 +576,12 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'button')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-tabs-typography($type-scale, $categories: (label: 'button')) {
+/// @requires {mixin} type-style
+@mixin tabs-typography($type-scale, $categories: (label: 'button')) {
     $label: map.get($categories, 'label');
 
     %tabs-header-item-inner > [igxtabheaderlabel]{
-        @include igx-type-style($type-scale, $label) {
+        @include type-style($type-scale, $label) {
             margin-top: 0;
             margin-bottom: 0;
         }

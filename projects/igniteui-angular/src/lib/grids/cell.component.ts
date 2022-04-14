@@ -48,7 +48,7 @@ import { ISelectionNode } from './common/types';
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager]
 })
-export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
+export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType {
     /**
      * @hidden
      * @internal
@@ -997,7 +997,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     private getCellType(useRow?: boolean): CellType {
         const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.data) : this.intRow.index;
-        // TODO: Fix types
         return new IgxGridCell(this.grid, rowID, this.column.field);
     }
 }

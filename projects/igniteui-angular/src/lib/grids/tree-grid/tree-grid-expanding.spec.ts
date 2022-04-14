@@ -1181,16 +1181,14 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 describe('Row editing expanding/collapsing #tGrid', () => {
     configureTestSuite();
     let fix;
-    let treeGrid;
+    let treeGrid: IgxTreeGridComponent;
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridRowEditingComponent
             ],
-            imports: [
-                NoopAnimationsModule,
-                IgxTreeGridModule]
+            imports: [ NoopAnimationsModule, IgxTreeGridModule ]
         })
             .compileComponents();
     }));
@@ -1202,7 +1200,7 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         treeGrid = fix.componentInstance.treeGrid;
     }));
 
-    it('Hide banner with collapsing a node, using UI', fakeAsync(() => {
+    it('Do not hide banner with collapsing a node, using UI', fakeAsync(() => {
         const rows = TreeGridFunctions.getAllRows(fix);
 
         const cell = treeGrid.getCellByColumn(1, 'Name');
@@ -1210,36 +1208,42 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         tick(16);
         fix.detectChanges();
         expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
 
         const firstRow = rows[0];
         const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
         indicatorDiv.triggerEventHandler('click', new Event('click'));
         fix.detectChanges();
         tick(16);
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should hide');
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should not hide');
+        expect(overlayContent.style.display).toEqual('');
 
         indicatorDiv.triggerEventHandler('click', new Event('click'));
         fix.detectChanges();
         tick(16);
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not show again');
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should still be shown');
+        expect(overlayContent.style.display).toEqual('');
     }));
 
-    it('Hide banner with collapsing a node, using API', fakeAsync(() => {
+    it('Do not hide banner with collapsing a node, using API', fakeAsync(() => {
         const cell = treeGrid.getCellByColumn(1, 'Name');
         cell.editMode = true;
         tick(16);
         fix.detectChanges();
+        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
         expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
 
         treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should hide');
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should not hide');
+        expect(overlayContent.style.display).toEqual('');
 
         treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not show again');
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should still be shown');
+        expect(overlayContent.style.display).toEqual('');
     }));
 
     // The following tests were written,
@@ -1248,52 +1252,7 @@ describe('Row editing expanding/collapsing #tGrid', () => {
     // Later any collapse/expand of the tree grid was exiting edit mode.
     // Please delete those test if you don't think this functionality will be reverted
     // and cell will stay in edit mode even row is collapsed/expanded.
-
-    /*it('Hide banner with collapsing a parent node, using UI', fakeAsync(() => {
-        // Test summary: Edit first child of the first row, then collapse parent row and see that row overlay is hidden.
-        // Then expand again parent row and see that overlay is visible. All this clicking row indicator.
-        const rows = TreeGridFunctions.getAllRows(fix);
-
-        const cell = treeGrid.getCellByColumn(1, 'Name');
-        cell.editMode = true;
-        tick(16);
-        fix.detectChanges();
-        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
-
-        const firstRow = rows[0];
-        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
-        indicatorDiv.triggerEventHandler('click', new Event('click'));
-        tick(16);
-        fix.detectChanges();
-        expect(overlayContent.style.display).toEqual('none');
-
-        indicatorDiv.triggerEventHandler('click', new Event('click'));
-        tick(16);
-        fix.detectChanges();
-        expect(overlayContent.style.display).toEqual('');
-    }));
-
-    it('Hide banner with collapsing a parent node, using API', fakeAsync(() => {
-        // Test summary: Edit first child of the first row, then collapse parent row and see that row overlay is hidden.
-        // Then expand again parent row and see that overlay is visible. All this using API.
-        const rows = TreeGridFunctions.getAllRows(fix);
-
-        const cell = treeGrid.getCellByColumn(1, 'Name');
-        cell.editMode = true;
-        tick(16);
-        fix.detectChanges();
-        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
-
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
-        tick(16);
-        fix.detectChanges();
-        expect(overlayContent.style.display).toEqual('none');
-
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
-        tick(16);
-        fix.detectChanges();
-        expect(overlayContent.style.display).toEqual('');
-    }));
+    // K.D. 01 Mar, 2022 #10634 The functionality is restored and tests brought back
 
     it('Do not hide parent banner while collapsing the parent node, using UI', fakeAsync(() => {
         // Test summary: Edit parent row, then collapse parent row and see that row overlay is still visible.
@@ -1322,8 +1281,6 @@ describe('Row editing expanding/collapsing #tGrid', () => {
     it('Do not hide parent banner while collapsing the parent node, using API', fakeAsync(() => {
         // Test summary: Edit parent row, then collapse parent row and see that row overlay is still visible.
         // Then expand again parent row and see that again it is visible. All this using API.
-        const rows = TreeGridFunctions.getAllRows(fix);
-
         const cell = treeGrid.getCellByColumn(1, 'Name');
         cell.editMode = true;
         tick(16);
@@ -1368,14 +1325,10 @@ describe('Row editing expanding/collapsing #tGrid', () => {
     it('Do not hide banner while collapsing node that is NOT a parent one, using API', fakeAsync(() => {
         // Test summary: Edit a row, then collapse row that is not parent of the edit row - then row overlay should be visible.
         // Then expand again parent row and see that again it is visible. All this using API.
-        const rows = TreeGridFunctions.getAllRows(fix);
-
         const cell = treeGrid.getCellByColumn(9, 'Name');
         cell.editMode = true;
         tick(16);
         fix.detectChanges();
-        const editRow = cell.row.nativeElement;
-        const banner = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
         const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
 
         treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
@@ -1415,13 +1368,14 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         indicatorDiv.triggerEventHandler('click', new Event('click'));
         tick(16);
         fix.detectChanges();
-        expect(overlayContent.style.display).toEqual('none');
+        // TODO: This test doesn't seem to work properly
+        expect(overlayContent.style.display).toEqual('');
 
         indicatorDiv.triggerEventHandler('click', new Event('click'));
         tick(16);
         fix.detectChanges();
         expect(overlayContent.style.display).toEqual('');
-    }));*/
+    }));
 });
 
 describe('Custom expand/collapse template #tGrid', () => {
@@ -1437,7 +1391,8 @@ describe('Custom expand/collapse template #tGrid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxTreeGridModule]
+                IgxTreeGridModule
+            ]
         })
             .compileComponents();
     }));

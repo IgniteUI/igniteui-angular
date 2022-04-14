@@ -28,4 +28,8 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
     public onClick(event: MouseEvent) {
         event.preventDefault();
     }
+
+    public get selectable(): boolean {
+        return false;
+    }
 }

@@ -38,10 +38,10 @@
 /// @requires text-contrast
 ///
 /// @example scss Set custom track and thumb on colors
-///   $my-slider-theme: igx-slider-theme($thumb-on-color: black, $track-on-color: yellow);
-///   // Pass the theme to the igx-slider component mixin
-///   @include igx-slider($my-slider-theme);
-@function igx-slider-theme(
+///   $my-slider-theme: slider-theme($thumb-on-color: black, $track-on-color: yellow);
+///   // Pass the theme to the slider component mixin
+///   @include slider($my-slider-theme);
+@function slider-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -106,11 +106,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-slider($theme) {
-    @include igx-css-vars($theme);
+@mixin slider($theme) {
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
 
@@ -475,7 +475,7 @@
         min-width: rem($slider-label-width);
         height: rem($slider-label-height);
         padding: $slider-label-padding;
-        border-radius: rem($slider-label-radius);
+        border-radius: border-radius(rem($slider-label-radius));
         margin: 0 auto;
         line-height: rem(18px);
         color: var-get($theme, 'label-text-color');
@@ -534,7 +534,7 @@
             border: rem($thumb-border-width) solid var-get($theme, 'thumb-border-color');
             transform: rotate(45deg);
             transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
-            border-radius: rem($slider-thumb-radius);
+            border-radius: border-radius(rem($slider-thumb-radius));
         }
 
         &::after {
@@ -550,7 +550,7 @@
             transform: scale(0);
             transform-origin: center center;
             transition: transform .1s $ease-out-quad, opacity .1s $ease-out-quad;
-            border-radius: 50%;
+            border-radius: border-radius(50%);
         }
     }
 
@@ -560,7 +560,7 @@
         &::before {
             background: var-get($theme, 'disabled-thumb-color');
             border-color: var-get($theme, 'thumb-disabled-border-color');
-            border-radius: rem($slider-thumb-radius);
+            border-radius: border-radius(rem($slider-thumb-radius));
         }
     }
 
@@ -593,8 +593,8 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(ticks-label: 'caption', thumb-label: 'caption')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-slider-typography(
+/// @requires {mixin} type-style
+@mixin slider-typography(
     $type-scale,
     $categories: (
         ticks-label: 'caption',
@@ -605,10 +605,10 @@
     $thumb-label: map.get($categories, 'thumb-label');
 
     %igx-slider-thumb-label__container {
-        @include igx-type-style($type-scale, $thumb-label)
+        @include type-style($type-scale, $thumb-label)
     }
 
     %igx-slider__tick-label {
-        @include igx-type-style($type-scale, $ticks-label)
+        @include type-style($type-scale, $ticks-label)
     }
 }

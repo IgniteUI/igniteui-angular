@@ -32,18 +32,17 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Change the previous/next button colors
-///   $my-carousel-theme: igx-carousel-theme(
+///   $my-carousel-theme: carousel-theme(
 ///     $button-background: black,
 ///     $button-hover-background: white
 ///   );
-///   // Pass the carousel theme to the igx-carousel component mixin
-///   @include igx-carousel($my-carousel-theme);
-@function igx-carousel-theme(
+///   // Pass the carousel theme to the carousel component mixin
+///   @include carousel($my-carousel-theme);
+@function carousel-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -76,13 +75,9 @@
 
     $theme: apply-palette($carousel-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($carousel-schema, 'border-radius')),0 ,36px
-    );
-
     @if not($button-shadow) {
         $button-elevation: map.get($carousel-schema, 'button-elevation');
-        $button-shadow: igx-elevation($elevations, $button-elevation);
+        $button-shadow: elevation($elevations, $button-elevation);
     }
 
     @if not($button-arrow-color) and $button-background {
@@ -123,15 +118,15 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
-/// @requires igx-color
-/// @requires igx-elevation
+/// @requires {mixin} css-vars
+/// @requires color
+/// @requires elevation
 /// @requires {mixin} animation
 /// @requires {mixin} scale-in-center
 /// @requires {mixin} scale-out-center
 /// @requires var-get
-@mixin igx-carousel($theme) {
-    @include igx-css-vars($theme);
+@mixin carousel($theme) {
+    @include css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -166,9 +161,9 @@
         height: 46px;
         cursor: pointer;
         @if $not-bootstrap-theme {
-            border-radius: 50%;
+            border-radius: border-radius(50%);
         } @else {
-            border-radius: var-get($theme, 'border-radius');
+            border-radius: border-radius(var-get($theme, 'border-radius'));
         }
 
         outline-style: none;
@@ -272,11 +267,11 @@
         @if $variant != 'indigo-design' {
             border: $indicator-border-style;
             border-color: var-get($theme, 'indicator-border-color');
-            box-shadow: igx-elevation($elevation: 1);
+            box-shadow: elevation($elevation: 1);
             opacity: .7;
         }
 
-        border-radius: 50%;
+        border-radius: border-radius(50%);
         transition: all .15s $ease-out-quad;
 
         &::after {
@@ -327,7 +322,7 @@
         height: inherit;
         overflow: hidden;
         outline-style: none;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         min-height: 300px;
         min-width: 300px;
     }

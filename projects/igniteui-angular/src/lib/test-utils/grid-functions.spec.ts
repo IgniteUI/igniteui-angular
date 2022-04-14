@@ -9,11 +9,6 @@ import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
-import {
-    CellType,
-    IgxColumnComponent,
-    IgxGridBaseDirective
-} from '../grids/grid/public_api';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
@@ -25,7 +20,9 @@ import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxPivotRowComponent } from '../grids/pivot-grid/pivot-row.component';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../grids/row.directive';
-import { GridType, RowType } from '../grids/common/grid.interface';
+import { CellType, GridType, RowType } from '../grids/common/grid.interface';
+import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
+import { IgxColumnComponent } from '../grids/columns/column.component';
 
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -90,16 +87,19 @@ const GRID_TOOLBAR_TAG = 'igx-grid-toolbar';
 const GRID_TOOLBAR_EXPORT_BUTTON_CLASS = '.igx-grid-toolbar__dropdown#btnExport';
 const GRID_OUTLET_CLASS = 'div.igx-grid__outlet';
 const SORT_INDEX_ATTRIBUTE = 'data-sortIndex';
-export const GRID_SCROLL_CLASS = 'igx-grid__scroll';
-export const GRID_MRL_BLOCK_CLASS = 'igx-grid__mrl-block';
+const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
+const RESIZE_AREA_CLASS = '.igx-grid-th__resize-handle';
+const GRID_COL_THEAD_CLASS = '.igx-grid-th';
+const TREE_NODE_TOGGLE = '.igx-tree-node__toggle-button';
+
+export const GRID_SCROLL_CLASS = '.igx-grid__scroll';
+export const GRID_MRL_BLOCK = 'igx-grid__mrl-block';
 export const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
 export const HEADER_PINNED_CLASS = 'igx-grid-th--pinned';
 export const GRID_HEADER_CLASS = '.igx-grid-thead__wrapper';
 export const PINNED_SUMMARY = 'igx-grid-summary--pinned';
 export const PAGER_CLASS = '.igx-page-nav';
-const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
-const RESIZE_AREA_CLASS = '.igx-grid-th__resize-handle';
-const GRID_COL_THEAD_CLASS = '.igx-grid-th';
+export const SAFE_DISPOSE_COMP_ID = 'root';
 
 export class GridFunctions {
 
@@ -122,7 +122,7 @@ export class GridFunctions {
         return fix.debugElement.query(By.css(GRID_CONTENT_CLASS));
     }
 
-    public static getGridHeader(grid: IgxGridBaseDirective): IgxGridHeaderRowComponent {
+    public static getGridHeader(grid: GridType): IgxGridHeaderRowComponent {
         return grid.theadRow;
     }
 
@@ -140,7 +140,7 @@ export class GridFunctions {
     }
 
     public static getGridScroll(fix): DebugElement {
-        return fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}`));
+        return fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -167,7 +167,7 @@ export class GridFunctions {
     /**
      * Focus the grid header
      */
-    public static focusHeader(fix: ComponentFixture<any>, grid: IgxGridBaseDirective) {
+    public static focusHeader(fix: ComponentFixture<any>, grid: GridType) {
         this.getGridHeader(grid).nativeElement.focus();
         fix.detectChanges();
     }
@@ -175,7 +175,7 @@ export class GridFunctions {
     /**
      * Focus the first cell in the grid
      */
-    public static focusFirstCell(fix: ComponentFixture<any>, grid: IgxGridBaseDirective) {
+    public static focusFirstCell(fix: ComponentFixture<any>, grid: GridType) {
         this.getGridHeader(grid).nativeElement.focus();
         fix.detectChanges();
         this.getGridContent(fix).triggerEventHandler('focus', null);
@@ -309,13 +309,13 @@ export class GridFunctions {
         expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
     }
 
-    public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
+    public static verifyUnpinnedAreaWidth(grid: GridType, expectedWidth: number, includeScrolllWidth = true) {
         const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollSize)) :
             Math.abs(expectedWidth - grid.unpinnedWidth);
         expect(tolerans).toBeLessThanOrEqual(1);
     }
 
-    public static verifyPinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number) {
+    public static verifyPinnedAreaWidth(grid: GridType, expectedWidth: number) {
         const tolerans = Math.abs(expectedWidth - grid.pinnedWidth);
         expect(tolerans).toBeLessThanOrEqual(1);
     }
@@ -698,6 +698,15 @@ export class GridFunctions {
         return columnHeader.querySelector(ESF_FILTER_ICON_FILTERED);
     }
 
+    /**
+     * Gets the ESF tree node icon
+     */
+     public static getExcelFilterTreeNodeIcon(fix: ComponentFixture<any>, index: number) {
+        const treeNodeEl = fix.debugElement.queryAll(By.directive(IgxTreeNodeComponent))[index]?.nativeElement;
+        const expandIcon = treeNodeEl.querySelector(TREE_NODE_TOGGLE);
+        return expandIcon;
+    }
+
     public static clickExcelFilterIcon(fix: ComponentFixture<any>, columnField: string) {
         const filterIcon = GridFunctions.getExcelFilterIcon(fix, columnField);
         const filterIconFiltered = GridFunctions.getExcelFilterIconFiltered(fix, columnField);
@@ -705,7 +714,12 @@ export class GridFunctions {
         UIInteractions.simulateClickAndSelectEvent(icon);
     }
 
-    public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: IgxGridBaseDirective, columnField: string) {
+    public static clickExcelTreeNodeExpandIcon(fix: ComponentFixture<any>, index: number) {
+        const expandIcon = GridFunctions.getExcelFilterTreeNodeIcon(fix, index);
+        UIInteractions.simulateClickAndSelectEvent(expandIcon);
+    }
+
+    public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: GridType, columnField: string) {
         const event = { stopPropagation: () => { }, preventDefault: () => { } };
         const header = grid.getColumnByName(columnField).headerCell;
         header.onFilteringIconClick(event);
@@ -713,7 +727,7 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
-    public static clickExcelFilterIconFromCodeAsync(fix: ComponentFixture<any>, grid: IgxGridBaseDirective, columnField: string) {
+    public static clickExcelFilterIconFromCodeAsync(fix: ComponentFixture<any>, grid: GridType, columnField: string) {
         const event = { stopPropagation: () => { }, preventDefault: () => { } };
         const header = grid.getColumnByName(columnField).headerCell;
         header.onFilteringIconClick(event);
@@ -938,7 +952,7 @@ export class GridFunctions {
     /**
      * Click the filter chip for the provided column in order to open the filter row for it.
      */
-    public static clickFilterCellChipUI(fix, columnField: string, forGrid?: IgxGridBaseDirective) {
+    public static clickFilterCellChipUI(fix, columnField: string, forGrid?: GridType) {
         const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerGroup = headerGroups.find((hg) => {
             const col: IgxColumnComponent = hg.componentInstance.column;
@@ -1047,11 +1061,16 @@ export class GridFunctions {
         return GridFunctions.sortNativeElementsVertically(Array.from(searchComponent.querySelectorAll('igx-list-item')));
     }
 
+    public static getExcelStyleSearchComponentTreeNodes(fix, comp = null, grid = 'igx-tree-grid'): HTMLElement[] {
+        const searchComponent = comp ? comp : GridFunctions.getExcelStyleSearchComponent(fix, null, grid);
+        return GridFunctions.sortNativeElementsVertically(Array.from(searchComponent.querySelectorAll('igx-tree-node')));
+    }
+
     public static getColumnHeaders(fix: ComponentFixture<any>): DebugElement[] {
         return fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
     }
 
-    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>, forGrid?: IgxGridBaseDirective): DebugElement {
+    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>, forGrid?: GridType): DebugElement {
         return this.getColumnHeaders(fix).find((header) => {
             const col = header.componentInstance.column;
             return col.field === columnField && (forGrid ? forGrid === col.grid : true);
@@ -1064,7 +1083,7 @@ export class GridFunctions {
         return groupHeaders;
     }
 
-    public static getColumnGroupHeader(header: string, fix: ComponentFixture<any>, forGrid?: IgxGridBaseDirective): DebugElement {
+    public static getColumnGroupHeader(header: string, fix: ComponentFixture<any>, forGrid?: GridType): DebugElement {
         const headers = this.getColumnGroupHeaders(fix);
         const head = headers.find((gr) => {
             const col = gr.componentInstance.column;
@@ -2003,7 +2022,7 @@ export class GridFunctions {
     public static verifyDOMMatchesLayoutSettings(grid: GridType, row: RowType, colSettings) {
         const firstRowCells = (row.cells as QueryList<CellType>).toArray();
         const rowElem = row.nativeElement;
-        const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl-block');
+        const mrlBlocks = rowElem.querySelectorAll(`.${GRID_MRL_BLOCK}`);
 
         colSettings.forEach((groupSetting, index) => {
             // check group has rendered block

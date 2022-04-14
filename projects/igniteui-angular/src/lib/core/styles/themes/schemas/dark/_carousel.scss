@@ -8,32 +8,32 @@
 ////
 
 /// Generates the base dark carousel schema.
-/// @prop {Map} button-arrow-color [igx-color: ('grays', 400)] - The previous/next buttons idle arrow color.
-/// @prop {Map} button-hover-arrow-color [igx-color: ('grays', 700)] - The previous/next buttons hover arrow color.
-/// @prop {Color} indicator-border-color [igx-color: ('grays', 600)] - The idle indicator border color.
-/// @prop {Color} indicator-active-dot-color [igx-color: ('grays', 600)] - The active indicator dot color.
-/// @prop {Color} indicator-active-border-color [igx-color: ('grays', 600)] - The active indicator border color.
+/// @prop {Map} button-arrow-color [color: ('grays', 400)] - The previous/next buttons idle arrow color.
+/// @prop {Map} button-hover-arrow-color [color: ('grays', 700)] - The previous/next buttons hover arrow color.
+/// @prop {Color} indicator-border-color [color: ('grays', 600)] - The idle indicator border color.
+/// @prop {Color} indicator-active-dot-color [color: ('grays', 600)] - The active indicator dot color.
+/// @prop {Color} indicator-active-border-color [color: ('grays', 600)] - The active indicator border color.
 /// @requires {function} extend
 /// @type {Map}
 $base-dark-carousel: extend($light-carousel, (
     button-arrow-color: (
-        igx-color: ('grays', 400)
+        color: ('grays', 400)
     ),
 
     button-hover-arrow-color: (
-        igx-color: ('grays', 700)
+        color: ('grays', 700)
     ),
 
     indicator-border-color: (
-        igx-color: ('grays', 600)
+        color: ('grays', 600)
     ),
 
     indicator-active-dot-color: (
-        igx-color: ('grays', 600)
+        color: ('grays', 600)
     ),
 
     indicator-active-border-color: (
-        igx-color: ('grays', 600)
+        color: ('grays', 600)
     ),
 ));
 
@@ -60,37 +60,37 @@ $dark-bootstrap-carousel: extend($bootstrap-carousel, $base-dark-carousel);
 
 /// Generates a dark indigo carousel schema based on a mix of $indigo-carousel and $base-dark-carousel
 /// @type {Map}
-/// @prop {Map} button-background [igx-color: ('grays', 400)] - The previous/next buttons idle background color.
-/// @prop {Map} button-hover-background [igx-color: ('grays', 200)] - The previous/next buttons hover background color.
-/// @prop {Map} button-arrow-color [igx-color: ('grays', 800)] - The previous/next buttons idle arrow color.
-/// @prop {Map} button-hover-arrow-color [igx-color: ('grays', 900)] - The previous/next buttons hover arrow color.
-/// @prop {Map} indicator-dot-color [igx-color: ('grays', 600, .6)] - The idle indicator dot color.
-/// @prop {Map} indicator-active-dot-color [igx-color: ('grays', 900)] - The active indicator dot color.
+/// @prop {Map} button-background [color: ('grays', 400)] - The previous/next buttons idle background color.
+/// @prop {Map} button-hover-background [color: ('grays', 200)] - The previous/next buttons hover background color.
+/// @prop {Map} button-arrow-color [color: ('grays', 800)] - The previous/next buttons idle arrow color.
+/// @prop {Map} button-hover-arrow-color [color: ('grays', 900)] - The previous/next buttons hover arrow color.
+/// @prop {Map} indicator-dot-color [color: ('grays', 600, .6)] - The idle indicator dot color.
+/// @prop {Map} indicator-active-dot-color [color: ('grays', 900)] - The active indicator dot color.
 /// @requires {function} extend
 /// @requires $indigo-carousel
 $dark-indigo-carousel: extend($indigo-carousel, (
     button-background: (
-        igx-color: ('grays' 400),
+        color: ('grays' 400),
     ),
 
     button-hover-background: (
-        igx-color: ('grays' 200),
+        color: ('grays' 200),
     ),
 
     button-arrow-color: (
-        igx-color: ('grays', 800)
+        color: ('grays', 800)
     ),
 
     button-hover-arrow-color: (
-        igx-color: ('grays', 900)
+        color: ('grays', 900)
     ),
 
     indicator-dot-color: (
-        igx-color: ('grays', 600, .6),
+        color: ('grays', 600, .6),
     ),
 
     indicator-active-dot-color: (
-        igx-color: ('grays' 900),
+        color: ('grays' 900),
     ),
 ));
 

@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/watermark' as *;
 
 ////
 /// @group schemas
@@ -14,18 +13,16 @@ $light-watermark-image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3d
 /// @type {Map}
 /// @see $default-palette
 /// @prop {Number} border-radius [0] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Map} border-color [igx-color: ('primary')] - The border color used for the link.
-/// @prop {Map} link-background [igx-color: ('primary')] - The background color used for the link.
+/// @prop {Map} border-color [color: ('primary')] - The border color used for the link.
+/// @prop {Map} link-background [color: ('primary')] - The background color used for the link.
 /// @prop {Color} color [#fff] - The color used for the link text.
 /// @requires {function} extend
-/// @requires {Map} $material-shape-watermark
 $light-watermark: extend(
-    $material-shape-watermark,
     (
         variant: 'material',
 
         link-background: (
-            igx-color: ('primary'),
+            color: ('primary'),
         ),
 
         background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTg0IiBoZWlnaHQ9IjEwNCIgdmlld0JveD0iMCAwIDE4NCAxMDQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIG9wYWNpdHk9IjAuMDUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTYuNyAxMC4xTDEwLjMgOC4zOTk5OUwxMi4xIDEuNjk5OTlMNy4xIDAuMzk5OTk0TDUuMyA3LjA5OTk5TDIuMyA2LjI5OTk5TDEuMSAxMC42TDQuMSAxMS40TDEuMiAyMi4yQzAuMjk5OTk3IDI1LjUgMC4xOTk5OTcgMjcuOSAwLjc5OTk5NyAyOS40QzEuNSAzMC45IDMuMSAzMiA1LjcgMzIuN0M3LjMgMzMuMSA5IDMzLjMgMTAuNiAzMy40TDExLjUgMjkuM0w3LjcgMjguNEM2LjYgMjguMSA1LjkgMjcuNiA1LjggMjYuOUM1LjggMjUuNiA2IDI0LjMgNi40IDIzTDkuMSAxMi44TDE1LjUgMTQuNUwxNi43IDEwLjFaTTE5LjcgMzUuOEwyNCAxOS42TDI1LjEgMTkuNUMyNy41IDE5LjIgMzAgMTkuMSAzMi41IDE5LjNMMzMuOSAxNC4yQzMwLjkgMTQgMjcuOSAxNC40IDI1LjEgMTUuNEwyNS44IDEyLjZMMjAuOCAxMS4zTDE0LjYgMzQuNUwxOS43IDM1LjhaTTM2LjUgNDAuM0w0Mi43IDE3LjFMMzcuNiAxNS43TDMxLjQgMzguOUwzNi41IDQwLjNaTTQzLjggMTMuMkw0NS4yIDcuODk5OTlMNDAuMSA2LjQ5OTk5TDM4LjcgMTEuOEw0My44IDEzLjJaTTYzLjggMjQuMkM2Mi45IDIyLjYgNjEgMjEuNSA1OC4yIDIwLjdDNTUgMTkuOSA1MS44IDE5LjUgNDguNiAxOS40TDQ3LjcgMjNMNDkuMiAyMy4zQzUyLjIgMjMuOCA1NC44IDI0LjQgNTYuNyAyNC45QzU3LjYgMjUuMSA1OC40IDI1LjYgNTguOSAyNi4zQzU5LjMgMjcuMiA1OS40IDI4LjIgNTkgMjkuMUw1OC41IDMwLjhMNTIuNCAyOS43QzUwLjMgMjkuMiA0OC4xIDI5LjMgNDYuMSAzMC4xQzQ0LjYgMzAuOCA0My41IDMyLjMgNDIuOCAzNC43QzQxLjUgMzkuNiA0My4xIDQyLjcgNDcuNyA0My45QzUwLjMgNDQuNiA1MyA0NC43IDU1LjYgNDQuMkM1Ny4xIDQ1LjkgNTkuMSA0Ny4xIDYxLjMgNDcuNkw2Mi41IDQzLjhDNjIgNDMuNiA2MS41IDQzLjMgNjEuMiA0Mi44QzYxIDQyLjMgNjAuOSA0MS43IDYxLjEgNDEuMUw2My45IDMwLjVDNjQuOCAyNy44IDY0LjcgMjUuNyA2My44IDI0LjJaTTU3LjcgMzQuNEw1NiA0MC41TDU1LjEgNDAuNkM1My40IDQwLjYgNTEuNiA0MC41IDUwIDQwQzQ4LjEgMzkuNSA0Ny41IDM4LjIgNDggMzZDNDguMyAzNC4yIDQ5LjkgMzMgNTEuNyAzMy4zQzUxLjkgMzMuMyA1MiAzMy40IDUyLjIgMzMuNEw1Ny43IDM0LjRaTTcxLjUgNDkuNkw4MC4zIDE2LjhMNzUuMiAxNS40TDY2LjQgNDguMkw3MS41IDQ5LjZaIiBmaWxsPSIjMDA5OUZGIi8+Cjwvc3ZnPgo='),
@@ -33,8 +30,10 @@ $light-watermark: extend(
         color: #fff,
 
         border-color: (
-            igx-color: ('primary'),
+            color: ('primary'),
         ),
+
+        border-radius: rem(0)
     )
 );
 
@@ -43,14 +42,14 @@ $light-watermark: extend(
 /// @prop {Number} border-radius [2px] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-watermark
-/// @requires {Map} $fluent-shape-watermark
 $fluent-watermark: extend(
     $light-watermark,
-    $fluent-shape-watermark,
     (
         variant: 'fluent',
 
         background-image: #{url($light-watermark-image)},
+
+        border-radius: rem(2px)
     )
 );
 
@@ -59,35 +58,34 @@ $fluent-watermark: extend(
 /// @prop {Number} border-radius [4px] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-watermark
-/// @requires {Map} $bootstrap-shape-watermark
 $bootstrap-watermark: extend(
     $light-watermark,
-    $bootstrap-shape-watermark,
     (
         variant: 'bootstrap',
 
         background-image: #{url($light-watermark-image)},
+
+        border-radius: rem(4px)
     )
 );
 
 /// Generates an indigo watermark schema.
 /// @type {Map}
-/// @prop {Map} border-color [igx-color: ('primary', 300)] - The border color for the link.
-/// @prop {Number} border-radius [1] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Map} border-color [color: ('primary', 300)] - The border color for the link.
+/// @prop {Number} border-radius [16px] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-watermark
-/// @requires {Map} $indigo-shape-watermark
 $indigo-watermark: extend(
     $light-watermark,
-    $indigo-shape-watermark,
     (
         variant: 'indigo-design',
 
         background-image: #{url($light-watermark-image)},
 
         border-color: (
-            igx-color: ('primary', 300),
+            color: ('primary', 300),
         ),
+
+        border-radius: rem(16px)
     )
 );
-

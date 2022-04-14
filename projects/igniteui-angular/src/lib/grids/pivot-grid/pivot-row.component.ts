@@ -11,6 +11,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxRowDirective } from '../row.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
+import { IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 
 
@@ -29,14 +30,11 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     @HostBinding('attr.aria-selected')
     public get selected(): boolean {
         let isSelected = false;
-        let prevDims = [];
-        for (let rowDim of this.grid.rowDimensions) {
-            const dimData = PivotUtil.getDimensionLevel(rowDim, this.data, this.grid.pivotKeys);
-            const key = PivotUtil.getRecordKey(this.data, dimData.dimension, prevDims, this.grid.pivotKeys);
+        for (let rowDim of this.data.dimensions) {
+            const key = PivotUtil.getRecordKey(this.data, rowDim);
             if (this.selectionService.isPivotRowSelected(key)) {
                 isSelected = true;
             }
-            prevDims.push(dimData.dimension);
         }
         return isSelected;
     }
@@ -60,14 +58,114 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         return this.index;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public disabled = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get addRowUI(): any {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get inEditMode(): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public set pinned(_value: boolean) {
+    }
+
+    public get pinned(): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public delete() {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public beginAddRow() {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public update(_value: any) {
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public pin() {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public unpin() {
+        return false;
+    }
+
+    /**
+    *  The pivot record data passed to the row component.
+    *
+    * ```typescript
+    * // get the pivot row data for the first selected row
+    * let selectedRowData = this.grid.selectedRows[0].data;
+    * ```
+    */
+    @Input()
+    public get data(): IPivotGridRecord {
+        return this._data;
+    }
+
+    public set data(v: IPivotGridRecord) {
+        this._data = v;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get pivotAggregationData() {
+        const aggregations = this.data.aggregationValues;
+        const obj = {};
+        aggregations.forEach((value, key) => {
+            obj[key] = value;
+        });
+        return obj;
+    }
+
     public getCellClass(col: IgxColumnComponent) {
-        const configuration = this.grid.pivotConfiguration;
-        if (configuration.values.length === 1) {
-            return configuration.values[0].styles;
+        const values = this.grid.values;
+        if (values.length === 1) {
+            return values[0].styles;
         }
         const colName = col.field.split(this.grid.pivotKeys.columnDimensionSeparator);
         const measureName = colName[colName.length - 1];
-        return this.grid.pivotConfiguration.values.find(v => v.member === measureName)?.styles;
+        return values.find(v => v.member === measureName)?.styles;
     }
 
     public isCellActive(visibleColumnIndex) {

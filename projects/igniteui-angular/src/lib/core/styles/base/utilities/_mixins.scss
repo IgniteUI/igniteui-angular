@@ -164,7 +164,7 @@
 /// @param {string} $prop - The CSS property to assign the palette color to.
 /// @param {string} $prefix - A prefix to be attached to the class name.
 /// @param {string} $suffix - A suffix to be attached to the class name.
-/// @param {Map} $palette [$default-palette] - The igx palette to use to generate css class names for.
+/// @param {Map} $palette [$default-palette] - The palette to use to generate css class names for.
 /// @example scss Generate background classes with colors from the palette.
 ///   // Will generate class names like
 ///   // .my-primary-500-bg { ... };
@@ -179,7 +179,7 @@
         @each $variant, $value in $color {
             @if meta.type-of($value) != 'map' {
                 @include gen-color-class($name, $variant, $prefix, $suffix) {
-                    #{$prop}: igx-color($color: $name, $variant: $variant);
+                    #{$prop}: color($color: $name, $variant: $variant);
                 }
             }
         }
@@ -188,17 +188,19 @@
 
 /// Generates CSS variables for a given palette.
 /// @access public
-/// @param {Map} $palette [null] - The igx palette to use to generate CSS variables for.
+/// @param {Map} $palette [null] - The palette to use to generate CSS variables for.
 /// @param {bool} $contrast [true] - Specify if contrast colors should be included.
+/// @param {string} $prefix [igx] - The prefix attached to the CSS variables.
 ///
 /// @example scss Generate css variables for the `$default-palette`.
-///    @include igx-palette-vars($default-palette);
+///    @include palette-vars($default-palette);
 ///
-@mixin igx-palette-vars($palette, $contrast: true) {
+@mixin palette-vars($palette, $contrast: true, $prefix: 'igx') {
     $scope: if(is-root(), ':root', '&');
     $_meta: map.get($palette, '_meta');
     $theme: if($_meta, map.get($_meta, 'variant'), null);
     $gray: if($_meta, map.get($_meta, 'grays'), #fff);
+    $surface: map.get(map.get($palette, 'surface'), 500);
 
     #{$scope} {
         @each $name, $color in $palette {
@@ -207,21 +209,41 @@
                 $_valid-variant: not(string.index(#{$variant}, 'contrast')) and not(string.index(#{$variant}, 'variant')) and $theme;
 
                 @if $_valid-base and $variant == 500 {
-                    --igx-#{$name}-h: #{math.round(color.hue($value))};
-                    --igx-#{$name}-s: #{math.round(color.saturation($value))};
-                    --igx-#{$name}-l: #{math.round(color.lightness($value))};
+                    @if $prefix == 'igc' and $name != 'grays' {
+                        --#{$prefix}-#{$name}-h: var(--igx-#{$name}-h);
+                        --#{$prefix}-#{$name}-s: var(--igx-#{$name}-s);
+                        --#{$prefix}-#{$name}-l: var(--igx-#{$name}-l);
+                    } @else if $prefix == 'igc' and $name == 'grays' {
+                        --#{$prefix}-gray-h: var(--igx-#{$name}-h);
+                        --#{$prefix}-gray-s: var(--igx-#{$name}-s);
+                        --#{$prefix}-gray-l: var(--igx-#{$name}-l);
+                    } @else {
+                        --#{$prefix}-#{$name}-h: #{math.round(color.hue($value))};
+                        --#{$prefix}-#{$name}-s: #{math.round(color.saturation($value))};
+                        --#{$prefix}-#{$name}-l: #{math.round(color.lightness($value))};
+                    }
 
                     @if $name != 'grays' {
-                        --igx-#{$name}-a: #{color.alpha($value)};
+                        --#{$prefix}-#{$name}-a: #{color.alpha($value)};
+                    } @else if $name == 'grays' and $prefix == 'igc' {
+                        --#{$prefix}-gray-a: 1;
                     } @else {
-                        --igx-#{$name}-a: 1;
+                        --#{$prefix}-#{$name}-a: 1;
                     }
                 }
 
                 @if $_valid-base and $_valid-variant {
-                    --igx-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme, $gray)};
+                    @if $prefix == 'igc' and $name == 'grays' {
+                        --#{$prefix}-gray-#{$variant}: #{gen-hsla-color('gray', $variant, $theme, $gray, #{$prefix}, $surface)};
+                    } @else {
+                        --#{$prefix}-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme, $gray, #{$prefix}, $surface)};
+                    }
                 } @else if $name != '_meta' {
-                    --igx-#{$name}-#{$variant}: #{$value};
+                    @if $prefix == 'igc' and $name == 'grays' {
+                        --#{$prefix}-gray-#{$variant}: #{$value};
+                    } @else {
+                        --#{$prefix}-#{$name}-#{$variant}: #{$value};
+                    }
                 }
             }
         }
@@ -229,22 +251,57 @@
 }
 // stylelint-enable max-nesting-depth
 
+/// Translates Ignite UI for Angular palette CSS variables
+/// into Ignite UI for Web Components compatible ones
+/// @access public
+/// @param {Map} $palette [null] - The palette to use to generate CSS variables for.
+///
+/// @example scss Translates igx- prefixed variables from `$default-palette` to igc- prefixed ones.
+///    @include palette-to-wc($default-palette);
+///
+@mixin palette-to-wc($palette) {
+    @include palette-vars($palette, $contrast: true, $prefix: 'igc');
+}
+
 /// Generates CSS variables for a given elevations map.
 /// @access public
-/// @param {Map} $elevations - The igx elevations map to use to generate CSS variables for.
+/// @param {Map} $elevations - The elevations map to use to generate CSS variables for.
+/// @param {string} $prefix [igx] - The prefix attached to the CSS variables.
 ///
 /// @example scss Generate CSS variables for elevations.
-///    $elevations: igx-elevations(red, green, blue); // umbra, penumbra, ambient
-///    @include igx-elevation-vars($elevations);
+///    $elevations: elevations(red, green, blue); // umbra, penumbra, ambient
+///    @include elevation-vars($elevations);
 ///
-@mixin igx-elevation-vars($elevations) {
+@mixin elevation-vars($elevations, $prefix: 'igx') {
     $scope: if(is-root(), ':root', '&');
 
     #{$scope} {
         @each $level, $shadow in $elevations {
-            --igx-elevation-#{$level}: #{$shadow};
+            --#{$prefix}-elevation-#{$level}: #{$shadow};
         }
     }
+}
+
+/// Translates Ignite UI for Angular CSS variables for elevations
+/// into Ignite UI for Web Components compatible ones
+/// @access public
+/// @param {Map} $elevations - The elevations map to use to generate CSS variables for.
+///
+/// @example scss Translates igx- prefixed variables for elevations to igc- prefixed ones.
+///    $elevations: elevations(red, green, blue);
+///    @include elevations-to-wc($elevations);
+///
+@mixin elevations-to-wc($elevations) {
+    @include elevation-vars($elevations, $prefix: 'igc');
+}
+
+/// Returns a middle value between an upper and lower bound
+/// @access private
+/// @param {Number} $radius - A preferred value
+/// @param {Number} $min - A minimum value
+/// @param {Number} $max - A maximum allowed value
+@mixin border-radius($radius, $min: rem(0), $max: $radius) {
+    border-radius: clamp($min, calc(var(--igx-radius-factor) * $radius), $max);
 }
 
 /// Generates CSS class names for all colors from
@@ -258,12 +315,12 @@
 /// @example scss Generate background classes with colors from the palette.
 ///   // Will generate class names like
 ///   // .igx-primary-500-bg { ... };
-///   @include igx-color-classes(
+///   @include color-classes(
 ///     $prop: 'background-color',
 ///     $suffix: 'bg'
 ///   );
 /// @requires {mixin} gen-color-classes
-@mixin igx-color-classes($prop, $suffix: null, $prefix: 'igx', $palette: $default-palette) {
+@mixin color-classes($prop, $suffix: null, $prefix: 'igx', $palette: $default-palette) {
     @include gen-color-classes($prop, $prefix, $suffix, $palette);
 }
 
@@ -272,7 +329,7 @@
 /// @access private
 /// @param {map} $theme - The component theme to be used to generate css variables.
 /// @example scss Convert theme colors to css variables.
-///   $my-theme: igx-avatar-theme($icon-color: red);
+///   $my-theme: avatar-theme($icon-color: red);
 ///   :root {
 ///     @include css-vars-from-theme($my-theme);
 ///   }
@@ -293,7 +350,7 @@
 
     @if $themes and meta.type-of($themes) == 'map' {
         @each $theme in $themes {
-            @include igx-css-vars(list.nth($theme, 2));
+            @include css-vars(list.nth($theme, 2));
         }
     }
 
@@ -314,7 +371,7 @@
 /// @access public
 /// @param {map} $theme - The component theme to be used
 /// @requires {mixin} css-vars-from-theme
-@mixin igx-css-vars($theme, $scope: null, $prefix: null) {
+@mixin css-vars($theme, $scope: null, $prefix: null) {
     $s: map.get($theme, 'selector');
     $n: map.get($theme, 'name');
     $name: if($scope, $scope, $s or $n);
@@ -336,22 +393,22 @@
 /// @access private
 /// @param {String} $parent - The selector to be used as top level scope.
 /// @example scss Apply mixin style rules only when '.igx-typography' selector is present.
-///    @mixin igx-card-typography {
-///       @include igx-scope('.igx-typography') {
+///    @mixin card-typography {
+///       @includescope('.igx-typography') {
 ///         // style rules...
 ///       }
 ///    }
 ///
 ///    // Later
 ///    .my-selector {
-///      @include igx-card-typography();
+///      @include card-typography();
 ///    }
 ///
 ///    // Generated CSS
 ///    // .igx-typography .my-selector {
-///    //    ...styles rules as output by igx-card-typography mixin
+///    //    ...styles rules as output by card-typography mixin
 ///    // }
-@mixin igx-scope($parent) {
+@mixin scope($parent) {
     @each $selector in & {
         $len: list.length($selector);
         @if $len == null {

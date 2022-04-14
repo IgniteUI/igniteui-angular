@@ -29,7 +29,7 @@ import { GridColumnDataType } from '../../data-operations/data-util';
 import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
 import { IColumnPipeArgs, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
-import { ISortingExpression, ISortingStrategy } from '../../data-operations/sorting-strategy';
+import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
@@ -61,7 +61,7 @@ export interface CellType {
     column: ColumnType;
     row: RowType;
     grid: GridType;
-    id: { rowID: any; columnID: number; rowIndex: number };
+    id?: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
     readonly?: boolean;
     title?: any;
@@ -234,6 +234,7 @@ export interface GridServiceType {
     clear_sort(fieldName: string): void;
 
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
+    sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
 
     update_cell(cell: IgxCell): IGridEditEventArgs;
     update_row(row: IgxEditRow, value: any, event?: Event): IGridEditEventArgs;
@@ -246,9 +247,9 @@ export interface GridServiceType {
     getParentRowId?(child: GridType): any;
     getChildGrids?(inDepth?: boolean): GridType[];
     getChildGrid?(path: IPathSegment[]): GridType;
-    endEditAll?(): void;
-    // XXX: Fix type
-    unsetChildRowIsland?(rowIsland: any): void;
+
+    unsetChildRowIsland?(rowIsland: GridType): void;
+    registerChildRowIsland?(rowIsland: GridType): void;
 }
 
 
@@ -276,7 +277,6 @@ export interface GridType extends IGridDataBindable {
     dataCloneStrategy: IDataCloneStrategy;
 
     gridAPI: GridServiceType;
-
 
     filterMode: FilterMode;
 
@@ -435,7 +435,6 @@ export interface GridType extends IGridDataBindable {
     loadingRows?: Set<any>;
     parent?: GridType;
     highlightedRowID?: any;
-    hgridAPI?: GridServiceType;
     updateOnRender?: boolean;
     childLayoutKeys?: any[];
     childLayoutList?: QueryList<any>;
@@ -519,7 +518,7 @@ export interface GridType extends IGridDataBindable {
     clearGrouping?(field: string): void;
     groupBy?(expression: IGroupingExpression | Array<IGroupingExpression>): void;
     resolveOutlet?(): IgxOverlayOutletDirective;
-
+    updateColumns(columns: ColumnType[]): void;
     getSelectedRanges(): GridSelectionRange[];
     deselectAllColumns(): void;
     deselectColumns(columns: string[] | ColumnType[]): void;
@@ -626,6 +625,7 @@ export interface HierarchicalGridType extends GridType {
 
 export interface PivotGridType extends GridType {
     pivotConfiguration: IPivotConfiguration;
+    allDimensions: IPivotDimension[],
     showPivotConfigurationUI: boolean;
     columnDimensions: IPivotDimension[];
     rowDimensions: IPivotDimension[];
@@ -637,16 +637,19 @@ export interface PivotGridType extends GridType {
     setupColumns(): void;
     toggleRow(rowID: any): void;
     resolveDataTypes(field: any): GridColumnDataType;
-    resolveRowDimensionWidth(dim: IPivotDimension): number;
     moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index? : number);
     getDimensionsByType(dimension: PivotDimensionType);
     toggleDimension(dimension: IPivotDimension);
+    sortDimension(dimension: IPivotDimension, sortDirection: SortingDirection);
     toggleValue(value: IPivotValue);
     moveValue(value: IPivotValue, index?: number);
+    rowDimensionWidthToPixels(dim: IPivotDimension): number;
     dimensionsChange: EventEmitter<IDimensionsChange>;
     valuesChange: EventEmitter<IValuesChange>;
     pivotKeys: IPivotKeys;
     hasMultipleValues: boolean;
+    excelStyleFilterMaxHeight: string;
+    excelStyleFilterMinHeight: string;
 }
 export interface GridSVGIcon {
     name: string;

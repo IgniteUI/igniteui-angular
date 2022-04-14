@@ -359,6 +359,24 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 .toBe(false, 'Button indicates there is active filtering.');
         }));
 
+        it('The Clear/Cancel/Apply buttons type should be set to "button"', () => {
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Get Clear/Cancel/Apply buttons types.
+            const clearButtonType = GridFunctions.getAdvancedFilteringClearFilterButton(fix).getAttributeNode('type').value;
+            const cancelButtonType = GridFunctions.getAdvancedFilteringCancelButton(fix).getAttributeNode('type').value;
+            const applyButtonType = GridFunctions.getAdvancedFilteringApplyButton(fix).getAttributeNode('type').value;
+
+            const expectedButtonType = 'button';
+
+            // Verify buttons type is set to "button".
+            expect(clearButtonType).toBe(expectedButtonType, 'Clear button type is not "button"');
+            expect(cancelButtonType).toBe(expectedButtonType, 'Cancel button type is not "button"');
+            expect(applyButtonType).toBe(expectedButtonType, 'Apply button type is not "button"');
+        });
+
         it('Should correctly display header name in select dropdown and in chip expression.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();

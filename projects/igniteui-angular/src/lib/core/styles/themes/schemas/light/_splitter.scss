@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/splitter' as *;
 
 ////
 /// @group schemas
@@ -10,43 +9,51 @@
 
 /// Generates a light splitter schema.
 /// @type {Map}
-/// @property {Map} icon-background [igx-color: ('grays', 400)]- The background color used for splitters of type icon.
-/// @property {Map} bar-color [igx-color: ('grays', 200)] - The background color of the bar.
-/// @property {Map} handle-color [igx-color: ('grays', 400)] - The color for the bar drag handle.
-/// @property {Map} expander-color [igx-color: ('grays', 400)] - The color for the arrow expander's.
-/// @property {Number} border-radius [1] - The border radius used for splitter. Can be a fraction between 0 and 1, pixels, or percent.
-/// @property {Map} focus-color [igx-color: ('secondary', 500)] - The color used for focused splitter bar.
+/// @property {Map} icon-background [color: ('grays', 400)]- The background color used for splitters of type icon.
+/// @property {Map} bar-color [color: ('grays', 200)] - The background color of the bar.
+/// @property {Map} handle-color [color: ('grays', 400)] - The color for the bar drag handle.
+/// @property {Map} expander-color [color: ('grays', 400)] - The color for the arrow expander's.
+/// @property {Number} border-radius [2px] - The border radius used for splitter. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Map} focus-color [color: ('secondary', 500)] - The color used for focused splitter bar.
 /// @property {Number} size [4px] - The size of the splitter, it's width for vertical and height for horizontal splitter.
 /// @requires {function} extend
-/// @requires {Map} $round-shape-splitter
 /// @see $default-palette
 $light-splitter: extend(
-    $round-shape-splitter,
     (
+        variant: 'material',
+
         bar-color: (
-            igx-color: ('grays', 200)
+            color: ('grays', 200)
         ),
 
         focus-color: (
-            igx-color: ('secondary', 500)
+            color: ('secondary', 500)
         ),
 
         handle-color: (
-            igx-color: ('grays', 400)
+            color: ('grays', 400)
         ),
 
         expander-color: (
-            igx-color: ('grays', 400)
+            color: ('grays', 400)
         ),
 
-        size: 4px
+        size: 4px,
+
+        border-radius: rem(2px)
     )
 );
 
 /// Generates a fluent splitter schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires {Map} $light-splitter
-$fluent-splitter: $light-splitter;
+$fluent-splitter: extend(
+    $light-splitter,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap splitter schema.
 /// @type {Map}
@@ -61,10 +68,10 @@ $bootstrap-splitter: extend(
 
 /// Generates an indigo splitter schema.
 /// @type {Map}
-/// @property {Map} bar-color [igx-color: ('grays', 400)] - The background color of the bar.
-/// @property {Map} handle-color [igx-color: ('surface')] - The color for the bar drag handle.
-/// @property {Map} expander-color [igx-color: ('surface')] - The color for the bar drag handle.
-/// @property {Map} focus-color [igx-color: ('primary', 500)] - The color used for focused splitter bar.
+/// @property {Map} bar-color [color: ('grays', 400)] - The background color of the bar.
+/// @property {Map} handle-color [color: ('surface')] - The color for the bar drag handle.
+/// @property {Map} expander-color [color: ('surface')] - The color for the bar drag handle.
+/// @property {Map} focus-color [color: ('primary', 500)] - The color used for focused splitter bar.
 /// @requires {function} extend
 /// @requires {Map} $light-splitter
 $indigo-splitter: extend(
@@ -73,19 +80,19 @@ $indigo-splitter: extend(
         variant: 'indigo-design',
 
         bar-color: (
-            igx-color: ('grays', 400)
+            color: ('grays', 400)
         ),
 
         focus-color: (
-            igx-color: ('primary', 500)
+            color: ('primary', 500)
         ),
 
         handle-color: (
-            igx-color: ('surface')
+            color: ('surface')
         ),
 
         expander-color: (
-            igx-color: ('surface')
+            color: ('surface')
         )
     )
 );

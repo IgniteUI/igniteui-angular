@@ -16,7 +16,7 @@ import { scaleInVerTop, scaleOutVerTop } from '../../animations/main';
 import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
 import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../../date-common/calendar-container/calendar-container.component';
-import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/public_api';
+import { IgxDatePickerModule } from '../../date-picker/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
@@ -96,80 +96,80 @@ export const addScrollDivToElement = (parent) => {
  * @param screenRect Rectangle of the visible area
  * @param elastic Is elastic position strategy, defaults to false
  */
-const getOverlayWrapperLocation = (
-    positionSettings: PositionSettings,
-    targetRect: ClientRect,
-    wrapperRect: ClientRect,
-    screenRect: ClientRect,
-    elastic = false): Point => {
-    const location: Point = new Point(0, 0);
+// const getOverlayWrapperLocation = (
+//     positionSettings: PositionSettings,
+//     targetRect: ClientRect,
+//     wrapperRect: ClientRect,
+//     screenRect: ClientRect,
+//     elastic = false): Point => {
+//     const location: Point = new Point(0, 0);
 
-    location.x =
-        targetRect.left +
-        targetRect.width * (1 + positionSettings.horizontalStartPoint) +
-        wrapperRect.width * positionSettings.horizontalDirection;
-    if (location.x < screenRect.left) {
-        if (elastic) {
-            let offset = screenRect.left - location.x;
-            if (offset > wrapperRect.width - positionSettings.minSize.width) {
-                offset = wrapperRect.width - positionSettings.minSize.width;
-            }
-            location.x += offset;
-        } else {
-            const flipOffset = wrapperRect.width * (1 + positionSettings.horizontalDirection);
-            if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
-                location.x = Math.max(0, targetRect.right - flipOffset);
-            } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
-                location.x =
-                    Math.max(0, targetRect.left + targetRect.width / 2 - flipOffset);
-            } else {
-                location.x = Math.max(0, targetRect.left - flipOffset);
-            }
-        }
-    } else if (location.x + wrapperRect.width > screenRect.right && !elastic) {
-        const flipOffset = wrapperRect.width * (1 + positionSettings.horizontalDirection);
-        if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
-            location.x = Math.min(screenRect.right, targetRect.right - flipOffset);
-        } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
-            location.x = Math.min(screenRect.right, targetRect.left + targetRect.width / 2 - flipOffset);
-        } else {
-            location.x = Math.min(screenRect.right, targetRect.left - flipOffset);
-        }
-    }
+//     location.x =
+//         targetRect.left +
+//         targetRect.width * (1 + positionSettings.horizontalStartPoint) +
+//         wrapperRect.width * positionSettings.horizontalDirection;
+//     if (location.x < screenRect.left) {
+//         if (elastic) {
+//             let offset = screenRect.left - location.x;
+//             if (offset > wrapperRect.width - positionSettings.minSize.width) {
+//                 offset = wrapperRect.width - positionSettings.minSize.width;
+//             }
+//             location.x += offset;
+//         } else {
+//             const flipOffset = wrapperRect.width * (1 + positionSettings.horizontalDirection);
+//             if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
+//                 location.x = Math.max(0, targetRect.right - flipOffset);
+//             } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
+//                 location.x =
+//                     Math.max(0, targetRect.left + targetRect.width / 2 - flipOffset);
+//             } else {
+//                 location.x = Math.max(0, targetRect.left - flipOffset);
+//             }
+//         }
+//     } else if (location.x + wrapperRect.width > screenRect.right && !elastic) {
+//         const flipOffset = wrapperRect.width * (1 + positionSettings.horizontalDirection);
+//         if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
+//             location.x = Math.min(screenRect.right, targetRect.right - flipOffset);
+//         } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
+//             location.x = Math.min(screenRect.right, targetRect.left + targetRect.width / 2 - flipOffset);
+//         } else {
+//             location.x = Math.min(screenRect.right, targetRect.left - flipOffset);
+//         }
+//     }
 
-    location.y =
-        targetRect.top +
-        targetRect.height * (1 + positionSettings.verticalStartPoint) +
-        wrapperRect.height * positionSettings.verticalDirection;
-    if (location.y < screenRect.top) {
-        if (elastic) {
-            let offset = screenRect.top - location.y;
-            if (offset > wrapperRect.height - positionSettings.minSize.height) {
-                offset = wrapperRect.height - positionSettings.minSize.height;
-            }
-            location.y += offset;
-        } else {
-            const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
-            if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
-                location.y = Math.max(0, targetRect.bottom - flipOffset);
-            } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
-                location.y = Math.max(0, targetRect.top + targetRect.height / 2 - flipOffset);
-            } else {
-                location.y = Math.max(0, targetRect.top - flipOffset);
-            }
-        }
-    } else if (location.y + wrapperRect.height > screenRect.bottom && !elastic) {
-        const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
-        if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
-            location.y = Math.min(screenRect.bottom, targetRect.bottom - flipOffset);
-        } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
-            location.y = Math.min(screenRect.bottom, targetRect.top + targetRect.height / 2 - flipOffset);
-        } else {
-            location.y = Math.min(screenRect.bottom, targetRect.top - flipOffset);
-        }
-    }
-    return location;
-};
+//     location.y =
+//         targetRect.top +
+//         targetRect.height * (1 + positionSettings.verticalStartPoint) +
+//         wrapperRect.height * positionSettings.verticalDirection;
+//     if (location.y < screenRect.top) {
+//         if (elastic) {
+//             let offset = screenRect.top - location.y;
+//             if (offset > wrapperRect.height - positionSettings.minSize.height) {
+//                 offset = wrapperRect.height - positionSettings.minSize.height;
+//             }
+//             location.y += offset;
+//         } else {
+//             const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
+//             if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
+//                 location.y = Math.max(0, targetRect.bottom - flipOffset);
+//             } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
+//                 location.y = Math.max(0, targetRect.top + targetRect.height / 2 - flipOffset);
+//             } else {
+//                 location.y = Math.max(0, targetRect.top - flipOffset);
+//             }
+//         }
+//     } else if (location.y + wrapperRect.height > screenRect.bottom && !elastic) {
+//         const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
+//         if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
+//             location.y = Math.min(screenRect.bottom, targetRect.bottom - flipOffset);
+//         } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
+//             location.y = Math.min(screenRect.bottom, targetRect.top + targetRect.height / 2 - flipOffset);
+//         } else {
+//             location.y = Math.min(screenRect.bottom, targetRect.top - flipOffset);
+//         }
+//     }
+//     return location;
+// };
 
 /**
  * Formats a string according to the given formatters
@@ -3054,24 +3054,53 @@ describe('igxOverlay', () => {
 
         // 3. Interaction
         // 3.1 Modal
-        // it('Should apply a greyed-out mask layers when is modal.', fakeAsync(() => {
-        //     const fixture = TestBed.createComponent(EmptyPageComponent);
-        //     const overlay = fixture.componentInstance.overlay;
-        //     const overlaySettings: OverlaySettings = {
-        //         modal: true,
-        //     };
+        it('Should apply a greyed-out mask layers when is modal.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                modal: true,
+            };
 
-        //     overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-        //     tick();
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+            tick(100);
 
-        //     const wrapperElement = (fixture.nativeElement as HTMLElement)
-        //         .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
-        //     const styles = css(wrapperElement);
-        //     const expectedBackgroundColor = 'background: var(--background-color)';
-        //     const appliedBackgroundStyles = styles[2];
-        //     console.log(appliedBackgroundStyles);
-        //     expect(appliedBackgroundStyles).toContain(expectedBackgroundColor);
-        // }));
+            const wrapperElement = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
+
+            expect(wrapperElement).toBeDefined();
+            const styles = css(wrapperElement);
+            expect(styles.findIndex(
+                (e) => e.includes('--background-color: var(--igx-overlay-background-color, hsla(var(--igx-grays-500), 0.54));')))
+                .toBeGreaterThan(-1);
+            expect(styles.findIndex(
+                (e) => e.includes('background: var(--background-color);')))
+                .toBeGreaterThan(-1);
+
+            fixture.componentInstance.overlay.detachAll();
+        }));
+
+        it('Should apply a greyed-out mask layers when is modal and has no animation.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                modal: true,
+                positionStrategy: new GlobalPositionStrategy({
+                    openAnimation: null,
+                    closeAnimation: null
+                })
+            };
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+            tick(100);
+
+            const wrapperElement = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
+            expect(wrapperElement).toBeDefined();
+            const styles = css(wrapperElement);
+            expect(styles.findIndex((e) => e.includes('--background-color: var(--igx-overlay-background-color, hsla(var(--igx-grays-500), 0.54));'))).toBeGreaterThan(-1);
+            expect(styles.findIndex((e) => e.includes('background: var(--background-color);'))).toBeGreaterThan(-1);
+
+            fixture.componentInstance.overlay.detachAll();
+        }));
 
         it('Should allow interaction only for the shown component when is modal.', fakeAsync(() => {
             // Utility handler meant for later detachment
@@ -4591,12 +4620,6 @@ const DYNAMIC_COMPONENTS = [
     WidthTestOverlayComponent,
     ScrollableComponent,
     FlexContainerComponent
-];
-
-const IgniteUIComponents = [
-    IgxCalendarComponent,
-    IgxAvatarComponent,
-    IgxDatePickerComponent
 ];
 
 const DIRECTIVE_COMPONENTS = [

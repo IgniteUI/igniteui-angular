@@ -35,8 +35,8 @@ We have selected [Titillium Web](https://fonts.google.com/selection?selection.fa
 There are a several mixins and functions that are used to set and retrieve category styles to/from a type scale. Those are:
 
 - `igx-type-style` [function] - Returns a set of style rules to be used by a type scale category.
-- `igx-type-scale` [function] - Returns a set of 13 style categories.
-- `igx-type-scale-category` [function] - Returns a map of style rules from a type scale and category.
+- `type-scale` [function] - Returns a set of 13 style categories.
+- `type-scale-category` [function] - Returns a map of style rules from a type scale and category.
 - `igx-type-style` [mixin] - Adds style rules to a selector from a specific type scale and category.
 - `igx-typography` [mixin] - Defines the global application typography styles.
 
@@ -62,7 +62,7 @@ $h1-style: igx-type-style(
 The type scale is a map of type styles for all 13 scale categories. To generate a new type map all you have to do is write.
 
 ```scss
-$my-type-scale: igx-type-scale();
+$my-type-scale: type-scale();
 ```
 
 This will produce a map, which is exactly the same as the `$default-scale-map` that the `igx-typography` mixin uses by default.
@@ -70,7 +70,7 @@ This will produce a map, which is exactly the same as the `$default-scale-map` t
 We can use the `$h1-style` we defined in our previous example to produce a slightly modified type scale.
 
 ```scss
-$my-type-scale: igx-type-scale($h1: $h1-style);
+$my-type-scale: type-scale($h1: $h1-style);
 ```
 
 Now `$my-type-scale` will store a modified type scale containing the modifications we specified for the `h1` category scale. 
@@ -95,11 +95,11 @@ To overwrite the default typography, include the `igx-typography` mixin anywhere
 ```
 
 ## Custom type styles
-The `igx-type-style` mixin can be used to retrieve the style rules for a scale category from a specific type scale. Further, it allows you to add additional style rules.
+The `type-style` mixin can be used to retrieve the style rules for a scale category from a specific type scale. Further, it allows you to add additional style rules.
 
 ```scss
 .my-fancy-h1 {
-    @include igx-type-style($my-type-scale, 'h1') {
+    @include type-style($my-type-scale, 'h1') {
         color: royalblue;
     }
 }
@@ -118,10 +118,10 @@ There are two ways to change the text styles of a card. The first is by modifyin
 
 ```scss
 // Create a custom h5 scale category style
-$my-h5: igx-type-style($font-size: 18px);
+$my-h5: type-style($font-size: 18px);
 
 // Create a custom type scale with the modified h5
-$my-type-scale: igx-type-scale($h5: $my-h5);
+$my-type-scale: type-scale($h5: $my-h5);
 
 // Pass the custom scale to the global typography mixin
 @include igx-typography($type-scale: $my-type-scale);
@@ -134,7 +134,7 @@ Note, however, that the above code will modify the `h5` scale category globally,
 $my-h5: igx-type-style($font-size: 18px);
 
 // Create a custom type scale with the modified h5
-$my-type-scale: igx-type-scale($h5: $my-h5);
+$my-type-scale: type-scale($h5: $my-h5);
 
 // Pass the custom scale to the card typography mixin only
 @include igx-card-typography($type-scale: $my-type-scale);

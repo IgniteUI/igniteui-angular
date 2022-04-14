@@ -87,6 +87,7 @@ const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: '불린 필터',
     igx_grid_excel_currency_filter: '통화 필터',
     igx_grid_excel_custom_filter: '사용자 필터...',
+    igx_grid_excel_no_matches: 'No matches',
     igx_grid_advanced_filter_title: '고급 필터링',
     igx_grid_advanced_filter_and_group: '그룹 "그리고"',
     igx_grid_advanced_filter_or_group: '그룹 "또는"',
@@ -150,7 +151,13 @@ const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_row_drop_chip: 'Drop here to use as row',
     igx_grid_pivot_column_drop_chip: 'Drop here to use as column',
     igx_grid_pivot_filter_drop_chip: 'Drop here to use as filter',
-    igx_grid_pivot_value_drop_chip: 'Drop here to use as value'
+    igx_grid_pivot_value_drop_chip: 'Drop here to use as value',
+    igx_grid_pivot_selector_filters: 'Filters',
+    igx_grid_pivot_selector_rows: 'Rows',
+    igx_grid_pivot_selector_columns: 'Columns',
+    igx_grid_pivot_selector_values: 'Values',
+    igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
 };
 
 

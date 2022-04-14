@@ -23,10 +23,10 @@
 /// @requires extend
 ///
 /// @example scss Change the background and icon colors in icon avatars
-///   $my-avatar-theme: igx-avatar-theme($icon-background: black, $icon-color: white);
-///   // Pass the theme to the igx-avatar component mixin
-///   @include igx-avatar($my-avatar-theme);
-@function igx-avatar-theme(
+///   $my-avatar-theme: avatar-theme($icon-background: black, $icon-color: white);
+///   // Pass the theme to the avatar component mixin
+///   @include avatar($my-avatar-theme);
+@function avatar-theme(
     $palette: null,
     $schema: $light-schema,
     $background: null,
@@ -45,10 +45,6 @@
 
     $theme: apply-palette($avatar-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($avatar-schema, 'border-radius')), 0, 16px
-    );
-
     @if not($color) and $background {
         $color: text-contrast($background);
     }
@@ -64,11 +60,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-avatar($theme) {
-    @include igx-css-vars($theme);
+@mixin avatar($theme) {
+    @include css-vars($theme);
 
     $size: map.get($theme, 'size');
     $small-size: rem(40px);
@@ -103,7 +99,7 @@
         color: var-get($theme, 'color');
         background: var-get($theme, 'background');
         vertical-align: middle;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         outline-style: none;
         flex-shrink: 0;
 

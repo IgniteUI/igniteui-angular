@@ -130,7 +130,7 @@ export abstract class IgxGroupByAreaDirective {
             if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
                 const groupingExpression = {
                     fieldName: column.field,
-                    dir: SortingDirection.Asc,
+                    dir: this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir || SortingDirection.Asc,
                     ignoreCase: column.sortingIgnoreCase,
                     strategy: column.sortStrategy,
                     groupingComparer: column.groupingComparer
@@ -189,6 +189,6 @@ export class IgxGroupByMetaPipe implements PipeTransform {
 
     public transform(key: string, grid: GridType) {
         const column = grid.getColumnByName(key);
-        return { groupable: column.groupable, title: column.header || key };
+        return { groupable: !!column?.groupable, title: column?.header || key };
     }
 }

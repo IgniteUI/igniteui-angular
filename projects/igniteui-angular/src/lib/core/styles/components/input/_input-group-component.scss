@@ -257,10 +257,6 @@
             @include e(textarea) {
                 @extend %form-group-textarea--cosy !optional;
             }
-
-            @include e(hint) {
-                @extend %form-group-hint--cosy !optional;
-            }
         }
 
         @include m(compact) {
@@ -284,10 +280,6 @@
 
             @include e(textarea) {
                 @extend %form-group-textarea--compact !optional;
-            }
-
-            @include e(hint) {
-                @extend %form-group-hint--compact !optional;
             }
         }
 
@@ -523,6 +515,10 @@
                 &:hover {
                     @extend %form-group-bundle--fluent--hover !optional;
                 }
+
+                &:focus-within {
+                    @extend %form-group-bundle--fluent--focus !optional;
+                }
             }
 
             @include e(bundle-main) {
@@ -573,24 +569,24 @@
                 @extend %fluent-input-disabled !optional;
 
                 &:hover {
-                    @extend %fluent-input-disabled !optional
-            }
+                    @extend %fluent-input-disabled !optional;
+                }
 
                 &:focus {
-                    @extend %fluent-input-disabled !optional
-            }
+                    @extend %fluent-input-disabled !optional;
+                }
             }
 
             @include e(file-input) {
                 @extend %fluent-input-disabled !optional;
 
                 &:hover {
-                    @extend %fluent-input-disabled !optional
-            }
+                    @extend %fluent-input-disabled !optional;
+                }
 
                 &:focus {
-                    @extend %fluent-input-disabled !optional
-            }
+                    @extend %fluent-input-disabled !optional;
+                }
             }
 
             @include e(label) {
@@ -613,10 +609,6 @@
         @include mx(focused, fluent) {
             @include e(bundle) {
                 @extend %form-group-bundle--focus !optional;
-
-                &:hover {
-                    @extend %form-group-bundle--fluent--focus !optional;
-                }
             }
 
             @include e(label) {
@@ -637,6 +629,10 @@
                 &:hover {
                     @extend %form-group-bundle-success--fluent--hover !optional;
                 }
+
+                &:focus-within {
+                    @extend %form-group-bundle-success--fluent--focus !optional;
+                }
             }
 
             @include e(label) {
@@ -650,6 +646,10 @@
 
                 &:hover {
                     @extend %form-group-bundle-error--fluent--hover !optional;
+                }
+
+                &:focus-within {
+                    @extend %form-group-bundle-error--fluent--focus !optional;
                 }
             }
 
@@ -745,7 +745,7 @@
                 @extend %form-group-bundle-error--indigo !optional;
 
                 &:hover {
-                    @extend %form-group-bundle-error--fluent--hover !optional;
+                    @extend %form-group-bundle-error--indigo--hover !optional;
                 }
             }
         }
@@ -887,10 +887,6 @@
         @include mx(disabled, bootstrap) {
             @include e(bundle) {
                 @extend %form-group-display--disabled-bootstrap !optional;
-            }
-
-            @include e(label) {
-                @extend %bootstrap-label--disabled !optional;
             }
 
             @include e(input) {

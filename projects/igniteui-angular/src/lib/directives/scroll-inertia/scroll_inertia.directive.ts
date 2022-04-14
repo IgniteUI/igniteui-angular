@@ -201,19 +201,25 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         while (i < path.length && path[i].localName !== 'igx-display-container') {
             const e = path[i++];
             if (e.scrollHeight > e.clientHeight) {
-                if (scrollDeltaY > 0 && e.scrollHeight - Math.abs(Math.round(e.scrollTop)) !== e.clientHeight) {
-                    return true;
-                }
-                if (scrollDeltaY < 0 && e.scrollTop !== 0) {
-                    return true;
+                const overflowY = window.getComputedStyle(e)['overflow-y'];
+                if (overflowY === 'auto' || overflowY === 'scroll') {
+                    if (scrollDeltaY > 0 && e.scrollHeight - Math.abs(Math.round(e.scrollTop)) !== e.clientHeight) {
+                        return true;
+                    }
+                    if (scrollDeltaY < 0 && e.scrollTop !== 0) {
+                        return true;
+                    }
                 }
             }
             if (e.scrollWidth > e.clientWidth) {
-                if (scrollDeltaX > 0 && e.scrollWidth - Math.abs(Math.round(e.scrollLeft)) !== e.clientWidth) {
-                    return true;
-                }
-                if (scrollDeltaX < 0 && e.scrollLeft !== 0) {
-                    return true;
+                const overflowX = window.getComputedStyle(e)['overflow-x'];
+                if (overflowX === 'auto' || overflowX === 'scroll') {
+                    if (scrollDeltaX > 0 && e.scrollWidth - Math.abs(Math.round(e.scrollLeft)) !== e.clientWidth) {
+                        return true;
+                    }
+                    if (scrollDeltaX < 0 && e.scrollLeft !== 0) {
+                        return true;
+                    }
                 }
             }
         }

@@ -25,24 +25,24 @@ $dark-bootstrap-time-picker: $bootstrap-time-picker;
 
 /// Generates a dark indigo time-picker schema.
 /// @type {Map}
-/// @prop {Map} text-color [igx-contrast-color: ('surface')] - The text color of an open time picker.
-/// @prop {Map} selected-text-color [igx-color: ('primary', 300)] -  The text color of a selected item in time picker.
-/// @prop {Map} hover-text-color [igx-color: ('primary', 300)] - The hover text color of an open time picker.
+/// @prop {Map} text-color [contrast-color: ('surface')] - The text color of an open time picker.
+/// @prop {Map} selected-text-color [color: ('primary', 300)] -  The text color of a selected item in time picker.
+/// @prop {Map} hover-text-color [color: ('primary', 300)] - The hover text color of an open time picker.
 /// @requires {function} extend
 /// @requires $indigo-time-picker
 $dark-indigo-time-picker: extend(
     $indigo-time-picker,
     (
         text-color: (
-            igx-contrast-color: ('surface')
+            contrast-color: ('surface')
         ),
 
         hover-text-color: (
-            igx-color: ('primary', 300)
+            color: ('primary', 300)
         ),
 
         selected-text-color: (
-            igx-color: ('primary', 300)
+            color: ('primary', 300)
         ),
     )
 );

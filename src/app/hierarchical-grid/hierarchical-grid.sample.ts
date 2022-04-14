@@ -10,7 +10,7 @@ import {
 
 @Component({
     selector: 'app-hierarchical-grid-sample',
-    styleUrls: ['hierarchical-grid.sample.css'],
+    styleUrls: ['hierarchical-grid.sample.scss'],
     templateUrl: 'hierarchical-grid.sample.html'
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
@@ -34,6 +34,11 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
     public columns;
     public childColumns;
 
+    public evenCondition = (row: RowType) =>  parseInt(row.data['ID'], 0) % 2 === 0;
+    public rowClasses = {
+        activeRow: this.evenCondition,
+    };
+
     constructor(private cdr: ChangeDetectorRef) {
         this.displayDensities = [
             { label: 'compact', selected: this.density === 'compact', togglable: true },
@@ -52,7 +57,7 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
     }
 
     public enableSummary() {
-        const childGrid = this.hGrid2.hgridAPI.getChildGrids(false)[0];
+        const childGrid = this.hGrid2.gridAPI.getChildGrids(false)[0];
         this.hGrid2.getColumnByName('ID').hasSummary = true;
         if (childGrid) {
             childGrid.getColumnByName('ID').hasSummary = true;

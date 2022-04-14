@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent, IGroupingExpression,  GridSelectionMode,
-        DisplayDensity, DefaultSortingStrategy, ITreeGridRecord } from 'igniteui-angular';
+        DisplayDensity, DefaultSortingStrategy, ITreeGridRecord, TreeGridFilteringStrategy } from 'igniteui-angular';
 import { IgxGroupedTreeGridSorting, ITreeGridAggregation } from 'projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.grouping.pipe';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
@@ -26,6 +26,7 @@ export class TreeGridGroupBySampleComponent implements OnInit {
     public groupKey = 'Groups';
     public childDataKey = 'ChildCompanies';
     public sorting = IgxGroupedTreeGridSorting.instance();
+    public filteringStrategy = new TreeGridFilteringStrategy([this.groupKey]);
 
     public employeeAggregations: ITreeGridAggregation[] = [{
         field: 'Employees',

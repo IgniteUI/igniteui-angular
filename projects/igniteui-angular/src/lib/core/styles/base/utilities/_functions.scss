@@ -131,29 +131,29 @@
 /// @group Palettes
 /// @param {Color} $color - The base color to be used to generate a color shade.
 /// @param {number|string} $shade - The shade.
-@function _gen-gray($color, $shade) {
-    $lumen: luminance($color);
+@function _gen-gray($color, $shade, $base) {
+    $lumen: luminance($base);
 
     @if ($shade == 50) {
-        @return change-color($color, $lightness: if($lumen < .5, 98%, 13%));
+        @return change-color($color, $lightness: if($lumen > .5, 98%, 13%));
     } @else if ($shade == 100) {
-        @return change-color($color, $lightness: if($lumen < .5, 96%, 26%));
+        @return change-color($color, $lightness: if($lumen > .5, 96%, 26%));
     } @else if ($shade == 200) {
-        @return change-color($color, $lightness: if($lumen < .5, 93%, 38%));
+        @return change-color($color, $lightness: if($lumen > .5, 93%, 38%));
     } @else if ($shade == 300) {
-        @return change-color($color, $lightness: if($lumen < .5, 88%, 54%));
+        @return change-color($color, $lightness: if($lumen > .5, 88%, 54%));
     } @else if ($shade == 400) {
-        @return change-color($color, $lightness: if($lumen < .5, 74%, 62%));
+        @return change-color($color, $lightness: if($lumen > .5, 74%, 62%));
     } @else if ($shade == 500) {
-        @return change-color($color, $lightness: if($lumen < .5, 62%, 74%));
+        @return change-color($color, $lightness: if($lumen > .5, 62%, 74%));
     } @else if ($shade == 600) {
-        @return change-color($color, $lightness: if($lumen < .5, 54%, 88%));
+        @return change-color($color, $lightness: if($lumen > .5, 54%, 88%));
     } @else if ($shade == 700) {
-        @return change-color($color, $lightness: if($lumen < .5, 38%, 93%));
+        @return change-color($color, $lightness: if($lumen > .5, 38%, 93%));
     } @else if ($shade == 800) {
-        @return change-color($color, $lightness: if($lumen < .5, 26%, 96%));
+        @return change-color($color, $lightness: if($lumen > .5, 26%, 96%));
     } @else if ($shade == 900) {
-        @return change-color($color, $lightness: if($lumen < .5, 13%, 98%));
+        @return change-color($color, $lightness: if($lumen > .5, 13%, 98%));
     }
 }
 
@@ -163,69 +163,70 @@
 /// @param {Color} $name - The base color name (primary, secondary, etc.) to be used to generate a color variant.
 /// @param {number|string} $variant - The target shade variant.
 /// @param {number|string} $theme - The target theme variant.
-@function gen-hsla-color($name, $variant, $theme, $color) {
-    $h: var(--igx-#{$name}-h);
-    $s: var(--igx-#{$name}-s);
-    $l: var(--igx-#{$name}-l);
-    $lumen: luminance($color);
+/// @param {String} $prefix [igx] - The prefix for the color variant.
+@function gen-hsla-color($name, $variant, $theme, $color, $prefix: 'igx', $base) {
+    $h: var(--#{$prefix}-#{$name}-h);
+    $s: var(--#{$prefix}-#{$name}-s);
+    $l: var(--#{$prefix}-#{$name}-l);
+    $lumen: luminance($base);
 
     @if ($variant == 50) {
-        @if $name == 'grays' {
-            @return #{$h, $s, if($lumen < .5, 98%, 13%)};
+        @if $name == 'grays' or $name == 'gray' {
+            @return #{$h, $s, if($lumen > .5, 98%, 13%)};
         } @else {
             @return #{$h, calc(#{$s} * 1.23), calc(#{$l} * 1.78)};
         }
     } @else if ($variant == 100) {
-        @if $name == 'grays' {
-            @return #{$h, $s, if($lumen < .5, 96%, 26%)};
+        @if $name == 'grays' or $name == 'gray' {
+            @return #{$h, $s, if($lumen > .5, 96%, 26%)};
         } @else {
             @return #{$h, calc(#{$s} / 1.25), calc(#{$l} * 1.66)};
         }
     } @else if ($variant == 200) {
-        @if $name == 'grays' {
-            @return #{$h, $s, if($lumen < .5, 93%, 38%)};
+        @if $name == 'grays' or $name == 'gray' {
+            @return #{$h, $s, if($lumen > .5, 93%, 38%)};
         } @else {
             @return #{$h, calc(#{$s} * .64), calc(#{$l} * 1.43)};
         }
     } @else if ($variant == 300) {
-        @if $name == 'grays' {
-            @return #{$h, $s, if($lumen < .5, 88%, 54%)};
+        @if $name == 'grays' or $name == 'gray' {
+            @return #{$h, $s, if($lumen > .5, 88%, 54%)};
         } @else {
             @return #{$h, calc(#{$s} * .73), calc(#{$l} * 1.19)};
         }
     } @else if ($variant == 400) {
-        @if $name == 'grays' {
-            @return #{$h, $s, if($lumen < .5, 74%, 62%)};
+        @if $name == 'grays' or $name == 'gray' {
+            @return #{$h, $s, if($lumen > .5, 74%, 62%)};
         } @else {
             @return #{$h, calc(#{$s} * .875), calc(#{$l} * 1.08)};
         }
     } @else if ($variant == 500) {
-        @if $name == 'grays' {
-            @return #{$h, $s, if($lumen < .5, 62%, 72%)};
+        @if $name == 'grays' or $name == 'gray' {
+            @return #{$h, $s, if($lumen > .5, 62%, 72%)};
         } @else {
             @return #{$h, $s, $l};
         }
     } @else if ($variant == 600) {
-        @if $name == 'grays' {
-            @return #{$h, $s, if($lumen < .5, 54%, 88%)};
+        @if $name == 'grays' or $name == 'gray' {
+            @return #{$h, $s, if($lumen > .5, 54%, 88%)};
         } @else {
             @return #{$h, calc(#{$s} * 1.26), calc(#{$l} * .89)};
         }
     } @else if ($variant == 700) {
-        @if $name == 'grays' {
-            @return #{$h, $s, if($lumen < .5, 38%, 93%)};
+        @if $name == 'grays' or $name == 'gray' {
+            @return #{$h, $s, if($lumen > .5, 38%, 93%)};
         } @else {
             @return #{$h, calc(#{$s} * 1.52), calc(#{$l} * .81)};
         }
     } @else if ($variant == 800) {
-        @if $name == 'grays' {
-            @return #{$h, $s, if($lumen < .5, 26%, 96%)};
+        @if $name == 'grays' or $name == 'gray' {
+            @return #{$h, $s, if($lumen > .5, 26%, 96%)};
         } @else {
             @return #{$h, calc(#{$s} * 1.5), calc(#{$l} * .73)};
         }
     } @else if ($variant == 900) {
-        @if $name == 'grays' {
-            @return #{$h, $s, if($lumen < .5, 13%, 98%)};
+        @if $name == 'grays' or $name == 'gray' {
+            @return #{$h, $s, if($lumen > .5, 13%, 98%)};
         } @else {
             @return #{$h, calc(#{$s} * 1.34), calc(#{$l} * .64)};
         }
@@ -282,7 +283,7 @@
 @function grayscale-palette($color, $shades, $base: #fff) {
     $result: ();
     @each $shade in $shades {
-        $gray-shade: _gen-gray($color, $shade);
+        $gray-shade: _gen-gray($color, $shade, $base);
         $contrast: text-contrast(to-opaque($gray-shade, $base, null));
 
         $result: map-merge($result, (
@@ -308,7 +309,7 @@
 /// @param {String} $variant ['material'] - The palette variant that gets generated. Possible values are: 'material', 'fluent', 'bootstrap', and 'indigo-design'.
 /// @returns {Map} - A map consisting of 74 color variations, including the `primary`, `secondary`, `grays`,
 /// `info`, `success`, `warn`, and `error` colors.
-@function igx-palette(
+@function palette(
     $primary,
     $secondary,
     $info: #1377d5,
@@ -372,9 +373,9 @@
 }
 
 /// @access private
-/// Used in igx-color to test internally
+/// Used in color to test internally
 /// for color and variant validity.
-$p-test: igx-palette(#fff, #000);
+$p-test: palette(#fff, #000);
 
 /// Retrieves a color from a color palette.
 /// @access public
@@ -383,7 +384,7 @@ $p-test: igx-palette(#fff, #000);
 /// @param {string} $color [primary]- The target color from the color palette.
 /// @param {number|string} $variant [500] - The target color shade from the color palette.
 /// @returns {Color} White if no palette, color, and variant matches found.
-@function igx-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
+@function color($palette: null, $color: primary, $variant: 500, $opacity: null) {
     $c: map.get($palette or $p-test, $color);
     $v: if($c, map.get($c, $variant), null);
     $a: var(--igx-#{$color}-a);
@@ -419,10 +420,10 @@ $p-test: igx-palette(#fff, #000);
 /// @param {Map} $palette [null] - The source palette map.
 /// @param {string} $color [primary] - The target color from the color palette.
 /// @param {number|variant} $variant [500] - The target color shade from the color palette.
-/// @requires igx-color
+/// @requires color
 /// @returns {Color} [#fff] - Returns white if no palette, color and/or variant matches found.
-@function igx-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
-    @return igx-color($palette, $color, #{$variant}-contrast, $opacity);
+@function contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
+    @return color($palette, $color, #{$variant}-contrast, $opacity);
 }
 
 /// Returns a CSS variable string reference as a list of words.
@@ -447,14 +448,14 @@ $p-test: igx-palette(#fff, #000);
 /// If the value is not a CSS variable it's simply passed through.
 /// @access private
 /// @returns {Color | Map}
-@function igx-color-from-var($value, $palette: $theme-palette, $raw: true) {
+@function color-from-var($value, $palette: $theme-palette, $raw: true) {
     $parts: var-to-parts($value);
     $is-igx: list.index($parts, 'igx');
 
     @if $parts and $is-igx {
         $c: list.nth($parts, 2);
         $v: to-number(nth($parts, 3));
-        $color: igx-color($palette, $c, $v);
+        $color: color($palette, $c, $v);
         @return if($raw, $color, (($c $v): $color));
     }
 
@@ -465,12 +466,12 @@ $p-test: igx-palette(#fff, #000);
 /// @access public
 /// @param {Color} $color-1 - The first color, usually transparent.
 /// @param {Color} $color-2 [#fff] - The second color, usually opaque.
-/// @param {Map} $palette [$default-palette] - Pass an igx-palette if the passed colors are CSS variable references.
-/// @requires {function} igx-color-from-var
+/// @param {Map} $palette [$default-palette] - Pass an palette if the passed colors are CSS variable references.
+/// @requires {function} color-from-var
 /// @return {Color} - The color representation of the rgba value.
 @function to-opaque($color-1, $color-2: #fff, $palette: $theme-palette) {
-    $color-1: igx-color-from-var($color-1, $palette);
-    $color-2: igx-color-from-var($color-2, $palette);
+    $color-1: color-from-var($color-1, $palette);
+    $color-2: color-from-var($color-2, $palette);
 
     @if meta.type-of($color-1) == color and meta.type-of($color-2) == color {
         $red: color.red($color-1);
@@ -499,11 +500,11 @@ $p-test: igx-palette(#fff, #000);
     $contrast: 'AAA',
     $palette: null
 ) {
-    $background: igx-color-from-var($background, $palette, $raw: false);
-    $foreground: igx-color-from-var($foreground, $palette);
+    $background: color-from-var($background, $palette, $raw: false);
+    $foreground: color-from-var($foreground, $palette);
 
     @if meta.type-of($background) == 'map' {
-        @return igx-contrast-color(null, nth(map.keys($background), 1)...);
+        @return contrast-color(null, nth(map.keys($background), 1)...);
     }
 
     @if meta.type-of($foreground) == 'color' and meta.type-of($background) == 'color' {
@@ -696,9 +697,9 @@ $p-test: igx-palette(#fff, #000);
 /// @access private
 /// @param {Map} $value - The value map to be used.
 /// @param {List | Map} $payload [null] - Additional payload to be passed during function calls.
-/// @example scss Resolve `igx-color` and apply 80% opacity
+/// @example scss Resolve `color` and apply 80% opacity
 ///   $value: (
-///     igx-color: ('primary', 500),
+///     color: ('primary', 500),
 ///     rgba: .2
 ///   );
 ///   // $palette is a palette we pass as extra payload.
@@ -716,7 +717,7 @@ $p-test: igx-palette(#fff, #000);
         $func: meta.get-function($fn);
 
         @if list.length(map.keys($value)) > 1 {
-            @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
+            @if $result == null and ($fn == 'color' or $fn == 'contrast-color') {
                 $result: meta.call($func, $payload or $tp, $args...);
             } @else if $fn == 'to-opaque' and meta.type-of($args) == 'map' {
                 $result: meta.call($func, $result, resolve-value($args, $payload or $tp));
@@ -726,7 +727,7 @@ $p-test: igx-palette(#fff, #000);
                 $result: meta.call($func, $args);
             }
         } @else {
-            @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
+            @if $result == null and ($fn == 'color' or $fn == 'contrast-color') {
                 $result: meta.call($func, $payload, $args...);
             } @else {
                 $result: meta.call($func, $args...);
@@ -743,7 +744,7 @@ $p-test: igx-palette(#fff, #000);
     @return hsl(math.random(360), 100%, 50%);
 }
 
-@function igx-generate-series-colors($palette) {
+@function generate-series-colors($palette) {
     $color-blind: if(meta.global-variable-exists('_igx-enhanced-accessibility'), $_igx-enhanced-accessibility, false);
 
     @if $color-blind {
@@ -775,17 +776,17 @@ $p-test: igx-palette(#fff, #000);
     );
 }
 
-/// Applies an `igx-palette` to a given theme schema.
+/// Applies an `palette` to a given theme schema.
 /// @access private
 /// @param {Map} $schema - A theme schema.
-/// @param {Map} $palette - An igx-palette map.
+/// @param {Map} $palette - An palette map.
 /// @requires {function} extend
 /// @requires {function} resolve-value
-/// @example scss Apply an `igx-palette` to theme schema
-///   $custom-palette: igx-palette($primary: red, $secondary: blue);
+/// @example scss Apply an `palette` to theme schema
+///   $custom-palette: palette($primary: red, $secondary: blue);
 ///   $custom-schema: (
 ///     my-color: (
-///        igx-color: ('primary', 800),
+///        color: ('primary', 800),
 ///        rgba: .5
 ///     ),
 ///     roundness: 5px
@@ -803,7 +804,7 @@ $p-test: igx-palette(#fff, #000);
 
         @if $value == 'series' {
             $result: extend($result, (
-                #{$key}: #{igx-generate-series-colors($palette)}
+                #{$key}: #{generate-series-colors($palette)}
             ));
         }
     }
@@ -841,29 +842,13 @@ $p-test: igx-palette(#fff, #000);
     @return ($max - $min) * $factor + $min;
 }
 
-/// If the value is unitless, returns value or list of values between 0 and 1
-/// where the 0 is the minimum and 1 is the maximum
-/// If the value is NOT unitless return the value or list of values with the unit you pass
+/// Returns a middle value between an upper and lower bound
 /// @access private
-@function round-borders($value, $min: 0, $max: 0) {
-    @if meta.type-of($value) == 'number' and math.is-unitless($value) {
-
-        @if $value < 0 or $value > 1 {
-            @return $value;
-        }
-
-        @return math.round(fraction-clamp($value, $min, $max));
-    }
-
-    @if meta.type-of($value) == 'list' and list.length($value) <= 4 {
-        $result: ();
-        @each $i in $value {
-            $result: list.append($result, round-borders($i, $min, $max), auto);
-        }
-        @return $result;
-    }
-
-    @return $value;
+/// @param {Number} $radius - A preferred value
+/// @param {Number} $min - A minimum value
+/// @param {Number} $max - A maximum allowed value
+@function border-radius($radius, $min: rem(0), $max: $radius) {
+    @return clamp($min, calc(var(--igx-radius-factor) * #{$radius}), $max);
 }
 
 /// A thin wrapper around Sass' color scale function

@@ -10,50 +10,50 @@
 /// @type {Map}
 ///
 /// @property {Color} background-color [inherit] - The summaries background color is inherited from the grid footer.
-/// @property {Map} focus-background-color [igx-color: ('grays', 100)] - The background color when a summary item is on focus.
-/// @property {map} label-color [igx-color: ('primary', 500)] - The summaries label color.
-/// @property {map} label-hover-color [igx-color: ('primary', 700)] - The summaries hover label color.
+/// @property {Map} focus-background-color [color: ('grays', 100)] - The background color when a summary item is on focus.
+/// @property {map} label-color [color: ('primary', 500)] - The summaries label color.
+/// @property {map} label-hover-color [color: ('primary', 700)] - The summaries hover label color.
 /// @property {Color} result-color ["'currentColor'"] - The summaries value/result color.
-/// @property {map} border-color [igx-color: ('grays', 400)] - The summaries border color.
+/// @property {map} border-color [color: ('grays', 400)] - The summaries border color.
 /// @property {String} pinned-border-width [2px] - The border width of the summary panel.
 /// @property {String} pinned-border-style [solid] - The border style of the summary panel.
-/// @property {map} pinned-border-color [igx-color: ('grays', 400)] - The border color of the summary panel.
+/// @property {map} pinned-border-color [color: ('grays', 400)] - The border color of the summary panel.
 ///
 /// @see $default-palette
 $light-grid-summary: (
     background-color: inherit,
 
     focus-background-color: (
-        igx-color: ('grays', 100)
+        color: ('grays', 100)
     ),
 
     label-color: (
-        igx-color: ('primary', 500)
+        color: ('primary', 500)
     ),
 
     label-hover-color: (
-        igx-color: ('primary', 700)
+        color: ('primary', 700)
     ),
 
     result-color: "'currentColor'",
 
     border-color: (
-        igx-color: ('grays', 400)
+        color: ('grays', 400)
     ),
 
     pinned-border-width: 2px,
     pinned-border-style: solid,
     pinned-border-color: (
-        igx-color: ('grays', 400)
+        color: ('grays', 400)
     )
 );
 
 /// Generates a fluent grid-summary schema.
 /// @type {Map}
 ///
-/// @property {Map} background-color [igx-color: ('surface')] - The summaries background color is inherited from the grid footer.
-/// @property {map} border-color [igx-color: ('grays', 100)] - The summaries border color.
-/// @property {map} pinned-border-color [igx-color: ('grays', 300)] - The border color of the summary panel.
+/// @property {Map} background-color [color: ('surface')] - The summaries background color is inherited from the grid footer.
+/// @property {map} border-color [color: ('grays', 100)] - The summaries border color.
+/// @property {map} pinned-border-color [color: ('grays', 300)] - The border color of the summary panel.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-grid-summary
@@ -61,15 +61,15 @@ $fluent-grid-summary: extend(
     $light-grid-summary,
     (
         background-color: (
-            igx-color: ('surface')
+            color: ('surface')
         ),
 
         border-color: (
-            igx-color: ('grays', 100)
+            color: ('grays', 100)
         ),
 
         pinned-border-color: (
-            igx-color: ('grays', 300)
+            color: ('grays', 300)
         ),
     )
 );
@@ -81,10 +81,10 @@ $bootstrap-grid-summary: $light-grid-summary;
 
 /// Generates an indigo grid-summary schema.
 /// @type {Map}
-/// @property {Map} background-color [igx-color: ('grays', 100)] - The summaries background color is inherited from the grid footer.
-/// @property {map} label-hover-color [igx-color: ('primary', 900)] - The summaries hover label color.
-/// @property {map} border-color [igx-color: ('primary', 50)] - The summaries border color.
-/// @property {map} pinned-border-color [igx-color: ('primary', 200)] - The border color of the summary panel.
+/// @property {Map} background-color [color: ('grays', 100)] - The summaries background color is inherited from the grid footer.
+/// @property {map} label-hover-color [color: ('primary', 900)] - The summaries hover label color.
+/// @property {map} border-color [color: ('primary', 50)] - The summaries border color.
+/// @property {map} pinned-border-color [color: ('primary', 200)] - The border color of the summary panel.
 /// @requires {function} extend
 /// @requires {Map} $light-grid-summary
 $indigo-grid-summary: extend(
@@ -93,19 +93,19 @@ $indigo-grid-summary: extend(
         variant: 'indigo-design',
 
         background-color: (
-            igx-color: ('grays', 100)
+            color: ('grays', 100)
         ),
 
         label-hover-color: (
-            igx-color: ('primary', 900)
+            color: ('primary', 900)
         ),
 
         border-color: (
-            igx-color: ('primary', 50)
+            color: ('primary', 50)
         ),
 
         pinned-border-color: (
-            igx-color: ('primary', 200)
+            color: ('primary', 200)
         ),
     )
 );

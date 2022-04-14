@@ -75,8 +75,6 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
           addChange(file.url, new FileChange(startTag.start, removePropTxt, repTxt, 'replace'));
         });
     });
-    applyChanges();
-    changes.clear();
 
     Array.from(gridsToMigrate).map(node => getSourceOffset(node as Element)).forEach(offset => {
       const { startTag, file } = offset;
@@ -84,7 +82,13 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     });
   }
 
+  const _import = new RegExp(`@import ('|")~igniteui-angular\/lib\/core\/styles\/themes\/index('|");`, 'g');
+  for (const path of update.sassFiles) {
+    const fileContent = host.read(path).toString();
+    const replacedString = fileContent.replace(_import, `@use "igniteui-angular/theming" as igniteui;`);
+    host.overwrite(path, replacedString);
+  }
   applyChanges();
-  changes.clear();
   update.applyChanges();
+  changes.clear();
 };

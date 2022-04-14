@@ -1,6 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
 import { ColumnType } from '../common/grid.interface';
-import { PivotRowHeaderGroupType } from '../pivot-grid/pivot-grid.interface';
 
 /**
  * @hidden

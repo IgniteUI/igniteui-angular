@@ -8,4 +8,5 @@ export * from './pivot-row.component';
 export * from './pivot-header-row.component';
 export * from './pivot-row-dimension-content.component';
 export * from './pivot-row-dimension-header-group.component';
+export * from './pivot-data-selector.component';
 export * from './pivot-row-dimension-header.component';

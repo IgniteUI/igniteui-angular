@@ -38,6 +38,7 @@ import { IgxDatePickerModule } from '../../../date-picker/date-picker.module';
 import { IgxTimePickerModule } from '../../../time-picker/time-picker.component';
 import { IgxFocusModule } from '../../../directives/focus/focus.directive';
 import { IgxDateTimeEditorModule } from '../../../directives/date-time-editor/date-time-editor.directive';
+import { IgxTreeModule } from '../../../tree/public_api';
 
 /**
  * @hidden
@@ -98,12 +99,11 @@ import { IgxDateTimeEditorModule } from '../../../directives/date-time-editor/da
         IgxProgressBarModule,
         IgxSelectModule,
         IgxFocusModule,
-        IgxDateTimeEditorModule
+        IgxDateTimeEditorModule,
+        IgxTreeModule
     ],
     providers: [
         IgxSelectionAPIService
     ]
 })
-export class IgxGridExcelStyleFilteringModule {
-
-}
+export class IgxGridExcelStyleFilteringModule { }

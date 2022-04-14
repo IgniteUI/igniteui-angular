@@ -74,17 +74,16 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires text-contrast
-/// @requires round-borders
 /// @requires extend
 ///
 /// @example scss Change the header and content background colors
-///   $my-calendar-theme: igx-calendar-theme(
+///   $my-calendar-theme: calendar-theme(
 ///     $header-background: purple,
 ///     $content-background: black
 ///   );
-///   // Pass the theme to the igx-calendar component mixin
-///   @include igx-calendar($my-calendar-theme);
-@function igx-calendar-theme(
+///   // Pass the theme to the calendar component mixin
+///   @include calendar($my-calendar-theme);
+@function calendar-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -148,18 +147,6 @@
     $variant: map.get($theme, variant);
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($calendar-schema, 'border-radius')), 0, 20px
-    );
-
-    $date-border-radius: round-borders(
-        if($date-border-radius, $date-border-radius, map.get($calendar-schema, 'date-border-radius')), 0, 20px
-    );
-
-    $month-border-radius: round-borders(
-        if($month-border-radius, $month-border-radius, map.get($calendar-schema, 'month-border-radius')), 0, 20px
-    );
 
     @if not($content-text-color) and $content-background {
         @if meta.type-of($content-background) == 'color' {
@@ -333,13 +320,13 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {function} text-contrast
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires em
 /// @requires rem
 /// @requires {mixin} ellipsis
 /// @requires var-get
-@mixin igx-calendar($theme) {
-    @include igx-css-vars($theme);
+@mixin calendar($theme) {
+    @include css-vars($theme);
 
     $palette: map.get($theme, 'palette');
     $cal-header-year-margin: 0;
@@ -414,7 +401,7 @@
         min-width: 290px;
         background: var-get($theme, 'content-background');
         outline: none;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         overflow: hidden;
         border: $border-width solid var-get($theme, 'border-color');
 
@@ -715,7 +702,7 @@
 
     %cal-value--selected--hover {
         %cal-value-content::after {
-            background: igx-color($palette, 'grays', 100, .18);
+            background: color($palette, 'grays', 100, .18);
         }
     }
 
@@ -727,7 +714,7 @@
         width: $cal-value-w;
         min-width: $cal-value-w;
         height: $cal-value-h;
-        border-radius: var-get($theme, 'date-border-radius');
+        border-radius: border-radius(var-get($theme, 'date-border-radius'));
         z-index: 0;
         // transition: background .15s ease-out;
 
@@ -903,7 +890,7 @@
             transform: translateY(-50%);
             height: 48px;
             background: transparent;
-            border-radius: var-get($theme, 'month-border-radius');
+            border-radius: border-radius(var-get($theme, 'month-border-radius'));
             transition: background-color .15s ease-out;
             z-index: -1;
         }
@@ -1116,8 +1103,8 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header-year: 'subtitle-1', header-date: 'h4', picker-date: 'subtitle-1', content: 'body-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-calendar-typography($type-scale, $categories: (
+/// @requires {mixin} type-style
+@mixin calendar-typography($type-scale, $categories: (
     header-year: 'overline',
     header-date: 'h4',
     weekday-label: 'body-1',
@@ -1126,40 +1113,40 @@
 ) {
     $header-year: map.get($categories, 'header-year');
     $header-date: map.get($categories, 'header-date');
-    $weekday-label: map.get($categories, 'weekday-labels');
+    $weekday-label: map.get($categories, 'weekday-label');
     $picker-date: map.get($categories, 'picker-date');
     $content: map.get($categories, 'content');
 
     %cal-header-year {
-        @include igx-type-style($type-scale, $header-year) {
+        @include type-style($type-scale, $header-year) {
             margin: 0;
         }
     }
 
     %cal-header-date {
-        @include igx-type-style($type-scale, $header-date) {
+        @include type-style($type-scale, $header-date) {
             margin: 0;
         }
     }
 
     %cal-picker-date {
-        @include igx-type-style($type-scale, $picker-date) {
+        @include type-style($type-scale, $picker-date) {
             margin: 0;
         }
     }
 
     %cal-value-content {
-        @include igx-type-style($type-scale, $content) {
+        @include type-style($type-scale, $content) {
             margin: 0;
         }
     }
 
     %cal-value--label {
-        @include igx-type-style($type-scale, $weekday-label)
+        @include type-style($type-scale, $weekday-label)
     }
 
     %cal-value--year-current {
-        @include igx-type-style($type-scale, $content) {
+        @include type-style($type-scale, $content) {
             font-size: rem(24px);
             line-height: rem(52px);
             margin: 0;

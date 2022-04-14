@@ -35,18 +35,17 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires igx-elevation
-/// @requires round-borders
+/// @requires elevation
 ///
 /// @example scss Change the background and item colors
-///   $navdrawer-theme: igx-navdrawer-theme(
+///   $navdrawer-theme: navdrawer-theme(
 ///     $background: #2d313a,
 ///     $item-active-background: #ecc256,
 ///     $item-icon-color: #ecc256
 ///   );
-///   // Pass the theme to the igx-navdrawer component mixin
-///   @include igx-navdrawer($navdrawer-theme);
-@function igx-navdrawer-theme(
+///   // Pass the theme to the navdrawer component mixin
+///   @include navdrawer($navdrawer-theme);
+@function navdrawer-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -80,14 +79,6 @@
     }
 
     $theme: apply-palette($navdrawer-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($navdrawer-schema, 'border-radius')), 0, 36px
-    );
-
-    $item-border-radius: round-borders(
-        if($item-border-radius, $item-border-radius, map.get($navdrawer-schema, 'item-border-radius')), 0, 24px
-    );
 
     @if not($item-header-text-color) and $background {
         $item-header-text-color: text-contrast($background);
@@ -127,7 +118,7 @@
 
     @if not($shadow) {
         $elevation: map.get($navdrawer-schema, 'elevation');
-        $shadow: igx-elevation($elevations, $elevation);
+        $shadow: elevation($elevations, $elevation);
     }
 
     @return extend($theme, (
@@ -151,11 +142,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-navdrawer($theme) {
-    @include igx-css-vars($theme);
+@mixin navdrawer($theme) {
+    @include css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -168,7 +159,6 @@
     $drawer-item-min-w: rem(32px);
 
     $variant: map.get($theme, variant);
-
 
     %navdrawer-display {
         transition: flex-basis;
@@ -194,7 +184,7 @@
         @if $variant != 'indigo-design' {
             border-#{$right}: 1px solid var-get($theme, 'border-color');
         }
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
     }
 
     %aside-panning {
@@ -265,7 +255,7 @@
 
     %overlay {
         opacity: 1;
-        background: igx-color(map.get($theme, 'palette'), 'grays', 500, .54);
+        background: color(map.get($theme, 'palette'), 'grays', 500, .54);
         transition: opacity, visibility;
         transition-duration: .25s, .25s;
         transition-timing-function: ease-in, step-start;
@@ -318,7 +308,7 @@
         user-select: none;
         outline: transparent;
         white-space: nowrap;
-        border-radius: var-get($theme, 'item-border-radius');
+        border-radius: border-radius(var-get($theme, 'item-border-radius'));
         text-decoration: none;
         width: calc(100% - #{$drawer-item-margin * 2});
         border: none;
@@ -450,8 +440,8 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(item: 'subtitle-2', header: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-navdrawer-typography(
+/// @requires {mixin} type-style
+@mixin navdrawer-typography(
     $type-scale,
     $categories: (
         item: 'subtitle-2',
@@ -462,11 +452,11 @@
     $header: map.get($categories, 'header');
 
     %item {
-        @include igx-type-style($type-scale, $item);
+        @include type-style($type-scale, $item);
     }
 
     %item--header {
-        @include igx-type-style($type-scale, $header) {
+        @include type-style($type-scale, $header) {
             margin: 0;
         }
     }

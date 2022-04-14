@@ -42,7 +42,7 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
     IgxTreeGridAddRowPipe
   ],
   imports: [
-    IgxGridCommonModule,
+    IgxGridCommonModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

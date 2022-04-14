@@ -18,10 +18,13 @@
 ///
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
 /// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
+/// @param {Color} $track-on-hover-color [null] - The color of the track when the switch is on and hovered.
 /// @param {Color} $thumb-off-color [null] - The color of the thumb when the switch is off.
 /// @param {Color} $track-off-color [null] - The color of the track when the switch is off.
 /// @param {Color} $thumb-disabled-color [null] - The color of the thumb when the switch is disabled.
+/// @param {Color} $thumb-on-disabled-color [null] - The color of the thumb when the switch is on and disabled.
 /// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
+/// @param {Color} $track-on-disabled-color [null] - The color of the track when the switch is on and disabled.
 /// @param {Color} $label-color [null] - The color of the switch label
 /// @param {Color} $label-disabled-color [null] - The color of the switch label when the switch is disabled
 /// @param {box-shadow} $resting-shadow [null] - The shadow used for the thumb in resting state of the switch.
@@ -36,31 +39,35 @@
 /// @param {Color} $border-disabled-color [null] - The border color of the switch when it is disabled.
 /// @param {Color} $border-on-color [null] - The border color when the switch is on.
 /// @param {Color} $border-on-hover-color [null] - The border color when the switch is on and hovered.
-/// @param {Color} $focus-outline-color [null] - TThe focus outlined color.
+/// @param {Color} $focus-outline-color [null] - The focus outlined color.
+/// @param {Color} $focus-outline-color-focused [null] - The focus outlined color for focused state.
+/// @param {Color} $focus-fill-color [null] - The focus fill color.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires igx-elevation
-/// @requires round-borders
+/// @requires elevation
 ///
 /// @example scss Set custom track and thumb on colors
-///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);
-///   // Pass the theme to the igx-bottom-nav component mixin
-///   @include igx-switch($my-switch-theme);
-@function igx-switch-theme(
+///   $my-switch-theme: switch-theme($thumb-on-color: black, $track-on-color: yellow);
+///   // Pass the theme to the switch component mixin
+///   @include switch($my-switch-theme);
+@function switch-theme(
     $palette: null,
     $schema: $light-schema,
 
     $thumb-on-color: null,
     $track-on-color: null,
+    $track-on-hover-color: null,
 
     $thumb-off-color: null,
     $track-off-color: null,
 
     $track-disabled-color: null,
+    $track-on-disabled-color: null,
     $thumb-disabled-color: null,
+    $thumb-on-disabled-color: null,
 
     $label-color: null,
     $label-disabled-color: null,
@@ -78,6 +85,8 @@
     $border-on-color: null,
     $border-on-hover-color: null,
     $focus-outline-color: null,
+    $focus-outline-color-focused: null,
+    $focus-fill-color: null
 ) {
     $name: 'igx-switch';
     $switch-schema: ();
@@ -90,31 +99,19 @@
 
     $theme: apply-palette($switch-schema, $palette);
 
-    $border-radius-track: round-borders(
-        if($border-radius-track, $border-radius-track, map.get($switch-schema, 'border-radius-track')), 0, 7px
-    );
-
-    $border-radius-thumb: round-borders(
-        if($border-radius-thumb, $border-radius-thumb, map.get($switch-schema, 'border-radius-thumb')), 0, 10px
-    );
-
-    $border-radius-ripple: round-borders(
-        if($border-radius-ripple, $border-radius-ripple, map.get($switch-schema, 'border-radius-ripple')), 0, 24px
-    );
-
     @if not($resting-shadow) {
         $resting-elevation: map.get($switch-schema, 'resting-elevation');
-        $resting-shadow: igx-elevation($elevation: $resting-elevation);
+        $resting-shadow: elevation($elevation: $resting-elevation);
     }
 
     @if not($hover-shadow) {
         $hover-elevation: map.get($switch-schema, 'hover-elevation');
-        $hover-shadow: igx-elevation($elevation: $hover-elevation);
+        $hover-shadow: elevation($elevation: $hover-elevation);
     }
 
     @if not($disabled-shadow) {
         $disabled-elevation: map.get($switch-schema, 'disabled-elevation');
-        $disabled-shadow: igx-elevation($elevation: $disabled-elevation);
+        $disabled-shadow: elevation($elevation: $disabled-elevation);
     }
 
     @return extend($theme, (
@@ -123,12 +120,15 @@
 
         thumb-on-color: $thumb-on-color,
         track-on-color: $track-on-color,
+        track-on-hover-color: $track-on-hover-color,
 
         thumb-off-color: $thumb-off-color,
         track-off-color: $track-off-color,
 
         track-disabled-color: $track-disabled-color,
+        track-on-disabled-color: $track-on-disabled-color,
         thumb-disabled-color: $thumb-disabled-color,
+        thumb-on-disabled-color: $thumb-on-disabled-color,
 
         label-color: $label-color,
         label-disabled-color: $label-disabled-color,
@@ -146,22 +146,24 @@
         border-on-color: $border-on-color,
         border-on-hover-color: $border-on-hover-color,
         focus-outline-color: $focus-outline-color,
+        focus-outline-color-focused: $focus-outline-color-focused,
+        focus-fill-color: $focus-fill-color
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} scale-in-out
-/// @requires {mixin} igx-ripple
+/// @requires {mixin} ripple
 /// @requires {mixin} hide-default
-/// @requires igx-ripple-theme
+/// @requires ripple-theme
 /// @requires em
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
 /// @requires var-get
-@mixin igx-switch($theme) {
-    @include igx-css-vars($theme);
+@mixin switch($theme) {
+    @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
     $variant: map.get($theme, variant);
@@ -183,21 +185,21 @@
     $switch-thumb-width: map.get((
         material: 20px,
         fluent: 12px,
-        bootstrap: 8px,
+        bootstrap: 10px,
         indigo-design: 8px
     ), $variant);
 
     $switch-on-offset: map.get((
         material: 1px,
         fluent: math.div($switch-thumb-width, 2),
-        bootstrap: math.div($switch-thumb-width, 2),
+        bootstrap: 4px,
         indigo-design: 7px
     ), $variant);
 
     $switch-off-offset: map.get((
         material: -1px,
         fluent: math.div($switch-thumb-width, 3),
-        bootstrap: math.div($switch-thumb-width, 3),
+        bootstrap: math.div($switch-thumb-width, 4),
         indigo-design: math.div($switch-thumb-width, 3),
     ), $variant);
 
@@ -229,7 +231,7 @@
         indigo-design: none
     ), $variant);
 
-    $switch-thumb-height: $switch-thumb-width ;
+    $switch-thumb-height: $switch-thumb-width;
 
     $ripple-size: em(48px);
     $ripple-radius: math.div($ripple-size, 2);
@@ -238,7 +240,7 @@
 
     $input-transition: all .2s $ease-in-out-quad;
 
-    $ripple-theme: igx-ripple-theme(
+    $ripple-theme: ripple-theme(
         $schema: $light-schema,
         $color: var-get($theme, 'thumb-on-color')
     );
@@ -269,7 +271,7 @@
         width: rem($switch-width);
         height: rem($switch-height);
         border: 1px solid var-get($theme, 'border-color');
-        border-radius: var-get($theme, 'border-radius-track');
+        border-radius: border-radius(var-get($theme, 'border-radius-track'));
         background: var-get($theme, 'track-off-color');
         cursor: pointer;
         user-select: none;
@@ -279,9 +281,23 @@
             border: 2px solid var-get($theme, 'border-color');
         }
 
-        &:hover,
-        &:focus {
-            border-color: var-get($theme, 'border-hover-color');
+        @if $variant != 'bootstrap' {
+            &:hover,
+            &:focus {
+                border-color: var-get($theme, 'border-hover-color');
+            }
+        }
+
+        @if $variant == 'fluent' {
+            &:hover {
+                %switch-composite-thumb {
+                    background: var-get($theme, 'border-hover-color');
+                }
+
+                %switch-composite-thumb--x {
+                    background: var-get($theme, 'thumb-on-color');
+                }
+            }
         }
     }
 
@@ -292,6 +308,12 @@
         &:hover,
         &:focus {
             border-color: var-get($theme, 'border-on-hover-color');
+        }
+
+        @if $variant == 'fluent' {
+            &:hover {
+                background: var-get($theme, 'track-on-hover-color');
+            }
         }
     }
 
@@ -306,7 +328,7 @@
         width: rem($switch-thumb-width);
         height: $switch-thumb-height;
         min-width: rem($switch-thumb-width);
-        border-radius: var-get($theme, 'border-radius-thumb');
+        border-radius: border-radius(var-get($theme, 'border-radius-thumb'));
         background: var-get($theme, 'thumb-off-color');
         box-shadow: $thumb-resting-shadow;
         transition: $input-transition;
@@ -319,8 +341,10 @@
             transform: translateX(#{rem(-1 * $switch-off-offset)});
         }
 
-        &:hover {
-            box-shadow: $thumb-hover-shadow;
+        @if $variant != 'bootstrap' {
+            &:hover {
+                box-shadow: $thumb-hover-shadow;
+            }
         }
     }
 
@@ -342,8 +366,8 @@
     }
 
     %switch-ripple {
-        @include igx-ripple($ripple-theme);
-        @include igx-css-vars($ripple-theme);
+        @include ripple($ripple-theme);
+        @include css-vars($ripple-theme);
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
@@ -353,45 +377,79 @@
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
-        border-radius: var-get($theme, 'border-radius-ripple');
+        border-radius: border-radius(var-get($theme, 'border-radius-ripple'));
     }
 
     %igx-switch--focused {
         @if $variant == 'fluent' {
-            position: relative;
-            $focus-outline-offset-top: rem(2px);
-            $focus-outline-offset-left: rem(2px);
+            %switch-composite {
+                position: relative;
+                $focus-outline-offset-top: rem(2px);
+                $focus-outline-offset-left: rem(2px);
 
-            &::after {
-                content: '';
-                position: absolute;
-                top: -$focus-outline-offset-top;
-                left: -$focus-outline-offset-left;
-                box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
-                width: calc(100% + (#{$focus-outline-offset-left} * 2));
-                height: calc(100% + (#{$focus-outline-offset-top} * 2));
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: -$focus-outline-offset-top;
+                    left: -$focus-outline-offset-left;
+                    box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
+                    width: calc(100% + (#{$focus-outline-offset-left} * 2));
+                    height: calc(100% + (#{$focus-outline-offset-top} * 2));
+                }
             }
         }
 
         @if $variant == 'bootstrap' {
             %switch-composite {
-                border-radius: var-get($theme, 'border-radius-thumb');
-                box-shadow: 0 0 0 2px var-get($theme, 'focus-outline-color');
+                border-color: var-get($theme, 'focus-fill-color');
+                box-shadow: 0 0 0 4px var-get($theme, 'focus-outline-color');
+            }
+
+            %switch-composite-thumb {
+                background: var-get($theme, 'focus-fill-color');
             }
         }
 
         @if $variant == 'indigo-design' {
             %switch-composite {
-                border-radius: var-get($theme, 'border-radius-thumb');
+                border-radius: border-radius(var-get($theme, 'border-radius-thumb'));
                 box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color');
             }
         }
     }
 
     %igx-switch--focused-checked {
+        @if $variant == 'bootstrap' {
+            %switch-composite {
+                border-color: var-get($theme, 'border-on-color');
+            }
+
+            %switch-composite-thumb--x {
+                background: var-get($theme, 'thumb-on-color');
+            }
+        }
+
         @if $variant == 'indigo-design' {
             %switch-composite {
                 box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color-focused');
+            }
+        }
+    }
+
+    %igx-switch--disabled-checked {
+        @if $variant != 'indigo-design' {
+            %switch-composite--x {
+                background: var-get($theme, 'track-on-disabled-color');
+            }
+
+            %switch-composite-thumb--x {
+                background: var-get($theme, 'thumb-on-disabled-color');
+            }
+        }
+
+        @if $variant == 'bootstrap' or $variant == 'fluent'{
+            %switch-composite--x {
+                border-color: var-get($theme, 'track-on-disabled-color');
             }
         }
     }
@@ -474,15 +532,15 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-switch-typography(
+/// @requires {mixin} type-style
+@mixin switch-typography(
     $type-scale,
     $categories: (label: 'subtitle-1')
 ) {
     $label: map.get($categories, 'label');
 
     %switch-label {
-        @include igx-type-style($type-scale, $label) {
+        @include type-style($type-scale, $label) {
             margin-top: 0;
             margin-bottom: 0;
         }

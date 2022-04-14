@@ -84,7 +84,7 @@
         }
 
         &-title {
-            @include igx-type-style($default-type-scale, 'h6');
+            @include type-style($default-type-scale, 'h6');
             margin-bottom: 24px;
 
             .light {

@@ -14,7 +14,7 @@
                         <ng-container *ngFor="let filter of this.filterAreaDimensions; let last = last;">
                         <span [style.visibility]='"hidden"' class="igx-grid__tr-pivot--chip_drop_indicator"
                               [style.height.px]='getAreaHeight(filterArea)'></span>
-                            <igx-chip [id]="filter.memberName" [draggable]="true" [displayDensity]="grid.displayDensity"
+                            <igx-chip [id]="filter.memberName" [draggable]="true" [displayDensity]="grid.displayDensity" [data]="{ pivotArea: 'filter' }"
                                       [removable]="true" (remove)="filterRemoved($event)" (dragOver)="onDimDragOver($event, 2)"
                                       (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, filterArea, 2)"
                                       (moveStart)='onDimDragStart($event, filterArea)' (moveEnd)='onDimDragEnd()'>
@@ -53,11 +53,11 @@
                         <ng-container *ngFor="let col of grid.columnDimensions; let last = last;">
                         <span [style.visibility]='"hidden"' class="igx-grid__tr-pivot--chip_drop_indicator"
                               [style.height.px]='getAreaHeight(colArea)'></span>
-                            <igx-chip [draggable]="true" [id]="col.memberName" [displayDensity]="grid.displayDensity"
+                            <igx-chip [draggable]="true" [id]="col.memberName" [displayDensity]="grid.displayDensity" [data]="{ pivotArea: 'column' }"
                                       [removable]="true" (remove)="columnRemoved($event)" (dragOver)="onDimDragOver($event, 1)"
                                       (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, colArea, 1)"
                                       (moveStart)='onDimDragStart($event, colArea)' (moveEnd)='onDimDragEnd()'
-                                      (click)="onChipSort($event, col, 1)">
+                                      (click)="onChipSort($event, col)">
                                 <igx-icon igxPrefix>view_column</igx-icon>
                                 <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
                                           (click)='onFilteringIconClick($event, col)'>filter_list</igx-icon>
@@ -87,7 +87,7 @@
                     <ng-container *ngFor="let value of grid.values; let last = last;">
                         <span [style.visibility]='"hidden"' class="igx-grid__tr-pivot--chip_drop_indicator"
                               [style.height.px]='getAreaHeight(valueArea)'></span>
-                            <igx-chip #currChip [draggable]="true" [id]="value.displayName || value.member"
+                            <igx-chip #currChip [draggable]="true" [id]="value.displayName || value.member" [data]="{ pivotArea: 'value' }"
                                       [displayDensity]="grid.displayDensity" [removable]="true" (remove)="valueRemoved($event)"
                                       (dragLeave)="onDimDragLeave($event)" (dragOver)="onDimDragOver($event)"
                                       (dragDrop)="onValueDrop($event, valueArea)">
@@ -130,11 +130,11 @@
                     <ng-container *ngFor="let row of grid.rowDimensions; let last = last;">
                         <span [style.visibility]='"hidden"' class="igx-grid__tr-pivot--chip_drop_indicator"
                               [style.height.px]='getAreaHeight(rowArea)'></span>
-                            <igx-chip [draggable]="true" [id]="row.memberName" [displayDensity]="grid.displayDensity"
+                            <igx-chip [draggable]="true" [id]="row.memberName" [displayDensity]="grid.displayDensity" [data]="{ pivotArea: 'row' }"
                                       [removable]="true" (remove)="rowRemoved($event)" (dragLeave)="onDimDragLeave($event)"
                                       (dragDrop)="onDimDrop($event, rowArea, 0)" (dragOver)="onDimDragOver($event, 0)"
                                       (moveStart)='onDimDragStart($event, rowArea)' (moveEnd)='onDimDragEnd()'
-                                      (click)="onChipSort($event, row, 0)">
+                                      (click)="onChipSort($event, row)">
                                 <igx-icon igxPrefix>table_rows</igx-icon>
                                 <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
                                           (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
@@ -210,7 +210,7 @@
 </igx-drop-down>
 
 <div [hidden]='true'>
-    <igx-grid-excel-style-filtering #esf>
+    <igx-grid-excel-style-filtering [maxHeight]='grid.excelStyleFilterMaxHeight' [minHeight]='grid.excelStyleFilterMinHeight' #esf>
         <div igxExcelStyleColumnOperations>
             <igx-chips-area #dropdownChips>
                 <igx-chip *ngFor="let filter of this.filterDropdownDimensions" [id]="filter.memberName"

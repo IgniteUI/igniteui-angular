@@ -6,7 +6,7 @@ import { IGroupByResult } from '../../data-operations/grouping-result.interface'
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { GridPagingMode } from '../common/enums';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
@@ -123,7 +123,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
             return collection;
         }
 
-        const result = DataUtil.filter(cloneArray(collection), state, this.grid);
+        const result = FilterUtil.filter(cloneArray(collection), state, this.grid);
         this.grid.setFilteredData(result, pinned);
         return result;
     }

@@ -8,16 +8,16 @@
 ////
 
 /// Generates a base dark grid-toolbar schema.
-/// @property {Map} resting-background [igx-color: ('grays', 200)] - The background color used for the highlight in its resting state.
-/// @property {Map} resting-color [igx-contrast-color: ('grays', 200)] - The icon color used for the highlight in its resting state.
+/// @property {Map} resting-background [color: ('grays', 200)] - The background color used for the highlight in its resting state.
+/// @property {Map} resting-color [contrast-color: ('grays', 200)] - The icon color used for the highlight in its resting state.
 /// @type {Map}
 $dark-base-highlight: (
     resting-background: (
-        igx-color: ('grays', 200)
+        color: ('grays', 200)
     ),
 
     resting-color: (
-        igx-contrast-color: ('grays', 200)
+        contrast-color: ('grays', 200)
     ),
 );
 
@@ -38,8 +38,8 @@ $dark-fluent-highlight: extend($fluent-highlight, $dark-base-highlight);
 
 /// Generates a dark bootstrap highlight schema.
 /// @type {Map}
-/// @property {Map} active-background [igx-color: ('primary', A100)] - The background color used for the highlight in its active state.
-/// @property {Map} active-color [igx-contrast-color: ('primary', A100) - The text color used for the highlight in its active state.
+/// @property {Map} active-background [color: ('primary', A100)] - The background color used for the highlight in its active state.
+/// @property {Map} active-color [contrast-color: ('primary', A100) - The text color used for the highlight in its active state.
 /// @requires {function} extend
 /// @requires $bootstrap-highlight
 /// @requires $dark-base-highlight
@@ -48,11 +48,11 @@ $dark-bootstrap-highlight: extend(
     $dark-base-highlight,
     (
         active-background: (
-            igx-color: ('primary', 'A100')
+            color: ('primary', 'A100')
         ),
 
         active-color: (
-            igx-contrast-color: ('primary', 'A100'),
+            contrast-color: ('primary', 'A100'),
         ),
     )
 );

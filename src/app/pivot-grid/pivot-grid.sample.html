@@ -1,32 +1,73 @@
 <div class="sample-flex-row">
-    <igx-combo #combo class="combo" [itemsMaxHeight]="250" (selectionChanging)="handleChange($event)"
-        [data]="dimensions" [displayKey]="'memberName'" [(ngModel)]="selected" placeholder="Dimension(s)"
-        searchPlaceholder="Search...">
+    <igx-combo
+        #combo
+        class="combo"
+        [itemsMaxHeight]="250"
+        (selectionChanging)="handleChange($event)"
+        [data]="dimensions"
+        [displayKey]="'memberName'"
+        [(ngModel)]="selected"
+        placeholder="Dimension(s)"
+        searchPlaceholder="Search..."
+    >
     </igx-combo>
     <div class="density-chooser">
         <igx-buttongroup>
-            <button igxButton [disabled]="grid1.displayDensity === comfortable"
-                (click)="setDensity('comfortable')">Comfortable</button>
-            <button igxButton [disabled]="grid1.displayDensity === cosy" (click)="setDensity('cosy')">Cosy</button>
-            <button igxButton [disabled]="grid1.displayDensity === compact"
-                (click)="setDensity('compact')">Compact</button>
+            <button
+                igxButton
+                [disabled]="gridDensity === 'comfortable'"
+                (click)="setDensity('comfortable')"
+            >
+                Comfortable
+            </button>
+            <button
+                igxButton
+                [disabled]="gridDensity === 'cosy'"
+                (click)="setDensity('cosy')"
+            >
+                Cosy
+            </button>
+            <button
+                igxButton
+                [disabled]="gridDensity === 'compact'"
+                (click)="setDensity('compact')"
+            >
+                Compact
+            </button>
+            <button
+                igxButton
+                [disabled]="gridDensity === 'superCompact'"
+                (click)="setDensity('superCompact')"
+            >
+                SCompact
+            </button>
         </igx-buttongroup>
     </div>
     <button igxButton (click)="setRowDimWidth(0, '400px')">ResizeRowDim</button>
-    <button (click)='remove()'>Remove</button>
-    <button (click)='toggle()'>Toggle</button>
-    <button (click)='move()'>Move</button>
-    <button (click)='insert()'>Insert</button>
+    <button (click)="remove()">Remove</button>
+    <button (click)="toggle()">Toggle</button>
+    <button (click)="move()">Move</button>
+    <button (click)="insert()">Insert</button>
 
-    <button (click)='removeVal()'>Remove</button>
-    <button (click)='toggleVal()'>Toggle</button>
-    <button (click)='moveVal()'>Move</button>
-    <button (click)='insertVal()'>Insert</button>
+    <button (click)="removeVal()">Remove</button>
+    <button (click)="toggleVal()">Toggle</button>
+    <button (click)="moveVal()">Move</button>
+    <button (click)="insertVal()">Insert</button>
 </div>
-<div style='flex: 1 1 auto; order: 0;'>
-<igx-pivot-grid #grid1 [data]="origData" [width]="'100%'" [height]="'100%'" [defaultExpandState]='true'
-    [superCompactMode]='true'
-    [rowSelection] = '"single"'
-    [pivotConfiguration]="pivotConfigHierarchy" (dimensionsChange)='dimensionChange($event)'>
-</igx-pivot-grid>
+<div class="pivot-container">
+    <div>
+        <igx-pivot-grid
+            #grid1
+            [data]="origData"
+            [width]="'100%'"
+            [height]="'100%'"
+            [displayDensity]="gridDensity"
+            [superCompactMode]="gridDensity === 'superCompact'"
+            [defaultExpandState]="true"
+            [rowSelection]='"single"'
+            [pivotConfiguration]="pivotConfigHierarchy"
+            (dimensionsChange)="dimensionChange()"
+        ></igx-pivot-grid>
+    </div>
+    <igx-pivot-data-selector [grid]="grid1"></igx-pivot-data-selector>
 </div>

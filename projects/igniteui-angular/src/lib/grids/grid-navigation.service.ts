@@ -75,7 +75,8 @@ export class IgxGridNavigationService {
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
         if (NAVIGATION_KEYS.has(key) && this.pendingNavigation) {
-            event.preventDefault(); return;
+            event.preventDefault();
+            return;
         }
 
         const type = this.isDataRow(this.activeNode.row) ? 'dataCell' :
@@ -132,7 +133,8 @@ export class IgxGridNavigationService {
     public focusTbody(event) {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
         if (gridRows < 1) {
-            this.activeNode = null; return;
+            this.activeNode = null;
+            return;
         }
         if (!this.activeNode || !Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             const hasLastActiveNode = Object.keys(this.lastActiveNode).length;
@@ -144,10 +146,12 @@ export class IgxGridNavigationService {
                 this.grid.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => {
                     obj.target?.activate(event);
                     this.grid.cdr.detectChanges();
-                } );
+                });
             } else {
-                const range = { rowStart: this.activeNode.row, rowEnd: this.activeNode.row,
-                    columnStart: this.activeNode.column, columnEnd: this.activeNode.column };
+                const range = {
+                    rowStart: this.activeNode.row, rowEnd: this.activeNode.row,
+                    columnStart: this.activeNode.column, columnEnd: this.activeNode.column
+                };
                 this.grid.selectRange(range);
                 this.grid.notifyChanges();
             }
@@ -157,7 +161,7 @@ export class IgxGridNavigationService {
     public focusFirstCell(header = true) {
         if ((header || this.grid.dataView.length) && this.activeNode &&
             (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length ||
-            (!header && !this.grid.hasSummarizedColumns))) {
+                (!header && !this.grid.hasSummarizedColumns))) {
             return;
         }
         const shouldScrollIntoView = this.lastActiveNode && (header && this.lastActiveNode.row !== -1) ||
@@ -253,11 +257,11 @@ export class IgxGridNavigationService {
         let curRow: any;
 
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
-                curRow = this.grid.dataView[rowIndex - this.grid.virtualizationState.startIndex];
-            if (!curRow){
+            curRow = this.grid.dataView[rowIndex - this.grid.virtualizationState.startIndex];
+            if (!curRow) {
                 return false;
             }
-        }else {
+        } else {
             curRow = this.grid.dataView[rowIndex];
         }
         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow)
@@ -495,7 +499,7 @@ export class IgxGridNavigationService {
 
     protected forOfDir(): IgxForOfDirective<any> {
         const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.summariesRowList.length ?
-        this.grid.summariesRowList.first.virtDirRow : this.grid.headerContainer;
+            this.grid.summariesRowList.first.virtDirRow : this.grid.headerContainer;
         return forOfDir as IgxForOfDirective<any>;
     }
 
@@ -649,9 +653,15 @@ export class IgxGridNavigationService {
             return;
         }
         if (shift && alt && this.isToggleKey(key) && !column.columnGroup && column.groupable) {
-            direction = direction ? SortingDirection.Desc : SortingDirection.Asc;
+            direction = direction || SortingDirection.Asc;
             if (key.includes('right')) {
-                (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false });
+                (this.grid as any).groupBy({
+                    fieldName: column.field,
+                    dir: direction,
+                    ignoreCase: column.sortingIgnoreCase,
+                    strategy: column.sortStrategy,
+                    groupingComparer: column.groupingComparer,
+                });
             } else {
                 (this.grid as any).clearGrouping(column.field);
             }
@@ -681,17 +691,21 @@ export class IgxGridNavigationService {
         }
     }
 
-    private  firstVisibleNode(rowIndex?) {
+    private firstVisibleNode(rowIndex?) {
         const colIndex = this.lastActiveNode.column !== undefined ? this.lastActiveNode.column :
             this.grid.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex)
-            .find(c => this.isColumnFullyVisible(c.visibleIndex))?.visibleIndex;
+                .find(c => this.isColumnFullyVisible(c.visibleIndex))?.visibleIndex;
         const column = this.grid.visibleColumns.find((col) => !col.columnLayout && col.visibleIndex === colIndex);
         const rowInd = rowIndex ? rowIndex : this.grid.rowList.find(r => !this.shouldPerformVerticalScroll(r.index, colIndex))?.index;
-        const node = { row: rowInd ?? 0,
+        const node = {
+            row: rowInd ?? 0,
             column: column?.visibleIndex ?? 0, level: column?.level ?? 0,
-            mchCache: column ? {level: column.level, visibleIndex: column.visibleIndex} : {} as ColumnGroupsCache,
-            layout: column && column.columnLayoutChild ? { rowStart: column.rowStart, colStart: column.colStart,
-                rowEnd: column.rowEnd, colEnd: column.colEnd, columnVisibleIndex: column.visibleIndex} : null };
+            mchCache: column ? { level: column.level, visibleIndex: column.visibleIndex } : {} as ColumnGroupsCache,
+            layout: column && column.columnLayoutChild ? {
+                rowStart: column.rowStart, colStart: column.colStart,
+                rowEnd: column.rowEnd, colEnd: column.colEnd, columnVisibleIndex: column.visibleIndex
+            } : null
+        };
         return node;
     }
 

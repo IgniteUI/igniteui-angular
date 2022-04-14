@@ -10,7 +10,7 @@
 
 /// @param {Map} $theme - The grid theme used to style the component.
 /// @param {Map} $palette - The palette map used as base for the component.
-/// @requires igx-color
+/// @requires color
 /// @requires rem
 /// @requires var-get
 @mixin advanced-filtering($theme, $palette) {
@@ -35,20 +35,20 @@
         min-width: 660px;
         max-width: 720px;
         background-color: var-get($theme, 'filtering-row-background');
-        box-shadow: igx-elevation($elevation: 12);
-        border-radius: rem(4px);
+        box-shadow: elevation($elevation: 12);
+        border-radius: border-radius(rem(4px));
     }
 
     %advanced-filter__header {
         display: flex;
         align-items: center;
         padding: $vertical-space-comfortable;
-        color: igx-color($palette, 'grays', 700);
+        color: color($palette, 'grays', 700);
 
         @if $bootstrap-theme {
-            background-color: igx-color($palette, 'grays', 100, .5);
+            background-color: color($palette, 'grays', 100, .5);
         } @else {
-            background-color: igx-color($palette, 'grays', 100);
+            background-color: color($palette, 'grays', 100);
         }
 
         user-select: none;
@@ -97,7 +97,7 @@
         background-color: white;
         margin-#{$right}: $horizontal-space-comfortable;
         outline-style: none;
-        border-radius: rem(4px);
+        border-radius: border-radius(rem(4px));
         cursor: pointer;
     }
 
@@ -153,12 +153,12 @@
 
         igx-icon {
             cursor: pointer;
-            color: igx-color($palette, 'grays', 500);
+            color: color($palette, 'grays', 500);
             outline-style: none;
 
             &:hover,
             &:focus {
-                color: igx-color($palette, 'grays', 800);
+                color: color($palette, 'grays', 800);
             }
         }
 
@@ -232,7 +232,7 @@
             width: rem(24px);
             height: rem(24px);
             background: white;
-            border-radius: rem(4px);
+            border-radius: border-radius(rem(4px));
             margin-#{$right}: rem(8px);
         }
 
@@ -257,8 +257,8 @@
         background-color: var-get($theme, 'filtering-row-background');
         padding: rem(16px);
         margin-#{$left}: rem(16px);
-        border-radius: rem(4px);
-        border: 1px solid igx-color($palette, 'grays', 200);
+        border-radius: border-radius(rem(4px));
+        border: 1px solid color($palette, 'grays', 200);
 
         > [igxButton] + [igxButton],
         igx-buttongroup + [igxButton],
@@ -281,19 +281,19 @@
     }
 
     %filter-con-menu__delete-btn {
-        color: igx-color($palette, 'error');
+        color: color($palette, 'error');
         @if $bootstrap-theme {
-            border-color: igx-color($palette, 'error');
+            border-color: color($palette, 'error');
         }
 
         &:hover,
         &:focus {
             @if $bootstrap-theme {
-                background: igx-color($palette, 'error');
-                border-color: igx-color($palette, 'error');
-                color: to-opaque(igx-color($palette, 'grays', 100));
+                background: color($palette, 'error');
+                border-color: color($palette, 'error');
+                color: to-opaque(color($palette, 'grays', 100));
             } @else {
-                color: igx-color($palette, 'error');
+                color: color($palette, 'error');
             }
         }
     }
@@ -303,7 +303,7 @@
         top: rem(-18px);
         #{$right}: rem(-18px);
         background-color: var-get($theme, 'filtering-row-background');
-        border: 1px solid igx-color($palette, 'grays', 200);
+        border: 1px solid color($palette, 'grays', 200);
 
         &:hover,
         &:focus {
@@ -321,7 +321,7 @@
     }
 
     %filter-empty__title {
-        color: igx-color($palette, 'grays', 500);
+        color: color($palette, 'grays', 500);
     }
 
     %advanced-filter--cosy {

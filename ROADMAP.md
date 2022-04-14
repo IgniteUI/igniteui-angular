@@ -2,28 +2,37 @@
 
 # Current Milestone
 
-## Milestone 20 (Due by Feb, 2022)
+## Milestone 21 (Due by May, 2022)
 
-1. Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
-2. igx-tree-grid:excel-style filtering should show children of parent elements returned from the filter [#10342](https://github.com/IgniteUI/igniteui-angular/issues/10342)
-3. Grid summary custom templating [#7981](https://github.com/IgniteUI/igniteui-angular/issues/7981)
-6. Tabs component does not support RTL [#5904](https://github.com/IgniteUI/igniteui-angular/issues/5904)
-7. Column moving feature on grid level [#10176](https://github.com/IgniteUI/igniteui-angular/issues/10176)
-8. Improve sorting experience for users [#9674](https://github.com/IgniteUI/igniteui-angular/issues/9674)
-9. Template grid excel filter footer [#10183](https://github.com/IgniteUI/igniteui-angular/issues/10183)
-10. Grid Cell Merging [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
+1. Improve sorting experience for users [#9674](https://github.com/IgniteUI/igniteui-angular/issues/9674)
+2. Template grid excel filter footer [#10183](https://github.com/IgniteUI/igniteui-angular/issues/10183) 
+3. Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205)
+4. Pivot Grid background color [#11158](https://github.com/IgniteUI/igniteui-angular/issues/11158)
+5. Fluent inputs styles [#11145](https://github.com/IgniteUI/igniteui-angular/issues/11145)
+6. Checkbox size and disabled state in Bootstrap [#11096](https://github.com/IgniteUI/igniteui-angular/issues/11096)
+7. [Pivot] Integrate ESF in tree view [#11049](https://github.com/IgniteUI/igniteui-angular/issues/11049) 
+8. Rework default sorting/filtering strategy's and their methods to be grid agnostic [#10922](https://github.com/IgniteUI/igniteui-angular/issues/10922)
+9. Validator service for igxGrid editing [#6501](https://github.com/IgniteUI/igniteui-angular/issues/6501)
 
 ## Going down the road
 
-# Due in 2022
-
-1. IgxLinearProgressBar: animate initial progress [#10068](https://github.com/IgniteUI/igniteui-angular/issues/10068)
-2. Classes to indicate position of auto overlay [#9481](https://github.com/IgniteUI/igniteui-angular/issues/9481)
-3. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
-4. Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205)
+1. Scheduler component [#8097](https://github.com/IgniteUI/igniteui-angular/issues/8097)
+2. IgxLinearProgressBar: animate initial progress [#10068](https://github.com/IgniteUI/igniteui-angular/issues/10068)
+3. Classes to indicate position of auto overlay [#9481](https://github.com/IgniteUI/igniteui-angular/issues/9481)
+4. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
 5. Getting only one sort and one filter event after changing the state of grid using setState function [#8064](https://github.com/IgniteUI/igniteui-angular/issues/8064)
+6. Grid Cell Merging [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
+7. Switch overlay service from angular animations to native Web Animations [#8780](https://github.com/IgniteUI/igniteui-angular/issues/8780)
 
 # Previous Milestone
+
+## Milestone 20 (Released March 2nd, 2022)
+
+1. **[DONE]** Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
+2. **[DONE]** igx-tree-grid:excel-style filtering should show children of parent elements returned from the filter [#10342](https://github.com/IgniteUI/igniteui-angular/issues/10342)
+3. **[DONE]** Grid summary custom templating [#7981](https://github.com/IgniteUI/igniteui-angular/issues/7981)
+6. **[DONE]** Tabs component does not support RTL [#5904](https://github.com/IgniteUI/igniteui-angular/issues/5904)
+7. **[DONE]** Column moving feature on grid level [#10176](https://github.com/IgniteUI/igniteui-angular/issues/10176)
 
 ## Milestone 19 (Released November 23rd, 2021)
 

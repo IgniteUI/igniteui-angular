@@ -6,9 +6,8 @@ $typeface: $material-typeface;
 $type-scale: $material-type-scale;
 
 $direction: ltr;
-
-$igx-background-color: igx-contrast-color($palette, 'grays', 900);
-$igx-foreground-color: igx-color($palette, 'grays', 900);
+$background-color: contrast-color($palette, 'grays', 900);
+$foreground-color: color($palette, 'grays', 900);
 
 $default-palette: $palette;
 

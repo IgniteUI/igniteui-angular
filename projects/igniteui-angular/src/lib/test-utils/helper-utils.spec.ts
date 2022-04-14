@@ -1,7 +1,7 @@
 import { EventEmitter, NgZone, Injectable } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
-import { IgxGridBaseDirective } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/public_api';
+import { GridType } from '../grids/common/grid.interface';
 
 export const resizeObserverIgnoreError = () => {
     jasmine.getEnv().allowRespy(true);
@@ -14,7 +14,7 @@ export const resizeObserverIgnoreError = () => {
     return spy;
 };
 
-export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: IgxGridBaseDirective) => {
+export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: GridType) => {
     grid.verticalScrollContainer.chunkLoad.subscribe(() => fixture.detectChanges());
     grid.parentVirtDir.chunkLoad.subscribe(() => fixture.detectChanges());
 };
@@ -22,7 +22,7 @@ export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: I
 export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) => {
     setupGridScrollDetection(fixture, hierarchicalGrid);
 
-    const existingChildren = hierarchicalGrid.hgridAPI.getChildGrids(true);
+    const existingChildren = hierarchicalGrid.gridAPI.getChildGrids(true);
     existingChildren.forEach(child => setupGridScrollDetection(fixture, child));
 
     const layouts = hierarchicalGrid.allLayoutList.toArray();

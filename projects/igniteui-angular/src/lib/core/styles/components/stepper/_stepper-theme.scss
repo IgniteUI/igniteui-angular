@@ -90,10 +90,10 @@
 /// @include igx-stepper($my-stepper-theme);
 ///
 /// @example scss Set custom steppet colors
-///   $my-stepper-theme: igx-stepper-theme($step-hover-background: red);
-///   // Pass the theme to the igx-stepper component mixin
-///   @include igx-stepper($my-stepper-theme);
-@function igx-stepper-theme(
+///   $my-stepper-theme: stepper-theme($step-hover-background: red);
+///   // Pass the theme to the stepper component mixin
+///   @include stepper($my-stepper-theme);
+@function stepper-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -194,14 +194,6 @@
     }
 
     $theme: apply-palette($stepper-schema, $palette);
-
-    $border-radius-indicator: round-borders(
-        if($border-radius-indicator, $border-radius-indicator, map.get($stepper-schema, 'border-radius-indicator')), 0, 100px
-    );
-
-    $border-radius-step-header: round-borders(
-        if($border-radius-step-header, $border-radius-step-header, map.get($stepper-schema, 'border-radius-step-header')), 0, 100px
-    );
 
     @if not($indicator-background) and $step-background {
         $indicator-background: text-contrast($step-background);
@@ -328,11 +320,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
-@mixin igx-stepper($theme) {
-    @include igx-css-vars($theme);
+@mixin stepper($theme) {
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
 
@@ -506,7 +498,7 @@
         gap: $title-gap;
         cursor: pointer;
         background: var-get($theme, 'step-background');
-        border-radius: var-get($theme, 'border-radius-step-header');
+        border-radius: border-radius(var-get($theme, 'border-radius-step-header'));
 
         &:hover {
             background: var-get($theme, 'step-hover-background');
@@ -529,7 +521,7 @@
         height: $indicator-size;
         width: $indicator-size;
         white-space: nowrap;
-        border-radius: var-get($theme, 'border-radius-indicator');
+        border-radius: border-radius(var-get($theme, 'border-radius-indicator'));
         color: var-get($theme, 'indicator-color');
         background: var-get($theme, 'indicator-background');
         box-shadow: 0 0 0 $outline-width var-get($theme, 'indicator-outline');
@@ -966,8 +958,8 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(title: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-stepper-typography(
+/// @requires {mixin} type-style
+@mixin stepper-typography(
     $type-scale,
     $categories: (
         title: 'body-2',
@@ -978,14 +970,14 @@
     $subtitle: map.get($categories, 'subtitle');
 
     %igx-stepper__step-title {
-        @include igx-type-style($type-scale, $title) {
+        @include type-style($type-scale, $title) {
             margin-top: 0;
             margin-bottom: 0;
         }
     }
 
     %igx-stepper__step-subtitle {
-        @include igx-type-style($type-scale, $subtitle) {
+        @include type-style($type-scale, $subtitle) {
             margin-top: 0;
             margin-bottom: 0;
         }
@@ -997,4 +989,3 @@
         }
     }
 }
-

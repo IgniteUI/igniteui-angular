@@ -21,7 +21,7 @@ import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { TransactionType } from '../services/transaction/transaction';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxAddRow, IgxEditRow } from './common/crud.service';
-import { ColumnType, GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { CellType, ColumnType, GridType, IGX_GRID_BASE } from './common/grid.interface';
 import mergeWith from 'lodash.mergewith';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -176,7 +176,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public checkboxElement: IgxCheckboxComponent;
 
     @ViewChildren('cell')
-    protected _cells: QueryList<any>;
+    protected _cells: QueryList<CellType>;
 
     /**
      * Gets the rendered cells in the row component.
@@ -187,7 +187,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * ```
      */
     public get cells() {
-        const res = new QueryList<any>();
+        const res = new QueryList<CellType>();
         if (!this._cells) {
             return res;
         }
@@ -409,11 +409,19 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public ngAfterViewInit() {
         // If the template of the row changes, the forOf in it is recreated and is not detected by the grid and rows can't be scrolled.
         this._virtDirRow.changes.pipe(takeUntil(this.destroy$)).subscribe(() => this.grid.resetHorizontalVirtualization());
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();

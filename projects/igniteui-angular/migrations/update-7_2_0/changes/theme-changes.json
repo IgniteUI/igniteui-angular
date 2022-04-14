@@ -1,0 +1,34 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [{
+            "name": "$search-shadow-color",
+            "replaceWith": "$search-resting-shadow",
+            "owner": "igx-input-group-theme",
+            "type": "property"
+        },
+        {
+            "name": "$search-disabled-shadow-color",
+            "replaceWith": "$search-disabled-shadow",
+            "owner": "igx-input-group-theme",
+            "type": "property"
+        },
+        {
+            "name": "$button-roundness",
+            "replaceWith": "$raised-border-radius",
+            "owner": "igx-button-theme",
+            "type": "property"
+        },
+        {
+            "name": "$roundness",
+            "replaceWith": "$border-radius",
+            "owner": "igx-chip-theme",
+            "type": "property"
+        },
+        {
+            "name": "$roundness",
+            "replaceWith": "$border-radius",
+            "owner": "igx-tooltip-theme",
+            "type": "property"
+        }
+    ]
+}

@@ -36,6 +36,7 @@
 @use './pagination' as *;
 @use './grid-summary' as *;
 @use './grid-toolbar' as *;
+@use './pivot-data-selector' as *;
 @use './highlight' as *;
 @use './icon' as *;
 @use './input-group' as *;
@@ -99,6 +100,7 @@
 /// @property {Map} funnel-chart [$dark-funnel-chart]
 /// @property {Map} igx-grid-summary [$dark-grid-summary]
 /// @property {Map} igx-grid-toolbar [$dark-grid-toolbar]
+/// @property {Map} igx-pivot-data-selector [$dark-pivot-data-selector]
 /// @property {Map} igx-highlight [$dark-highlight]
 /// @property {Map} igx-icon [$dark-icon]
 /// @property {Map} igx-input-group [$dark-input-group]
@@ -159,6 +161,7 @@ $dark-schema: (
     igx-paginator: $dark-pagination,
     igx-grid-summary: $dark-grid-summary,
     igx-grid-toolbar: $dark-grid-toolbar,
+    igx-pivot-data-selector: $dark-pivot-data-selector,
     igx-highlight: $dark-highlight,
     igx-icon: $dark-icon,
     igx-input-group: $dark-input-group,
@@ -229,6 +232,7 @@ $dark-material-schema: $dark-schema;
 /// @property {Map} funnel-chart [$dark-fluent-funnel-chart],
 /// @property {Map} igx-grid-summary [$dark-fluent-grid-summary],
 /// @property {Map} igx-grid-toolbar [$dark-fluent-grid-toolbar],
+/// @property {Map} igx-pivot-data-selector [$dark-fluent-pivot-data-selector]
 /// @property {Map} igx-highlight [$dark-fluent-highlight],
 /// @property {Map} igx-icon [$dark-fluent-icon],
 /// @property {Map} igx-input-group [$dark-fluent-input-group],
@@ -289,6 +293,7 @@ $dark-fluent-schema: (
     funnel-chart: $dark-fluent-funnel-chart,
     igx-grid-summary: $dark-fluent-grid-summary,
     igx-grid-toolbar: $dark-fluent-grid-toolbar,
+    igx-pivot-data-selector: $dark-fluent-pivot-data-selector,
     igx-highlight: $dark-fluent-highlight,
     igx-icon: $dark-fluent-icon,
     igx-input-group: $dark-fluent-input-group,
@@ -354,6 +359,7 @@ $dark-fluent-schema: (
 /// @property {Map} funnel-chart [$dark-bootstrap-funnel-chart],
 /// @property {Map} igx-grid-summary [$dark-bootstrap-grid-summary],
 /// @property {Map} igx-grid-toolbar [$dark-bootstrap-grid-toolbar],
+/// @property {Map} igx-pivot-data-selector [$dark-bootstrap-pivot-data-selector]
 /// @property {Map} igx-highlight [$dark-bootstrap-highlight],
 /// @property {Map} igx-icon [$dark-bootstrap-icon],
 /// @property {Map} igx-input-group [$dark-bootstrap-input-group],
@@ -414,6 +420,7 @@ $dark-bootstrap-schema: (
     funnel-chart: $dark-bootstrap-funnel-chart,
     igx-grid-summary: $dark-bootstrap-grid-summary,
     igx-grid-toolbar: $dark-bootstrap-grid-toolbar,
+    igx-pivot-data-selector: $dark-bootstrap-pivot-data-selector,
     igx-highlight: $dark-bootstrap-highlight,
     igx-icon: $dark-bootstrap-icon,
     igx-input-group: $dark-bootstrap-input-group,
@@ -479,6 +486,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} funnel-chart [$dark-indigo-funnel-chart]
 /// @property {Map} igx-grid-summary [$dark-indigo-grid-summary]
 /// @property {Map} igx-grid-toolbar [$dark-indigo-grid-toolbar]
+/// @property {Map} igx-pivot-data-selector [$dark-indigo-pivot-data-selector]
 /// @property {Map} igx-highlight [$dark-indigo-highlight]
 /// @property {Map} igx-icon [$dark-indigo-icon]
 /// @property {Map} igx-input-group [$dark-indigo-input-group]
@@ -539,6 +547,7 @@ $dark-indigo-schema: (
     funnel-chart: $dark-indigo-funnel-chart,
     igx-grid-summary: $dark-indigo-grid-summary,
     igx-grid-toolbar: $dark-indigo-grid-toolbar,
+    igx-pivot-data-selector: $dark-indigo-pivot-data-selector,
     igx-highlight: $dark-indigo-highlight,
     igx-icon: $dark-indigo-icon,
     igx-input-group: $dark-indigo-input-group,

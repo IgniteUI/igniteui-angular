@@ -36,6 +36,7 @@
 @use './pagination' as *;
 @use './grid-summary' as *;
 @use './grid-toolbar' as *;
+@use './pivot-data-selector' as *;
 @use './highlight' as *;
 @use './icon' as *;
 @use './input-group' as *;
@@ -99,6 +100,7 @@
 /// @property {Map} igx-paginator [$light-pagination]
 /// @property {Map} igx-grid-summary [$light-grid-summary]
 /// @property {Map} igx-grid-toolbar [$light-grid-toolbar]
+/// @property {Map} igx-pivot-data-selector [$light-pivot-data-selector]
 /// @property {Map} igx-highlight [$light-highlight]
 /// @property {Map} igx-icon [$light-icon]
 /// @property {Map} igx-input-group [$light-input-group]
@@ -159,6 +161,7 @@ $light-schema: (
     igx-paginator: $light-pagination,
     igx-grid-summary: $light-grid-summary,
     igx-grid-toolbar: $light-grid-toolbar,
+    igx-pivot-data-selector: $light-pivot-data-selector,
     igx-highlight: $light-highlight,
     igx-icon: $light-icon,
     igx-input-group: $light-input-group,
@@ -230,6 +233,7 @@ $light-fluent-schema: (
     igx-paginator: $fluent-pagination,
     igx-grid-summary: $fluent-grid-summary,
     igx-grid-toolbar: $fluent-grid-toolbar,
+    igx-pivot-data-selector: $fluent-pivot-data-selector,
     igx-highlight: $fluent-highlight,
     igx-icon: $fluent-icon,
     igx-input-group: $fluent-input-group,
@@ -296,6 +300,7 @@ $light-bootstrap-schema: (
     igx-paginator: $bootstrap-pagination,
     igx-grid-summary: $bootstrap-grid-summary,
     igx-grid-toolbar: $bootstrap-grid-toolbar,
+    igx-pivot-data-selector: $bootstrap-pivot-data-selector,
     igx-highlight: $bootstrap-highlight,
     igx-icon: $bootstrap-icon,
     igx-input-group: $bootstrap-input-group,
@@ -362,6 +367,7 @@ $light-indigo-schema: (
     igx-paginator: $indigo-pagination,
     igx-grid-summary: $indigo-grid-summary,
     igx-grid-toolbar: $indigo-grid-toolbar,
+    igx-pivot-data-selector: $indigo-pivot-data-selector,
     igx-highlight: $indigo-highlight,
     igx-icon: $indigo-icon,
     igx-input-group: $indigo-input-group,

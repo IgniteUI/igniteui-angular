@@ -1090,17 +1090,18 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
         });
 
-        it('Moving: Verify that when move a column, it stays selected', () => {
+        it('Moving: Verify that when move a column, it stays selected', fakeAsync(() => {
             colProductID.selected = true;
             fix.detectChanges();
 
             grid.moveColumn(colProductID, colProductName);
+            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
             expect(colProductID.visibleIndex).toEqual(1);
-        });
+        }));
 
         it('Paging: Verify column stays selected when change page', fakeAsync(() => {
             colProductName.selected = true;

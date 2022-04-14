@@ -56,7 +56,7 @@
 ///   $my-chip-theme: igx-chip-theme($background: black);
 ///   // Pass the theme to the igx-chip component mixin
 ///   @include igx-chip($my-chip-theme);
-@function igx-chip-theme(
+@function chip-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -104,10 +104,6 @@
     }
 
     $theme: apply-palette($chip-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($chip-schema, 'border-radius')), 0, 16px
-    );
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -199,7 +195,7 @@
 
     @if not($ghost-shadow) {
         $ghost-elevation: map.get($chip-schema, 'ghost-elevation');
-        $ghost-shadow: igx-elevation($elevations, $ghost-elevation);
+        $ghost-shadow: elevation($elevations, $ghost-elevation);
     }
 
     @return extend($theme, (
@@ -242,11 +238,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-chip($theme) {
-    @include igx-css-vars($theme);
+@mixin chip($theme) {
+    @include css-vars($theme);
 
     $transition: all 120ms $ease-in-out-quad;
     $chip-max-width: 32ch;
@@ -520,7 +516,7 @@
         border-width: 1px;
         border-style: solid;
         border-color: var-get($theme, 'border-color');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         user-select: none;
         overflow: hidden;
         cursor: pointer;
@@ -627,15 +623,15 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-chip-typography(
+/// @requires {mixin} type-style
+@mixin chip-typography(
     $type-scale,
     $categories: (text: 'body-2'))
 {
     $text: map.get($categories, 'text');
 
     %igx-chip {
-        @include igx-type-style($type-scale, $text) {
+        @include type-style($type-scale, $text) {
             font-weight: 600;
         }
     }
@@ -643,7 +639,7 @@
     %igx-chip--compact,
     %igx-chip__ghost--compact {
         %igx-chip__content {
-            @include igx-type-style($type-scale, $text) {
+            @include type-style($type-scale, $text) {
                 font-size: 12px;
                 font-weight: 600;
             }

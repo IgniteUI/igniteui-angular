@@ -18,10 +18,10 @@
 /// @requires extend
 ///
 /// @example scss Change the color of the divider
-///   $my-divider-theme: igx-divider-theme($color: orange);
+///   $my-divider-theme: divider-theme($color: orange);
 ///   // Pass the theme to the igx-divider component mixin
-///   @include igx-divider($my-divider-theme);
-@function igx-divider-theme(
+///   @include divider($my-divider-theme);
+@function divider-theme(
     $palette: null,
     $schema: $light-schema,
     $color: null
@@ -46,11 +46,11 @@
 
 ///
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires var-get
 ///
-@mixin igx-divider($theme) {
-    @include igx-css-vars($theme);
+@mixin divider($theme) {
+    @include css-vars($theme);
 
     %igx-divider-display {
         display: block;

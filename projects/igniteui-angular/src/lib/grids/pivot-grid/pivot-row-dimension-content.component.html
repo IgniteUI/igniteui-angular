@@ -2,26 +2,26 @@
     [class.igx-grid__tr--mrl]="hasMRL">
     <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="width">
             <igx-pivot-row-dimension-header-group [ngClass]="rowDimensionColumn.headerGroupClasses"
-                [ngStyle]="rowDimensionColumn.headerGroupStyles |igxHeaderGroupStyle:rowDimensionColumn:grid.pipeTrigger" [column]="rowDimensionColumn"
-                [style.min-width]="grid.resolveRowDimensionWidth(dimension) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                [style.flex-basis]="grid.resolveRowDimensionWidth(dimension) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [ngStyle]="rowDimensionColumn.headerGroupStyles | igxHeaderGroupStyle:rowDimensionColumn:grid.pipeTrigger" [column]="rowDimensionColumn"
+                [style.min-width]="grid.rowDimensionWidthToPixels(rootDimension) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.flex-basis]="grid.rowDimensionWidthToPixels(rootDimension) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [rowIndex]="rowIndex"
-                [style.height.px]='headerHeight' [parent]='this'>
+                [parent]='this'>
             </igx-pivot-row-dimension-header-group>
     </div>
 </div>
 
 <ng-template #headerTemplate let-column>
-    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel(column)}}'>
-        <igx-icon [attr.draggable]=" false" (click)="toggleRowDimension($event, column)">
-            {{ getExpandState(column) ? 'expand_more' : 'chevron_right'}}</igx-icon>
+    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel()}}'>
+        <igx-icon [attr.draggable]=" false" (click)="toggleRowDimension($event)">
+            {{ getExpandState() ? 'expand_more' : 'chevron_right'}}</igx-icon>
         {{column.header}}
     </div>
 </ng-template>
 
 <ng-template #headerDefaultTemplate let-column>
 
-    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel(column)}}'>
+    <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel()}}'>
         <igx-icon style='flex-shrink: 0;' [attr.draggable]=" false">
         </igx-icon>
         {{column.header}}

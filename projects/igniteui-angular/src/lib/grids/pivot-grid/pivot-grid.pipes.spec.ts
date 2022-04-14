@@ -1,10 +1,9 @@
 import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxNumberSummaryOperand } from '../summaries/grid-summary';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
-import { IgxPivotNumericAggregate } from './pivot-grid-aggregate';
+import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotConfiguration } from './pivot-grid.interface';
-import { IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
+import { IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
 import { DATA } from 'src/app/shared/pivot-data';
 
@@ -12,6 +11,7 @@ describe('Pivot pipes #pivotGrid', () => {
     let rowPipe: IgxPivotRowPipe;
     let rowStatePipe: IgxPivotRowExpansionPipe;
     let columnPipe: IgxPivotColumnPipe;
+    let autoTransformPipe: IgxPivotAutoTransform;
     let expansionStates: Map<any, boolean>;
     let data: any[];
     let pivotConfig: IPivotConfiguration;
@@ -69,28 +69,28 @@ describe('Pivot pipes #pivotGrid', () => {
         rowPipe = new IgxPivotRowPipe();
         rowStatePipe = new IgxPivotRowExpansionPipe();
         columnPipe = new IgxPivotColumnPipe();
+        autoTransformPipe = new IgxPivotAutoTransform();
     });
 
     it('transforms flat data to pivot data', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-        expect(rowStatePipeResult).toEqual([
-            { All: 2127, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, AllCategory: 'All', AllCategory_level: 0 },
-            { ProductCategory: 'Clothing', All: 1526, 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456, ProductCategory_level: 1 },
-            {
-                ProductCategory: 'Bikes', All: 68, 'All-Uruguay': 68, ProductCategory_level: 1, UnitPrice: 3.56, SellerName: 'Lydia', Country: 'Uruguay',
-                Date: '01/06/2020', UnitsSold: 68
-            },
-            {
-                ProductCategory: 'Accessories', All: 293, 'All-USA': 293, ProductCategory_level: 1, UnitPrice: 85.58, SellerName: 'David', Country: 'USA',
-                Date: '04/07/2021', UnitsSold: 293
-            },
-            {
-                ProductCategory: 'Components', All: 240, 'All-USA': 240, ProductCategory_level: 1, UnitPrice: 18.13, SellerName: 'John', Country: 'USA',
-                Date: '12/08/2021', UnitsSold: 240
-            }
-        ]);
+        const dimensionValues = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        expect(dimensionValues).toEqual([
+            { 'AllCategory': 'All' },
+            { 'ProductCategory': 'Clothing' },
+            { 'ProductCategory': 'Bikes' },
+            { 'ProductCategory': 'Accessories' },
+            { 'ProductCategory': 'Components' }]);
+
+        const aggregations = PivotGridFunctions.getAggregationValues(rowStatePipeResult);
+        expect(aggregations).toEqual([
+            { 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, 'All': 2127 },
+            { 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456, 'All': 1526 },
+            { 'All-Uruguay': 68, 'All': 68 },
+            { 'All-USA': 293, 'All': 293 },
+            { 'All-USA': 240, 'All': 240 }]);
     });
 
     it('transforms flat data to pivot data single row dimension and no children are defined', () => {
@@ -99,94 +99,15 @@ describe('Pivot pipes #pivotGrid', () => {
             enabled: true
         }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
-        expect(rowPipeResult).toEqual([
-            {
-                ProductCategory: 'Clothing', records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
-                        Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
-                        Country: 'USA', Date: '01/05/2019', UnitsSold: 296
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
-                        Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
-                    }],
-                ProductCategory_records: [
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
-                        Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
-                        Country: 'USA', Date: '01/05/2019', UnitsSold: 296
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
-                        Country: 'Uruguay', Date: '05/12/2020', UnitsSold: 456
-                    },
-                    {
-                        ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
-                        Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
-                    }
-                ], level: 0
-            },
-            {
-                ProductCategory: 'Bikes', records: [
-                    {
-                        ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
-                        Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68
-                    }
-                ], ProductCategory_records: [
-                    {
-                        ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
-                        Country: 'Uruguay', Date: '01/06/2020', UnitsSold: 68
-                    }
-                ], level: 0
-            },
-            {
-                ProductCategory: 'Accessories', records: [
-                    {
-                        ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
-                        Country: 'USA', Date: '04/07/2021', UnitsSold: 293
-                    }
-                ], ProductCategory_records: [
-                    {
-                        ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
-                        Country: 'USA', Date: '04/07/2021', UnitsSold: 293
-                    }
-                ], level: 0
-            },
-            {
-                ProductCategory: 'Components', records: [
-                    {
-                        ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
-                        Country: 'USA', Date: '12/08/2021', UnitsSold: 240
-                    }
-                ], ProductCategory_records: [
-                    {
-                        ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
-                        Country: 'USA', Date: '12/08/2021', UnitsSold: 240
-                    }
-                ], level: 0
-            }]);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-        expect(rowStatePipeResult).toEqual([
-            {
-                ProductCategory: 'Clothing', All: 1526, 'All-Bulgaria': 774, 'All-USA': 296,
-                'All-Uruguay': 456, ProductCategory_level: 0
-            },
-            { ProductCategory: 'Bikes', All: 68, 'All-Uruguay': 68, ProductCategory_level: 0 },
-            { ProductCategory: 'Accessories', All: 293, 'All-USA': 293, ProductCategory_level: 0 },
-            { ProductCategory: 'Components', All: 240, 'All-USA': 240, ProductCategory_level: 0 }
-        ]);
+
+        const dimensionValues = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        expect(dimensionValues).toEqual([
+            { 'ProductCategory': 'Clothing' },
+            { 'ProductCategory': 'Bikes' },
+            { 'ProductCategory': 'Accessories' },
+            { 'ProductCategory': 'Components' }]);
     });
 
     it('allows setting expand/collapse state.', () => {
@@ -195,34 +116,20 @@ describe('Pivot pipes #pivotGrid', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expanded);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
         const rowPipeCollapseResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expanded, true);
-        expect(rowPipeCollapseResult).toEqual([
-            {
-                AllCategory: 'All',
-                AllCategory_level: 0,
-                All: 2127,
-                'All-Bulgaria': 774,
-                'All-USA': 829,
-                'All-Uruguay': 524
-            }
+        let dimensionValues = PivotGridFunctions.getDimensionValues(rowPipeCollapseResult);
+        expect(dimensionValues).toEqual([
+            { 'AllCategory': 'All' }
         ]);
 
         expanded.set('All', true);
         const rowPipeExpandResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expanded, true);
-        expect(rowPipeExpandResult).toEqual([
-            { AllCategory: 'All', All: 2127, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, AllCategory_level: 0 },
-            { ProductCategory: 'Clothing', All: 1526, 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456, ProductCategory_level: 1 },
-            {
-                ProductCategory: 'Bikes', All: 68, 'All-Uruguay': 68, ProductCategory_level: 1, UnitPrice: 3.56, SellerName: 'Lydia', Country: 'Uruguay',
-                Date: '01/06/2020', UnitsSold: 68
-            },
-            {
-                ProductCategory: 'Accessories', All: 293, 'All-USA': 293, ProductCategory_level: 1, UnitPrice: 85.58, SellerName: 'David', Country: 'USA',
-                Date: '04/07/2021', UnitsSold: 293
-            },
-            {
-                ProductCategory: 'Components', All: 240, 'All-USA': 240, ProductCategory_level: 1, UnitPrice: 18.13, SellerName: 'John', Country: 'USA',
-                Date: '12/08/2021', UnitsSold: 240
-            }]);
+        dimensionValues = PivotGridFunctions.getDimensionValues(rowPipeExpandResult);
+        expect(dimensionValues).toEqual([
+            { 'AllCategory': 'All' },
+            { 'ProductCategory': 'Clothing' },
+            { 'ProductCategory': 'Bikes' },
+            { 'ProductCategory': 'Accessories' },
+            { 'ProductCategory': 'Components' }]);
     });
 
     it('transforms flat data to pivot data multiple row dimensions', () => {
@@ -239,14 +146,18 @@ describe('Pivot pipes #pivotGrid', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-        expect(rowStatePipeResult).toEqual([
-            { Date: '01/01/2021', ProductCategory: 'Clothing', All: 282, 'All-Bulgaria': 282, ProductCategory_level: 0, Date_level: 0 },
-            { Date: '01/05/2019', ProductCategory: 'Clothing', All: 296, 'All-USA': 296, ProductCategory_level: 0, Date_level: 0 },
-            { Date: '05/12/2020', ProductCategory: 'Clothing', All: 456, 'All-Uruguay': 456, ProductCategory_level: 0, Date_level: 0 },
-            { Date: '02/19/2020', ProductCategory: 'Clothing', All: 492, 'All-Bulgaria': 492, ProductCategory_level: 0, Date_level: 0 },
-            { Date: '01/06/2020', ProductCategory: 'Bikes', All: 68, 'All-Uruguay': 68, ProductCategory_level: 0, Date_level: 0 },
-            { Date: '04/07/2021', ProductCategory: 'Accessories', All: 293, 'All-USA': 293, ProductCategory_level: 0, Date_level: 0 },
-            { Date: '12/08/2021', ProductCategory: 'Components', All: 240, 'All-USA': 240, ProductCategory_level: 0, Date_level: 0 }]);
+        const dimensionValues = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        expect(dimensionValues).toEqual(
+            [
+                { 'ProductCategory': 'Clothing', 'Date': '01/01/2021' },
+                { 'ProductCategory': 'Clothing', 'Date': '01/05/2019' },
+                { 'ProductCategory': 'Clothing', 'Date': '05/12/2020' },
+                { 'ProductCategory': 'Clothing', 'Date': '02/19/2020', },
+                { 'ProductCategory': 'Bikes', 'Date': '01/06/2020' },
+                { 'ProductCategory': 'Accessories', 'Date': '04/07/2021' },
+                { 'ProductCategory': 'Components', 'Date': '12/08/2021' }
+            ]
+        );
     });
 
     it('transforms flat data to pivot data with multiple nested row dimensions', () => {
@@ -271,87 +182,27 @@ describe('Pivot pipes #pivotGrid', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-        expect(rowStatePipeResult).toEqual([
-            {
-                'AllDate': 'AllDate', 'AllProd': 'AllProd', 'All': 2127, 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524, 'AllProd_level': 0,
-                'AllDate_level': 0
-            },
-            {
-                'Date': '01/01/2021', 'ProductCategory': 'Clothing', 'UnitPrice': 12.81, 'SellerName': 'Stanley', 'Country': 'Bulgaria',
-                'UnitsSold': 282, 'AllProd': 'AllProd', 'All': 282, 'All-Bulgaria': 282, 'Date_level': 1, 'AllProd_level': 0
-            },
-            {
-                'Date': '01/05/2019', 'ProductCategory': 'Clothing', 'UnitPrice': 49.57, 'SellerName': 'Elisa', 'Country': 'USA',
-                'UnitsSold': 296, 'AllProd': 'AllProd', 'All': 296, 'All-USA': 296, 'Date_level': 1, 'AllProd_level': 0
-            },
-            {
-                'Date': '05/12/2020', 'ProductCategory': 'Clothing', 'UnitPrice': 68.33, 'SellerName': 'Larry', 'Country': 'Uruguay',
-                'UnitsSold': 456, 'AllProd': 'AllProd', 'All': 456, 'All-Uruguay': 456, 'Date_level': 1, 'AllProd_level': 0
-            },
-            {
-                'Date': '02/19/2020', 'ProductCategory': 'Clothing', 'UnitPrice': 16.05, 'SellerName': 'Walter', 'Country': 'Bulgaria',
-                'UnitsSold': 492, 'AllProd': 'AllProd', 'All': 492, 'All-Bulgaria': 492, 'Date_level': 1, 'AllProd_level': 0
-            },
-            {
-                'Date': '01/06/2020', 'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia', 'Country': 'Uruguay',
-                'UnitsSold': 68, 'AllProd': 'AllProd', 'All': 68, 'All-Uruguay': 68, 'Date_level': 1, 'AllProd_level': 0
-            },
-            {
-                'Date': '04/07/2021', 'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA',
-                'UnitsSold': 293, 'AllProd': 'AllProd', 'All': 293, 'All-USA': 293, 'Date_level': 1, 'AllProd_level': 0
-            },
-            {
-                'Date': '12/08/2021', 'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA',
-                'UnitsSold': 240, 'AllProd': 'AllProd', 'All': 240, 'All-USA': 240, 'Date_level': 1, 'AllProd_level': 0
-            },
-            {
-                'ProductCategory': 'Clothing', 'AllDate': 'AllDate', 'All': 1526, 'All-Bulgaria': 774, 'All-USA': 296,
-                'All-Uruguay': 456, 'ProductCategory_level': 1, 'AllDate_level': 0
-            },
-            {
-                'Date': '01/01/2021',
-                'ProductCategory': 'Clothing', 'UnitPrice': 12.81, 'SellerName': 'Stanley', 'Country': 'Bulgaria',
-                'UnitsSold': 282, 'All': 282, 'All-Bulgaria': 282, 'Date_level': 1, 'ProductCategory_level': 1
-            },
-            {
-                'Date': '01/05/2019', 'ProductCategory': 'Clothing', 'UnitPrice': 49.57, 'SellerName': 'Elisa',
-                'Country': 'USA', 'UnitsSold': 296, 'All': 296, 'All-USA': 296, 'Date_level': 1, 'ProductCategory_level': 1
-            },
-            {
-                'Date': '05/12/2020', 'ProductCategory': 'Clothing', 'UnitPrice': 68.33, 'SellerName': 'Larry', 'Country': 'Uruguay',
-                'UnitsSold': 456, 'All': 456, 'All-Uruguay': 456, 'Date_level': 1, 'ProductCategory_level': 1
-            },
-            {
-                'Date': '02/19/2020', 'ProductCategory': 'Clothing', 'UnitPrice': 16.05, 'SellerName': 'Walter',
-                'Country': 'Bulgaria', 'UnitsSold': 492, 'All': 492, 'All-Bulgaria': 492, 'Date_level': 1,
-                'ProductCategory_level': 1
-            }, {
-                'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia',
-                'Country': 'Uruguay', 'Date': '01/06/2020', 'UnitsSold': 68, 'AllDate': 'AllDate', 'All': 68,
-                'All-Uruguay': 68, 'ProductCategory_level': 1, 'AllDate_level': 0
-            },
-            {
-                'Date': '01/06/2020', 'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia',
-                'Country': 'Uruguay', 'UnitsSold': 68, 'All': 68, 'All-Uruguay': 68, 'Date_level': 1, 'ProductCategory_level': 1
-            },
-            {
-                'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA', 'Date': '04/07/2021', 'UnitsSold': 293,
-                'AllDate': 'AllDate', 'All': 293, 'All-USA': 293, 'ProductCategory_level': 1, 'AllDate_level': 0
-            },
-            {
-                'Date': '04/07/2021', 'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA', 'UnitsSold': 293,
-                'All': 293, 'All-USA': 293, 'Date_level': 1, 'ProductCategory_level': 1
-            },
-            {
-                'ProductCategory': 'Components', 'UnitPrice': 18.13,
-                'SellerName': 'John', 'Country': 'USA', 'Date': '12/08/2021', 'UnitsSold': 240, 'AllDate': 'AllDate', 'All': 240, 'All-USA': 240,
-                'ProductCategory_level': 1, 'AllDate_level': 0
-            },
-            {
-                'Date': '12/08/2021', 'ProductCategory': 'Components',
-                'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA', 'UnitsSold': 240, 'All': 240, 'All-USA': 240, 'Date_level': 1,
-                'ProductCategory_level': 1
-            }]);
+        const dimensionValues = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        expect(dimensionValues).toEqual([
+            { 'AllProd': 'AllProd', 'AllDate': 'AllDate' },
+            { 'AllProd': 'AllProd', 'Date': '01/01/2021' },
+            { 'AllProd': 'AllProd', 'Date': '01/05/2019' },
+            { 'AllProd': 'AllProd', 'Date': '05/12/2020' },
+            { 'AllProd': 'AllProd', 'Date': '02/19/2020', },
+            { 'AllProd': 'AllProd', 'Date': '01/06/2020' },
+            { 'AllProd': 'AllProd', 'Date': '04/07/2021' },
+            { 'AllProd': 'AllProd', 'Date': '12/08/2021' },
+            { 'ProductCategory': 'Clothing', 'AllDate': 'AllDate' },
+            { 'ProductCategory': 'Clothing', 'Date': '01/01/2021' },
+            { 'ProductCategory': 'Clothing', 'Date': '01/05/2019' },
+            { 'ProductCategory': 'Clothing', 'Date': '05/12/2020' },
+            { 'ProductCategory': 'Clothing', 'Date': '02/19/2020' },
+            { 'ProductCategory': 'Bikes', 'AllDate': 'AllDate', },
+            { 'ProductCategory': 'Bikes', 'Date': '01/06/2020' },
+            { 'ProductCategory': 'Accessories', 'AllDate': 'AllDate' },
+            { 'ProductCategory': 'Accessories', 'Date': '04/07/2021' },
+            { 'ProductCategory': 'Components', 'AllDate': 'AllDate' },
+            { 'ProductCategory': 'Components', 'Date': '12/08/2021' }]);
     });
 
     it('transforms flat data to pivot data 2 column dimensions', () => {
@@ -366,28 +217,21 @@ describe('Pivot pipes #pivotGrid', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
-        /* eslint-disable quote-props */
-        expect(rowStatePipeResult).toEqual([
-            {
-                'AllCategory': 'All', 'Bulgaria': 774, 'Bulgaria-01/01/2021': 282, 'Bulgaria-02/19/2020': 492, 'USA': 829, 'USA-01/05/2019': 296,
-                'USA-04/07/2021': 293, 'USA-12/08/2021': 240, 'Uruguay': 524, 'Uruguay-05/12/2020': 456, 'Uruguay-01/06/2020': 68, 'AllCategory_level': 0
-            },
-            {
-                'ProductCategory': 'Clothing', 'Bulgaria': 774, 'Bulgaria-01/01/2021': 282, 'Bulgaria-02/19/2020': 492, 'USA': 296, 'USA-01/05/2019': 296,
-                'Uruguay': 456, 'Uruguay-05/12/2020': 456, 'ProductCategory_level': 1
-            },
-            {
-                'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia', 'Country': 'Uruguay', 'Date': '01/06/2020', 'UnitsSold': 68, 'Uruguay': 68,
-                'Uruguay-01/06/2020': 68, 'ProductCategory_level': 1
-            },
-            {
-                'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA', 'Date': '04/07/2021', 'UnitsSold': 293,
-                'USA': 293, 'USA-04/07/2021': 293, 'ProductCategory_level': 1
-            },
-            {
-                'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA', 'Date': '12/08/2021', 'UnitsSold': 240,
-                'USA': 240, 'USA-12/08/2021': 240, 'ProductCategory_level': 1
-            }
+        const dimensionValues = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        expect(dimensionValues).toEqual([
+            { 'AllCategory': 'All' },
+            { 'ProductCategory': 'Clothing' },
+            { 'ProductCategory': 'Bikes' },
+            { 'ProductCategory': 'Accessories' },
+            { 'ProductCategory': 'Components' }]);
+        // for columns we need to check aggregations
+        const aggregations = PivotGridFunctions.getAggregationValues(rowStatePipeResult);
+        expect(aggregations).toEqual([
+            { 'Bulgaria-01/01/2021': 282, 'Bulgaria-02/19/2020': 492, 'Bulgaria': 774, 'USA-01/05/2019': 296, 'USA-04/07/2021': 293, 'USA-12/08/2021': 240, 'USA': 829, 'Uruguay-05/12/2020': 456, 'Uruguay-01/06/2020': 68, 'Uruguay': 524 },
+            { 'Bulgaria-01/01/2021': 282, 'Bulgaria-02/19/2020': 492, 'Bulgaria': 774, 'USA-01/05/2019': 296, 'USA': 296, 'Uruguay-05/12/2020': 456, 'Uruguay': 456 },
+            { 'Uruguay-01/06/2020': 68, 'Uruguay': 68 },
+            { 'USA-04/07/2021': 293, 'USA': 293 },
+            { 'USA-12/08/2021': 240, 'USA': 240 }
         ]);
     });
 
@@ -407,34 +251,13 @@ describe('Pivot pipes #pivotGrid', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, new Map<any, boolean>());
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         const rowStateResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
-        /* eslint-disable quote-props */
-        expect(rowStateResult).toEqual(
-            [
-                {
-                    'AllCategory': 'All', 'Bulgaria': 774, 'Bulgaria-Stanley': 282, 'Bulgaria-Stanley-01/01/2021': 282, 'Bulgaria-Walter': 492,
-                    'Bulgaria-Walter-02/19/2020': 492, 'USA': 829, 'USA-Elisa': 296, 'USA-Elisa-01/05/2019': 296, 'USA-David': 293,
-                    'USA-David-04/07/2021': 293, 'USA-John': 240, 'USA-John-12/08/2021': 240, 'Uruguay': 524, 'Uruguay-Larry': 456,
-                    'Uruguay-Larry-05/12/2020': 456, 'Uruguay-Lydia': 68, 'Uruguay-Lydia-01/06/2020': 68, 'AllCategory_level': 0
-                },
-                {
-                    'ProductCategory': 'Clothing', 'Bulgaria': 774, 'Bulgaria-Stanley': 282, 'Bulgaria-Stanley-01/01/2021': 282,
-                    'Bulgaria-Walter': 492, 'Bulgaria-Walter-02/19/2020': 492, 'USA': 296, 'USA-Elisa': 296, 'USA-Elisa-01/05/2019': 296,
-                    'Uruguay': 456, 'Uruguay-Larry': 456, 'Uruguay-Larry-05/12/2020': 456, 'ProductCategory_level': 1
-                },
-                {
-                    'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia', 'Country': 'Uruguay', 'Date': '01/06/2020',
-                    'UnitsSold': 68, 'Uruguay': 68, 'Uruguay-Lydia': 68, 'Uruguay-Lydia-01/06/2020': 68, 'ProductCategory_level': 1
-                },
-                {
-                    'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA', 'Date': '04/07/2021',
-                    'UnitsSold': 293, 'USA': 293, 'USA-David': 293, 'USA-David-04/07/2021': 293, 'ProductCategory_level': 1
-                },
-                {
-                    'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA', 'Date': '12/08/2021',
-                    'UnitsSold': 240, 'USA': 240, 'USA-John': 240, 'USA-John-12/08/2021': 240, 'ProductCategory_level': 1
-                }
-            ]
-        );
+        const aggregations = PivotGridFunctions.getAggregationValues(rowStateResult);
+        expect(aggregations).toEqual([
+            { 'Bulgaria-Stanley-01/01/2021': 282, 'Bulgaria-Stanley': 282, 'Bulgaria-Walter-02/19/2020': 492, 'Bulgaria-Walter': 492, 'Bulgaria': 774, 'USA-Elisa-01/05/2019': 296, 'USA-Elisa': 296, 'USA-David-04/07/2021': 293, 'USA-David': 293, 'USA-John-12/08/2021': 240, 'USA-John': 240, 'USA': 829, 'Uruguay-Larry-05/12/2020': 456, 'Uruguay-Larry': 456, 'Uruguay-Lydia-01/06/2020': 68, 'Uruguay-Lydia': 68, 'Uruguay': 524 },
+            { 'Bulgaria-Stanley-01/01/2021': 282, 'Bulgaria-Stanley': 282, 'Bulgaria-Walter-02/19/2020': 492, 'Bulgaria-Walter': 492, 'Bulgaria': 774, 'USA-Elisa-01/05/2019': 296, 'USA-Elisa': 296, 'USA': 296, 'Uruguay-Larry-05/12/2020': 456, 'Uruguay-Larry': 456, 'Uruguay': 456 },
+            { 'Uruguay-Lydia-01/06/2020': 68, 'Uruguay-Lydia': 68, 'Uruguay': 68 },
+            { 'USA-David-04/07/2021': 293, 'USA-David': 293, 'USA': 293 },
+            { 'USA-John-12/08/2021': 240, 'USA-John': 240, 'USA': 240 }]);
     });
 
     it('transforms flat data to pivot data 2 value dimensions', () => {
@@ -461,35 +284,44 @@ describe('Pivot pipes #pivotGrid', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
-        expect(rowStatePipeResult).toEqual(
-            [
-                {
-                    'AllCategory': 'All', 'All-UnitsSold': 2127, 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86, 'All-USA-UnitsSold': 829,
-                    'All-USA-UnitPrice': 153.28, 'All-Uruguay-UnitsSold': 524, 'All-Uruguay-UnitPrice': 71.89, 'All-UnitPrice': 254.02999999999997,
-                    'AllCategory_level': 0
-                },
-                {
-                    'ProductCategory': 'Clothing', 'All-UnitsSold': 1526, 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86,
-                    'All-USA-UnitsSold': 296, 'All-USA-UnitPrice': 49.57, 'All-Uruguay-UnitsSold': 456, 'All-Uruguay-UnitPrice': 68.33,
-                    'All-UnitPrice': 146.76, 'ProductCategory_level': 1
-                },
-                {
-                    'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia',
-                    'Country': 'Uruguay', 'Date': '01/06/2020', 'UnitsSold': 68, 'All-UnitsSold': 68, 'All-Uruguay-UnitsSold': 68,
-                    'All-Uruguay-UnitPrice': 3.56, 'All-UnitPrice': 3.56, 'ProductCategory_level': 1
-                },
-                {
-                    'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA', 'Date': '04/07/2021',
-                    'UnitsSold': 293, 'All-UnitsSold': 293, 'All-USA-UnitsSold': 293, 'All-USA-UnitPrice': 85.58, 'All-UnitPrice': 85.58,
-                    'ProductCategory_level': 1
-                },
-                {
-                    'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA', 'Date': '12/08/2021',
-                    'UnitsSold': 240, 'All-UnitsSold': 240, 'All-USA-UnitsSold': 240, 'All-USA-UnitPrice': 18.13, 'All-UnitPrice': 18.13,
-                    'ProductCategory_level': 1
-                }
-            ]
-        );
+        const aggregations = PivotGridFunctions.getAggregationValues(rowStatePipeResult);
+
+        expect(aggregations).toEqual([
+            { 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86, 'All-USA-UnitsSold': 829, 'All-USA-UnitPrice': 153.28, 'All-Uruguay-UnitsSold': 524, 'All-Uruguay-UnitPrice': 71.89, 'All-UnitsSold': 2127, 'All-UnitPrice': 254.02999999999997 },
+            { 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86, 'All-USA-UnitsSold': 296, 'All-USA-UnitPrice': 49.57, 'All-Uruguay-UnitsSold': 456, 'All-Uruguay-UnitPrice': 68.33, 'All-UnitsSold': 1526, 'All-UnitPrice': 146.76 },
+            { 'All-Uruguay-UnitsSold': 68, 'All-Uruguay-UnitPrice': 3.56, 'All-UnitsSold': 68, 'All-UnitPrice': 3.56 }, { 'All-USA-UnitsSold': 293, 'All-USA-UnitPrice': 85.58, 'All-UnitsSold': 293, 'All-UnitPrice': 85.58 },
+            { 'All-USA-UnitsSold': 240, 'All-USA-UnitPrice': 18.13, 'All-UnitsSold': 240, 'All-UnitPrice': 18.13 }]);
+    });
+
+    it('should return correct values for each pivot aggregation type', () => {
+        // check each aggregator has correct aggregations
+        expect(IgxPivotAggregate.aggregators().map(x => x.key)).toEqual(['COUNT']);
+        expect(IgxPivotNumericAggregate.aggregators().map(x => x.key)).toEqual(['COUNT', 'MIN', 'MAX', 'SUM', 'AVG']);
+        expect(IgxPivotDateAggregate.aggregators().map(x => x.key)).toEqual(['COUNT', 'LATEST', 'EARLIEST']);
+        expect(IgxPivotTimeAggregate.aggregators().map(x => x.key)).toEqual(['COUNT', 'LATEST', 'EARLIEST']);
+
+        // check aggregations are applied correctly
+        expect(IgxPivotAggregate.count([1, 2, 3])).toEqual(3);
+
+        expect(IgxPivotNumericAggregate.count([1, 2, 3])).toEqual(3);
+        expect(IgxPivotNumericAggregate.min([1, 2, 3])).toEqual(1);
+        expect(IgxPivotNumericAggregate.max([1, 2, 3])).toEqual(3);
+        expect(IgxPivotNumericAggregate.sum([1, 2, 3])).toEqual(6);
+        expect(IgxPivotNumericAggregate.average([1, 2, 3])).toEqual(2);
+
+        expect(IgxPivotDateAggregate.latest(['01/01/2021', '01/01/2022', '02/01/2021'])).toEqual('01/01/2022');
+        expect(IgxPivotDateAggregate.earliest(['01/01/2021', '01/01/2022', '02/01/2021'])).toEqual('01/01/2021');
+
+
+        expect(IgxPivotTimeAggregate.latestTime(['01/01/2021 8:00', '01/01/2021 1:00', '01/01/2021 22:00'])).toEqual(new Date('01/01/2021 22:00'));
+        expect(IgxPivotTimeAggregate.earliestTime(['01/01/2021 8:00', '01/01/2021 1:00', '01/01/2021 22:00'])).toEqual(new Date('01/01/2021 1:00'));
+
+        // check localization can be changed
+        IgxPivotTimeAggregate.resourceStrings = {
+            igx_grid_pivot_aggregate_time_earliest: 'Earliest Custom Time'
+        };
+
+        expect(IgxPivotTimeAggregate.aggregators().find(x => x.key === 'EARLIEST').label).toEqual('Earliest Custom Time');
     });
 
     it('allow setting NoopPivotDimensionsStrategy for rows/columns', () => {
@@ -509,23 +341,17 @@ describe('Pivot pipes #pivotGrid', () => {
 
         const rowPipeResult = rowPipe.transform(preprocessedData, pivotConfig, new Map<any, boolean>());
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
-        const rowStateResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
+        const autoTransformResult = autoTransformPipe.transform(columnPipeResult, pivotConfig);
+        const rowStateResult = rowStatePipe.transform(autoTransformResult, pivotConfig, new Map<any, boolean>(), true);
 
-        // same data but expanded
-        expect(rowStateResult).toEqual(
-            [
-                {
-                    'All': 2127, 'AllCategory': 'All', 'All-Bulgaria': 774, 'All-USA': 829,
-                    'All-Uruguay': 524, 'AllCategory_level': 0
-                },
-                {
-                    'ProductCategory': 'Clothing', 'All': 1526, 'All-Bulgaria': 774,
-                    'All-USA': 296, 'All-Uruguay': 456, 'ProductCategory_level': 1
-                },
-                { 'ProductCategory': 'Bikes', 'All': 68, 'All-Uruguay': 68, 'ProductCategory_level': 1 },
-                { 'ProductCategory': 'Accessories', 'All': 293, 'All-USA': 293, 'ProductCategory_level': 1 },
-                { 'ProductCategory': 'Components', 'All': 240, 'All-USA': 240, 'ProductCategory_level': 1 }]
-        );
+        // same data but expanded and transformed to IPivotRecord
+        const dimensionValues = PivotGridFunctions.getDimensionValues(rowStateResult);
+        expect(dimensionValues).toEqual([
+            { 'AllCategory': 'All' },
+            { 'ProductCategory': 'Clothing' },
+            { 'ProductCategory': 'Bikes' },
+            { 'ProductCategory': 'Accessories' },
+            { 'ProductCategory': 'Components' }]);
     });
 
     it('should generate correct levels when using predefined date dimension', () => {
@@ -572,190 +398,21 @@ describe('Pivot pipes #pivotGrid', () => {
         ];
 
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
-
-        expect(rowPipeResult[0]).toEqual(
-            {
-                'AllPeriods': 'All Periods', 'AllPeriods_records': [
-                    {
-                        'Years': '2021', 'records': [
-                            {
-                                'ProductCategory': 'Clothing', 'UnitPrice': 12.81, 'SellerName': 'Stanley', 'Country': 'Bulgaria', 'City': 'Sofia',
-                                'Date': '01/01/2021', 'UnitsSold': 282
-                            },
-                            {
-                                'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA', 'City': 'New York',
-                                'Date': '04/07/2021', 'UnitsSold': 293
-                            }, {
-                                'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John',
-                                'Country': 'USA', 'City': 'New York', 'Date': '12/08/2021', 'UnitsSold': 240
-                            }
-                        ], 'Years_records': [
-                            {
-                                'Date': '01/01/2021', 'records': [
-                                    {
-                                        'ProductCategory': 'Clothing', 'UnitPrice': 12.81, 'SellerName': 'Stanley', 'Country': 'Bulgaria', 'City': 'Sofia',
-                                        'Date': '01/01/2021', 'UnitsSold': 282
-                                    }], 'Date_records': [{
-                                        'ProductCategory': 'Clothing', 'UnitPrice': 12.81,
-                                        'SellerName': 'Stanley', 'Country': 'Bulgaria', 'City': 'Sofia', 'Date': '01/01/2021', 'UnitsSold': 282
-                                    }
-                                    ], 'level': 2, 'ProductCategory': 'Clothing', 'UnitPrice': 12.81, 'SellerName': 'Stanley',
-                                'Country': 'Bulgaria', 'City': 'Sofia', 'UnitsSold': 282
-                            },
-                            {
-                                'Date': '04/07/2021', 'records': [
-                                    {
-                                        'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA', 'City': 'New York',
-                                        'Date': '04/07/2021', 'UnitsSold': 293
-                                    }
-                                ], 'Date_records': [
-                                    {
-                                        'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA',
-                                        'City': 'New York', 'Date': '04/07/2021', 'UnitsSold': 293
-                                    }
-                                ], 'level': 2, 'ProductCategory': 'Accessories', 'UnitPrice': 85.58, 'SellerName': 'David', 'Country': 'USA',
-                                'City': 'New York', 'UnitsSold': 293
-                            },
-                            {
-                                'Date': '12/08/2021', 'records': [
-                                    {
-                                        'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA',
-                                        'City': 'New York', 'Date': '12/08/2021', 'UnitsSold': 240
-                                    }
-                                ], 'Date_records': [
-                                    {
-                                        'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA',
-                                        'City': 'New York', 'Date': '12/08/2021', 'UnitsSold': 240
-                                    }
-                                ], 'level': 2, 'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John', 'Country': 'USA',
-                                'City': 'New York', 'UnitsSold': 240
-                            }
-                        ], 'level': 1
-                    },
-                    {
-                        'Years': '2019', 'records': [
-                            {
-                                'ProductCategory': 'Clothing', 'UnitPrice': 49.57, 'SellerName': 'Elisa', 'Country': 'USA',
-                                'City': 'New York', 'Date': '01/05/2019', 'UnitsSold': 296
-                            }
-                        ], 'Years_records': [
-                            {
-                                'Date': '01/05/2019', 'records': [
-                                    {
-                                        'ProductCategory': 'Clothing', 'UnitPrice': 49.57, 'SellerName': 'Elisa',
-                                        'Country': 'USA', 'City': 'New York', 'Date': '01/05/2019', 'UnitsSold': 296
-                                    }
-                                ], 'Date_records': [{
-                                    'ProductCategory': 'Clothing', 'UnitPrice': 49.57, 'SellerName': 'Elisa',
-                                    'Country': 'USA', 'City': 'New York', 'Date': '01/05/2019', 'UnitsSold': 296
-                                }
-                                ], 'level': 2, 'ProductCategory': 'Clothing', 'UnitPrice': 49.57,
-                                'SellerName': 'Elisa', 'Country': 'USA', 'City': 'New York', 'UnitsSold': 296
-                            }
-                        ], 'level': 1, 'ProductCategory': 'Clothing', 'UnitPrice': 49.57, 'SellerName': 'Elisa',
-                        'Country': 'USA', 'City': 'New York', 'Date': '01/05/2019', 'UnitsSold': 296
-                    },
-                    {
-                        'Years': '2020', 'records': [
-                            {
-                                'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia',
-                                'Country': 'Uruguay', 'City': 'Ciudad de la Costa', 'Date': '01/06/2020',
-                                'UnitsSold': 68
-                            },
-                            {
-                                'ProductCategory': 'Clothing', 'UnitPrice': 68.33, 'SellerName': 'Larry',
-                                'Country': 'Uruguay', 'City': 'Ciudad de la Costa', 'Date': '05/12/2020',
-                                'UnitsSold': 456
-                            },
-                            {
-                                'ProductCategory': 'Clothing', 'UnitPrice': 16.05, 'SellerName': 'Walter',
-                                'Country': 'Bulgaria', 'City': 'Plovdiv', 'Date': '02/19/2020', 'UnitsSold': 492
-                            }
-                        ], 'Years_records': [{
-                            'Date': '01/06/2020', 'records': [
-                                {
-                                    'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia',
-                                    'Country': 'Uruguay', 'City': 'Ciudad de la Costa', 'Date': '01/06/2020',
-                                    'UnitsSold': 68
-                                }
-                            ], 'Date_records': [
-                                {
-                                    'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia',
-                                    'Country': 'Uruguay', 'City': 'Ciudad de la Costa', 'Date': '01/06/2020',
-                                    'UnitsSold': 68
-                                }
-                            ], 'level': 2, 'ProductCategory': 'Bikes', 'UnitPrice': 3.56,
-                            'SellerName': 'Lydia', 'Country': 'Uruguay', 'City': 'Ciudad de la Costa',
-                            'UnitsSold': 68
-                        },
-                        {
-                            'Date': '05/12/2020', 'records': [
-                                {
-                                    'ProductCategory': 'Clothing', 'UnitPrice': 68.33, 'SellerName': 'Larry',
-                                    'Country': 'Uruguay', 'City': 'Ciudad de la Costa', 'Date': '05/12/2020',
-                                    'UnitsSold': 456
-                                }
-                            ], 'Date_records': [
-                                {
-                                    'ProductCategory': 'Clothing', 'UnitPrice': 68.33, 'SellerName': 'Larry',
-                                    'Country': 'Uruguay', 'City': 'Ciudad de la Costa',
-                                    'Date': '05/12/2020', 'UnitsSold': 456
-                                }
-                            ], 'level': 2, 'ProductCategory': 'Clothing', 'UnitPrice': 68.33,
-                            'SellerName': 'Larry', 'Country': 'Uruguay', 'City': 'Ciudad de la Costa',
-                            'UnitsSold': 456
-                        },
-                        {
-                            'Date': '02/19/2020', 'records': [
-                                {
-                                    'ProductCategory': 'Clothing', 'UnitPrice': 16.05,
-                                    'SellerName': 'Walter', 'Country': 'Bulgaria', 'City': 'Plovdiv',
-                                    'Date': '02/19/2020', 'UnitsSold': 492
-                                }
-                            ], 'Date_records': [
-                                {
-                                    'ProductCategory': 'Clothing', 'UnitPrice': 16.05,
-                                    'SellerName': 'Walter', 'Country': 'Bulgaria', 'City': 'Plovdiv',
-                                    'Date': '02/19/2020', 'UnitsSold': 492
-                                }
-                            ], 'level': 2, 'ProductCategory': 'Clothing', 'UnitPrice': 16.05,
-                            'SellerName': 'Walter', 'Country': 'Bulgaria', 'City': 'Plovdiv',
-                            'UnitsSold': 492
-                        }
-                        ], 'level': 1
-                    }
-                ], 'level': 0, 'records': [
-                    {
-                        'ProductCategory': 'Clothing', 'UnitPrice': 12.81,
-                        'SellerName': 'Stanley', 'Country': 'Bulgaria', 'City': 'Sofia',
-                        'Date': '01/01/2021', 'UnitsSold': 282
-                    },
-                    {
-                        'ProductCategory': 'Accessories', 'UnitPrice': 85.58,
-                        'SellerName': 'David', 'Country': 'USA', 'City': 'New York',
-                        'Date': '04/07/2021', 'UnitsSold': 293
-                    },
-                    {
-                        'ProductCategory': 'Components', 'UnitPrice': 18.13, 'SellerName': 'John',
-                        'Country': 'USA', 'City': 'New York', 'Date': '12/08/2021', 'UnitsSold': 240
-                    },
-                    {
-                        'ProductCategory': 'Clothing', 'UnitPrice': 49.57, 'SellerName': 'Elisa', 'Country': 'USA', 'City': 'New York',
-                        'Date': '01/05/2019', 'UnitsSold': 296
-                    },
-                    {
-                        'ProductCategory': 'Bikes', 'UnitPrice': 3.56, 'SellerName': 'Lydia', 'Country': 'Uruguay',
-                        'City': 'Ciudad de la Costa', 'Date': '01/06/2020', 'UnitsSold': 68
-                    },
-                    {
-                        'ProductCategory': 'Clothing', 'UnitPrice': 68.33, 'SellerName': 'Larry', 'Country': 'Uruguay',
-                        'City': 'Ciudad de la Costa', 'Date': '05/12/2020', 'UnitsSold': 456
-                    },
-                    {
-                        'ProductCategory': 'Clothing', 'UnitPrice': 16.05, 'SellerName': 'Walter', 'Country': 'Bulgaria',
-                        'City': 'Plovdiv', 'Date': '02/19/2020', 'UnitsSold': 492
-                    }]
-            }
+        const rowStateResult = rowStatePipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>(), true);
+        const dimensionValues = PivotGridFunctions.getDimensionValues(rowStateResult);
+        expect(dimensionValues).toEqual(
+            [
+                { 'AllPeriods': 'All Periods' },
+                { 'Years': '2021' },
+                { 'Date': '01/01/2021' },
+                { 'Date': '04/07/2021' },
+                { 'Date': '12/08/2021' },
+                { 'Years': '2019' },
+                { 'Date': '01/05/2019' },
+                { 'Years': '2020' },
+                { 'Date': '01/06/2020' },
+                { 'Date': '05/12/2020' },
+                { 'Date': '02/19/2020' }]
         );
     });
 
@@ -818,7 +475,7 @@ describe('Pivot pipes #pivotGrid', () => {
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
 
-        const date_city_product = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const date_city_product = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         expect(rowStatePipeResult.length).toEqual(37);
         const allPeriodsRecords = date_city_product.filter(x => x['AllPeriods'] === 'All Periods');
         expect(allPeriodsRecords).toEqual([
@@ -851,7 +508,7 @@ describe('Pivot pipes #pivotGrid', () => {
         ]);
     });
     it('should generate correct row data with 2 dimensions with varying depth.', () => {
-        // one dimension with 4 depth and one with 1 depth 
+        // one dimension with 4 depth and one with 1 depth
         pivotConfig.rows = [
             new IgxPivotDateDimension(
                 {
@@ -873,7 +530,7 @@ describe('Pivot pipes #pivotGrid', () => {
         let rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toBe(24);
 
-        const date_product = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const date_product = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
 
         expect(date_product).toEqual(
             [
@@ -925,7 +582,7 @@ describe('Pivot pipes #pivotGrid', () => {
         columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toBe(24);
-        const product_date = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const product_date = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
 
         expect(product_date).toEqual(
             [
@@ -991,7 +648,7 @@ describe('Pivot pipes #pivotGrid', () => {
         let columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         let rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
 
-        const date_prod_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const date_prod_seller =  PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         expect(rowStatePipeResult.length).toBe(42);
 
         const allPeriodsRecords = date_prod_seller.filter(x => x['AllPeriods'] === 'All Periods');
@@ -1037,7 +694,7 @@ describe('Pivot pipes #pivotGrid', () => {
         columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
 
-        const prod_date_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const prod_date_seller = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         expect(rowStatePipeResult.length).toBe(42);
         const allProdsRecords = prod_date_seller.filter(x => x['AllProduct'] === 'All Products');
         expect(allProdsRecords).toEqual([
@@ -1089,7 +746,7 @@ describe('Pivot pipes #pivotGrid', () => {
         columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toBe(42);
-        const seller_prod_date = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const seller_prod_date =  PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         const stanleyRecords = seller_prod_date.filter(x => x['SellerName'] === 'Stanley');
         expect(stanleyRecords).toEqual([
             { SellerName: 'Stanley', AllProduct: 'All Products', AllPeriods: 'All Periods' },
@@ -1144,7 +801,7 @@ describe('Pivot pipes #pivotGrid', () => {
         let columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         let rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
 
-        const date_prod_country_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const date_prod_country_seller = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         expect(rowStatePipeResult.length).toBe(42);
         const allPeriodsData = date_prod_country_seller.filter(x => x['AllPeriods'] === 'All Periods');
         expect(allPeriodsData).toEqual([
@@ -1193,7 +850,7 @@ describe('Pivot pipes #pivotGrid', () => {
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toBe(42);
 
-        const country_prod_seller_date = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const country_prod_seller_date = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         const bgRecords = country_prod_seller_date.filter(x => x['Country'] === 'Bulgaria');
         expect(bgRecords).toEqual([
             { Country: 'Bulgaria', AllProduct: 'All Products', SellerName: 'Stanley', AllPeriods: 'All Periods' },
@@ -1223,7 +880,7 @@ describe('Pivot pipes #pivotGrid', () => {
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toBe(42);
 
-        const prod_country_date_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const prod_country_date_seller = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         const allProdsRecords = prod_country_date_seller.filter(x => x['AllProduct'] === 'All Products');
         expect(allProdsRecords).toEqual([
             { AllProduct: 'All Products', Country: 'Bulgaria', AllPeriods: 'All Periods', SellerName: 'Stanley' },
@@ -1333,7 +990,7 @@ describe('Pivot pipes #pivotGrid', () => {
         let columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         let rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toBe(84);
-        const prod_country_date_seller_discontinued = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const prod_country_date_seller_discontinued = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         const allPeriods_allProducts_records = prod_country_date_seller_discontinued.filter(x => x['AllPeriods'] === 'All Periods' &&
             x['AllProduct'] === 'All Products');
         expect(allPeriods_allProducts_records).toEqual(
@@ -1358,9 +1015,9 @@ describe('Pivot pipes #pivotGrid', () => {
         const allPeriods_clothing_records = prod_country_date_seller_discontinued.filter(x => x['AllPeriods'] === 'All Periods' && x['ProductCategory'] === 'Clothing');
         expect(allPeriods_clothing_records).toEqual([
             { AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Stanley', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Walter', Discontinued: 'false' },
             { AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Elisa', Discontinued: 'true' },
             { AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Larry', Discontinued: 'true' },
-            { AllPeriods: 'All Periods', ProductCategory: 'Clothing', AllCountries: 'All Countries', SellerName: 'Walter', Discontinued: 'false' },
             { AllPeriods: 'All Periods', ProductCategory: 'Clothing', Country: 'Bulgaria', SellerName: 'Stanley', Discontinued: 'false' },
             { AllPeriods: 'All Periods', ProductCategory: 'Clothing', Country: 'Bulgaria', SellerName: 'Walter', Discontinued: 'false' },
             { AllPeriods: 'All Periods', ProductCategory: 'Clothing', Country: 'USA', SellerName: 'Elisa', Discontinued: 'true' },
@@ -1420,7 +1077,7 @@ describe('Pivot pipes #pivotGrid', () => {
         columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toBe(84);
-        const discontinued_prod_country_date_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const discontinued_prod_country_date_seller = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         const ongoing_records = discontinued_prod_country_date_seller.filter(x => x['Discontinued'] === 'false');
         const discontinued_records = discontinued_prod_country_date_seller.filter(x => x['Discontinued'] === 'true');
         expect(discontinued_records.length).toBe(36);
@@ -1474,7 +1131,7 @@ describe('Pivot pipes #pivotGrid', () => {
         columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toBe(84);
-        const seller_country_date_prod_disc = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const seller_country_date_prod_disc = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         const stanley_allCountries_allPeriods = seller_country_date_prod_disc.filter(x => x['SellerName'] === 'Stanley' &&
             x['AllCountries'] === 'All Countries' && x['AllPeriods'] === 'All Periods');
         expect(stanley_allCountries_allPeriods).toEqual([
@@ -1504,7 +1161,7 @@ describe('Pivot pipes #pivotGrid', () => {
         columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toBe(84);
-        const date_prod_disc_seller = PivotGridFunctions.getDimensionData(rowStatePipeResult, pivotConfig.rows);
+        const date_prod_disc_seller = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
 
         const date_allPeriods_allProducts_records = date_prod_disc_seller.filter(x => x['AllPeriods'] === 'All Periods' && x['AllProduct'] === 'All Products');
         expect(date_allPeriods_allProducts_records).toEqual([
@@ -1533,7 +1190,7 @@ describe('Pivot pipes #pivotGrid', () => {
             { Years: '2021', AllProduct: 'All Products', Discontinued: 'false', Country: 'USA', SellerName: 'John' }
         ]);
     });
-    // automation for https://github.com/IgniteUI/igniteui-angular/issues/10545
+    // // automation for https://github.com/IgniteUI/igniteui-angular/issues/10545
     it('should generate last dimension values for all records.', () => {
         data = [
             {
@@ -1600,12 +1257,13 @@ describe('Pivot pipes #pivotGrid', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-        const sellers = rowStatePipeResult.map(x => x.SellerName);
+        const dimensionValues = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        const sellers = dimensionValues.map(x => x['SellerName']);
         // there should be no empty values.
         expect(sellers.filter(x => x === undefined).length).toBe(0);
     });
 
-    // automation for https://github.com/IgniteUI/igniteui-angular/issues/10662
+    // // automation for https://github.com/IgniteUI/igniteui-angular/issues/10662
     it('should retain processed values for last dimension when bound to complex object.', () => {
         data = DATA;
         pivotConfig.rows = [
@@ -1641,9 +1299,65 @@ describe('Pivot pipes #pivotGrid', () => {
         const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
-
-        const res = rowStatePipeResult.filter(x => x.AllSeller === undefined).map(x => x.Seller);
+        const dimensionValues = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        const res = dimensionValues.filter(x => x['AllSeller'] === undefined).map(x => x['Seller']);
         // all values should be strings as the result of the processed member function is string.
         expect(res.filter(x => typeof x !== 'string').length).toBe(0);
+    });
+
+    it('should generate correct values for IgxPivotDateDimension with quarters enabled.', () => {
+        data = [
+            { Date: '01/19/2020', UnitsSold: 492 },
+            { Date: '02/19/2020', UnitsSold: 200 },
+            { Date: '03/19/2020', UnitsSold: 178 },
+            { Date: '04/19/2020', UnitsSold: 456 },
+            { Date: '05/19/2020', UnitsSold: 456 },
+            { Date: '06/19/2020', UnitsSold: 0 },
+            { Date: '07/19/2020', UnitsSold: 500 },
+            { Date: '08/19/2020', UnitsSold: 100 },
+            { Date: '09/19/2020', UnitsSold: 300 },
+            { Date: '10/19/2020', UnitsSold: 100 },
+            { Date: '11/19/2020', UnitsSold: 200 },
+            { Date: '12/19/2020', UnitsSold: 456 }
+        ];
+        pivotConfig.columns = [];
+        pivotConfig.rows = [
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: true,
+                    quarters: true,
+                    fullDate: false
+                }
+            )
+        ]
+        const rowPipeResult = rowPipe.transform(data, pivotConfig, expansionStates);
+        const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>());
+        const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
+
+        const dateData = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        expect(dateData).toEqual([
+            { 'AllPeriods': 'All Periods' },
+            { 'Years': '2020' },
+            { 'Quarters': 'Q1' },
+            { 'Months': 'January' },
+            { 'Months': 'February' },
+            { 'Months': 'March' },
+            { 'Quarters': 'Q2' },
+            { 'Months': 'April' },
+            { 'Months': 'May' },
+            { 'Months': 'June' },
+            { 'Quarters': 'Q3' },
+            { 'Months': 'July' },
+            { 'Months': 'August' },
+            { 'Months': 'September' },
+            { 'Quarters': 'Q4' },
+            { 'Months': 'October' },
+            { 'Months': 'November' },
+            { 'Months': 'December' }
+        ]);
     });
 });

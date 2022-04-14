@@ -1,0 +1,17 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+        {
+            "name": "$card-border-color",
+            "replaceWith": "$outline-color",
+            "owner": "igx-card-theme",
+            "type": "property"
+        },
+        {
+            "name": "$disable-border",
+            "remove": true,
+            "owner": "igx-badge-theme",
+            "type": "property"
+        }
+    ]
+}

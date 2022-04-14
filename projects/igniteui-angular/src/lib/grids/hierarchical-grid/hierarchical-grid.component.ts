@@ -32,7 +32,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { CellType, GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
+import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxGridCRUDService } from '../common/crud.service';
@@ -93,7 +93,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public index: number;
 
     @ViewChild('hgrid', { static: true })
-    public hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
+    public hGrid: IgxHierarchicalGridComponent;
 
     /**
      * Get a reference to the grid that contains the selected row.
@@ -113,8 +113,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * ```
      */
     // TODO: Refactor
-    public get parentGrid(): any/* TODO: IgxHierarchicalGridComponent*/ {
-        return this.gridAPI.grid;
+    public get parentGrid(): IgxHierarchicalGridComponent {
+        return this.gridAPI.grid as IgxHierarchicalGridComponent;
     }
 
     @HostBinding('attr.aria-level')
@@ -142,9 +142,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      */
     public expanded = false;
 
-
     constructor(
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
+        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
         public element: ElementRef<HTMLElement>,
         private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef) { }
@@ -178,8 +177,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public ngAfterViewInit() {
         this.hGrid.childLayoutList = this.layout.children;
         const layouts = this.hGrid.childLayoutList.toArray();
-        layouts.forEach((l) => this.hGrid.hgridAPI.registerChildRowIsland(l));
-        this.parentGrid.hgridAPI.registerChildGrid(this.data.rowID, this.layout.key, this.hGrid);
+        layouts.forEach((l) => this.hGrid.gridAPI.registerChildRowIsland(l));
+        this.parentGrid.gridAPI.registerChildGrid(this.data.rowID, this.layout.key, this.hGrid);
         this.layout.rowIslandAPI.registerChildGrid(this.data.rowID, this.hGrid);
 
         this.layout.gridInitialized.emit({
@@ -318,7 +317,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public parent = null;
+    public parent: IgxHierarchicalGridComponent = null;
+
+    /**
+     * @hidden
+     */
+    public childRow: IgxChildGridRowComponent;
 
     private _data;
     private _filteredData = null;
@@ -496,7 +500,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         if (!this.parent) {
             return null;
         }
-        return this.parent.hgridAPI.getParentRowId(this);
+        return this.parent.gridAPI.getParentRowId(this);
     }
 
     /**
@@ -794,7 +798,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     public ngOnDestroy() {
         if (!this.parent) {
-            this.hgridAPI.getChildGrids(true).forEach((grid) => {
+            this.gridAPI.getChildGrids(true).forEach((grid) => {
                 if (!grid.childRow.cdr.destroyed) {
                     grid.childRow.cdr.destroy();
                 }
@@ -886,7 +890,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public get rootGrid(): GridType {
-        let currGrid = this;
+        let currGrid = this as IgxHierarchicalGridComponent;
         while (currGrid.parent) {
             currGrid = currGrid.parent;
         }
@@ -997,7 +1001,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             cachedData.owner = args.owner;
 
             this.childLayoutList.forEach((layout) => {
-                const relatedGrid = this.hgridAPI.getChildGridByID(layout.key, args.context.$implicit.rowID);
+                const relatedGrid = this.gridAPI.getChildGridByID(layout.key, args.context.$implicit.rowID);
                 if (relatedGrid && relatedGrid.updateOnRender) {
                     // Detect changes if `expandChildren` has changed when the grid wasn't visible. This is for performance reasons.
                     relatedGrid.notifyChanges(true);
@@ -1006,7 +1010,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             });
 
             const childGrids = this.getChildGrids(true);
-            childGrids.forEach((grid) => {
+            childGrids.forEach((grid: IgxHierarchicalGridComponent) => {
                 if (grid.isPercentWidth) {
                     grid.notifyChanges(true);
                 }
@@ -1038,7 +1042,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        const rec: any = data ?? this.dataView[index];
+        const dataIndex = this._getResolvedDataIndex(index);
+        const rec: any = data ?? this.dataView[dataIndex];
 
         if (!row && rec && !rec.childGridsData) {
             row = new IgxHierarchicalGridRow(this as any, index, rec);
@@ -1049,7 +1054,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /** @hidden @internal */
     public getChildGrids(inDeph?: boolean) {
-        return this.hgridAPI.getChildGrids(inDeph);
+        return this.gridAPI.getChildGrids(inDeph);
     }
 
     protected generateDataFields(data: any[]): string[] {
@@ -1103,7 +1108,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         if (document.body.contains(this.nativeElement) && this.isPercentWidth) {
             this.reflow();
 
-            this.hgridAPI.getChildGrids(false).forEach((grid) => {
+            this.gridAPI.getChildGrids(false).forEach((grid: IgxHierarchicalGridComponent) => {
                 grid.updateSizes();
             });
         }

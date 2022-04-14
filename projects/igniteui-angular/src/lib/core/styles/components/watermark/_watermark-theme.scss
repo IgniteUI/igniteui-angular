@@ -21,13 +21,12 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Change the watermark link background
-///   $my-watermark-theme: igx-watermark-theme($link-background: magenta);
-///   // Pass the theme to the igx-watermark component mixin
-///   @include igx-watermark($my-watermark-theme);
-@function igx-watermark-theme(
+///   $my-watermark-theme: watermark-theme($link-background: magenta);
+///   // Pass the theme to the watermark component mixin
+///   @include watermark($my-watermark-theme);
+@function watermark-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -48,10 +47,6 @@
 
     $theme: apply-palette($watermark-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($watermark-schema, 'border-radius')), 0, 16px
-    );
-
     @if not($color) and $link-background {
         $color: text-contrast($link-background);
     }
@@ -68,10 +63,10 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires var-get
-@mixin igx-watermark($theme) {
-    @include igx-css-vars($theme);
+@mixin watermark($theme) {
+    @include css-vars($theme);
 
     %igx-watermark {
         display: block;
@@ -93,7 +88,7 @@
         font-size: rem(14px);
         padding: rem(2px) rem(4px);
         line-height: normal;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         border: 1px solid var-get($theme, 'border-color');
         color: var-get($theme, 'color');
         z-index: 10002;
@@ -120,4 +115,3 @@
         }
     }
 }
-

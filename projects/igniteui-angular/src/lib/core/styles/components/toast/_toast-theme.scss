@@ -28,14 +28,13 @@
 /// @requires apply-palette
 /// @requires text-contrast
 /// @requires extend
-/// @requires round-borders
-/// @requires igx-elevation
+/// @requires elevation
 ///
 /// @example scss Set a custom background color
-///   $my-toast-theme: igx-toast-theme($background: green);
-///   // Pass the theme to the igx-toast component mixin
-///   @include igx-toast($my-toast-theme);
-@function igx-toast-theme(
+///   $my-toast-theme: toast-theme($background: green);
+///   // Pass the theme to the toast component mixin
+///   @include toast($my-toast-theme);
+@function toast-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -55,13 +54,9 @@
 
     $theme: apply-palette($toast-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($toast-schema, 'border-radius')), 0, 26px
-    );
-
     @if not($shadow) {
         $elevation: map.get($toast-schema, 'elevation');
-        $shadow: igx-elevation($elevation: $elevation);
+        $shadow: elevation($elevation: $elevation);
     }
 
     @if not($text-color) and $background {
@@ -80,11 +75,11 @@
 
 /// Toast Component
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-toast($theme) {
-    @include igx-css-vars($theme);
+@mixin toast($theme) {
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
 
@@ -102,7 +97,7 @@
     $border: map.get((
         'material': none,
         'fluent': none,
-        'bootstrap': 1px solid igx-color($palette, 'grays', 300),
+        'bootstrap': 1px solid color($palette, 'grays', 300),
         'indigo-design': none
     ), $variant);
 
@@ -116,7 +111,7 @@
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         border: $border;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         box-shadow: map.get($theme, 'shadow');
         backdrop-filter: blur(10px);
     }
@@ -128,12 +123,12 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-toast-typography($type-scale, $categories: (text: 'body-2')) {
+/// @requires {mixin} type-style
+@mixin toast-typography($type-scale, $categories: (text: 'body-2')) {
     $text: map.get($categories, 'text');
 
     %igx-toast-display > *{
-        @include igx-type-style($type-scale, $text) {
+        @include type-style($type-scale, $text) {
             margin: 0;
         }
     }
