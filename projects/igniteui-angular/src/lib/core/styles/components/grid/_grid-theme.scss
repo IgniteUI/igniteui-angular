@@ -1343,9 +1343,9 @@
         background-clip: border-box !important;
     }
 
-    %igx-grid__td--tree-cell {
-        overflow: hidden;
-    }
+    // %igx-grid__td--tree-cell {
+    //     overflow: hidden;
+    // }
 
     %grid-cell-text {
         @include ellipsis();
