@@ -233,6 +233,9 @@
         $color: var-get($theme, 'button-ripple-color')
     );
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     $icon-space: (
         comfortable: rem(12px),
         cosy: rem(8px),
@@ -277,7 +280,7 @@
                 content: '';
                 position: absolute;
                 bottom: 0;
-                inset-inline-start: 0;
+                left: 0;
                 width: 100%;
                 height: 1px;
                 background: var-get($theme, 'border-color');
@@ -336,16 +339,13 @@
         @include ripple($button-ripple-theme);
         @include css-vars($button-ripple-theme);
 
-        [dir='rtl'] & {
+        @include if-rtl() {
             transform: scaleX(-1);
         }
     }
 
     %tabs-header-item {
-        & > * + & > * {
-            margin-inline-start: map.get($icon-space, 'comfortable');
-        }
-        
+        @include icon-w-margin(map.get($icon-space, 'comfortable'), $left);
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -371,8 +371,8 @@
 
         @if $bootstrap-theme {
             border: 1px solid transparent;
-            border-start-start-radius: border-radius(var-get($theme, 'border-radius'));
-            border-start-end-radius: border-radius(var-get($theme, 'border-radius'));
+            border-top-left-radius: border-radius(var-get($theme, 'border-radius'));
+            border-top-right-radius: border-radius(var-get($theme, 'border-radius'));
         }
 
         @if $indigo-theme {
@@ -408,12 +408,14 @@
 
         @if $indigo-theme {
             border-top: transparent;
-            border-inline: transparent;
+            border-left: transparent;
+            border-right: transparent;
 
             &:hover,
             &:focus {
                 border-top: transparent;
-                border-inline: transparent;
+                border-left: transparent;
+                border-right: transparent;
             }
         }
 
@@ -448,14 +450,15 @@
             position: relative;
             z-index: 1;
             border-top-color: var-get($theme, 'border-color');
+            border-left-color: var-get($theme, 'border-color');
+            border-right-color: var-get($theme, 'border-color');
             border-bottom-color: transparent;
-            border-inline-color: var-get($theme, 'border-color');
 
             &::after {
                 content: '';
                 position: absolute;
                 bottom: -1px;
-                inset-inline-start: 0;
+                left: 0;
                 width: 100%;
                 height: 1px;
                 background: var-get($theme, 'item-active-background');
@@ -464,8 +467,9 @@
             &:hover,
             &:focus {
                 border-top-color: var-get($theme, 'border-color');
+                border-left-color: var-get($theme, 'border-color');
+                border-right-color: var-get($theme, 'border-color');
                 border-bottom-color: transparent;
-                border-inline-color: var-get($theme, 'border-color');
             }
         }
     }
@@ -502,7 +506,7 @@
         position: absolute;
         bottom: 0;
         // We need to explicitly set the default for IE 11
-        inset-inline-start: 0;
+        left: 0;
         transform: translateX(0);
         height: 2px;
         min-width: $item-min-width;
@@ -522,7 +526,10 @@
     %tabs-panel {
         display: block;
         position: absolute;
-        inset: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         width: 100%;
         height: 100%;
         overflow-x: hidden;
