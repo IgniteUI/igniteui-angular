@@ -280,15 +280,9 @@
     );
 
     $list-line-margin: (
-        comfortable: 0 0 0 rem(16px),
-        cosy: 0 0 0 rem(12px),
-        compact: 0 0 0 rem(8px)
-    );
-
-    $list-line-margin-rtl: (
-        comfortable: 0 rem(16px) 0 0 ,
-        cosy: 0 rem(12px) 0 0 ,
-        compact: 0 rem(8px) 0 0
+        comfortable: rem(16px),
+        cosy: rem(12px),
+        compact: rem(8px)
     );
 
     %igx-list {
@@ -454,9 +448,7 @@
         color: var-get($theme, 'item-thumbnail-color');
 
         > igx-icon {
-            [dir='ltr'] & {
-                margin: map.get($list-icon-margin, 'comfortable');
-            }
+            margin: map.get($list-icon-margin, 'comfortable');
 
             [dir='rtl'] & {
                 margin: map.get($list-icon-margin-rtl, 'comfortable');
@@ -475,40 +467,20 @@
     }
 
     %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
-        [dir='ltr'] & {
-            margin: map.get($list-line-margin, 'comfortable');
-        }
-
-        [dir='rtl'] & {
-            margin: map.get($list-line-margin-rtl, 'comfortable');
-        }
+        margin-inline-start: map.get($list-line-margin, 'comfortable');
     }
 
     %igx-list__item-thumbnail--cosy:not(:empty) + %igx-list__item-lines {
-        [dir='ltr'] & {
-            margin: map.get($list-line-margin, 'cosy');
-        }
-
-        [dir='rtl'] & {
-            margin: map.get($list-line-margin-rtl, 'cosy');
-        }
+        margin-inline-start: map.get($list-line-margin, 'cosy');
     }
 
     %igx-list__item-thumbnail--compact:not(:empty) + %igx-list__item-lines {
-        [dir='ltr'] & {
-            margin: map.get($list-line-margin, 'compact');
-        }
-
-        [dir='rtl'] & {
-            margin: map.get($list-line-margin-rtl, 'compact');
-        }
+        margin-inline-start: map.get($list-line-margin, 'compact');
     }
 
     %igx-list__item-thumbnail--cosy {
-        [dir='ltr'] & {
-            > igx-icon {
-                margin: map.get($list-icon-margin, 'cosy');
-            }
+        > igx-icon {
+            margin: map.get($list-icon-margin, 'cosy');
         }
 
         [dir='rtl'] & {
@@ -519,10 +491,8 @@
     }
 
     %igx-list__item-thumbnail--compact {
-        [dir='ltr'] & {
-            > igx-icon {
-                margin: map.get($list-icon-margin, 'compact');
-            }
+        > igx-icon {
+            margin: map.get($list-icon-margin, 'compact');
         }
 
         [dir='rtl'] & {
