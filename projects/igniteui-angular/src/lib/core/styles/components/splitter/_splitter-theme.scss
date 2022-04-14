@@ -74,6 +74,14 @@
 
     $variant: map.get($theme, 'variant');
 
+    %igx-splitter-base {
+        &[aria-orientation='horizontal'] {
+            [dir='rtl'] & {
+                flex-direction: row-reverse !important;
+            }
+        }
+    }
+
     %handle-area {
         position: absolute;
         content: '';
