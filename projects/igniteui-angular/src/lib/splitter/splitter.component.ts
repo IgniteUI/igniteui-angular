@@ -1,8 +1,7 @@
-import { Component, QueryList, Input, ContentChildren, AfterContentInit, HostBinding, Inject, ElementRef,
-     Output, EventEmitter, HostListener } from '@angular/core';
-import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 import { DOCUMENT } from '@angular/common';
+import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList } from '@angular/core';
 import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs } from '../directives/drag-drop/drag-drop.directive';
+import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
 /**
  * An enumeration that defines the `SplitterComponent` panes orientation.
@@ -56,6 +55,15 @@ export class IgxSplitterComponent implements AfterContentInit {
      * const panes = this.splitter.panes;
      * ```
      */
+
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-splitter')
+    public cssClass = 'igx-splitter';
+
     @ContentChildren(IgxSplitterPaneComponent, { read: IgxSplitterPaneComponent })
     public panes!: QueryList<IgxSplitterPaneComponent>;
 
@@ -72,6 +80,15 @@ export class IgxSplitterComponent implements AfterContentInit {
      */
     @HostBinding('style.display')
     public display = 'flex';
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.aria-orientation')
+    public get orientation() {
+        return this.type === SplitterType.Horizontal ? 'horizontal' : 'vertical';
+    }
 
     /**
      * Event fired when resizing of panes starts.
