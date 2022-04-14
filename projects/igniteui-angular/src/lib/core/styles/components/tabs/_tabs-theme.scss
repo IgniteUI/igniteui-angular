@@ -342,10 +342,13 @@
     }
 
     %tabs-header-item {
-        & > * + & > * {
+        > * {
             margin-inline-start: map.get($icon-space, 'comfortable');
+    
+            &:first-child {
+                margin-inline-start: 0;
+            }
         }
-        
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -448,8 +451,8 @@
             position: relative;
             z-index: 1;
             border-top-color: var-get($theme, 'border-color');
-            border-bottom-color: transparent;
             border-inline-color: var-get($theme, 'border-color');
+            border-bottom-color: transparent;
 
             &::after {
                 content: '';
@@ -464,8 +467,8 @@
             &:hover,
             &:focus {
                 border-top-color: var-get($theme, 'border-color');
-                border-bottom-color: transparent;
                 border-inline-color: var-get($theme, 'border-color');
+                border-bottom-color: transparent;
             }
         }
     }
@@ -502,7 +505,7 @@
         position: absolute;
         bottom: 0;
         // We need to explicitly set the default for IE 11
-        inset-inline-start: 0;
+        left: 0;
         transform: translateX(0);
         height: 2px;
         min-width: $item-min-width;
