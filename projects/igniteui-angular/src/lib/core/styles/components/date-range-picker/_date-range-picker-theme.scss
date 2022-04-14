@@ -43,6 +43,8 @@
 /// @requires var-get
 @mixin date-range-picker($theme) {
     @include css-vars($theme);
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     $base-scale-size: (
         'comfortable': rem(16px),
@@ -95,10 +97,10 @@
         padding: 0 rem(16px) rem(16px) rem(16px);
 
         > * {
-            margin-inline-end: rem(8px);
+            margin-#{$right}: rem(8px);
 
             &:last-of-type {
-                margin-inline-end: 0;
+                margin-#{$right}: 0;
             }
         }
 
