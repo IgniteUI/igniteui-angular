@@ -55,17 +55,15 @@ export class IgxSplitterComponent implements AfterContentInit {
      * const panes = this.splitter.panes;
      * ```
      */
+    @ContentChildren(IgxSplitterPaneComponent, { read: IgxSplitterPaneComponent })
+    public panes!: QueryList<IgxSplitterPaneComponent>;
 
-
-    /**
+     /**
      * @hidden
      * @internal
      */
     @HostBinding('class.igx-splitter')
     public cssClass = 'igx-splitter';
-
-    @ContentChildren(IgxSplitterPaneComponent, { read: IgxSplitterPaneComponent })
-    public panes!: QueryList<IgxSplitterPaneComponent>;
 
     /**
      * @hidden @internal
