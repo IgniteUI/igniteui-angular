@@ -176,6 +176,12 @@
             font-size: $icon-size;
         }
 
+        [dir='rtl'] & {
+            igx-icon {
+                transform: scaleX(-1);
+            }
+        }
+
         &::after {
             content: '';
             position: absolute;
