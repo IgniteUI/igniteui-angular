@@ -75,6 +75,29 @@
     ));
 }
 
+@mixin striped-gradient($gradient-orientation, $stripe-color) {
+    background-image: linear-gradient(
+        $gradient-orientation,
+        $stripe-color 25%,
+        transparent 25%,
+        transparent 50%,
+        $stripe-color 50%,
+        $stripe-color 75%,
+        transparent 75%,
+        transparent
+    );
+}
+
+@mixin striped-gradient--indigo($gradient-orientation, $stripe-color) {
+    background-image: linear-gradient(
+        $gradient-orientation,
+        transparent 25%,
+        $stripe-color 25%,
+        $stripe-color 75%,
+        transparent 75%,
+    );
+}
+
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires em
@@ -143,48 +166,18 @@
 
     %linear-indicator--striped {
         @if $variant != 'indigo-design' {
-            background-image: linear-gradient(
-                $gradient-orientation,
-                $stripe-color 25%,
-                transparent 25%,
-                transparent 50%,
-                $stripe-color 50%,
-                $stripe-color 75%,
-                transparent 75%,
-                transparent
-            );
+            @include striped-gradient($gradient-orientation, $stripe-color);
         } @else {
-            background-image: linear-gradient(
-                $gradient-orientation,
-                transparent 25%,
-                $stripe-color 25%,
-                $stripe-color 75%,
-                transparent 75%,
-            );
+            @include striped-gradient--indigo($gradient-orientation, $stripe-color);
         }
 
         background-size: $background-size;
 
         [dir='rtl'] & {
             @if $variant != 'indigo-design' {
-                background-image: linear-gradient(
-                    $gradient-orientation-rtl,
-                    $stripe-color 25%,
-                    transparent 25%,
-                    transparent 50%,
-                    $stripe-color 50%,
-                    $stripe-color 75%,
-                    transparent 75%,
-                    transparent
-                );
+                @include striped-gradient($gradient-orientation-rtl, $stripe-color);
             } @else {
-                background-image: linear-gradient(
-                    $gradient-orientation-rtl,
-                    transparent 25%,
-                    $stripe-color 25%,
-                    $stripe-color 75%,
-                    transparent 75%,
-                );
+                @include striped-gradient--indigo($gradient-orientation-rtl, $stripe-color);
             }
         }
     }
