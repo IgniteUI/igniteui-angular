@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/watermark' as *;
 
 ////
 /// @group schemas
@@ -18,9 +17,7 @@ $light-watermark-image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3d
 /// @prop {Map} link-background [color: ('primary')] - The background color used for the link.
 /// @prop {Color} color [#fff] - The color used for the link text.
 /// @requires {function} extend
-/// @requires {Map} $material-shape-watermark
 $light-watermark: extend(
-    $material-shape-watermark,
     (
         variant: 'material',
 
@@ -35,6 +32,8 @@ $light-watermark: extend(
         border-color: (
             color: ('primary'),
         ),
+
+        border-radius: rem(0)
     )
 );
 
@@ -43,14 +42,14 @@ $light-watermark: extend(
 /// @prop {Number} border-radius [2px] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-watermark
-/// @requires {Map} $fluent-shape-watermark
 $fluent-watermark: extend(
     $light-watermark,
-    $fluent-shape-watermark,
     (
         variant: 'fluent',
 
         background-image: #{url($light-watermark-image)},
+
+        border-radius: rem(2px)
     )
 );
 
@@ -59,27 +58,25 @@ $fluent-watermark: extend(
 /// @prop {Number} border-radius [4px] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-watermark
-/// @requires {Map} $bootstrap-shape-watermark
 $bootstrap-watermark: extend(
     $light-watermark,
-    $bootstrap-shape-watermark,
     (
         variant: 'bootstrap',
 
         background-image: #{url($light-watermark-image)},
+
+        border-radius: rem(4px)
     )
 );
 
 /// Generates an indigo watermark schema.
 /// @type {Map}
 /// @prop {Map} border-color [color: ('primary', 300)] - The border color for the link.
-/// @prop {Number} border-radius [1] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [16px] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-watermark
-/// @requires {Map} $indigo-shape-watermark
 $indigo-watermark: extend(
     $light-watermark,
-    $indigo-shape-watermark,
     (
         variant: 'indigo-design',
 
@@ -88,6 +85,7 @@ $indigo-watermark: extend(
         border-color: (
             color: ('primary', 300),
         ),
+
+        border-radius: rem(16px)
     )
 );
-
