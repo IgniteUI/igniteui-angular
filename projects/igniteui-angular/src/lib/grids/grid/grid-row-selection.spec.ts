@@ -1479,7 +1479,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(middleRow);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
-            grid.paginator.nextPage();
+            grid.nextPage();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(secondRow, false);

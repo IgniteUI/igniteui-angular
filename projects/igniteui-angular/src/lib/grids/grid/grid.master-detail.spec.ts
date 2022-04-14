@@ -871,10 +871,10 @@ describe('IgxGrid Master Detail #grid', () => {
                 ];
                 fix.componentInstance.paging = true;
                 fix.detectChanges();
-                grid.paginator.perPage = 5;
+                grid.perPage = 5;
                 fix.detectChanges();
                 tick(16);
-                grid.paginator.paginate(1);
+                grid.paginate(1);
                 fix.detectChanges();
                 tick(16);
 
@@ -891,7 +891,7 @@ describe('IgxGrid Master Detail #grid', () => {
                     { ContactName: 'Patricio Simpson' },
                     { ContactName: 'Francisco Chang' }
                 ];
-                grid.paginator.paginate(2);
+                grid.paginate(2);
                 fix.detectChanges();
                 tick(16);
 

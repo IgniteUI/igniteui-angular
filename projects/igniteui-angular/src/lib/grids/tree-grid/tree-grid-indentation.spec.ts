@@ -98,7 +98,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
 
-            treeGrid.paginator.perPage = 4;
+            treeGrid.perPage = 4;
             fix.detectChanges();
             tick(16);
 
