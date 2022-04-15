@@ -29,7 +29,7 @@ describe(`Update to ${version}`, () => {
 
     const migrationName = 'migration-24';
 
-    it('should rename remove the $direction prop from the core mixin', async () => {
+    it('should remove the $direction prop from the core mixin', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
 `@include igniteui.core($direction: 'rtl');`
