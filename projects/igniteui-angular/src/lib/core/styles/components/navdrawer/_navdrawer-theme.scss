@@ -148,9 +148,6 @@
 @mixin navdrawer($theme) {
     @include css-vars($theme);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $drawer-icon-size: rem(24px);
     $drawer-item-margin: rem(8px);
     $text-side-padding: rem(8px);
@@ -176,13 +173,13 @@
         background: var-get($theme, 'background');
         top: 0;
         bottom: 0;
-        #{$left}: 0;
+        inset-inline-start: 0;
         z-index: 999;
         transition: width, transform;
         transition-timing-function: $ease-out-quad, $ease-out-quad;
         box-shadow: var-get($theme, 'shadow');
         @if $variant != 'indigo-design' {
-            border-#{$right}: 1px solid var-get($theme, 'border-color');
+            border-inline-end: 1px solid var-get($theme, 'border-color');
         }
         border-radius: border-radius(var-get($theme, 'border-radius'));
     }
@@ -202,6 +199,10 @@
     %aside--collapsed--right {
         transform: translate3d(300px, 0, 0);
         box-shadow: none;
+
+        [dir='rtl'] & {
+            transform: translate3d(-300px, 0, 0);
+        }
     }
 
     %igx-nav-drawer__aside--collapsed {
@@ -212,11 +213,9 @@
     }
 
     %aside--collapsed {
-        @include if-ltr() {
-            transform: translate3d(-300px, 0, 0);
-        }
+        transform: translate3d(-300px, 0, 0);
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: translate3d(300px, 0, 0);
         }
 
@@ -224,10 +223,10 @@
     }
 
     %aside--right {
-        left: auto;
-        right: 0;
-        border-#{$right}: none;
-        border-#{$left}: 1px solid var-get($theme, 'border-color');
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+        border-inline-end: none;
+        border-inline-start: 1px solid var-get($theme, 'border-color');
     }
 
     %aside--mini {
@@ -242,7 +241,7 @@
                 margin: rem(14px) auto !important;
 
                 igx-icon {
-                    margin-#{$left}: 0;
+                    margin-inline-start: 0;
                 }
             }
         }
@@ -261,7 +260,7 @@
         transition-timing-function: ease-in, step-start;
         transition-delay: 0s, 0s;
         position: absolute;
-        #{$left}: 0;
+        inset-inline-start: 0;
         top: 0;
         width: 100%;
         height: 100%;
@@ -316,22 +315,22 @@
 
         > igx-icon + span {
             @if $variant == 'indigo-design' {
-                margin-#{$left}: calc(32px - #{$text-side-padding});
+                margin-inline-start: calc(32px - #{$text-side-padding});
             } @else {
-                margin-#{$left}: rem(32px);
+                margin-inline-start: rem(32px);
             }
         }
 
         span {
             @if $variant == 'indigo-design' {
-                padding-#{$left}: $text-side-padding;
+                padding-inline-start: $text-side-padding;
             }
         }
 
         igx-icon {
             color: var-get($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
-                margin-#{$left}: rem(4px);
+                margin-inline-start: rem(4px);
             }
         }
 
