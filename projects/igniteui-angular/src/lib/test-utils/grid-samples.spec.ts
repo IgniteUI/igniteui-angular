@@ -1276,7 +1276,7 @@ export class IgxGridFilteringESFEmptyTemplatesComponent extends BasicGridCompone
             <igx-icon>filter_alt</igx-icon>
         </ng-template>
 
-        <igx-grid-excel-style-filtering [minHeight]="'0px'" [maxHeight]="'500px'">
+        <igx-grid-excel-style-filtering #esf [minHeight]="'0px'" [maxHeight]="'500px'">
             <igx-excel-style-column-operations>
                 <igx-excel-style-moving></igx-excel-style-moving>
                 <igx-excel-style-pinning></igx-excel-style-pinning>
@@ -1288,6 +1288,9 @@ export class IgxGridFilteringESFEmptyTemplatesComponent extends BasicGridCompone
     </igx-grid>`
 })
 export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent })
+    public esf: IgxGridExcelStyleFilteringComponent;
+
     public customFilter = CustomFilter.instance();
     public resizable = false;
     public filterable = true;
