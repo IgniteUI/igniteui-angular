@@ -268,15 +268,9 @@
     );
 
     $list-icon-margin: (
-        comfortable: rem(8px) rem(16px) rem(8px) 0,
-        cosy: rem(6px) rem(8px) rem(6px) 0,
-        compact: rem(4px) rem(4px) rem(4px) 0
-    );
-
-    $list-icon-margin-rtl: (
-        comfortable: rem(8px) 0 rem(8px) rem(16px),
-        cosy: rem(6px) 0 rem(6px) rem(8px),
-        compact: rem(4px) 0 rem(4px) rem(4px)
+        comfortable: rem(8px) rem(16px),
+        cosy: rem(6px) rem(8px),
+        compact: rem(4px)
     );
 
     $list-line-margin: (
@@ -455,10 +449,7 @@
 
         > igx-icon {
             margin: map.get($list-icon-margin, 'comfortable');
-
-            [dir='rtl'] & {
-                margin: map.get($list-icon-margin-rtl, 'comfortable');
-            }
+            margin-inline-start: 0;
         }
 
         > igx-avatar {
@@ -490,24 +481,14 @@
     %igx-list__item-thumbnail--cosy {
         > igx-icon {
             margin: map.get($list-icon-margin, 'cosy');
-        }
-
-        [dir='rtl'] & {
-            > igx-icon {
-                margin: map.get($list-icon-margin-rtl, 'cosy');
-            }
+            margin-inline-start: 0;
         }
     }
 
     %igx-list__item-thumbnail--compact {
         > igx-icon {
             margin: map.get($list-icon-margin, 'compact');
-        }
-
-        [dir='rtl'] & {
-            > igx-icon {
-                margin: map.get($list-icon-margin-rtl, 'compact');
-            }
+            margin-inline-start: 0;
         }
     }
 
