@@ -419,6 +419,12 @@
         igx-icon {
             color: var-get($theme, 'item-action-color')
         }
+
+        [dir='rtl'] & {
+            igx-icon {
+                transform: scaleX(-1);
+            }
+        }
     }
 
     %igx-list-item-content {
@@ -467,14 +473,17 @@
     }
 
     %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
+        margin: 0;
         margin-inline-start: map.get($list-line-margin, 'comfortable');
     }
 
     %igx-list__item-thumbnail--cosy:not(:empty) + %igx-list__item-lines {
+        margin: 0;
         margin-inline-start: map.get($list-line-margin, 'cosy');
     }
 
     %igx-list__item-thumbnail--compact:not(:empty) + %igx-list__item-lines {
+        margin: 0;
         margin-inline-start: map.get($list-line-margin, 'compact');
     }
 
