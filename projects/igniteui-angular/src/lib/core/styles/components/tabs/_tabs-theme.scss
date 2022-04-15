@@ -250,7 +250,7 @@
     }
 
     %tabs-display {
-        display: block;
+        display: flex;
     }
 
     %tabs-header {
@@ -259,6 +259,7 @@
         box-shadow: var-get($theme, 'tab-area-shadow');
         min-height: rem(42px);
         z-index: 1;
+        flex: 0 0  auto;
 
         @if $bootstrap-theme or $indigo-theme {
             box-shadow: none;
@@ -521,6 +522,9 @@
         position: relative;
         overflow: hidden;
         flex-grow: 1;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
     }
 
     %tabs-panel {
