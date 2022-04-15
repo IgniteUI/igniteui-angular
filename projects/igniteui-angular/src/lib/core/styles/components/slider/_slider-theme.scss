@@ -236,6 +236,10 @@
         background: var-get($theme, 'track-color');
         transform-origin: left center;
         transform: scaleX(0);
+
+        [dir='rtl'] & {
+            transform-origin: right center;
+        }
     }
 
     %igx-slider-track-fill--disabled {
@@ -419,6 +423,11 @@
         top: -#{rem($slider-thumb-radius)};
         margin-left: -#{rem($slider-thumb-radius)};
 
+        [dir='rtl'] & {
+            margin: initial;
+            margin-right: -#{rem($slider-thumb-radius)};
+        }
+
         &:focus div::after {
             opacity: .18;
             /* 32 / 40 */
@@ -481,6 +490,11 @@
         border-color: var-get($theme, 'label-background-color') transparent transparent;
         // transition: opacity .1s $ease-out-quad;
         z-index: -1;
+
+        [dir='rtl'] & {
+            left: initial;
+            right: -50%;
+        }
 
         &::after {
             content: '';
