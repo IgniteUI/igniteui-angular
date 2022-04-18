@@ -1,6 +1,4 @@
-import { Component, ViewChild, AfterContentInit } from '@angular/core';
-import { IgxRadioGroupDirective, RadioGroupAlignment } from 'igniteui-angular';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-rating-sample',
