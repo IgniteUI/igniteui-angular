@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, AfterViewInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, QueryList, ViewChildren, TemplateRef } from '@angular/core';
 import { FilteringExpressionsTree, FilteringLogic,
   IgxNumberSummaryOperand, IgxSummaryResult, IGridState, IgxGridStateDirective,
   IgxExpansionPanelComponent, IgxGridBaseDirective,
-  IGridStateOptions, GridFeatures, GridColumnDataType } from 'igniteui-angular';
+  IGridStateOptions, GridFeatures, GridColumnDataType, IgxColumnComponent } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TREEGRID_FLAT_DATA, EMPLOYEE_DATA, employeesData } from './data';
@@ -220,6 +220,17 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
         const key = `${grid.id}-state`;
         window.localStorage.removeItem(key);
     }
+
+    @ViewChild('activeTemplate', { static: true })
+    public activeTemplate: TemplateRef<any>;
+
+    public onColumnInit(column: IgxColumnComponent) {
+        const key = `${this.gridId}-state`;
+        const state = window.localStorage.getItem(key);
+        if (state) {
+            column.bodyTemplate = this.activeTemplate;
+        }
+      }
 
     public reloadPage() {
         window.location.reload();
