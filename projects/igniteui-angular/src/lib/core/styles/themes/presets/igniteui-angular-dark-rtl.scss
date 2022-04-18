@@ -1,5 +1,0 @@
-@use '../../themes' as *;
-
-@include core($direction: rtl);
-@include typography($font-family: $material-typeface, $type-scale: $material-type-scale);
-@include dark-theme($dark-material-palette);
