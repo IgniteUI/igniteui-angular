@@ -21,7 +21,6 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Change the watermark link background
 ///   $my-watermark-theme: watermark-theme($link-background: magenta);
@@ -48,10 +47,6 @@
 
     $theme: apply-palette($watermark-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($watermark-schema, 'border-radius')), 0, 16px
-    );
-
     @if not($color) and $link-background {
         $color: text-contrast($link-background);
     }
@@ -77,7 +72,7 @@
         display: block;
         position: absolute;
         bottom: 0;
-        right: 0;
+        inset-inline-end: 0;
         width: 100%;
         height: 100%;
         z-index: 10000;
@@ -89,11 +84,11 @@
         align-items: center;
         position: absolute;
         bottom: 0;
-        right: 0;
+        inset-inline-end: 0;
         font-size: rem(14px);
         padding: rem(2px) rem(4px);
         line-height: normal;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         border: 1px solid var-get($theme, 'border-color');
         color: var-get($theme, 'color');
         z-index: 10002;
@@ -107,7 +102,7 @@
         height: 100%;
         position: absolute;
         top: 0;
-        left: 0;
+        inset-inline-start: 0;
         z-index: 10001;
         pointer-events: none;
         background-image: var-get($theme, 'background-image');
@@ -120,4 +115,3 @@
         }
     }
 }
-

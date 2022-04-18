@@ -53,16 +53,13 @@
 @mixin combo($theme) {
     @include css-vars($theme);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     %igx-combo {
         position: relative;
         display: block;
     }
 
     %igx-combo__checkbox {
-        margin-#{$right}: rem(8);
+        margin-inline-end: rem(8);
     }
 
     %igx-combo__drop-down {

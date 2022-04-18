@@ -63,14 +63,6 @@
 
     $theme: apply-palette($checkbox-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($checkbox-schema, 'border-radius')), 0, 10px
-    );
-
-    $border-radius-ripple: round-borders(
-        if($border-radius-ripple, $border-radius-ripple, map.get($checkbox-schema, 'border-radius-ripple')), 0, 24px
-    );
-
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -160,9 +152,6 @@
         $color: var-get($theme, 'fill-color')
     );
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     @include scale-in-center();
 
     %cbx-display {
@@ -202,7 +191,7 @@
         border-width: rem($border-width);
         border-style: solid;
         border-color: var-get($theme, 'empty-color');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         -webkit-tap-highlight-color: transparent;
         transition: border-color .2s $ease-out-quad;
         overflow: hidden;
@@ -210,10 +199,7 @@
         &::after {
             position: absolute;
             content: '';
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
+            inset: 0;
             transition: background .2s $ease-out-quad;
         }
     }
@@ -250,10 +236,7 @@
 
     %cbx-composite-mark {
         position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+        inset: 0;
         stroke: var-get($theme, 'tick-color');
         stroke-linecap: square;
         stroke-width: $mark-stroke;
@@ -268,7 +251,7 @@
     %igx-checkbox--indeterminate {
         %cbx-composite-mark {
             top: $mark-offset;
-            left: $mark-offset;
+            inset-inline-start: $mark-offset;
         }
 
         @if $variant == 'material' {
@@ -297,10 +280,10 @@
                     content: '';
                     position: absolute;
                     top: calc($size / 2 - rem(6px));
-                    left: calc($size / 2 - rem(6px));
+                    inset-inline-start: calc($size / 2 - rem(6px));
                     width: rem(10px);
                     height: rem(10px);
-                    border-radius: rem(2px);
+                    border-radius: border-radius(rem(2px));
                     border: rem(5px) solid var-get($theme, 'fill-color');
                     z-index: 1;
                 }
@@ -353,11 +336,11 @@
     }
 
     %cbx-label-pos--after {
-        margin-#{$left}: $label-margin;
+        margin-inline-start: $label-margin;
     }
 
     %cbx-label-pos--before {
-        margin-#{$right}: $label-margin;
+        margin-inline-end: $label-margin;
         order: -1;
     }
 
@@ -371,10 +354,10 @@
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
-        right: calc(100% - #{$ripple-radius} - #{$checkbox-radius});
+        inset-inline-end: calc(100% - #{$ripple-radius} - #{$checkbox-radius});
         width: $ripple-size;
         height: $ripple-size;
-        border-radius: var-get($theme, 'border-radius-ripple');
+        border-radius: border-radius(var-get($theme, 'border-radius-ripple'));
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
@@ -390,7 +373,7 @@
                 content: '';
                 position: absolute;
                 top: -$focus-outline-offset-top;
-                left: -$focus-outline-offset-left;
+                inset-inline-start: -$focus-outline-offset-left;
                 box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
                 width: calc(100% + (#{$focus-outline-offset-left} * 2));
                 height: calc(100% + (#{$focus-outline-offset-top} * 2));
@@ -399,14 +382,14 @@
 
         @if $variant == 'bootstrap' {
             %cbx-composite {
-                border-radius: var-get($theme, 'border-radius');
+                border-radius: border-radius(var-get($theme, 'border-radius'));
                 box-shadow: 0 0 0 2px var-get($theme, 'focus-outline-color');
             }
         }
 
         @if $variant == 'indigo-design' {
             %cbx-composite {
-                border-radius: var-get($theme, 'border-radius');
+                border-radius: border-radius(var-get($theme, 'border-radius'));
                 box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color');
             }
         }
@@ -415,7 +398,7 @@
     %igx-checkbox--focused-checked {
         @if $variant == 'indigo-design' {
             %cbx-composite {
-                border-radius: var-get($theme, 'border-radius');
+                border-radius: border-radius(var-get($theme, 'border-radius'));
                 box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color-focused');
             }
         }
@@ -436,10 +419,7 @@
             position: absolute;
             content: '';
             opacity: .06;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            inset: 0;
         }
     }
 

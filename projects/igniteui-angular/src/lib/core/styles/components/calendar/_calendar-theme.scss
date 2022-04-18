@@ -74,7 +74,6 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires text-contrast
-/// @requires round-borders
 /// @requires extend
 ///
 /// @example scss Change the header and content background colors
@@ -148,18 +147,6 @@
     $variant: map.get($theme, variant);
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($calendar-schema, 'border-radius')), 0, 20px
-    );
-
-    $date-border-radius: round-borders(
-        if($date-border-radius, $date-border-radius, map.get($calendar-schema, 'date-border-radius')), 0, 20px
-    );
-
-    $month-border-radius: round-borders(
-        if($month-border-radius, $month-border-radius, map.get($calendar-schema, 'month-border-radius')), 0, 20px
-    );
 
     @if not($content-text-color) and $content-background {
         @if meta.type-of($content-background) == 'color' {
@@ -402,11 +389,6 @@
         indigo-design: var-get($theme, 'date-selected-text-color'),
     ), $variant);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-    $before: if-ltr(before, after);
-    $after: if-ltr(after, before);
-
     %cal-display {
         display: flex;
         flex-flow: column nowrap;
@@ -414,7 +396,7 @@
         min-width: 290px;
         background: var-get($theme, 'content-background');
         outline: none;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         overflow: hidden;
         border: $border-width solid var-get($theme, 'border-color');
 
@@ -462,7 +444,7 @@
     }
 
     %cal-display + %cal-display {
-        margin-#{$left}: 1rem;
+        margin-inline-start: 1rem;
 
         @if $bootstrap-theme {
             margin: 0;
@@ -558,17 +540,17 @@
             color: var-get($theme, 'picker-arrow-hover-color');
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
         }
     }
 
     %cal-picker-arrow__prev {
-        #{$left}: 0;
+        inset-inline-start: 0;
     }
 
     %cal-picker-arrow__next {
-        #{$right}: 0;
+        inset-inline-end: 0;
     }
 
     %cal-picker-date {
@@ -613,11 +595,11 @@
         outline: none;
 
         &:first-of-type {
-            padding-#{$left}: $cal-row-padding;
+            padding-inline-start: $cal-row-padding;
         }
 
         &:last-of-type {
-            padding-#{$right}: $cal-row-padding;
+            padding-inline-end: $cal-row-padding;
         }
 
         // 100 divided by the number of weekdays
@@ -727,7 +709,7 @@
         width: $cal-value-w;
         min-width: $cal-value-w;
         height: $cal-value-h;
-        border-radius: var-get($theme, 'date-border-radius');
+        border-radius: border-radius(var-get($theme, 'date-border-radius'));
         z-index: 0;
         // transition: background .15s ease-out;
 
@@ -736,7 +718,7 @@
             width: calc(100% - 4px);
             height: calc(100% - 4px);
             top: 2px;
-            left: 2px;
+            inset-inline-start: 2px;
             border-radius: inherit;
             z-index: -1;
         }
@@ -767,7 +749,7 @@
     }
 
     %cal-value-date--week-number + %cal-value {
-        padding-#{$left}: 0 !important;
+        padding-inline-start: 0 !important;
     }
 
     %label--week-number,
@@ -779,7 +761,7 @@
     }
 
     %cal-value-date--week-number {
-        padding-#{$right}: 0 !important;
+        padding-inline-end: 0 !important;
         cursor: default;
 
         &:hover,
@@ -804,14 +786,14 @@
             position: absolute;
             width: 100%;
             height: math.div($cal-row-padding, 2);
-            #{$left}: 0;
+            inset-inline-start: 0;
             top: 100%;
             background: var-get($theme, 'week-number-background') !important;
         }
     }
 
     %label--week-number {
-        padding-#{$right}: 0 !important;
+        padding-inline-end: 0 !important;
         text-align: center;
 
         span {
@@ -825,7 +807,7 @@
                 position: absolute;
                 width: 100%;
                 background: var-get($theme, 'week-number-background');
-                #{$left}: 0;
+                inset-inline-start: 0;
             }
 
             &::after {
@@ -843,7 +825,7 @@
     }
 
     %label--week-number + %cal-value--label {
-        padding-#{$left}: 0 !important;
+        padding-inline-start: 0 !important;
     }
 
     %cal-value--year {
@@ -852,11 +834,11 @@
         line-height: rem(52px);
 
         &:first-of-type {
-            padding-#{$left}: 0;
+            padding-inline-start: 0;
         }
 
         &:last-of-type {
-            padding-#{$right}: 0;
+            padding-inline-end: 0;
         }
     }
 
@@ -898,12 +880,12 @@
             position: absolute;
             content: '';
             top: 50%;
-            left: 0;
-            right: 0;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
             transform: translateY(-50%);
             height: 48px;
             background: transparent;
-            border-radius: var-get($theme, 'month-border-radius');
+            border-radius: border-radius(var-get($theme, 'month-border-radius'));
             transition: background-color .15s ease-out;
             z-index: -1;
         }
@@ -1061,7 +1043,7 @@
             content: '';
             width: 50%;
             top: 0;
-            #{$left}: 50%;
+            inset-inline-start: 50%;
             bottom: 0;
             background: var-get($theme, 'date-selected-background');
             z-index: -1;
@@ -1078,7 +1060,7 @@
             content: '';
             width: 50%;
             top: 0;
-            #{$right}: 50%;
+            inset-inline-end: 50%;
             bottom: 0;
             background: var-get($theme, 'date-selected-background');
             z-index: -1;
@@ -1096,7 +1078,7 @@
         border: none!important;
         height: 1px!important;
         width: 1px!important;
-        left: 0!important;
+        inset-inline-start: 0!important;
         top: 0!important;
         overflow: hidden!important;
         padding: 0!important;

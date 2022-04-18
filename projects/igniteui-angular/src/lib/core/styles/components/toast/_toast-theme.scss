@@ -28,7 +28,6 @@
 /// @requires apply-palette
 /// @requires text-contrast
 /// @requires extend
-/// @requires round-borders
 /// @requires elevation
 ///
 /// @example scss Set a custom background color
@@ -54,10 +53,6 @@
     }
 
     $theme: apply-palette($toast-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($toast-schema, 'border-radius')), 0, 26px
-    );
 
     @if not($shadow) {
         $elevation: map.get($toast-schema, 'elevation');
@@ -116,7 +111,7 @@
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         border: $border;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         box-shadow: map.get($theme, 'shadow');
         backdrop-filter: blur(10px);
     }

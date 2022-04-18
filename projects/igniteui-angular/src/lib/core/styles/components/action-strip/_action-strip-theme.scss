@@ -20,7 +20,6 @@
 /// @param {actions-border-radius} $actions-border-radius [null] - The border radius used for actions container inside action strip component.
 ///
 /// @requires extend
-/// @requires round-borders
 /// @requires apply-palette
 /// @requires text-contrast
 ///
@@ -48,10 +47,6 @@
     }
 
     $theme: apply-palette($action-strip-schema, $palette);
-
-    $actions-border-radius: round-borders(
-        if($actions-border-radius, $actions-border-radius, map.get($action-strip-schema, 'actions-border-radius')), 0, 24px
-    );
 
     @if not($icon-color) and $actions-background {
         $icon-color: text-contrast($actions-background);
@@ -83,9 +78,6 @@
 
     $variant: map.get($theme, variant);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     %igx-action-strip-display {
         display: flex;
         align-items: center;
@@ -95,7 +87,7 @@
         height: 100%;
         pointer-events: none;
         top: 0;
-        #{$left}: 0;
+        inset-inline-start: 0;
         background: var-get($theme, 'background');
         color: inherit;
         padding: map.get($padding, 'comfortable');
@@ -144,18 +136,18 @@
         }
 
         igx-icon + [igxLabel] {
-            margin-#{$left}: rem(12px);
+            margin-inline-start: rem(12px);
         }
 
         &%igx-drop-down__item--cosy {
             igx-icon + [igxLabel] {
-                margin-#{$left}: rem(10px);
+                margin-inline-start: rem(10px);
             }
         }
 
         &%igx-drop-down__item--compact {
             igx-icon + [igxLabel] {
-                margin-#{$left}: rem(8px);
+                margin-inline-start: rem(8px);
             }
         }
     }
@@ -180,12 +172,12 @@
         pointer-events: all;
         position: relative;
         color: var-get($theme, 'icon-color');
-        border-radius: var-get($theme, 'actions-border-radius');
+        border-radius: border-radius(var-get($theme, 'actions-border-radius'));
         background: var-get($theme, 'actions-background');
         max-height: 36px;
 
         &:last-child {
-            margin-#{$right}: 0;
+            margin-inline-end: 0;
         }
 
         igx-icon {
@@ -198,17 +190,17 @@
             }
 
             @if $variant == 'indigo-design' {
-                border-radius: var-get($theme, 'actions-border-radius');
+                border-radius: border-radius(var-get($theme, 'actions-border-radius'));
             }
         }
     }
 
     %igx-action-strip__editing-actions {
         > [igxButton] {
-            margin-#{$left}: rem(4px);
+            margin-inline-start: rem(4px);
 
             &:first-of-type {
-                margin-#{$left}: 0;
+                margin-inline-start: 0;
             }
         }
     }
