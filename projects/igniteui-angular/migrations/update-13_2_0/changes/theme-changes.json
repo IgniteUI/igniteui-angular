@@ -1,0 +1,11 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+        {
+            "name": "$direction",
+            "remove": true,
+            "owner": "core",
+            "type": "property"
+        }
+    ]
+}
