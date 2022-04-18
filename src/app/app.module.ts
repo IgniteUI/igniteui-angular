@@ -3,7 +3,7 @@ import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxBottomNavModule, IgxGridModule, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxInputGroupModule,
@@ -11,7 +11,8 @@ import {
     IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService, IgxButtonGroupModule,
     IgxListModule,
     IgxTextSelectionModule,
-    IgxPivotGridModule
+    IgxPivotGridModule,
+    IgxWebComponentInteropModule
 } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
@@ -159,6 +160,7 @@ import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
+import { RatingSampleComponent } from './rating/rating.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -297,7 +299,8 @@ const components = [
     PivotGridSampleComponent,
     PivotGridHierarchySampleComponent,
     PivotGridNoopSampleComponent,
-    IgxStepperSampleComponent
+    IgxStepperSampleComponent,
+    RatingSampleComponent
 ];
 
 @NgModule({
@@ -329,7 +332,8 @@ const components = [
         HammerModule,
         IgxDateTimeEditorModule,
         IgxButtonModule,
-        IgxPivotGridModule
+        IgxPivotGridModule,
+        IgxWebComponentInteropModule
     ],
     providers: [
         LocalService,
@@ -346,6 +350,7 @@ const components = [
             multi: true
         }
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }
