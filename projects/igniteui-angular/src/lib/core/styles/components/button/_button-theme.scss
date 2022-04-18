@@ -264,39 +264,39 @@
     $button-icon-padding: 0;
 
     $button-padding-material: (
-        comfortable: rem(9px, 16px) rem(16px, 16px),
-        cosy: rem(6px, 16px) rem(16px, 16px),
-        compact: rem(3px, 16px) rem(16px, 16px)
+        comfortable: spacing(9px, 'comfortable') spacing(16px, 'comfortable'),
+        cosy: spacing(6px, 'cosy') spacing(16px, 'cosy'),
+        compact: spacing(3px, 'compact') spacing(16px, 'compact')
     );
 
     $outlined-button-padding-material: (
-        comfortable: rem(7px, 16px) rem(14px, 16px),
-        cosy: rem(4px, 16px) rem(14px, 16px),
-        compact: rem(1px, 16px) rem(14px, 16px)
+        comfortable: spacing(7px, 'comfortable') spacing(14px, 'comfortable'),
+        cosy: spacing(4px, 'cosy') spacing(14px, 'cosy'),
+        compact: spacing(1px, 'compact') spacing(14px, 'compact')
     );
 
     $button-padding-fluent: (
-        comfortable: 0 rem(16px, 16px),
-        cosy: 0 rem(16px, 16px),
-        compact: 0 rem(16px, 16px)
+        comfortable: 0 spacing(16px, 'comfortable'),
+        cosy: 0 spacing(16px, 'cosy'),
+        compact: 0 spacing(16px, 'compact')
     );
 
     $button-padding-bootstrap: (
-        comfortable: rem(6px, 16px) rem(12px, 16px),
-        cosy: rem(4px, 16px) rem(10px, 16px),
-        compact: rem(2px, 16px) rem(8px, 16px)
+        comfortable: spacing(6px, 'comfortable') spacing(12px, 'comfortable'),
+        cosy: spacing(4px, 'cosy') spacing(10px, 'cosy'),
+        compact: spacing(2px, 'compact') spacing(8px, 'compact')
     );
 
     $button-padding-indigo: (
-        comfortable: rem(3px, 16px) rem(12px, 16px),
-        cosy: rem(2px, 16px) rem(12px, 16px),
-        compact: rem(1px, 16px) rem(8px, 16px)
+        comfortable: spacing(3px, 'comfortable') spacing(12px, 'comfortable'),
+        cosy: spacing(2px, 'cosy') spacing(12px, 'cosy'),
+        compact: spacing(1px, 'compact') spacing(8px, 'compact')
     );
 
     $outlined-button-padding-indigo: (
-        comfortable: rem(6px, 16px) rem(14px, 16px),
-        cosy: rem(4px, 16px) rem(10px, 16px),
-        compact: rem(2px, 16px) rem(6px, 16px)
+        comfortable: spacing(6px, 'comfortable') spacing(14px, 'comfortable'),
+        cosy: spacing(4px, 'cosy') spacing(10px, 'cosy'),
+        compact: spacing(2px, 'cosy') spacing(6px, 'cosy')
     );
 
     $icon-button-width-material: (
@@ -376,9 +376,9 @@
     ), $variant);
 
     $button-floating-padding: (
-        comfortable: rem(8px) rem(14px),
-        cosy: rem(4px) rem(10px),
-        compact: 0 rem(6px)
+        comfortable: spacing(8px, 'comfortable') spacing(14px, 'comfortable'),
+        cosy: spacing(4px, 'cosy') spacing(10px, 'cosy'),
+        compact: 0 spacing(6px, 'compact')
     );
 
     $button-floating-size: (
@@ -394,9 +394,9 @@
     );
 
     $icon-in-button-margin: (
-        comfortable: rem(12px),
-        cosy: rem(8px),
-        compact: rem(4px)
+        comfortable: spacing(12px, 'comfortable'),
+        cosy: spacing(8px, 'cosy'),
+        compact: spacing(4px, 'compact')
     );
 
     $icon-sizes: map.get((

@@ -5,6 +5,7 @@
 
 @use 'sass:list';
 @use 'sass:string';
+@use 'sass:map';
 @use '../base' as *;
 @use 'schemas' as *;
 @use 'palettes' as *;
@@ -69,6 +70,18 @@
     }
 
     $theme-palette: $palette !global;
+
+    :root {
+        --igx-spacing-comfortable: #{rem(map.get($spacing, 'comfortable'))};
+        --igx-spacing-cosy: #{rem(map.get($spacing, 'cosy'))};
+        --igx-spacing-compact: #{rem(map.get($spacing, 'compact'))};
+
+        @if $wc {
+            --igc-spacing-large: var(--igx-spacing-comfortable);
+            --igc-spacing-medium: var(--igx-spacing-cosy);
+            --igc-spacing-small: var(--igx-spacing-compact);
+        }
+    }
 
     @if list.length($exclude) > 0 {
         $excluded: is-component($exclude);

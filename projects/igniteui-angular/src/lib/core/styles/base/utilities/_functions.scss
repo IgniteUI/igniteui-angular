@@ -961,3 +961,22 @@ $p-test: palette(#fff, #000);
 
     @return $used;
 }
+
+/// Returns a value based on the global spacing config for the specified display density.
+/// @access private
+@function spacing($value, $density: 'comfortable') {
+    $space: map.get($spacing, $density);
+    $ratio: 1;
+
+    @if math.compatible($value, $space) {
+        $ratio: math.div($value, $space);
+    } @else {
+        @error 'Spacing must be specified in pixel values.';
+    }
+
+    @if ($ratio == 1) {
+        @return var(--igx-spacing-#{$density});
+    } @else {
+        @return calc(var(--igx-spacing-#{$density}) * #{$ratio});
+    }
+}

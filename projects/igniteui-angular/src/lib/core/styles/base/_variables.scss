@@ -131,3 +131,10 @@ $enhanced-accessibility: false !default;
 
 /// Stores a list of dropped component themes.
 $dropped-themes: () !default;
+
+/// A map that stores the default spacing values.
+$spacing: (
+    comfortable: 8px,
+    cosy: 4px,
+    compact: 2px
+);
