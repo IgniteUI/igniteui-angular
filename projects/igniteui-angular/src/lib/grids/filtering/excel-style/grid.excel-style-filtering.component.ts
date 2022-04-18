@@ -735,16 +735,13 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     private addBlanksItem(shouldUpdateSelection) {
-        const blanks =  new FilterListItem();
+        const blanks = new FilterListItem();
         if (this.column.filteringExpressionsTree) {
-            if (shouldUpdateSelection) {
-                if (this.filterValues.has(null)) {
-                    blanks.isSelected = true;
-                    blanks.isFiltered = true;
-                } else {
-                    blanks.isSelected = false;
-                    blanks.isFiltered = false;
-                }
+            blanks.isSelected = false;
+            blanks.isFiltered = false;
+            if (shouldUpdateSelection && this.filterValues.has(null)) {
+                blanks.isSelected = true;
+                blanks.isFiltered = true;
             }
         } else {
             blanks.isSelected = true;
