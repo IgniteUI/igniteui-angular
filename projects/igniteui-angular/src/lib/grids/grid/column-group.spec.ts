@@ -918,7 +918,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             spyOn(grid.columnInit, 'emit').and.callThrough();
             componentInstance.mchCount.push({});
             fixture.detectChanges();
-            const colsCount = 2; // 1 col group and 1 col
+            const colsCount = grid.columns.length; // all
             expect(grid.columnInit.emit).toHaveBeenCalledTimes(colsCount);
         });
     });
