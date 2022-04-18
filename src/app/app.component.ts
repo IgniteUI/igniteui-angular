@@ -324,6 +324,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Selection'
         },
         {
+            link: '/gridSorting',
+            icon: 'view_column',
+            name: 'Grid Sorting'
+        },
+        {
             link: '/gridRowDrag',
             icon: 'view_column',
             name: 'Grid Row Drag'

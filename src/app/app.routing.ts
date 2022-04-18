@@ -99,6 +99,7 @@ import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
+import { GridSortingComponent } from './grid-sorting/grid-sorting-sample.component';
 
 const appRoutes = [
     {
@@ -342,6 +343,10 @@ const appRoutes = [
     {
         path: 'gridSelection',
         component: GridSelectionComponent
+    },
+    {
+        path: 'gridSorting',
+        component: GridSortingComponent
     },
     {
         path: 'gridRowDrag',

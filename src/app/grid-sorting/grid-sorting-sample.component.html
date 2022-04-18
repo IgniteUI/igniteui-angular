@@ -1,0 +1,58 @@
+<div class="grid__wrapper">
+    <button class="button-opitions" igxButton="raised" (click)="sortingOptions = sortingOptions.mode ==='single' ? {mode: 'multiple'} : {mode: 'single'}">
+        {{ sortingOptions.mode}}
+    </button>
+    - Sorting mode
+    <br />
+
+    <button class="button-opitions" igxButton="raised" (click)="grid1.sortingExpressions = []">
+       Clear Sorting
+    </button>
+    - To clear sorting only
+    <br />
+
+    <button class="button-opitions" igxButton="raised" (click)="grid1.groupingExpressions = []">
+        Clear Grouped columns
+     </button>
+     - To clear grouped columns only
+     <br />
+    <igx-grid igxPreventDocumentScroll #grid1 [data]="data" [width]="'100%'" [height]="'570px'" [rowSelection]='selectionMode' [groupingExpressions]='expr' [sortable]="true" [sortingOptions]="sortingOptions">
+        <igx-column field="OrderID" header="Order ID" [hidden]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="ShipCountry" header="Ship Country" width="200px" [groupable]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="OrderDate" header="Order Date" width="200px" [formatter]="formatDate" [groupable]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="PostalCode" header="Postal Code" width="200px" [groupable]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="Discontinued" header="Discontinued" width="200px" [groupable]="true" [sortable]="true">
+            <ng-template igxCell let-cell="cell" let-val>
+                    <img *ngIf="val" src="https://www.infragistics.com/angular-demos-lob/assets/images/grid/active.png" title="Continued" alt="Continued" />
+                    <img *ngIf="!val" src="https://www.infragistics.com/angular-demos-lob/assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
+            </ng-template>
+        </igx-column>
+        <igx-column field="ShipName" header="Ship Name" width="250px" [groupable]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="ShipCity" header="Ship City" width="250px" [groupable]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="ShipperName" header="Shipper Name" width="250px" [groupable]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="Salesperson" header="Salesperson" width="250px" [groupable]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="UnitPrice" header="Unit Price" width="150px" [formatter]="formatCurrency" dataType="number" [groupable]="true" [sortable]="true">
+        </igx-column>
+        <igx-column field="Quantity" header="Quantity" width="150px" dataType="number" [groupable]="true" [sortable]="true">
+        </igx-column>
+            <ng-template igxGroupByRow let-groupRow>
+                    <div class="igx-group-label">
+                        <igx-icon family="material" class="igx-group-label__icon">group_work</igx-icon>
+                        <span class="igx-group-label__column-name">
+                        {{ groupRow.expression.fieldName }}:
+                        </span>
+                        <span class="igx-group-label__text">{{ isDate(groupRow.value) ? formatDate(groupRow.value) : groupRow.value }}</span>
+                        <igx-badge [value]="groupRow.records.length" class='igx-group-label__count-badge'></igx-badge>
+                        <span style ="color:#09f;"> Ordered in 2017:</span><span class="igx-badge__circle igx-badge__circle--default" >{{ calc2017(groupRow.records)}}</span>
+                    </div>
+                </ng-template>
+        </igx-grid>
+  </div>
