@@ -49,6 +49,8 @@ interface GridState {
 })
 
 export class GridSaveStateComponent implements OnInit, AfterViewInit {
+    @ViewChild('activeTemplate', { static: true })
+    public activeTemplate: TemplateRef<any>;
     @ViewChild(IgxExpansionPanelComponent, { static: true })
     private igxExpansionPanel: IgxExpansionPanelComponent;
     @ViewChildren(IgxGridStateDirective)
@@ -220,9 +222,6 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
         const key = `${grid.id}-state`;
         window.localStorage.removeItem(key);
     }
-
-    @ViewChild('activeTemplate', { static: true })
-    public activeTemplate: TemplateRef<any>;
 
     public onColumnInit(column: IgxColumnComponent) {
         const key = `${this.gridId}-state`;
