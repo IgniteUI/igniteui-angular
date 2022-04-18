@@ -104,9 +104,9 @@
     $indigo-theme: $variant == 'indigo-design';
 
     $node-indent: (
-        comfortable: rem(24px),
-        cosy: rem(16px),
-        compact: rem(12px)
+        comfortable: spacing(24px),
+        cosy: spacing(16px, 'cosy'),
+        compact: spacing(12px, 'compact')
     );
 
     $node-height: (
@@ -116,7 +116,7 @@
     );
 
     $icon-size: rem(24px);
-    $icon-space: rem(8px);
+    $icon-space: spacing(8px);
 
     $drop-indicator-width: (
         comfortable: calc(100% - ((#{map.get($node-indent, 'comfortable')} * 2) + (#{$icon-size} + #{$icon-space}))),

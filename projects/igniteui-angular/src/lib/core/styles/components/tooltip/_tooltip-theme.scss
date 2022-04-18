@@ -81,12 +81,12 @@
     }
 
     %tooltip--desktop {
-        padding: 0 rem(8px);
+        padding: 0 spacing(8px);
         min-height: rem(24px);
     }
 
     %tooltip--mobile {
-        padding: 0 rem(16px);
+        padding: 0 spacing(16px);
         min-height: rem(32px);
     }
 

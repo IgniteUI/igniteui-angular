@@ -85,13 +85,13 @@
 
     $palette: map.get($theme, 'palette');
     $width: 52px;
-    $margin: rem(42px) auto;
+    $margin: spacing(42px) auto;
 
     $padding: map.get((
-        'material': rem(16px) rem(24px),
-        'fluent': rem(16px) rem(24px),
-        'bootstrap': rem(12px),
-        'indigo-design': rem(14px) rem(24px)
+        'material': spacing(16px) spacing(24px),
+        'fluent': spacing(16px) spacing(24px),
+        'bootstrap': spacing(12px),
+        'indigo-design': spacing(14px) spacing(24px)
     ), $variant);
 
     $border: map.get((
