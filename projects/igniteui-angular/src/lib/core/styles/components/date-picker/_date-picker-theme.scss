@@ -12,7 +12,6 @@
 /// @requires elevation
 /// @requires text-contrast
 /// @requires var-get
-/// @requires rem
 @mixin date-picker($theme) {
     $palette: map.get($theme, 'palette');
     $selected-hover-color: text-contrast(map.get($theme, 'date-selected-background'), $palette: $palette);
@@ -153,6 +152,6 @@
     %date-picker__buttons {
         display: flex;
         justify-content: flex-end;
-        padding: rem(8px);
+        padding: spacing(8px);
     }
 }
