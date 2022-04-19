@@ -67,13 +67,14 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires rem
+/// @requires spacing
 /// @requires var-get
 @mixin banner($theme) {
     @include css-vars($theme);
     $banner-padding: (
-        comfortable: rem(8),
-        cosy: rem(8),
-        compact: rem(8)
+        comfortable: spacing(8px, 'comfortable'),
+        cosy: spacing(8px, 'cosy'),
+        compact: spacing(8px, 'compact')
     );
 
     %igx-banner,
@@ -100,7 +101,7 @@
         width: rem(40);
         min-width: rem(40);
         height: rem(40);
-        margin-inline-start: rem(16);
+        margin-inline-start: spacing(16px);
         color: var-get($theme, 'banner-illustration-color');
     }
 
@@ -117,7 +118,7 @@
     %igx-banner__text {
         color: var-get($theme, 'banner-message-color');
         flex: 1 0 0%;
-        margin-inline-start: rem(24);
+        margin-inline-start: spacing(24px);
 
         > * {
             margin-block-start: 0 !important;
@@ -135,7 +136,7 @@
     %igx-banner__message {
         min-width: rem(220);
         flex: 1 0 0%;
-        margin-inline-end: rem(90);
+        margin-inline-end: spacing(90px);
     }
 
     %igx-banner__row {
