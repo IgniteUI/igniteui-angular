@@ -631,9 +631,9 @@
         color: var-get($theme, 'pinned-border-color')
     );
 
-    $padding-comfortable: spacing(24px);
-    $padding-cosy: spacing(16px);
-    $padding-compact: spacing(12px);
+    $padding-comfortable: spacing(24px, 'comfortable');
+    $padding-cosy: spacing(16px, 'cosy');
+    $padding-compact: spacing(12px, 'compact');
 
     $grid-header-padding: (
         comfortable: 0 $padding-comfortable,
@@ -669,9 +669,9 @@
         compact: rem(24px)
     );
 
-    $cell-padding-comfortable: spacing(24px);
-    $cell-padding-cosy: spacing(16px);
-    $cell-padding-compact: spacing(12px);
+    $cell-padding-comfortable: spacing(24px, 'comfortable');
+    $cell-padding-cosy: spacing(16px, 'cosy');
+    $cell-padding-compact: spacing(12px, 'compact');
 
     $grid-cell-padding: (
         comfortable: 0 $cell-padding-comfortable,
@@ -680,17 +680,17 @@
     );
 
     $hierarchical-grid-indent: (
-        comfortable: spacing(24px),
-        cosy: spacing(16px),
-        compact: spacing(12px)
+        comfortable: spacing(24px, 'comfortable'),
+        cosy: spacing(16px, 'cosy'),
+        compact: spacing(12px, 'compact')
     );
 
     $hierarchical-action-icon: 24px;
 
     $grouparea-padding: (
-        comfortable: 0 spacing(24px),
-        cosy: 0 spacing(16px),
-        compact: 0 spacing(12px)
+        comfortable: 0 spacing(24px, 'comfortable'),
+        cosy: 0 spacing(16px, 'cosy'),
+        compact: 0 spacing(12px, 'compact')
     );
 
     $grouparea-min-height: (
@@ -2128,15 +2128,15 @@
 
     [dir='rtl'] {
         %igx-grid__group-content {
-            padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'comfortable'));
+            padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'comfortable'), 'comfortable');
         }
 
         %igx-grid__group-content--cosy {
-            padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'cosy'));
+            padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'cosy'), 'cosy');
         }
 
         %igx-grid__group-content--compact{
-            padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'compact'));
+            padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'compact'), 'compact');
         }
 
         %igx-group-label {
@@ -2155,7 +2155,7 @@
         align-items: center;
         justify-content: flex-start;
         flex: 1 1 auto;
-        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'comfortable'));
+        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'comfortable'), 'comfortable');
         min-height: map.get($grid-header-height, 'comfortable');
 
         &:focus {
@@ -2164,12 +2164,12 @@
     }
 
     %igx-grid__group-content--cosy {
-        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'cosy'));
+        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'cosy'), 'cosy');
         min-height: map.get($grid-header-height, 'cosy');
     }
 
     %igx-grid__group-content--compact{
-        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'compact'));
+        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'compact'), 'compact');
         min-height: map.get($grid-header-height, 'compact');
     }
 
@@ -2178,8 +2178,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'comfortable'));
-        padding-inline-end: spacing(map.get($grid-grouping-indicator-padding, 'comfortable'));
+        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'comfortable'), 'comfortable');
+        padding-inline-end: spacing(map.get($grid-grouping-indicator-padding, 'comfortable'), 'comfortable');
         border-inline-end: 1px solid var-get($theme, 'header-border-color');
         background: inherit;
         z-index: 1;
@@ -2210,13 +2210,13 @@
     }
 
     %igx-grid__row-indentation--cosy {
-        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'cosy'));
-        padding-inline-end: spacing(map.get($grid-grouping-indicator-padding, 'cosy'))
+        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'cosy'), 'cosy');
+        padding-inline-end: spacing(map.get($grid-grouping-indicator-padding, 'cosy'), 'cosy')
     }
 
     %igx-grid__row-indentation--compact {
-        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'compact'));
-        padding-inline-end: spacing(map.get($grid-grouping-indicator-padding, 'compact'));
+        padding-inline-start: spacing(map.get($grid-grouping-indicator-padding, 'compact'), 'compact');
+        padding-inline-end: spacing(map.get($grid-grouping-indicator-padding, 'compact'), 'compact');
     }
 
     %igx-grid-grouparea {
@@ -2266,8 +2266,8 @@
         padding: map.get($grouparea-padding, 'cosy');
 
         %igx-chip {
-            margin-top: spacing(8px);
-            margin-bottom: spacing(8px);
+            margin-top: spacing(8px, 'cosy');
+            margin-bottom: spacing(8px, 'cosy');
         }
     }
 
@@ -2276,8 +2276,8 @@
         padding: map.get($grouparea-padding, 'compact');
 
         %igx-chip {
-            margin-top: spacing(4px);
-            margin-bottom: spacing(4px);
+            margin-top: spacing(4px, 'compact');
+            margin-bottom: spacing(4px, 'compact');
         }
     }
 
@@ -2297,7 +2297,7 @@
             width: rem(16px);
             height: rem(16px);
             font-size: rem(16px);
-            margin-inline-end: spacing(8px);
+            margin-inline-end: spacing(8px, 'comfortable');
         }
     }
 
@@ -2447,15 +2447,15 @@
 
     @for $i from 1 through 25 {
         %igx-grid__tree-cell--padding-level-#{$i} {
-            padding-inline-start: spacing($i * map.get($grid-grouping-indicator-padding, 'comfortable'));
+            padding-inline-start: spacing($i * map.get($grid-grouping-indicator-padding, 'comfortable'), 'comfortable');
         }
 
         %igx-grid__tree-cell-cosy--padding-level-#{$i} {
-            padding-inline-start: spacing($i * map.get($grid-grouping-indicator-padding, 'cosy'));
+            padding-inline-start: spacing($i * map.get($grid-grouping-indicator-padding, 'cosy'), 'cosy');
         }
 
         %igx-grid__tree-cell-compact--padding-level-#{$i} {
-            padding-inline-start: spacing($i * map.get($grid-grouping-indicator-padding, 'compact'));
+            padding-inline-start: spacing($i * map.get($grid-grouping-indicator-padding, 'compact'), 'cosy');
         }
     }
 

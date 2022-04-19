@@ -18,12 +18,12 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $vertical-space-comfortable: spacing(16px);
-    $vertical-space-cosy: spacing(12px);
-    $vertical-space-compact: spacing(8px);
-    $horizontal-space-comfortable: spacing(16px);
-    $horizontal-space-cosy: spacing(12px);
-    $horizontal-space-compact: spacing(8px);
+    $vertical-space-comfortable: spacing(16px, 'comfortable');
+    $vertical-space-cosy: spacing(12px, 'cosy');
+    $vertical-space-compact: spacing(8px, 'compact');
+    $horizontal-space-comfortable: spacing(16px, 'comfortable');
+    $horizontal-space-cosy: spacing(12px, 'cosy');
+    $horizontal-space-compact: spacing(8px, 'compact');
 
     $bootstrap-theme: $variant == 'bootstrap';
 
@@ -333,7 +333,7 @@
 
         %advanced-filter__main,
         %advanced-filter__header {
-            padding: $vertical-space-cosy spacing(16px);
+            padding: $vertical-space-cosy spacing(16px, 'cosy');
         }
 
         %filter-tree__expression-actions igx-icon {
@@ -392,7 +392,7 @@
 
         %advanced-filter__main,
         %advanced-filter__header {
-            padding: $vertical-space-compact spacing(16px);
+            padding: $vertical-space-compact spacing(16px, 'compact');
         }
 
         %filter-tree__expression-actions igx-icon {

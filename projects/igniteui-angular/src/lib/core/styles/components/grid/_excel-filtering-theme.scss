@@ -23,9 +23,9 @@
     $bootstrap-theme: $variant == 'bootstrap';
 
     $tree-node-indent: (
-        comfortable: spacing(16px),
-        cosy: spacing(8px),
-        compact: spacing(4px)
+        comfortable: spacing(16px, 'comfortable'),
+        cosy: spacing(8px, 'cosy'),
+        compact: spacing(4px, 'compact')
     );
 
     $tree-node-expander-size: rem(20px);
@@ -351,43 +351,43 @@
 
     %grid-excel-menu--cosy {
         igx-chips-area {
-            padding: spacing(8px);
+            padding: spacing(8px, 'cosy');
             padding-bottom: 0;
         }
 
         %grid-excel-menu__header {
             justify-content: space-between;
-            padding: spacing(8px);
+            padding: spacing(8px, 'cosy');
         }
 
         %grid-excel-sort {
-            padding: spacing(8px);
+            padding: spacing(8px, 'cosy');
         }
 
         %grid-excel-move {
-            padding: spacing(8px);
+            padding: spacing(8px, 'cosy');
         }
 
         %grid-excel-actions {
-            padding: spacing(8px);
+            padding: spacing(8px, 'cosy');
         }
 
         %grid-excel-actions__action {
-            padding: spacing(8px);
+            padding: spacing(8px, 'cosy');
         }
 
         %grid-excel-main {
-            padding: spacing(8px);
-            gap: spacing(8px);
+            padding: spacing(8px, 'cosy');
+            gap: spacing(8px, 'cosy');
         }
 
         igx-list {
-            margin-inline-start: spacing(-8px);
-            margin-inline-end: spacing(-8px);
+            margin-inline-start: spacing(-8px, 'cosy');
+            margin-inline-end: spacing(-8px, 'cosy');
         }
 
         %igx-excel-filter__tree {
-            margin: 0 spacing(-8px);
+            margin: 0 spacing(-8px, 'cosy');
 
             > igx-checkbox,
             .igx-tree-node__wrapper {
@@ -411,19 +411,19 @@
 
     %grid-excel-menu--compact {
         igx-chips-area {
-            padding: spacing(4px);
+            padding: spacing(4px, 'compact');
             padding-bottom: 0;
-            gap: spacing(4px);
+            gap: spacing(4px, 'compact');
         }
 
         %grid-excel-menu__header {
             justify-content: space-between;
-            padding: spacing(4px);
+            padding: spacing(4px, 'compact');
         }
 
         %grid-excel-sort,
         %grid-excel-move {
-            padding: spacing(4px);
+            padding: spacing(4px, 'compact');
 
             @extend %grid-excel-action--compact;
 
@@ -437,25 +437,25 @@
         }
 
         %grid-excel-actions {
-            padding: spacing(4px);
+            padding: spacing(4px, 'compact');
         }
 
         %grid-excel-actions__action {
-            padding: spacing(4px);
+            padding: spacing(4px, 'compact');
         }
 
         %grid-excel-main {
-            padding: spacing(4px);
-            gap: spacing(4px);
+            padding: spacing(4px, 'compact');
+            gap: spacing(4px, 'compact');
         }
 
         igx-list {
-            margin-inline-start: spacing(-4px);
-            margin-inline-end: spacing(-4px);
+            margin-inline-start: spacing(-4px, 'compact');
+            margin-inline-end: spacing(-4px, 'compact');
         }
 
         %igx-excel-filter__tree {
-            margin: 0 spacing(-4px);
+            margin: 0 spacing(-4px, 'compact');
 
             igx-checkbox,
             .igx-tree-node__wrapper {
@@ -487,37 +487,37 @@
 
     %grid-excel-menu__secondary--cosy {
         %grid-excel-menu__header {
-            padding: spacing(8px);
+            padding: spacing(8px, 'cosy');
         }
 
         %grid-excel-menu__condition {
-            padding: 0 spacing(8px);
+            padding: 0 spacing(8px, 'cosy');
         }
 
         %grid-excel-menu__add-filter {
-            margin: 0 spacing(8px) spacing(8px);
+            margin: 0 spacing(8px, 'cosy') spacing(8px, 'cosy');
         }
 
         %grid-excel-menu__footer {
-            padding: spacing(8px);
+            padding: spacing(8px, 'cosy');
         }
     }
 
     %grid-excel-menu__secondary--compact {
         %grid-excel-menu__header {
-            padding: spacing(4px);
+            padding: spacing(4px, 'compact');
         }
 
         %grid-excel-menu__condition {
-            padding: 0 spacing(4px);
+            padding: 0 spacing(4px, 'compact');
         }
 
         %grid-excel-menu__add-filter {
-            margin: 0 spacing(4px) spacing(4px);
+            margin: 0 spacing(4px, 'compact') spacing(4px, 'compact');
         }
 
         %grid-excel-menu__footer {
-            padding: spacing(8px) spacing(4px);
+            padding: spacing(8px, 'compact') spacing(4px, 'compact');
         }
     }
 

@@ -119,15 +119,15 @@
     $grid-toolbar-fs: rem(16px);
 
     $grid-toolbar-padding: (
-        comfortable: rem(16px) rem(24px),
-        cosy: rem(12px) rem(16px),
-        compact: rem(8px) rem(12px)
+        comfortable: spacing(16px, 'comfortable') spacing(24px, 'comfortable'),
+        cosy: spacing(12px, 'cosy') spacing(16px, 'cosy'),
+        compact: spacing(8px, 'compact') spacing(12px, 'compact')
     );
 
     $grid-toolbar-spacer: (
-        comfortable: rem(16px),
-        cosy: rem(12px),
-        compact: rem(8px)
+        comfortable: spacing(16px, 'comfortable'),
+        cosy: spacing(12px, 'cosy'),
+        compact: spacing(8px, 'compact')
     );
 
     $grid-toolbar-height: (
@@ -297,7 +297,7 @@
     %igx-grid-toolbar__dd-list-items {
         cursor: pointer;
         position: relative;
-        padding: em(8px) em(16px);
+        padding: spacing(8px) spacing(16px);
         color: var-get($theme, 'item-text-color');
         white-space: nowrap;
 

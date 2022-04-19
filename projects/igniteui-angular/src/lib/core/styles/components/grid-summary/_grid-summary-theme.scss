@@ -108,15 +108,15 @@
     );
 
     $item-padding: (
-        comfortable: rem(6px) 0,
-        cosy: rem(2px) 0,
+        comfortable: spacing(6px, 'comfortable') 0,
+        cosy: spacing(2px, 'cosy') 0,
         compact: 0
     );
 
     $summary-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+        comfortable: 0 spacing(24px, 'comfortable'),
+        cosy: 0 spacing(16px, 'cosy'),
+        compact: 0 spacing(12px, 'compact')
     );
 
     %igx-grid-summary {
@@ -189,7 +189,7 @@
     %igx-grid-summary__label {
         color: var-get($theme, 'label-color');
         min-width: rem(30px);
-        margin-inline-end: rem(3px);
+        margin-inline-end: spacing(3px);
 
         &:hover {
             color: var-get($theme, 'label-hover-color');
