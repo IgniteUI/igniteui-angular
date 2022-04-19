@@ -75,21 +75,13 @@
 @use '../print';
 
 /// @param {boolean} $print-layout [true] - Activates the printing styles of the components.
-/// @param {string} $direction [ltr] - Sets the layout direction. Can be 'ltr' or 'rtl'.
 /// @param {boolean} $enhanced-accesibility [false] - Switches component colors and other properties to more accessible values.
 /// @requires {mixin} igx-vhelper
 /// @requires {mixin} igx-print-layout
 @mixin core(
     $print-layout: true,
-    $direction: $direction,
     $enhanced-accessibility: $enhanced-accessibility
 ) {
-    @if $direction != ltr and $direction != rtl {
-        $direction: ltr !global;
-    } @else {
-        $direction: $direction !global;
-    }
-
     $enhanced-accessibility: $enhanced-accessibility !global;
 
     // Angular hack for binding to [hidden] property

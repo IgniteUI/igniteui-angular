@@ -155,42 +155,8 @@
         }
     }
 }
+
 /* stylelint-enable max-nesting-depth */
-
-@include describe('Direction') {
-    @include it('should return styles only when the global direction is RTL') {
-        $direction: 'rtl' !global;
-
-        @include assert() {
-            @include output() {
-                @include if-rtl() {
-                    margin: 1px;
-                }
-            }
-
-            @include expect() {
-                margin: 1px;
-            }
-        }
-    }
-
-    @include it('should return styles only when the global direction is LTR') {
-        $direction: 'ltr' !global;
-
-        @include assert() {
-            @include output() {
-                @include  if-ltr() {
-                    margin: 1px;
-                }
-            }
-
-            @include expect() {
-                margin: 1px;
-            }
-        }
-    }
-}
-
 /* stylelint-disable string-quotes, number-leading-zero */
 @include describe('Animation') {
     @include it('should produce correct syntax for animation') {
