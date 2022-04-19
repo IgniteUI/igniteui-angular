@@ -1,5 +1,5 @@
 import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { debounceTime } from 'rxjs/operators';
 import { RemoteVirtService } from '../shared/remoteProductsData.service';
 
@@ -28,6 +28,10 @@ export class GridVirtualizationScrollSampleComponent implements OnInit, AfterVie
 
     public ngOnInit(): void {
         this.remoteData = this.remoteService.data;
+    }
+
+    public onColumnInit(col: IgxColumnComponent) {
+        col.editable = true;
     }
 
     public ngAfterViewInit() {
