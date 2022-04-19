@@ -238,7 +238,7 @@ function typedocBuildDocsJA(cb) {
 function typedocBuildDocsEN(cb) {
     const childProcess = spawnSync('typedoc', [
         TYPEDOC.PROJECT_PATH,
-        '--alocalize',
+        '--localize',
         'en',
         "--tsconfig",
         path.join(__dirname, "tsconfig.typedoc.json")], { stdio: 'inherit', shell: true });
