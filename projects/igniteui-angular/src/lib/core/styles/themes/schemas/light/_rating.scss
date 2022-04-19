@@ -1,0 +1,102 @@
+@use '../../../base' as *;
+
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+///
+/// @property {Map} label-color [color: ('grays', 700)] - sets the color for the label.
+/// @param {Map} $idle-symbol-color [null] - sets the idle color for the symbol when it is a plane text.
+/// @param {Map} $selected-symbol-color [null] - sets the color in selected state for the symbol when it is a plane text.
+/// @param {Map} $disabled-label-color [null] - sets the color for the label in disabled state.
+/// @param {Map} $disabled-idle-symbols-color [null] - sets the idle color for the symbol in disabled state when it is a plane text.
+/// @param {Map} $disabled-selected-symbols-color [null] - sets the color for the symbol in selected/disabled state when it is a plane text.
+///
+/// Generates a light rating schema.
+/// @type {Map}
+///
+///
+/// @see $default-palette
+
+$light-rating: (
+    variant: 'material',
+
+    label-color: (
+        color: ('grays', 700)
+    ),
+
+    idle-symbol-color: (
+        color: ('grays', 900)
+    ),
+
+    selected-symbols-color: (
+        color: ('primary')
+    ),
+
+    disabled-label-color: (
+        color: ('grays', 400)
+    ),
+
+    disabled-idle-symbols-color: (
+        color: ('grays', 400)
+    ),
+
+    disabled-selected-symbols-color: (
+        color: ('grays', 600)
+    ),
+
+);
+
+/// Generates a fluent rating schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $light-rating
+
+
+//$disabled-color: color(gray, 200) !default;
+//$disabled-selected-color: color(gray, 500) !default;
+//$disabled-label-color: color(gray, 400) !default;
+$fluent-rating: extend($light-rating, (
+    variant: 'fluent',
+
+    label-color: (
+        color: ('grays', 900)
+    ),
+
+    disabled-label-color: (
+        color: ('grays', 400)
+    ),
+
+    disabled-idle-symbols-color: (
+        color: ('grays', 200)
+    ),
+
+    disabled-selected-symbols-color: (
+        color: ('grays', 500)
+    ),
+));
+
+/// Generates a bootstrap rating schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $light-rating
+$bootstrap-rating: extend($light-rating, (
+    variant: 'bootstrap',
+
+    label-color: (
+        color: ('grays', 900)
+    ),
+));
+
+/// Generates an indigo rating schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $light-rating
+$indigo-rating: extend($light-rating, (
+    variant: 'indigo-design',
+
+    label-color: (
+        color: ('grays', 900)
+    ),
+));

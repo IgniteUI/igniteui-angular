@@ -26,6 +26,7 @@
 @use './date-range-picker' as *;
 @use './divider' as *;
 @use './dock-manager' as *;
+@use './rating' as *;
 @use './drop-down' as *;
 @use './expansion-panel' as *;
 @use './gauge' as *;
@@ -89,6 +90,7 @@
 /// @property {Map} igx-date-range-picker [$light-date-range-picker ]
 /// @property {Map} igx-divider [$light-divider]
 /// @property {Map} igc-dockmanager [$light-dock-manager]
+/// @property {Map} igc-rating [$light-rating]
 /// @property {Map} igx-drop-down [$light-drop-down]
 /// @property {Map} igx-expansion-panel [$light-expansion-panel]
 /// @property {Map} linear-gauge [$light-linear-gauge]
@@ -150,6 +152,7 @@ $light-schema: (
     igx-date-range: $light-date-range-picker,
     igx-divider: $light-divider,
     igc-dockmanager: $light-dock-manager,
+    igc-rating: $light-rating,
     igx-drop-down: $light-drop-down,
     igx-expansion-panel: $light-expansion-panel,
     linear-gauge: $light-linear-gauge,
@@ -222,6 +225,7 @@ $light-fluent-schema: (
     igx-date-range: $fluent-date-range-picker,
     igx-divider: $fluent-divider,
     igc-dockmanager: $fluent-dock-manager,
+    igc-rating: $fluent-rating,
     igx-drop-down: $fluent-drop-down,
     igx-expansion-panel: $fluent-expansion-panel,
     linear-gauge: $fluent-linear-gauge,
@@ -289,6 +293,7 @@ $light-bootstrap-schema: (
     igx-date-range: $bootstrap-date-range-picker,
     igx-divider: $bootstrap-divider,
     igc-dockmanager: $bootstrap-dock-manager,
+    igc-rating: $bootstrap-rating,
     igx-drop-down: $bootstrap-drop-down,
     igx-expansion-panel: $bootstrap-expansion-panel,
     linear-gauge: $bootstrap-linear-gauge,
@@ -356,7 +361,7 @@ $light-indigo-schema: (
     igx-date-range: $indigo-date-range-picker,
     igx-drop-down: $indigo-drop-down,
     igx-divider: $indigo-divider,
-    igc-dockmanager: $indigo-dock-manager,
+    igc-rating: $indigo-rating,
     igx-expansion-panel: $indigo-expansion-panel,
     linear-gauge: $indigo-linear-gauge,
     radial-gauge: $indigo-radial-gauge,

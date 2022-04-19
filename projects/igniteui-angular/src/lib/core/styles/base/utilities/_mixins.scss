@@ -358,7 +358,7 @@
         $elevation: string.index($key, 'elevation');
 
         @if not(list.index($ignore, $key) or $elevation) and meta.type-of($value) != 'map' {
-            @if $prefix {
+            @if $prefix and $prefix != ignore {
                 --#{$prefix}-#{$key}: var(--#{$name}-#{$key}, #{$value});
             } @else {
                 --#{$key}: var(--#{$name}-#{$key}, #{$value});
