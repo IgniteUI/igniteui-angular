@@ -18,12 +18,12 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $vertical-space-comfortable: rem(16px);
-    $vertical-space-cosy: rem(12px);
-    $vertical-space-compact: rem(8px);
-    $horizontal-space-comfortable: rem(16px);
-    $horizontal-space-cosy: rem(12px);
-    $horizontal-space-compact: rem(8px);
+    $vertical-space-comfortable: spacing(16px);
+    $vertical-space-cosy: spacing(12px);
+    $vertical-space-compact: spacing(8px);
+    $horizontal-space-comfortable: spacing(16px);
+    $horizontal-space-cosy: spacing(12px);
+    $horizontal-space-compact: spacing(8px);
 
     $bootstrap-theme: $variant == 'bootstrap';
 
@@ -59,13 +59,13 @@
 
     %advanced-filter__main {
         display: block;
-        padding: rem(16px);
+        padding: spacing(16px);
         overflow: auto;
         min-height: 214px;
         max-height: 468px;
 
         [igxButton] + [igxButton] {
-            margin-inline-start: rem(8px);
+            margin-inline-start: spacing(8px);
         }
     }
 
@@ -74,7 +74,7 @@
             width: rem(18px);
             height: rem(18px);
             font-size: rem(18px);
-            margin-inline-end: rem(8px);
+            margin-inline-end: spacing(8px);
         }
     }
 
@@ -141,12 +141,12 @@
     }
 
     %filter-tree__expression-column {
-        padding: 0 rem(8px);
+        padding: 0 spacing(8px);
     }
 
     %filter-tree__expression-actions {
         display: inline-flex;
-        margin: 0 rem(8px);
+        margin: 0 spacing(8px);
 
         igx-icon {
             cursor: pointer;
@@ -160,7 +160,7 @@
         }
 
         igx-icon + igx-icon {
-            margin-inline-start: rem(8px);
+            margin-inline-start: spacing(8px);
         }
     }
 
@@ -189,7 +189,7 @@
         igx-select + igx-input-group,
         igx-select + igx-date-picker,
         igx-input-group + igx-select {
-            margin-inline-start: rem(8px);
+            margin-inline-start: spacing(8px);
         }
 
         + %filter-tree,
@@ -200,7 +200,7 @@
 
     %filter-tree__inputs-actions {
         display: flex;
-        margin: 0 rem(8px);
+        margin: 0 spacing(8px);
         align-items: center;
 
         [igxButton] {
@@ -208,7 +208,7 @@
         }
 
         [igxButton] + [igxButton] {
-            margin-inline-start: rem(8px);
+            margin-inline-start: spacing(8px);
         }
     }
 
@@ -230,11 +230,11 @@
             height: rem(24px);
             background: white;
             border-radius: border-radius(rem(4px));
-            margin-inline-end: rem(8px);
+            margin-inline-end: spacing(8px);
         }
 
         + %filter-legend__item {
-            margin-inline-start: rem(24px);
+            margin-inline-start: spacing(24px);
         }
     }
 
@@ -252,8 +252,8 @@
         flex-flow: column;
         width: 196px;
         background-color: var-get($theme, 'filtering-row-background');
-        padding: rem(16px);
-        margin-inline-start: rem(16px);
+        padding: spacing(16px);
+        margin-inline-start: spacing(16px);
         border-radius: border-radius(rem(4px));
         border: 1px solid color($palette, 'grays', 200);
 
@@ -269,7 +269,7 @@
         }
 
         [igxButton] > igx-icon + * {
-            margin-inline-start: 8px;
+            margin-inline-start: spacing(8px);
         }
 
         igx-buttongroup > * {
@@ -333,7 +333,7 @@
 
         %advanced-filter__main,
         %advanced-filter__header {
-            padding: $vertical-space-cosy rem(16px);
+            padding: $vertical-space-cosy spacing(16px);
         }
 
         %filter-tree__expression-actions igx-icon {
@@ -392,7 +392,7 @@
 
         %advanced-filter__main,
         %advanced-filter__header {
-            padding: $vertical-space-compact rem(16px);
+            padding: $vertical-space-compact spacing(16px);
         }
 
         %filter-tree__expression-actions igx-icon {

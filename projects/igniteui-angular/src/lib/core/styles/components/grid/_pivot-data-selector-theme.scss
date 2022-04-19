@@ -49,8 +49,8 @@
         compact: rem(18px)
     );
 
-    $chip-item-padding: 0 rem(2px);
-    $panel-padding: rem(4px, 16px);
+    $chip-item-padding: 0 spacing(2px);
+    $panel-padding: spacing(4px);
 
     %selector-base {
         display: flex;
@@ -70,7 +70,7 @@
 
         > igx-list {
             igx-display-container {
-                padding: rem(4px);
+                padding: spacing(4px);
             }
 
             igx-list-item {
@@ -90,7 +90,7 @@
         %form-group-prefix,
         %form-group-prefix--cosy,
         %form-group-prefix--compact {
-            padding-inline-end: rem(16px) !important;
+            padding-inline-end: spacing(16px) !important;
             box-sizing: content-box;
         }
 
@@ -120,7 +120,7 @@
         }
 
         %igx-expansion-panel__header-icon--start {
-            margin-inline-end: rem(8px);
+            margin-inline-end: spacing(8px);
         }
 
         igx-icon {
@@ -146,7 +146,7 @@
         igx-list {
             display: flex;
             flex-direction: column;
-            padding: rem(8px) rem(4px);
+            padding: spacing(8px) spacing(4px);
             min-height: 186px;
             max-height: 208px;
             overflow-y: auto;
@@ -157,7 +157,7 @@
         }
 
         igx-checkbox + span {
-            margin-inline-start: rem(8px);
+            margin-inline-start: spacing(8px);
             line-height: rem(28px);
         }
     }
@@ -180,7 +180,7 @@
 
     %selector-header-extra {
         igx-icon {
-            padding: 0 rem(8px);
+            padding: 0 spacing(8px);
             box-sizing: content-box;
         }
 
@@ -209,7 +209,7 @@
         width: 100%;
 
         .igx-drag--push & {
-            padding-top: rem(32px);
+            padding-top: spacing(32px);
         }
     }
 
@@ -221,7 +221,7 @@
         background: color($color: 'surface');
         min-height: rem(32px);
         height: auto;
-        padding: 0 rem(2px) 0 rem(4px);
+        padding: 0 spacing(2px) 0 spacing(4px);
         cursor: grabbing;
         box-shadow: elevation($elevations, 24);
         border: 1px solid color($color: 'grays', $variant: 100);
@@ -240,7 +240,7 @@
         align-items: center;
 
         igx-icon {
-            margin-inline-end: rem(8px);
+            margin-inline-end: spacing(8px);
         }
     }
 
@@ -276,7 +276,7 @@
         justify-content: space-between;
         align-items: center;
         flex: 0 1 100%;
-        margin-inline-end: rem(8px);
+        margin-inline-end: spacing(8px);
         overflow: hidden;
     }
 
@@ -284,7 +284,7 @@
         display: flex;
 
         igx-icon + igx-icon {
-            margin-inline-start: rem(8px);
+            margin-inline-start: spacing(8px);
         }
     }
 }
