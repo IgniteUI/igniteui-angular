@@ -5884,7 +5884,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData) && nextCellIndex !== undefined) {
             return { rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex };
         } else {
-            const nextIndex = this.getNextDataRowIndex(currRowIndex)
+            const nextIndex = this.getNextDataRowIndex(currRowIndex);
             if (colIndexes.length === 0 || nextIndex === currRowIndex) {
                 return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
             } else {
