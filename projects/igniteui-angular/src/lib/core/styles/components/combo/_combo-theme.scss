@@ -59,7 +59,7 @@
     }
 
     %igx-combo__checkbox {
-        margin-inline-end: rem(8);
+        margin-inline-end: spacing(8px);
     }
 
     %igx-combo__drop-down {
@@ -72,7 +72,7 @@
     }
 
     %igx-combo__search {
-        padding: rem(8px) rem(16px);
+        padding: spacing(8px) spacing(16px);
         margin: 0 !important;
         z-index: 26;
         border-bottom: 1px dashed var-get($theme, 'search-separator-border-color');
@@ -93,7 +93,7 @@
         justify-content: center;
         align-items: center;
         position: relative;
-        padding: rem(16px);
+        padding: spacing(16px);
         background: var-get($theme, 'empty-list-background');
     }
 
@@ -103,7 +103,7 @@
         align-items: center;
         width: 100%;
         color: var-get($theme, 'empty-list-placeholder-color');
-        padding: 0 rem(24px);
+        padding: 0 spacing(24px);
         font-size: rem(13px);
     }
 

@@ -86,7 +86,7 @@
         bottom: 0;
         inset-inline-end: 0;
         font-size: rem(14px);
-        padding: rem(2px) rem(4px);
+        padding: spacing(2px) spacing(4px);
         line-height: normal;
         border-radius: border-radius(var-get($theme, 'border-radius'));
         border: 1px solid var-get($theme, 'border-color');

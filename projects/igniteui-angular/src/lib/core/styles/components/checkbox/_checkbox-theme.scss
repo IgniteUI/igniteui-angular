@@ -125,7 +125,7 @@
         indigo-design: none,
     ), $variant);
 
-    $label-margin: em(8px);
+    $label-margin: spacing(8px);
 
     $mark-stroke: map.get((
         material: 3,
