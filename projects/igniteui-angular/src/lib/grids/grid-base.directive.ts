@@ -7207,7 +7207,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         // find next/prev record that is editable.
         const nextRowIndex = previous ? this.findPrevEditableDataRowIndex(currentRowIndex) :
             this.dataView.findIndex((rec, index) =>
-                index > resolvedIndex && this.isEditableDataRecordAtIndex(resolvedIndex));
+                index > resolvedIndex && this.isEditableDataRecordAtIndex(index));
         const nextDataIndex = this.getDataIndex(nextRowIndex);
         return nextDataIndex !== -1 ? nextDataIndex : currentRowIndex;
     }
