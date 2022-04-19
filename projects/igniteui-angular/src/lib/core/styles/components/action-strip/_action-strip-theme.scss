@@ -65,15 +65,16 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
+/// @requires spacing
 /// @requires rem
 /// @requires var-get
 @mixin action-strip($theme) {
     @include css-vars($theme);
 
     $padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+        comfortable: 0 spacing(24px, 'comfortable'),
+        cosy: 0 spacing(16px, 'cosy'),
+        compact: 0 spacing(12px, 'compact')
     );
 
     $variant: map.get($theme, variant);
@@ -136,18 +137,18 @@
         }
 
         igx-icon + [igxLabel] {
-            margin-inline-start: rem(12px);
+            margin-inline-start: spacing(12px);
         }
 
         &%igx-drop-down__item--cosy {
             igx-icon + [igxLabel] {
-                margin-inline-start: rem(10px);
+                margin-inline-start: spacing(10px);
             }
         }
 
         &%igx-drop-down__item--compact {
             igx-icon + [igxLabel] {
-                margin-inline-start: rem(8px);
+                margin-inline-start: spacing(8px);
             }
         }
     }
@@ -197,7 +198,7 @@
 
     %igx-action-strip__editing-actions {
         > [igxButton] {
-            margin-inline-start: rem(4px);
+            margin-inline-start: spacing(4px);
 
             &:first-of-type {
                 margin-inline-start: 0;
