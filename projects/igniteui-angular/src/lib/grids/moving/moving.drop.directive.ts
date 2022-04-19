@@ -116,7 +116,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 this.cms.icon.innerText = 'swap_horiz';
             }
 
-            this.cms.icon.innerText = 'lock';
+            this.cms.icon.innerText = 'save_alt';
         } else {
             this.cms.icon.innerText = 'block';
         }
