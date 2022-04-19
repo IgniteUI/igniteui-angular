@@ -4420,32 +4420,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    protected _getDataViewIndex(index: number): number {
-        let newIndex = index;
-        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.paginator.page !== 0) {
-            newIndex = index - this.paginator.perPage * this.paginator.page;
-        } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
-            newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
-        }
-        return newIndex;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected getDataIndex(dataViewIndex: number): number {
-        let newIndex = dataViewIndex;
-        if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
-            newIndex = dataViewIndex + this.gridAPI.grid.virtualizationState.startIndex;
-        }
-        return newIndex;
-    }
-
-    /**
      * Places a column before or after the specified target column.
      *
      * @example
@@ -7260,6 +7234,32 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         directive.scrollTo(goal);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+     protected _getDataViewIndex(index: number): number {
+        let newIndex = index;
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.paginator.page !== 0) {
+            newIndex = index - this.paginator.perPage * this.paginator.page;
+        } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
+            newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
+        }
+        return newIndex;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected getDataIndex(dataViewIndex: number): number {
+        let newIndex = dataViewIndex;
+        if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
+            newIndex = dataViewIndex + this.gridAPI.grid.virtualizationState.startIndex;
+        }
+        return newIndex;
     }
 
     private getColumnWidthSum(): number {
