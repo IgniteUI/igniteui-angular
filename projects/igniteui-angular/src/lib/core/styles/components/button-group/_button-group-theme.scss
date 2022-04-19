@@ -166,15 +166,17 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires color
+/// @requires rem
+/// @requires spacing
+/// @requires border-radius
 /// @requires var-get
 @mixin button-group($theme) {
     @include css-vars($theme);
     $group-item-min-width: 24px;
     $group-item-border-thickness: 1px;
-    $group-items-margin: rem(10px, 16px);
+    $group-items-margin: spacing(10px);
     $transition: all 140ms $ease-in-out-quad;
     $palette: map.get($theme, 'palette');
-
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo-design';
