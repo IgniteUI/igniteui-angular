@@ -89,12 +89,13 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
-/// @requires em
+/// @requires rem
+/// @requires spacing
 /// @requires var-get
 @mixin navbar($theme) {
     @include css-vars($theme);
 
-    $navbar-padding: rem(16px);
+    $navbar-padding: spacing(16px);
     $navbar-title-fz: rem(18px, 16px);
     $navbar-title-lh: rem(18px, 16px);
     $navbar-title-margin: 0;
@@ -135,7 +136,7 @@
         user-select: none;
 
         > * + * {
-            margin-inline-start: rem(16px);
+            margin-inline-start: spacing(16px);
         }
     }
 
