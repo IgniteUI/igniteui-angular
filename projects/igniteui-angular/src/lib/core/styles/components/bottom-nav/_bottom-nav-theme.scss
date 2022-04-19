@@ -82,6 +82,7 @@
 /// @requires color
 /// @requires extend
 /// @requires rem
+/// @requires spacing
 /// @requires $ease-in-out-quad
 /// @requires var-get
 @mixin bottom-nav($theme) {
@@ -90,7 +91,7 @@
     $menu-height: rem(56px);
     $item-min-width: rem(80px);
     $item-max-width: rem(168px);
-    $item-padding: 0 rem(12px, 16px);
+    $item-padding: 0 spacing(12px);
 
     %igx-bottom-nav-panel {
         display: block;
@@ -161,7 +162,7 @@
 
     %igx-tab-label {
         @include ellipsis();
-        padding-block-start: rem(4px);
+        padding-block-start: spacing(4px);
         max-width: 100%;
         text-align: center;
         transform: translateZ(0);
