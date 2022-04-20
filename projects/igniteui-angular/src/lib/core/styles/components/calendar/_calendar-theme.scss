@@ -331,17 +331,17 @@
     $palette: map.get($theme, 'palette');
     $cal-header-year-margin: 0;
     $cal-header-date-margin: 0;
-    $cal-header-padding: em(16px);
+    $cal-header-padding: spacing(16px);
 
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $cal-picker-padding: map.get((
-        material: em(16px),
-        fluent: em(16px),
-        bootstrap: em(8px),
-        indigo-design: em(16px),
+        material: rem(16px),
+        fluent: rem(16px),
+        bootstrap: rem(8px),
+        indigo-design: rem(16px),
     ), $variant);
 
     $cal-value-w: map.get((
@@ -369,11 +369,11 @@
     $cal-value-br: math.div($cal-value-w, 2);
     $cal-value-fw: 600;
 
-    $cal-value-month-margin: 0 em(12px);
+    $cal-value-month-margin: 0 spacing(12px);
     $cal-value-month-height: em(91px);
 
     $cal-row-padding: rem(8px);
-    $cal-row-margin: rem(2px) 0;
+    $cal-row-margin: spacing(2px) 0;
 
     $current-color-variant: map.get((
         material: var-get($theme, 'date-selected-background'),
@@ -425,7 +425,7 @@
             %cal-row-display {
                 &:first-of-type {
                     padding-top: 0;
-                    padding-bottom: math.div($cal-picker-padding, 2);
+                    padding-bottom: spacing(px(math.div($cal-picker-padding, 2)));
                 }
             }
 
@@ -444,7 +444,7 @@
     }
 
     %cal-display + %cal-display {
-        margin-inline-start: 1rem;
+        margin-inline-start: spacing(16px);
 
         @if $bootstrap-theme {
             margin: 0;
@@ -496,12 +496,12 @@
         display: flex;
         height: em(56px);
         align-items: center;
-        padding-bottom: $cal-picker-padding;
+        padding-bottom: spacing(px($cal-picker-padding));
         background: var-get($theme, 'picker-background-color');
 
         @if $bootstrap-theme {
             height: auto;
-            padding-top: $cal-picker-padding;
+            padding-top: spacing(px($cal-picker-padding));
         }
         position: relative;
 
@@ -557,7 +557,7 @@
         color: var-get($theme, 'picker-text-color');
         text-align: center;
         outline: none;
-        padding: 0 rem(2px);
+        padding: 0 spacing(2px);
 
         &:hover,
         &:focus {
@@ -569,9 +569,9 @@
     %cal-body-display {
         flex: 1 1 auto;
         @if $not-bootstrap-theme {
-            padding-top: $cal-picker-padding;
+            padding-top: spacing(px($cal-picker-padding));
         }
-        padding-bottom: $cal-picker-padding;
+        padding-bottom: spacing(px($cal-picker-padding));
 
         overflow: hidden;
     }
@@ -595,11 +595,11 @@
         outline: none;
 
         &:first-of-type {
-            padding-inline-start: $cal-row-padding;
+            padding-inline-start: spacing(px($cal-row-padding));
         }
 
         &:last-of-type {
-            padding-inline-end: $cal-row-padding;
+            padding-inline-end: spacing(px($cal-row-padding));
         }
 
         // 100 divided by the number of weekdays
@@ -625,8 +625,8 @@
                 margin-top: 0;
                 background: var-get($theme, 'picker-background-color');
                 border-bottom: 1px solid var-get($theme, 'border-color');
-                padding-bottom: $cal-picker-padding;
-                padding-top: $cal-picker-padding;
+                padding-bottom: spacing(px($cal-picker-padding));
+                padding-top: spacing(px($cal-picker-padding));
             }
 
             @if $not-bootstrap-theme{
