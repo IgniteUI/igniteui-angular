@@ -318,7 +318,7 @@
 
         > igx-icon + span {
             @if $variant == 'indigo-design' {
-                margin-inline-start: spacing(calc(rem(32px) - #{$text-side-padding}));
+                margin-inline-start: spacing(24px);
             } @else {
                 margin-inline-start: spacing(32px);
             }
