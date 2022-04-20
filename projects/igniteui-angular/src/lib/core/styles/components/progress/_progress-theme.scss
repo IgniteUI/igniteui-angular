@@ -100,7 +100,8 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
-/// @requires em
+/// @requires rem
+/// @requires border-radius
 /// @requires var-get
 @mixin progress-linear($theme) {
     @include css-vars($theme);
@@ -138,7 +139,6 @@
     $stripe-color: var-get($theme, 'stripes-color');
     $value-fs: em(14px, 16px);
     $value-fw: 600;
-    $value-margin: 0;
 
     %linear-display {
         position: relative;
@@ -229,7 +229,7 @@
     }
 
     %linear-value {
-        margin: $value-margin;
+        margin: 0;
         color: var-get($theme, 'text-color');
         font-size: $value-fs;
         font-weight: $value-fw;
@@ -338,6 +338,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires rem
+/// @requires border-radius
 /// @requires {mixin} rotate-center
 /// @requires var-get
 @mixin progress-circular($theme) {
