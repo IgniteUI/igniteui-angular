@@ -63,14 +63,15 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires rem
+/// @requires spacing
 /// @requires var-get
 @mixin paginator($theme) {
     @include css-vars($theme);
 
     $paginator-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+        comfortable: 0 spacing(24px, 'comfortable'),
+        cosy: 0 spacing(16px, 'cosy'),
+        compact: 0 spacing(12px, 'compact')
     );
 
     $paginator-height: (
@@ -123,7 +124,7 @@
     }
 
     %igx-page-size__label {
-        margin-inline-end: rem(8px);
+        margin-inline-end: spacing(8px);
         @include ellipsis();
     }
 
@@ -140,7 +141,7 @@
         flex: 1;
 
         > * {
-            margin-inline-start: rem(8px);
+            margin-inline-start: spacing(8px);
         }
 
         [dir='rtl'] & {
