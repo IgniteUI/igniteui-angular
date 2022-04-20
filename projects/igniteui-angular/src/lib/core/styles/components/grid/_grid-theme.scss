@@ -1558,7 +1558,7 @@
     }
 
     %grid-cell--pinned-chip--cosy {
-        margin-inline-end: spacing(8px);
+        margin-inline-end: spacing(8px, 'cosy');
     }
 
     %grid-cell--pinned-chip--compact {
