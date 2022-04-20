@@ -1,0 +1,23 @@
+<section class="sample-content">
+    <article class="sample-column">
+        <h4 class="sample-title">Range label slider</h4>
+        <igx-slider #slider1 [type]="'range'"
+            [(lowerValue)]="rangeValue.lower" [(upperValue)]="rangeValue.upper"
+            [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']">
+        </igx-slider>
+
+
+    </article>
+
+    <article class="sample-column">
+        <h4>Range slider bounds</h4>
+        <igx-input-group>
+            <label igxLabel>lower</label>
+            <input type="text" igxInput [(ngModel)]="rangeValue.lower">
+        </igx-input-group>
+        <igx-input-group>
+            <label igxLabel>upper</label>
+            <input type="text" igxInput [(ngModel)]="rangeValue.upper">
+        </igx-input-group>
+    </article>
+</section>

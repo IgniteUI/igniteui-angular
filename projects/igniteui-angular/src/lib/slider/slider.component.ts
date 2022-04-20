@@ -34,7 +34,7 @@ import {
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import { IgxTicksComponent } from './ticks/ticks.component';
 import { IgxTickLabelsPipe } from './ticks/tick.pipe';
-import { PlatformUtil, resizeObservable } from '../core/utils';
+import { resizeObservable } from '../core/utils';
 import { IgxDirectionality } from '../services/direction/directionality';
 
 let NEXT_ID = 0;
@@ -704,6 +704,34 @@ export class IgxSliderComponent implements
     public valueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
     /**
+     * This event is emitted every time the lower value of a range slider is changed.
+     * ```typescript
+     * public change(value){
+     *    alert(`The lower value has been changed to ${value}`);
+     * }
+     * ```
+     * ```html
+     * <igx-slider [(lowerValue)]="model.lowervalue" (lowerValueChange)="change($event)" [step]="5">
+     * ```
+     */
+     @Output()
+     public lowerValueChange = new EventEmitter<number>();
+
+     /**
+      * This event is emitted every time the upper value of a range slider is changed.
+      * ```typescript
+      * public change(value){
+      *    alert(`The upper value has been changed to ${value}`);
+      * }
+      * ```
+      * ```html
+      * <igx-slider [(upperValue)]="model.uppervalue" (upperValueChange)="change($event)" [step]="5">
+      * ```
+      */
+      @Output()
+      public upperValueChange = new EventEmitter<number>();
+
+    /**
      * This event is emitted at the end of every slide interaction.
      * ```typescript
      * public change(event){
@@ -780,8 +808,7 @@ export class IgxSliderComponent implements
                 private _el: ElementRef,
                 private _cdr: ChangeDetectorRef,
                 private _ngZone: NgZone,
-                private _dir: IgxDirectionality,
-                private platform: PlatformUtil) {
+                private _dir: IgxDirectionality) {
         this.stepDistance = this._step;
     }
 
@@ -869,12 +896,20 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * @hidden @internal
+     * Sets the lower value of a range `IgxSliderComponent`.
+     * ```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * public lowValue(event){
+     *    this.slider.lowerValue = value;
+     * }
+     * ```
      */
+    @Input()
     public set lowerValue(value: number) {
         value = this.valueInRange(value, this.lowerBound, this.upperBound);
         this._lowerValue = value;
-
+        this.lowerValueChange.emit(value);
     }
 
     /**
@@ -896,11 +931,20 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * @hidden @internal
+     * Sets the upper value of a range `IgxSliderComponent`.
+     * ```typescript
+     *  @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * public upperValue(event){
+     *     this.slider.upperValue = value;
+     * }
+     * ```
      */
+    @Input()
     public set upperValue(value: number) {
         value = this.valueInRange(value, this.lowerBound, this.upperBound);
         this._upperValue = value;
+        this.upperValueChange.emit(value);
     }
 
     /**
@@ -1094,15 +1138,14 @@ export class IgxSliderComponent implements
         let newVal: IRangeSliderValue;
         if (this.isRange) {
             if (thumbType === SliderHandle.FROM) {
-                newVal = {
-                    lower: (this.value as IRangeSliderValue).lower + value,
-                    upper: (this.value as IRangeSliderValue).upper
-                };
+                this.lowerValue += value;
             } else {
-                newVal = {
-                    lower: (this.value as IRangeSliderValue).lower,
-                    upper: (this.value as IRangeSliderValue).upper + value
-                };
+                this.upperValue += value;
+            }
+
+            newVal = {
+                lower: this._lowerValue,
+                upper: this._upperValue
             }
 
             // Swap the thumbs if a collision appears.
@@ -1113,7 +1156,7 @@ export class IgxSliderComponent implements
             }
 
         } else {
-            this.value = this.value as number + value;
+            (this.value as number) += value;
         }
 
         if (this.hasValueChanged(oldValue)) {
@@ -1140,11 +1183,6 @@ export class IgxSliderComponent implements
         if (!this.isRange) {
             this.upperValue = value as number - (value as number % this.step);
             res = this.upperValue;
-        } else {
-            value = this.validateInitialValue(value as IRangeSliderValue);
-            this.upperValue = (value as IRangeSliderValue).upper;
-            this.lowerValue = (value as IRangeSliderValue).lower;
-            res = { lower: this.lowerValue, upper: this.upperValue };
         }
 
         if (triggerChange) {
@@ -1383,25 +1421,6 @@ export class IgxSliderComponent implements
         } else {
             this.renderer.setStyle(this.trackRef.nativeElement, 'transform', `scaleX(${toPosition})`);
         }
-    }
-
-    private validateInitialValue(value: IRangeSliderValue) {
-        if (value.lower < this.lowerBound && value.upper < this.lowerBound) {
-            value.upper = this.lowerBound;
-            value.lower = this.lowerBound;
-        }
-
-        if (value.lower > this.upperBound && value.upper > this.upperBound) {
-            value.upper = this.upperBound;
-            value.lower = this.upperBound;
-        }
-
-        if (value.upper < value.lower) {
-            value.upper = this.upperValue;
-            value.lower = this.lowerValue;
-        }
-
-        return value;
     }
 
     private subscribeTo(thumb: IgxSliderThumbComponent, callback: (a: number, b: string) => void) {
