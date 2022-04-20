@@ -365,7 +365,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this._groupingExpressions = cloneArray(value);
         this.groupingExpressionsChange.emit(this._groupingExpressions);
         if (this._gridAPI.grid) {
-            debugger;
             /* grouping and sorting are working separate from each other */
             this._applyGrouping();
             this.notifyChanges();
