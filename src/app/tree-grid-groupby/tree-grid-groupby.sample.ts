@@ -57,7 +57,6 @@ export class TreeGridGroupBySampleComponent implements OnInit {
     }
 
     public print() {
-        debugger;
         console.log('Sorting: ', this.grid1.sortingExpressions);
         console.log('Grouping: ', this.grid1.treeGroupArea, this.groupingExpressions);
     }
