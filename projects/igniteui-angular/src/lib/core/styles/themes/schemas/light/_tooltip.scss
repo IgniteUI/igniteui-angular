@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/tooltip' as *;
 
 ////
 /// @group schemas
@@ -12,14 +11,14 @@
 ///
 /// @property {Map} background [color: ('grays', 700, .8),] - The background color of the tooltip.
 /// @property {Map} text-color [contrast-color: ('grays', 700)] - The text color of the tooltip.
-/// @property {Number} border-radius [.25] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Number} border-radius [4px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
-/// @requires {Map} $default-shape-tooltip
 /// @see $default-palette
 $light-tooltip: extend(
-    $default-shape-tooltip,
     (
+        variant: 'material',
+
         background: (
             color: ('grays', 700, .9),
         ),
@@ -28,7 +27,7 @@ $light-tooltip: extend(
             contrast-color: ('grays', 700),
         ),
 
-        roundness: rem(4px)
+        border-radius: rem(4px)
     )
 );
 
@@ -39,18 +38,20 @@ $light-tooltip: extend(
 /// @prop {Number} border-radius [2px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-tooltip
-/// @requires {Map} $fluent-shape-tooltip
 $fluent-tooltip: extend(
     $light-tooltip,
-    $fluent-shape-tooltip,
     (
+        variant: 'fluent',
+
         background: (
             color: ('grays', 900, .8)
         ),
 
         text-color: (
             contrast-color: ('grays', 900)
-        )
+        ),
+
+        border-radius: rem(2px)
     )
 );
 
@@ -61,11 +62,11 @@ $fluent-tooltip: extend(
 /// @prop {Number} border-radius [4px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $light-tooltip
-/// @requires $bootstrap-shape-tooltip
 $bootstrap-tooltip: extend(
     $light-tooltip,
-    $bootstrap-shape-tooltip,
     (
+        variant: 'bootstrap',
+
         background: (
             color: ('grays', 900, .8)
         ),
@@ -82,8 +83,11 @@ $bootstrap-tooltip: extend(
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-tooltip
-/// @requires {Map} $indigo-shape-tooltip
 $indigo-tooltip: extend(
     $light-tooltip,
-    $indigo-shape-tooltip,
+    (
+        variant: 'indigo-design',
+
+        border-radius: rem(3px)
+    )
 );

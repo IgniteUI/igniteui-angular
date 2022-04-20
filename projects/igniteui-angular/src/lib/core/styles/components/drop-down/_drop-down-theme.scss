@@ -50,7 +50,6 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
-/// @requires round-borders
 @function drop-down-theme(
     $palette: null,
     $schema: $light-schema,
@@ -97,14 +96,6 @@
     }
 
     $theme: apply-palette($drop-down-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($drop-down-schema, 'border-radius')), 0, 20px
-    );
-
-    $item-border-radius: round-borders(
-        if($item-border-radius, $item-border-radius, map.get($drop-down-schema, 'item-border-radius')), 0, 20px
-    );
 
     @if not($item-text-color) and $background-color {
         $item-text-color: text-contrast($background-color);
@@ -249,16 +240,13 @@
         compact: 0 rem(8px)
     );
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     %igx-drop-down {
         position: absolute;
     }
 
     %igx-drop-down__list {
         overflow: hidden;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         background: var-get($theme, 'background-color');
         box-shadow: var-get($theme, 'shadow');
         min-width: rem(128px);
@@ -299,7 +287,7 @@
         igx-divider {
             position: absolute;
             width: 100%;
-            #{$left}: 0;
+            inset-inline-start: 0;
             bottom: 0;
         }
     }
@@ -308,7 +296,7 @@
         color: var-get($theme, 'item-text-color');
         cursor: pointer;
         padding: map.get($item-padding, 'comfortable');
-        border-radius: var-get($theme, 'item-border-radius');
+        border-radius: border-radius(var-get($theme, 'item-border-radius'));
 
         &:focus {
             outline: 0;
@@ -332,7 +320,7 @@
     %igx-drop-down__inner {
         display: block;
         @include ellipsis();
-        margin-#{$right}: auto;
+        margin-inline-end: auto;
     }
 
     %igx-drop-down__item--cosy {
@@ -366,35 +354,35 @@
     }
 
     %igx-drop-down__prefix {
-        margin-#{$right}: map.get($prefix-margin, 'comfortable');
+        margin-inline-end: map.get($prefix-margin, 'comfortable');
     }
 
     %igx-drop-down__suffix {
         + igx-suffix,
         + [igxSuffix] {
-            margin-#{$left}: map.get($suffix-margin, 'comfortable');
+            margin-inline-start: map.get($suffix-margin, 'comfortable');
         }
     }
 
     %igx-drop-down__prefix--cosy {
-        margin-#{$right}: map.get($prefix-margin, 'cosy');
+        margin-inline-end: map.get($prefix-margin, 'cosy');
     }
 
     %igx-drop-down__suffix--cosy {
         + igx-suffix,
         + [igxSuffix] {
-            margin-#{$left}: map.get($suffix-margin, 'cosy');
+            margin-inline-start: map.get($suffix-margin, 'cosy');
         }
     }
 
     %igx-drop-down__prefix--compact {
-        margin-#{$right}: map.get($prefix-margin, 'compact');
+        margin-inline-end: map.get($prefix-margin, 'compact');
     }
 
     %igx-drop-down__suffix--compact {
         + igx-suffix,
         + [igxSuffix] {
-            margin-#{$left}: map.get($suffix-margin, 'compact');
+            margin-inline-start: map.get($suffix-margin, 'compact');
         }
     }
 

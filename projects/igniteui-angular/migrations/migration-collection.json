@@ -115,6 +115,11 @@
             "version": "13.1.0",
             "description": "Updates Ignite UI for Angular from v13.0.x to v13.1.0",
             "factory": "./update-13_1_0"
+        },
+        "migration-24": {
+            "version": "13.2.0",
+            "description": "Updates Ignite UI for Angular from v13.1.x to v13.2.0",
+            "factory": "./update-13_2_0"
         }
     }
 }

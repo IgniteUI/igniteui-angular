@@ -30,7 +30,6 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
-/// @requires round-borders
 ///
 /// @example scss Set a custom background color
 ///   $my-snackbar-theme: snackbar-theme($background: white);
@@ -57,10 +56,6 @@
     }
 
     $theme: apply-palette($snackbar-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($snackbar-schema, 'border-radius')), 0, 24px
-    );
 
     @if not($button-color) and $background {
         $button-color: text-contrast($background);
@@ -94,14 +89,11 @@
     @include css-vars($theme);
     @include fade-in();
 
-    // @debug $theme;
-
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);
     $snackbar-button-left-margin: rem(24px);
     $snackbar-button-line-height: rem(16px);
     $snackbar-button-font-weight: 600;
-    $left: if-ltr(left, right);
 
     %igx-snackbar-display {
         position: relative;
@@ -116,7 +108,7 @@
         background: var-get($theme, 'background');
         backface-visibility: hidden;
         box-shadow: var-get($theme, 'shadow');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         backdrop-filter: blur(8px);
     }
 
@@ -129,7 +121,7 @@
         color: var-get($theme, 'button-color');
         border: 0;
         line-height: $snackbar-button-line-height;
-        margin-#{$left}: $snackbar-button-left-margin;
+        margin-inline-start: $snackbar-button-left-margin;
         text-transform: uppercase;
         user-select: none;
         font-weight: $snackbar-button-font-weight;

@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement, QueryList } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -508,9 +508,10 @@ describe('Row Drag Tests #grid', () => {
             fixture.detectChanges();
             verifyDragAndDropRowCellValues(1, 0);
         });
-        it('should be able to drag grid row when column moving is enabled', () => {
+        it('should be able to drag grid row when column moving is enabled', fakeAsync(() => {
             const dragGridColumns = dragGrid.columnList.toArray();
             dragGrid.moveColumn(dragGridColumns[0], dragGridColumns[2]);
+            tick();
             fixture.detectChanges();
 
             dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -548,7 +549,7 @@ describe('Row Drag Tests #grid', () => {
             expect(dropRowCells[2].value).toEqual(dragRowCells[1].value);
             expect(dropRowCells[3].value).toEqual(dragRowCells[3].value);
             expect(dropRowCells[4].value).toEqual(dragRowCells[4].value);
-        });
+        }));
         it('should be able to drag grid row when column pinning is enabled', () => {
             dragGrid.pinColumn('ProductName');
             fixture.detectChanges();

@@ -70,10 +70,6 @@
 /// @requires var-get
 @mixin banner($theme) {
     @include css-vars($theme);
-
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $banner-padding: (
         comfortable: rem(8),
         cosy: rem(8),
@@ -88,10 +84,10 @@
     }
 
     %igx-banner {
-        padding-#{$right}: map.get($banner-padding, 'comfortable');
-        padding-#{$left}: 0;
-        padding-top: map.get($banner-padding, 'comfortable');
-        padding-bottom: map.get($banner-padding, 'comfortable');
+        padding-inline-start: 0;
+        padding-inline-end: map.get($banner-padding, 'comfortable');
+        padding-block-start: map.get($banner-padding, 'comfortable');
+        padding-block-end: map.get($banner-padding, 'comfortable');
         background: var-get($theme, 'banner-background');
         align-items: center;
         position: relative;
@@ -104,27 +100,27 @@
         width: rem(40);
         min-width: rem(40);
         height: rem(40);
-        margin-#{$left}: rem(16);
+        margin-inline-start: rem(16);
         color: var-get($theme, 'banner-illustration-color');
     }
 
     %igx-banner__border-top {
-        border-top: 1px solid var-get($theme, 'banner-border-color');
-        top: -1px
+        border-block-start: 1px solid var-get($theme, 'banner-border-color');
+        inset-block-start: -1px
     }
 
     %igx-banner__border-bottom {
-        border-bottom: 1px solid var-get($theme, 'banner-border-color');
-        top: 0;
+        border-block-end: 1px solid var-get($theme, 'banner-border-color');
+        inset-block-start: 0;
     }
 
     %igx-banner__text {
         color: var-get($theme, 'banner-message-color');
         flex: 1 0 0%;
-        margin-#{$left}: rem(24);
+        margin-inline-start: rem(24);
 
         > * {
-            margin-top: 0 !important;
+            margin-block-start: 0 !important;
         }
     }
 
@@ -139,7 +135,7 @@
     %igx-banner__message {
         min-width: rem(220);
         flex: 1 0 0%;
-        margin-#{$right}: rem(90);
+        margin-inline-end: rem(90);
     }
 
     %igx-banner__row {
@@ -168,8 +164,8 @@
 
     %igx-banner__text {
         @include type-style($type-scale, $message) {
-            margin-top: 0;
-            margin-bottom: 0;
+            margin-block-start: 0;
+            margin-block-end: 0;
         }
     }
 }

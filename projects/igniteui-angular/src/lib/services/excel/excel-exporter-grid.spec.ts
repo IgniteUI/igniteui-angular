@@ -1139,6 +1139,7 @@ describe('Excel Exporter', () => {
 
         it('should export grid with multi column headers and moved column', async () => {
             grid.columnList.get(0).move(2);
+            await wait();
             fix.detectChanges();
 
             await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersDataWithMovedColumn, false);

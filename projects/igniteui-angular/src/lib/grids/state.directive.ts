@@ -228,8 +228,7 @@ export class IgxGridStateDirective {
                         newColumns.push(ref.instance);
                     }
                 });
-                context.currGrid.columnList.reset(newColumns);
-                context.currGrid.columnList.notifyOnChanges();
+                context.grid.updateColumns(newColumns);
             }
         },
         groupBy: {
@@ -553,8 +552,10 @@ export class IgxGridStateDirective {
                 let dataType: string;
                 if (this.currGrid.columnList.length > 0) {
                     dataType = this.currGrid.columnList.find(c => c.field === expr.fieldName).dataType;
-                } else {
+                } else if (this.state.columns) {
                     dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;
+                } else {
+                    return null;
                 }
                 // when ESF, values are stored in Set.
                 // First those values are converted to an array before returning string in the stringifyCallback
@@ -562,7 +563,7 @@ export class IgxGridStateDirective {
                 if (Array.isArray(expr.searchVal)) {
                     expr.searchVal = new Set(expr.searchVal);
                 } else {
-                    expr.searchVal = expr.searchVal && (dataType === 'date') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
+                    expr.searchVal = expr.searchVal && (dataType === 'date' || dataType === 'dateTime') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
                 }
                 expr.condition = this.generateFilteringCondition(dataType, expr.condition.name);
                 expressionsTree.filteringOperands.push(expr);

@@ -30,7 +30,6 @@
 /// @requires elevation
 /// @requires text-contrast
 /// @requires rem
-/// @requires round-borders
 ///
 /// @example scss Change the text and icon colors in a badge
 ///   $my-badge-theme: badge-theme($icon-color: black, $background-color: white);
@@ -64,10 +63,6 @@
     }
 
     $theme: apply-palette($badge-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($badge-schema, 'border-radius')), 0, 11px
-    );
 
     @if not($icon-color) and $background-color {
         $icon-color: text-contrast($background-color);
@@ -104,7 +99,6 @@
     @include css-vars($theme);
 
     $palette: map.get($theme, 'palette');
-
     $badge-width: 22px;
     $badge-height: $badge-width;
 
@@ -127,7 +121,7 @@
         color: var-get($theme, 'text-color');
         line-height: 1;
         background: var-get($theme, 'background-color');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         box-shadow: var-get($theme, 'shadow');
         border-width: var-get($theme, 'border-width');
         border-color: var-get($theme, 'border-color');

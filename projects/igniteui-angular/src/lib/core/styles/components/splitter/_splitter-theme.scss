@@ -41,12 +41,6 @@
 
     $theme: apply-palette($splitter-schema, $palette);
 
-    $border-radius-handle: round-borders(
-        if($border-radius, $border-radius, map.get($splitter-schema, 'border-radius')), 0, 2px
-    );
-
-    $theme: apply-palette($splitter-schema, $palette);
-
     @if not($handle-color) and $bar-color {
         $handle-color: text-contrast($bar-color);
     }
@@ -61,7 +55,7 @@
         bar-color: $bar-color,
         handle-color: $handle-color,
         expander-color: $expander-color,
-        border-radius: $border-radius-handle,
+        border-radius: $border-radius,
         focus-color: $focus-color,
         size: $size
     ));
@@ -79,6 +73,14 @@
     $hitbox-debug-color: rgba(coral, .24);
 
     $variant: map.get($theme, 'variant');
+
+    %igx-splitter-base {
+        &[aria-orientation='horizontal'] {
+            [dir='rtl'] & {
+                flex-direction: row-reverse !important;
+            }
+        }
+    }
 
     %handle-area {
         position: absolute;
@@ -150,7 +152,7 @@
 
     %igx-splitter-handle {
         background: var-get($theme, 'handle-color');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
     }
 
     %igx-splitter-handle--horizontal {
@@ -175,8 +177,8 @@
         position: relative;
         width: 0;
         height: 0;
-        border-right: var-get($theme, 'size') solid transparent;
-        border-left: var-get($theme, 'size') solid transparent;
+        border-inline-end: var-get($theme, 'size') solid transparent;
+        border-inline-start: var-get($theme, 'size') solid transparent;
         cursor: pointer;
         z-index: 1;
     }
@@ -208,9 +210,9 @@
 
     %igx-splitter-expander--start-vertical {
         border-top: var-get($theme, 'size') solid transparent;
-        border-right: var-get($theme, 'size') solid var-get($theme, 'expander-color');
+        border-inline-end: var-get($theme, 'size') solid var-get($theme, 'expander-color');
         border-bottom: var-get($theme, 'size') solid transparent;
-        border-left: unset;
+        border-inline-start: unset;
 
         &::before {
             @extend %igx-splitter-hitbox;
@@ -223,9 +225,9 @@
 
     %igx-splitter-expander--end-vertical {
         border-top: var-get($theme, 'size') solid transparent;
-        border-right: unset;
+        border-inline-end: unset;
         border-bottom: var-get($theme, 'size') solid transparent;
-        border-left: var-get($theme, 'size') solid var-get($theme, 'expander-color');
+        border-inline-start: var-get($theme, 'size') solid var-get($theme, 'expander-color');
 
         &::before {
             @extend %igx-splitter-hitbox;

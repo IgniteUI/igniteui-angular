@@ -273,7 +273,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public getAreaHeight(area: IgxChipsAreaComponent) {
         const chips = area.chipsList;
-        return chips && chips.length > 0 ? chips.first.nativeElement.clientHeight : 0;
+        return chips && chips.length > 0 ? chips.first.nativeElement.offsetHeight : 0;
     }
 
     /**
@@ -310,26 +310,10 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public filterRemoved(event: IBaseChipEventArgs) {
         const filter = this.grid.pivotConfiguration.filters.find(x => x.memberName === event.owner.id);
         this.grid.toggleDimension(filter);
-        if (this.isFiltersButton && this.filterDropdownDimensions.has(filter)) {
-            const selectedChip = this.dropdownChips.chipsList.find(x => x.selected);
-            if (!selectedChip || selectedChip.id === event.owner.id) {
-                this.dropdownChips.chipsList.first.selected = true;
-            }
-            this.filterDropdownDimensions.delete(filter)
-            if (this.filterDropdownDimensions.size === 0) {
-                this.grid.filteringService.hideESF();
-            } else {
-                this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, undefined, false);
-            }
+        if (this.filterDropdownDimensions.size > 0) {
+            this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, undefined, false);
         } else {
-            if (this.filterAreaDimensions.has(filter)) {
-                this.filterAreaDimensions.delete(filter)
-                this.grid.filteringService.hideESF();
-            } else if (this.filterDropdownDimensions.size > 0) {
-                this.onFiltersAreaDropdownClick({ target: this.filtersButton.el.nativeElement }, undefined, false);
-            } else {
-                this.grid.filteringService.hideESF();
-            }
+            this.grid.filteringService.hideESF();
         }
     }
 
@@ -359,15 +343,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         event.stopPropagation();
         event.preventDefault();
         let dim = dimension;
-        let col;
-        while (dim) {
-            col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
-            if (col) {
-                break;
-            } else {
-                dim = dim.childLevel;
-            }
-        }
+        const col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
         this.grid.filteringService.toggleFilterDropdown(event.target, col);
     }
 
@@ -377,15 +353,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public onSummaryClick(eventArgs, value: IPivotValue, dropdown: IgxDropDownComponent, chip: IgxChipComponent) {
         this._subMenuOverlaySettings.target = eventArgs.currentTarget;
-        if (dropdown.collapsed) {
-            this.updateDropDown(value, dropdown, chip);
-        } else {
-            // close for previous chip
-            dropdown.close();
-            dropdown.closed.pipe(first()).subscribe(() => {
-                this.updateDropDown(value, dropdown, chip);
-            });
-        }
+        this.updateDropDown(value, dropdown, chip);
     }
 
     /**
@@ -393,15 +361,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
      */
     public onFiltersAreaDropdownClick(event, dimension?, shouldReattach = true) {
         let dim = dimension || this.filterDropdownDimensions.values().next().value;
-        let col;
-        while (dim) {
-            col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
-            if (col) {
-                break;
-            } else {
-                dim = dim.childLevel;
-            }
-        }
+        const col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
         if (shouldReattach) {
             this.dropdownChips.chipsList.forEach(chip => {
                 chip.selected = false
@@ -549,12 +509,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         // clean states
         this.onDimDragEnd();
         this.onAreaDragLeave(event, area);
-    }
-
-    protected getDimensionsType(dimension: IPivotDimension) {
-        const isColumn = !!this.grid.pivotConfiguration.columns?.find(x => x && x.memberName === dimension.memberName);
-        const isRow = !!this.grid.pivotConfiguration.rows?.find(x => x && x.memberName === dimension.memberName);
-        return isColumn ? PivotDimensionType.Column : isRow ? PivotDimensionType.Row : PivotDimensionType.Filter;
     }
 
     protected updateDropDown(value: IPivotValue, dropdown: IgxDropDownComponent, chip: IgxChipComponent) {

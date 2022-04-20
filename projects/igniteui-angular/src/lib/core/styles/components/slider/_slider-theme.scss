@@ -114,9 +114,6 @@
 
     $variant: map.get($theme, variant);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $slider-height: 48px;
 
     $slider-track-height: map.get((
@@ -217,7 +214,7 @@
         height: 0;
         cursor: default;
         z-index: 1;
-        #{$left}: 0;
+        inset-inline-start: 0;
     }
 
     %igx-slider-track {
@@ -237,8 +234,12 @@
         width: 100%;
         height: inherit;
         background: var-get($theme, 'track-color');
-        transform-origin: #{$left} center;
+        transform-origin: left center;
         transform: scaleX(0);
+
+        [dir='rtl'] & {
+            transform-origin: right center;
+        }
     }
 
     %igx-slider-track-fill--disabled {
@@ -267,11 +268,11 @@
         position: relative;
 
         &:first-of-type {
-            margin-#{$left}: rem(-1px);
+            margin-inline-start: rem(-1px);
         }
 
         &:last-of-type {
-            margin-#{$left}: rem(-1px);
+            margin-inline-start: rem(-1px);
         }
     }
 
@@ -284,7 +285,7 @@
         opacity: 1;
         transition: opacity .2s $ease-in-out-quad;
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             left: 100%;
         }
     }
@@ -420,7 +421,12 @@
         height: $slider-thumb-height;
         outline-style: none;
         top: -#{rem($slider-thumb-radius)};
-        margin-#{$left}: -#{rem($slider-thumb-radius)};
+        margin-left: -#{rem($slider-thumb-radius)};
+
+        [dir='rtl'] & {
+            margin: initial;
+            margin-right: -#{rem($slider-thumb-radius)};
+        }
 
         &:focus div::after {
             opacity: .18;
@@ -470,12 +476,12 @@
         justify-content: center;
         flex: 0 0 auto;
         top: -#{rem($slider-thumb-height - 4px)};
-        #{$left}: -50%;
+        left: -50%;
         pointer-events: none;
         min-width: rem($slider-label-width);
         height: rem($slider-label-height);
         padding: $slider-label-padding;
-        border-radius: rem($slider-label-radius);
+        border-radius: border-radius(rem($slider-label-radius));
         margin: 0 auto;
         line-height: rem(18px);
         color: var-get($theme, 'label-text-color');
@@ -485,12 +491,17 @@
         // transition: opacity .1s $ease-out-quad;
         z-index: -1;
 
+        [dir='rtl'] & {
+            left: initial;
+            right: -50%;
+        }
+
         &::after {
             content: '';
             position: absolute;
             top: 0;
-            #{$left}: 50%;
-            margin-#{$left}: -#{$slider-label-radius};
+            left: 50%;
+            margin-left: -#{$slider-label-radius};
             width: rem($slider-label-width);
             height: $slider-label-height;
             border-radius: 0 $slider-label-radius $slider-label-radius;
@@ -503,9 +514,9 @@
             content: '';
             position: absolute;
             top: rem(40px);
-            #{$left}: calc(50% - 1px);
-            border-#{$left}: 1px solid;
-            border-#{$right}: 1px solid;
+            left: calc(50% - 1px);
+            border-left: 1px solid;
+            border-right: 1px solid;
             border-top: rem(14px) solid;
             border-color: inherit;
         }
@@ -513,7 +524,7 @@
 
     %igx-slider-thumb__dot {
         position: relative;
-        #{$left}: 0;
+        inset-inline-start: 0;
         padding: rem(20px);
         pointer-events: none;
 
@@ -528,13 +539,13 @@
             content: '';
             width: rem($dot-size);
             height: rem($dot-size);
-            #{$left}: #{rem($slider-thumb-radius) - math.div(rem($dot-size), 2)};
+            left: #{rem($slider-thumb-radius) - math.div(rem($dot-size), 2)};
             top: #{rem($slider-thumb-radius) - math.div(rem($dot-size), 2)};
             background: var-get($theme, 'thumb-color');
             border: rem($thumb-border-width) solid var-get($theme, 'thumb-border-color');
             transform: rotate(45deg);
             transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
-            border-radius: rem($slider-thumb-radius);
+            border-radius: border-radius(rem($slider-thumb-radius));
         }
 
         &::after {
@@ -545,12 +556,12 @@
             height: rem($slider-thumb-height);
             background: var-get($theme, 'thumb-color');
             top: 0;
-            #{$left}: 0;
+            left: 0;
             opacity: 0;
             transform: scale(0);
             transform-origin: center center;
             transition: transform .1s $ease-out-quad, opacity .1s $ease-out-quad;
-            border-radius: 50%;
+            border-radius: border-radius(50%);
         }
     }
 
@@ -560,7 +571,7 @@
         &::before {
             background: var-get($theme, 'disabled-thumb-color');
             border-color: var-get($theme, 'thumb-disabled-border-color');
-            border-radius: rem($slider-thumb-radius);
+            border-radius: border-radius(rem($slider-thumb-radius));
         }
     }
 

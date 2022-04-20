@@ -44,7 +44,6 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
-/// @requires round-borders
 ///
 /// @example scss Change the background, text, and border colors
 ///   $my-button-group-theme: button-group-theme(
@@ -93,10 +92,6 @@
     $theme: apply-palette($button-group-schema, $palette);
 
     $border: 1px solid map.get($theme, 'item-selected-border-color');
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($button-group-schema, 'border-radius')), 0, 20px
-    );
 
     @if not($item-text-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {
@@ -180,9 +175,6 @@
     $transition: all 140ms $ease-in-out-quad;
     $palette: map.get($theme, 'palette');
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo-design';
@@ -191,12 +183,12 @@
         display: flex;
         box-shadow: var-get($theme, 'shadow');
         transition: $transition;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
 
         button {
             // The margin here is required to fix a bug in Safari #7858
             margin-top: 0;
-            margin-#{$right}: 0;
+            margin-inline-end: 0;
             margin-bottom: 0;
         }
     }
@@ -219,20 +211,21 @@
 
         &[igxButton] {
             border-radius: 0;
+            border-color: var-get($theme, 'item-border-color');
         }
 
         &:not(:nth-child(0)) {
-            margin-#{$left}: -1px;
+            margin-inline-start: -1px;
         }
 
         &:first-of-type {
-            border-top-#{$left}-radius: var-get($theme, 'border-radius');
-            border-bottom-#{$left}-radius: var-get($theme, 'border-radius');
+            border-start-start-radius: border-radius(var-get($theme, 'border-radius'));
+            border-end-start-radius: border-radius(var-get($theme, 'border-radius'));
         }
 
         &:last-of-type {
-            border-top-#{$right}-radius: var-get($theme, 'border-radius');
-            border-bottom-#{$right}-radius: var-get($theme, 'border-radius');
+            border-start-end-radius: border-radius(var-get($theme, 'border-radius'));
+            border-end-end-radius: border-radius(var-get($theme, 'border-radius'));
         }
 
         &[igxButton][disabled='true'] {
@@ -261,21 +254,21 @@
     %igx-group-item-vertical {
         &:not(:nth-child(0)) {
             margin-top: -1px;
-            margin-#{$left}: 0;
+            margin-inline-start: 0;
         }
 
         &:first-of-type {
-            border-top-#{$left}-radius: var-get($theme, 'border-radius');
-            border-top-#{$right}-radius: var-get($theme, 'border-radius');
-            border-bottom-#{$left}-radius: 0;
-            border-bottom-#{$right}-radius: 0;
+            border-start-start-radius: border-radius(var-get($theme, 'border-radius'));
+            border-start-end-radius: border-radius(var-get($theme, 'border-radius'));
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
         }
 
         &:last-of-type {
-            border-top-#{$left}-radius: 0;
-            border-top-#{$right}-radius: 0;
-            border-bottom-#{$left}-radius: var-get($theme, 'border-radius');
-            border-bottom-#{$right}-radius: var-get($theme, 'border-radius');
+            border-start-start-radius: 0;
+            border-start-end-radius: 0;
+            border-end-start-radius: border-radius(var-get($theme, 'border-radius'));
+            border-end-end-radius: border-radius(var-get($theme, 'border-radius'));
         }
     }
 
@@ -309,9 +302,9 @@
                 position: absolute;
                 content: '';
                 top: 0;
-                #{$right}: 0;
                 bottom: 0;
-                #{$left}: 0;
+                inset-inline-end: 0;
+                inset-inline-start: 0;
                 background: color($palette, 'grays', 500, .12);
             }
         }
@@ -328,7 +321,7 @@
         min-width: 0;
 
         * ~ * {
-            margin-#{$left}: $group-items-margin;
+            margin-inline-start: $group-items-margin;
         }
     }
 

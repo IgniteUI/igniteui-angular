@@ -288,14 +288,65 @@ $light-fluent-word-palette: $fluent-word-palette;
 $dark-fluent-word-palette: $fluent-word-dark-palette;
 
 /// @access private
+$fluent-palette: palette(
+    $primary: #0078d4,
+    $secondary: #0078d4,
+    $success: #107c10,
+    $warn: #797673,
+    $error: #a80000,
+    $variant: 'fluent'
+) !default;
+
+/// @access private
+$fluent-dark-palette: palette(
+    $primary: color($fluent-palette, 'primary'),
+    $secondary: color($fluent-palette, 'secondary'),
+    $success: color($fluent-palette, 'success'),
+    $warn: color($fluent-palette, 'warn'),
+    $error: color($fluent-palette, 'error'),
+    $surface: #222,
+    $grays: #fff,
+    $variant: 'fluent'
+) !default;
+
+/// Light Fluent palette
+/// @type Map
+/// @prop {Color} primary [#0078d4] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#0078d4] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#797673] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#a80000] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$light-fluent-palette: $fluent-palette;
+
+/// Dark Fluent palette
+/// @type Map
+/// @prop {Color} primary [#0078d4] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#0078d4] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#797673] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#a80000] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$dark-fluent-palette: $fluent-dark-palette;
+
+/// @access private
 $bootstrap-palette: palette(
-    $primary: #007bff,
+    $primary: #0d6efd,
     $secondary: #6c757d,
-    $info: #17a2b8,
-    $success: #28a745,
+    $info: #0dcaf0,
+    $success: #198754,
     $warn: #ffc107,
     $error: #dc3545,
     $surface: #f8f9fa,
+    $grays: #adb5bd,
     $variant: 'bootstrap'
 ) !default;
 
@@ -308,18 +359,18 @@ $bootstrap-dark-palette: palette(
     $warn: color($bootstrap-palette, 'warn'),
     $error: color($bootstrap-palette, 'error'),
     $surface: #212529,
-    $grays: #fff,
+    $grays: color($bootstrap-palette, 'grays'),
     $variant: 'bootstrap'
 ) !default;
 
 /// Light bootstrap palette
 /// @type Map
-/// @prop {Color} primary [#007bff] - The 500 variant of the `primary` color (default).
+/// @prop {Color} primary [#0d6efd] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#6c757d] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} grays [#adb5bd] - The base color for  the `grays` shades.
 /// @prop {Color} surface [#f8f9fa] - The color used as a background in components, such as cards, sheets, and menus.
-/// @prop {Color} info [#17a2b8] - The `info` color. Default for every palette if not specified.
-/// @prop {Color} success [#28a745] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} info [#0dcaf0] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#198754] - The `success` color. Default for every palette if not specified.
 /// @prop {Color} warn [#ffc107] - The `warn` color. Default for every palette if not specified.
 /// @prop {Color} error [#dc3456] - The `error`. Default for every palette if not specified.
 /// @access public
@@ -328,12 +379,12 @@ $light-bootstrap-palette: $bootstrap-palette;
 
 /// Dark bootstrap palette
 /// @type Map
-/// @prop {Color} primary [#007bff] - The 500 variant of the `primary` color (default).
+/// @prop {Color} primary [#0d6efd] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#6c757d] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
-/// @prop {Color} surface [#333] - The color used as a background in components, such as cards, sheets, and menus.
-/// @prop {Color} info [#17a2b8] - The `info` color. Default for every palette if not specified.
-/// @prop {Color} success [#28a745] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} grays [#adb5bd] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#212529] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#0dcaf0] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#198754] - The `success` color. Default for every palette if not specified.
 /// @prop {Color} warn [#ffc107] - The `warn` color. Default for every palette if not specified.
 /// @prop {Color} error [#dc3456] - The `error`. Default for every palette if not specified.
 /// @access public

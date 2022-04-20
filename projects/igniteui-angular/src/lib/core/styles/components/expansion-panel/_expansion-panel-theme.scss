@@ -30,7 +30,6 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Change the background color
 ///   $my-expansion-panel-theme: expansion-panel($header-background: black);
@@ -61,10 +60,6 @@
     }
 
     $theme: apply-palette($expansion-panel-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($expansion-panel-schema, 'border-radius')), 0, 16px
-    );
 
     @if not($header-title-color) and $header-background {
         $header-title-color: text-contrast($header-background);
@@ -107,9 +102,6 @@
 @mixin expansion-panel($theme) {
     @include css-vars($theme);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $panel-padding: em(16px, 16px);
     $panel-compact-padding: em(16px, 16px);
     $panel-cosy-padding: em(8px, 16px);
@@ -117,13 +109,13 @@
     %igx-expansion-panel {
         display: flex;
         flex-direction: column;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         overflow: hidden;
     }
 
     %igx-expansion-panel__header-title {
         color: var-get($theme, 'header-title-color');
-        margin-#{$right}: rem(16px, 16px);
+        margin-inline-end: rem(16px, 16px);
     }
 
     %igx-expansion-panel__header-description {
@@ -184,12 +176,12 @@
 
     %igx-expansion-panel__header-icon--end {
         order: 1;
-        margin-#{$left}: rem(16px, 16px);
+        margin-inline-start: rem(16px, 16px);
     }
 
     %igx-expansion-panel__header-icon--start {
         order: -1;
-        margin-#{$right}: rem(16px, 16px);
+        margin-inline-end: rem(16px, 16px);
     }
 
     %igx-expansion-panel__header-icon--none {
@@ -245,7 +237,7 @@
 ) {
     $title: map.get($categories, 'title');
     $description: map.get($categories, 'description');
-    $body: map.get($categories, '$body');
+    $body: map.get($categories, 'body');
 
     %igx-expansion-panel__header-title {
         @include type-style($type-scale, $title) {
