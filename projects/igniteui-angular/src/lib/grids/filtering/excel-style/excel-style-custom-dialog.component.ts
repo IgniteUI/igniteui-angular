@@ -146,6 +146,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     public closeDialog() {
         if (this.overlayComponentId) {
             this.overlayService.hide(this.overlayComponentId);
+            this.overlayComponentId = null;
         } else {
             this.toggle.close();
         }
