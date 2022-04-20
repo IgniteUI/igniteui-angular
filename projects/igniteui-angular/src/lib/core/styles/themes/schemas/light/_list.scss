@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/list' as *;
 
 ////
 /// @group schemas
@@ -44,11 +43,11 @@
 /// @prop {Color} border-width [0] - The list border width.
 ///
 /// @requires {function} extend
-/// @requires {Map} $default-shape-list
 /// @see $default-palette
 $light-list: extend(
-    $default-shape-list,
     (
+        variant: 'material',
+
         background: (
             color: 'surface'
         ),
@@ -112,6 +111,10 @@ $light-list: extend(
         border-color: transparent,
 
         border-width: 0,
+
+        border-radius: rem(0),
+
+        item-border-radius: rem(0)
     )
 );
 
@@ -119,7 +122,12 @@ $light-list: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {Map} $light-list
-$fluent-list: extend($light-list);
+$fluent-list: extend(
+    $light-list,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap list schema.
 /// @type {Map}
@@ -134,10 +142,8 @@ $fluent-list: extend($light-list);
 /// @prop {Color} border-width [rem(1px)] - The list border width.
 /// @requires {function} extend
 /// @requires {Map} $light-list
-/// @requires {Map} $bootstrap-shape-list
 $bootstrap-list: extend(
     $light-list,
-    $bootstrap-shape-list,
     (
         variant: 'bootstrap',
 
@@ -166,6 +172,8 @@ $bootstrap-list: extend(
         item-text-color-active: (
             color: ('grays', 900)
         ),
+
+        border-radius: rem(4px)
     )
 );
 
@@ -198,10 +206,8 @@ $bootstrap-list: extend(
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-list
-/// @requires {Map} $indigo-shape-list
 $indigo-list: extend(
     $light-list,
-    $indigo-shape-list,
     (
         variant: 'indigo-design',
 
@@ -263,7 +269,8 @@ $indigo-list: extend(
 
         item-thumbnail-color-active: (
             color: ('grays', 600)
-        )
+        ),
+
+        item-border-radius: rem(2px)
     )
 );
-

@@ -36,7 +36,7 @@
         max-width: 720px;
         background-color: var-get($theme, 'filtering-row-background');
         box-shadow: elevation($elevation: 12);
-        border-radius: rem(4px);
+        border-radius: border-radius(rem(4px));
     }
 
     %advanced-filter__header {
@@ -97,7 +97,7 @@
         background-color: white;
         margin-#{$right}: $horizontal-space-comfortable;
         outline-style: none;
-        border-radius: rem(4px);
+        border-radius: border-radius(rem(4px));
         cursor: pointer;
     }
 
@@ -232,7 +232,7 @@
             width: rem(24px);
             height: rem(24px);
             background: white;
-            border-radius: rem(4px);
+            border-radius: border-radius(rem(4px));
             margin-#{$right}: rem(8px);
         }
 
@@ -257,7 +257,7 @@
         background-color: var-get($theme, 'filtering-row-background');
         padding: rem(16px);
         margin-#{$left}: rem(16px);
-        border-radius: rem(4px);
+        border-radius: border-radius(rem(4px));
         border: 1px solid color($palette, 'grays', 200);
 
         > [igxButton] + [igxButton],

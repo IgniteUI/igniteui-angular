@@ -20,7 +20,6 @@
 /// @param {actions-border-radius} $actions-border-radius [null] - The border radius used for actions container inside action strip component.
 ///
 /// @requires extend
-/// @requires round-borders
 /// @requires apply-palette
 /// @requires text-contrast
 ///
@@ -48,10 +47,6 @@
     }
 
     $theme: apply-palette($action-strip-schema, $palette);
-
-    $actions-border-radius: round-borders(
-        if($actions-border-radius, $actions-border-radius, map.get($action-strip-schema, 'actions-border-radius')), 0, 24px
-    );
 
     @if not($icon-color) and $actions-background {
         $icon-color: text-contrast($actions-background);
@@ -180,7 +175,7 @@
         pointer-events: all;
         position: relative;
         color: var-get($theme, 'icon-color');
-        border-radius: var-get($theme, 'actions-border-radius');
+        border-radius: border-radius(var-get($theme, 'actions-border-radius'));
         background: var-get($theme, 'actions-background');
         max-height: 36px;
 
@@ -198,7 +193,7 @@
             }
 
             @if $variant == 'indigo-design' {
-                border-radius: var-get($theme, 'actions-border-radius');
+                border-radius: border-radius(var-get($theme, 'actions-border-radius'));
             }
         }
     }

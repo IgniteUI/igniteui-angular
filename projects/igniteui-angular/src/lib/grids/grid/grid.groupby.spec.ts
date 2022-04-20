@@ -15,7 +15,7 @@ import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '..
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
-import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionFunctions, GridFunctions, GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
@@ -2946,7 +2946,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const groupArea = grid.groupArea;
         const gridHeader = grid.theadRow;
         const gridFooter = grid.tfoot;
-        const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+        const gridScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
 
         let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
             - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
@@ -3242,6 +3242,29 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(groupRows.length).toEqual(3);
         }));
+
+    it('should respect current sorting direction when grouping', (async () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+
+        grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Desc });
+
+        const firstColumn = fix.debugElement.query(By.directive(IgxColumnMovingDragDirective));
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstColumn.nativeElement, 75, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 110, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 100, 30);
+        await wait(50);
+        UIInteractions.simulatePointerEvent('pointerup', firstColumn.nativeElement, 100, 30);
+        await wait(50);
+        fix.detectChanges();
+
+        expect(grid.groupingExpressions[0].dir).toEqual(2);
+    }));
 
     it('should update grouping expression when sorting a column first then grouping by it and changing sorting for it again',
         fakeAsync(/** height/width setter rAF */() => {
@@ -3743,7 +3766,7 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
         </igx-grid>
     `
 })
-export class GridGroupByCaseSensitiveComponent extends DataParent {
+export class GridGroupByCaseSensitiveComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 

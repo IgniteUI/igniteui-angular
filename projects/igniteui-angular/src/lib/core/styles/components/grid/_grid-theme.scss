@@ -125,7 +125,6 @@
 /// @requires to-opaque
 /// @requires extend
 /// @requires elevation
-/// @requires round-borders
 @function grid-theme(
     $palette: null,
     $schema: $light-schema,
@@ -245,10 +244,6 @@
     }
 
     $theme: apply-palette($grid-schema, $palette);
-
-    $drop-area-border-radius: round-borders(
-        if($drop-area-border-radius, $drop-area-border-radius, map.get($grid-schema, 'drop-area-border-radius')), 0, 16px
-    );
 
     @if not($cell-selected-within-text-color) and $cell-selected-within-background {
         $cell-selected-within-text-color: text-contrast($cell-selected-within-background);
@@ -1343,6 +1338,11 @@
         background-clip: border-box !important;
     }
 
+    // This is no longer being extended and is left
+    // here for reference purposes only. It seems setting
+    // overflow: hidden on the cell prevents drag and selection
+    // of the cell.
+    // See github issue #9821
     %igx-grid__td--tree-cell {
         overflow: hidden;
     }
@@ -2281,7 +2281,7 @@
         align-items: center;
         justify-content: flex-start;
         height: map.get($drop-area-height, 'comfortable');
-        border-radius: var-get($theme, 'drop-area-border-radius');
+        border-radius: border-radius(var-get($theme, 'drop-area-border-radius'));
         padding: map.get($grid-cell-padding, 'comfortable');
         flex: 1 0 0%;
         background: var-get($theme, 'drop-area-background');
@@ -2301,13 +2301,13 @@
 
     %igx-drop-area--cosy {
         height: map.get($drop-area-height, 'cosy');
-        border-radius: var-get($theme, 'drop-area-border-radius');
+        border-radius: border-radius(var-get($theme, 'drop-area-border-radius'));
         padding: map.get($grid-cell-padding, 'cosy');
     }
 
     %igx-drop-area--compact {
         height: map.get($drop-area-height, 'compact');
-        border-radius: var-get($theme, 'drop-area-border-radius');
+        border-radius: border-radius(var-get($theme, 'drop-area-border-radius'));
         padding: map.get($grid-cell-padding, 'compact');
     }
 
@@ -3079,6 +3079,3 @@
     }
     // Pivot grid END
 }
-
-
-

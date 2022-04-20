@@ -41,12 +41,6 @@
 
     $theme: apply-palette($splitter-schema, $palette);
 
-    $border-radius-handle: round-borders(
-        if($border-radius, $border-radius, map.get($splitter-schema, 'border-radius')), 0, 2px
-    );
-
-    $theme: apply-palette($splitter-schema, $palette);
-
     @if not($handle-color) and $bar-color {
         $handle-color: text-contrast($bar-color);
     }
@@ -61,7 +55,7 @@
         bar-color: $bar-color,
         handle-color: $handle-color,
         expander-color: $expander-color,
-        border-radius: $border-radius-handle,
+        border-radius: $border-radius,
         focus-color: $focus-color,
         size: $size
     ));
@@ -150,7 +144,7 @@
 
     %igx-splitter-handle {
         background: var-get($theme, 'handle-color');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
     }
 
     %igx-splitter-handle--horizontal {
