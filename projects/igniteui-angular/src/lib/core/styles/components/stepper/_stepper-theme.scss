@@ -343,17 +343,16 @@
     ), $variant);
 
     $step-header-padding-simple: map.get((
-        material: rem(8px),
-        fluent: rem(8px),
-        bootstrap: rem(16px),
-        indigo-design: rem(8px)
+        material: spacing(8px),
+        fluent: spacing(8px),
+        bootstrap: spacing(16px),
+        indigo-design: spacing(8px)
     ), $variant);
 
-    $step-body-padding: rem(16px);
+    $step-body-padding: spacing(16px);
     $title-gap: rem(8px);
     $indicator-gap: rem(4px);
-    $indicator-padding: rem(2px);
-    $v-line-indent: calc(#{$step-header-padding} + (#{$indicator-size} / 2));
+    $v-line-indent: calc(#{spacing(px($step-header-padding))} + (#{$indicator-size} / 2));
     $separator-position: 50%;
 
     $outline-width: map.get((
@@ -487,7 +486,7 @@
 
     %igx-stepper__step-header {
         display: flex;
-        padding: $step-header-padding;
+        padding: spacing(px($step-header-padding));
         position: relative;
         line-height: normal;
         flex-direction: column;
@@ -914,7 +913,7 @@
 
             %igx-stepper__step-header {
                 @if $variant != 'fluent' {
-                    padding: calc(#{$step-header-padding} / 2);
+                    padding: calc(#{spacing(px($step-header-padding))} / 2);
                 }
 
                 &::before,
