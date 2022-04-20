@@ -1562,7 +1562,7 @@
     }
 
     %grid-cell--pinned-chip--compact {
-        margin-inline-end: spacing(4px);
+        margin-inline-end: spacing(4px, 'compact');
     }
 
     %grid-cell-header {
