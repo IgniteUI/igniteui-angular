@@ -257,6 +257,10 @@
             @include e(textarea) {
                 @extend %form-group-textarea--cosy !optional;
             }
+
+            @include e(hint) {
+                @extend %form-group-helper--cosy !optional;
+            }
         }
 
         @include m(compact) {
@@ -280,6 +284,10 @@
 
             @include e(textarea) {
                 @extend %form-group-textarea--compact !optional;
+            }
+
+            @include e(hint) {
+                @extend %form-group-helper--compact !optional;
             }
         }
 
