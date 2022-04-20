@@ -13,7 +13,7 @@ body {
     --some-dynamic-color: hsl(#{random(360)}, 100%, 50%);
 }
 
-@include core($direction: $direction);
+@include core();
 @include typography($font-family: $typeface, $type-scale: $type-scale);
 @include theme(
     $palette: $palette,

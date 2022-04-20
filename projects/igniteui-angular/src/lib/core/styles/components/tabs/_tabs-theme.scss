@@ -233,9 +233,6 @@
         $color: var-get($theme, 'button-ripple-color')
     );
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $icon-space: (
         comfortable: rem(12px),
         cosy: rem(8px),
@@ -284,7 +281,7 @@
                 content: '';
                 position: absolute;
                 bottom: 0;
-                left: 0;
+                inset-inline-start: 0;
                 width: 100%;
                 height: 1px;
                 background: var-get($theme, 'border-color');
@@ -343,13 +340,19 @@
         @include ripple($button-ripple-theme);
         @include css-vars($button-ripple-theme);
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
         }
     }
 
     %tabs-header-item {
-        @include icon-w-margin(map.get($icon-space, 'comfortable'), $left);
+        > * {
+            margin-inline-start: map.get($icon-space, 'comfortable');
+    
+            &:first-child {
+                margin-inline-start: 0;
+            }
+        }
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -375,8 +378,8 @@
 
         @if $bootstrap-theme {
             border: 1px solid transparent;
-            border-top-left-radius: border-radius(var-get($theme, 'border-radius'));
-            border-top-right-radius: border-radius(var-get($theme, 'border-radius'));
+            border-start-start-radius: border-radius(var-get($theme, 'border-radius'));
+            border-start-end-radius: border-radius(var-get($theme, 'border-radius'));
         }
 
         @if $indigo-theme {
@@ -412,14 +415,12 @@
 
         @if $indigo-theme {
             border-top: transparent;
-            border-left: transparent;
-            border-right: transparent;
+            border-inline: transparent;
 
             &:hover,
             &:focus {
                 border-top: transparent;
-                border-left: transparent;
-                border-right: transparent;
+                border-inline: transparent;
             }
         }
 
@@ -454,15 +455,14 @@
             position: relative;
             z-index: 1;
             border-top-color: var-get($theme, 'border-color');
-            border-left-color: var-get($theme, 'border-color');
-            border-right-color: var-get($theme, 'border-color');
+            border-inline-color: var-get($theme, 'border-color');
             border-bottom-color: transparent;
 
             &::after {
                 content: '';
                 position: absolute;
                 bottom: -1px;
-                left: 0;
+                inset-inline-start: 0;
                 width: 100%;
                 height: 1px;
                 background: var-get($theme, 'item-active-background');
@@ -471,8 +471,7 @@
             &:hover,
             &:focus {
                 border-top-color: var-get($theme, 'border-color');
-                border-left-color: var-get($theme, 'border-color');
-                border-right-color: var-get($theme, 'border-color');
+                border-inline-color: var-get($theme, 'border-color');
                 border-bottom-color: transparent;
             }
         }
@@ -532,10 +531,7 @@
     %tabs-panel {
         display: block;
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: 0;
         width: 100%;
         height: 100%;
         overflow-x: hidden;
