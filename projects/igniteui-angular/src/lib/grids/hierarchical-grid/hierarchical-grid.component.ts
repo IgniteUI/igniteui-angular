@@ -833,7 +833,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
-        return record.childGridsData !== undefined;
+        return record?.childGridsData !== undefined;
     }
 
     /**
