@@ -608,7 +608,7 @@
 @mixin bootstrap-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
