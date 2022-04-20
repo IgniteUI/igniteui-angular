@@ -223,10 +223,6 @@
             @extend %grid-cell-display !optional;
         }
 
-        @include e(td, $m: tree-cell ) {
-            @extend %igx-grid__td--tree-cell !optional;
-        }
-
         @include e(td, $m: active) {
             @extend %grid-cell--active !optional;
         }

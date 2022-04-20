@@ -102,9 +102,6 @@
 @mixin grid-summary($theme) {
     @include css-vars($theme);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $cell-pin: (
         style: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style'),
         color: var-get($theme, 'pinned-border-color')
@@ -134,10 +131,7 @@
 
         &::after {
             position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            inset: 0;
         }
 
         &:focus::after {
@@ -163,16 +157,16 @@
     }
 
     %igx-grid-summary--pinned-last {
-        border-#{$right}: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
+        border-inline-end: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
         @media print {
-            border-right: map.get($cell-pin, 'style') #999;
+            border-inline-end: map.get($cell-pin, 'style') #999;
         }
     }
 
     %igx-grid-summary--pinned-first {
-        border-#{$left}: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
+        border-inline-start: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
         @media print {
-            border-left: map.get($cell-pin, 'style') #999;
+            border-inline-start: map.get($cell-pin, 'style') #999;
         }
     }
 
@@ -195,7 +189,7 @@
     %igx-grid-summary__label {
         color: var-get($theme, 'label-color');
         min-width: rem(30px);
-        margin-#{$right}: rem(3px);
+        margin-inline-end: rem(3px);
 
         &:hover {
             color: var-get($theme, 'label-hover-color');
@@ -206,7 +200,7 @@
         color: var-get($theme, 'result-color');
         font-weight: 600;
         flex: 1 1 auto;
-        text-align: #{$right};
+        text-align: end;
     }
 
     %igx-grid-summary__label,

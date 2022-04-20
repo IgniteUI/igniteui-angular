@@ -1,5 +1,0 @@
-@use '../../themes' as *;
-
-@include core($direction: rtl);
-@include typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
-@include indigo-light-theme($light-indigo-palette);
