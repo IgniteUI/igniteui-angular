@@ -1,72 +1,12 @@
 <igx-switch (change)='changeType()' style="padding-left: 10px">Toggle Splitter Direction</igx-switch>
-<div>Simple sample</div>
-<igx-splitter style='height: 30vh;'>
-    <igx-splitter-pane size='20%'>
-        <div style='width:100%;'>
-           Pane 1
-        </div>
-    </igx-splitter-pane>
-    <igx-splitter-pane size='200px'>
-        <div style='width:100%;'>
-            Pane 2
-         </div>
-    </igx-splitter-pane>
-    <igx-splitter-pane>
-        <div style='width:100%;'>
-            Pane 3
-         </div>
-    </igx-splitter-pane>
-</igx-splitter>
-<div>Nested splitters sample</div>
-<igx-splitter style='height: 30vh;' [type]='0' >
-    <igx-splitter-pane>
-        <igx-splitter [type]='1' [style.width]='"100%"'>
-            <igx-splitter-pane>
-                Pane1.1
-            </igx-splitter-pane>
-            <igx-splitter-pane>
-                Pane1.2
-            </igx-splitter-pane>
-        </igx-splitter>
-    </igx-splitter-pane>
-    <igx-splitter-pane>
-        <igx-splitter [type]='1' [style.width]='"100%"'>
-            <igx-splitter-pane>
-                Pane2.1
-            </igx-splitter-pane>
-            <igx-splitter-pane>
-                Pane2.2
-            </igx-splitter-pane>
-        </igx-splitter>
-    </igx-splitter-pane>
-</igx-splitter>
-<div>Sample with Grids</div>
 <igx-splitter [type]="type" style='height: 60vh;'>
     <igx-splitter-pane minSize="100">
-        <igx-grid #grid1 class="grid" displayDensity="cosy" [rowSelection]="'single'" (rowSelectionChanging)="onCustomerSelection($event)"
-        [data]="data1" [isLoading]="true" [primaryKey]="'CustomerID'" [autoGenerate]="false">
-            <igx-column field="CustomerID" [hidden]='true'></igx-column>
-            <igx-column field="CompanyName"></igx-column>
-            <igx-column field="ContactName"></igx-column>
-            <igx-column field="ContactTitle"></igx-column>
-            <igx-column field="Country"></igx-column>
-        </igx-grid>
+        <div style="background-color: rgb(255, 112, 120); width: 100%; height: 100">Simple text</div>
     </igx-splitter-pane>
+    <!-- <igx-splitter-pane>
+        <div style="background-color: rgb(7, 234, 121); width: 100%; height: 100%;">More text</div>
+    </igx-splitter-pane> -->
     <igx-splitter-pane>
-        <igx-grid #grid2 class="grid" [rowSelection]="'single'" (rowSelectionChanging)="onOrderSelection($event)"  displayDensity="cosy" [data]="data2" [isLoading]="true" [primaryKey]="'OrderID'" [autoGenerate]="false">
-            <igx-column field="OrderID" [hidden]='true'></igx-column>
-            <igx-column field="OrderDate"></igx-column>
-            <igx-column field="ShipCountry"></igx-column>
-            <igx-column field="ShipCity"></igx-column>
-            <igx-column field="ShipAddress"></igx-column>
-        </igx-grid>
-    </igx-splitter-pane>
-    <igx-splitter-pane>
-        <igx-grid #grid3 class="grid" displayDensity="cosy" [data]="data3" [isLoading]="true" [primaryKey]="'ProductID'" [autoGenerate]="false">
-            <igx-column field="ProductID" [hidden]='true'></igx-column>
-            <igx-column field="UnitPrice"></igx-column>
-            <igx-column field="Quantity"></igx-column>
-            <igx-column field="Discount"></igx-column>
-        </igx-grid>
+        <div style="background-color: rgb(85, 115, 252); width: 100%; height: 100%;">More text</div>
     </igx-splitter-pane>
 </igx-splitter>

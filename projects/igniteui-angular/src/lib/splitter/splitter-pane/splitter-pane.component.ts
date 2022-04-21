@@ -126,6 +126,7 @@ export class IgxSplitterPaneComponent {
 
     public set size(value) {
         this._size = value;
+        this.previousSize = value !== 'auto' ? value : this.previousSize;
         this.el.nativeElement.style.flex = this.flex;
     }
 
@@ -173,10 +174,10 @@ export class IgxSplitterPaneComponent {
      * ```
      */
     @Input()
-    public set collapsed(value) {
+    public set collapsed(value) {   
         if (this.owner) {
             // reset sibling sizes when pane collapse state changes.
-            this._getSiblings().forEach(sibling => sibling.size = 'auto');
+            this._getSiblings().forEach(sibling => sibling.size = value ? 'auto' : sibling.previousSize);
         }
         this._collapsed = value;
         this.display = this._collapsed ? 'none' : 'flex' ;
@@ -187,9 +188,21 @@ export class IgxSplitterPaneComponent {
         return this._collapsed;
     }
 
+    /**
+     * @hidden @internal
+     */
+     public set previousSize(value) {
+        this._previousSize = value;
+    }
+
+    public get previousSize() {
+        return this._previousSize;
+    }
+
     private _size = 'auto';
     private _dragSize;
     private _collapsed = false;
+    private _previousSize = 'auto';
 
 
     constructor(private el: ElementRef) { }

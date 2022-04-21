@@ -430,6 +430,34 @@ describe('IgxSplitter pane collapse', () => {
             expect(pane.size).toBe('auto');
         });
     });
+    
+    it('should preserve pane sizes when collapsing and expanding', () => {
+        fixture.componentInstance.type = SplitterType.Vertical;
+        fixture.detectChanges();
+        const panes = splitter.panes.toArray();
+        const pane1 = panes[0];
+        const pane2 = panes[1];
+        pane1.size = '50px';
+        pane2.size = '50px';
+        fixture.detectChanges();
+
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
+        splitterBarComponent.nativeElement.focus();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
+        fixture.detectChanges();
+        splitterBarComponent.context.movingEnd.emit(-10);
+
+        const pane1_size = pane1.size;
+        const pane2_size = pane2.size;
+        pane1.collapsed = true;
+        fixture.detectChanges();
+        expect(pane2.size).toBe('auto');
+        pane1.collapsed = false;
+        fixture.detectChanges();
+        expect(pane1_size).toBe(pane1.size);
+        expect(pane2_size).toBe(pane2.size);
+
+    });
 });
 
 @Component({
