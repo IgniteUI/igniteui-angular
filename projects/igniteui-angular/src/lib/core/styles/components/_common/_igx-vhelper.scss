@@ -2,8 +2,6 @@
 
 /// @group themes
 /// @access private
-$_right: if-ltr(right, left);
-
 %vhelper-display {
     display: block;
     overflow: auto;
@@ -13,7 +11,7 @@ $_right: if-ltr(right, left);
 %vhelper--vertical {
     position: absolute;
     top: 0;
-    #{$_right}: 0;
+    inset-inline-end: 0;
 }
 
 %vhelper--horizontal {

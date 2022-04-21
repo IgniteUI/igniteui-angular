@@ -109,9 +109,6 @@
         indigo-design: scale(.5),
     ), $variant);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $border-width: map.get((
         material: rem(2px),
         fluent: rem(1px),
@@ -179,7 +176,7 @@
             content: '';
             width: $size;
             height: $size;
-            left: 0;
+            inset-inline-start: 0;
             top: 0;
             border-radius: $border-radius;
         }
@@ -288,12 +285,12 @@
     }
 
     %radio-label--after {
-        margin-#{$left}: $label-margin;
+        margin-inline-start: $label-margin;
     }
 
     %radio-label--before {
         order: -1;
-        margin-#{$right}: $label-margin;
+        margin-inline-end: $label-margin;
     }
 
     %radio-label--before,
@@ -309,7 +306,7 @@
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
-        left: calc(50% - #{$ripple-radius});
+        inset-inline-start: calc(50% - #{$ripple-radius});
         width: $ripple-size;
         height: $ripple-size;
         border-radius: border-radius(math.div($ripple-size, 2));
@@ -332,7 +329,7 @@
                 content: '';
                 position: absolute;
                 top: -$focus-outline-offset-top;
-                left: -$focus-outline-offset-left;
+                inset-inline-start: -$focus-outline-offset-left;
                 box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
                 width: calc(100% + (#{$focus-outline-offset-left} * 2));
                 height: calc(100% + (#{$focus-outline-offset-top} * 2));
@@ -377,10 +374,7 @@
             position: absolute;
             content: '';
             opacity: .06;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            inset: 0;
         }
     }
 
