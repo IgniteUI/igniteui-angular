@@ -13,7 +13,6 @@
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {color} $label-color [null] - The color for date range separator label.
 /// @requires var-get
-/// @requires rem
 @function date-range-picker-theme(
     $palette: null,
     $schema: $light-schema,
@@ -39,16 +38,9 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
-/// @requires rem
 /// @requires var-get
 @mixin date-range-picker($theme) {
     @include css-vars($theme);
-
-    $base-scale-size: (
-        'comfortable': rem(16px),
-        'cosy': rem(19px),
-        'compact': rem(22px)
-    );
 
     %igx-date-range-picker {
         display: flex;
@@ -73,29 +65,30 @@
         display: flex;
         align-items: center;
         color: var-get($theme, 'label-color');
-        margin: 0 rem(8px);
-        padding-top: rem(18px, map.get($base-scale-size, 'comfortable'));
+        margin: 0 spacing(8px);
+        padding-top: rem(18px);
     }
 
     %igx-date-range-picker--cosy {
         %igx-date-range-picker__label {
-            padding-top: rem(18px, map.get($base-scale-size, 'cosy'));
+            padding-top: rem(15px);
         }
     }
 
     %igx-date-range-picker--compact {
         %igx-date-range-picker__label {
-            padding-top: rem(18px, map.get($base-scale-size, 'compact'));
+            padding-top: rem(13px);
         }
     }
 
     %igx-date-range-picker-buttons {
         display: flex;
         justify-content: flex-end;
-        padding: 0 rem(16px) rem(16px) rem(16px);
+        padding: spacing(16px);
+        padding-top: 0;
 
         > * {
-            margin-inline-end: rem(8px);
+            margin-inline-end: spacing(8px);
 
             &:last-of-type {
                 margin-inline-end: 0;
