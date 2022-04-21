@@ -1255,7 +1255,7 @@
     }
 
     %form-group-prefix--cosy {
-        padding: spacing(px(rem(8px, map.get($base-scale-size, 'cosy'))), 'compact');
+        padding: spacing(px(rem(8px, map.get($base-scale-size, 'cosy'))), 'cosy');
         padding-inline-start: 0;
     }
 
