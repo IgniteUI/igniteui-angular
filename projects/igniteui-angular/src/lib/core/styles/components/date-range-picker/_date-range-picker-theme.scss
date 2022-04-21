@@ -66,18 +66,18 @@
         align-items: center;
         color: var-get($theme, 'label-color');
         margin: 0 spacing(8px);
-        padding-top: spacing(18px);
+        padding-top: rem(18px);
     }
 
     %igx-date-range-picker--cosy {
         %igx-date-range-picker__label {
-            padding-top: spacing(15px, 'cosy');
+            padding-top: rem(15px);
         }
     }
 
     %igx-date-range-picker--compact {
         %igx-date-range-picker__label {
-            padding-top: spacing(13px, 'compact');
+            padding-top: rem(13px);
         }
     }
 
