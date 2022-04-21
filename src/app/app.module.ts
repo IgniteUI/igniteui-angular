@@ -3,7 +3,7 @@ import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxBottomNavModule, IgxGridModule, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxInputGroupModule,
@@ -350,7 +350,6 @@ const components = [
             multi: true
         }
     ],
-    bootstrap: [AppComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
