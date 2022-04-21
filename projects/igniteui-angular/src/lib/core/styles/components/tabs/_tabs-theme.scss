@@ -222,7 +222,7 @@
 
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
 
-    $item-padding: rem(11px) rem(16px);
+    $item-padding: spacing(11px) spacing(16px);
 
     $tabs-ripple-theme: ripple-theme(
         $schema: $light-schema,
@@ -493,7 +493,7 @@
         text-align: center;
 
         > [igxtabheadericon] {
-            margin-bottom: rem(8px);
+            margin-bottom: spacing(8px);
 
             &:last-child {
                 margin-bottom: 0;
