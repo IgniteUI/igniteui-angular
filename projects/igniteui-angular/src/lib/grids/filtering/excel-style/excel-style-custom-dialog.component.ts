@@ -134,6 +134,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
                 this.grid.rootGrid ? this.grid.rootGrid.nativeElement : this.grid.nativeElement :
                 esf;
         this.toggle.open(this._customDialogOverlaySettings);
+        this.overlayComponentId = this.toggle.overlayId;
     }
 
     public onClearButtonClick() {
@@ -145,6 +146,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     public closeDialog() {
         if (this.overlayComponentId) {
             this.overlayService.hide(this.overlayComponentId);
+            this.overlayComponentId = null;
         } else {
             this.toggle.close();
         }
