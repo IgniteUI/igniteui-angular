@@ -47,6 +47,7 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
+/// @requires var-get
 @mixin rating($theme) {
     @include css-vars($theme: $theme, $prefix: ignore);
 
@@ -78,5 +79,4 @@
         color: var-get($theme, 'disabled-selected-symbols-color');
     }
 }
-
 

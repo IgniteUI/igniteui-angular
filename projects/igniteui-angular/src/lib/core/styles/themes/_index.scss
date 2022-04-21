@@ -272,6 +272,12 @@
         ));
     }
 
+    @if is-used('igc-rating', $exclude) {
+        @include rating(rating-theme(
+            $schema: $schema
+        ));
+    }
+
     @if is-used('igx-drop-down', $exclude) {
         @include drop-down(drop-down-theme(
             $schema: $schema
