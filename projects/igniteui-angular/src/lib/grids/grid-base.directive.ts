@@ -2126,6 +2126,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public set sortingOptions(value: ISortingOptions) {
+        this.clearSort();
         this._sortingOptions = Object.assign(this._sortingOptions, value);
     }
 
