@@ -465,7 +465,7 @@
 @mixin light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -499,7 +499,7 @@
 @mixin dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -533,7 +533,7 @@
 @mixin fluent-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -562,7 +562,7 @@
 @mixin fluent-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -592,7 +592,7 @@
 @mixin bootstrap-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -621,7 +621,7 @@
 @mixin bootstrap-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -650,7 +650,7 @@
 @mixin indigo-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -679,7 +679,7 @@
 @mixin indigo-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
