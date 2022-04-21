@@ -1,0 +1,82 @@
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use '../../typography/base' as *;
+@use 'sass:map';
+
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} $label-color [null] - sets the color for the label.
+/// @param {Color} $idle-symbol-color [null] - sets the idle color for the symbol when it is a plane text.
+/// @param {Color} $selected-symbol-color [null] - sets the color in selected state for the symbol when it is a plane text.
+/// @param {Color} $disabled-label-color [null] - sets the color for the label in disabled state.
+/// @param {Color} $disabled-idle-symbols-color [null] - sets the idle color for the symbol in disabled state when it is a plane text.
+/// @param {Color} $disabled-selected-symbols-color [null] - sets the color for the symbol in selected/disabled state when it is a plane text.
+///
+/// @requires $light-schema
+/// @requires extend
+///
+/// @example scss
+///   $my-rating-theme: rating-theme();
+///   @include rating($my-rating-theme);
+@function rating-theme(
+    $palette: null,
+    $schema: $light-schema,
+    $rest...
+) {
+
+    $name: 'igc-rating';
+    $rating-schema: ();
+
+    @if map.has-key($schema, $name) {
+        $rating-schema: map.get($schema, $name);
+    } @else {
+        $rating-schema: $schema;
+    }
+
+    $theme: apply-palette($rating-schema, $palette);
+
+    @return extend($theme, (name: $name), keywords($rest));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} css-vars
+/// @requires var-get
+@mixin rating($theme) {
+    @include css-vars($theme: $theme, $prefix: ignore);
+
+    igc-rating::part(symbol) {
+        filter: none;
+    }
+
+    igc-rating::part(label) {
+        color: var-get($theme, 'label-color');
+    }
+
+    igc-rating::part(symbols-wrapper) {
+        color: var-get($theme, 'idle-symbol-color');
+    }
+
+    igc-rating::part(symbols-wrapper selected) {
+        color: var-get($theme, 'selected-symbols-color');
+    }
+
+    igc-rating[disabled]::part(label) {
+        color: var-get($theme, 'disabled-label-color');
+    }
+
+    igc-rating[disabled]::part(symbols-wrapper) {
+        color: var-get($theme, 'disabled-idle-symbols-color')
+    }
+
+    igc-rating[disabled]::part(symbols-wrapper selected) {
+        color: var-get($theme, 'disabled-selected-symbols-color');
+    }
+}
+
