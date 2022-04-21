@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IRangeSliderValue } from 'igniteui-angular';
+import { IgxSliderType, IRangeSliderValue } from 'igniteui-angular';
 
 @Component({
   selector: 'app-range-slider',
@@ -7,10 +7,18 @@ import { IRangeSliderValue } from 'igniteui-angular';
   styleUrls: ['./range-slider.component.scss']
 })
 export class RangeSliderComponent {
+    public sliderType: IgxSliderType = IgxSliderType.RANGE;
 
-    public rangeValue: IRangeSliderValue = {
+    public weekdays: IRangeSliderValue = {
         lower: 2,
         upper: 5
+    };
+
+    public weekdayLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    public rangeValues: IRangeSliderValue = {
+        lower: 20,
+        upper: 50
     };
 
     constructor() { }

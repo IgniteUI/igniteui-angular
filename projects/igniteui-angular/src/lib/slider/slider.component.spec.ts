@@ -76,13 +76,12 @@ describe('IgxSlider', () => {
             expect(slider.upperBound).toBe(slider.maxValue);
         });
 
-        it(`should have upper value equal to lower bound when
-            lower value is not set and slider type is SLIDER`, () => {
-                slider.type = IgxSliderType.SLIDER;
-                fixture.detectChanges();
+        it('should have upper value equal to lower bound when lower value is not set and slider type is SLIDER', () => {
+            slider.type = IgxSliderType.SLIDER;
+            fixture.detectChanges();
 
-                expect(slider.value).toBe(slider.lowerBound);
-            });
+            expect(slider.value).toBe(slider.lowerBound);
+        });
 
         it('should change minValue', () => {
             const expectedMinValue = 3;
