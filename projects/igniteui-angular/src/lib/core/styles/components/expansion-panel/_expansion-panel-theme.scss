@@ -103,7 +103,6 @@
     @include css-vars($theme);
 
     $panel-padding: spacing(16px, 'comfortable');
-    $panel-cosy-padding: spacing(8px, 'cosy');
 
     %igx-expansion-panel {
         display: flex;
