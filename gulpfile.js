@@ -14,7 +14,7 @@ const sassdoc = require('sassdoc');
 const path = require('path');
 const EventEmitter = require('events').EventEmitter;
 const { series } = require('gulp');
-const {spawnSync} = require('child_process');
+const { spawnSync } = require('child_process');
 const slash = require('slash');
 
 const STYLES = {
@@ -131,9 +131,11 @@ module.exports.copySchematics = (cb) => {
 };
 
 const typedocBuildTheme = (cb) => {
-    spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH,
-    "--tsconfig",
-    path.join(__dirname,"tsconfig.json")], { stdio: 'inherit', shell: true });
+    spawnSync(`typedoc`, [
+        TYPEDOC.PROJECT_PATH,
+        "--tsconfig",
+        path.join(__dirname, "tsconfig.typedoc.json")],
+        { stdio: 'inherit', shell: true });
     cb();
 };
 typedocBuildTheme.displayName = 'typedoc-build:theme';
@@ -163,9 +165,9 @@ function typedocWatchFunc(cb) {
         slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'css', '/**/*.{scss,sass}')),
         slash(path.join(TYPEDOC_THEME.SRC, '/**/*.hbs')),
         slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'images', '/**/*.{png,jpg,gif}')),
-      ], series(typedocBuildTheme, browserReload));
+    ], series(typedocBuildTheme, browserReload));
 
-      cb();
+    cb();
 }
 
 
@@ -176,27 +178,29 @@ const TYPEDOC = {
 };
 
 function typedocBuildExportFn(cb) {
-    spawnSync('typedoc', [
+    const childProcess = spawnSync('typedoc', [
         TYPEDOC.PROJECT_PATH,
         "--generate-json",
         TYPEDOC.EXPORT_JSON_PATH,
         "--tags",
         "--params",
         "--tsconfig",
-        path.join(__dirname,"tsconfig.json")],
+        path.join(__dirname, "tsconfig.json")],
         { stdio: 'inherit', shell: true });
+    process.exitCode = childProcess.status || 0;
     cb();
 }
 
 function typedocImportJsonFn(cb) {
-    spawnSync('typedoc', [
+    const childProcess = spawnSync('typedoc', [
         TYPEDOC.PROJECT_PATH,
         "--generate-from-json",
         TYPEDOC.EXPORT_JSON_PATH,
         "--warns",
         "--tsconfig",
-        path.join(__dirname,"tsconfig.json")],
-        { stdio: 'inherit', shell: true});
+        path.join(__dirname, "tsconfig.json")],
+        { stdio: 'inherit', shell: true });
+    process.exitCode = childProcess.status || 0;
     cb();
 }
 
@@ -210,31 +214,32 @@ function cleanTypedocOutputDirFn(cb) {
     cb();
 }
 
-function typedocBuildDocsJA (cb) {
-        spawnSync('typedoc',[
-            TYPEDOC.PROJECT_PATH,
-            '--generate-from-json',
-            slash(path.join(__dirname, 'i18nRepo', 'typedoc', 'ja')),
-            '--templateStrings',
-            TYPEDOC.TEMPLATE_STRINGS_PATH,
-            '--warns',
-            '--localize',
-            'jp',
-            "--tsconfig",
-            path.join(__dirname,"tsconfig.json")], { stdio: 'inherit', shell: true });
-
-        cb();
+function typedocBuildDocsJA(cb) {
+    const childProcess = spawnSync('typedoc', [
+        TYPEDOC.PROJECT_PATH,
+        '--generate-from-json',
+        slash(path.join(__dirname, 'i18nRepo', 'typedoc', 'ja')),
+        '--templateStrings',
+        TYPEDOC.TEMPLATE_STRINGS_PATH,
+        '--warns',
+        '--localize',
+        'jp',
+        "--tsconfig",
+        path.join(__dirname, "tsconfig.json")], { stdio: 'inherit', shell: true });
+    process.exitCode = childProcess.status || 0;
+    cb();
 }
 
-function typedocBuildDocsEN (cb) {
-        spawnSync('typedoc', [
-            TYPEDOC.PROJECT_PATH,
-            '--localize',
-            'en',
-            "--tsconfig",
-            path.join(__dirname,"tsconfig.json")], { stdio: 'inherit', shell: true});
+function typedocBuildDocsEN(cb) {
+    const childProcess = spawnSync('typedoc', [
+        TYPEDOC.PROJECT_PATH,
+        '--localize',
+        'en',
+        "--tsconfig",
+        path.join(__dirname, "tsconfig.json")], { stdio: 'inherit', shell: true });
+    process.exitCode = childProcess.status || 0;
 
-        cb();
+    cb();
 }
 
 const SASSDOC = {
@@ -266,7 +271,7 @@ function sassdocBuildJson(cb) {
 function sassdocImportJson(cb) {
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
 
-    const {render, importDir} = argv;
+    const { render, importDir } = argv;
 
     options.render = render;
     options.json_dir = importDir;
@@ -278,7 +283,7 @@ function sassdocImportJson(cb) {
     cb();
 }
 
-function sassdocBuildJA (cb) {
+function sassdocBuildJA(cb) {
     const pathTranslations = path.join(__dirname, 'i18nRepo', 'sassdoc', 'ja');
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
 
@@ -293,7 +298,7 @@ function sassdocBuildJA (cb) {
     cb();
 }
 
-function sassdocBuildEN (cb) {
+function sassdocBuildEN(cb) {
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
 
     options.lang = 'en';

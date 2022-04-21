@@ -550,8 +550,10 @@ export class IgxGridNavigationService {
         event.preventDefault();
         if ((this.grid.crudService.rowInEditMode && this.grid.rowEditTabs.length) &&
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
-            this.grid.crudService.updateCell(true, event);
-            if (shift) {
+            const args = this.grid.crudService.updateCell(true, event);
+            if(args.cancel) {
+                return;
+            } else if (shift) {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
             } else {
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
