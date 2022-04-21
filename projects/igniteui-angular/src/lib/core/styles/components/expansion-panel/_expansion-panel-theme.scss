@@ -102,9 +102,9 @@
 @mixin expansion-panel($theme) {
     @include css-vars($theme);
 
-    $panel-padding: em(16px, 16px);
-    $panel-compact-padding: em(16px, 16px);
-    $panel-cosy-padding: em(8px, 16px);
+    $panel-padding: spacing(16px, 'comfortable');
+    $panel-compact-padding: spacing(16px, 'compact');
+    $panel-cosy-padding: spacing(8px, 'cosy');
 
     %igx-expansion-panel {
         display: flex;
@@ -115,7 +115,7 @@
 
     %igx-expansion-panel__header-title {
         color: var-get($theme, 'header-title-color');
-        margin-inline-end: rem(16px, 16px);
+        margin-inline-end: spacing(16px);
     }
 
     %igx-expansion-panel__header-description {
@@ -176,12 +176,12 @@
 
     %igx-expansion-panel__header-icon--end {
         order: 1;
-        margin-inline-start: rem(16px, 16px);
+        margin-inline-start: spacing(16px);
     }
 
     %igx-expansion-panel__header-icon--start {
         order: -1;
-        margin-inline-end: rem(16px, 16px);
+        margin-inline-end: spacing(16px);
     }
 
     %igx-expansion-panel__header-icon--none {
