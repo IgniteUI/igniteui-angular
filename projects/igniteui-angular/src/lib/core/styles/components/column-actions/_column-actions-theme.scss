@@ -81,13 +81,13 @@
     %column-actions-title {
         color: var-get($theme, 'title-color');
         margin: 0;
-        padding: rem(16px) rem(16px) rem(8px);
+        padding: spacing(16px) spacing(16px) spacing(8px);
     }
 
     %column-actions-input {
         font-size: rem(16px) !important;
-        margin: -16px 0 0 !important;
-        padding: rem(8px) rem(16px);
+        margin: spacing(-16px) 0 0 !important;
+        padding: spacing(8px) spacing(16px);
     }
 
     %column-actions-columns {
@@ -98,14 +98,14 @@
     }
 
     %column-actions-item {
-        padding: rem(4px) rem(16px);
+        padding: spacing(4px) spacing(16px);
         min-height: rem(32px);
     }
 
     %column-actions-buttons {
         display: flex;
         justify-content: flex-end;
-        padding: rem(8px) rem(16px);
+        padding: spacing(8px) spacing(16px);
     }
 }
 

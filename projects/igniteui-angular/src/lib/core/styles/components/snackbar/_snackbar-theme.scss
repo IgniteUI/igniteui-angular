@@ -90,8 +90,8 @@
     @include fade-in();
 
     $snackbar-min-height: rem(48px);
-    $snackbar-padding: rem(7px) rem(24px);
-    $snackbar-button-left-margin: rem(24px);
+    $snackbar-padding: spacing(7px) spacing(24px);
+    $snackbar-button-left-margin: spacing(24px);
     $snackbar-button-line-height: rem(16px);
     $snackbar-button-font-weight: 600;
 
@@ -103,7 +103,7 @@
         justify-content: space-between;
         min-height: $snackbar-min-height;
         padding: $snackbar-padding;
-        margin: 8px;
+        margin: spacing(8px);
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         backface-visibility: hidden;
