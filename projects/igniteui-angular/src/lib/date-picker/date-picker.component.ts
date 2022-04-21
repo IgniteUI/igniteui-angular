@@ -38,6 +38,7 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { PickerHeaderOrientation as PickerHeaderOrientation } from '../date-common/types';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxPickerClearComponent, IgxPickerActionsDirective } from '../date-common/public_api';
+import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 let NEXT_ID = 0;
 
@@ -73,7 +74,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     @Input()
-    public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
+    public weekStart: WEEKDAYS | number = getLocaleFirstDayOfWeek(this.locale);
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -724,6 +725,11 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
+
+        this.locale = this.locale || this._localeId;
+        if (!this.weekStart) {
+            this.weekStart = getLocaleFirstDayOfWeek(this.locale);
+        }
     }
 
     /** @hidden @internal */

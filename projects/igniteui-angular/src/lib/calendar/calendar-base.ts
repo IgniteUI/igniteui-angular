@@ -8,6 +8,7 @@ import { IgxCalendarView } from './month-picker-base';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
+import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 
 /**
@@ -258,6 +259,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set locale(value: string) {
         this._locale = value;
+        if (!this.weekStart) {
+            this.calendarModel.firstWeekDay = getLocaleFirstDayOfWeek(this._locale);
+        }
         this.initFormatters();
     }
 

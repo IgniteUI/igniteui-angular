@@ -35,6 +35,7 @@ import {
     DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
     IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent
 } from './date-range-picker-inputs.common';
+import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -110,7 +111,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public weekStart = WEEKDAYS.SUNDAY;
+    public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
 
     /**
      * Locale settings used for value formatting and calendar.
@@ -611,6 +612,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
+
+        this.locale = this.locale || this._localeId;
+        if (!this.weekStart) {
+            this.weekStart = getLocaleFirstDayOfWeek(this.locale);
+        }
     }
 
     /** @hidden */

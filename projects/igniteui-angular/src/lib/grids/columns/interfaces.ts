@@ -1,4 +1,5 @@
 import { ColumnType } from '../common/grid.interface';
+import { WEEKDAYS } from "../../calendar/calendar";
 
 
 /**
@@ -42,4 +43,7 @@ export interface IColumnPipeArgs {
      * The value is of type string. By default is set to 'symbol'
      */
     display?: string;
+
+    /** The first week day to be displayed in calendar when filtering or editing a date column */
+    weekStart?: number | WEEKDAYS;
 }
