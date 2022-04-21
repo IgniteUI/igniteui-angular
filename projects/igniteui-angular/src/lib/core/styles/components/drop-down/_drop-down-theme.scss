@@ -204,17 +204,17 @@
         compact: rem(28px)
     );
 
-    $item-padding-comfortable: 0 rem(24px);
-    $item-padding-cosy: 0 rem(20px);
-    $item-padding-compact: 0 rem(16px);
+    $item-padding-comfortable: 0 spacing(24px);
+    $item-padding-cosy: 0 spacing(20px, 'cosy');
+    $item-padding-compact: 0 spacing(16px, 'compact');
 
-    $prefix-margin-comfortable: rem(20px);
-    $prefix-margin-cosy: rem(16px);
-    $prefix-margin-compact: rem(12px);
+    $prefix-margin-comfortable: spacing(20px);
+    $prefix-margin-cosy: spacing(16px, 'cosy');
+    $prefix-margin-compact: spacing(12px, 'compact');
 
-    $suffix-margin-comfortable: rem(8px);
-    $suffix-margin-cosy: rem(6px);
-    $suffix-margin-compact: rem(4px);
+    $suffix-margin-comfortable: spacing(8px);
+    $suffix-margin-cosy: spacing(6px, 'cosy');
+    $suffix-margin-compact: spacing(4px, 'compact');
 
     $item-padding: (
         comfortable: $item-padding-comfortable,
@@ -235,9 +235,9 @@
     );
 
     $header-item-padding: (
-        comfortable: 0 rem(16px),
-        cosy: 0 rem(12px),
-        compact: 0 rem(8px)
+        comfortable: 0 spacing(16px),
+        cosy: 0 spacing(12px, 'cosy'),
+        compact: 0 spacing(8px, 'compact')
     );
 
     %igx-drop-down {
