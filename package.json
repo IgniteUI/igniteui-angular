@@ -112,7 +112,7 @@
     "gulp-uglify": "^3.0.1",
     "gulp-util": "^3.0.8",
     "hammer-simulator": "0.0.1",
-    "ig-typedoc-theme": "^4.0.3",
+    "ig-typedoc-theme": "^4.1.0",
     "igniteui-sassdoc-theme": "^1.1.4",
     "jasmine": "~3.6.0",
     "jasmine-core": "~3.6.0",
@@ -134,8 +134,8 @@
     "themeleon": "^3.0.2",
     "ts-node": "~7.0.1",
     "tslint": "~6.1.0",
-    "typedoc": "^0.21.0",
-    "typedoc-plugin-localization": "^2.2.4",
+    "typedoc": "^0.22.13",
+    "typedoc-plugin-localization": "^2.3.0",
     "typescript": "^4.3.5",
     "webpack-sources": "1.3.0"
   }
