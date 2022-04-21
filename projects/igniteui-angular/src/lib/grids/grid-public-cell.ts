@@ -5,7 +5,7 @@ import { resolveNestedPath } from '../core/utils';
 export class IgxGridCell implements CellType {
 
     /**
-     * Returns the grid containing the cell.
+     * Returns the grid containing the cell TEST TEST
      *
      * @memberof IgxGridCell
      */
