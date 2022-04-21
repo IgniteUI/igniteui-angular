@@ -144,13 +144,16 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires rem
+/// @requires spacing
+/// @requires border-radius
 /// @requires var-get
 @mixin navdrawer($theme) {
     @include css-vars($theme);
 
     $drawer-icon-size: rem(24px);
-    $drawer-item-margin: rem(8px);
-    $text-side-padding: rem(8px);
+    $drawer-item-m: 8px;
+    $drawer-item-margin: spacing($drawer-item-m);
+    $text-side-padding: spacing(8px);
     $drawer-item-min-h: auto;
     $drawer-item-max-h: rem(48px);
     $drawer-item-min-w: rem(32px);
@@ -238,7 +241,7 @@
             @if $variant == 'indigo-design' {
                 max-width: rem(32px);
                 // important is needed to override the typography margins
-                margin: rem(14px) auto !important;
+                margin: spacing(14px) auto !important;
 
                 igx-icon {
                     margin-inline-start: 0;
@@ -296,11 +299,11 @@
         @if $variant != 'indigo-design' {
             // important is needed to override the typography margins
             margin: $drawer-item-margin !important;
-            padding: rem(12px) rem(8px);
+            padding: spacing(12px) spacing(8px);
         } @else {
             // important is needed to override the typography margins
-            margin: rem(15px) $drawer-item-margin !important;
-            padding: rem(4px);
+            margin: spacing(15px) $drawer-item-margin !important;
+            padding: spacing(4px);
         }
 
         cursor: pointer;
@@ -309,15 +312,15 @@
         white-space: nowrap;
         border-radius: border-radius(var-get($theme, 'item-border-radius'));
         text-decoration: none;
-        width: calc(100% - #{$drawer-item-margin * 2});
+        width: calc(100% - #{rem($drawer-item-m) * 2});
         border: none;
         justify-content: flex-start;
 
         > igx-icon + span {
             @if $variant == 'indigo-design' {
-                margin-inline-start: calc(32px - #{$text-side-padding});
+                margin-inline-start: spacing(24px);
             } @else {
-                margin-inline-start: rem(32px);
+                margin-inline-start: spacing(32px);
             }
         }
 
@@ -330,7 +333,7 @@
         igx-icon {
             color: var-get($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
-                margin-inline-start: rem(4px);
+                margin-inline-start: spacing(4px);
             }
         }
 
@@ -415,7 +418,7 @@
 
     %item--header {
         display: block;
-        padding: rem(12px) rem(16px);
+        padding: spacing(12px) spacing(16px);
         white-space: nowrap;
         color: var-get($theme, 'item-header-text-color');
     }
