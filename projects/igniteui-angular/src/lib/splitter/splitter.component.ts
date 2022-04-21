@@ -154,7 +154,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
     public set type(value) {
         this._type = value;
-        this.resetPaneSizes(this.panes?.filter(x => !x.collapsed).length > 1);
+        this.resetPaneSizes(this.panes?.filter(x => x.collapsed).length === 0);
     }
 
     /**
