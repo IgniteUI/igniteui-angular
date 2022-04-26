@@ -462,7 +462,7 @@
 
         igx-suffix,
         [igxSuffix] {
-            padding-right: rem(16px, map.get($base-scale-size, 'comfortable'));
+            padding-inline-end: rem(16px, map.get($base-scale-size, 'comfortable'));
         }
     }
 
