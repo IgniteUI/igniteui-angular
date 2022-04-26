@@ -860,7 +860,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        const dataIndex = this._getResolvedDataIndex(index);
+        const dataIndex = this._getDataViewIndex(index);
         const rec: any = data ?? this.dataView[dataIndex];
 
         if (this.isSummaryRow(rec)) {
