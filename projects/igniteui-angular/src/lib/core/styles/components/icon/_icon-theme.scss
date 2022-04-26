@@ -68,6 +68,7 @@
         height: $igx-icon-font-size;
         font-size: $igx-icon-font-size;
         color: var-get($theme, 'color');
+        direction: inherit;
 
         div,
         svg {

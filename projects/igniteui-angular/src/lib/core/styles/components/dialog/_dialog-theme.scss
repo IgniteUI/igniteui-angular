@@ -93,8 +93,6 @@
 /// @requires var-get
 @mixin dialog($theme) {
     @include css-vars($theme);
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
 
     $variant: map.get($theme, variant); 
     $bootstrap-theme: map.get($theme, variant) == 'bootstrap';
@@ -196,7 +194,7 @@
         }
 
         button + button {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
     }
 }
