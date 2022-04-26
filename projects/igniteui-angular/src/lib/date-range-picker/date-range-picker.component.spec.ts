@@ -276,7 +276,7 @@ describe('IgxDateRangePicker', () => {
             expect(mockCalendar.daysView.focusActiveDate).toHaveBeenCalledTimes(1);
         });
 
-        fit('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
+        it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
             debugger
             const dateRange = new IgxDateRangePickerComponent(elementRef, 'en', platform, mockInjector, null, null, null);
             dateRange.ngOnInit();
