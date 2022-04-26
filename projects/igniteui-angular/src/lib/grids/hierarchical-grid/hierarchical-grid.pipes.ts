@@ -38,7 +38,10 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
             result.push(v);
             const childGridsData = {};
             childKeys.forEach((childKey) => {
-                const childData = v[childKey] ? v[childKey] : null;
+                if (!v[childKey]) {
+                    v[childKey] = [];
+                }
+                const childData = v[childKey];
                 childGridsData[childKey] = childData;
             });
             if (grid.gridAPI.get_row_expansion_state(v)) {

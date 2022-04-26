@@ -25,9 +25,6 @@
     $horizontal-space-cosy: rem(12px);
     $horizontal-space-compact: rem(8px);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $bootstrap-theme: $variant == 'bootstrap';
 
     %advanced-filter {
@@ -36,7 +33,7 @@
         max-width: 720px;
         background-color: var-get($theme, 'filtering-row-background');
         box-shadow: elevation($elevation: 12);
-        border-radius: rem(4px);
+        border-radius: border-radius(rem(4px));
     }
 
     %advanced-filter__header {
@@ -68,7 +65,7 @@
         max-height: 468px;
 
         [igxButton] + [igxButton] {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
     }
 
@@ -77,7 +74,7 @@
             width: rem(18px);
             height: rem(18px);
             font-size: rem(18px);
-            margin-#{$right}: rem(8px);
+            margin-inline-end: rem(8px);
         }
     }
 
@@ -95,9 +92,9 @@
         width: rem(8px);
         min-width: rem(8px);
         background-color: white;
-        margin-#{$right}: $horizontal-space-comfortable;
+        margin-inline-end: $horizontal-space-comfortable;
         outline-style: none;
-        border-radius: rem(4px);
+        border-radius: border-radius(rem(4px));
         cursor: pointer;
     }
 
@@ -163,7 +160,7 @@
         }
 
         igx-icon + igx-icon {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
     }
 
@@ -192,7 +189,7 @@
         igx-select + igx-input-group,
         igx-select + igx-date-picker,
         igx-input-group + igx-select {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
 
         + %filter-tree,
@@ -211,13 +208,13 @@
         }
 
         [igxButton] + [igxButton] {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
     }
 
     %filter-legend {
         display: flex;
-        margin-#{$left}: auto;
+        margin-inline-start: auto;
         pointer-events: none;
     }
 
@@ -232,12 +229,12 @@
             width: rem(24px);
             height: rem(24px);
             background: white;
-            border-radius: rem(4px);
-            margin-#{$right}: rem(8px);
+            border-radius: border-radius(rem(4px));
+            margin-inline-end: rem(8px);
         }
 
         + %filter-legend__item {
-            margin-#{$left}: rem(24px);
+            margin-inline-start: rem(24px);
         }
     }
 
@@ -256,8 +253,8 @@
         width: 196px;
         background-color: var-get($theme, 'filtering-row-background');
         padding: rem(16px);
-        margin-#{$left}: rem(16px);
-        border-radius: rem(4px);
+        margin-inline-start: rem(16px);
+        border-radius: border-radius(rem(4px));
         border: 1px solid color($palette, 'grays', 200);
 
         > [igxButton] + [igxButton],
@@ -272,7 +269,7 @@
         }
 
         [igxButton] > igx-icon + * {
-            margin-#{$left}: 8px;
+            margin-inline-start: 8px;
         }
 
         igx-buttongroup > * {
@@ -301,7 +298,7 @@
     %filter-con-menu__close-btn {
         position: absolute;
         top: rem(-18px);
-        #{$right}: rem(-18px);
+        inset-inline-end: rem(-18px);
         background-color: var-get($theme, 'filtering-row-background');
         border: 1px solid color($palette, 'grays', 200);
 
@@ -346,7 +343,7 @@
         }
 
         %filter-tree__line {
-            margin-#{$right}: $horizontal-space-cosy;
+            margin-inline-end: $horizontal-space-cosy;
         }
 
         %filter-tree {
@@ -405,7 +402,7 @@
         }
 
         %filter-tree__line {
-            margin-#{$right}: $horizontal-space-compact;
+            margin-inline-end: $horizontal-space-compact;
         }
 
         %filter-tree {

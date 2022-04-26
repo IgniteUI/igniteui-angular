@@ -28,7 +28,6 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
-/// @requires round-borders
 ///
 /// @example scss Change the background color
 ///   $my-dialog-theme: dialog-theme($background: black);
@@ -59,10 +58,6 @@
     }
 
     $theme: apply-palette($dialog-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($dialog-schema, 'border-radius')), 0 , 36px
-    );
 
     @if not($title-color) and $background{
         $title-color: text-contrast($background);
@@ -98,10 +93,9 @@
 /// @requires var-get
 @mixin dialog($theme) {
     @include css-vars($theme);
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, variant); 
+    $bootstrap-theme: map.get($theme, variant) == 'bootstrap';
 
     $dialog-min-width: map.get((
         material: rem(280px),
@@ -130,8 +124,6 @@
         indigo-design: rem(8px),
     ), $variant);
 
-    $bootstrap-theme: map.get($theme, variant) == 'bootstrap';
-
     %igx-dialog-display {
         outline-style: none;
     }
@@ -144,7 +136,7 @@
         position: relative;
         min-width: $dialog-min-width;
         border: 1px solid var-get($theme, 'border-color');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         background: var-get($theme, 'background');
         box-shadow: var-get($theme, 'shadow');
         overflow: hidden;
@@ -202,7 +194,7 @@
         }
 
         button + button {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
     }
 }

@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/grid' as *;
 @use '../elevation/grid' as *;
 
 ////
@@ -94,13 +93,11 @@
 /// @prop {Map} row-ghost-background [color: ('primary', 50))] - The background color of the dragged row.
 /// @prop {number} grid-elevation [2] - The elevation level, between 0-24, to be used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation level, between 0-24, to be used for movable elements (ex. column header).
-/// @prop {Number} drop-area-border-radius [1] - The border radius used for drop-area. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} drop-area-border-radius [16px] - The border radius used for drop-area. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires {Map} $default-shape-grid
 /// @requires {Map} $default-elevation-grid
 /// @see $default-palette
 $light-grid: extend(
-    $default-shape-grid,
     $default-elevation-grid,
     (
         variant: 'material',
@@ -403,7 +400,9 @@ $light-grid: extend(
 
         row-drag-color: (
             color: ('grays', 200)
-        )
+        ),
+
+        drop-area-border-radius: rem(16px)
     )
 );
 
@@ -439,11 +438,9 @@ $light-grid: extend(
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-grid
-/// @requires {Map} $fluent-shape-grid
 /// @requires {Map} $fluent-elevation-grid
 $fluent-grid: extend(
     $light-grid,
-    $fluent-shape-grid,
     $fluent-elevation-grid,
     (
         variant: 'fluent',
@@ -547,6 +544,8 @@ $fluent-grid: extend(
         row-ghost-background: (
             color: 'surface'
         ),
+
+        drop-area-border-radius: rem(2px)
     )
 );
 
@@ -570,10 +569,8 @@ $fluent-grid: extend(
 /// @prop {Map} row-selected-hover-text-color [contrast-color: ('primary', 100)] - The selected row hover text color.
 /// @requires {function} extend
 /// @requires {Map} $light-grid
-/// @requires {Map} $bootstrap-shape-grid
 $bootstrap-grid: extend(
     $light-grid,
-    $bootstrap-shape-grid,
     (
         variant: 'bootstrap',
 
@@ -656,6 +653,8 @@ $bootstrap-grid: extend(
         edit-mode-color: (
             color: ('primary', 500)
         ),
+
+        drop-area-border-radius: rem(4px)
     )
 );
 
@@ -701,6 +700,7 @@ $bootstrap-grid: extend(
 /// @prop {Map} drop-area-background [color: ('grays', 200)] - The drop area background color.
 /// @prop {Map} drop-area-text-color [contrast-color: ('grays', 200, .62)] - The drop area text color.
 /// @prop {Map} drop-area-icon-color [contrast-color: ('grays', 200, .62)] - The drop area icon color.
+/// @prop {Number} drop-area-border-radius [16px] - The border radius used for drop-area. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Map} root-summaries-background [color: ('grays', 100)] - The background color of the summary groups located the footer.
 /// @prop {Map} body-summaries-background [color: ('grays', 100)] - The background color of the summary groups located the body.
 /// @prop {Map} group-row-background [color: ('grays', 100)] - The grid group row background color.

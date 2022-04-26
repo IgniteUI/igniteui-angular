@@ -32,7 +32,7 @@
     $palette,
     $schema: $light-material-schema,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $elevations: $elevations,
     $wc: false
@@ -54,6 +54,16 @@
 
             @if $wc {
                 --igc-elevation-factor: var(--igx-elevation-factor);
+            }
+        }
+    }
+
+    @if $roundness {
+        :root {
+            --igx-radius-factor: #{$roundness};
+
+            @if $wc {
+                --igc-radius-factor: var(--igx-radius-factor);
             }
         }
     }
@@ -84,64 +94,55 @@
 
     @if is-used('igx-badge', $exclude) {
         @include badge(badge-theme(
-            $schema: $schema,
-            $border-radius: $roundness
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-bottom-nav', $exclude) {
         @include bottom-nav(bottom-nav-theme(
-            $schema: $schema,
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-button', $exclude) {
         @include button(button-theme(
-            $schema: $schema,
-            $border-radius: $roundness
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-button-group', $exclude) {
         @include button-group(button-group-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-banner', $exclude) {
         @include banner(banner-theme(
-            $schema: $schema,
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-calendar', $exclude) {
         @include calendar(calendar-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $date-border-radius: $roundness,
-            $month-border-radius: $roundness,
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-card', $exclude) {
         @include card(card-theme(
-            $schema: $schema,
-            $border-radius: $roundness
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-carousel', $exclude) {
         @include carousel(carousel-theme(
-            $schema: $schema,
-            $border-radius: $roundness
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-splitter', $exclude) {
         @include splitter(splitter-theme(
-            $schema: $schema,
-            $border-radius: $roundness
+            $schema: $schema
         ));
     }
 
@@ -219,16 +220,13 @@
 
     @if is-used('igx-checkbox', $exclude) {
         @include checkbox(checkbox-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $border-radius-ripple: $roundness,
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-chip', $exclude) {
         @include chip(chip-theme(
-            $schema: $schema,
-            $border-radius: $roundness
+            $schema: $schema
         ));
     }
 
@@ -246,8 +244,7 @@
 
     @if is-used('igx-date-picker', $exclude) {
         @include date-picker(calendar-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+            $schema: $schema
         ));
     }
 
@@ -259,8 +256,7 @@
 
     @if is-used('igx-dialog', $exclude) {
         @include dialog(dialog-theme(
-            $schema: $schema,
-            $border-radius: $roundness
+            $schema: $schema
         ));
     }
 
@@ -276,24 +272,27 @@
         ));
     }
 
+    @if is-used('igc-rating', $exclude) {
+        @include rating(rating-theme(
+            $schema: $schema
+        ));
+    }
+
     @if is-used('igx-drop-down', $exclude) {
         @include drop-down(drop-down-theme(
-            $schema: $schema,
-            $border-radius: $roundness
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-expansion-panel', $exclude) {
         @include expansion-panel(expansion-panel-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-grid', $exclude) {
         @include grid(grid-theme(
-            $schema: $schema,
-            $drop-area-border-radius: $roundness
+            $schema: $schema
         ));
     }
 
@@ -329,18 +328,13 @@
 
     @if is-used('igx-input-group', $exclude) {
         @include input-group(input-group-theme(
-            $schema: $schema,
-            $box-border-radius: $roundness,
-            $border-border-radius: $roundness,
-            $search-border-radius: $roundness
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-list', $exclude) {
         @include list(list-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $item-border-radius: $roundness,
+            $schema: $schema
         ));
     }
 
@@ -352,9 +346,7 @@
 
     @if is-used('igx-nav-drawer', $exclude) {
         @include navdrawer(navdrawer-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $item-border-radius: $roundness
+            $schema: $schema
         ));
     }
 
@@ -402,17 +394,13 @@
 
     @if is-used('igx-snackbar', $exclude) {
         @include snackbar(snackbar-theme(
-            $schema: $schema,
-            $border-radius: $roundness
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-switch', $exclude) {
         @include switch(switch-theme(
             $schema: $schema,
-            $border-radius-track: $roundness,
-            $border-radius-thumb: $roundness,
-            $border-radius-ripple: $roundness
         ));
     }
 
@@ -430,23 +418,19 @@
 
     @if is-used('igx-toast', $exclude) {
         @include toast(toast-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-tooltip', $exclude) {
         @include tooltip(tooltip-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-time-picker', $exclude) {
         @include time-picker(time-picker-theme(
             $schema: $schema,
-            $border-radius: $roundness,
-            $active-item-border-radius: $roundness
         ));
     }
 
@@ -458,8 +442,7 @@
 
     @if is-used('igx-watermark', $exclude) {
         @include watermark(watermark-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+            $schema: $schema
         ));
     }
 
@@ -475,7 +458,7 @@
 @mixin light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -509,7 +492,7 @@
 @mixin dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -543,7 +526,7 @@
 @mixin fluent-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -572,7 +555,7 @@
 @mixin fluent-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -602,7 +585,7 @@
 @mixin bootstrap-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -631,7 +614,7 @@
 @mixin bootstrap-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -660,7 +643,7 @@
 @mixin indigo-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -689,7 +672,7 @@
 @mixin indigo-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {

@@ -26,6 +26,7 @@
 @use './date-range-picker' as *;
 @use './divider' as *;
 @use './dock-manager' as *;
+@use './rating' as *;
 @use './drop-down' as *;
 @use './expansion-panel' as *;
 @use './gauge' as *;
@@ -88,6 +89,7 @@
 /// @property {Map} igx-date-range-picker [$dark-date-range-picker]
 /// @property {Map} igx-divider [$dark-divider]
 /// @property {Map} igc-dockmanager [$dark-dock-manager]
+/// @property {Map} igc-rating [$dark-rating]
 /// @property {Map} igx-drop-down [$dark-drop-down]
 /// @property {Map} igx-expansion-panel [$dark-expansion-panel]
 /// @property {Map} linear-gauge [$dark-linear-gauge]
@@ -149,6 +151,7 @@ $dark-schema: (
     igx-date-range: $dark-date-range-picker,
     igx-divider: $dark-divider,
     igc-dockmanager: $dark-dock-manager,
+    igc-rating: $dark-rating,
     igx-drop-down: $dark-drop-down,
     igx-expansion-panel: $dark-expansion-panel,
     linear-gauge: $dark-linear-gauge,
@@ -220,6 +223,7 @@ $dark-material-schema: $dark-schema;
 /// @property {Map} igx-date-range-picker [$dark-fluent-date-range-picker],
 /// @property {Map} igx-divider [$dark-fluent-divider],
 /// @property {Map} igc-dockmanager [$dark-fluent-dock-manager],
+/// @property {Map} igc-rating [$dark-fluent-rating],
 /// @property {Map} igx-drop-down [$dark-fluent-drop-down],
 /// @property {Map} igx-expansion-panel [$dark-fluent-expansion-panel],
 /// @property {Map} linear-gauge [$dark-fluent-linear-gauge]
@@ -281,6 +285,7 @@ $dark-fluent-schema: (
     igx-date-range: $dark-fluent-date-range-picker,
     igx-divider: $dark-fluent-divider,
     igc-dockmanager: $dark-fluent-dock-manager,
+    igc-rating: $dark-fluent-rating,
     igx-drop-down: $dark-fluent-drop-down,
     igx-expansion-panel: $dark-fluent-expansion-panel,
     linear-gauge: $dark-fluent-linear-gauge,
@@ -347,6 +352,7 @@ $dark-fluent-schema: (
 /// @property {Map} igx-date-range-picker [$dark-bootstrap-date-range-picker],
 /// @property {Map} igx-divider [$dark-bootstrap-divider],
 /// @property {Map} igc-dockmanager [$dark-bootstrap-dock-manager],
+/// @property {Map} igc-rating [$dark-bootstrap-rating],
 /// @property {Map} igx-drop-down [$dark-bootstrap-drop-down],
 /// @property {Map} igx-expansion-panel [$dark-bootstrap-expansion-panel],
 /// @property {Map} linear-gauge [$dark-bootstrap-linear-gauge]
@@ -408,6 +414,7 @@ $dark-bootstrap-schema: (
     igx-date-range: $dark-bootstrap-date-range-picker,
     igx-divider: $dark-bootstrap-divider,
     igc-dockmanager: $dark-bootstrap-dock-manager,
+    igc-rating: $dark-bootstrap-rating,
     igx-drop-down: $dark-bootstrap-drop-down,
     igx-expansion-panel: $dark-bootstrap-expansion-panel,
     linear-gauge: $dark-bootstrap-linear-gauge,
@@ -475,6 +482,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} igx-drop-down [$dark-indigo-drop-down]
 /// @property {Map} igx-divider [$dark-indigo-divider]
 /// @property {Map} igc-dockmanager [$dark-indigo-dock-manager]
+/// @property {Map} igc-rating [$dark-indigo-rating]
 /// @property {Map} igx-expansion-panel [$dark-indigo-expansion-panel]
 /// @property {Map} linear-gauge [$dark-indigo-linear-gauge]
 /// @property {Map} radial-gauge [$dark-indigo-radial-gauge]
@@ -536,6 +544,7 @@ $dark-indigo-schema: (
     igx-drop-down: $dark-indigo-drop-down,
     igx-divider: $dark-indigo-divider,
     igc-dockmanager: $dark-indigo-dock-manager,
+    igc-rating: $dark-indigo-rating,
     igx-expansion-panel: $dark-indigo-expansion-panel,
     linear-gauge: $dark-indigo-linear-gauge,
     radial-gauge: $dark-indigo-radial-gauge,

@@ -551,8 +551,10 @@ export class IgxGridNavigationService {
         event.preventDefault();
         if ((this.grid.crudService.rowInEditMode && this.grid.rowEditTabs.length) &&
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
-            this.grid.crudService.updateCell(true, event);
-            if (shift) {
+            const args = this.grid.crudService.updateCell(true, event);
+            if (args.cancel) {
+                return;
+            } else if (shift) {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
             } else {
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
@@ -653,9 +655,15 @@ export class IgxGridNavigationService {
             return;
         }
         if (shift && alt && this.isToggleKey(key) && !column.columnGroup && column.groupable) {
-            direction = direction ? SortingDirection.Desc : SortingDirection.Asc;
+            direction = direction || SortingDirection.Asc;
             if (key.includes('right')) {
-                (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false });
+                (this.grid as any).groupBy({
+                    fieldName: column.field,
+                    dir: direction,
+                    ignoreCase: column.sortingIgnoreCase,
+                    strategy: column.sortStrategy,
+                    groupingComparer: column.groupingComparer,
+                });
             } else {
                 (this.grid as any).clearGrouping(column.field);
             }

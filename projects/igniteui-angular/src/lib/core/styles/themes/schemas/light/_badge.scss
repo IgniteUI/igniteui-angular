@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/badge' as *;
 @use '../elevation/badge' as *;
 
 ////
@@ -16,15 +15,15 @@
 /// @prop {Number} border-width [0] - The border width of the badge component.
 /// @prop {Map} background-color [color: ('primary', 500)] - The background color used.
 /// @prop {Number} elevation [1] - The elevation level, between 0-24, to be used for the badge shadow.
-/// @prop {Number} border-radius [1] - The border radius used for badge. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [11px] - The border radius used for badge. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires {Map} $_default-shape-badge
 /// @requires {Map} $_default-elevation-badge
 /// @see $default-palette
 $light-badge: extend(
-    $default-shape-badge,
     $default-elevation-badge,
     (
+        variant: 'material',
+
         icon-color: (
             contrast-color: ('primary', 500)
         ),
@@ -41,7 +40,9 @@ $light-badge: extend(
             color: ('primary', 500)
         ),
 
-        border-width: 0
+        border-width: 0,
+
+        border-radius: rem(11px)
     )
 );
 
@@ -49,7 +50,12 @@ $light-badge: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {Map} $_light-badge
-$fluent-badge: $light-badge;
+$fluent-badge: extend(
+    $light-badge,
+    (
+        variant: 'fluent'
+    )
+);
 
 /// Generates a bootstrap badge schema.
 /// @type {Map}
@@ -57,14 +63,16 @@ $fluent-badge: $light-badge;
 /// @prop {Number} border-radius [4px] - The border radius used for badge. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-badge
-/// @requires {Map} $_bootstrap-shape-badge
 /// @requires {Map} $_bootstrap-elevation-badge
 $bootstrap-badge: extend(
     $light-badge,
-    $bootstrap-shape-badge,
     $bootstrap-elevation-badge,
     (
+        variant: 'bootstrap',
+
         border-width: 1px,
+
+        border-radius: rem(4px)
     )
 );
 
@@ -72,5 +80,9 @@ $bootstrap-badge: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {Map} $_light-badge
-$indigo-badge: $light-badge;
-
+$indigo-badge: extend(
+    $light-badge,
+    (
+        variant: 'indigo-design'
+    )
+);

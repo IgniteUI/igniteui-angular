@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/action-strip' as *;
 
 ////
 /// @group schemas
@@ -13,12 +12,10 @@
 /// @prop {Map} background [color: ('grays', 100] - The color used for the action strip component content background.
 /// @prop {Map} actions-background [color: ('grays', 200)] - The color used for actions background.
 /// @prop {Map} delete-action [color: ('error')] - The color used for the delete icon in action strip component.
-/// @prop {Number} border-radius [1] - The border radius used for action strip actions container. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} actions-border-radius [24px] - The border radius used for action strip actions container. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
-/// @requires {Map} $_default-shape-action-strip
 /// @see $default-palette
 $light-action-strip: extend(
-    $default-shape-action-strip,
     (
         variant: 'material',
 
@@ -35,18 +32,17 @@ $light-action-strip: extend(
         delete-action: (
             color: ('error')
         ),
+
+        actions-border-radius: rem(24px)
     )
 );
 
 /// Generates a fluent action strip schema.
 /// @type {Map}
-/// @prop {Number} border-radius [0] - The border radius used for action strip actions container. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-action-strip
-/// @requires {Map} $_fluent-shape-action-strip
 $fluent-action-strip: extend(
     $light-action-strip,
-    $fluent-shape-action-strip,
     (
         variant: 'fluent',
     )
@@ -54,15 +50,15 @@ $fluent-action-strip: extend(
 
 /// Generates a bootstrap action strip schema.
 /// @type {Map}
-/// @prop {Number} border-radius [4px] - The border radius used for action strip actions container. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} actions-border-radius [4px] - The border radius used for action strip actions container. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-action-strip
-/// @requires {Map} $_bootstrap-shape-action-strip
 $bootstrap-action-strip: extend(
     $light-action-strip,
-    $bootstrap-shape-action-strip,
     (
         variant: 'bootstrap',
+
+        actions-border-radius: rem(4px)
     )
 );
 
@@ -70,13 +66,11 @@ $bootstrap-action-strip: extend(
 /// @type {Map}
 /// @prop {Map} color [contrast-color: 'primary'] - The color used for the actions icons.
 /// @prop {Map} actions-background [color: ('primary')] - The color used for actions background.
-/// @prop {Number} border-radius [3px] - The border radius used for action strip actions container. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} actions-border-radius [3px] - The border radius used for action strip actions container. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-action-strip
-/// @requires {Map} $_indigo-shape-action-strip
 $indigo-action-strip: extend(
     $light-action-strip,
-    $indigo-shape-action-strip,
     (
         variant: 'indigo-design',
 
@@ -87,5 +81,7 @@ $indigo-action-strip: extend(
         icon-color: (
             contrast-color: 'primary',
         ),
+
+        actions-border-radius: rem(3px)
     )
 );

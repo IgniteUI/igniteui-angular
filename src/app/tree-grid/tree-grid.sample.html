@@ -3,9 +3,9 @@
         <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
-    <igx-tree-grid #grid1 selectionType='multi' [batchEditing]="true" [data]="data"
+    <igx-tree-grid #grid1 selectionType="multi" [autoGenerate]="true" [batchEditing]="true" [data]="data"
         childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1"
-        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'500px'"
+        [rowSelection]="selectionMode" [displayDensity]="density" [height]="'500px'"
         [allowFiltering]="true" [moving]="true" [filterMode]="'excelStyleFilter'" [filterStrategy]="filterStrategy">
         <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
             <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
@@ -19,11 +19,11 @@
                 </igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
+        <!-- <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
             [groupable]="false" [resizable]="c.resizable" [width]="c.width"
             [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
             [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
-        </igx-column>
+        </igx-column> -->
     </igx-tree-grid>
 
     <div class="topMargin">

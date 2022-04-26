@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/stepper' as *;
 
 /// @group schemas
 /// @access public
@@ -71,12 +70,12 @@
 /// @property {Map} complete-step-separator-color [color: ('grays', 900)] - The separator border-color between the completed steps.
 /// @property {String} step-separator-style ['dashed'] - The separator border-style of between the steps.
 /// @property {String} complete-step-separator-style ['solid'] - The separator border-style between the completed steps.
+/// @prop {Number} border-radius-indicator [100px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-step-header [0] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
-/// @requires {Map} $default-shape-stepper
 /// @see $default-palette
 $light-stepper: extend(
-    $default-shape-stepper,
     (
         variant: 'material',
 
@@ -264,6 +263,8 @@ $light-stepper: extend(
         ),
         step-separator-style: 'dashed',
         complete-step-separator-style: 'solid',
+        border-radius-indicator: rem(100px),
+        border-radius-step-header: rem(0)
     )
 );
 
@@ -278,13 +279,12 @@ $light-stepper: extend(
 /// @property {Map} complete-step-separator-color [color: ('primary', 500)] - The separator border-color between the completed steps.
 /// @property {Color} disabled-indicator-background [transparent] - The background color of the disabled step indicator.
 /// @property {Color} disabled-indicator-outline [transparent] - The outline color of the disabled step indicator.
-///
+/// @prop {Number} border-radius-indicator [2px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-step-header [2px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-stepper
-/// @requires {Map} $fluent-shape-stepper
 $fluent-stepper: extend(
     $light-stepper,
-    $fluent-shape-stepper,
     (
         variant: 'fluent',
 
@@ -309,6 +309,8 @@ $fluent-stepper: extend(
         // Disabled
         disabled-indicator-background: transparent,
         disabled-indicator-outline: transparent,
+        border-radius-indicator: rem(2px),
+        border-radius-step-header: rem(2px)
     )
 );
 
@@ -346,13 +348,13 @@ $fluent-stepper: extend(
 /// @property {Map} invalid-step-focus-background [color: ('grays', 300, .5)] - The background of the invalid step header on hover.
 /// @property {Map} current-step-focus-background [color: ('grays', 300, .5)] - The background of the current step header on hover.
 /// @property {Map} complete-step-focus-background [color: ('grays', 300, .5)] - The background of the complete step header on hover.
+/// @prop {Number} border-radius-indicator [2px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-step-header [2px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-stepper
-/// @requires {Map} $bootstrap-shape-stepper
 $bootstrap-stepper: extend(
     $light-stepper,
-    $bootstrap-shape-stepper,
     (
         variant: 'bootstrap',
 
@@ -436,6 +438,8 @@ $bootstrap-stepper: extend(
         ),
         step-separator-style: 'solid',
         complete-step-separator-style: 'solid',
+        border-radius-indicator: rem(2px),
+        border-radius-step-header: rem(2px)
     )
 );
 
@@ -456,6 +460,8 @@ $bootstrap-stepper: extend(
 /// @property {Map} complete-step-separator-color [color: ('primary', 500)] - The separator border-color between the completed steps.
 /// @property {String} step-separator-style ['solid'] - The separator border-style of between the steps.
 /// @property {String} complete-step-separator-style ['solid'] - The separator border-style between the completed steps.
+/// @prop {Number} border-radius-indicator [100px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-step-header [0] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires $light-stepper
@@ -500,4 +506,3 @@ $indigo-stepper: extend(
         complete-step-separator-style: 'solid',
     )
 );
-

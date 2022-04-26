@@ -169,6 +169,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
+        if (!this._init) {
+            this.setupColumns();
+        }
         this.notifyChanges(true);
     }
 
@@ -981,7 +984,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @Input()
     public set data(value: any[] | null) {
         this._data = value || [];
-        if (this.shouldGenerate) {
+        if (!this._init) {
             this.setupColumns();
             this.reflow();
         }

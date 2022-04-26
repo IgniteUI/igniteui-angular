@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/navdrawer' as *;
 @use '../elevation/navdrawer' as *;
 
 ////
@@ -24,14 +23,12 @@
 /// @prop {Map} item-hover-icon-color [color: ('grays', 900)] - The item's hover icon color.
 /// @prop {Map} elevation [16] - The elevation level, between 0-24, to be used for the drawer.
 /// @prop {Number} border-radius [0] - The border radius used for the navdrawer component. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} item-border-radius [.16667] - The border radius used for the navdrawer items. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} item-border-radius [4px] - The border radius used for the navdrawer items. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
-/// @requires {Map} $default-shape-navdrawer
 /// @requires {Map} $default-elevation-navdrawer
 /// @see $default-palette
 $light-navdrawer: extend(
-    $default-shape-navdrawer,
     $default-elevation-navdrawer,
     (
         variant: 'material',
@@ -79,6 +76,10 @@ $light-navdrawer: extend(
         item-hover-icon-color: (
             color: ('grays', 900),
         ),
+
+        border-radius: rem(0),
+
+        item-border-radius: rem(4px)
     )
 );
 
@@ -118,14 +119,12 @@ $bootstrap-navdrawer: extend(
 /// @prop {Map} item-hover-icon-color [contrast-color: ('grays', 700)] - The item's hover icon color.
 /// @prop {Map} elevation [0] - The elevation level, between 0-24, to be used for the drawer.
 /// @prop {Number} border-radius [0] - The border radius used for the navdrawer component. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} item-border-radius [1] - The border radius used for the navdrawer items. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} item-border-radius [24px] - The border radius used for the navdrawer items. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-navdrawer
-/// @requires {Map} $indigo-shape-navdrawer
 /// @requires {Map} $indigo-elevation-navdrawer
 $indigo-navdrawer: extend(
     $light-navdrawer,
-    $indigo-shape-navdrawer,
     $indigo-elevation-navdrawer,
     (
         variant: 'indigo-design',
@@ -167,5 +166,7 @@ $indigo-navdrawer: extend(
         item-hover-icon-color: (
             color: ('grays', 100)
         ),
+
+        item-border-radius: rem(24px)
     )
 );
