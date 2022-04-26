@@ -568,7 +568,7 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, null, overlay, mockModuleRef, mockInjector, renderer2, null, mockCdr);
+            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockModuleRef, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
@@ -608,7 +608,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.spinLoop).toEqual(true);
                 expect(datePicker.tabIndex).toEqual(undefined);
                 expect(datePicker.overlaySettings).toEqual(undefined);
-                expect(datePicker.locale).toEqual(null);
+                expect(datePicker.locale).toEqual('en-US');
                 expect(datePicker.placeholder).toEqual('');
                 expect(datePicker.readOnly).toEqual(false);
                 expect(datePicker.value).toEqual(undefined);

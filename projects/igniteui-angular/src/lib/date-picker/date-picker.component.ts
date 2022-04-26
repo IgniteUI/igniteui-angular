@@ -74,7 +74,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     @Input()
-    public weekStart: WEEKDAYS | number = getLocaleFirstDayOfWeek(this.locale);
+    public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.

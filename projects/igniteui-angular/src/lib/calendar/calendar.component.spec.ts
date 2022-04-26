@@ -347,7 +347,7 @@ describe('IgxCalendar - ', () => {
                 expect(headerDate.nativeElement.textContent.trim()).toMatch('1 sept.');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('18');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('sept.');
-                expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Dim.');
+                expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Lun.');
             });
 
             it('Should default to today date when invalid date is passed', () => {
