@@ -1162,7 +1162,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const sundayLabel = calendar.querySelectorAll('.igx-calendar__label')[0].innerHTML;
 
-            expect(sundayLabel.trim()).toEqual('So');
+            expect(sundayLabel.trim()).toEqual('Mo');
         }));
 
         it('Should size grid correctly if enable/disable filtering in run time.', fakeAsync(() => {
