@@ -479,12 +479,10 @@ export abstract class IgxBaseExporter {
     private prepareData(grid: GridType) {
         this.flatRecords = [];
         const tagName = grid.nativeElement.tagName.toLowerCase();
-
         const hasFiltering = (grid.filteringExpressionsTree && grid.filteringExpressionsTree.filteringOperands.length > 0) ||
             (grid.advancedFilteringExpressionsTree && grid.advancedFilteringExpressionsTree.filteringOperands.length > 0);
-
-        const hasSorting = grid.sortingExpressions &&
-            grid.sortingExpressions.length > 0;
+        const expressions = grid.groupingExpressions ? grid.groupingExpressions.concat(grid.sortingExpressions || []) : grid.sortingExpressions;
+        const hasSorting = expressions && expressions.length > 0;
 
         switch (tagName) {
             case 'igx-hierarchical-grid': {
@@ -732,8 +730,8 @@ export abstract class IgxBaseExporter {
                 //     grid.sortingExpressions.length > 1 ?
                 //         cloneValue(grid.sortingExpressions[1]) :
                 //         cloneValue(grid.sortingExpressions[0]);
-
-                gridData = DataUtil.sort(gridData, grid.sortingExpressions, grid.sortStrategy, grid);
+                const expressions = grid.groupingExpressions ? grid.groupingExpressions.concat(grid.sortingExpressions || []) : grid.sortingExpressions;
+                gridData = DataUtil.sort(gridData, expressions, grid.sortStrategy, grid);
             }
 
             if (hasGrouping && !this.options.ignoreGrouping) {

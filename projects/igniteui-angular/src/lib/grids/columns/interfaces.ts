@@ -43,3 +43,7 @@ export interface IColumnPipeArgs {
      */
     display?: string;
 }
+
+export interface ISortingOptions {
+    mode: 'single' | 'multiple';
+}
