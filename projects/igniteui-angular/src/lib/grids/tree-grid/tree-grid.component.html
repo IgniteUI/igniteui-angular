@@ -34,7 +34,7 @@
             | treeGridAddRow:true:pipeTrigger
             | gridRowPinning:id:true:pipeTrigger
             | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:pipeTrigger:filteringPipeTrigger:true
-            | treeGridSorting:sortingExpressions:sortStrategy:pipeTrigger:true as pinnedData'>
+            | treeGridSorting:sortingExpressions:treeGroupArea?.expressions:sortStrategy:pipeTrigger:true as pinnedData'>
                 <div #pinContainer *ngIf='pinnedData.length > 0'
                     [ngClass]="{
                         'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
@@ -54,7 +54,7 @@
         | visibleColumns:hasVisibleColumns
         | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:pipeTrigger
         | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:pipeTrigger:filteringPipeTrigger
-        | treeGridSorting:sortingExpressions:sortStrategy:pipeTrigger
+        | treeGridSorting:sortingExpressions:treeGroupArea?.expressions:sortStrategy:pipeTrigger
         | treeGridFlattening:expansionDepth:expansionStates:pipeTrigger
         | treeGridPaging:paginator?.page:paginator?.perPage:pipeTrigger
         | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
