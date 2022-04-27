@@ -1177,7 +1177,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        const dataIndex = this._getResolvedDataIndex(index);
+
+        const dataIndex = this._getDataViewIndex(index);
         const rec = data ?? this.dataView[dataIndex];
 
         if (rec && this.isGroupByRecord(rec)) {

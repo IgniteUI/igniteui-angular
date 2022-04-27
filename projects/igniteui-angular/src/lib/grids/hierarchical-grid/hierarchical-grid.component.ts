@@ -649,7 +649,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
-        return record.childGridsData !== undefined;
+        return record?.childGridsData !== undefined;
     }
 
     /**
@@ -858,7 +858,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        const dataIndex = this._getResolvedDataIndex(index);
+        const dataIndex = this._getDataViewIndex(index);
         const rec: any = data ?? this.dataView[dataIndex];
 
         if (!row && rec && !rec.childGridsData) {

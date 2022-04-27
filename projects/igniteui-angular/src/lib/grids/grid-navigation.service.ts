@@ -260,7 +260,8 @@ export class IgxGridNavigationService {
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
             curRow = this.grid.dataView[rowIndex - this.grid.virtualizationState.startIndex];
             if (!curRow) {
-                return false;
+                // if data is remote, record might not be in the view yet.
+                return this.grid.verticalScrollContainer.isRemote && rowIndex >= 0 && rowIndex <= (this.grid as any).totalItemCount - 1;
             }
         } else {
             curRow = this.grid.dataView[rowIndex];
