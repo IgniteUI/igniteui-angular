@@ -16,7 +16,7 @@ import { DisplayDensity } from '../../core/displayDensity';
 import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { GridType } from '../common/grid.interface';
+import { FlatGridType, GridType } from '../common/grid.interface';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 
 /**
@@ -51,7 +51,7 @@ export abstract class IgxGroupByAreaDirective {
 
     /** The parent grid containing the component. */
     @Input()
-    public grid: GridType;
+    public grid: FlatGridType | GridType;
 
     /**
      * The group-by expressions provided by the parent grid.
@@ -107,7 +107,7 @@ export abstract class IgxGroupByAreaDirective {
 
     public handleKeyDown(id: string, event: KeyboardEvent) {
         if (this.platform.isActivationKey(event)) {
-            this.updateSorting(id);
+            this.updateGroupSorting(id);
         }
     }
 
@@ -115,7 +115,7 @@ export abstract class IgxGroupByAreaDirective {
         if (!this.grid.getColumnByName(id).groupable) {
             return;
         }
-        this.updateSorting(id);
+        this.updateGroupSorting(id);
     }
 
      public onDragDrop(event) {
@@ -158,10 +158,11 @@ export abstract class IgxGroupByAreaDirective {
         return newExpressions;
     }
 
-    protected updateSorting(id: string) {
-        const expr = this.grid.sortingExpressions.find(e => e.fieldName === id);
+    protected updateGroupSorting(id: string) {
+        const expr = this.expressions.find(e => e.fieldName === id);
         expr.dir = 3 - expr.dir;
-        this.grid.sort(expr);
+        this.grid.pipeTrigger++;
+        this.grid.notifyChanges();
     }
 
     protected expressionsChanged() {
