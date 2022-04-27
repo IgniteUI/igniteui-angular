@@ -14,7 +14,7 @@
                     width="1200px" height="550px" [autoGenerate]="false" [data]="localData" primaryKey="EmployeeID"
                     [rowEditable]="false" [allowFiltering]="true" [allowAdvancedFiltering]="true"
                     [filterMode]="'excelStyleFilter'" displayDensity="cosy" cellSelection="multiple"
-                    rowSelection="multiple">
+                    rowSelection="multiple" (columnInit)="onColumnInit($event)">
                     <igx-grid-toolbar [displayDensity]="grid.displayDensity">
                         <igx-grid-toolbar-actions>
                             <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -240,3 +240,7 @@
         </div>
     </div>
 </ng-template>
+
+<ng-template igxCell #activeTemplate let-column let-cell="cell">
+    Hi I'm {{ cell.value }}
+  </ng-template>
