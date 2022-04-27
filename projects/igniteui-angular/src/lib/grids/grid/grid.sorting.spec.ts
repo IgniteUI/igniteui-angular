@@ -570,5 +570,65 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             icon = GridFunctions.getHeaderSortIcon(header);
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('expand_more');
         });
+
+        it('Should be able to set single sorting mode and sort one column at a time', fakeAsync(() => {
+            fixture = TestBed.createComponent(SortByParityComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            const fieldName = 'Name';
+            const fieldLastName = 'LastName';
+            const header = GridFunctions.getColumnHeader(fieldName, fixture, grid);
+            const headerLastName = GridFunctions.getColumnHeader(fieldLastName, fixture, grid);
+            let icon = GridFunctions.getHeaderSortIcon(header);
+
+            grid.sortingOptions = {mode: 'single'};
+            fixture.detectChanges();
+            debugger;
+
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('unfold_more');
+
+            GridFunctions.clickHeaderSortIcon(header);
+            tick(30);
+            fixture.detectChanges();
+
+            icon = GridFunctions.getHeaderSortIcon(header);
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('expand_less');
+
+            GridFunctions.clickHeaderSortIcon(headerLastName);
+            tick(30);
+            fixture.detectChanges();
+
+            icon = GridFunctions.getHeaderSortIcon(header);
+            const iconLastName = GridFunctions.getHeaderSortIcon(headerLastName);
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('unfold_more');
+            expect(iconLastName.nativeElement.textContent.toLowerCase().trim()).toBe('expand_less');
+        }));
+
+
+        it('should not display sorting index when sorting mode is set to "single"', fakeAsync(() => {
+            fixture = TestBed.createComponent(SortByParityComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            const fieldName = 'Name';
+            const fieldLastName = 'LastName';
+            const header = GridFunctions.getColumnHeader(fieldName, fixture, grid);
+            const headerLastName = GridFunctions.getColumnHeader(fieldLastName, fixture, grid);
+
+            grid.sortingOptions = {mode: 'single'};
+            fixture.detectChanges();
+
+            GridFunctions.clickHeaderSortIcon(header);
+            tick(30);
+            fixture.detectChanges();
+            expect(GridFunctions.getColumnSortingIndex(header)).toBeNull();
+            expect(grid.sortingExpressions.length).toBe(1);
+
+            GridFunctions.clickHeaderSortIcon(headerLastName);
+            tick(30);
+            fixture.detectChanges();
+
+            expect(GridFunctions.getColumnSortingIndex(headerLastName)).toBeNull();
+            expect(grid.sortingExpressions.length).toBe(1);
+        }));
     });
 });
