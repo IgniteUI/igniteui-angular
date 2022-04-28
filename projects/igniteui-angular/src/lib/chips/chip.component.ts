@@ -804,12 +804,12 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @internal
      */
     public onChipDrop(event: IDropDroppedEventArgs) {
+        // Cancel the default drop logic
+        event.cancel = true;
         if (this.dragDirective === event.drag) {
             return;
         }
 
-        // Cancel the default drop logic
-        event.cancel = true;
         const eventArgs: IChipEnterDragAreaEventArgs = {
             owner: this,
             dragChip: event.drag.data?.chip,
