@@ -770,13 +770,13 @@ export class IgxChipComponent extends DisplayDensityBase {
     // -----------------------------
     // Start chip igxDrop behavior
     public onChipDragEnterHandler(event: IDropBaseEventArgs) {
-        if (this.dragDirective === event.drag || !event.drag.data || !event.drag.data.chip) {
+        if (this.dragDirective === event.drag) {
             return;
         }
 
         const eventArgs: IChipEnterDragAreaEventArgs = {
             owner: this,
-            dragChip: event.drag.data.chip,
+            dragChip: event.drag.data?.chip,
             originalEvent: event
         };
         this.dragEnter.emit(eventArgs);
@@ -787,9 +787,13 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @internal
      */
     public onChipDragLeaveHandler(event: IDropBaseEventArgs) {
+        if (this.dragDirective === event.drag) {
+            return;
+        }
+
         const eventArgs: IChipEnterDragAreaEventArgs = {
             owner: this,
-            dragChip: event.drag.data.chip,
+            dragChip: event.drag.data?.chip,
             originalEvent: event
         };
         this.dragLeave.emit(eventArgs);
@@ -800,11 +804,15 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @internal
      */
     public onChipDrop(event: IDropDroppedEventArgs) {
+        if (this.dragDirective === event.drag) {
+            return;
+        }
+
         // Cancel the default drop logic
         event.cancel = true;
         const eventArgs: IChipEnterDragAreaEventArgs = {
             owner: this,
-            dragChip: event.drag.data.chip,
+            dragChip: event.drag.data?.chip,
             originalEvent: event
         };
         this.dragDrop.emit(eventArgs);
@@ -815,13 +823,17 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @internal
      */
     public onChipOverHandler(event: IDropBaseEventArgs) {
-            const eventArgs: IChipEnterDragAreaEventArgs = {
-                owner: this,
-                dragChip: event.drag.data.chip,
-                originalEvent: event
-            };
-            this.dragOver.emit(eventArgs);
+        if (this.dragDirective === event.drag) {
+            return;
         }
+
+        const eventArgs: IChipEnterDragAreaEventArgs = {
+            owner: this,
+            dragChip: event.drag.data?.chip,
+            originalEvent: event
+        };
+        this.dragOver.emit(eventArgs);
+    }
     // End chip igxDrop behavior
 
     protected changeSelection(newValue: boolean, srcEvent = null) {
