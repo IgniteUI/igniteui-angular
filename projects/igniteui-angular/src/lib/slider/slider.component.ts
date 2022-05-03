@@ -909,8 +909,7 @@ export class IgxSliderComponent implements
     public set lowerValue(value: number) {
         const adjustedValue = this.valueInRange(value, this.lowerBound, this.upperBound);
         if (this._lowerValue !== adjustedValue) {
-            this._lowerValue = adjustedValue;
-            this.value = { lower: this._lowerValue, upper: this._upperValue };
+            this.value = { lower: adjustedValue, upper: this._upperValue };
         }
     }
 
@@ -946,8 +945,7 @@ export class IgxSliderComponent implements
     public set upperValue(value: number) {
         const adjustedValue = this.valueInRange(value, this.lowerBound, this.upperBound);
         if (this._upperValue !== adjustedValue) {
-            this._upperValue = adjustedValue;
-            this.value = { lower: this._lowerValue, upper: this._upperValue };
+            this.value = { lower: this._lowerValue, upper: adjustedValue };
         }
     }
 
@@ -1023,7 +1021,12 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public ngOnInit() {
-        this.sliderSetup();
+        /**
+         * if {@link SliderType.SLIDER} than the initial value shold be the lowest one.
+         */
+        if (!this.isRange && this._upperValue === undefined) {
+            this._upperValue = this.lowerBound;
+        }
 
         // Set track travel zone
         this._pMin = this.valueToFraction(this.lowerBound) || 0;
@@ -1179,10 +1182,16 @@ export class IgxSliderComponent implements
 
     public setValue(value: number | IRangeSliderValue, triggerChange: boolean) {
         let res;
-        if (!this.isRange) {
+        if (!this.isRange && !Number.isNaN(value)) {
+            console.log(value);
             value = value as number;
             this._upperValue = value - value % this.step;
             res = this._upperValue;
+        } else {
+            value = this.validateInitialValue(value as IRangeSliderValue);
+            this._upperValue = (value as IRangeSliderValue).upper;
+            this._lowerValue = (value as IRangeSliderValue).lower;
+            res = { lower: this._lowerValue, upper: this._upperValue };
         }
 
         if (triggerChange) {
@@ -1200,6 +1209,25 @@ export class IgxSliderComponent implements
         }
 
         this.toggleThumb();
+        return value;
+    }
+
+    private validateInitialValue(value: IRangeSliderValue) {
+        if (value.lower < this.lowerBound && value.upper < this.lowerBound) {
+            value.upper = this.lowerBound;
+            value.lower = this.lowerBound;
+        }
+
+        if (value.lower > this.upperBound && value.upper > this.upperBound) {
+            value.upper = this.upperBound;
+            value.lower = this.upperBound;
+        }
+
+        if (value.upper < value.lower) {
+            value.upper = this.upperValue;
+            value.lower = this.lowerValue;
+        }
+
         return value;
     }
 
@@ -1221,15 +1249,6 @@ export class IgxSliderComponent implements
     private updateUpperBoundAndMaxTravelZone() {
         this.upperBound = this.maxValue;
         this._pMax = 1;
-    }
-
-    private sliderSetup() {
-        /**
-         * if {@link SliderType.SLIDER} than the initial value shold be the lowest one.
-         */
-        if (!this.isRange && this._upperValue === undefined) {
-            this._upperValue = this.lowerBound;
-        }
     }
 
     private calculateStepDistance() {

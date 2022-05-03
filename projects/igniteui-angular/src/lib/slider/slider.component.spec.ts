@@ -28,7 +28,7 @@ interface FakeDoc {
     documentElement: { dir?: string };
 }
 
-describe('IgxSlider', () => {
+fdescribe('IgxSlider', () => {
     let fakeDoc: FakeDoc;
     configureTestSuite();
     beforeAll(waitForAsync(() => {
@@ -191,23 +191,18 @@ describe('IgxSlider', () => {
 
             fixture.detectChanges();
 
-            slider.value = {
-                lower: 20,
-                upper: 30
-            };
+            slider.lowerValue = 20;
+            slider.upperValue = 30;
 
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(30);
+            expect((slider.value as IRangeSliderValue).lower).toBe(20);
+            expect((slider.value as IRangeSliderValue).upper).toBe(30);
 
-            slider.value = {
-                lower: 20,
-                upper: 50
-            };
+            slider.upperValue = 50;
 
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(40);
+            expect((slider.value as IRangeSliderValue).lower).toBe(20);
+            expect((slider.value as IRangeSliderValue).upper).toBe(40);
         });
 
         it('should not set value upper when is less than lower value when slider is RANGE', () => {
@@ -217,35 +212,24 @@ describe('IgxSlider', () => {
 
             fixture.detectChanges();
 
-            slider.value = {
-                lower: 20,
-                upper: 30
-            };
+            slider.lowerValue = 20;
+            slider.upperValue = 30;
 
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(30);
+            expect((slider.value as IRangeSliderValue).lower).toBe(20);
+            expect((slider.value as IRangeSliderValue).upper).toBe(30);
 
-            slider.value = {
-                lower: 20,
-                upper: 15
-            };
+            slider.upperValue = 15;
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(30);
+            expect((slider.value as IRangeSliderValue).lower).toBe(20);
+            expect((slider.value as IRangeSliderValue).upper).toBe(30);
         });
 
         it('should position correctly lower and upper value based on the step', () => {
             slider.step = 10;
-
             slider.type = IgxSliderType.RANGE;
-
-            fixture.detectChanges();
-
-            slider.value = {
-                lower: 23,
-                upper: 56
-            };
+            slider.lowerValue = 23;
+            slider.upperValue = 56;
 
             fixture.detectChanges();
 
@@ -260,22 +244,18 @@ describe('IgxSlider', () => {
 
             fixture.detectChanges();
 
-            slider.value = {
-                lower: 20,
-                upper: 30
-            };
+            slider.lowerValue = 20;
+            slider.upperValue = 30;
 
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(30);
+            expect((slider.value as IRangeSliderValue).lower).toBe(20);
+            expect((slider.value as IRangeSliderValue).upper).toBe(30);
 
-            slider.value = {
-                lower: 5,
-                upper: 30
-            };
+            slider.lowerValue = 5;
+
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(10);
-            expect(slider.value.upper).toBe(30);
+            expect((slider.value as IRangeSliderValue).lower).toBe(10);
+            expect((slider.value as IRangeSliderValue).upper).toBe(30);
         });
 
         it('should not set value lower when is more than upper value when slider is RANGE', () => {
@@ -285,23 +265,19 @@ describe('IgxSlider', () => {
 
             fixture.detectChanges();
 
-            slider.value = {
-                lower: 20,
-                upper: 30
-            };
+            slider.lowerValue = 20;
+            slider.upperValue = 30;
 
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(30);
+            expect((slider.value as IRangeSliderValue).lower).toBe(20);
+            expect((slider.value as IRangeSliderValue).upper).toBe(30);
 
-            slider.value = {
-                lower: 35,
-                upper: 30
-            };
+            slider.lowerValue = 35;
+            slider.upperValue = 30;
 
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(30);
+            expect((slider.value as IRangeSliderValue).lower).toBe(20);
+            expect((slider.value as IRangeSliderValue).upper).toBe(30);
         });
 
         it('should set upperBound to be same as maxValue if exceeds lowerBound', () => {
@@ -984,7 +960,8 @@ describe('IgxSlider', () => {
             expect(slider.upperBound).toBe(4);
             expect(slider.lowerBound).toBe(1);
 
-            slider.value = {lower: -1, upper: 3};
+            slider.lowerValue = -1;
+            slider.upperValue = 3;
             fixture.detectChanges();
 
             expect(slider.value).toEqual({lower: 1, upper: 3});
@@ -1072,26 +1049,27 @@ describe('IgxSlider', () => {
             expect(fromThumb).toBeDefined();
             expect(slider.upperLabel).toEqual('Sunday');
             expect(slider.lowerLabel).toEqual('Monday');
-            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit').and.callThrough();
+            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit').and.callThrough();
+            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(valueChangeSpy).toHaveBeenCalledTimes(1);
-            expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 0, upper: 6}, value: {lower: 1, upper: 6}});
+            expect(lowerValueChangeSpy).toHaveBeenCalledTimes(1);
+            expect(lowerValueChangeSpy).toHaveBeenCalledWith(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(valueChangeSpy).toHaveBeenCalledTimes(2);
-            expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 1, upper: 6}, value: {lower: 2, upper: 6}});
+            expect(lowerValueChangeSpy).toHaveBeenCalledTimes(2);
+            expect(lowerValueChangeSpy).toHaveBeenCalledWith(2);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(valueChangeSpy).toHaveBeenCalledTimes(2);
+            expect(upperValueChangeSpy).toHaveBeenCalledTimes(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(valueChangeSpy).toHaveBeenCalledTimes(3);
-            expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 2, upper: 6}, value: {lower: 2, upper: 5}});
+            expect(upperValueChangeSpy).toHaveBeenCalledTimes(2);
+            expect(upperValueChangeSpy).toHaveBeenCalledWith(5);
         });
 
         it('dynamically change the type of the slider SLIDER, RANGE, LABEL', () => {
@@ -1321,10 +1299,8 @@ describe('IgxSlider', () => {
             fixture.componentInstance.type = IgxSliderType.RANGE;
             fixture.detectChanges();
 
-            fixture.componentInstance.slider.value = {
-                lower: 2,
-                upper: 9
-            };
+            slider.lowerValue = 2;
+            slider.upperValue = 9;
 
             fixture.componentInstance.changeMinValue(5);
             fixture.componentInstance.changeMaxValue(7);
@@ -1701,7 +1677,7 @@ describe('IgxSlider', () => {
 @Component({
     selector: 'igx-slider-rtl',
     template: `
-        <igx-slider [type]="type" [value]="value"></igx-slider>
+        <igx-slider [type]="type" [lowerValue]="value.lower" [upperValue]="value.upper"></igx-slider>
     `
 })
 export class SliderRtlComponent {
