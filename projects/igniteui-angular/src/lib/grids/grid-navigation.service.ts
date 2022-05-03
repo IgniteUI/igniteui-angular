@@ -259,7 +259,8 @@ export class IgxGridNavigationService {
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
             curRow = this.grid.dataView[rowIndex - this.grid.virtualizationState.startIndex];
             if (!curRow) {
-                return false;
+                // if data is remote, record might not be in the view yet.
+                return this.grid.verticalScrollContainer.isRemote && rowIndex >= 0 && rowIndex <= (this.grid as any).totalItemCount - 1;
             }
         } else {
             curRow = this.grid.dataView[rowIndex];
@@ -551,8 +552,10 @@ export class IgxGridNavigationService {
         event.preventDefault();
         if ((this.grid.crudService.rowInEditMode && this.grid.rowEditTabs.length) &&
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
-            this.grid.crudService.updateCell(true, event);
-            if (shift) {
+            const args = this.grid.crudService.updateCell(true, event);
+            if (args.cancel) {
+                return;
+            } else if (shift) {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
             } else {
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
