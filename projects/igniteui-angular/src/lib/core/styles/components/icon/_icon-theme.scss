@@ -60,7 +60,7 @@
 @mixin icon($theme) {
     @include css-vars($theme);
 
-    $igx-icon-font-size: var-get($theme, 'size');
+    $igx-icon-font-size: var(--icon-size, #{var-get($theme, 'size')});
 
     %igx-icon-display {
         display: inline-flex;
