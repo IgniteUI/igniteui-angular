@@ -319,7 +319,7 @@
         transition: $transition;
         transition-property: top, left;
 
-        [dir='rtl'] & { 
+        [dir='rtl'] & {
             transition-property: top right;
         }
 
@@ -378,27 +378,27 @@
 
     %igx-chip-custom-icon {
         igx-icon {
-            width: map.get($chip-icon-size, 'comfortable');
-            height: map.get($chip-icon-size, 'comfortable');
-            font-size: map.get($chip-icon-size, 'comfortable');
+            width: var(--icon-size, map.get($chip-icon-size, 'comfortable'));
+            height: var(--icon-size, map.get($chip-icon-size, 'comfortable'));
+            font-size: var(--icon-size, map.get($chip-icon-size, 'comfortable'));
             outline-style: none;
         }
     }
 
     %igx-chip-custom-icon--cosy {
         igx-icon {
-            width: map.get($chip-icon-size, 'cosy');
-            height: map.get($chip-icon-size, 'cosy');
-            font-size: map.get($chip-icon-size, 'cosy');
+            width: var(--icon-size, map.get($chip-icon-size, 'cosy'));
+            height: var(--icon-size, map.get($chip-icon-size, 'cosy'));
+            font-size: var(--icon-size, map.get($chip-icon-size, 'cosy'));
             outline-style: none;
         }
     }
 
     %igx-chip-custom-icon--compact {
         igx-icon {
-            width: map.get($chip-icon-size, 'compact');
-            height: map.get($chip-icon-size, 'compact');
-            font-size: map.get($chip-icon-size, 'compact');
+            width: var(--icon-size, map.get($chip-icon-size, 'compact'));
+            height: var(--icon-size, map.get($chip-icon-size, 'compact'));
+            font-size: var(--icon-size, map.get($chip-icon-size, 'compact'));
             outline-style: none;
         }
     }

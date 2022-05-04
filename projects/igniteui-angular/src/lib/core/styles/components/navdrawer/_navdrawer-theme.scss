@@ -338,20 +338,6 @@
         &[igxButton] {
             background: transparent;
             border: none;
-            box-shadow: none;
-
-            igx-icon {
-                width: $drawer-icon-size;
-                height: $drawer-icon-size;
-                font-size: $drawer-icon-size;
-                margin: 0;
-            }
-
-            &:hover,
-            &:focus {
-                box-shadow: none;
-                border: none;
-            }
         }
 
         &%igx-button--fab {
@@ -384,24 +370,6 @@
             color: var-get($theme, 'item-active-icon-color');
         }
 
-        // Need this to override the igx-buttons
-        &[igxButton] {
-            box-shadow: none;
-
-            igx-icon {
-                width: $drawer-icon-size;
-                height: $drawer-icon-size;
-                font-size: $drawer-icon-size;
-                margin: 0;
-            }
-
-            &:hover,
-            &:focus {
-                box-shadow: none;
-                border: none;
-            }
-        }
-
         &:focus,
         &:hover {
             color: var-get($theme, 'item-active-text-color');
@@ -409,6 +377,27 @@
 
             igx-icon {
                 color: var-get($theme, 'item-active-icon-color');
+            }
+        }
+    }
+
+    %item,
+    %item--active {
+        // Need this to override the igx-buttons
+        &[igxButton] {
+            box-shadow: none;
+
+            igx-icon {
+                width: var(--icon-size, #{$drawer-icon-size});
+                height: var(--icon-size, #{$drawer-icon-size});
+                font-size: var(--icon-size, #{$drawer-icon-size});
+                margin: 0;
+            }
+
+            &:hover,
+            &:focus {
+                box-shadow: none;
+                border: none;
             }
         }
     }
