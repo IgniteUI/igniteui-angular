@@ -24,6 +24,7 @@
     $horizontal-space-comfortable: rem(16px);
     $horizontal-space-cosy: rem(12px);
     $horizontal-space-compact: rem(8px);
+    $icon-size: rem(18px);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -74,9 +75,9 @@
 
     %advanced-filter__outlet {
         igx-select-item > igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
+            width: var(--icon-size, #{$icon-size});
+            height: var(--icon-size, #{$icon-size});
+            font-size: var(--icon-size, #{$icon-size});
             margin-#{$right}: rem(8px);
         }
     }
@@ -272,7 +273,7 @@
         }
 
         [igxButton] > igx-icon + * {
-            margin-#{$left}: 8px;
+            margin-#{$left}: rem(8px);
         }
 
         igx-buttongroup > * {
@@ -339,12 +340,6 @@
             padding: $vertical-space-cosy rem(16px);
         }
 
-        %filter-tree__expression-actions igx-icon {
-            font-size: rem(18px);
-            width: rem(18px);
-            height: rem(18px);
-        }
-
         %filter-tree__line {
             margin-#{$right}: $horizontal-space-cosy;
         }
@@ -399,9 +394,9 @@
         }
 
         %filter-tree__expression-actions igx-icon {
-            font-size: rem(18px);
-            width: rem(18px);
-            height: rem(18px);
+            width: var(--icon-size, #{$icon-size});
+            height: var(--icon-size, #{$icon-size});
+            font-size: var(--icon-size, #{$icon-size});
         }
 
         %filter-tree__line {

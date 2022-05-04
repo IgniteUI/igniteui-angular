@@ -1306,12 +1306,6 @@
         font-weight: 400;
         border-radius: border-radius(var-get($theme, 'border-border-radius')) 0 0 border-radius(var-get($theme, 'border-border-radius'));
 
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
-
         &:last-of-type {
             margin-#{$right}: rem(8px);
         }
@@ -1319,12 +1313,6 @@
 
     %form-group-prefix-fluent-search {
         padding: 0 rem(8px, map.get($base-scale-size, 'comfortable'));
-
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
 
         &:last-of-type {
             margin-#{$right}: 0;
@@ -1340,12 +1328,6 @@
         line-height: normal;
         border-radius: 0 border-radius(var-get($theme, 'border-border-radius')) border-radius(var-get($theme, 'border-border-radius')) 0;
 
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
-
         &:first-of-type {
             margin-#{$left}: rem(8px);
         }
@@ -1357,14 +1339,19 @@
         padding: 0 rem(8px, map.get($base-scale-size, 'comfortable'));
         line-height: normal;
 
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
-
         &:first-of-type {
             margin-#{$left}: 0;
+        }
+    }
+
+    %form-group-prefix-fluent,
+    %form-group-suffix-fluent,
+    %form-group-suffix-fluent-search,
+    %form-group-prefix-fluent-search {
+        igx-icon {
+            width: var(--icon-size, #{rem(18px)});
+            height: var(--icon-size, #{rem(18px)});
+            font-size: var(--icon-size, #{rem(18px)});
         }
     }
 
@@ -1645,9 +1632,9 @@
         white-space: nowrap;
 
         igx-icon {
-            width: map.get($bootstrap-font-size, 'comfortable');
-            height: map.get($bootstrap-font-size, 'comfortable');
-            font-size: map.get($bootstrap-font-size, 'comfortable');
+            width: var(--icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
+            height: var(--icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
+            font-size: var(--icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
             font-weight: 400;
         }
     }
@@ -1677,9 +1664,9 @@
         height: auto;
 
         igx-icon {
-            width: map.get($bootstrap-font-size, 'cosy');
-            height: map.get($bootstrap-font-size, 'cosy');
-            font-size: map.get($bootstrap-font-size, 'cosy');
+            width: var(--icon-size, #{map.get($bootstrap-font-size, 'cosy')});
+            height: var(--icon-size, #{map.get($bootstrap-font-size, 'cosy')});
+            font-size: var(--icon-size, #{map.get($bootstrap-font-size, 'cosy')});
         }
     }
 
@@ -1690,9 +1677,9 @@
         height: auto;
 
         igx-icon {
-            width: map.get($bootstrap-font-size, 'compact');
-            height: map.get($bootstrap-font-size, 'compact');
-            font-size: map.get($bootstrap-font-size, 'compact');
+            width: var(--icon-size, #{map.get($bootstrap-font-size, 'compact')});
+            height: var(--icon-size, #{map.get($bootstrap-font-size, 'compact')});
+            font-size: var(--icon-size, #{map.get($bootstrap-font-size, 'compact')});
         }
     }
 

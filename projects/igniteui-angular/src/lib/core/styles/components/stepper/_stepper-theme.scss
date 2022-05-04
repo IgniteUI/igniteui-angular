@@ -528,9 +528,9 @@
 
         @if $variant != 'bootstrap' {
             > igx-icon {
-                width: calc(#{$indicator-size} - #{rem(6px)});
-                height: calc(#{$indicator-size} - #{rem(6px)});
-                font-size: calc(#{$indicator-size} - #{rem(6px)});
+                width: var(--icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                height: var(--icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                font-size: var(--icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
                 color: inherit;
             }
         }
