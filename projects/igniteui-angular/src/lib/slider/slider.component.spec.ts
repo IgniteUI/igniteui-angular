@@ -28,7 +28,7 @@ interface FakeDoc {
     documentElement: { dir?: string };
 }
 
-fdescribe('IgxSlider', () => {
+describe('IgxSlider', () => {
     let fakeDoc: FakeDoc;
     configureTestSuite();
     beforeAll(waitForAsync(() => {
@@ -1319,8 +1319,10 @@ fdescribe('IgxSlider', () => {
             fixture.componentInstance.type = IgxSliderType.RANGE;
             fixture.detectChanges();
 
-            slider.lowerValue = 2;
-            slider.upperValue = 9;
+            slider.value = {
+                lower: 2,
+                upper: 9
+            };
 
             fixture.componentInstance.changeMinValue(5);
             fixture.componentInstance.changeMaxValue(7);
@@ -1330,8 +1332,8 @@ fdescribe('IgxSlider', () => {
             expect(slider.maxValue).toBe(7);
             expect(slider.lowerBound).toBe(5);
             expect(slider.upperBound).toBe(7);
-            expect((slider.value as IRangeSliderValue).lower).toBe(5);
-            expect((slider.value as IRangeSliderValue).upper).toBe(7);
+            expect(slider.value.lower).toBe(5);
+            expect(slider.value.upper).toBe(7);
         });
 
         it('Lower and upper bounds should not exceed min and max values', () => {
