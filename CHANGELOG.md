@@ -16,6 +16,18 @@ A new fluent light and dark palettes that use the default fluent colors - `$ligh
 ## 13.1.0
 
 ### New Features
+
+- Added new CSS property `--icon-size` to allow changing the icon size globally or scoped to a selector.
+```SCSS
+    // Will make all icons 10px
+    --icon-size: 10px;
+
+    // will have effect only on icons that are children of .my-icon
+    .my-icon {
+        --icon-size: 10px;
+    }
+```
+
 - Added `IgxPivotGrid` component(Preview)
     - The igxPivotGrid is a data presentation control for displaying data in a pivot table. It enables users to perform complex analysis on the supplied data. Main purpose is to transform and display a flat array of data into a complex grouped structure with aggregated values based on the main 3 dimensions: rows, columns and values, which the user may specify depending on his/her business needs. The whole pivot grid configuration is set through `IPivotConfiguration` interface.
 
