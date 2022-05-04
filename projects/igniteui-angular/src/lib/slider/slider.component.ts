@@ -781,10 +781,10 @@ export class IgxSliderComponent implements
     private _hasViewInit = false;
     private _minValue = 0;
     private _maxValue = 100;
-    private _lowerBound?: number;
-    private _upperBound?: number;
-    private _lowerValue?: number;
-    private _upperValue?: number;
+    private _lowerBound: number;
+    private _upperBound: number;
+    private _lowerValue: number;
+    private _upperValue: number;
     private _continuous = false;
     private _disabled = false;
     private _step = 1;
@@ -909,7 +909,8 @@ export class IgxSliderComponent implements
     public set lowerValue(value: number) {
         const adjustedValue = this.valueInRange(value, this.lowerBound, this.upperBound);
         if (this._lowerValue !== adjustedValue) {
-            this.value = { lower: adjustedValue, upper: this._upperValue };
+            this._lowerValue = adjustedValue;
+            this.value = { lower: this._lowerValue, upper: this._upperValue };
         }
     }
 
@@ -945,7 +946,8 @@ export class IgxSliderComponent implements
     public set upperValue(value: number) {
         const adjustedValue = this.valueInRange(value, this.lowerBound, this.upperBound);
         if (this._upperValue !== adjustedValue) {
-            this.value = { lower: this._lowerValue, upper: adjustedValue };
+            this._upperValue = adjustedValue;
+            this.value = { lower: this._lowerValue, upper: this._upperValue };
         }
     }
 
@@ -1024,7 +1026,7 @@ export class IgxSliderComponent implements
         /**
          * if {@link SliderType.SLIDER} than the initial value shold be the lowest one.
          */
-        if (!this.isRange && this._upperValue === undefined) {
+        if (!this.isRange) {
             this._upperValue = this.lowerBound;
         }
 
@@ -1140,11 +1142,15 @@ export class IgxSliderComponent implements
 
         if (this.isRange) {
             if (thumbType === SliderHandle.FROM) {
-                this._lowerValue += value;
-                this.lowerValueChange.emit(this._lowerValue);
+                if (this._lowerValue + value >= this.lowerBound) {
+                    this._lowerValue += value;
+                    this.lowerValueChange.emit(this._lowerValue);
+                }
             } else {
-                this._upperValue += value;
-                this.upperValueChange.emit(this._upperValue);
+                if (this._upperValue + value <= this.upperBound) {
+                    this._upperValue += value;
+                    this.upperValueChange.emit(this._upperValue);
+                }
             }
 
             const newVal: IRangeSliderValue = {
@@ -1155,10 +1161,15 @@ export class IgxSliderComponent implements
             // Swap the thumbs if a collision appears.
             if (newVal.lower >= newVal.upper) {
                 this.value = this.swapThumb(newVal);
+            } else {
+                this.value = newVal;
             }
 
         } else {
-            (this.value as number) += value;
+            const newVal = (this.value as number) + value;
+            if (newVal >= this.lowerBound && newVal <= this.upperBound) {
+                this.value = newVal;
+            }
         }
 
         if (this.hasValueChanged(oldValue)) {
@@ -1182,16 +1193,17 @@ export class IgxSliderComponent implements
 
     public setValue(value: number | IRangeSliderValue, triggerChange: boolean) {
         let res;
-        if (!this.isRange && !Number.isNaN(value)) {
-            console.log(value);
+        if (!this.isRange) {
             value = value as number;
-            this._upperValue = value - value % this.step;
-            res = this._upperValue;
+            if (!isNaN(value)) {
+                this._upperValue = value - value % this.step;
+                res = this.upperValue;
+            }
         } else {
             value = this.validateInitialValue(value as IRangeSliderValue);
-            this._upperValue = (value as IRangeSliderValue).upper;
-            this._lowerValue = (value as IRangeSliderValue).lower;
-            res = { lower: this._lowerValue, upper: this._upperValue };
+            this._upperValue = value.upper;
+            this._lowerValue = value.lower;
+            res = { lower: this.lowerValue, upper: this.upperValue };
         }
 
         if (triggerChange) {
@@ -1201,11 +1213,11 @@ export class IgxSliderComponent implements
 
     private swapThumb(value: IRangeSliderValue) {
         if (this.thumbFrom.isActive) {
-            value.upper = this._upperValue;
-            value.lower = this._upperValue;
+            value.upper = this.upperValue;
+            value.lower = this.upperValue;
         } else {
-            value.upper = this._lowerValue;
-            value.lower = this._lowerValue;
+            value.upper = this.lowerValue;
+            value.lower = this.lowerValue;
         }
 
         this.toggleThumb();

@@ -191,18 +191,23 @@ fdescribe('IgxSlider', () => {
 
             fixture.detectChanges();
 
-            slider.lowerValue = 20;
-            slider.upperValue = 30;
+            slider.value = {
+                lower: 20,
+                upper: 30
+            };
 
             fixture.detectChanges();
-            expect((slider.value as IRangeSliderValue).lower).toBe(20);
-            expect((slider.value as IRangeSliderValue).upper).toBe(30);
+            expect(slider.value.lower).toBe(20);
+            expect(slider.value.upper).toBe(30);
 
-            slider.upperValue = 50;
+            slider.value = {
+                lower: 20,
+                upper: 50
+            };
 
             fixture.detectChanges();
-            expect((slider.value as IRangeSliderValue).lower).toBe(20);
-            expect((slider.value as IRangeSliderValue).upper).toBe(40);
+            expect(slider.value.lower).toBe(20);
+            expect(slider.value.upper).toBe(40);
         });
 
         it('should not set value upper when is less than lower value when slider is RANGE', () => {
@@ -212,24 +217,32 @@ fdescribe('IgxSlider', () => {
 
             fixture.detectChanges();
 
-            slider.lowerValue = 20;
-            slider.upperValue = 30;
+            slider.value = {
+                lower: 20,
+                upper: 30
+            };
 
             fixture.detectChanges();
-            expect((slider.value as IRangeSliderValue).lower).toBe(20);
-            expect((slider.value as IRangeSliderValue).upper).toBe(30);
+            expect(slider.value.lower).toBe(20);
+            expect(slider.value.upper).toBe(30);
 
-            slider.upperValue = 15;
+            slider.value = {
+                lower: 20,
+                upper: 15
+            };
+
             fixture.detectChanges();
-            expect((slider.value as IRangeSliderValue).lower).toBe(20);
-            expect((slider.value as IRangeSliderValue).upper).toBe(30);
+            expect(slider.value.lower).toBe(20);
+            expect(slider.value.upper).toBe(30);
         });
 
         it('should position correctly lower and upper value based on the step', () => {
             slider.step = 10;
             slider.type = IgxSliderType.RANGE;
-            slider.lowerValue = 23;
-            slider.upperValue = 56;
+            slider.value = {
+                lower: 23,
+                upper: 56
+            };
 
             fixture.detectChanges();
 
@@ -244,18 +257,23 @@ fdescribe('IgxSlider', () => {
 
             fixture.detectChanges();
 
-            slider.lowerValue = 20;
-            slider.upperValue = 30;
+            slider.value = {
+                lower: 20,
+                upper: 30
+            };
 
             fixture.detectChanges();
-            expect((slider.value as IRangeSliderValue).lower).toBe(20);
-            expect((slider.value as IRangeSliderValue).upper).toBe(30);
+            expect(slider.value.lower).toBe(20);
+            expect(slider.value.upper).toBe(30);
 
-            slider.lowerValue = 5;
+            slider.value = {
+                lower: 5,
+                upper: 30
+            };
 
             fixture.detectChanges();
-            expect((slider.value as IRangeSliderValue).lower).toBe(10);
-            expect((slider.value as IRangeSliderValue).upper).toBe(30);
+            expect(slider.value.lower).toBe(10);
+            expect(slider.value.upper).toBe(30);
         });
 
         it('should not set value lower when is more than upper value when slider is RANGE', () => {
@@ -265,19 +283,23 @@ fdescribe('IgxSlider', () => {
 
             fixture.detectChanges();
 
-            slider.lowerValue = 20;
-            slider.upperValue = 30;
+            slider.value = {
+                lower: 20,
+                upper: 30
+            };
 
             fixture.detectChanges();
-            expect((slider.value as IRangeSliderValue).lower).toBe(20);
-            expect((slider.value as IRangeSliderValue).upper).toBe(30);
+            expect(slider.value.lower).toBe(20);
+            expect(slider.value.upper).toBe(30);
 
-            slider.lowerValue = 35;
-            slider.upperValue = 30;
+            slider.value = {
+                lower: 35,
+                upper: 30
+            };
 
             fixture.detectChanges();
-            expect((slider.value as IRangeSliderValue).lower).toBe(20);
-            expect((slider.value as IRangeSliderValue).upper).toBe(30);
+            expect(slider.value.lower).toBe(20);
+            expect(slider.value.upper).toBe(30);
         });
 
         it('should set upperBound to be same as maxValue if exceeds lowerBound', () => {
@@ -960,8 +982,7 @@ fdescribe('IgxSlider', () => {
             expect(slider.upperBound).toBe(4);
             expect(slider.lowerBound).toBe(1);
 
-            slider.lowerValue = -1;
-            slider.upperValue = 3;
+            slider.value = {lower: -1, upper: 3};
             fixture.detectChanges();
 
             expect(slider.value).toEqual({lower: 1, upper: 3});
@@ -1049,27 +1070,26 @@ fdescribe('IgxSlider', () => {
             expect(fromThumb).toBeDefined();
             expect(slider.upperLabel).toEqual('Sunday');
             expect(slider.lowerLabel).toEqual('Monday');
-            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit').and.callThrough();
-            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit').and.callThrough();
+            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(lowerValueChangeSpy).toHaveBeenCalledTimes(1);
-            expect(lowerValueChangeSpy).toHaveBeenCalledWith(1);
+            expect(valueChangeSpy).toHaveBeenCalledTimes(1);
+            expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 0, upper: 6}, value: {lower: 1, upper: 6}});
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(lowerValueChangeSpy).toHaveBeenCalledTimes(2);
-            expect(lowerValueChangeSpy).toHaveBeenCalledWith(2);
+            expect(valueChangeSpy).toHaveBeenCalledTimes(2);
+            expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 1, upper: 6}, value: {lower: 2, upper: 6}});
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(upperValueChangeSpy).toHaveBeenCalledTimes(1);
+            expect(valueChangeSpy).toHaveBeenCalledTimes(2);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(upperValueChangeSpy).toHaveBeenCalledTimes(2);
-            expect(upperValueChangeSpy).toHaveBeenCalledWith(5);
+            expect(valueChangeSpy).toHaveBeenCalledTimes(3);
+            expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 2, upper: 6}, value: {lower: 2, upper: 5}});
         });
 
         it('dynamically change the type of the slider SLIDER, RANGE, LABEL', () => {
