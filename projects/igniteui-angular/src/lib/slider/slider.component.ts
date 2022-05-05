@@ -1142,13 +1142,15 @@ export class IgxSliderComponent implements
 
         if (this.isRange) {
             if (thumbType === SliderHandle.FROM) {
-                if (this._lowerValue + value >= this.lowerBound) {
-                    this._lowerValue += value;
+                const newLower = this.lowerValue + value;
+                if (newLower >= this.lowerBound && newLower <= this.upperValue) {
+                    this._lowerValue = newLower;
                     this.lowerValueChange.emit(this._lowerValue);
                 }
             } else {
-                if (this._upperValue + value <= this.upperBound) {
-                    this._upperValue += value;
+                const newUpper = this.upperValue + value;
+                if (newUpper <= this.upperBound && newUpper >= this.lowerValue) {
+                    this._upperValue = newUpper;
                     this.upperValueChange.emit(this._upperValue);
                 }
             }
@@ -1159,11 +1161,11 @@ export class IgxSliderComponent implements
             }
 
             // Swap the thumbs if a collision appears.
-            if (newVal.lower >= newVal.upper) {
-                this.value = this.swapThumb(newVal);
-            } else {
-                this.value = newVal;
+            if (newVal.lower == newVal.upper) {
+                this.toggleThumb();
             }
+
+            this.value = newVal;
 
         } else {
             const newVal = (this.value as number) + value;
@@ -1209,19 +1211,6 @@ export class IgxSliderComponent implements
         if (triggerChange) {
             this._onChangeCallback(res);
         }
-    }
-
-    private swapThumb(value: IRangeSliderValue) {
-        if (this.thumbFrom.isActive) {
-            value.upper = this.upperValue;
-            value.lower = this.upperValue;
-        } else {
-            value.upper = this.lowerValue;
-            value.lower = this.lowerValue;
-        }
-
-        this.toggleThumb();
-        return value;
     }
 
     private validateInitialValue(value: IRangeSliderValue) {

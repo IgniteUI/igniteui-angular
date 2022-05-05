@@ -17,6 +17,17 @@
             </ng-template>
         </igx-slider>
 
+        <h4 class="sample-title">Range slider weekdays with [(ngModel)] doesn't work 2-way (expected)</h4>
+        <igx-slider [type]="sliderType" [(ngModel)]="weekdays"
+            [labels]="weekdayLabels">
+            <ng-template igxSliderThumbFrom let-value let-labels="labels">
+                <span>Start Day: {{ labels[value.lower] }}</span>
+            </ng-template>
+            <ng-template igxSliderThumbTo let-value let-labels="labels">
+                <span>End Day: {{ labels[value.upper] }}</span>
+            </ng-template>
+        </igx-slider>
+
         <h4 class="sample-title">Disabled Range slider</h4>
         <igx-slider #slider [type]="'range'" [disabled]="true" [(lowerValue)]="rangeValues.lower" [(upperValue)]="rangeValues.upper" [minValue]="0" [maxValue]="100">
         </igx-slider>

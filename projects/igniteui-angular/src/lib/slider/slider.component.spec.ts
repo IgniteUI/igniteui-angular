@@ -28,7 +28,7 @@ interface FakeDoc {
     documentElement: { dir?: string };
 }
 
-describe('IgxSlider', () => {
+fdescribe('IgxSlider', () => {
     let fakeDoc: FakeDoc;
     configureTestSuite();
     beforeAll(waitForAsync(() => {
@@ -317,28 +317,20 @@ describe('IgxSlider', () => {
         });
 
 
-        it('should change value from 60 to 61 when right arrow is pressed and slider is SLIDER', () => {
+        it('should change value when arrows are pressed and slider is SLIDER', () => {
             slider.value = 60;
             fixture.detectChanges();
 
-            const fromThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
-            fromThumb.focus();
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
+            const thumbTo = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumbTo, true);
 
             fixture.detectChanges();
             expect(Math.round(slider.value as number)).toBe(61);
-        });
 
-        it('should change value from 60 to 59 when left arrow is pressed and slider is SLIDER', () => {
-            slider.value = 60;
-            fixture.detectChanges();
-
-            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
-            toThumb.focus();
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumbTo, true);
 
             fixture.detectChanges();
-            expect(Math.round(slider.value as number)).toBe(59);
+            expect(Math.round(slider.value as number)).toBe(60);
         });
     });
 
@@ -424,17 +416,10 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
         });
 
-        it(`should have lower value equal to lower bound when
-            lower value is not set and slider type is RANGE`, () => {
-
-                expect((slider.value as IRangeSliderValue).lower).toBe(slider.lowerBound);
-            });
-
-        it(`should have upper value equal to upper bound when
-            lower value is not set and slider type is RANGE`, () => {
-
-                expect((slider.value as IRangeSliderValue).upper).toBe(slider.upperBound);
-            });
+        it(`should have lower and upper value equal to lower and upper bound when lower and upper values are not set`, () => {
+            expect((slider.value as IRangeSliderValue).lower).toBe(slider.lowerBound);
+            expect((slider.value as IRangeSliderValue).upper).toBe(slider.upperBound);
+        });
 
         it('continuous(smooth) sliding should be allowed', (done) => {
             pending(`panRight trigers pointerdown where we are capturing all pointer events by passing a valid pointerId.
@@ -464,7 +449,7 @@ describe('IgxSlider', () => {
             });
         });
 
-        it('should switch from lower to upper thumb when the lower value is equal to the upper one', () => {
+        it('should switch from lower to upper thumb and vice versa when the lower value is equal to the upper one', () => {
             slider.value = {
                 lower: 60,
                 upper: 60
@@ -473,33 +458,37 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             const fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
-            fromThumb.dispatchEvent(new Event('focus'));
-            fixture.detectChanges();
+            fromThumb.focus();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
             fixture.detectChanges();
 
-            expect((slider.value as IRangeSliderValue).lower).toBe(60);
-            expect((slider.value as IRangeSliderValue).upper).toBe(60);
+            expect(slider.value.lower).toBe(60);
+            expect(slider.value.upper).toBe(60);
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_TO_CLASS));
-        });
 
-        it('should switch from upper to lower thumb when the upper value is equal to the lower one', () => {
-            slider.value = {
-                lower: 60,
-                upper: 60
-            };
+            const thumbTo = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumbTo, true);
             fixture.detectChanges();
 
-            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
-            toThumb.dispatchEvent(new Event('focus'));
+            expect(slider.value.lower).toBe(60);
+            expect(slider.value.upper).toBe(61);
+            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_TO_CLASS));
+
+            fromThumb.focus();
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
+            expect(slider.value.lower).toBe(61);
+            expect(slider.value.upper).toBe(61);
+            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_TO_CLASS));
+
+            thumbTo.focus();
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumbTo, true);
             fixture.detectChanges();
 
-            expect((slider.value as IRangeSliderValue).lower).toBe(60);
-            expect((slider.value as IRangeSliderValue).upper).toBe(60);
+            expect(slider.value.lower).toBe(61);
+            expect(slider.value.upper).toBe(61);
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_FROM_CLASS));
         });
 
@@ -515,48 +504,42 @@ describe('IgxSlider', () => {
             UIInteractions.triggerKeyDownEvtUponElem('A', toThumb, true);
             fixture.detectChanges();
 
-            expect((slider.value as IRangeSliderValue).lower).toBe(50);
-            expect((slider.value as IRangeSliderValue).upper).toBe(60);
+            expect(slider.value.lower).toBe(50);
+            expect(slider.value.upper).toBe(60);
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_TO_CLASS));
         });
 
-        it('should increment lower value when lower thumb is focused ' +
-            'if right arrow is pressed and slider is RANGE', () => {
-                slider.value = {
-                    lower: 50,
-                    upper: 60
-                };
-                fixture.detectChanges();
+        it('should increment lower value when lower thumb is focused if right arrow is pressed and slider is RANGE', () => {
+            slider.value = {
+                lower: 50,
+                upper: 60
+            };
+            fixture.detectChanges();
 
-                const fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
+            const fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
+            fixture.detectChanges();
 
-                fromThumb.dispatchEvent(new Event('focus'));
-                fixture.detectChanges();
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
+            fixture.detectChanges();
 
-                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
-                fixture.detectChanges();
+            expect(slider.value.lower).toBe(51);
+            expect(slider.value.upper).toBe(60);
+        });
 
-                expect((slider.value as IRangeSliderValue).lower).toBe(51);
-                expect((slider.value as IRangeSliderValue).upper).toBe(60);
-            });
+        it('should increment upper value when upper thumb is focused if right arrow is pressed and slider is RANGE', () => {
+            slider.value = {
+                lower: 50,
+                upper: 60
+            };
+            fixture.detectChanges();
 
-        it('should increment upper value when upper thumb is focused' +
-            'if right arrow is pressed and slider is RANGE', () => {
-                slider.value = {
-                    lower: 50,
-                    upper: 60
-                };
-                fixture.detectChanges();
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
 
-                const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
-                toThumb.dispatchEvent(new Event('focus'));
-                fixture.detectChanges();
-
-                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb, true);
-                fixture.detectChanges();
-                expect((slider.value as IRangeSliderValue).lower).toBe(50);
-                expect((slider.value as IRangeSliderValue).upper).toBe(61);
-            });
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb, true);
+            fixture.detectChanges();
+            expect(slider.value.lower).toBe(50);
+            expect(slider.value.upper).toBe(61);
+        });
 
         it('should not increment upper value when slider is disabled', () => {
             slider.disabled = true;
@@ -567,13 +550,28 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
-            toThumb.dispatchEvent(new Event('focus'));
-            fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb, true);
             fixture.detectChanges();
-            expect((slider.value as IRangeSliderValue).lower).toBe(50);
-            expect((slider.value as IRangeSliderValue).upper).toBe(60);
+            expect(slider.value.lower).toBe(50);
+            expect(slider.value.upper).toBe(60);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
+            fixture.detectChanges();
+            expect(slider.value.lower).toBe(50);
+            expect(slider.value.upper).toBe(60);
+
+            const fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
+            fixture.detectChanges();
+            expect(slider.value.lower).toBe(50);
+            expect(slider.value.upper).toBe(60);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', fromThumb, true);
+            fixture.detectChanges();
+            expect(slider.value.lower).toBe(50);
+            expect(slider.value.upper).toBe(60);
         });
 
     });
@@ -771,10 +769,14 @@ describe('IgxSlider', () => {
             expect(slider).toBeDefined();
             expect(slider.upperLabel).toEqual('Winter');
             const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit').and.callThrough();
+            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit').and.callThrough();
+            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
             fixture.detectChanges();
-            expect(valueChangeSpy).toHaveBeenCalledTimes(0);
+            expect(valueChangeSpy).not.toHaveBeenCalled();
+            expect(upperValueChangeSpy).not.toHaveBeenCalled();
+            expect(lowerValueChangeSpy).not.toHaveBeenCalled();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             fixture.detectChanges();
@@ -799,6 +801,8 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(4);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: 3, value: 2});
+            expect(upperValueChangeSpy).not.toHaveBeenCalled();
+            expect(lowerValueChangeSpy).not.toHaveBeenCalled();
         });
 
         it('Dynamically change the type of the slider SLIDER, RANGE, LABEL', () => {
@@ -904,42 +908,43 @@ describe('IgxSlider', () => {
         });
 
         it('rendering of the slider should corresponds to the set labels', () => {
-            const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS));
-            const toThumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
+            const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const toThumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
 
-            expect(slider).toBeDefined();
             expect(fromThumb).toBeDefined();
-            expect(slider.upperLabel).toEqual('Sunday');
-            expect(slider.lowerLabel).toEqual('Monday');
+            expect(toThumb).toBeDefined();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
+            expect(slider.lowerLabel).toEqual('Monday');
+            expect(slider.upperLabel).toEqual('Sunday');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.slider.value).toEqual({lower: 1, upper: 6});
+            expect(slider.value).toEqual({lower: 1, upper: 6});
             expect(slider.lowerLabel).toEqual('Tuesday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.slider.value).toEqual({lower: 2, upper: 6});
+            expect(slider.value).toEqual({lower: 2, upper: 6});
             expect(slider.lowerLabel).toEqual('Wednesday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.slider.value).toEqual({lower: 3, upper: 6});
+            expect(slider.value).toEqual({lower: 3, upper: 6});
             expect(slider.lowerLabel).toEqual('Thursday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.slider.value).toEqual({lower: 4, upper: 6});
+            expect(slider.value).toEqual({lower: 4, upper: 6});
             expect(slider.lowerLabel).toEqual('Friday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.slider.value).toEqual({lower: 4, upper: 5});
+            expect(slider.value).toEqual({lower: 4, upper: 5});
             expect(slider.upperLabel).toEqual('Saturday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.slider.value).toEqual({lower: 4, upper: 4});
+            expect(slider.value).toEqual({lower: 4, upper: 4});
             expect(slider.upperLabel).toEqual('Friday');
         });
 
@@ -1071,24 +1076,32 @@ describe('IgxSlider', () => {
             expect(slider.upperLabel).toEqual('Sunday');
             expect(slider.lowerLabel).toEqual('Monday');
             const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit').and.callThrough();
+            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit').and.callThrough();
+            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(1);
+            expect(lowerValueChangeSpy).toHaveBeenCalledTimes(1);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 0, upper: 6}, value: {lower: 1, upper: 6}});
+            expect(lowerValueChangeSpy).toHaveBeenCalledWith(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(2);
+            expect(lowerValueChangeSpy).toHaveBeenCalledTimes(2);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 1, upper: 6}, value: {lower: 2, upper: 6}});
+            expect(lowerValueChangeSpy).toHaveBeenCalledWith(2);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb.nativeElement, true);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(2);
+            expect(upperValueChangeSpy).not.toHaveBeenCalled();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(3);
+            expect(upperValueChangeSpy).toHaveBeenCalledOnceWith(5);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 2, upper: 6}, value: {lower: 2, upper: 5}});
         });
 
