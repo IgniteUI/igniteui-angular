@@ -81,5 +81,5 @@ import { IgxSliderComponent } from "../../../src/main";
 | Name | Description |
 | :--- | :--- | 
 | valueChange  | This event is emitted when user has stopped interacting the thumb and value is changed.  |
-| upperValueChange | This event is emitted when upperValue changes in a RANGE slider. |
-| lowerValueChange | This event is emitted when lowerValue changes in a RANGE slider. |
+| upperValueChange | This event is emitted when `upperValue` changes in a RANGE slider. |
+| lowerValueChange | This event is emitted when `lowerValue` changes in a RANGE slider. |
