@@ -1355,19 +1355,40 @@ fdescribe('IgxSlider', () => {
 
             const componentInst = fix.componentInstance;
             const slider = componentInst.slider;
-            const expectedMinVal = 0;
-            const expectedMaxVal = 10;
+            let expectedMinVal = 0;
+            let expectedMaxVal = 10;
 
             expect(slider.minValue).toEqual(expectedMinVal);
             expect(slider.maxValue).toEqual(expectedMaxVal);
 
-            const expectedLowerBound = -1;
-            const expectedUpperBound = 11;
+            let expectedLowerBound = -1;
+            let expectedUpperBound = 11;
             slider.lowerBound = expectedLowerBound;
             slider.upperBound = expectedUpperBound;
 
             expect(slider.lowerBound).toEqual(expectedMinVal);
             expect(slider.upperBound).toEqual(expectedMaxVal);
+
+            // Setting minValue > upperBound should result in boundry updates
+            slider.lowerBound = 2;
+            slider.upperBound = 5;
+            slider.minValue = 6;
+            expectedLowerBound = 6;
+            expectedUpperBound = 10;
+
+            expect(slider.lowerBound).toEqual(expectedLowerBound);
+            expect(slider.upperBound).toEqual(expectedUpperBound);
+
+            // Setting maxValue < lowerBound should result in boundry updates
+            slider.minValue = 0;
+            slider.lowerBound = 5;
+            slider.upperBound = 9;
+            slider.maxValue = 4;
+            expectedLowerBound = 0;
+            expectedUpperBound = 4;
+
+            expect(slider.lowerBound).toEqual(expectedLowerBound);
+            expect(slider.upperBound).toEqual(expectedUpperBound);
         });
 
         it('Should emit dragFinished only when stop interacting with the slider', () => {
