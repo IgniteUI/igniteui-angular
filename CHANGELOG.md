@@ -13,6 +13,8 @@ A new fluent light and dark palettes that use the default fluent colors - `$ligh
     - new *sortingOption* property has been introduced on grid level; This property allows you to set either `single` or `multiple` sorting mode; When single mode is enabled you can sort one column at a time; The default value of the property is `multiple`;
 
     - **Behavioral Change** - sorting and grouping expressions are now working separately; If grouping/sorting expressions are in a conflict, grouping expressions take precedence. You can read more about that in our official documentation.
+- `IgxSlider`
+    - support for double value binding in slider of type RANGE through newly exposed `lowerValue` and `upperValue`
 ## 13.1.0
 
 ### New Features
