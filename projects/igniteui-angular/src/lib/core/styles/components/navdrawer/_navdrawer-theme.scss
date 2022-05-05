@@ -239,10 +239,11 @@
                 max-width: rem(32px);
                 // important is needed to override the typography margins
                 margin: rem(14px) auto !important;
+            }
 
-                igx-icon {
-                    margin-inline-start: 0;
-                }
+            igx-icon {
+                margin-inline-start: 0;
+                margin-inline-end: 0;
             }
         }
     }
@@ -313,24 +314,19 @@
         border: none;
         justify-content: flex-start;
 
-        > igx-icon + span {
+        igx-icon {
+            color: var-get($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
-                margin-inline-start: calc(32px - #{$text-side-padding});
+                margin-inline-start: rem(4px);
+                margin-inline-end: calc(32px - #{$text-side-padding});
             } @else {
-                margin-inline-start: rem(32px);
+                margin-inline-end: rem(32px);
             }
         }
 
         span {
             @if $variant == 'indigo-design' {
                 padding-inline-start: $text-side-padding;
-            }
-        }
-
-        igx-icon {
-            color: var-get($theme, 'item-icon-color');
-            @if $variant == 'indigo-design' {
-                margin-inline-start: rem(4px);
             }
         }
 
