@@ -12,18 +12,16 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
 
     public groupBy(expression: IGroupingExpression): void {
         const groupingState = cloneArray(this.grid.groupingExpressions);
-        const sortingState = cloneArray(this.grid.sortingExpressions);
-        this.prepare_sorting_expression([sortingState, groupingState], expression);
+        this.prepare_grouping_expression([groupingState], expression);
         this.grid.groupingExpressions = groupingState;
         this.arrange_sorting_expressions();
     }
 
     public groupBy_multiple(expressions: IGroupingExpression[]): void {
         const groupingState = cloneArray(this.grid.groupingExpressions);
-        const sortingState = cloneArray(this.grid.sortingExpressions);
 
         for (const each of expressions) {
-            this.prepare_sorting_expression([sortingState, groupingState], each);
+            this.prepare_grouping_expression([groupingState], each);
         }
 
         this.grid.groupingExpressions = groupingState;
@@ -32,14 +30,11 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
 
     public clear_groupby(name?: string | Array<string>) {
         const groupingState = cloneArray(this.grid.groupingExpressions);
-        const sortingState = cloneArray(this.grid.sortingExpressions);
 
         if (name) {
             const names = typeof name === 'string' ? [name] : name;
             const groupedCols = groupingState.filter((state) => names.indexOf(state.fieldName) < 0);
-            const newSortingExpr = sortingState.filter((state) => names.indexOf(state.fieldName) < 0);
             this.grid.groupingExpressions = groupedCols;
-            this.grid.sortingExpressions = newSortingExpr;
             names.forEach((colName) => {
                 const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === colName);
                 const grpExpandState = this.grid.groupingExpansionState;
@@ -56,13 +51,6 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
             // clear all
             this.grid.groupingExpressions = [];
             this.grid.groupingExpansionState = [];
-            for (const grExpr of groupingState) {
-                const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === grExpr.fieldName);
-                if (sortExprIndex > -1) {
-                    sortingState.splice(sortExprIndex, 1);
-                }
-            }
-            this.grid.sortingExpressions = sortingState;
         }
     }
 
@@ -134,19 +122,14 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
 
     public arrange_sorting_expressions() {
         const groupingState = this.grid.groupingExpressions;
-        this.grid.sortingExpressions.sort((a, b) => {
-            const groupExprA = groupingState.find((expr) => expr.fieldName === a.fieldName);
-            const groupExprB = groupingState.find((expr) => expr.fieldName === b.fieldName);
-            if (groupExprA && groupExprB) {
-                return groupingState.indexOf(groupExprA) > groupingState.indexOf(groupExprB) ? 1 : -1;
-            } else if (groupExprA) {
-                return -1;
-            } else if (groupExprB) {
-                return 1;
-            } else {
-                return 0;
+        const sortingState = cloneArray(this.grid.sortingExpressions);
+        for (const grExpr of groupingState) {
+            const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === grExpr.fieldName);
+            if (sortExprIndex > -1) {
+                sortingState.splice(sortExprIndex, 1);
             }
-        });
+        }
+        this.grid.sortingExpressions = sortingState;
     }
 
     public get_groupBy_record_id(gRow: IGroupByRecord): string {

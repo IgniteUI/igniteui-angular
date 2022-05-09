@@ -8,6 +8,7 @@ import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
+import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { FilterUtil } from '../data-operations/filtering-strategy';
 
@@ -221,6 +222,15 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         this.grid.sortingExpressions = sortingState;
     }
 
+    public sort_decoupled(expression: IGroupingExpression): void {
+        if (expression.dir === SortingDirection.None) {
+            this.remove_grouping_expression(expression.fieldName);
+        }
+        const groupingState = cloneArray((this.grid as any).groupingExpressions);
+        this.prepare_grouping_expression([groupingState], expression);
+        (this.grid as any).groupingExpressions = groupingState;
+    }
+
     public sort_multiple(expressions: ISortingExpression[]): void {
         const sortingState = cloneArray(this.grid.sortingExpressions);
 
@@ -232,6 +242,17 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         this.grid.sortingExpressions = sortingState;
+    }
+
+    public sort_groupBy_multiple(expressions: ISortingExpression[]): void {
+        const groupingState = cloneArray((this.grid as any).groupingExpressions);
+
+        for (const each of expressions) {
+            if (each.dir === SortingDirection.None) {
+                this.remove_grouping_expression(each.fieldName);
+            }
+            this.prepare_grouping_expression([groupingState], each);
+        }
     }
 
     public clear_sort(fieldName: string) {
@@ -424,6 +445,43 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     }
 
     public prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
+        if (expression.dir === SortingDirection.None) {
+            stateCollections.forEach(state => {
+                state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
+            });
+            return;
+        }
+
+        /**
+         * We need to make sure the states in each collection with same fields point to the same object reference.
+         * If the different state collections provided have different sizes we need to get the largest one.
+         * That way we can get the state reference from the largest one that has the same fieldName as the expression to prepare.
+         */
+        let maxCollection = stateCollections[0];
+        for (let i = 1; i < stateCollections.length; i++) {
+            if (maxCollection.length < stateCollections[i].length) {
+                maxCollection = stateCollections[i];
+            }
+        }
+        const maxExpr = maxCollection.find((expr) => expr.fieldName === expression.fieldName);
+
+        stateCollections.forEach(collection => {
+            const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
+            if (!myExpr && !maxExpr) {
+                // Expression with this fieldName is missing from the current and the max collection.
+                collection.push(expression);
+            } else if (!myExpr && maxExpr) {
+                // Expression with this fieldName is missing from the current and but the max collection has.
+                collection.push(maxExpr);
+                Object.assign(maxExpr, expression);
+            } else {
+                // The current collection has the expression so just update it.
+                Object.assign(myExpr, expression);
+            }
+        });
+    }
+
+    public prepare_grouping_expression(stateCollections: Array<Array<any>>, expression: IGroupingExpression) {
         if (expression.dir === SortingDirection.None) {
             stateCollections.forEach(state => {
                 state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);

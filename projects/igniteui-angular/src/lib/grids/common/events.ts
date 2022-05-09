@@ -2,6 +2,7 @@ import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
 import { GridKeydownTargetType } from './enums';
 import { CellType, ColumnType, GridType, RowType } from './grid.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxBaseExporter } from '../../services/exporter-common/base-export-service';
 import { IgxExporterOptionsBase } from '../../services/exporter-common/exporter-options-base';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
@@ -201,7 +202,8 @@ export interface IActiveNodeChangeEventArgs extends IBaseEventArgs {
 }
 
 export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
-    sortingExpressions: ISortingExpression | Array<ISortingExpression>;
+    sortingExpressions?: ISortingExpression | Array<ISortingExpression>;
+    groupingExpressions?: IGroupingExpression | Array<IGroupingExpression>;
 }
 
 export interface IFilteringEventArgs extends IBaseEventArgs, CancelableEventArgs {
