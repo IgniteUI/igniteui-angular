@@ -28,7 +28,7 @@ interface FakeDoc {
     documentElement: { dir?: string };
 }
 
-describe('IgxSlider', () => {
+fdescribe('IgxSlider', () => {
     let fakeDoc: FakeDoc;
     configureTestSuite();
     beforeAll(waitForAsync(() => {
@@ -202,10 +202,7 @@ describe('IgxSlider', () => {
             expect(slider.value.lower).toBe(20);
             expect(slider.value.upper).toBe(30);
 
-            slider.value = {
-                lower: 20,
-                upper: 50
-            };
+            slider.upperValue = 50;
 
             fixture.detectChanges();
             expect(slider.value.lower).toBe(20);
