@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { By, HammerModule } from '@angular/platform-browser';
 import { IgxSliderComponent, IgxSliderModule } from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxSliderType, IRangeSliderValue, TicksOrientation, TickLabelsOrientation } from './slider.common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxDirectionality, DIR_DOCUMENT } from '../services/direction/directionality';
 
 declare let Simulator: any;
@@ -43,10 +43,12 @@ describe('IgxSlider', () => {
                 RangeSliderWithLabelsComponent,
                 RangeSliderWithCustomTemplateComponent,
                 SliderTicksComponent,
-                SliderRtlComponent
+                SliderRtlComponent,
+                SliderTemplateFormComponent,
+                SliderReactiveFormComponent
             ],
             imports: [
-                IgxSliderModule, NoopAnimationsModule, FormsModule, HammerModule
+                IgxSliderModule, NoopAnimationsModule, FormsModule, ReactiveFormsModule, HammerModule
             ],
             providers: [
                 { provide: DIR_DOCUMENT, useFactory: () => fakeDoc }
@@ -1694,6 +1696,46 @@ describe('IgxSlider', () => {
         });
     });
 
+    describe('Form Component', () => {
+        it('Should correctly bind, update and get updated by ngModel', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SliderTemplateFormComponent);
+            fixture.detectChanges();
+            tick();
+
+            const slider = fixture.componentInstance.slider;
+
+            expect(slider.value).toBe(fixture.componentInstance.value);
+
+            fixture.componentInstance.value = 20;
+            fixture.detectChanges();
+            tick();
+            expect(slider.value).toBe(fixture.componentInstance.value);
+
+            slider.value = 30;
+            fixture.detectChanges();
+            tick();
+            expect(slider.value).toBe(fixture.componentInstance.value);
+        }));
+
+        it('Should correctly bind, update and get updated by ngModel', () => {
+            const fixture = TestBed.createComponent(SliderReactiveFormComponent);
+            fixture.detectChanges();
+
+            const slider = fixture.componentInstance.slider;
+            const formControl = fixture.componentInstance.formControl;
+
+            expect(slider.value).toBe(formControl.value);
+
+            formControl.setValue(20);
+            fixture.detectChanges();
+            expect(slider.value).toBe(formControl.value);
+
+            slider.value = 30;
+            fixture.detectChanges();
+            expect(slider.value).toBe(formControl.value);
+        });
+    });
+
     const panRight = (element, elementHeight, elementWidth, duration) => {
         const panOptions = {
             deltaX: elementWidth * 0.6,
@@ -1733,7 +1775,7 @@ describe('IgxSlider', () => {
 @Component({
     selector: 'igx-slider-rtl',
     template: `
-        <igx-slider [type]="type" [lowerValue]="value.lower" [upperValue]="value.upper"></igx-slider>
+        <igx-slider [type]="type" [value]="value"></igx-slider>
     `
 })
 export class SliderRtlComponent {
@@ -1862,4 +1904,30 @@ class RangeSliderWithLabelsComponent {
 class RangeSliderWithCustomTemplateComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
     public type = IgxSliderType.RANGE;
+}
+
+@Component({
+    template: `
+        <form #form="ngForm">
+            <igx-slider [(ngModel)]="value" name="amount"></igx-slider>
+        </form>
+    `
+})
+export class SliderTemplateFormComponent {
+    @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
+
+    public value = 10;
+}
+
+@Component({
+    template: `
+        <form #form="ngForm">
+            <igx-slider [formControl]="formControl"></igx-slider>
+        </form>
+    `
+})
+export class SliderReactiveFormComponent {
+    @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
+
+    public formControl = new FormControl(10);
 }

@@ -35,6 +35,14 @@
         <h4 class="sample-title">Basic Range slider</h4>
         <igx-slider #slider [type]="'range'" [(lowerValue)]="rangeValues.lower" [(upperValue)]="rangeValues.upper" [minValue]="0" [maxValue]="100">
         </igx-slider>
+
+        <h4 class="sample-title">Lower value</h4>
+        <igx-slider #slider [(ngModel)]="rangeValues.lower" [upperBound]="rangeValues.upper">
+        </igx-slider>
+
+        <h4 class="sample-title">Upper value</h4>
+        <igx-slider #slider [(ngModel)]="rangeValues.upper" [lowerBound]="rangeValues.lower">
+        </igx-slider>
     </article>
 
     <article class="sample-column">
