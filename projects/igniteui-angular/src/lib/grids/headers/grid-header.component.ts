@@ -149,6 +149,16 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
             return this.defaultSortHeaderIconTemplate;
         }
     }
+    /**
+     * @hidden
+     */
+    public get disabled() {
+        const groupArea = this.grid.groupArea || this.grid.treeGroupArea;
+        if (groupArea?.expressions && groupArea.expressions.length && groupArea.expressions.map(g => g.fieldName).includes(this.column.field)) {
+            return true;
+        }
+        return false;
+    }
 
     public get sorted() {
         return this.sortDirection !== SortingDirection.None;

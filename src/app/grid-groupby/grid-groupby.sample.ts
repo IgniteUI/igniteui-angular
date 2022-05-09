@@ -3,7 +3,7 @@ import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 
 import {
     IgxGridComponent, SortingDirection, ISortingExpression,
-    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs
+    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs, ISortingOptions
 } from 'igniteui-angular';
 
 @Component({
@@ -27,6 +27,7 @@ export class GridGroupBySampleComponent implements OnInit {
     public summaryModes = [];
     public selectionModes: any[];
     public position: GridSummaryPosition = GridSummaryPosition.top;
+    public sortingOp: ISortingOptions = {mode: 'multiple'};
 
     private _density: DisplayDensity = DisplayDensity.cosy;
 

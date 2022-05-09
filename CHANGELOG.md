@@ -2,12 +2,17 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 13.2.0 
+## 13.2.0
 
 ### New palette
 
 A new fluent light and dark palettes that use the default fluent colors - `$light-fluent-palette` and `$dark-fluent-palette`.
 
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - new *sortingOption* property has been introduced on grid level; This property allows you to set either `single` or `multiple` sorting mode; When single mode is enabled you can sort one column at a time; The default value of the property is `multiple`;
+
+    - **Behavioral Change** - sorting and grouping expressions are now working separately; If grouping/sorting expressions are in a conflict, grouping expressions take precedence. You can read more about that in our official documentation.
 ## 13.1.0
 
 ### New Features
@@ -138,7 +143,7 @@ A new fluent light and dark palettes that use the default fluent colors - `$ligh
 - `IgxDialog`
     - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
 - `IgxProgressBar`
-    - Exposed new animationDuration input - sets the duration of the progress animation. 
+    - Exposed new animationDuration input - sets the duration of the progress animation.
 
 ### General
 
