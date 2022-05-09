@@ -737,7 +737,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
 
         if (this._ngControl) {
-            this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            this._statusChanges$ =
+            this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            if (this._ngControl.control.validator) {
+                this._inputGroup.isRequired = this.required;
+            }
         }
     }
 
