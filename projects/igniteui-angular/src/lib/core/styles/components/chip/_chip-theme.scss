@@ -376,27 +376,27 @@
 
     %igx-chip-custom-icon {
         igx-icon {
-            width: var(--icon-size, map.get($chip-icon-size, 'comfortable'));
-            height: var(--icon-size, map.get($chip-icon-size, 'comfortable'));
-            font-size: var(--icon-size, map.get($chip-icon-size, 'comfortable'));
+            width: var(--igx-icon-size, map.get($chip-icon-size, 'comfortable'));
+            height: var(--igx-icon-size, map.get($chip-icon-size, 'comfortable'));
+            font-size: var(--igx-icon-size, map.get($chip-icon-size, 'comfortable'));
             outline-style: none;
         }
     }
 
     %igx-chip-custom-icon--cosy {
         igx-icon {
-            width: var(--icon-size, map.get($chip-icon-size, 'cosy'));
-            height: var(--icon-size, map.get($chip-icon-size, 'cosy'));
-            font-size: var(--icon-size, map.get($chip-icon-size, 'cosy'));
+            width: var(--igx-icon-size, map.get($chip-icon-size, 'cosy'));
+            height: var(--igx-icon-size, map.get($chip-icon-size, 'cosy'));
+            font-size: var(--igx-icon-size, map.get($chip-icon-size, 'cosy'));
             outline-style: none;
         }
     }
 
     %igx-chip-custom-icon--compact {
         igx-icon {
-            width: var(--icon-size, map.get($chip-icon-size, 'compact'));
-            height: var(--icon-size, map.get($chip-icon-size, 'compact'));
-            font-size: var(--icon-size, map.get($chip-icon-size, 'compact'));
+            width: var(--igx-icon-size, map.get($chip-icon-size, 'compact'));
+            height: var(--igx-icon-size, map.get($chip-icon-size, 'compact'));
+            font-size: var(--igx-icon-size, map.get($chip-icon-size, 'compact'));
             outline-style: none;
         }
     }

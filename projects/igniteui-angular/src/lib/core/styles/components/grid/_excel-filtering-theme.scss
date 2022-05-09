@@ -69,9 +69,9 @@
         cursor: pointer;
 
         igx-icon {
-            width: var(--icon-size, #{rem(15px)});
-            height: var(--icon-size, #{rem(15px)});
-            font-size: var(--icon-size, #{rem(15px)});
+            width: var(--igx-icon-size, #{rem(15px)});
+            height: var(--igx-icon-size, #{rem(15px)});
+            font-size: var(--igx-icon-size, #{rem(15px)});
         }
     }
 
@@ -190,9 +190,9 @@
         }
 
         igx-icon {
-            width: var(--icon-size, #{rem(18px)});
-            height: var(--icon-size, #{rem(18px)});
-            font-size: var(--icon-size, #{rem(18px)});
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
             display: initial;
         }
     }
@@ -305,9 +305,9 @@
             flex: 1;
 
             igx-icon {
-                width: var(--icon-size, #{$tree-node-expander-size});
-                height: var(--icon-size, #{$tree-node-expander-size});
-                font-size: var(--icon-size, #{$tree-node-expander-size});
+                width: var(--igx-icon-size, #{$tree-node-expander-size});
+                height: var(--igx-icon-size, #{$tree-node-expander-size});
+                font-size: var(--igx-icon-size, #{$tree-node-expander-size});
             }
 
             > igx-checkbox,
@@ -572,9 +572,9 @@
         margin: 0 rem(16px) rem(16px);
 
         igx-icon {
-            width: var(--icon-size, #{rem(18px)});
-            height: var(--icon-size, #{rem(18px)});
-            font-size: var(--icon-size, #{rem(18px)});
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 

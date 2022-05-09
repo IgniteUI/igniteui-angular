@@ -229,9 +229,9 @@
     %selector-base,
     %selector-item-ghost {
         igx-icon {
-            width: var(--icon-size, #{rem(18px)});
-            height: var(--icon-size, #{rem(18px)});
-            font-size: var(--icon-size, #{rem(18px)});
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 

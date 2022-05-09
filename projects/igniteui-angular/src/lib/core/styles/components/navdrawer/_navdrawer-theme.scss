@@ -389,9 +389,9 @@
             box-shadow: none;
 
             igx-icon {
-                width: var(--icon-size, #{$drawer-icon-size});
-                height: var(--icon-size, #{$drawer-icon-size});
-                font-size: var(--icon-size, #{$drawer-icon-size});
+                width: var(--igx-icon-size, #{$drawer-icon-size});
+                height: var(--igx-icon-size, #{$drawer-icon-size});
+                font-size: var(--igx-icon-size, #{$drawer-icon-size});
                 margin: 0;
             }
 
