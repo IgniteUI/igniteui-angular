@@ -491,9 +491,9 @@
         igx-icon {
             display: flex;
             justify-content: center;
-            width: var(--icon-size, #{$icon-in-button-size});
-            height: var(--icon-size, #{$icon-in-button-size});
-            font-size: var(--icon-size, #{$icon-in-button-size});
+            width: var(--igx-icon-size, #{$icon-in-button-size});
+            height: var(--igx-icon-size, #{$icon-in-button-size});
+            font-size: var(--igx-icon-size, #{$icon-in-button-size});
             color: inherit;
         }
 

@@ -1331,9 +1331,9 @@
     %form-group-suffix-fluent-search,
     %form-group-prefix-fluent-search {
         igx-icon {
-            width: var(--icon-size, #{rem(18px)});
-            height: var(--icon-size, #{rem(18px)});
-            font-size: var(--icon-size, #{rem(18px)});
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 
@@ -1599,9 +1599,9 @@
         white-space: nowrap;
 
         igx-icon {
-            width: var(--icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
-            height: var(--icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
-            font-size: var(--icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
+            width: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
+            height: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
+            font-size: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
             font-weight: 400;
         }
     }
@@ -1631,9 +1631,9 @@
         height: auto;
 
         igx-icon {
-            width: var(--icon-size, #{map.get($bootstrap-font-size, 'cosy')});
-            height: var(--icon-size, #{map.get($bootstrap-font-size, 'cosy')});
-            font-size: var(--icon-size, #{map.get($bootstrap-font-size, 'cosy')});
+            width: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'cosy')});
+            height: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'cosy')});
+            font-size: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'cosy')});
         }
     }
 
@@ -1644,9 +1644,9 @@
         height: auto;
 
         igx-icon {
-            width: var(--icon-size, #{map.get($bootstrap-font-size, 'compact')});
-            height: var(--icon-size, #{map.get($bootstrap-font-size, 'compact')});
-            font-size: var(--icon-size, #{map.get($bootstrap-font-size, 'compact')});
+            width: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'compact')});
+            height: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'compact')});
+            font-size: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'compact')});
         }
     }
 

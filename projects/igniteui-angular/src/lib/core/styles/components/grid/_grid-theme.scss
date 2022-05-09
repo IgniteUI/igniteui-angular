@@ -1079,9 +1079,9 @@
         background-clip: border-box;
 
         igx-icon {
-            width: var(--icon-size, #{$drag-icon-size});
-            height: var(--icon-size, #{$drag-icon-size});
-            font-size: var(--icon-size, #{$drag-icon-size});
+            width: var(--igx-icon-size, #{$drag-icon-size});
+            height: var(--igx-icon-size, #{$drag-icon-size});
+            font-size: var(--igx-icon-size, #{$drag-icon-size});
         }
     }
 
@@ -1147,9 +1147,9 @@
         justify-content: center;
 
         igx-icon {
-            width: var(--icon-size, #{rem(18px)});
-            height: var(--icon-size, #{rem(18px)});
-            font-size: var(--icon-size, #{rem(18px)});
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
 
         %igx-icon--error {
@@ -1633,9 +1633,9 @@
             display: flex;
 
             igx-icon {
-                width: var(--icon-size, #{rem(15px)});
-                height: var(--icon-size, #{rem(15px)});
-                font-size: var(--icon-size, #{rem(15px)});
+                width: var(--igx-icon-size, #{rem(15px)});
+                height: var(--igx-icon-size, #{rem(15px)});
+                font-size: var(--igx-icon-size, #{rem(15px)});
             }
 
             &::after {
@@ -2101,9 +2101,9 @@
 
         igx-icon {
             color: var-get($theme, 'group-label-icon');
-            width: var(--icon-size, #{rem(16px)});
-            height: var(--icon-size, #{rem(16px)});
-            font-size: var(--icon-size, #{rem(16px)});
+            width: var(--igx-icon-size, #{rem(16px)});
+            height: var(--igx-icon-size, #{rem(16px)});
+            font-size: var(--igx-icon-size, #{rem(16px)});
         }
     }
 
@@ -2251,9 +2251,9 @@
         margin: 0 rem(4px);
 
         igx-icon {
-            width: var(--icon-size, #{rem(16px)});
-            height: var(--icon-size, #{rem(16px)});
-            font-size: var(--icon-size, #{rem(16px)});
+            width: var(--igx-icon-size, #{rem(16px)});
+            height: var(--igx-icon-size, #{rem(16px)});
+            font-size: var(--igx-icon-size, #{rem(16px)});
         }
 
         [dir='rtl'] & {
@@ -2338,7 +2338,7 @@
 
         igx-icon {
             color: var-get($theme, 'expand-icon-color');
-            width: var(--icon-size, #{$indicator-icon-width});
+            width: var(--igx-icon-size, #{$indicator-icon-width});
         }
 
         &:hover,
@@ -2533,9 +2533,9 @@
         visibility: visible;
 
         igx-icon {
-            width: var(--icon-size, #{rem(18px)});
-            height: var(--icon-size, #{rem(18px)});
-            font-size: var(--icon-size, #{rem(18px)});
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
 
         %igx-badge-display {

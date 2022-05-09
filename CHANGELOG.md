@@ -17,11 +17,11 @@ A new fluent light and dark palettes that use the default fluent colors - `$ligh
 
 ### New Features
 
-- Added new CSS property `--icon-size` to allow changing the icon when its original size is modified by other components.
+- Added new CSS property `--igx-icon-size` to allow changing the icon when its original size is modified by other components.
 ```SCSS
     // will have effect only on icons that are children of .igx-button
     .igx-button {
-        --icon-size: 10px;
+        --igx-icon-size: 10px;
     }
 ```
 

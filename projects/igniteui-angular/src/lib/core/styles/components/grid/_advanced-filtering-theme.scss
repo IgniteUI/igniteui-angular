@@ -72,9 +72,9 @@
 
     %advanced-filter__outlet {
         igx-select-item > igx-icon {
-            width: var(--icon-size, #{$icon-size});
-            height: var(--icon-size, #{$icon-size});
-            font-size: var(--icon-size, #{$icon-size});
+            width: var(--igx-icon-size, #{$icon-size});
+            height: var(--igx-icon-size, #{$icon-size});
+            font-size: var(--igx-icon-size, #{$icon-size});
             margin-inline-end: rem(8px);
         }
     }
@@ -391,9 +391,9 @@
         }
 
         %filter-tree__expression-actions igx-icon {
-            width: var(--icon-size, #{$icon-size});
-            height: var(--icon-size, #{$icon-size});
-            font-size: var(--icon-size, #{$icon-size});
+            width: var(--igx-icon-size, #{$icon-size});
+            height: var(--igx-icon-size, #{$icon-size});
+            font-size: var(--igx-icon-size, #{$icon-size});
         }
 
         %filter-tree__line {
