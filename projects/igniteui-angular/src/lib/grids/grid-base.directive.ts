@@ -1070,8 +1070,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanging)='handleDataChangingEvent()'></igx-grid>
      * ```
      */
-     @Output()
-     public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+    @Output()
+    public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
 
     /**
      * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
@@ -3333,8 +3333,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
-            this.notifyChanges(true);
-            this.cdr.detectChanges();
+            if (!this.isPercentHeight) {
+                this.notifyChanges(true);
+                this.cdr.detectChanges();
+            }
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
@@ -4561,10 +4563,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             if (this._sortingOptions.mode === 'single') {
                 this.columns.forEach((col) => {
-                 if (!(col.field === expression.fieldName)) {
-                    this.clearSort(col.field);
-                 }
-               });
+                    if (!(col.field === expression.fieldName)) {
+                        this.clearSort(col.field);
+                    }
+                });
             }
             this.gridAPI.prepare_sorting_expression([sortingState], expression);
         }
@@ -6294,10 +6296,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Update internal column's collection.
      * @hidden
      */
-    public updateColumns(newColumns:IgxColumnComponent[]) {
+    public updateColumns(newColumns: IgxColumnComponent[]) {
         // update internal collections to retain order.
         this._pinnedColumns = newColumns
-        .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
+            .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this.columnList.reset(newColumns);
         this.columnList.notifyOnChanges();
