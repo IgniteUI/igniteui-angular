@@ -149,7 +149,7 @@
     <ng-container *ngIf="level > 0">
         <div
             #indentationDiv
-            class="igx-grid__tree-cell--padding-level-{{ level }}"
+            style="{{'--igx-tree-indent-level:' + level}}; padding-inline-start: calc(var(--igx-tree-indent-size) * var(--igx-tree-indent-level))"
         ></div>
     </ng-container>
     <div

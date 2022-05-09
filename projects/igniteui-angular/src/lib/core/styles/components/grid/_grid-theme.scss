@@ -2445,18 +2445,16 @@
         }
     }
 
-    @for $i from 1 through 25 {
-        %igx-grid__tree-cell--padding-level-#{$i} {
-            padding-inline-start: #{$i*map.get($grid-grouping-indicator-padding, 'comfortable')};
-        }
+    .igx-grid {
+        --igx-tree-indent-size: #{rem(24px)};
+    }
 
-        %igx-grid__tree-cell-cosy--padding-level-#{$i} {
-            padding-inline-start: #{$i*map.get($grid-grouping-indicator-padding, 'cosy')};
-        }
+    .igx-grid--cosy {
+        --igx-tree-indent-size: #{rem(16px)};
+    }
 
-        %igx-grid__tree-cell-compact--padding-level-#{$i} {
-            padding-inline-start: #{$i*map.get($grid-grouping-indicator-padding, 'compact')};
-        }
+    .igx-grid--compact {
+        --igx-tree-indent-size: #{rem(12px)};
     }
 
     %igx-grid__outlet {
