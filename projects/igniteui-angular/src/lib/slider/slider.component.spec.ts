@@ -1754,19 +1754,19 @@ describe('IgxSlider', () => {
 
     const verifySecondaryTicsLabelsAreHidden = (ticks, hidden) => {
         const allTicks = Array.from(ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}`));
-        const secondaryTicks =  allTicks.filter((tick: any) =>
-            !tick.classList.contains(SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME)
+        const secondaryTicks =  allTicks.filter((ticker: any) =>
+            !ticker.classList.contains(SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME)
         );
-        secondaryTicks.forEach(tick => {
-           const label = (tick as HTMLElement).querySelector(SLIDER_TICK_LABELS_CLASS);
+        secondaryTicks.forEach(ticker => {
+           const label = (ticker as HTMLElement).querySelector(SLIDER_TICK_LABELS_CLASS);
            expect(label.classList.contains(SLIDER_TICK_LABELS_HIDDEN_CLASS)).toEqual(hidden);
         });
     };
 
     const verifyPrimaryTicsLabelsAreHidden = (ticks, hidden) => {
         const primaryTicks = ticks.nativeElement.querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS}`);
-        primaryTicks.forEach(tick => {
-           const label = (tick as HTMLElement).querySelector(SLIDER_TICK_LABELS_CLASS);
+        primaryTicks.forEach(ticker => {
+           const label = (ticker as HTMLElement).querySelector(SLIDER_TICK_LABELS_CLASS);
            expect(label.classList.contains(SLIDER_TICK_LABELS_HIDDEN_CLASS)).toEqual(hidden);
         });
     };
