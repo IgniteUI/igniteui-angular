@@ -1183,6 +1183,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey && element[this.displayKey] ? element[this.displayKey] : element;
+        if (!element[this.displayKey]) {
+            this.data = [];
+        }
         return value.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
     };
 
