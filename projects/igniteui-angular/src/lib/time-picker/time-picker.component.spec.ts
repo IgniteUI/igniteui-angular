@@ -1,6 +1,6 @@
 import { Component, ViewChild, DebugElement, EventEmitter, QueryList } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { FormControl, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTimePickerComponent, IgxTimePickerModule, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
@@ -1643,7 +1643,7 @@ describe('IgxTimePicker', () => {
                         IgxTimePickerInFormComponent,
                         IgxTimePickerReactiveFormComponent
                     ],
-                    imports: [IgxTimePickerModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+                    imports: [IgxTimePickerModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule, ReactiveFormsModule]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -1659,7 +1659,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 tpInput.blur();
-                tick();
+                tick(50);
                 fixture.detectChanges();
                 expect((timePicker as any).inputDirective.valid).toEqual(IgxInputState.INVALID);
 
