@@ -1083,9 +1083,9 @@
         background-clip: border-box;
 
         igx-icon {
-            width: $drag-icon-size;
-            height: $drag-icon-size;
-            font-size: $drag-icon-size;
+            width: var(--igx-icon-size, #{$drag-icon-size});
+            height: var(--igx-icon-size, #{$drag-icon-size});
+            font-size: var(--igx-icon-size, #{$drag-icon-size});
         }
     }
 
@@ -1151,9 +1151,9 @@
         justify-content: center;
 
         igx-icon {
-            height: rem(18px);
-            width: rem(18px);
-            font-size: rem(18px);
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
 
         %igx-icon--error {
@@ -1637,9 +1637,9 @@
             display: flex;
 
             igx-icon {
-                width: rem(15px);
-                height: rem(15px);
-                font-size: rem(15px);
+                width: var(--igx-icon-size, #{rem(15px)});
+                height: var(--igx-icon-size, #{rem(15px)});
+                font-size: var(--igx-icon-size, #{rem(15px)});
             }
 
             &::after {
@@ -2105,9 +2105,9 @@
 
         igx-icon {
             color: var-get($theme, 'group-label-icon');
-            width: rem(16px);
-            height: rem(16px);
-            font-size: rem(16px);
+            width: var(--igx-icon-size, #{rem(16px)});
+            height: var(--igx-icon-size, #{rem(16px)});
+            font-size: var(--igx-icon-size, #{rem(16px)});
         }
     }
 
@@ -2255,9 +2255,9 @@
         margin: 0 rem(4px);
 
         igx-icon {
-            width: 16px;
-            height: 16px;
-            font-size: 16px;
+            width: var(--igx-icon-size, #{rem(16px)});
+            height: var(--igx-icon-size, #{rem(16px)});
+            font-size: var(--igx-icon-size, #{rem(16px)});
         }
 
         @include if-rtl() {
@@ -2342,7 +2342,7 @@
 
         igx-icon {
             color: var-get($theme, 'expand-icon-color');
-            width: $indicator-icon-width;
+            width: var(--igx-icon-size, #{$indicator-icon-width});
         }
 
         &:hover,
@@ -2523,9 +2523,9 @@
         visibility: visible;
 
         igx-icon {
-            width: 18px;
-            height: 18px;
-            font-size: 18px;
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
 
         %igx-badge-display {
