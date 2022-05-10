@@ -715,6 +715,8 @@
     }
 
     %grid-display {
+        --igx-tree-indent-size: #{rem(24px)};
+
         position: relative;
         display: grid;
         grid-template-rows: auto auto auto 1fr auto auto;
@@ -732,6 +734,14 @@
         %cbx-display {
             min-width: $cbx-size;
         }
+    }
+
+    %grid-display-cosy {
+        --igx-tree-indent-size: #{rem(16px)};
+    }
+
+    %grid-display-compact {
+        --igx-tree-indent-size: #{rem(12px)};
     }
 
     %grid-caption {
@@ -2437,18 +2447,6 @@
                 padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'compact')};
             }
         }
-    }
-
-    .igx-grid {
-        --igx-tree-indent-size: #{rem(24px)};
-    }
-
-    .igx-grid--cosy {
-        --igx-tree-indent-size: #{rem(16px)};
-    }
-
-    .igx-grid--compact {
-        --igx-tree-indent-size: #{rem(12px)};
     }
 
     %igx-grid__outlet {

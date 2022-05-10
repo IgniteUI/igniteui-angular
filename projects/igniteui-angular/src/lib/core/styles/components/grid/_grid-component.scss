@@ -600,6 +600,7 @@
 
         @include m(cosy) {
             @extend %grid-display !optional;
+            @extend %grid-display-cosy !optional;
 
             @include e(tr-pivot) {
                 @extend %igx-grid__tr-pivot--cosy !optional
@@ -695,6 +696,7 @@
 
         @include m(compact) {
             @extend %grid-display !optional;
+            @extend %grid-display-compact !optional;
 
             @include e(tr-pivot) {
                 @extend %igx-grid__tr-pivot--compact !optional
