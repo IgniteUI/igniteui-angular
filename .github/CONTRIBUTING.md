@@ -80,7 +80,7 @@ Accessibility is an integral part of any UI component. We as a team are committe
  * Section 508 compliance.  
  * WCAG (preferably AAA compliance, AA compliance where AAA is unachivable because of the type of UI component)  
  * WAI-ARIA  
- * Fully keyboard navigation  
+ * Full keyboard navigation  
 
 ## Localization - applicable to issues and pull requests
 1. `status: pending-localization` this status tells that there are changes in the localization strings that need to be translated. When you make such changes, put this status badge without removing the other applicable ones and assign a person to do the translations.
