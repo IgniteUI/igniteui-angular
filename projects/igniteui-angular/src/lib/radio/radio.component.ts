@@ -340,6 +340,17 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @hidden
      * @internal
      */
+     @HostListener('change', ['$event'])
+     public _changed(){
+         if(event instanceof Event){
+           event.preventDefault();
+         }
+     }
+
+    /**
+     * @hidden
+     * @internal
+     */
     @HostListener('keyup', ['$event'])
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
