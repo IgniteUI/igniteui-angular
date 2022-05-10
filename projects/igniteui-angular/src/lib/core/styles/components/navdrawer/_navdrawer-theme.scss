@@ -243,7 +243,6 @@
 
             igx-icon {
                 margin-inline-start: 0;
-                margin-inline-end: 0;
             }
         }
     }
@@ -298,10 +297,12 @@
             // important is needed to override the typography margins
             margin: $drawer-item-margin !important;
             padding: rem(12px) rem(8px);
+            gap: rem(32px);
         } @else {
             // important is needed to override the typography margins
             margin: rem(15px) $drawer-item-margin !important;
             padding: rem(4px);
+            gap: calc(32px - #{$text-side-padding});
         }
 
         cursor: pointer;
@@ -318,9 +319,6 @@
             color: var-get($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
                 margin-inline-start: rem(4px);
-                margin-inline-end: calc(32px - #{$text-side-padding});
-            } @else {
-                margin-inline-end: rem(32px);
             }
         }
 
