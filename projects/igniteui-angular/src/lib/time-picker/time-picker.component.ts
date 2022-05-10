@@ -1827,12 +1827,7 @@ export class IgxTimePickerComponent implements
             }
 
             const formattedMinute = minute < 10 && format.indexOf('mm') !== -1 ? '0' + minute : `${minute}`;
-
-<<<<<<< HEAD
             const formattedSeconds = seconds < 10 && format.indexOf('ss') !== -1 ? '0' + seconds : `${seconds}`;
-=======
-        
->>>>>>> 8efb9148e4 (fix(time-picker): fix host binding with input group)
 
             return format.replace('hh', formattedHour).replace('h', formattedHour)
                 .replace('HH', formattedHour).replace('H', formattedHour)
