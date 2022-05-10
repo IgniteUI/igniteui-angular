@@ -4,7 +4,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { BaseToolbarColumnActionsDirective } from '../toolbar/grid-toolbar.base';
+import { GridFunctions } from "../../test-utils/grid-functions.spec";
+import { By } from "@angular/platform-browser";
 
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
@@ -175,6 +176,24 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect($('#excelEntry').textContent).toMatch(instance.customExcelText);
             expect($('#csvEntry').textContent).toMatch(instance.customCSVText);
         });
+
+        it('should initialize input property columnsAreaMaxHeight properly', fakeAsync(() => {
+            expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('100%');
+
+            instance.pinningAction.columnsAreaMaxHeight = '10px';
+            fixture.detectChanges();
+
+            expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('10px');
+
+            const pinningButton = GridFunctions.getColumnPinningButton(fixture);
+            pinningButton.click();
+            tick();
+            fixture.detectChanges()
+            const element = fixture.debugElement.query(By.css('.igx-column-actions__columns'));
+            expect(element.attributes.style).toBe('max-height: 10px;');
+
+            expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('10px');
+        }));
 
         it('Setting overlaySettings for each toolbar columns action', () => {
             const defaultSettings = instance.pinningAction.overlaySettings;
