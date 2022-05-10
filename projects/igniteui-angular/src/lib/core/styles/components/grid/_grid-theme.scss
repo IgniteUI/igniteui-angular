@@ -715,6 +715,8 @@
     }
 
     %grid-display {
+        --igx-tree-indent-size: #{rem(24px)};
+
         position: relative;
         display: grid;
         grid-template-rows: auto auto auto 1fr auto auto;
@@ -732,6 +734,14 @@
         %cbx-display {
             min-width: $cbx-size;
         }
+    }
+
+    %grid-display-cosy {
+        --igx-tree-indent-size: #{rem(16px)};
+    }
+
+    %grid-display-compact {
+        --igx-tree-indent-size: #{rem(12px)};
     }
 
     %grid-caption {
@@ -2436,20 +2446,6 @@
             %igx-grid__grouping-indicator {
                 padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'compact')};
             }
-        }
-    }
-
-    @for $i from 1 through 25 {
-        %igx-grid__tree-cell--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'comfortable')};
-        }
-
-        %igx-grid__tree-cell-cosy--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'cosy')};
-        }
-
-        %igx-grid__tree-cell-compact--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'compact')};
         }
     }
 
