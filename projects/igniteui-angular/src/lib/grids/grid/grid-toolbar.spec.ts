@@ -4,8 +4,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { GridFunctions } from "../../test-utils/grid-functions.spec";
-import { By } from "@angular/platform-browser";
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { By } from '@angular/platform-browser';
 
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
@@ -188,7 +188,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             const pinningButton = GridFunctions.getColumnPinningButton(fixture);
             pinningButton.click();
             tick();
-            fixture.detectChanges()
+            fixture.detectChanges();
             const element = fixture.debugElement.query(By.css('.igx-column-actions__columns'));
             expect(element.attributes.style).toBe('max-height: 10px;');
 
