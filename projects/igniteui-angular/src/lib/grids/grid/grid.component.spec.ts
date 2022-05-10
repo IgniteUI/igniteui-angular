@@ -2237,7 +2237,9 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
             await wait(100);
-            grid.cdr.detectChanges();
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             expect(headers.length).toBe(4);
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
@@ -2256,7 +2258,9 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
             await wait(100);
-            grid.cdr.detectChanges();
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const paging = fix.debugElement.query(By.css('igx-page-nav'));
@@ -2299,7 +2303,9 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
             await wait(100);
-            grid.cdr.detectChanges();
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const expectedHeight = grid.nativeElement.offsetHeight
                 - grid.theadRow.nativeElement.offsetHeight
