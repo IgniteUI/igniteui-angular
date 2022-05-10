@@ -341,7 +341,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @internal
      */
     @HostListener('change', ['$event'])
-    public _changed(){
+    public _changed(event: Event){
         if(event instanceof Event){
           event.preventDefault();
         }
