@@ -9,7 +9,7 @@ All notable changes for each version of this project will be documented in this 
 - Added new CSS property `--igx-icon-size` to allow changing the icon when its original size is modified by other components.
 ```SCSS
     // will have effect only on icons that are children of .igx-button
-    .igx-button {
+    [igxButton] {
         --igx-icon-size: 10px;
     }
 ```
