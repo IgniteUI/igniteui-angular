@@ -980,6 +980,8 @@ export class IgxTimePickerComponent implements
 
             if (this._ngControl) {
                 this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+                this._inputGroup.isRequired = this.required;
+                this._cdr.detectChanges();
             }
         }
     }
@@ -1825,7 +1827,6 @@ export class IgxTimePickerComponent implements
             }
 
             const formattedMinute = minute < 10 && format.indexOf('mm') !== -1 ? '0' + minute : `${minute}`;
-
             const formattedSeconds = seconds < 10 && format.indexOf('ss') !== -1 ? '0' + seconds : `${seconds}`;
 
             return format.replace('hh', formattedHour).replace('h', formattedHour)
