@@ -3481,7 +3481,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         )
             .subscribe(() => {
                 this.zone.run(() => {
-                    this.notifyChanges(true);
+                    // do not trigger reflow if element is detached.
+                    if (this.document.contains(this.nativeElement)) {
+                        this.notifyChanges(true);
+                    }
                 });
             });
 
