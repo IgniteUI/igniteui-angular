@@ -1539,8 +1539,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this.advancedFilteringExpressionsTreeChange.emit(this._advancedFilteringExpressionsTree);
 
-        if (this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree) &&
-            !this.advancedFilteringExpressionsTree) {
+        if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
+            this.filteringService.isFilteringExpressionsTreeEmpty(this.advancedFilteringExpressionsTree)) {
             this.filteredData = null;
         }
 
