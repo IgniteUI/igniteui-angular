@@ -928,7 +928,7 @@
             background: var-get($icon-theme, 'focus-background');
             border-color: var-get($icon-theme, 'focus-border-color');
 
-            @if $variant != 'material' {
+            @if $variant == 'fluent' {
                 &:hover {
                     color: var-get($icon-theme, 'hover-foreground');
                     background: var-get($icon-theme, 'hover-background');
