@@ -913,6 +913,11 @@
         border-radius: border-radius(var-get($icon-theme, 'border-radius'));
         border-color: var-get($icon-theme, 'border-color');
 
+        @if $variant == 'indigo-design' {
+            border-width: rem(3px);
+        }
+
+
         &:hover {
             @if $variant != 'fluent' {
                 transition: $button-transition;
