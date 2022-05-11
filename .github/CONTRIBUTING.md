@@ -43,7 +43,8 @@ Example status workflows:
 
 ### Versioning
 
-When creating an issue assign a `version:` label. Add `version:` labels for each version for which the issue is applicable.
+When creating an issue assign a `version:` label. Add `version:` labels for each version for which the issue is applicable.  
+When creating a PR assign a `version:` label for the corresponding version branch the PR is targeting.
 
 ### Severity
 
@@ -74,12 +75,18 @@ Example status workflows:
 
 `status: awaiting-test` => `status: in-test` => `status: not-fixed` => `status: in-development` => `status: awaiting-test`
 
+## Accessibility (a11y)
+Accessibility is an integral part of any UI component. We as a team are committed to deliver fully-accessible UI components. Every developer should take into account the following standards and should implement and test for compliance with them:  
+ * Section 508 compliance.  
+ * WCAG (preferably AAA compliance, AA compliance where AAA is unachivable because of the type of UI component)  
+ * WAI-ARIA  
+ * Full keyboard navigation  
 
 ## Localization - applicable to issues and pull requests
 1. `status: pending-localization` this status tells that there are changes in the localization strings that need to be translated. When you make such changes, put this status badge without removing the other applicable ones and assign a person to do the translations.
 2. `status: localized` this status is for issues that were with a pending translation status and have already been localized. Place this status label once these translation changes have been included in the current pull request, or the changes are already pulled with a different pull request.
 
-## Localization - applicable to components' string resources
+## Localization (i18n) - applicable to components' string resources
 There are several ways to localize components' string resources:
 
 1. Using custom resource strings:
@@ -148,8 +155,9 @@ In order to contribute code to a new feature, you need to follow these guideline
 2. Follow a test-driven development process (TDD) to ensure full code coverage.
 3. Document all newly added public methods, inputs, outputs and properties.
 4. Make sure all static code analysis and tests pass before opening a pull request.
-5. Reference the issue you've been working on in your commit message and pull request title/description.
-6. Don't forget to make the necessary status updates, as described in the workflow section.
+5. Test the component with screen reader and browser tools for accessibility compliance.
+6. Reference the issue you've been working on in your commit message and pull request title/description.
+7. Don't forget to make the necessary status updates, as described in the workflow section.
 
 # Breaking changes and migrations
 If the bug fix or new feature development requires changes to released public API or behavior in a way that'll njo longer be compatible with an existing user code base:
