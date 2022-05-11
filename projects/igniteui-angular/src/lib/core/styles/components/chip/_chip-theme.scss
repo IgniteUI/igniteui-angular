@@ -298,9 +298,6 @@
         compact: rem(16px)
     );
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     %igx-chip-area {
         display: flex;
         align-items: center;
@@ -321,6 +318,11 @@
         flex-shrink: 0;
         transition: $transition;
         transition-property: top, left;
+
+        [dir='rtl'] & {
+            transition-property: top right;
+        }
+
         touch-action: none;
 
         &:focus {
@@ -376,27 +378,27 @@
 
     %igx-chip-custom-icon {
         igx-icon {
-            width: map.get($chip-icon-size, 'comfortable');
-            height: map.get($chip-icon-size, 'comfortable');
-            font-size: map.get($chip-icon-size, 'comfortable');
+            width: var(--igx-icon-size, map.get($chip-icon-size, 'comfortable'));
+            height: var(--igx-icon-size, map.get($chip-icon-size, 'comfortable'));
+            font-size: var(--igx-icon-size, map.get($chip-icon-size, 'comfortable'));
             outline-style: none;
         }
     }
 
     %igx-chip-custom-icon--cosy {
         igx-icon {
-            width: map.get($chip-icon-size, 'cosy');
-            height: map.get($chip-icon-size, 'cosy');
-            font-size: map.get($chip-icon-size, 'cosy');
+            width: var(--igx-icon-size, map.get($chip-icon-size, 'cosy'));
+            height: var(--igx-icon-size, map.get($chip-icon-size, 'cosy'));
+            font-size: var(--igx-icon-size, map.get($chip-icon-size, 'cosy'));
             outline-style: none;
         }
     }
 
     %igx-chip-custom-icon--compact {
         igx-icon {
-            width: map.get($chip-icon-size, 'compact');
-            height: map.get($chip-icon-size, 'compact');
-            font-size: map.get($chip-icon-size, 'compact');
+            width: var(--igx-icon-size, map.get($chip-icon-size, 'compact'));
+            height: var(--igx-icon-size, map.get($chip-icon-size, 'compact'));
+            font-size: var(--igx-icon-size, map.get($chip-icon-size, 'compact'));
             outline-style: none;
         }
     }
@@ -413,19 +415,19 @@
         + igx-suffix,
         + [igxSuffix],
         + %igx-chip__remove {
-            margin-#{$left}: rem(4px);
+            margin-inline-start: rem(4px);
         }
     }
 
     %igx-chip__prefix {
         + igx-prefix,
         + [igxPrefix] {
-            margin-#{$left}: rem(4px);
+            margin-inline-start: rem(4px);
 
             igx-avatar {
                 max-height: 100%;
                 max-width: 100%;
-                margin-#{$left}: $chip-avatar-inset!important;
+                margin-inline-start: $chip-avatar-inset!important;
             }
         }
     }
@@ -450,7 +452,7 @@
 
     %igx-chip__remove {
         display: inline-flex;
-        margin-#{$right}: rem(4px);
+        margin-inline-end: rem(4px);
         color: var-get($theme, 'remove-icon-color', currentColor);
 
         &:empty {
@@ -489,7 +491,7 @@
 
         + igx-prefix,
         + [igxPrefix] {
-            margin-#{$left}: rem(4px);
+            margin-inline-start: rem(4px);
         }
     }
 
@@ -500,7 +502,7 @@
 
         + igx-prefix,
         + [igxPrefix] {
-            margin-#{$left}: 0;
+            margin-inline-start: 0;
         }
     }
 
