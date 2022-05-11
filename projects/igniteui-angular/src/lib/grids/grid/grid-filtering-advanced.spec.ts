@@ -2821,6 +2821,24 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.filteredData).toBe(null);
             expect(grid.rowList.length).toBe(8);
         }));
+
+        it('should correctly set filteredData if advancedFilteringExpressionsTree is empty', fakeAsync(() => {
+            // Verify filtering expressions tree binding state
+            expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands = [];
+
+            // Clear filter
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Verify filtering expressions tree binding state
+            expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+
+            // Verify no filtered data
+            expect(grid.filteredData).toBe(null);
+        }));
     });
 });
 
