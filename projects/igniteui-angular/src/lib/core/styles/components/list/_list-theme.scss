@@ -299,8 +299,9 @@
         display: flex;
         flex-flow: column nowrap;
         background: var-get($theme, 'background');
-        height: 100%;
-        overflow: hidden;
+        height: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
         z-index: 0;
         border-radius: border-radius(var-get($theme, 'border-radius'));
     }
