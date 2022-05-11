@@ -232,19 +232,19 @@ $material-fab-button: extend(
 
 /// @type {Map}
 /// @prop {Color} background [transparent] - The background color of the an icon button.
-/// @prop {Map} foreground [color: ('grays', 800)] - The icon color of an icon button.
+/// @prop {Map} foreground [color: ('grays', 900)] - The icon color of an icon button.
 /// @prop {Map} hover-background [color: ('grays', 100)] - The hover background color of an icon button.
-/// @prop {Map} hover-foreground [color: ('grays', 800)] - The hover icon color of an icon button.
-/// @prop {Map} focus-background [color: ('grays', 400] - The focus background color an icon button.
-/// @prop {Map} focus-foreground [color: ('grays', 800)] - The focus icon color of an icon button.
-/// @prop {Map} focus-visible-background [color: ('grays', 400] - The focus-visible background color an icon button.
-/// @prop {Map} focus-visible-foreground [color: ('grays', 800)] - The focus-visible icon color of an icon button.
-/// @prop {Map} active-background [color: ('grays', 400] - The active background color an icon button.
-/// @prop {Map} active-foreground [color: ('grays', 800)] - The active icon color of an icon button.
+/// @prop {Color} hover-foreground [transparent] - The hover icon color of an icon button.
+/// @prop {Map} focus-background [color: ('grays', 200] - The focus background color an icon button.
+/// @prop {Map} focus-foreground [color: ('grays', 900)] - The focus icon color of an icon button.
+/// @prop {Map} focus-visible-background [color: ('grays', 200] - The focus-visible background color an icon button.
+/// @prop {Map} focus-visible-foreground [color: ('grays', 900)] - The focus-visible icon color of an icon button.
+/// @prop {Map} active-background [color: ('grays', 200] - The active background color an icon button.
+/// @prop {Map} active-foreground [color: ('grays', 900)] - The active icon color of an icon button.
 /// @prop {Color} disabled-background [transparent] - The disabled background color an icon button.
-/// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} focus-elevation [6] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Map} focus-border-color [color: ('grays', 400)] - The focus border color of the button.
+/// @prop {Map} focus-visible-border-color [color: ('grays', 400)] - The focus-visible border color of the button.
+/// @prop {Map} active-border-color [color: ('grays', 400)] - The active border color of the button.
 /// @prop {Number} border-radius [20px] - The border radius used for the floating button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $material-base-button
@@ -258,44 +258,54 @@ $material-icon-button: extend(
         background: transparent,
 
         foreground: (
-            color: ('grays', 800)
+            color: ('grays', 900)
         ),
 
-        hover-background: (
-            color: ('grays', 100)
-        ),
+        hover-background: transparent,
 
         hover-foreground: (
-            color: ('grays', 800)
+            color: ('grays', 900)
         ),
 
         focus-background: (
-            color: ('grays', 400)
+            color: ('grays', 200)
         ),
 
         focus-foreground: (
-            color: ('grays', 800)
+            color: ('grays', 900)
         ),
 
         focus-visible-background: (
-            color: ('grays', 400)
+            color: ('grays', 200)
         ),
 
         focus-visible-foreground: (
-            color: ('grays', 800)
+            color: ('grays', 900)
         ),
 
         active-background: (
-            color: ('grays', 400)
+            color: ('grays', 200)
         ),
 
         active-foreground: (
-            color: ('grays', 800)
+            color: ('grays', 900)
         ),
 
         disabled-background: transparent,
 
-        border-radius: rem(20px)
+        active-border-color: (
+            color: ('grays', 400)
+        ),
+
+        focus-border-color: (
+            color: ('grays', 400)
+        ),
+
+        focus-visible-border-color: (
+            color: ('grays', 400)
+        ),
+
+        border-radius: rem(20px),
     )
 );
 

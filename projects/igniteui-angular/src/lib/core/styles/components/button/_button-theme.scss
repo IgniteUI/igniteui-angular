@@ -928,16 +928,18 @@
             background: var-get($icon-theme, 'focus-background');
             border-color: var-get($icon-theme, 'focus-border-color');
 
-            &:hover {
-                color: var-get($icon-theme, 'hover-foreground');
-                background: var-get($icon-theme, 'hover-background');
-                border-color: var-get($icon-theme, 'hover-border-color');
-            }
+            @if $variant != 'material' {
+                &:hover {
+                    color: var-get($icon-theme, 'hover-foreground');
+                    background: var-get($icon-theme, 'hover-background');
+                    border-color: var-get($icon-theme, 'hover-border-color');
+                }
 
-            &:active {
-                color: var-get($icon-theme, 'active-foreground');
-                background: var-get($icon-theme, 'active-background');
-                border-color: var-get($icon-theme, 'active-border-color');
+                &:active {
+                    color: var-get($icon-theme, 'active-foreground');
+                    background: var-get($icon-theme, 'active-background');
+                    border-color: var-get($icon-theme, 'active-border-color');
+                }
             }
         }
 
