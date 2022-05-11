@@ -1,0 +1,71 @@
+<section class="sample-content">
+    <article class="sample-column">
+        <h4 class="sample-title">Range slider weekdays</h4>
+        <igx-slider #slider1 [type]="sliderType"
+            [(lowerValue)]="weekdays.lower" [(upperValue)]="weekdays.upper"
+            [labels]="weekdayLabels">
+        </igx-slider>
+
+        <h4 class="sample-title">Range slider weekdays with label template</h4>
+        <igx-slider [type]="sliderType" [(lowerValue)]="weekdays.lower" [(upperValue)]="weekdays.upper"
+            [labels]="weekdayLabels">
+            <ng-template igxSliderThumbFrom let-value let-labels="labels">
+                <span>Start Day: {{ labels[value.lower] }}</span>
+            </ng-template>
+            <ng-template igxSliderThumbTo let-value let-labels="labels">
+                <span>End Day: {{ labels[value.upper] }}</span>
+            </ng-template>
+        </igx-slider>
+
+        <h4 class="sample-title">Range slider weekdays with [(ngModel)] doesn't work 2-way (expected)</h4>
+        <igx-slider [type]="sliderType" [(ngModel)]="weekdays" [showTicks]="true"
+            [labels]="weekdayLabels">
+            <ng-template igxSliderThumbFrom let-value let-labels="labels">
+                <span>Start Day: {{ labels[value.lower] }}</span>
+            </ng-template>
+            <ng-template igxSliderThumbTo let-value let-labels="labels">
+                <span>End Day: {{ labels[value.upper] }}</span>
+            </ng-template>
+        </igx-slider>
+
+        <h4 class="sample-title">Disabled Range slider</h4>
+        <igx-slider #slider [type]="'range'" [disabled]="true" [(lowerValue)]="rangeValues.lower" [(upperValue)]="rangeValues.upper" [minValue]="0" [maxValue]="100">
+        </igx-slider>
+
+        <h4 class="sample-title">Basic Range slider</h4>
+        <igx-slider #slider [type]="'range'" [(lowerValue)]="rangeValues.lower" [(upperValue)]="rangeValues.upper" [minValue]="0" [maxValue]="100">
+        </igx-slider>
+
+        <h4 class="sample-title">Lower value</h4>
+        <igx-slider #slider [(ngModel)]="rangeValues.lower" [upperBound]="rangeValues.upper">
+        </igx-slider>
+
+        <h4 class="sample-title">Upper value</h4>
+        <igx-slider #slider [(ngModel)]="rangeValues.upper" [lowerBound]="rangeValues.lower">
+        </igx-slider>
+
+        <igx-slider #slider type="range" [(ngModel)]="rangeValues" [lowerBound]="30" [upperBound]="40">
+        </igx-slider>
+    </article>
+
+    <article class="sample-column">
+        <h4>Range slider bounds</h4>
+        <igx-input-group>
+            <label igxLabel>week lower</label>
+            <input type="text" igxInput min="0" max="6" [(ngModel)]="weekdays.lower">
+        </igx-input-group>
+        <igx-input-group>
+            <label igxLabel>week upper</label>
+            <input type="text" igxInput min="0" max="6" [(ngModel)]="weekdays.upper">
+        </igx-input-group>
+
+        <igx-input-group>
+            <label igxLabel>0-100 values lower</label>
+            <input type="text" igxInput min="0" max="100" [(ngModel)]="rangeValues.lower">
+        </igx-input-group>
+        <igx-input-group>
+            <label igxLabel>0-100 values upper</label>
+            <input type="text" igxInput min="0" max="100" [(ngModel)]="rangeValues.upper">
+        </igx-input-group>
+    </article>
+</section>

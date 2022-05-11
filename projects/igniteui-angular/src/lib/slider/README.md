@@ -2,8 +2,10 @@
 
 ### The latest version of the SPEC could be found in the [Wiki](https://github.com/IgniteUI/igniteui-angular/wiki/igxSlider-Specification).
 
-The slider component allows users to select a value in certain range or select a range of values. 
-Based on its configuration it's a slider or range slider.  
+IgxSliderComponent is a much more powerful alternative to `<input type="range" />`.  
+The slider component allows users to select a single value from a range or select upper and lower values from range of values.  
+The slider is a form component and can be used in both template-driven and reactive forms. When using the slider with `[(ngModel)]` consider the fact that the `IgxSliderType.SLIDER` (single-value) slider supports it fully, but the `IgxSliderType.RANGE` (upper and lower value) slider supports it only to write to the `ngModel`. If you want to take advantage of two-way databinding with the `IgxSliderType.RANGE` slider, then use `[(upperValue)]` and `[(lowerValue)]` bindings.  
+Based on its configuration it's a slider (single value) or range (upper and lower value) slider.  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider)
 
 ## Usage
@@ -20,7 +22,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 ### Range slider
 
 ```html
-<igx-slider [type]="sliderType" [value]="{ lower: 5, upper: 50 }"
+<igx-slider [type]="sliderType" [lowerValue]="5" [upperValue]="50" 
             [minValue]="0" [maxValue]="100">
 </igx-slider>
 ```
@@ -52,8 +54,8 @@ import { IgxSliderComponent } from "../../../src/main";
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| lower | number | The lower value of the range slider |
-| upper | number | The upper value of the range slider |
+| lower | number | The lower value of the RANGE slider |
+| upper | number | The upper value of the RANGE slider |
 
 
 ##### Inputs
@@ -64,17 +66,20 @@ import { IgxSliderComponent } from "../../../src/main";
 | disabled | boolean | Disables or enables UI interaction. |
 | continuous | boolean | Marks slider as continuous. By default is considered that the slider is discrete. Discrete slider does not have ticks and does not shows bubble labels for values. |
 | lowerBound | number | The lower boundary of the slider value. If not set is the same as min value. |
+| upperBound | number | The lower boundary of the slider value. If not set is the same as max value. |
+| lowerValue | number | The lower value of a RANGE slider. |
+| upperValue | number | The upper value of a RANGE slider. |
 | maxValue | number | The maximal value for the slider. |
 | minValue | number | The minimal value for the slider. |
 | step | number | The incremental/decremental step of the value when dragging the thumb. The default step is 1, and step should be greater than 0. |
 | thumbLabelVisibilityDuration | number | The duration visibility of thumbs labels. The default value is 750 milliseconds. |
 | type | [IgxSliderType](#slidertype) | Sets the IgxSliderType, which is SLIDER or RANGE. |
-| upperBound | number | The lower boundary of the slider value. If not set is the same as max value. |
-| value | number\|[IRangeSliderValue](#irangeslidervalue) | The slider value. If the slider is of type SLIDER the argument is number. By default if no value is set the default value is same as lower upper bound. If the slider type is RANGE then the argument is object containing lower and upper properties for the values.  By default if no value is set the default value is for lower value it is the same as lower bound and if no value is set for the upper value it is the same as the upper bound.
+| value | number | [IRangeSliderValue](#irangeslidervalue) | The slider value. If the slider is of type SLIDER the argument is number. By default if no value is set the default value is same as lower upper bound. If the slider type is RANGE then the argument is object containing lower and upper properties for the values.  By default if no value is set the default value is for lower value it is the same as lower bound and if no value is set for the upper value it is the same as the upper bound.
 
 ##### Outputs
 
 | Name | Description |
 | :--- | :--- | 
 | valueChange  | This event is emitted when user has stopped interacting the thumb and value is changed.  |
-| valueChanged | This event is emitted at the end of every slide interaction.
+| upperValueChange | This event is emitted when `upperValue` changes in a RANGE slider. |
+| lowerValueChange | This event is emitted when `lowerValue` changes in a RANGE slider. |
