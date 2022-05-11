@@ -22,5 +22,4 @@ export class RangeSliderComponent {
     };
 
     constructor() { }
-
 }

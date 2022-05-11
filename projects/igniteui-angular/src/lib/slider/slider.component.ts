@@ -1213,19 +1213,18 @@ export class IgxSliderComponent implements
     }
 
     private validateInitialValue(value: IRangeSliderValue) {
-        if (value.lower < this.lowerBound && value.upper < this.lowerBound) {
-            value.upper = this.lowerBound;
+        if (value.upper < value.lower) {
+            const temp = value.upper;
+            value.upper = value.lower;
+            value.lower = temp;
+        }
+
+        if (value.lower < this.lowerBound) {
             value.lower = this.lowerBound;
         }
 
-        if (value.lower > this.upperBound && value.upper > this.upperBound) {
+        if (value.upper > this.upperBound) {
             value.upper = this.upperBound;
-            value.lower = this.upperBound;
-        }
-
-        if (value.upper < value.lower) {
-            value.upper = this.upperValue;
-            value.lower = this.lowerValue;
         }
 
         return value;

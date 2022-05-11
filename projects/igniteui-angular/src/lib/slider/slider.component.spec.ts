@@ -45,7 +45,8 @@ describe('IgxSlider', () => {
                 SliderTicksComponent,
                 SliderRtlComponent,
                 SliderTemplateFormComponent,
-                SliderReactiveFormComponent
+                SliderReactiveFormComponent,
+                SliderWithValueAdjustmentComponent
             ],
             imports: [
                 IgxSliderModule, NoopAnimationsModule, FormsModule, ReactiveFormsModule, HammerModule
@@ -231,8 +232,8 @@ describe('IgxSlider', () => {
             };
 
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(30);
+            expect(slider.value.lower).toBe(15);
+            expect(slider.value.upper).toBe(20);
         });
 
         it('should position correctly lower and upper value based on the step', () => {
@@ -297,8 +298,8 @@ describe('IgxSlider', () => {
             };
 
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(30);
+            expect(slider.value.lower).toBe(30);
+            expect(slider.value.upper).toBe(35);
         });
 
         it('should set upperBound to be same as maxValue if exceeds lowerBound', () => {
@@ -1390,6 +1391,20 @@ describe('IgxSlider', () => {
             expect(slider.upperBound).toEqual(expectedUpperBound);
         });
 
+        it('Should swap value upper and lower and should adjust according to bounds', () => {
+            const fix = TestBed.createComponent(SliderWithValueAdjustmentComponent);
+            fix.detectChanges();
+
+            const slider = fix.componentInstance.slider;
+            const value = slider.value as IRangeSliderValue;
+
+            // Value is initially { lower: 50, upper: 20 } with slider bounds 30 to 40. Value should be swaped and adjusted accordingly
+            expect(value.lower).toEqual(30);
+            expect(value.upper).toEqual(40);
+            expect(slider.lowerValue).toEqual(30);
+            expect(slider.upperValue).toEqual(40);
+        });
+
         it('Should emit dragFinished only when stop interacting with the slider', () => {
             const fix = TestBed.createComponent(SliderTestComponent);
             fix.detectChanges();
@@ -1927,4 +1942,18 @@ export class SliderReactiveFormComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
 
     public formControl = new FormControl(10);
+}
+
+@Component({
+    template: `
+        <igx-slider type="range" [value]="value" [lowerBound]="30" [upperBound]="40"></igx-slider>
+    `
+})
+export class SliderWithValueAdjustmentComponent {
+    @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
+
+    public value = {
+        lower: 50,
+        upper: 20
+    };
 }
