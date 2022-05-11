@@ -10,6 +10,28 @@
 
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 
+### Contributing
+There are many ways in which you can [participate](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#overview) in this project, for example:
+
+- [Submit bugs and feature requests](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github), and help us verify as they are checked in.
+- Review [source code changes](https://github.com/IgniteUI/igniteui-angular/pulls)
+- Review [the documentation](https://github.com/IgniteUI/igniteui-docfx) and make pull requests for anything from typos to additional and new content
+- If you are interested in fixing issues and contributing directly to the code base, please see the document [How to Contribute](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug), which covers the following:
+
+  - [How to build and run from source](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug)
+  - The [development workflow](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#workflow), including debugging and running tests
+  - [Coding guidelines](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
+  - [Submitting pull requests](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#commit-message-conventions)
+  - [New feature development](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#new-feature-development)
+  - [Accessibility and Localization](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#accessibility-a11y)
+  - [Testing a PR](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#testing-a-pr)
+
+### Feedback
+ - Ask a question by starting [a discussion](https://github.com/IgniteUI/igniteui-angular/discussions) or submitting [an issue](https://github.com/IgniteUI/igniteui-angular/issues/new/choose)
+ - Request a [new feature](https://github.com/IgniteUI/igniteui-angular/issues/new?assignees=&labels=%3Atoolbox%3A+feature-request&template=feature_request.md&title=)
+ - Upvote [popular feature requests](https://github.com/IgniteUI/igniteui-angular/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Atoolbox%3A+feature-request%22)
+ - [File an issue](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github)
+ - Reach out to us [through Discord](https://discord.gg/sBwHs5cJ)
 
 ### Angular Data Grid Overview
 
