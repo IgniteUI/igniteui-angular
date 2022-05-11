@@ -1,6 +1,6 @@
 import { Component, ViewChild, DebugElement, EventEmitter, QueryList } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { FormControl, FormsModule, NgForm } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTimePickerComponent, IgxTimePickerModule, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
@@ -23,6 +23,9 @@ import { HammerGesturesManager } from '../core/touch';
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_INPUTGROUP_DISABLED = 'igx-input-group--disabled';
+const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid ';
+const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUT = '.igx-input-group__input';
 const CSS_CLASS_DROPDOWN = '.igx-time-picker--dropdown';
 const CSS_CLASS_HOURLIST = 'igx-time-picker__hourList';
@@ -44,6 +47,7 @@ describe('IgxTimePicker', () => {
         let elementRef;
         let mockNgControl;
         let mockInjector;
+        let mockCdr;
         let mockDateTimeEditorDirective;
         let mockInputGroup: Partial<IgxInputGroupComponent>;
         let mockInputDirective;
@@ -184,7 +188,9 @@ describe('IgxTimePicker', () => {
             mockInjector = jasmine.createSpyObj('Injector', {
                 get: mockNgControl
             });
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
+
+            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             (timePicker as any)._inputGroup = mockInputGroup;
             (timePicker as any).inputDirective = mockInputDirective;
@@ -285,7 +291,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should open/close the dropdown with toggle() method', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', ['open', 'close'], { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -300,7 +306,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should reset value and emit valueChange with clear() method', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -327,7 +333,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should not emit valueChange when value is \'00:00:00\' and is cleared', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -343,7 +349,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should not emit valueChange when value is null and is cleared', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -356,7 +362,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should select time and trigger valueChange event with select() method', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
 
             const date = new Date(2020, 12, 12, 10, 30, 30);
@@ -377,7 +383,7 @@ describe('IgxTimePicker', () => {
             const date = new Date(2020, 12, 12, 10, 30, 30);
             const updatedDate = new Date(2020, 12, 12, 11, 30, 30);
 
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null, mockCdr);
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', ['close'], { collapsed: true });
             timePicker['dateTimeEditor'] = mockDateTimeEditorDirective;
             timePicker['inputDirective'] = mockInputDirective;
@@ -409,7 +415,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should validate correctly minValue and maxValue', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null, mockCdr);
             timePicker['dateTimeEditor'] = mockDateTimeEditorDirective;
             timePicker['inputDirective'] = mockInputDirective;
             timePicker.ngOnInit();
@@ -1633,14 +1639,16 @@ describe('IgxTimePicker', () => {
         });
 
         describe('FormControl integration', () => {
-            let fixture: ComponentFixture<IgxTimePickerInFormComponent>;
+            let fixture: ComponentFixture<IgxTimePickerInFormComponent |
+                IgxTimePickerReactiveFormComponent>;
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
-                        IgxTimePickerInFormComponent
+                        IgxTimePickerInFormComponent,
+                        IgxTimePickerReactiveFormComponent
                     ],
-                    imports: [IgxTimePickerModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+                    imports: [IgxTimePickerModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule, ReactiveFormsModule]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -1656,14 +1664,61 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 tpInput.blur();
-                tick();
+                tick(50);
                 fixture.detectChanges();
                 expect((timePicker as any).inputDirective.valid).toEqual(IgxInputState.INVALID);
 
-                fixture.componentInstance.form.resetForm();
+                (fixture.componentInstance as IgxTimePickerInFormComponent).form.resetForm();
                 tick();
                 expect((timePicker as any).inputDirective.valid).toEqual(IgxInputState.INITIAL);
             }));
+
+            it('should apply asterisk properly when required validator is set dynamically', () => {
+                fixture = TestBed.createComponent(IgxTimePickerReactiveFormComponent);
+                fixture.detectChanges();
+                timePicker = fixture.componentInstance.timePicker;
+
+                let inputGroupRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+                let inputGroupInvalidClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
+                let asterisk = window.
+                    getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').
+                    content;
+                expect(asterisk).toBe('"*"');
+                expect(inputGroupRequiredClass).toBeDefined();
+                expect(inputGroupRequiredClass).not.toBeNull();
+
+                timePicker.clear();
+                fixture.detectChanges();
+
+                inputGroupInvalidClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
+                expect(inputGroupInvalidClass).not.toBeNull();
+                expect(inputGroupInvalidClass).not.toBeUndefined();
+
+                inputGroupRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+                expect(inputGroupRequiredClass).not.toBeNull();
+                expect(inputGroupRequiredClass).not.toBeUndefined();
+
+                (fixture.componentInstance as IgxTimePickerReactiveFormComponent).removeValidators();
+                fixture.detectChanges();
+
+                inputGroupRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+                asterisk = window.
+                    getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').
+                    content;
+                expect(inputGroupRequiredClass).toBeNull();
+                expect(asterisk).toBe('none');
+
+                (fixture.componentInstance as IgxTimePickerReactiveFormComponent).addValidators();
+                fixture.detectChanges();
+
+                inputGroupRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+                asterisk = window.
+                    getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').
+                    content;
+                expect(inputGroupRequiredClass).toBeDefined();
+                expect(inputGroupRequiredClass).not.toBeNull();
+                expect(asterisk).toBe('"*"');
+            });
         });
     });
 });
@@ -1720,4 +1775,36 @@ export class IgxTimePickerInFormComponent {
 
     public minValue = new Date(2010, 3, 3, 13, 0, 0);
     public date: Date = new Date(2010, 3, 3, 12, 0, 0);;
+}
+
+@Component({
+    template: `
+   <form [formGroup]="form">
+    <div class="time-picker-wrapper">
+        <igx-time-picker formControlName="time" [value]="time">
+            <label igxLabel>Time</label>
+        </igx-time-picker>
+    </div>
+</form>
+    `
+})
+export class IgxTimePickerReactiveFormComponent {
+    @ViewChild(IgxTimePickerComponent)
+    public timePicker: IgxTimePickerComponent;
+
+    public time: Date = new Date(2012, 5, 3);
+
+    public form: FormGroup = new FormGroup({
+        time: new FormControl(null, Validators.required)
+    });
+
+    public removeValidators() {
+        this.form.get('time').clearValidators();
+        this.form.get('time').updateValueAndValidity();
+    }
+
+    public addValidators() {
+        this.form.get('time').setValidators(Validators.required);
+        this.form.get('time').updateValueAndValidity();
+    }
 }
