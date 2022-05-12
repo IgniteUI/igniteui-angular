@@ -1208,7 +1208,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
 
         // Verify no filtered data
         expect(grid.filteredData).toBe(null);
-    })
+    });
 });
 
 const verifyExpressionUI = (expressionUI: ExpressionUI, expression: IFilteringExpression,
