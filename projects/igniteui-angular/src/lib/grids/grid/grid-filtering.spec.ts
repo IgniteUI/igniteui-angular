@@ -1200,9 +1200,6 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
         grid.advancedFilteringExpressionsTree = tree;
         fix.detectChanges();
 
-        // Verify filtering expressions tree binding state
-        expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
-
         // Verify no filtered data
         expect(grid.filteredData).toBe(null);
     });
