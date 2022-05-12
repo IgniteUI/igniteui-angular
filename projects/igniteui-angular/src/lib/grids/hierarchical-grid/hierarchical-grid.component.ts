@@ -822,12 +822,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     relatedGrid.updateOnRender = false;
                 }
             });
-            const childGrids = this.getChildGrids(true);
-            childGrids.forEach((grid: IgxHierarchicalGridComponent) => {
-                if (grid.isPercentWidth) {
-                    grid.notifyChanges(true);
-                }
-            });
         }
     }
 
@@ -860,6 +854,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             const keys = layoutsList.map((item) => item.key);
             return keys.indexOf(field) === -1;
         });
+    }
+
+    protected resizeNotifyHandler() {
+        // do not trigger reflow if element is detached or if it is child grid.
+        if (this.document.contains(this.nativeElement) && !this.parent) {
+            this.notifyChanges(true);
+        }
     }
 
     /**
