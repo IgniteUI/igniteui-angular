@@ -1195,6 +1195,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     it('should correctly set filteredData if advancedFilteringExpressionsTree is empty', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.And);
         tree.filteringOperands = [];
+        grid.filteringExpressionsTree.filteringOperands = [];
 
         // Clear filter
         grid.advancedFilteringExpressionsTree = tree;
