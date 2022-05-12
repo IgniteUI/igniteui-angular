@@ -11,7 +11,9 @@ import {
     FilteringExpressionsTree,
     FilteringLogic,
     IgxStringFilteringOperand,
-    PivotDimensionType
+    PivotDimensionType,
+    IPivotGridRecord,
+    IPivotGridColumn
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -128,11 +130,11 @@ export class PivotGridSampleComponent {
                 },
                 enabled: true,
                 styles: {
-                    upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
-                    downFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 300
+                    upFont: (rowData: IPivotGridRecord, columnData: IPivotGridColumn): boolean => rowData.aggregationValues.get(columnData.field) > 300,
+                    downFont: (rowData: IPivotGridRecord, columnData: IPivotGridColumn): boolean => rowData.aggregationValues.get(columnData.field) <= 300
                 },
                 // dataType: 'currency',
-                formatter: (value) => value ? value + '$' : undefined
+                formatter: (value, rowData: IPivotGridRecord, columnData: IPivotGridColumn) => { return value ? value + '$' : undefined; }
             },
             {
                 member: 'AmountOfSale',
