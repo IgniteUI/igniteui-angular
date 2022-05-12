@@ -3014,7 +3014,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set summariesHeight(val: number) {
         this._summariesHeight = val;
     }
-     
 
     private _columnPinningTitle: string;
     private _columnHidingTitle: string;
