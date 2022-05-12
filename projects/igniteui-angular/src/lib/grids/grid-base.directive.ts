@@ -2807,10 +2807,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public tfootHeight: number;
-    /**
-     * @hidden @internal
-     */
-    public summariesHeight: number;
 
     /**
      * @hidden @internal
@@ -3005,6 +3001,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.verticalScrollContainer.getScrollNativeSize();
     }
 
+    /**
+     * @hidden @internal
+     */
+    public get summariesHeight(): number {
+        if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
+            return this._summariesHeight;
+        }
+        return 0;
+    }
+
+    public set summariesHeight(val: number) {
+        this._summariesHeight = val;
+    }
+     
+
     private _columnPinningTitle: string;
     private _columnHidingTitle: string;
 
@@ -3019,6 +3030,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
+
+    private _summariesHeight: number;
 
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     private _cdrRequests = false;
