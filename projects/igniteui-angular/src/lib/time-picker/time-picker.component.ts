@@ -17,6 +17,7 @@ import {
     AfterViewInit,
     Injector,
     PipeTransform,
+    ChangeDetectorRef,
     LOCALE_ID, Optional, ContentChildren, QueryList, HostListener
 } from '@angular/core';
 import {
@@ -609,7 +610,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         private _injector: Injector,
-        private platform: PlatformUtil) {
+        private platform: PlatformUtil,
+        private cdr: ChangeDetectorRef) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
     }
 
@@ -738,6 +740,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            this._inputGroup.isRequired = this.required;
+            this.cdr.detectChanges();
         }
     }
 
