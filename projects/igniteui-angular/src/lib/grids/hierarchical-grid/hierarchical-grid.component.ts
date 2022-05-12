@@ -822,6 +822,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     relatedGrid.updateOnRender = false;
                 }
             });
+            const childGrids = this.getChildGrids(true);
+            childGrids.forEach((grid: IgxHierarchicalGridComponent) => {
+                if (grid.isPercentWidth) {
+                    grid.notifyChanges(true);
+                }
+            }); 
         }
     }
 
