@@ -130,10 +130,10 @@
     @include scale-in-center();
     @include scale-out-center();
 
-    $carousel-arrow-margin: 0 16px;
-    $carousel-indicators-margin: 16px 0;
+    $carousel-arrow-margin: 0 spacing(16px);
+    $carousel-indicators-margin: spacing(16px) 0;
     $carousel-indicators-padding: 0;
-    $carousel-indicator-margin: 0 5px;
+    $carousel-indicator-margin: 0 spacing(5px);
     $indicator-border-style: 2px solid;
 
     $variant: map.get($theme, variant);

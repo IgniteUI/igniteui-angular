@@ -158,13 +158,13 @@
     %igx-splitter-handle--horizontal {
         width: 25%;
         height: var-get($theme, 'size');
-        margin: 0 rem(48px);
+        margin: 0 spacing(48px);
     }
 
     %igx-splitter-handle--vertical {
         width: var-get($theme, 'size');
         height: 25%;
-        margin: rem(48px) 0;
+        margin: spacing(48px) 0;
     }
 
     %igx-splitter-hitbox {

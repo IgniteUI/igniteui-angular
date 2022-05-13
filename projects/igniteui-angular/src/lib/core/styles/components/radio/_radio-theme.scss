@@ -89,7 +89,7 @@
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $label-margin: em(8px);
+    $label-margin: spacing(8px);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';

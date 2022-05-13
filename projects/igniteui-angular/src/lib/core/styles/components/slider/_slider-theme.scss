@@ -153,7 +153,7 @@
     $slider-label-width: 36px;
     $slider-label-height: $slider-label-width;
     $slider-label-radius: math.div($slider-label-width, 2);
-    $slider-label-padding: 0 rem(2px);
+    $slider-label-padding: 0 spacing(2px);
 
     $switch-display: map.get((
         material: block,
@@ -268,11 +268,11 @@
         position: relative;
 
         &:first-of-type {
-            margin-inline-start: rem(-1px);
+            margin-inline-start: spacing(-1px);
         }
 
         &:last-of-type {
-            margin-inline-start: rem(-1px);
+            margin-inline-start: spacing(-1px);
         }
     }
 
@@ -421,11 +421,11 @@
         height: $slider-thumb-height;
         outline-style: none;
         top: -#{rem($slider-thumb-radius)};
-        margin-left: -#{rem($slider-thumb-radius)};
+        margin-left: #{spacing(-$slider-thumb-radius)};
 
         [dir='rtl'] & {
             margin: initial;
-            margin-right: -#{rem($slider-thumb-radius)};
+            margin-right: #{spacing(-$slider-thumb-radius)};
         }
 
         &:focus div::after {
@@ -501,7 +501,7 @@
             position: absolute;
             top: 0;
             left: 50%;
-            margin-left: -#{$slider-label-radius};
+            margin-left: #{spacing(-$slider-label-radius)};
             width: rem($slider-label-width);
             height: $slider-label-height;
             border-radius: 0 $slider-label-radius $slider-label-radius;
@@ -525,7 +525,7 @@
     %igx-slider-thumb__dot {
         position: relative;
         inset-inline-start: 0;
-        padding: rem(20px);
+        padding: spacing(20px);
         pointer-events: none;
 
         &:hover::after {

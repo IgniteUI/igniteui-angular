@@ -120,7 +120,7 @@ describe('IgxTreeGrid', () => {
             tick();
 
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(20);
+            expect(rows.length).toBe(treeGrid.rowList.length);
         }));
 
         it('shows a new group chip when adding a grouping expression', fakeAsync(() => {

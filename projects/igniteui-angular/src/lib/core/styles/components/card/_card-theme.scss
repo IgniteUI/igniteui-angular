@@ -124,12 +124,12 @@
     $variant: map.get($theme, 'variant');
     $not-material-theme: $variant != 'material';
 
-    $card-heading-padding: rem(16px);
-    $card-heading-compact-padding: rem(16px, 16px);
-    $card-content-padding: rem(14px);
-    $card-actions-padding: rem(8px);
+    $card-heading-padding: spacing(16px);
+    $card-heading-compact-padding: spacing(16px, 'compact');
+    $card-content-padding: spacing(14px);
+    $card-actions-padding: spacing(8px);
 
-    $card-tgroup-margin: 0 em(16px);
+    $card-tgroup-margin: 0 spacing(16px);
 
     $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1);
 
@@ -192,7 +192,7 @@
             justify-content: center;
             align-self: unset;
             margin-inline-end: 0;
-            margin-bottom: rem(16px);
+            margin-bottom: spacing(16px);
         }
     }
 
@@ -202,7 +202,7 @@
 
     %igx-card-header-thumbnail {
         align-self: flex-start;
-        margin-inline-end: rem(16px);
+        margin-inline-end: spacing(16px);
 
         &:empty {
             display: none;
@@ -264,7 +264,7 @@
         padding: $card-actions-padding;
 
         [igxButton] ~ [igxButton] {
-            margin-inline-start: rem(8px);
+            margin-inline-start: spacing(8px);
         }
     }
 
@@ -314,7 +314,7 @@
 
         [igxButton] ~ [igxButton] {
             margin-inline-start: 0;
-            margin-top: rem(8px);
+            margin-top: spacing(8px);
         }
     }
 
@@ -348,7 +348,7 @@
         flex-flow: row nowrap;
 
         [igxButton] ~ [igxButton] {
-            margin-inline-start: 8px;
+            margin-inline-start: spacing(8px);
         }
     }
 

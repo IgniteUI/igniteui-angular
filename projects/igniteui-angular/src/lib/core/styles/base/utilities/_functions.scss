@@ -969,7 +969,7 @@ $p-test: palette(#fff, #000);
     $ratio: 1;
 
     @if math.compatible($value, $space) {
-        $ratio: math.round(math.div($value, $space));
+        $ratio: math.div($value, $space);
     } @else {
         @error 'Spacing must be specified in pixel values.';
     }
