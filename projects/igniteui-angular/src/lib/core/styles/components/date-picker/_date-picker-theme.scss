@@ -23,6 +23,8 @@
     $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {
+        // width: 100%; Fix bug when the picker is inside flex column;
+        width: 100%;
         box-shadow: elevation($elevation: 24);
         border-radius: border-radius(var-get($theme, 'border-radius'));
         background: var-get($theme, 'content-background');
