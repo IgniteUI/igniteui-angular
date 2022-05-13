@@ -60,7 +60,7 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
-    styles: [':host { display: block; }']
+    styles: [':host { display: block; width: 100% }']
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
     OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
