@@ -1747,25 +1747,23 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         const treeGrid = fix.componentInstance.treeGrid;
         setupGridScrollDetection(fix, treeGrid);
         fix.detectChanges();
-        await wait(16);
-
+        await wait(30);
+        fix.detectChanges();
         (treeGrid as any).scrollTo(23, 0, 0);
         fix.detectChanges();
-        await wait(16);
+        await wait(30);
         fix.detectChanges();
 
         let row = treeGrid.getRowByKey(15);
         row.expanded = false;
         fix.detectChanges();
-        await wait(16);
+        await wait(30);
         fix.detectChanges();
 
         row = treeGrid.getRowByKey(15);
         row.expanded = true;
         fix.detectChanges();
         await wait(30);
-        fix.detectChanges();
-        await wait(16);
         fix.detectChanges();
 
         expect(treeGrid.dataRowList.length).toEqual(10);
