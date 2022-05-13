@@ -818,6 +818,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this._virtHeight = hSum;
                 if (!this.scrollComponent.destroyed) {
                     this.scrollComponent.cdr.detectChanges();
+                    if (!this.isScrollable()) {
+                        this.scrollbarVisibilityChanged.emit();
+                    }
                 }
                 if (scrToBottom && !this._isAtBottomIndex) {
                     const containerSize = parseInt(this.igxForContainerSize, 10);
