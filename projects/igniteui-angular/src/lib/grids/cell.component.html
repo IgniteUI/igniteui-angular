@@ -34,7 +34,7 @@
         [metadata]="searchMetadata"
     >{{
             formatter
-                ? (value | columnFormatter:formatter:rowData)
+                ? (value | columnFormatter:formatter:rowData:columnData)
                 : column.dataType === "number"
                 ? (value | number:column.pipeArgs.digitsInfo:grid.locale)
                 : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime')
