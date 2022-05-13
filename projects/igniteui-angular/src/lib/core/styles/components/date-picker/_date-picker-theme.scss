@@ -22,7 +22,7 @@
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
-    // This targets only the class .igx-date-picker not the selector igx-date-picker
+    // This targets only the class .igx-date-picker not the tag selector igx-date-picker
     %date-picker {
         box-shadow: elevation($elevation: 24);
         border-radius: border-radius(var-get($theme, 'border-radius'));
