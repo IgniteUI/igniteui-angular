@@ -16,7 +16,7 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 --- | --- | --- | --- | --- |:---:|
 Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 11* |
 
-\* *IE 11 is only supported in Ignite UI for Angular <= 13.0.0*
+\* *IE 11 is only supported in Ignite UI for Angular < 13.0.0*
 
 ## Overview
 
