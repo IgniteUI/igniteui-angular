@@ -415,14 +415,14 @@
         + igx-suffix,
         + [igxSuffix],
         + %igx-chip__remove {
-            margin-inline-start: spacing(4px);
+            margin-inline-start: spacing(4px, 'cosy');
         }
     }
 
     %igx-chip__prefix {
         + igx-prefix,
         + [igxPrefix] {
-            margin-inline-start: spacing(4px);
+            margin-inline-start: spacing(4px, 'cosy');
 
             igx-avatar {
                 max-height: 100%;
