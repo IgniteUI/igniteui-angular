@@ -1187,10 +1187,14 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     };
 
     protected manageRequiredAsterisk(): void {
-        if (this.ngControl && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            this.inputGroup.isRequired = error && error.required;
+        if (this.ngControl) {
+            if (this.ngControl.control.validator) {
+                // Run the validation with empty object to check if required is enabled.
+                const error = this.ngControl.control.validator({} as AbstractControl);
+                this.inputGroup.isRequired = error && error.required;
+            } else {
+                this.inputGroup.isRequired = false;
+            }
         }
     }
 
