@@ -1763,6 +1763,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         row = treeGrid.getRowByKey(15);
         row.expanded = true;
         fix.detectChanges();
+        await wait(30);
+        fix.detectChanges();
         await wait(16);
         fix.detectChanges();
 
