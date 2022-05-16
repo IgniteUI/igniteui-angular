@@ -2835,7 +2835,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Verify filtering expressions tree binding state
-            expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+            expect(grid.advancedFilteringExpressionsTree).toBe(tree);
 
             // Verify no filtered data
             expect(grid.filteredData).toBe(null);
