@@ -192,7 +192,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
      */
     public get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number {
         dataCollection = dataCollection || this.grid.data;
-        return this.grid.primaryKey ? dataCollection.findIndex(rec => rec.data[this.grid.primaryKey] === pk) : -1;
+        return this.grid.primaryKey ? dataCollection.findIndex(rec => rec[this.grid.primaryKey] === pk) : -1;
     }
 
     public addRowToData(data: any, parentRowID?: any) {
