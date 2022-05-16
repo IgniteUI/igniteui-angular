@@ -1053,7 +1053,7 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditorDirective.nativeElement.setSelectionRange(1, 1);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement, false, false, true);
                 fixture.detectChanges();
-                expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate() + 2);
+                expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate() + 1);
 
                 dateTimeEditorDirective.nativeElement.setSelectionRange(1, 1);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
