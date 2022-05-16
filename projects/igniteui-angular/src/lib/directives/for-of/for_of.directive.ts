@@ -798,9 +798,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this._virtHeight = hSum;
                 if (!this.scrollComponent.destroyed) {
                     this.scrollComponent.cdr.detectChanges();
-                    if (!this.isScrollable()) {
-                        this.scrollbarVisibilityChanged.emit();
-                    }
                 }
                 if (scrToBottom && !this._isAtBottomIndex) {
                     const containerSize = parseInt(this.igxForContainerSize, 10);
@@ -876,10 +873,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected updateSizes() {
+        const scrollable = this.isScrollable();
         this.recalcUpdateSizes();
         this._applyChanges();
         this._updateScrollOffset();
-        this.contentSizeChange.emit();
+        if (scrollable !== this.isScrollable()) {
+            this.scrollbarVisibilityChanged.emit();
+        } else {
+            this.contentSizeChange.emit();
+        }
     }
 
     /**
