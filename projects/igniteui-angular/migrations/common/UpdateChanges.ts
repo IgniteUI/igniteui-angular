@@ -483,19 +483,19 @@ export class UpdateChanges {
             if (change.type !== ThemeType.Function && change.type !== ThemeType.Mixin) {
                 continue;
             }
+
             let occurrences: number[] = [];
             if (aliases.length > 0 && !aliases.includes('*')) {
-                for (const alias of aliases) {
-                    occurrences = occurrences.concat(findMatches(fileContent, alias + '.' + change.name));
-                }
+                aliases.forEach(a => occurrences = occurrences.concat(findMatches(fileContent, a + '.' + change.name)));
                 if (occurrences.length > 0) {
                     ({ overwrite, fileContent } = this.tryReplaceScssFunctionWithAlias(occurrences, aliases, fileContent, change, overwrite));
+                    continue;
                 }
-            } else {
-                occurrences = findMatches(fileContent, change.name);
-                if (occurrences.length > 0) {
-                    ({ overwrite, fileContent } = this.tryReplaceScssFunction(occurrences, fileContent, change, overwrite));
-                }
+            }
+
+            occurrences = findMatches(fileContent, change.name);
+            if (occurrences.length > 0) {
+                ({ overwrite, fileContent } = this.tryReplaceScssFunction(occurrences, fileContent, change, overwrite));
             }
         }
         if (overwrite) {
@@ -504,31 +504,20 @@ export class UpdateChanges {
     }
 
     protected getAliases(entryPath: string) {
-        let fileContent = this.host.read(entryPath).toString();
-        const allUses = [
-            `@use 'igniteui-angular/theming' as `,
-            `@use 'igniteui-angular/theme' as `,
-            `@use 'igniteui-angular/lib/core/styles/themes/index' as `
-        ]
-        let urls = [];
-        for (let i = 0; i < allUses.length; i++) {
-            if (fileContent.includes(allUses[i])) {
-                urls.push(allUses[i].substring(5, allUses[i].length - 4));
-            }
-        }
+        const fileContent = this.host.read(entryPath).toString();
+        const matchers = [
+            /@use(\s+)('|")igniteui-angular\/theming\2\1as\1(\w+)/g,
+            /@use(\s+)('|")igniteui-angular\/theme\2\1as\1(\w+)/g,
+            /@use(\s+)('|")igniteui-angular\/lib\/core\/styles\/themes\/index\2\1as\1(\w+)/g
+        ];
 
-        return this.formatAliases(urls, fileContent);
-    }
-
-    protected formatAliases(urls: string[], fileContent: string) {
-        let aliases = [];
-        for (const url of urls) {
-            const matcher = new RegExp(String.raw`@use\s+${escapeRegExp(url)}\s+as\s+(\w+)`, 'g');
-            const match = matcher.exec(fileContent);
+        var aliases = [];
+        matchers.forEach(m => {
+            const match = m.exec(fileContent);
             if (match) {
-                aliases.push(match[1]); // access the first captured match
+                aliases.push(match[3]); // access the captured alias
             }
-        }
+        });
 
         return aliases;
     }
