@@ -168,7 +168,7 @@ npm run build:style
 npm run build:lib
 ```
 
-You can find the build ouput under `dist/igniteui-angular`.
+You can find the build output under `dist/igniteui-angular`.
 
 ## Running the tests
 
