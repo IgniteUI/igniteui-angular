@@ -1191,6 +1191,19 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
         expect(grid.rowList.length).toEqual(8);
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
     }));
+
+    it('should correctly set filteredData if advancedFilteringExpressionsTree is empty', () => {
+        const tree = new FilteringExpressionsTree(FilteringLogic.And);
+        tree.filteringOperands = [];
+        grid.filteringExpressionsTree.filteringOperands = [];
+
+        // Clear filter
+        grid.advancedFilteringExpressionsTree = tree;
+        fix.detectChanges();
+
+        // Verify no filtered data
+        expect(grid.filteredData).toBe(null);
+    });
 });
 
 const verifyExpressionUI = (expressionUI: ExpressionUI, expression: IFilteringExpression,
