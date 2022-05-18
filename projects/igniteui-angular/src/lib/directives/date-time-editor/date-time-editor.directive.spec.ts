@@ -934,17 +934,17 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
-            it('should properly increment/decrement date portions with arrow up/down keys in shadow DOM', () => {
+            it('should properly increment/decrement date-time portions with arrow up/down keys in shadow DOM', () => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorShadowDomComponent);
                 fixture.detectChanges();
 
-                fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
+                fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy hh:mm:ss';
                 fixture.detectChanges();
 
                 inputElement = fixture.debugElement.query(By.css('input'));
                 dateTimeEditorDirective = inputElement.injector.get(IgxDateTimeEditorDirective);
 
-                const today = new Date(2021, 12, 12);
+                const today = new Date(2022, 5, 12, 14, 35, 12);
                 dateTimeEditorDirective.value = today;
 
                 inputElement.nativeElement.focus();
@@ -979,6 +979,36 @@ describe('IgxDateTimeEditor', () => {
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
                 fixture.detectChanges();
                 expect(dateTimeEditorDirective.value.getFullYear()).toEqual(today.getFullYear());
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(12, 12);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getHours()).toEqual(today.getHours() + 1);
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(12, 12);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getHours()).toEqual(today.getHours());
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(15, 15);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getMinutes()).toEqual(today.getMinutes() + 1);
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(15, 15);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getMinutes()).toEqual(today.getMinutes());
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(18, 18);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getSeconds()).toEqual(today.getSeconds() + 1);
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(18, 18);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getSeconds()).toEqual(today.getSeconds());
             });
         });
 
@@ -1135,5 +1165,5 @@ class IgxDateTimeEditorFormComponent {
     encapsulation: ViewEncapsulation.ShadowDom
 })
 export class IgxDateTimeEditorShadowDomComponent {
-    public dateTimeFormat = 'dd-MM-yyyy';
+    public dateTimeFormat = 'dd/MM/yyyy hh:mm:ss';
 }
