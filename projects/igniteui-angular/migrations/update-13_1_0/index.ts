@@ -89,7 +89,9 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 `/* Line added via automated migrations. */
 @use "igniteui-angular/theming" as *;
 ` + fileContent.replace(_import, '');
-    host.overwrite(path, replacedString);
+    if (_import.test(fileContent)) {
+      host.overwrite(path, replacedString);
+    }
   }
   applyChanges();
   update.applyChanges();
