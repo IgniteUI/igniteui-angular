@@ -171,9 +171,9 @@
 
         // We need this here, since we count on it to calculate the width of the tree drop indicator
         igx-icon {
-            width: $icon-size;
-            height: $icon-size;
-            font-size: $icon-size;
+            width: var(--igx-icon-size, #{$icon-size});
+            height: var(--igx-icon-size, #{$icon-size});
+            font-size: var(--igx-icon-size, #{$icon-size});
         }
 
         [dir='rtl'] & {

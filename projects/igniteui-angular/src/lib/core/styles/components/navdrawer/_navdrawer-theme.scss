@@ -242,10 +242,10 @@
                 max-width: rem(32px);
                 // important is needed to override the typography margins
                 margin: spacing(14px) auto !important;
+            }
 
-                igx-icon {
-                    margin-inline-start: 0;
-                }
+            igx-icon {
+                margin-inline-start: 0;
             }
         }
     }
@@ -304,6 +304,7 @@
             // important is needed to override the typography margins
             margin: spacing(15px) $drawer-item-margin !important;
             padding: spacing(4px);
+            gap: calc(32px - #{$text-side-padding});
         }
 
         cursor: pointer;
@@ -316,11 +317,12 @@
         border: none;
         justify-content: flex-start;
 
-        > igx-icon + span {
+        igx-icon {
+            color: var-get($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
                 margin-inline-start: spacing(24px);
             } @else {
-                margin-inline-start: spacing(32px);
+                margin-inline-start: spacing(4px);
             }
         }
 
@@ -330,31 +332,10 @@
             }
         }
 
-        igx-icon {
-            color: var-get($theme, 'item-icon-color');
-            @if $variant == 'indigo-design' {
-                margin-inline-start: spacing(4px);
-            }
-        }
-
         // Need this to override the igx-buttons
         &[igxButton] {
             background: transparent;
             border: none;
-            box-shadow: none;
-
-            igx-icon {
-                width: $drawer-icon-size;
-                height: $drawer-icon-size;
-                font-size: $drawer-icon-size;
-                margin: 0;
-            }
-
-            &:hover,
-            &:focus {
-                box-shadow: none;
-                border: none;
-            }
         }
 
         &%igx-button--fab {
@@ -387,24 +368,6 @@
             color: var-get($theme, 'item-active-icon-color');
         }
 
-        // Need this to override the igx-buttons
-        &[igxButton] {
-            box-shadow: none;
-
-            igx-icon {
-                width: $drawer-icon-size;
-                height: $drawer-icon-size;
-                font-size: $drawer-icon-size;
-                margin: 0;
-            }
-
-            &:hover,
-            &:focus {
-                box-shadow: none;
-                border: none;
-            }
-        }
-
         &:focus,
         &:hover {
             color: var-get($theme, 'item-active-text-color');
@@ -412,6 +375,27 @@
 
             igx-icon {
                 color: var-get($theme, 'item-active-icon-color');
+            }
+        }
+    }
+
+    %item,
+    %item--active {
+        // Need this to override the igx-buttons
+        &[igxButton] {
+            box-shadow: none;
+
+            igx-icon {
+                width: var(--igx-icon-size, #{$drawer-icon-size});
+                height: var(--igx-icon-size, #{$drawer-icon-size});
+                font-size: var(--igx-icon-size, #{$drawer-icon-size});
+                margin: 0;
+            }
+
+            &:hover,
+            &:focus {
+                box-shadow: none;
+                border: none;
             }
         }
     }

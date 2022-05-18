@@ -132,9 +132,9 @@
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            width: $badge-width - 2px;
-            height: $badge-width - 2px;
-            font-size: $badge-icon-font-size;
+            width: var(--igx-icon-size, #{$badge-width - 2px});
+            height: var(--igx-icon-size, #{$badge-width - 2px});
+            font-size: var(--igx-icon-size, #{$badge-icon-font-size});
             font-weight: $badge-font-weight;
             color: var-get($theme, 'icon-color');
         }

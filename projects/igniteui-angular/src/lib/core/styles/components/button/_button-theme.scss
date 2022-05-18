@@ -491,9 +491,9 @@
         igx-icon {
             display: flex;
             justify-content: center;
-            width: $icon-in-button-size;
-            height: $icon-in-button-size;
-            font-size: $icon-in-button-size;
+            width: var(--igx-icon-size, #{$icon-in-button-size});
+            height: var(--igx-icon-size, #{$icon-in-button-size});
+            font-size: var(--igx-icon-size, #{$icon-in-button-size});
             color: inherit;
         }
 
@@ -913,6 +913,11 @@
         border-radius: border-radius(var-get($icon-theme, 'border-radius'));
         border-color: var-get($icon-theme, 'border-color');
 
+        @if $variant == 'indigo-design' {
+            border-width: rem(3px);
+        }
+
+
         &:hover {
             @if $variant != 'fluent' {
                 transition: $button-transition;
@@ -928,16 +933,18 @@
             background: var-get($icon-theme, 'focus-background');
             border-color: var-get($icon-theme, 'focus-border-color');
 
-            &:hover {
-                color: var-get($icon-theme, 'hover-foreground');
-                background: var-get($icon-theme, 'hover-background');
-                border-color: var-get($icon-theme, 'hover-border-color');
-            }
+            @if $variant == 'fluent' {
+                &:hover {
+                    color: var-get($icon-theme, 'hover-foreground');
+                    background: var-get($icon-theme, 'hover-background');
+                    border-color: var-get($icon-theme, 'hover-border-color');
+                }
 
-            &:active {
-                color: var-get($icon-theme, 'active-foreground');
-                background: var-get($icon-theme, 'active-background');
-                border-color: var-get($icon-theme, 'active-border-color');
+                &:active {
+                    color: var-get($icon-theme, 'active-foreground');
+                    background: var-get($icon-theme, 'active-background');
+                    border-color: var-get($icon-theme, 'active-border-color');
+                }
             }
         }
 

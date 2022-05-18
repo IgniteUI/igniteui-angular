@@ -247,11 +247,14 @@
     }
 
     %tabs-display {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
 
     %tabs-header {
         overflow: hidden;
+        flex: 0 0 auto;
         background: var-get($theme, 'item-background');
         box-shadow: var-get($theme, 'tab-area-shadow');
         min-height: rem(42px);
@@ -519,17 +522,17 @@
     %tabs-panels {
         position: relative;
         overflow: hidden;
-        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
     }
 
     %tabs-panel {
-        display: block;
         position: absolute;
         inset: 0;
-        width: 100%;
-        height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
+        flex: 1 1 auto;
 
         &::-moz-focus-inner {
             // remove focus dotted border in firefox

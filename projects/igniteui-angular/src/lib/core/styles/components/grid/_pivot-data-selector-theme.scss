@@ -123,12 +123,6 @@
             margin-inline-end: spacing(8px);
         }
 
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
-
         %igx-expansion-panel__header-title {
             display: flex;
 
@@ -227,11 +221,14 @@
         border: 1px solid color($color: 'grays', $variant: 100);
         border-radius: border-radius(rem(2px));
         z-index: 10;
+    }
 
+    %selector-base,
+    %selector-item-ghost {
         igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 
