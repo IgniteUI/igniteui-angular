@@ -1,7 +1,7 @@
 import {
-    Rule,
-    SchematicContext,
-    Tree
+  Rule,
+  SchematicContext,
+  Tree
 } from '@angular-devkit/schematics';
 import { Element } from '@angular/compiler';
 import { nativeImport } from '../common/import-helper.js';
@@ -85,7 +85,10 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
   const _import = new RegExp(`@import ('|")~igniteui-angular\/lib\/core\/styles\/themes\/index('|");`, 'g');
   for (const path of update.sassFiles) {
     const fileContent = host.read(path).toString();
-    const replacedString = fileContent.replace(_import, `@use "igniteui-angular/theming" as igniteui;`);
+    const replacedString =
+`/* Line added via automated migrations. */
+@use "igniteui-angular/theming" as *;
+` + fileContent.replace(_import, '');
     host.overwrite(path, replacedString);
   }
   applyChanges();
