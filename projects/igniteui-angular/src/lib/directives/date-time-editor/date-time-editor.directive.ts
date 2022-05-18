@@ -242,6 +242,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   private get targetDatePart(): DatePart {
+    // V.K. May 16th, 2022 #11556 Get correct date part in shadow DOM
     if (this.document.activeElement === this.nativeElement ||
       this.document.activeElement?.shadowRoot?.activeElement === this.nativeElement) {
       return this._inputDateParts
