@@ -423,8 +423,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === 'vertical') {
             this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
             this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
-            if (!this.scrollComponent || !this.document.contains(this.scrollComponent.elementRef.nativeElement)) {
-                this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance
+            if (!this.scrollComponent || this.scrollComponent.destroyed) {
+                this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance;
             }
             this._maxHeight = this._calcMaxBrowserHeight();
             this.scrollComponent.size = this.igxForOf ? this._calcHeight() : 0;

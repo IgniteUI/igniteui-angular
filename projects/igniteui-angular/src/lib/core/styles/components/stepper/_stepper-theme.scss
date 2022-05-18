@@ -373,9 +373,6 @@
     $separator-title-top: calc(100% - ((#{$indicator-size} / 2) + #{$step-header-padding} + (#{$separator-size} / 2)));
     $separator-title-bottom: calc((#{$indicator-size} / 2) + #{$step-header-padding} - (#{$separator-size} / 2));
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     %stepper-display,
     %igx-stepper__header,
     %igx-stepper__body,
@@ -528,9 +525,9 @@
 
         @if $variant != 'bootstrap' {
             > igx-icon {
-                width: calc(#{$indicator-size} - #{rem(6px)});
-                height: calc(#{$indicator-size} - #{rem(6px)});
-                font-size: calc(#{$indicator-size} - #{rem(6px)});
+                width: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                height: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                font-size: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
                 color: inherit;
             }
         }
@@ -628,10 +625,7 @@
     %igx-stepper__body-content {
         display: block;
         position: absolute;
-        top: 0;
-        #{$left}: 0;
-        #{$right}: 0;
-        bottom: 0;
+        inset: 0;
         width: 100%;
         height: 100%;
         overflow-y: auto;
@@ -650,18 +644,18 @@
     }
 
     %igx-stepper__step-content-wrapper {
-        margin-#{$left}: $v-line-indent;
+        margin-inline-start: $v-line-indent;
         position: relative;
         min-height: rem(32px);
 
         &::before {
             content: '';
             position: absolute;
-            #{$left}: calc(-#{$separator-size} / 2);
+            inset-inline-start: calc(-#{$separator-size} / 2);
             top: calc(-#{$step-header-padding} + #{$title-gap});
             bottom: calc(-#{$step-header-padding} + #{$title-gap});
             width: $separator-size;
-            border-#{$left}: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
+            border-inline-start: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
         }
     }
 
@@ -750,8 +744,8 @@
 
         %igx-stepper__step-content-wrapper {
             &::before {
-                border-#{$left}-style: unquote(var-get($theme, 'complete-step-separator-style'));
-                border-#{$left}-color: var-get($theme, 'complete-step-separator-color');
+                border-inline-start-style: unquote(var-get($theme, 'complete-step-separator-style'));
+                border-inline-start-color: var-get($theme, 'complete-step-separator-color');
             }
         }
     }
@@ -838,11 +832,11 @@
             }
 
             &::before {
-                #{$left}: 0;
+                inset-inline-start: 0;
             }
 
             &::after {
-                #{$right}: 0;
+                inset-inline-end: 0;
             }
         }
 
@@ -908,7 +902,7 @@
 
         %igx-stepper__step--start {
             %igx-stepper__step-title-wrapper {
-                text-align: #{$right};
+                text-align: end;
             }
         }
 

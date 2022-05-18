@@ -43,6 +43,7 @@
 @use '../components/date-range-picker/date-range-picker-component' as date-range-picker;
 @use '../components/dialog/dialog-component' as dialog;
 @use '../components/dock-manager/dock-manager-component' as dock-manager;
+@use '../components/rating/rating-component' as rating;
 @use '../components/drop-down/drop-down-component' as drop-down;
 @use '../components/expansion-panel/expansion-panel-component' as expansion-panel;
 @use '../components/grid/grid-component' as grid;
@@ -74,21 +75,13 @@
 @use '../print';
 
 /// @param {boolean} $print-layout [true] - Activates the printing styles of the components.
-/// @param {string} $direction [ltr] - Sets the layout direction. Can be 'ltr' or 'rtl'.
 /// @param {boolean} $enhanced-accesibility [false] - Switches component colors and other properties to more accessible values.
 /// @requires {mixin} igx-vhelper
 /// @requires {mixin} igx-print-layout
 @mixin core(
     $print-layout: true,
-    $direction: $direction,
     $enhanced-accessibility: $enhanced-accessibility
 ) {
-    @if $direction != ltr and $direction != rtl {
-        $direction: ltr !global;
-    } @else {
-        $direction: $direction !global;
-    }
-
     $enhanced-accessibility: $enhanced-accessibility !global;
 
     // Angular hack for binding to [hidden] property
@@ -144,6 +137,7 @@
     @include date-range-picker.component();
     @include dialog.component();
     @include dock-manager.component();
+    @include rating.component();
     @include drop-down.component();
     @include expansion-panel.component();
     @include grid.component();

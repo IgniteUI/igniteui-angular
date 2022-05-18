@@ -39,6 +39,7 @@
 ) {
     // Stores all excluded component styles
     $excluded: ();
+    $scope: if(is-root(), ':root', '&');
 
     @include palette-vars($palette, $contrast: true);
     @include elevation-vars($elevations);
@@ -49,7 +50,7 @@
     }
 
     @if $elevation == false {
-        :root {
+        #{$scope} {
             --igx-elevation-factor: 0;
 
             @if $wc {
@@ -59,7 +60,7 @@
     }
 
     @if $roundness {
-        :root {
+        #{$scope} {
             --igx-radius-factor: #{$roundness};
 
             @if $wc {
@@ -272,6 +273,12 @@
         ));
     }
 
+    @if is-used('igc-rating', $exclude) {
+        @include rating(rating-theme(
+            $schema: $schema
+        ));
+    }
+
     @if is-used('igx-drop-down', $exclude) {
         @include drop-down(drop-down-theme(
             $schema: $schema
@@ -452,7 +459,7 @@
 @mixin light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -486,7 +493,7 @@
 @mixin dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -520,7 +527,7 @@
 @mixin fluent-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -549,7 +556,7 @@
 @mixin fluent-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -579,7 +586,7 @@
 @mixin bootstrap-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -608,7 +615,7 @@
 @mixin bootstrap-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -637,7 +644,7 @@
 @mixin indigo-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {
@@ -666,7 +673,7 @@
 @mixin indigo-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
     $wc: false,
 ) {

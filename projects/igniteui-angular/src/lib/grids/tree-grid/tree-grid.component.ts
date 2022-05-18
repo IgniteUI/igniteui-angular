@@ -187,7 +187,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @internal
      */
     @ContentChild(IgxTreeGridGroupByAreaComponent, { read: IgxTreeGridGroupByAreaComponent })
-    public groupArea;
+    public treeGroupArea: IgxTreeGridGroupByAreaComponent;
 
     /**
      * @hidden
@@ -867,7 +867,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        const dataIndex = this._getResolvedDataIndex(index);
+        const dataIndex = this._getDataViewIndex(index);
         const rec: any = data ?? this.dataView[dataIndex];
 
         if (this.isSummaryRow(rec)) {
@@ -996,7 +996,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden @internal
      */
     protected getGroupAreaHeight(): number {
-        return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
+        return this.treeGroupArea ? this.getComputedHeight(this.treeGroupArea.nativeElement) : 0;
     }
 
     /**

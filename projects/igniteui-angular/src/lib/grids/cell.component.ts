@@ -856,7 +856,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
-            this._updateCRUDStatus(event);
+            const currentActive = this.selectionService.activeElement;
+            this.selectionService.activeElement = node;
+            const cancel = this._updateCRUDStatus(event);
+            if (cancel) {
+                this.selectionService.activeElement = currentActive;
+                return;
+            }
 
             const activeElement = this.selectionService.activeElement;
             const row = activeElement ? this.grid.gridAPI.get_row_by_index(activeElement.row) : null;
@@ -864,7 +870,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 return;
             }
 
-            this.selectionService.activeElement = node;
         } else {
             this.selectionService.activeElement = null;
             if (this.grid.crudService.cellInEditMode && !this.editMode) {

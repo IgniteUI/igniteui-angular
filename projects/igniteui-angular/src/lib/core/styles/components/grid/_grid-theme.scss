@@ -571,6 +571,15 @@
     ));
 }
 
+@mixin _filtering-scroll-mask($theme, $dir) {
+    display: block;
+    position: absolute;
+    width: rem(10px);
+    content: '';
+    inset-block: rem(-2px);
+    background: linear-gradient(to #{$dir}, var-get($theme, 'filtering-row-background'), transparent);
+}
+
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} css-vars
 /// @requires {mixin} ellipsis
@@ -600,9 +609,6 @@
 
     $grid-shadow: var-get($theme, 'grid-shadow');
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $grid-caption-fs: rem(20px);
     $grid-caption-lh: rem(32px);
     $grid-caption-padding: rem(16px) rem(24px);
@@ -612,7 +618,7 @@
     $transition: all 120ms $ease-in-out-cubic;
 
     // Cell
-    $grid-cell-align-num: #{$right};
+    $grid-cell-align-num: end;
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
     $grid-cell-pinned-style: 1px solid;
@@ -715,6 +721,8 @@
     }
 
     %grid-display {
+        --igx-tree-indent-size: #{rem(24px)};
+
         position: relative;
         display: grid;
         grid-template-rows: auto auto auto 1fr auto auto;
@@ -732,6 +740,14 @@
         %cbx-display {
             min-width: $cbx-size;
         }
+    }
+
+    %grid-display-cosy {
+        --igx-tree-indent-size: #{rem(16px)};
+    }
+
+    %grid-display-compact {
+        --igx-tree-indent-size: #{rem(12px)};
     }
 
     %grid-caption {
@@ -829,7 +845,7 @@
     }
 
     %grid-thead-title--pinned {
-        border-#{$right}: map.get($cell-pin, 'style') map.get($cell-pin, 'color') !important;
+        border-inline-end: map.get($cell-pin, 'style') map.get($cell-pin, 'color') !important;
     }
 
     %grid-thead-title--cosy {
@@ -912,7 +928,7 @@
         }
 
         %grid-cell-display {
-            border-#{$right}: 1px solid var-get($theme, 'row-border-color');
+            border-inline-end: 1px solid var-get($theme, 'row-border-color');
             border-bottom: 1px solid var-get($theme, 'row-border-color');
         }
     }
@@ -979,20 +995,20 @@
 
     %grid-thead-thumb {
         background: var-get($theme, 'header-background');
-        border-#{$left}: rem(1px) solid var-get($theme, 'header-border-color');
+        border-inline-start: rem(1px) solid var-get($theme, 'header-border-color');
     }
 
     %grid-tfoot-thumb {
         position: absolute;
         top: 0;
-        #{$right}: 0;
+        inset-inline-end: 0;
         background: var-get($theme, 'header-background');
-        border-#{$left}: rem(1px) solid var-get($theme, 'header-border-color');
+        border-inline-start: rem(1px) solid var-get($theme, 'header-border-color');
     }
 
     %grid-tbody-scrollbar {
         background: var-get($theme, 'content-background');
-        border-#{$left}: rem(1px) solid var-get($theme, 'row-border-color');
+        border-inline-start: rem(1px) solid var-get($theme, 'row-border-color');
         position: relative;
     }
 
@@ -1069,13 +1085,13 @@
         background: inherit;
         z-index: 4;
         cursor: move;
-        border-#{$right}: 1px solid transparent;
+        border-inline-end: 1px solid transparent;
         background-clip: border-box;
 
         igx-icon {
-            width: $drag-icon-size;
-            height: $drag-icon-size;
-            font-size: $drag-icon-size;
+            width: var(--igx-icon-size, #{$drag-icon-size});
+            height: var(--igx-icon-size, #{$drag-icon-size});
+            font-size: var(--igx-icon-size, #{$drag-icon-size});
         }
     }
 
@@ -1092,7 +1108,7 @@
     }
 
     %igx-grid__drag-indicator--header {
-        border-#{$right}: $grid-header-border;
+        border-inline-end: $grid-header-border;
     }
 
     %igx-grid__drag-indicator--off {
@@ -1123,7 +1139,7 @@
         z-index: 10000;
 
         %igx-grid__hierarchical-expander--empty {
-            border-#{$right}: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
         }
     }
 
@@ -1141,9 +1157,9 @@
         justify-content: center;
 
         igx-icon {
-            height: rem(18px);
-            width: rem(18px);
-            font-size: rem(18px);
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
 
         %igx-icon--error {
@@ -1167,7 +1183,7 @@
             height: rem(1);
             width: 100%;
             top: rem(-1);
-            #{$left}: 0;
+            inset-inline-start: 0;
             background: var-get($theme, 'edit-mode-color');
         }
 
@@ -1295,7 +1311,7 @@
         justify-content: center;
         user-select: none;
         outline-style: none;
-        margin-#{$right}: rem(8);
+        margin-inline-end: rem(8);
         cursor: pointer;
 
         color: var-get($theme, 'expand-icon-color');
@@ -1304,7 +1320,7 @@
             color: var-get($theme, 'expand-icon-hover-color')
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
         }
     }
@@ -1312,7 +1328,7 @@
     %igx-grid__tree-loading-indicator {
         width: rem(24px, 16px);
         height: rem(24px, 16px);
-        margin-#{$right}: rem(8px, 16px);
+        margin-inline-end: rem(8px, 16px);
 
         %circular-outer {
             stroke: var-get($theme, 'expand-icon-color');
@@ -1334,7 +1350,7 @@
         font-size: $grid-cell-fs;
         line-height: $grid-cell-lh;
         color: inherit;
-        text-align: #{$left};
+        text-align: start;
         background-clip: border-box !important;
     }
 
@@ -1369,7 +1385,7 @@
 
         %igx-grid__filtering-cell,
         %grid-cell-header {
-            border-#{$right}-color: var-get($theme, 'cell-active-border-color');
+            border-inline-end-color: var-get($theme, 'cell-active-border-color');
             border-bottom-color: var-get($theme, 'cell-active-border-color');
         }
     }
@@ -1523,23 +1539,23 @@
     }
 
     %grid-cell--pinned-last {
-        border-#{$right}: map.get($cell-pin, 'style') map.get($cell-pin, 'color') !important;
+        border-inline-end: map.get($cell-pin, 'style') map.get($cell-pin, 'color') !important;
 
         %igx-grid__filtering-cell,
         %grid-cell-header {
-            border-#{$right}: none;
+            border-inline-end: none;
         }
 
         &%grid-cell--editing {
-            border-#{$right}: map.get($cell-pin, 'style') var-get($theme, 'cell-selected-background') !important;
+            border-inline-end: map.get($cell-pin, 'style') var-get($theme, 'cell-selected-background') !important;
         }
     }
 
     %grid-cell--pinned-first {
-        border-#{$left}: map.get($cell-pin, 'style') map.get($cell-pin, 'color') !important;
+        border-inline-start: map.get($cell-pin, 'style') map.get($cell-pin, 'color') !important;
 
         &%grid-cell--editing {
-            border-#{$left}: map.get($cell-pin, 'style') var-get($theme, 'cell-selected-background') !important;
+            border-inline-start: map.get($cell-pin, 'style') var-get($theme, 'cell-selected-background') !important;
         }
     }
 
@@ -1548,15 +1564,15 @@
     }
 
     %grid-cell--pinned-chip {
-        margin-#{$right}: rem(12px);
+        margin-inline-end: rem(12px);
     }
 
     %grid-cell--pinned-chip--cosy {
-        margin-#{$right}: rem(8px);
+        margin-inline-end: rem(8px);
     }
 
     %grid-cell--pinned-chip--compact {
-        margin-#{$right}: rem(4px);
+        margin-inline-end: rem(4px);
     }
 
     %grid-cell-header {
@@ -1567,7 +1583,7 @@
         font-weight: $grid-head-fw;
         min-width: 0;
         padding: map.get($grid-header-padding, 'comfortable');
-        border-#{$right}: $grid-header-border;
+        border-inline-end: $grid-header-border;
         outline-style: none;
         overflow: hidden;
         transition: color 250ms ease-in-out;
@@ -1627,18 +1643,18 @@
             display: flex;
 
             igx-icon {
-                width: rem(15px);
-                height: rem(15px);
-                font-size: rem(15px);
+                width: var(--igx-icon-size, #{rem(15px)});
+                height: var(--igx-icon-size, #{rem(15px)});
+                font-size: var(--igx-icon-size, #{rem(15px)});
             }
 
             &::after {
                 content: attr(data-sortIndex);
                 position: absolute;
                 top: -5px;
-                #{$right}: -1px;
+                inset-inline-end: -1px;
                 font-size: rem(10px);
-                text-align: $right;
+                text-align: end;
                 font-family: sans-serif;
                 line-height: rem(10px);
             }
@@ -1650,7 +1666,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-#{$right}: rem(8px);
+        margin-inline-end: rem(8px);
         cursor: pointer;
 
         igx-icon {
@@ -1833,7 +1849,7 @@
         position: absolute;
         width: 4px;
         top: 0;
-        #{$right}: -2px;
+        inset-inline-end: -2px;
         height: 100%;
         z-index: 2;
     }
@@ -1854,11 +1870,11 @@
         }
 
         &::before {
-            #{$right}: 100%;
+            inset-inline-end: 100%;
         }
 
         &::after {
-            #{$left}: 100%;
+            inset-inline-start: 100%;
         }
     }
 
@@ -1894,7 +1910,7 @@
         }
         position: relative;
         z-index: 1;
-        border-#{$right}: 1px solid var-get($theme, 'header-border-color');
+        border-inline-end: 1px solid var-get($theme, 'header-border-color');
     }
 
     // Column moving
@@ -1908,17 +1924,17 @@
     }
 
     %igx-grid-th__drop-indicator-left {
-        #{$left}: -1px;
+        inset-inline-start: -1px;
     }
 
     %igx-grid-th__drop-indicator-right {
-        #{$right}: -1px;
+        inset-inline-end: -1px;
     }
 
     %igx-grid-th__drop-indicator--active {
         &%igx-grid-th__drop-indicator-left,
         &%igx-grid-th__drop-indicator-right {
-            border-#{$right}: 1px solid var-get($theme, 'drop-indicator-color');
+            border-inline-end: 1px solid var-get($theme, 'drop-indicator-color');
         }
 
         &::after,
@@ -1928,7 +1944,7 @@
             width: 0;
             height: 0;
             border-style: solid;
-            #{$left}: -3px;
+            inset-inline-start: -3px;
         }
 
         &::before {
@@ -1954,11 +1970,11 @@
     }
 
     %grid__scroll-on-drag-left {
-        #{$left}: 0;
+        inset-inline-start: 0;
     }
 
     %grid__scroll-on-drag-right {
-        #{$right}: 0;
+        inset-inline-end: 0;
     }
 
     %grid__scroll-on-drag-pinned {
@@ -1980,7 +1996,7 @@
         height: map.get($grid-header-height, 'comfortable');
         min-height: map.get($grid-header-height, 'comfortable');
         top: -99999px;
-        #{$left}: -99999px;
+        inset-inline-start: -99999px;
         border: none;
         box-shadow: var-get($theme, 'drag-shadow');
         overflow: hidden;
@@ -1989,7 +2005,7 @@
         %grid-cell-header-title {
             @include ellipsis();
             flex: 1 0 0;
-            text-align: #{$right};
+            text-align: end;
         }
 
         %grid-cell-header-icons {
@@ -2013,14 +2029,14 @@
 
     %grid__drag-ghost-image-icon {
         color: var-get($theme, 'ghost-header-icon-color');
-        margin-#{$right}: rem(12px);
+        margin-inline-end: rem(12px);
     }
 
     %grid__drag-ghost-image-icon-group {
         color: var-get($theme, 'ghost-header-icon-color');
         padding: var-get($grid-header-padding, 'comfortable');
-        padding-#{$right}: 0;
-        margin-#{$right}: rem(8);
+        padding-inline-end: 0;
+        margin-inline-end: rem(8);
     }
 
     %igx-grid__drag-col-header {
@@ -2057,8 +2073,8 @@
 
         %igx-grid__drag-indicator {
             border: 1px solid var-get($theme, 'cell-active-border-color');
-            border-left-width: 0;
-            border-right-width: 0;
+            border-inline-start-width: 0;
+            border-inline-end-width: 0;
             box-shadow: inset 1px 0 0 0 var-get($theme, 'cell-active-border-color');
         }
 
@@ -2082,10 +2098,10 @@
         line-height: rem(16px);
 
         > * {
-            margin-#{$right}: rem(4px);
+            margin-inline-end: rem(4px);
 
             &:last-child {
-                margin-#{$right}: 0;
+                margin-inline-end: 0;
             }
         }
     }
@@ -2095,9 +2111,9 @@
 
         igx-icon {
             color: var-get($theme, 'group-label-icon');
-            width: rem(16px);
-            height: rem(16px);
-            font-size: rem(16px);
+            width: var(--igx-icon-size, #{rem(16px)});
+            height: var(--igx-icon-size, #{rem(16px)});
+            font-size: var(--igx-icon-size, #{rem(16px)});
         }
     }
 
@@ -2122,23 +2138,23 @@
 
     [dir='rtl'] {
         %igx-grid__group-content {
-            padding-#{$left}: map.get($grid-grouping-indicator-padding, 'comfortable');
+            padding-inline-start: map.get($grid-grouping-indicator-padding, 'comfortable');
         }
 
         %igx-grid__group-content--cosy {
-            padding-#{$left}: map.get($grid-grouping-indicator-padding, 'cosy');
+            padding-inline-start: map.get($grid-grouping-indicator-padding, 'cosy');
         }
 
         %igx-grid__group-content--compact{
-            padding-#{$left}: map.get($grid-grouping-indicator-padding, 'compact');
+            padding-inline-start: map.get($grid-grouping-indicator-padding, 'compact');
         }
 
         %igx-group-label {
             > * {
-                margin-#{$left}: rem(4px);
+                margin-inline-start: rem(4px);
 
                 &:last-child {
-                    margin-#{$left}: 0;
+                    margin-inline-start: 0;
                 }
             }
         }
@@ -2149,7 +2165,7 @@
         align-items: center;
         justify-content: flex-start;
         flex: 1 1 auto;
-        padding-#{$left}: map.get($grid-grouping-indicator-padding, 'comfortable');
+        padding-inline-start: map.get($grid-grouping-indicator-padding, 'comfortable');
         min-height: map.get($grid-header-height, 'comfortable');
 
         &:focus {
@@ -2158,12 +2174,12 @@
     }
 
     %igx-grid__group-content--cosy {
-        padding-#{$left}: map.get($grid-grouping-indicator-padding, 'cosy');
+        padding-inline-start: map.get($grid-grouping-indicator-padding, 'cosy');
         min-height: map.get($grid-header-height, 'cosy');
     }
 
     %igx-grid__group-content--compact{
-        padding-#{$left}: map.get($grid-grouping-indicator-padding, 'compact');
+        padding-inline-start: map.get($grid-grouping-indicator-padding, 'compact');
         min-height: map.get($grid-header-height, 'compact');
     }
 
@@ -2172,9 +2188,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-#{$left}: map.get($grid-grouping-indicator-padding, 'comfortable');
-        padding-#{$right}: map.get($grid-grouping-indicator-padding, 'comfortable');
-        border-#{$right}: 1px solid var-get($theme, 'header-border-color');
+        padding-inline-start: map.get($grid-grouping-indicator-padding, 'comfortable');
+        padding-inline-end: map.get($grid-grouping-indicator-padding, 'comfortable');
+        border-inline-end: 1px solid var-get($theme, 'header-border-color');
         background: inherit;
         z-index: 1;
         background-clip: border-box;
@@ -2185,7 +2201,7 @@
             width: 100%;
             height: rem(1px);
             bottom: -1px;
-            #{$left}: 0;
+            inset-inline-start: 0;
             background: transparent;
         }
 
@@ -2204,13 +2220,13 @@
     }
 
     %igx-grid__row-indentation--cosy {
-        padding-#{$left}: map.get($grid-grouping-indicator-padding, 'cosy');
-        padding-#{$right}: map.get($grid-grouping-indicator-padding, 'cosy')
+        padding-inline-start: map.get($grid-grouping-indicator-padding, 'cosy');
+        padding-inline-end: map.get($grid-grouping-indicator-padding, 'cosy')
     }
 
     %igx-grid__row-indentation--compact {
-        padding-#{$left}: map.get($grid-grouping-indicator-padding, 'compact');
-        padding-#{$right}: map.get($grid-grouping-indicator-padding, 'compact')
+        padding-inline-start: map.get($grid-grouping-indicator-padding, 'compact');
+        padding-inline-end: map.get($grid-grouping-indicator-padding, 'compact')
     }
 
     %igx-grid-grouparea {
@@ -2245,12 +2261,12 @@
         margin: 0 rem(4px);
 
         igx-icon {
-            width: 16px;
-            height: 16px;
-            font-size: 16px;
+            width: var(--igx-icon-size, #{rem(16px)});
+            height: var(--igx-icon-size, #{rem(16px)});
+            font-size: var(--igx-icon-size, #{rem(16px)});
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
         }
     }
@@ -2291,7 +2307,7 @@
             width: rem(16px);
             height: rem(16px);
             font-size: rem(16px);
-            margin-#{$right}: rem(8px);
+            margin-inline-end: rem(8px);
         }
     }
 
@@ -2326,13 +2342,13 @@
         align-items: center;
         z-index: 1;
         cursor: pointer;
-        padding-#{$right}: $grouping-padding-right;
-        margin-#{$left}: #{map.get($grid-grouping-indicator-padding, 'comfortable')};
+        padding-inline-end: $grouping-padding-right;
+        margin-inline-start: #{map.get($grid-grouping-indicator-padding, 'comfortable')};
         min-height: map.get($grid-header-height, 'comfortable');
 
         igx-icon {
             color: var-get($theme, 'expand-icon-color');
-            width: $indicator-icon-width;
+            width: var(--igx-icon-size, #{$indicator-icon-width});
         }
 
         &:hover,
@@ -2344,35 +2360,35 @@
             }
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
         }
     }
 
     %igx-grid__grouping-indicator--cosy {
         min-height: map.get($grid-header-height, 'cosy');
-        margin-#{$left}: #{map.get($grid-grouping-indicator-padding, 'cosy')};
+        margin-inline-start: #{map.get($grid-grouping-indicator-padding, 'cosy')};
     }
 
     %igx-grid__grouping-indicator--compact {
         min-height: map.get($grid-header-height, 'compact');
-        margin-#{$left}: #{map.get($grid-grouping-indicator-padding, 'compact')};
+        margin-inline-start: #{map.get($grid-grouping-indicator-padding, 'compact')};
     }
 
     %igx-grid__header-indentation {
         position: relative;
-        padding-#{$right}: map.get($grid-grouping-indicator-padding, 'comfortable');
-        border-#{$right}: 1px solid var-get($theme, 'header-border-color');
+        padding-inline-end: map.get($grid-grouping-indicator-padding, 'comfortable');
+        border-inline-end: 1px solid var-get($theme, 'header-border-color');
         background: var-get($theme, 'header-background');
         z-index: 4;
     }
 
     %igx-grid__header-indentation--cosy {
-        padding-#{$right}: map.get($grid-grouping-indicator-padding, 'cosy');
+        padding-inline-end: map.get($grid-grouping-indicator-padding, 'cosy');
     }
 
     %igx-grid__header-indentation--compact {
-        padding-#{$right}: map.get($grid-grouping-indicator-padding, 'compact');
+        padding-inline-end: map.get($grid-grouping-indicator-padding, 'compact');
     }
 
     %igx-grid__group-expand-btn {
@@ -2380,7 +2396,7 @@
         cursor: pointer;
         user-select: none;
         top: calc(50% - 12px);
-        #{$left}: map.get($grid-grouping-indicator-padding, 'comfortable');
+        inset-inline-start: map.get($grid-grouping-indicator-padding, 'comfortable');
 
         &:hover {
             color: var-get($theme, 'expand-icon-hover-color');
@@ -2392,7 +2408,7 @@
     }
 
     %igx-grid__group-expand-btn--cosy {
-        #{$left}: map.get($grid-grouping-indicator-padding, 'cosy');
+        inset-inline-start: map.get($grid-grouping-indicator-padding, 'cosy');
 
         &%igx-grid__group-expand-btn--push {
             top: math.div(map.get($grid-header-height, 'cosy') - rem(24px), 2);
@@ -2400,7 +2416,7 @@
     }
 
     %igx-grid__group-expand-btn--compact {
-        #{$left}: map.get($grid-grouping-indicator-padding, 'compact');
+        inset-inline-start: map.get($grid-grouping-indicator-padding, 'compact');
 
         &%igx-grid__group-expand-btn--push {
             top: math.div(map.get($grid-header-height, 'compact') - rem(24px), 2);
@@ -2409,47 +2425,33 @@
 
     @for $i from 1 through 10 {
         %igx-grid__row-indentation--level-#{$i} {
-            padding-#{$left}: calc(#{$i * map.get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
+            padding-inline-start: calc(#{$i * map.get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row--padding-level-#{$i} {
             %igx-grid__grouping-indicator {
-                padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'comfortable')};
+                padding-inline-start: #{$i * map.get($grid-grouping-indicator-padding, 'comfortable')};
             }
         }
 
         %igx-grid__row-indentation-cosy--level-#{$i} {
-            padding-#{$left}: calc(#{$i * map.get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
+            padding-inline-start: calc(#{$i * map.get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row-cosy--padding-level-#{$i} {
             %igx-grid__grouping-indicator {
-                padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'cosy')};
+                padding-inline-start: #{$i * map.get($grid-grouping-indicator-padding, 'cosy')};
             }
         }
 
         %igx-grid__row-indentation-compact--level-#{$i} {
-            padding-#{$left}: calc(#{$i * map.get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
+            padding-inline-start: calc(#{$i * map.get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row-compact--padding-level-#{$i} {
             %igx-grid__grouping-indicator {
-                padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'compact')};
+                padding-inline-start: #{$i * map.get($grid-grouping-indicator-padding, 'compact')};
             }
-        }
-    }
-
-    @for $i from 1 through 25 {
-        %igx-grid__tree-cell--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'comfortable')};
-        }
-
-        %igx-grid__tree-cell-cosy--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'cosy')};
-        }
-
-        %igx-grid__tree-cell-compact--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'compact')};
         }
     }
 
@@ -2485,14 +2487,14 @@
         position: absolute;
         z-index: 5;
         bottom: rem(24px);
-        left: 50%;
+        inset-inline-start: 50%;
         transform: translateX(-50%);
     }
 
     %igx-grid__filtering-cell {
         display: flex;
         align-items: center;
-        border-#{$right}: $grid-header-border;
+        border-inline-end: $grid-header-border;
         border-top: $grid-header-border;
         height: map.get($grid-header-height, 'comfortable');
         padding: map.get($grid-header-padding, 'comfortable');
@@ -2521,15 +2523,15 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding-#{$right}: 8px;
-        margin-#{$left}: 8px;
+        padding-inline-end: rem(8px);
+        margin-inline-start: rem(8px);
         cursor: pointer;
         visibility: visible;
 
         igx-icon {
-            width: 18px;
-            height: 18px;
-            font-size: 18px;
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
 
         %igx-badge-display {
@@ -2543,7 +2545,7 @@
             min-width: 14px;
             font-size: 12px;
             text-align: center;
-            #{$right}: 0;
+            inset-inline-end: 0;
         }
     }
 
@@ -2571,7 +2573,7 @@
         justify-content: space-between;
         background: var-get($theme, 'filtering-row-background');
         color: var-get($theme, 'filtering-row-text-color');
-        #{$left}: 0;
+        inset-inline-start: 0;
         bottom: 0;
         z-index: 3;
 
@@ -2580,8 +2582,8 @@
             position: absolute;
             content: '';
             background: inherit;
-            #{$left}: 0;
-            #{$right}: 0;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
             top: 0;
             bottom: 0;
             box-shadow: 0 1px 0 var-get($theme, 'filtering-row-background'),
@@ -2609,7 +2611,7 @@
                 }
 
                 + igx-icon {
-                    margin-#{$left}: rem(4px);
+                    margin-inline-start: rem(4px);
                 }
             }
         }
@@ -2621,7 +2623,7 @@
     }
 
     %igx-grid__filtering-dropdown-text {
-        margin-left: rem(16px);
+        margin-inline-start: rem(16px);
     }
 
     %igx-grid__filtering-row--cosy {
@@ -2652,62 +2654,69 @@
         [igxButton] {
             igx-icon {
                 position: absolute;
-                #{$left}: rem(12px);
+                inset-inline-start: rem(12px);
                 /* IE fix for vertical alignment*/
                 top: 50%;
                 transform: translateY(-50%);
             }
 
             span {
-                margin-#{$left}: rem(16px);
+                margin-inline-start: rem(16px);
             }
         }
     }
 
-    %filtering-scroll-mask {
-        display: block;
-        position: absolute;
-        content: '';
-        top: -2px;
-        bottom: -2px;
-        width: 10px;
-    }
-
     %igx-grid__filtering-scroll-start {
-        width: 24px;
-        height: 24px;
+        width: rem(24px);
+        height: rem(24px);
         position: relative;
         overflow: visible;
-        margin: 0 8px;
+        margin: 0 rem(8px);
         z-index: 1;
 
         &::after {
-            @extend %filtering-scroll-mask;
-            #{$left}: calc(100% + 6px);
-            background: linear-gradient(to #{$right}, var-get($theme, 'filtering-row-background'), transparent);
+            @include _filtering-scroll-mask($theme, right);
+            inset-inline-start: calc(100% + 6px);
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
+
+            &::after {
+                content: initial;
+            }
+
+            &::before {
+                @include _filtering-scroll-mask($theme, right);
+                inset-inline-end: calc(100% + 6px);
+            }
         }
     }
 
     %igx-grid__filtering-scroll-end {
-        width: 24px;
-        height: 24px;
+        width: rem(24px);
+        height: rem(24px);
         position: relative;
         overflow: visible;
-        margin: 0 8px;
+        margin: 0 rem(8px);
         z-index: 1;
 
         &::before {
-            @extend %filtering-scroll-mask;
-            #{$right}: calc(100% + 6px);
-            background: linear-gradient(to left, var-get($theme, 'filtering-row-background'), transparent);
+            @include _filtering-scroll-mask($theme, left);
+            inset-inline-end: calc(100% + 6px);
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
+
+            &::before {
+                content: initial;
+            }
+
+            &::after {
+                @include _filtering-scroll-mask($theme, left);
+                inset-inline-start: calc(100% + 6px);
+            }
         }
     }
 
@@ -2718,7 +2727,7 @@
             content: '';
             position: absolute;
             top: 0;
-            #{$left}: 0;
+            inset-inline-start: 0;
             width: 4px;
             height: 100%;
             background: var-get($theme, 'row-highlight');
@@ -2727,12 +2736,12 @@
 
         %igx-grid__tr--edited {
             &::before {
-                #{$left}: 4px;
+                inset-inline-start: rem(4px);
             }
         }
 
         &::before {
-            #{$left}: 4px;
+            inset-inline-start: rem(4px);
         }
     }
 
@@ -2747,8 +2756,8 @@
     %igx-grid__hierarchical-expander {
         user-select: none;
         background: inherit;
-        padding-#{$left}: map.get($hierarchical-grid-indent, 'comfortable');
-        padding-#{$right}: map.get($hierarchical-grid-indent, 'comfortable');
+        padding-inline-start: map.get($hierarchical-grid-indent, 'comfortable');
+        padding-inline-end: map.get($hierarchical-grid-indent, 'comfortable');
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2777,7 +2786,7 @@
             min-width: $hierarchical-action-icon;
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: scaleX(-1);
         }
 
@@ -2788,18 +2797,18 @@
     }
 
     %igx-grid__hierarchical-expander--cosy {
-        padding-#{$left}: map.get($hierarchical-grid-indent, 'cosy');
-        padding-#{$right}: map.get($hierarchical-grid-indent, 'cosy');
+        padding-inline-start: map.get($hierarchical-grid-indent, 'cosy');
+        padding-inline-end: map.get($hierarchical-grid-indent, 'cosy');
     }
 
     %igx-grid__hierarchical-expander--compact {
-        padding-#{$left}: map.get($hierarchical-grid-indent, 'compact');
-        padding-#{$right}: map.get($hierarchical-grid-indent, 'compact');
+        padding-inline-start: map.get($hierarchical-grid-indent, 'compact');
+        padding-inline-end: map.get($hierarchical-grid-indent, 'compact');
     }
 
     %igx-grid__hierarchical-expander--header {
         background: inherit;
-        border-#{$right}: 1px solid var-get($theme, 'header-border-color');
+        border-inline-end: 1px solid var-get($theme, 'header-border-color');
         z-index: 3;
         background-clip: border-box;
 
@@ -2831,39 +2840,39 @@
     }
 
     %igx-grid__header-indentation--no-border {
-        border-#{$right}: 1px solid transparent;
+        border-inline-end: 1px solid transparent;
     }
 
     %igx-grid__hierarchical-indent {
-        margin-#{$left}: calc(2 * #{map.get($hierarchical-grid-indent, 'comfortable')} + #{$hierarchical-action-icon});
+        margin-inline-start: calc(2 * #{map.get($hierarchical-grid-indent, 'comfortable')} + #{$hierarchical-action-icon});
         margin-top: map.get($hierarchical-grid-indent, 'comfortable');
-        margin-#{$right}: map.get($hierarchical-grid-indent, 'comfortable');
+        margin-inline-end: map.get($hierarchical-grid-indent, 'comfortable');
         margin-bottom: map.get($hierarchical-grid-indent, 'comfortable');
 
         &--scroll {
-            margin-#{$right}: calc(#{map.get($hierarchical-grid-indent, 'comfortable')} + 18px);
+            margin-inline-end: calc(#{map.get($hierarchical-grid-indent, 'comfortable')} + 18px);
         }
     }
 
     %igx-grid__hierarchical-indent--cosy {
-        margin-#{$left}: calc(2 * #{map.get($hierarchical-grid-indent, 'cosy')} + #{$hierarchical-action-icon});
+        margin-inline-start: calc(2 * #{map.get($hierarchical-grid-indent, 'cosy')} + #{$hierarchical-action-icon});
         margin-top: map.get($hierarchical-grid-indent, 'cosy');
-        margin-#{$right}: map.get($hierarchical-grid-indent, 'cosy');
+        margin-inline-end: map.get($hierarchical-grid-indent, 'cosy');
         margin-bottom: map.get($hierarchical-grid-indent, 'cosy');
 
         &--scroll {
-            margin-#{$right}: calc(#{map.get($hierarchical-grid-indent, 'cosy')} + 18px);
+            margin-inline-end: calc(#{map.get($hierarchical-grid-indent, 'cosy')} + 18px);
         }
     }
 
     %igx-grid__hierarchical-indent--compact {
-        margin-#{$left}: calc(2 * #{map.get($hierarchical-grid-indent, 'compact')} + #{$hierarchical-action-icon});
+        margin-inline-start: calc(2 * #{map.get($hierarchical-grid-indent, 'compact')} + #{$hierarchical-action-icon});
         margin-top: map.get($hierarchical-grid-indent, 'compact');
-        margin-#{$right}: map.get($hierarchical-grid-indent, 'compact');
+        margin-inline-end: map.get($hierarchical-grid-indent, 'compact');
         margin-bottom: map.get($hierarchical-grid-indent, 'compact');
 
         &--scroll {
-            margin-#{$right}: calc(#{map.get($hierarchical-grid-indent, 'compact')} + 18px);
+            margin-inline-end: calc(#{map.get($hierarchical-grid-indent, 'compact')} + 18px);
         }
     }
 
@@ -2892,7 +2901,7 @@
 
     %igx-grid__tr-action {
         &:last-of-type {
-            border-#{$right}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+            border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         }
     }
 
@@ -2919,7 +2928,7 @@
         display: flex;
 
         %grid-thead--virtualizationWrapper {
-            border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+            border-inline-start: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         }
     }
 
@@ -2952,7 +2961,7 @@
 
         padding: map.get($grid-header-padding, 'comfortable');
         background-clip: border-box !important;
-        border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        border-inline-start: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 
         igx-chips-area {
@@ -2960,11 +2969,11 @@
             width: auto;
 
             > * {
-                margin-#{$right}: rem(4px);
+                margin-inline-end: rem(4px);
             }
 
             &:last-child {
-                margin-#{$right}: 0;
+                margin-inline-end: 0;
             }
         }
     }
@@ -2979,7 +2988,7 @@
         > igx-badge {
             position: absolute;
             top: rem(-4px);
-            left: 60%;
+            inset-inline-start: 60%;
             width: rem(18px);
             min-width: rem(18px);
             height: rem(18px);
@@ -2992,7 +3001,7 @@
     %igx-grid__pivot-empty-chip-area {
         line-height: normal;
         font-size: rem(14px);
-        margin-right: 0 !important;
+        margin-inline-end: 0 !important;
     }
 
     %igx-grid__tr-pivot--row-area {
@@ -3008,7 +3017,7 @@
             padding-bottom: map.get($pivot-row-aria-padding, 'compact');
         }
 
-        border-#{$left}: 0;
+        border-inline-start: 0;
         border-bottom: 0;
     }
 
@@ -3037,8 +3046,8 @@
             height: map.get($grid-header-height, 'compact');
         }
 
-        border-left: 0;
-        border-right: 0;
+        border-inline-start: 0;
+        border-inline-end: 0;
         border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
     }
 

@@ -8,6 +8,7 @@ import { TransactionType } from '../../services/public_api';
 import { IgxAddRow } from '../common/crud.service';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy } from '../common/strategy';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 
 /**
  * @hidden
@@ -175,11 +176,13 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
 
     public transform(
         hierarchicalData: ITreeGridRecord[],
-        expressions: ISortingExpression[],
+        sortExpressions: ISortingExpression[],
+        groupExpressions: IGroupingExpression[],
         sorting: IGridSortingStrategy,
         _: number,
         pinned?: boolean): ITreeGridRecord[] {
 
+        const expressions = groupExpressions ? groupExpressions.concat(sortExpressions) : sortExpressions;
         let result: ITreeGridRecord[];
         if (!expressions.length) {
             result = hierarchicalData;

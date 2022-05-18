@@ -43,9 +43,6 @@
 @mixin pivot-data-selector($theme) {
     @include css-vars($theme);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $chip-height-material: (
         comfortable: rem(22px),
         cosy: rem(20px),
@@ -53,7 +50,7 @@
     );
 
     $chip-item-padding: 0 rem(2px);
-    $panel-padding: em(4px, 16px);
+    $panel-padding: rem(4px, 16px);
 
     %selector-base {
         display: flex;
@@ -93,7 +90,7 @@
         %form-group-prefix,
         %form-group-prefix--cosy,
         %form-group-prefix--compact {
-            padding-#{$right}: rem(16px) !important;
+            padding-inline-end: rem(16px) !important;
             box-sizing: content-box;
         }
 
@@ -123,13 +120,7 @@
         }
 
         %igx-expansion-panel__header-icon--start {
-            margin-#{$right}: rem(8px);
-        }
-
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
+            margin-inline-end: rem(8px);
         }
 
         %igx-expansion-panel__header-title {
@@ -160,7 +151,7 @@
         }
 
         igx-checkbox + span {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
             line-height: rem(28px);
         }
     }
@@ -230,11 +221,14 @@
         border: 1px solid color($color: 'grays', $variant: 100);
         border-radius: border-radius(rem(2px));
         z-index: 10;
+    }
 
+    %selector-base,
+    %selector-item-ghost {
         igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 
@@ -287,7 +281,7 @@
         display: flex;
 
         igx-icon + igx-icon {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
     }
 }

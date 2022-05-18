@@ -2,15 +2,31 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 13.2.0 
+## 13.2.0
 
 ### New palette
 
 A new fluent light and dark palettes that use the default fluent colors - `$light-fluent-palette` and `$dark-fluent-palette`.
 
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - new *sortingOption* property has been introduced on grid level; This property allows you to set either `single` or `multiple` sorting mode; When single mode is enabled you can sort one column at a time; The default value of the property is `multiple`;
+
+    - **Behavioral Change** - sorting and grouping expressions are now working separately; If grouping/sorting expressions are in a conflict, grouping expressions take precedence. You can read more about that in our official documentation.
+- `IgxSlider`
+    - support for double value binding in slider of type RANGE through newly exposed `lowerValue` and `upperValue`
 ## 13.1.0
 
 ### New Features
+
+- Added new CSS property `--igx-icon-size` to allow changing the icon when its original size is modified by other components.
+```SCSS
+    // will have effect only on icons that are children of .igx-button
+    .igx-button {
+        --igx-icon-size: 10px;
+    }
+```
+
 - Added `IgxPivotGrid` component(Preview)
     - The igxPivotGrid is a data presentation control for displaying data in a pivot table. It enables users to perform complex analysis on the supplied data. Main purpose is to transform and display a flat array of data into a complex grouped structure with aggregated values based on the main 3 dimensions: rows, columns and values, which the user may specify depending on his/her business needs. The whole pivot grid configuration is set through `IPivotConfiguration` interface.
 
@@ -138,7 +154,7 @@ A new fluent light and dark palettes that use the default fluent colors - `$ligh
 - `IgxDialog`
     - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
 - `IgxProgressBar`
-    - Exposed new animationDuration input - sets the duration of the progress animation. 
+    - Exposed new animationDuration input - sets the duration of the progress animation.
 
 ### General
 

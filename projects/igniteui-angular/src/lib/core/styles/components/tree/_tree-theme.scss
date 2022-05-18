@@ -100,9 +100,6 @@
 @mixin tree($theme) {
     @include css-vars($theme);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $variant: map.get($theme, variant);
     $indigo-theme: $variant == 'indigo-design';
 
@@ -152,7 +149,7 @@
 
     %node-toggle-button,
     %node-select {
-        margin-#{$right}: $icon-space;
+        margin-inline-end: $icon-space;
     }
 
     %node-content,
@@ -174,16 +171,22 @@
 
         // We need this here, since we count on it to calculate the width of the tree drop indicator
         igx-icon {
-            width: $icon-size;
-            height: $icon-size;
-            font-size: $icon-size;
+            width: var(--igx-icon-size, #{$icon-size});
+            height: var(--igx-icon-size, #{$icon-size});
+            font-size: var(--igx-icon-size, #{$icon-size});
+        }
+
+        [dir='rtl'] & {
+            igx-icon {
+                transform: scaleX(-1);
+            }
         }
 
         &::after {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
+            inset-inline-start: 0;
             width: 100%;
             height: 100%;
             background: transparent;
@@ -214,7 +217,7 @@
             }
 
             %node-drop-indicator {
-                #{$right}: map.get($node-indent, 'cosy');
+                inset-inline-end: map.get($node-indent, 'cosy');
                 width: map.get($drop-indicator-width, 'cosy');
             }
 
@@ -233,7 +236,7 @@
             }
 
             %node-drop-indicator {
-                #{$right}: map.get($node-indent, 'compact');
+                inset-inline-end: map.get($node-indent, 'compact');
                 width: map.get($drop-indicator-width, 'compact');
             }
 
@@ -315,7 +318,7 @@
         display: flex;
         visibility: hidden;
         position: absolute;
-        #{$right}: map.get($node-indent, 'comfortable');
+        inset-inline-end: map.get($node-indent, 'comfortable');
         bottom: 0;
         width: map.get($drop-indicator-width, 'comfortable');
 

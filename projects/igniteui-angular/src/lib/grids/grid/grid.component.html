@@ -52,7 +52,7 @@
         | gridAddRow:true:pipeTrigger
         | gridRowPinning:id:true:pipeTrigger
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-        | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
+        | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
             <div #pinContainer *ngIf="pinnedData.length > 0"
                 [ngClass]="{
                     'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
@@ -70,7 +70,7 @@
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
-        | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
+        | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger
         | gridGroupBy:groupingExpressions:groupingExpansionState:groupStrategy:groupsExpanded:id:groupsRecords:pipeTrigger
         | gridPaging:page:perPage:id:pipeTrigger
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger

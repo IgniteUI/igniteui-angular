@@ -19,8 +19,6 @@
 /// @requires rem
 /// @requires var-get
 @mixin excel-filtering($theme, $palette) {
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
@@ -69,9 +67,9 @@
         cursor: pointer;
 
         igx-icon {
-            width: rem(15px);
-            height: rem(15px);
-            font-size: rem(15px);
+            width: var(--igx-icon-size, #{rem(15px)});
+            height: var(--igx-icon-size, #{rem(15px)});
+            font-size: var(--igx-icon-size, #{rem(15px)});
         }
     }
 
@@ -90,25 +88,25 @@
         flex-direction: column;
         height: 100%;
         background: var-get($theme, 'filtering-row-background');
-        // TODO The border-radius should not be hardcoded.
+        // TODO: The border-radius should not be hardcoded.
         border-radius: border-radius(rem(4px));
 
-        @include button-group(button-group-theme(
-            $shadow: none,
-            $schema: $dark-schema,
-            $item-background: var-get($theme, 'filtering-row-background'),
-            $item-hover-background: color($palette, 'grays', 100),
-            $item-selected-background: color($palette, 'grays', 100),
-            $item-text-color: color($palette, 'grays', 700),
-            $item-hover-text-color: color($palette, 'grays', 800),
-            $item-selected-text-color: if(
+        igx-buttongroup {
+            --shadow: none;
+            --item-background: #{var-get($theme, 'filtering-row-background')};
+            --item-hover-background: #{color($palette, 'grays', 100)};
+            --item-selected-background: #{color($palette, 'grays', 100)};
+            --item-text-color: #{color($palette, 'grays', 700)};
+            --item-hover-text-color: #{color($palette, 'grays', 800)};
+            --item-selected-text-color: #{if(
                 $variant == 'indigo-design',
                 contrast-color($palette, 'surface'),
                 color($palette, 'secondary', 500)
-            ),
-            $item-border-color: transparent,
-            $item-selected-border-color: transparent
-        ));
+            )};
+            --item-border-color: transparent;
+            --item-selected-border-color: transparent;
+            --item-disabled-border: transparent;
+        }
 
         @include tree(tree-theme(
             $background: color($palette, 'surface'),
@@ -140,10 +138,10 @@
 
     %grid-excel-menu__header-actions {
         display: flex;
-        margin-#{$left}: auto;
+        margin-inline-start: auto;
 
         [igxButton] + [igxButton] {
-            margin-#{$left}: rem(4px);
+            margin-inline-start: rem(4px);
         }
 
         %grid-excel-actions__action {
@@ -176,7 +174,7 @@
     }
 
     %grid-excel-filter__cancel + %grid-excel-filter__apply {
-        margin-#{$left}: rem(16px);
+        margin-inline-start: rem(16px);
     }
 
     %grid-excel-sort,
@@ -190,10 +188,10 @@
         }
 
         igx-icon {
-            font-size: rem(18px);
-            width: rem(18px);
-            height: rem(18px);
-            justify-content: initial;
+            display: initial;
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 
@@ -204,7 +202,7 @@
 
         header {
             color: color($palette, 'grays', 700);
-            margin-#{$right}: auto;
+            margin-inline-end: auto;
         }
     }
 
@@ -222,19 +220,24 @@
         }
     }
 
-    %grid-excel-move igx-buttongroup {
-        @include if-rtl() {
+    %grid-excel-move .igx-button-group {
+        [dir='rtl'] & {
             flex-direction: row-reverse;
 
+            igx-icon,
             [igxButton] {
-                flex-direction: row-reverse;
+                direction: ltr;
+            }
+        }
+    }
 
-                span,
-                igx-icon {
-                    margin: initial;
-                }
+    %grid-excel-sort .igx-button-group {
+        [dir='rtl'] & {
+            flex-direction: row-reverse;
 
-                @include icon-w-margin(rem(8px), $right);
+            igx-icon,
+            [igxButton] {
+                direction: ltr;
             }
         }
     }
@@ -253,7 +256,7 @@
             background: color($palette, 'grays', 100);
         }
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             igx-icon {
                 transform: scaleX(-1);
             }
@@ -282,8 +285,7 @@
         igx-list {
             flex-grow: 1;
             overflow: hidden;
-            margin-left: -#{rem(16px)};
-            margin-right: -#{rem(16px)};
+            margin-inline: -#{rem(16px)};
             border: 0;
         }
 
@@ -305,9 +307,9 @@
             flex: 1;
 
             igx-icon {
-                width: $tree-node-expander-size;
-                height: $tree-node-expander-size;
-                font-size: $tree-node-expander-size;
+                width: var(--igx-icon-size, #{$tree-node-expander-size});
+                height: var(--igx-icon-size, #{$tree-node-expander-size});
+                font-size: var(--igx-icon-size, #{$tree-node-expander-size});
             }
 
             > igx-checkbox,
@@ -318,7 +320,7 @@
 
             .igx-tree-node__toggle-button {
                 min-width: rem(20px);
-                margin-left: map.get($tree-node-indent, 'comfortable');
+                margin-inline-start: map.get($tree-node-indent, 'comfortable');
             }
         }
 
@@ -341,7 +343,7 @@
             }
 
             > igx-checkbox {
-                margin-left: map.get($checkbox-indent, 'comfortable');
+                margin-inline-start: map.get($checkbox-indent, 'comfortable');
             }
         }
     }
@@ -378,8 +380,8 @@
         }
 
         igx-list {
-            margin-left: -#{rem(8px)};
-            margin-right: -#{rem(8px)};
+            margin-inline-start: -#{rem(8px)};
+            margin-inline-end: -#{rem(8px)};
         }
 
         %igx-excel-filter__tree {
@@ -392,7 +394,7 @@
             }
 
             .igx-tree-node__toggle-button {
-                margin-left: map.get($tree-node-indent, 'cosy');
+                margin-inline-start: map.get($tree-node-indent, 'cosy');
             }
         }
 
@@ -400,7 +402,7 @@
             height: map.get($tree-node-height, 'cosy');
 
             > igx-checkbox {
-                margin-left: map.get($checkbox-indent, 'cosy');
+                margin-inline-start: map.get($checkbox-indent, 'cosy');
             }
         }
     }
@@ -445,8 +447,8 @@
         }
 
         igx-list {
-            margin-left: -#{rem(4px)};
-            margin-right: -#{rem(4px)};
+            margin-inline-start: -#{rem(4px)};
+            margin-inline-end: -#{rem(4px)};
         }
 
         %igx-excel-filter__tree {
@@ -467,7 +469,7 @@
             height: map.get($tree-node-height, 'compact');
 
             > igx-checkbox {
-                margin-left: map.get($checkbox-indent, 'compact');
+                margin-inline-start: map.get($checkbox-indent, 'compact');
             }
         }
     }
@@ -555,7 +557,7 @@
 
             ~ igx-input-group,
             ~ igx-date-picker {
-                margin-#{$left}: rem(16px);
+                margin-inline-start: rem(16px);
             }
         }
 
@@ -564,7 +566,7 @@
         }
 
         [igxButton='icon'] {
-            margin-#{$left}: rem(16px);
+            margin-inline-start: rem(16px);
         }
     }
 
@@ -572,9 +574,9 @@
         margin: 0 rem(16px) rem(16px);
 
         igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 
