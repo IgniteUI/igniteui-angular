@@ -505,6 +505,7 @@ export class UpdateChanges {
 
     protected getAliases(entryPath: string) {
         const fileContent = this.host.read(entryPath).toString();
+        // B.P. 18/05/22 #11577 - Use RegEx to distinguish themed imports.
         const matchers = [
             /@use(\s+)('|")igniteui-angular\/theming\2\1as\1(\w+)/g,
             /@use(\s+)('|")igniteui-angular\/theme\2\1as\1(\w+)/g,
