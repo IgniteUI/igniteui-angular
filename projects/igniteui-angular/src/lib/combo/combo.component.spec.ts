@@ -29,7 +29,6 @@ import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxComboState } from './combo.common';
-import { IgxLabelDirective } from 'igniteui-angular';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -2829,7 +2828,8 @@ describe('igxCombo', () => {
             });
             it('should add/remove asterisk when setting validators dynamically', () => {
                 let inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
-                let asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
+                let asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL))
+                               .nativeElement, ':after').content;
                 expect(asterisk).toBe('"*"');
                 expect(inputGroupIsRequiredClass).toBeDefined();
 
@@ -2837,7 +2837,8 @@ describe('igxCombo', () => {
                 fixture.componentInstance.reactiveForm.controls.townCombo.updateValueAndValidity();
                 fixture.detectChanges();
                 inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
-                asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
+                asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL))
+                           .nativeElement, ':after').content;
                 expect(asterisk).toBe('none');
                 expect(inputGroupIsRequiredClass).toBeNull();
 
@@ -2845,7 +2846,8 @@ describe('igxCombo', () => {
                 fixture.componentInstance.reactiveForm.controls.townCombo.updateValueAndValidity();
                 fixture.detectChanges();
                 inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
-                asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
+                asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL))
+                           .nativeElement, ':after').content;
                 expect(asterisk).toBe('"*"');
                 expect(inputGroupIsRequiredClass).toBeDefined();
             });
