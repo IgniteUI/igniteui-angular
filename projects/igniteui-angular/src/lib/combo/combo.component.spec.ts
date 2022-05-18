@@ -28,6 +28,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { IgxComboState } from './combo.common';
+import { IgxLabelDirective } from 'igniteui-angular';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -50,6 +51,7 @@ const CSS_CLASS_INPUTGROUP_WRAPPER = 'igx-input-group__wrapper';
 const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
 const CSS_CLASS_INPUTGROUP_MAINBUNDLE = 'igx-input-group__bundle-main';
 const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
+const CSS_CLASS_INPUTGROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_SEARCHINPUT = 'input[name=\'searchInput\']';
 const CSS_CLASS_HEADER = 'header-class';
@@ -2813,6 +2815,28 @@ describe('igxCombo', () => {
                 expect(form.status).toEqual('VALID');
                 fixture.debugElement.query(By.css('button')).triggerEventHandler('click', UIInteractions.simulateClickAndSelectEvent);
             });
+            it('should add/remove asterisk when setting validators dynamically', () => {
+                let inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
+                let asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
+                expect(asterisk).toBe('"*"');
+                expect(inputGroupIsRequiredClass).toBeDefined();
+
+                fixture.componentInstance.reactiveForm.controls.townCombo.clearValidators();
+                fixture.componentInstance.reactiveForm.controls.townCombo.updateValueAndValidity();
+                fixture.detectChanges();
+                inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
+                asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
+                expect(asterisk).toBe('none');
+                expect(inputGroupIsRequiredClass).toBeNull();
+
+                fixture.componentInstance.reactiveForm.controls.townCombo.setValidators(Validators.required);
+                fixture.componentInstance.reactiveForm.controls.townCombo.updateValueAndValidity();
+                fixture.detectChanges();
+                inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
+                asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
+                expect(asterisk).toBe('"*"');
+                expect(inputGroupIsRequiredClass).toBeDefined();
+            });
         });
         describe('Template form tests: ', () => {
             let inputGroupRequired: DebugElement;
@@ -3088,7 +3112,7 @@ class IgxComboSampleComponent {
 <p>
 <igx-combo #comboReactive formControlName="townCombo"
 class="input-container" [filterable]="true" placeholder="Location(s)"
-[data]="items" [displayKey]="'field'" [groupKey]="'region'"></igx-combo>
+[data]="items" [displayKey]="'field'" [groupKey]="'region'"><label igxLabel>Town</label></igx-combo>
 </p>
 <p>
 <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
