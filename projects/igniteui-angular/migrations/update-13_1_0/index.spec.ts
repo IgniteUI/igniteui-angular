@@ -94,9 +94,10 @@ describe(`Update to ${version}`, () => {
             .toPromise();
 
         expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
+            tree.readContent('/testSrc/appPrefix/component/test.component.scss').replace(/\n|\r\n/g, '')
         ).toEqual(
-`@use "igniteui-angular/theming" as igniteui;`
+`/* Line added via automated migrations. */
+@use "igniteui-angular/theming" as *;`.replace(/\n|\r\n/g, '')
         );
     });
 
