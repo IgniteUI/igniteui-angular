@@ -546,7 +546,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             }
         }));
 
-        it('should able to change rowSelection at runtime', async() => {
+        it('should able to change rowSelection at runtime', async () => {
             hierarchicalGrid.width = '1000px';
             fix.detectChanges();
             hierarchicalGrid.expandChildren = true;

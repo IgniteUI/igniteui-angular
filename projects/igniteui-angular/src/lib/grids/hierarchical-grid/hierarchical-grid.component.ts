@@ -827,7 +827,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                 if (grid.isPercentWidth) {
                     grid.notifyChanges(true);
                 }
-            }); 
+            });
         }
     }
 
