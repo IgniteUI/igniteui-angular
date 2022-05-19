@@ -102,9 +102,7 @@
 @mixin expansion-panel($theme) {
     @include css-vars($theme);
 
-    $panel-padding: em(16px, 16px);
-    $panel-compact-padding: em(16px, 16px);
-    $panel-cosy-padding: em(8px, 16px);
+    $panel-padding: rem(16px) rem(24px);
 
     %igx-expansion-panel {
         display: flex;
@@ -206,6 +204,8 @@
         color: var-get($theme, 'body-color');
         background: var-get($theme, 'body-background');
         overflow: hidden;
+        padding: $panel-padding;
+        padding-top: 0;
     }
 
     %igx-expansion-panel--disabled {
