@@ -32,20 +32,16 @@
 $light-graph: (
     'backing-brush': (
         color: 'surface',
-        darken: 5%
     ),
     'backing-outline': (
         color: 'surface',
-        darken: 8%
     ),
     'backing-stroke-thickness': null,
     'font-brush': (
-        contrast-color: 'surface',
-        rgba: .62
+        contrast-color: ('surface', 500, .62)
     ),
     'minor-tick-brush': (
-        contrast-color: 'surface',
-        rgba: .62
+        contrast-color: ('surface', 500, .62)
     ),
     'minor-tick-thickness': null,
     'range-brushes': series,
@@ -64,8 +60,7 @@ $light-graph: (
     'target-value-outline': null,
     'target-value-thickness': null,
     'tick-brush': (
-        contrast-color: 'surface',
-        rgba: .62
+        contrast-color: ('surface', 500, .62)
     ),
     'tick-stroke-thickness': null,
     'value-brush': (

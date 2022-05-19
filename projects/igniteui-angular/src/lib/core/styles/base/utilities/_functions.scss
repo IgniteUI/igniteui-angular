@@ -394,6 +394,7 @@ $p-test: palette(#fff, #000);
         list.index(str-split($variant, '-'), 'contrast'),
         null
     );
+    $meta: if($palette, map.get($palette, '_meta'), null);
 
     @if not($c) {
         @error 'The passed color #{$color} is not valid.';
@@ -403,7 +404,7 @@ $p-test: palette(#fff, #000);
         @error 'The passed variant #{$variant} is not valid.';
     }
 
-    @if $palette == null {
+    @if $palette == null or $meta == null {
         @return if(
             $contrast,
             $var-string,
