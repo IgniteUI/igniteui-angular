@@ -100,9 +100,9 @@
             height: rem(28px);
 
             igx-icon {
-                width: rem(14px);
-                height: rem(14px);
-                font-size: rem(14px);
+                width: var(--igx-icon-size, #{rem(14px)});
+                height: var(--igx-icon-size, #{rem(14px)});
+                font-size: var(--igx-icon-size, #{rem(14px)});
             }
         }
     }
@@ -130,9 +130,9 @@
         }
 
         igx-icon {
-            font-size: rem(18px);
-            width: rem(18px);
-            height: rem(18px);
+            width: var(--igx-icon-size, rem(18px));
+            height: var(--igx-icon-size, rem(18px));
+            font-size: var(--igx-icon-size, rem(18px));
         }
 
         igx-icon + [igxLabel] {
