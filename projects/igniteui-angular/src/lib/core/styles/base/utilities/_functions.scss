@@ -962,3 +962,7 @@ $p-test: palette(#fff, #000);
 
     @return $used;
 }
+
+@function to-hsl($color) {
+    @return (color.hue($color), color.saturation($color), color.lightness($color));
+}
