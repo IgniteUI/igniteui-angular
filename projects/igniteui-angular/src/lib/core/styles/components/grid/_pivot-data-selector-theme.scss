@@ -133,6 +133,16 @@
                 font-size: rem(12px);
             }
         }
+
+        %igx-expansion-panel__header-inner {
+            background: var-get($theme, 'header-color');
+            padding: $panel-padding;
+    
+            .dragOver & {
+                background: color($color: 'grays', $variant: 300);
+                box-shadow: inset 0 0 0 1px color($color: 'grays', $variant: 400);
+            }
+        }
     }
 
     %selector-filter {
@@ -163,16 +173,6 @@
     %selector-header-extra {
         display: flex;
         align-items: center;
-    }
-
-    %igx-expansion-panel__header-inner {
-        background: var-get($theme, 'header-color');
-        padding: $panel-padding;
-
-        .dragOver & {
-            background: color($color: 'grays', $variant: 300);
-            box-shadow: inset 0 0 0 1px color($color: 'grays', $variant: 400);
-        }
     }
 
     %selector-header-extra {
