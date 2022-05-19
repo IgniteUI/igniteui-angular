@@ -386,7 +386,7 @@ $p-test: palette(#fff, #000);
 /// @returns {Color} White if no palette, color, and variant matches found.
 @function color($palette: null, $color: primary, $variant: 500, $opacity: null) {
     $c: map.get($palette or $p-test, $color);
-    $v: if($c, map.get($c, $variant), null);
+    // $v: if($c, map.get($c, $variant), null);
     $a: var(--igx-#{$color}-a);
     $var-string: #{var(--igx-#{$color}-#{$variant})};
     $contrast: if(
@@ -400,9 +400,10 @@ $p-test: palette(#fff, #000);
         @error 'The passed color #{$color} is not valid.';
     }
 
-    @if not($v) {
-        @error 'The passed variant #{$variant} is not valid.';
-    }
+    // Do not check for variant
+    // @if not($v) {
+    //     @error 'The passed variant #{$variant} is not valid.';
+    // }
 
     @if $palette == null or $meta == null {
         @return if(
