@@ -3301,10 +3301,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             // called to recalc all widths that may have changes as a result of
             // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
+            this.cdr.detectChanges();
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
-            this.notifyChanges(true);
+            this.notifyChanges(false);
             this.cdr.detectChanges();
         });
 
