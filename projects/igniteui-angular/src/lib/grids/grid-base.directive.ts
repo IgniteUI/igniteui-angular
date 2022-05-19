@@ -2807,10 +2807,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public tfootHeight: number;
-    /**
-     * @hidden @internal
-     */
-    public summariesHeight: number;
 
     /**
      * @hidden @internal
@@ -3005,6 +3001,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.verticalScrollContainer.getScrollNativeSize();
     }
 
+    /**
+     * @hidden @internal
+     */
+    public get summariesHeight(): number {
+        if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
+            return this._summariesHeight;
+        }
+        return 0;
+    }
+
+    public set summariesHeight(val: number) {
+        this._summariesHeight = val;
+    }
+
     private _columnPinningTitle: string;
     private _columnHidingTitle: string;
 
@@ -3019,6 +3029,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
+
+    private _summariesHeight: number;
 
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     private _cdrRequests = false;
@@ -3536,10 +3548,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             // called to recalc all widths that may have changes as a result of
             // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
+            this.cdr.detectChanges();
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(() => {
-            this.calculateGridSizes(false);
+            this.notifyChanges(false);
+            this.cdr.detectChanges();
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
