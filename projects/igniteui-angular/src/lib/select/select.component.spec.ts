@@ -1066,6 +1066,7 @@ describe('igxSelect', () => {
             it('should not append any text to the input box when an item is focused but not selected',
                 fakeAsync(() => {
                     let focusedItem = select.items[2];
+                    let selectedItem: IgxSelectItemComponent = null;
                     const navigationStep = focusedItem.index;
 
                     const navigateDropdownItems = (keydownEvent: KeyboardEvent) => {
@@ -1098,7 +1099,7 @@ describe('igxSelect', () => {
                     verifyFocusedItemIsNotSelected();
 
                     // Focus item when there is a selected item
-                    const selectedItem = select.items[13] as IgxSelectItemComponent;
+                    selectedItem = select.items[13] as IgxSelectItemComponent;
                     selectedItem.element.nativeElement.click();
                     tick();
                     fixture.detectChanges();
