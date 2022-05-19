@@ -29,6 +29,7 @@ import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxComboState } from './combo.common';
+import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -2168,7 +2169,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
 
             const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
-            spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({ element: { nativeElement: mockObj } });
+            spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({ element: { nativeElement: mockObj } } as IgxDropDownItemBaseDirective);
             (combo.dropdown.headers[0] as IgxComboItemComponent).clicked(null);
             fixture.detectChanges();
             expect(mockObj.focus).not.toHaveBeenCalled(); // Focus only if `allowItemFocus === true`

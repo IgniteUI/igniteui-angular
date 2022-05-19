@@ -422,7 +422,7 @@ class CheckboxDisabledTransitionsComponent {
 class CheckboxFormGroupComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
 
-    public myForm = this.fb.group({ checkbox: [''] });
+    public myForm = this.fb.group({ checkbox: [null] });
 
     constructor(private fb: FormBuilder) {}
 }
