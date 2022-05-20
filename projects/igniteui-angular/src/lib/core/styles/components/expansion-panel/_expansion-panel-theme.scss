@@ -138,6 +138,7 @@
     %igx-expanded-panel-margin {
         igx-expansion-panel[aria-expanded='true'] {
             margin: var-get($theme, 'expanded-margin') 0;
+            transition: margin 350ms $ease-in-quad;
 
             &:first-of-type {
                 margin-top: 0;
@@ -146,6 +147,10 @@
             &:last-of-type {
                 margin-bottom: 0;
             }
+        }
+
+        igx-expansion-panel[aria-expanded='false'] {
+            transition: margin 350ms $ease-out-quad;
         }
     }
 
