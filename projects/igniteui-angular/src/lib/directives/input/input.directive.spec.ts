@@ -18,6 +18,7 @@ const INPUT_GROUP_DISABLED_CSS_CLASS = 'igx-input-group--disabled';
 const INPUT_GROUP_REQUIRED_CSS_CLASS = 'igx-input-group--required';
 const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
+const INPUT_GROUP_CLEAR_CSS_CLASS = 'igx-input-group__clear-icon'
 
 describe('IgxInput', () => {
     configureTestSuite();
@@ -757,13 +758,14 @@ describe('IgxInput', () => {
         expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
     }));
 
-    it('should not hold old file input value in form after clearing the input', () => {
+    fit('should not hold old file input value in form after clearing the input', () => {
         const fixture = TestBed.createComponent(FileInputFormComponent);
         fixture.detectChanges();
 
         const igxInput = fixture.componentInstance.input;
         const inputElement = igxInput.nativeElement;
         const form = fixture.componentInstance.formWithFileInput;
+        const clearButton = fixture.debugElement.query(By.css(INPUT_GROUP_CLEAR_CSS_CLASS)).nativeElement;
 
         expect(inputElement.value).toEqual('');
 
@@ -773,8 +775,9 @@ describe('IgxInput', () => {
 
         expect(igxInput.value).toEqual('C:FakePath/sun.jpg');
         expect(form.controls['fileInput'].value).toEqual('C:FakePath/sun.jpg')
+        expect(clearButton).toBeDefined();
 
-        igxInput.clear();
+        clearButton.click();
         inputElement.dispatchEvent(new Event('blur'));
         fixture.detectChanges();
 
@@ -1118,22 +1121,6 @@ class FileInputFormComponent {
         this.formWithFileInput = fb.group({
             fileInput: new FormControl('')
         });
-    }
-    public onSubmit() {
-
-    }
-
-    public markAsTouched() {
-        if (!this.formWithFileInput.valid) {
-            for (const key in this.formWithFileInput.controls) {
-                if (this.formWithFileInput.controls.hasOwnProperty(key)) {
-                    if (this.formWithFileInput.controls[key]) {
-                        this.formWithFileInput.controls[key].markAsTouched();
-                        this.formWithFileInput.controls[key].updateValueAndValidity();
-                    }
-                }
-            }
-        }
     }
 }
 
