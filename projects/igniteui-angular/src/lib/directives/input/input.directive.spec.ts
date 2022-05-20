@@ -37,7 +37,8 @@ describe('IgxInput', () => {
                 ReactiveFormComponent,
                 InputsWithSameNameAttributesComponent,
                 ToggleRequiredWithNgModelInputComponent,
-                InputReactiveFormComponent
+                InputReactiveFormComponent,
+                FileInputFormComponent
             ],
             imports: [
                 IgxInputGroupModule,
@@ -755,6 +756,32 @@ describe('IgxInput', () => {
         expect(asterisk).toBe('"*"');
         expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
     }));
+
+    fit('should not submit old file input value after clearing the input', () => {
+        const fixture = TestBed.createComponent(FileInputFormComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.input;
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+        const form = fixture.componentInstance.formWithFileInput;
+
+        expect(igxInput.nativeElement.value).toEqual('');
+
+        inputElement.value = 'C:FakePath/sun.jpg';
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+
+        expect(igxInput.value).toEqual('C:FakePath/sun.jpg');
+        expect(form.controls['fileInput'].value).toEqual('C:FakePath/sun.jpg')
+
+        igxInput.clear();
+        inputElement.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+
+        expect(igxInput.value).toEqual('');
+        expect(form.controls['fileInput'].value).toEqual('');
+
+    });
 });
 
 @Component({
@@ -1070,6 +1097,46 @@ class InputReactiveFormComponent {
         }
     }
 }
+
+@Component({
+    template: `
+        <form [formGroup]="formWithFileInput" (ngSubmit)="onSubmit()">
+            <igx-input-group #igxInputGroup>
+                <input igxInput #fileInput name="fileInput" type="text" formControlName="fileInput" />
+                <label igxLabel for="fileInput">File Name</label>
+            </igx-input-group>
+        </form>
+`
+})
+
+class FileInputFormComponent {
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('fileInput', { read: IgxInputDirective }) public input: IgxInputDirective;
+    public formWithFileInput: FormGroup;
+
+    constructor(fb: FormBuilder) {
+        this.formWithFileInput = fb.group({
+            fileInput: new FormControl('')
+        });
+    }
+    public onSubmit() {
+
+    }
+
+    public markAsTouched() {
+        if (!this.formWithFileInput.valid) {
+            for (const key in this.formWithFileInput.controls) {
+                if (this.formWithFileInput.controls.hasOwnProperty(key)) {
+                    if (this.formWithFileInput.controls[key]) {
+                        this.formWithFileInput.controls[key].markAsTouched();
+                        this.formWithFileInput.controls[key].updateValueAndValidity();
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 const testRequiredValidation = (inputElement, fixture) => {
     dispatchInputEvent('focus', inputElement, fixture);
