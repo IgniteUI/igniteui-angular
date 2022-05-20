@@ -313,8 +313,8 @@ export class IgxGridTransactionStatePipe implements PipeTransform {
 @Pipe({ name: 'columnFormatter' })
 export class IgxColumnFormatterPipe implements PipeTransform {
 
-    public transform(value: any, formatter: (v: any, data: any) => any, rowData: any) {
-        return formatter(value, rowData);
+    public transform(value: any, formatter: (v: any, data: any, columnData? :any) => any, rowData: any, columnData? : any) {
+        return formatter(value, rowData, columnData);
     }
 }
 
