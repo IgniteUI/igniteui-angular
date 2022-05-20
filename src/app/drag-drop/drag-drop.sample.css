@@ -133,3 +133,20 @@
     font-size: 1.2em;
     margin-left: 0.2em;
 }
+
+.dragRow {
+    display: flex;
+    flex-direction:row;
+}
+
+.dragScrollContainer {
+    width: 1000px;
+    height: 300px;
+    overflow: auto;
+}
+
+.dragScrollContent {
+    height: 1000px;
+    width: 2000px;
+    background-color: grey
+}

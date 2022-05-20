@@ -1,31 +1,60 @@
 <section class="sample-content">
     <article class="sample-column">
         <h4 class="sample-title">No ghost dragging:</h4>
-        <div [style.height.px]="100">
-            <div [igxDrag]="{ dragged: false }" [ghost]="false" class="dialog" [dragChannel]="['Suspect']" [dragDirection]="dragDir"
-                (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false" (dragClick)="dragClick()">
-                <span *ngIf="!draggedElem">Drag me</span>
-                <span *ngIf="draggedElem">Weeeee</span>
-                <igx-icon igxDragIgnore class="dragClickable" (click)="openDialog()">edit</igx-icon>
+        <div class="dragRow">
+            <div style="width: 500px; height: 300px;">
+                <div [igxDrag]="{ dragged: false }" [ghost]="false" class="dialog" [dragChannel]="['Suspect']" [dragDirection]="dragDir"
+                    (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false" (dragClick)="dragClick()">
+                    <span *ngIf="!draggedElem">Drag me</span>
+                    <span *ngIf="draggedElem">Weeeee</span>
+                    <igx-icon igxDragIgnore class="dragClickable" (click)="openDialog()">edit</igx-icon>
+                </div>
+            </div>
+            <div #parentScroll class="dragScrollContainer">
+                <div class="dragScrollContent">
+                    <div [igxDrag]="{ dragged: false }" [ghost]="false" class="dialog" [dragChannel]="['Suspect']" [dragDirection]="dragDir" [scrollContainer]="parentScroll"
+                        (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false" (dragClick)="dragClick()">
+                        <span *ngIf="!draggedElem">Drag me</span>
+                        <span *ngIf="draggedElem">Weeeee</span>
+                        <igx-icon igxDragIgnore class="dragClickable" (click)="openDialog()">edit</igx-icon>
+                    </div>
+                </div>
             </div>
         </div>
         <br>
         <h4 class="sample-title">Ghost and base templating:</h4>
-        <div #ghostHost [style.height.px]="100">
-            <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
-                [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
-                (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (dragClick)="dragClick()">
-                <span *ngIf="!customDragged">Drag me</span>
-                <ng-template #dragGhost>
-                    <div class="customGhost">
-                        <span *ngIf="!ghostInDropArea">Weeeee</span>
-                        <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
-                        <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
+        <div class="dragRow">
+            <div style="width: 500px; height: 300px;">
+                <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
+                    [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                    (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (dragClick)="dragClick()">
+                    <span *ngIf="!customDragged">Drag me</span>
+                    <ng-template #dragGhost>
+                        <div class="customGhost">
+                            <span *ngIf="!ghostInDropArea">Weeeee</span>
+                            <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
+                            <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+            <div #parentScrollGhost class="dragScrollContainer">
+                <div class="dragScrollContent">
+                    <div [igxDrag]="{ id: 'customGhost2'}" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhostScroll" [scrollContainer]="parentScrollGhost" [ghostHost]="parentScrollGhost"
+                        [ngClass]="customDraggedScroll ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                        (dragStart)="customDraggedScroll = true" (dragEnd)="customDraggedScroll = false"  (dragClick)="dragClick()">
+                        <span *ngIf="!customDraggedScroll">Drag me</span>
+                        <ng-template #dragGhostScroll>
+                            <div class="customGhost">
+                                <span *ngIf="!ghostInDropArea">Weeeee</span>
+                                <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
+                                <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
+                            </div>
+                        </ng-template>
                     </div>
-                </ng-template>
+                </div>
             </div>
         </div>
-
         <br>
         <h4 class="sample-title">Drag Handle:</h4>
         <button igxButton="raised" igxRipple (click)="openDialog()" [style.width.px]="150">Open dialog</button>
@@ -109,11 +138,26 @@
         </ng-template>
 
         <p>Ghost dragging - transition to origin:</p>
-        <div [style.height.px]="100">
-                <div [igxDrag]="{ id: 'customGhostAnim'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhostAnimTemplate"
-                [ngClass]="customDraggedAnim ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
-                (dragStart)="customDraggedAnim = true" (dragEnd)="dragGhostAnimOrigin($event)" (transitioned)="customDraggedAnim = false">
-                <span *ngIf="!customDraggedAnim">Drag me</span>
+        <div class="dragRow">
+            <div style="width: 500px; height: 300px;">
+                <div [style.height.px]="100">
+                        <div [igxDrag]="{ id: 'customGhostAnim'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhostAnimTemplate"
+                        [ngClass]="customDraggedAnim ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                        (dragStart)="customDraggedAnim = true" (dragEnd)="dragGhostAnimOrigin($event)" (transitioned)="customDraggedAnim = false">
+                        <span *ngIf="!customDraggedAnim">Drag me</span>
+                    </div>
+                </div>
+            </div>
+            <div #parentScrollGhostOrigin class="dragScrollContainer">
+                <div class="dragScrollContent">
+                    <div [style.height.px]="100">
+                            <div [igxDrag]="{ id: 'customGhostAnim'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhostAnimTemplate" [scrollContainer]="parentScrollGhostOrigin"
+                            [ngClass]="customDraggedAnimScroll ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                            (dragStart)="customDraggedAnimScroll = true" (dragEnd)="dragGhostAnimOrigin($event)" (transitioned)="customDraggedAnimScroll = false">
+                            <span *ngIf="!customDraggedAnimScroll">Drag me</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

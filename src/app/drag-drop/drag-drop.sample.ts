@@ -64,7 +64,9 @@ export class DragDropSampleComponent {
     public dropStrategy = IgxInsertDropStrategy;
     public draggedElem = false;
     public customDragged = false;
+    public customDraggedScroll = false;
     public customDraggedAnim = false;
+    public customDraggedAnimScroll = false;
     public customDraggedAnimXY = false;
     public ghostInDropArea = false;
     public friendlyArea = true;
