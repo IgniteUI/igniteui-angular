@@ -205,7 +205,6 @@
         background: var-get($theme, 'body-background');
         overflow: hidden;
         padding: $panel-padding;
-        padding-top: 0;
     }
 
     %igx-expansion-panel--disabled {
