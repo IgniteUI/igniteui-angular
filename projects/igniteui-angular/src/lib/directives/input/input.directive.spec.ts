@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
@@ -777,8 +778,7 @@ describe('IgxInput', () => {
         expect(form.controls['fileInput'].value).toEqual('C:FakePath/sun.jpg')
         expect(clearButton).toBeDefined();
 
-        clearButton.click();
-        inputElement.dispatchEvent(new Event('blur'));
+        UIInteractions.simulateClickEvent(clearButton);
         fixture.detectChanges();
 
         expect(igxInput.value).toEqual('');
