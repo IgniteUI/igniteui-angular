@@ -440,6 +440,11 @@ export class AppComponent implements OnInit {
             name: 'Slider'
         },
         {
+            link: '/range-slider',
+            icon: 'open_in_full',
+            name: 'Range Slider'
+        },
+        {
             link: '/splitter',
             icon: 'linear_scale',
             name: 'Splitter'

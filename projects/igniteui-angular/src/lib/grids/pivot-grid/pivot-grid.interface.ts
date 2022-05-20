@@ -136,7 +136,19 @@ export interface IPivotValue {
     /** Enables a data type specific template of the cells */
     dataType?: GridColumnDataType;
     /** Applies display format to cell values. */
-    formatter?: (value: any, rowData?: any) => any;
+    formatter?: (value: any, rowData?: IPivotGridRecord, columnData?: IPivotGridColumn) => any;
+}
+
+/** Interface describing the Pivot column data.
+*  Contains information on the related column dimensions and their values.
+*/
+export interface IPivotGridColumn {
+        field: string,
+        /** Gets/Sets the group value associated with the related column dimension by its memberName. **/
+        dimensionValues: Map<string, string>;
+        /** List of dimensions associated with the column.**/
+        dimensions: IPivotDimension[];
+        value: IPivotValue
 }
 
 /** Interface describing the Pivot data keys used for data generation.
