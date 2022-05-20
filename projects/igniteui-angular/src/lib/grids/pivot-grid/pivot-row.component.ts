@@ -7,11 +7,12 @@ import {
     forwardRef,
     HostBinding, Inject, Input, ViewContainerRef
 } from '@angular/core';
+import { dumpTruck } from '@igniteui/material-icons-extended';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxRowDirective } from '../row.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IPivotGridRecord } from './pivot-grid.interface';
+import { IPivotGridColumn, IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 
 
@@ -175,5 +176,26 @@ export class IgxPivotRowComponent extends IgxRowDirective {
             !nav.isRowHeaderActive &&
             super.isCellActive(visibleColumnIndex) :
             false;
+    }
+
+    public getColumnData(col: IgxColumnComponent) : IPivotGridColumn {
+        const path = col.field.split(this.grid.pivotKeys.columnDimensionSeparator);
+        const keyValueMap = new Map<string, string>();
+        const colDimensions = PivotUtil.flatten(this.grid.columnDimensions);
+        for (const dim of colDimensions) {
+            keyValueMap.set(dim.memberName, path.shift());
+        }
+        let pivotValue;
+        if (this.grid.hasMultipleValues) {
+            pivotValue = this.grid.values.find(x => x.member === path.shift());
+        } else {
+            pivotValue = this.grid.values ? this.grid.values[0] : undefined;
+        }
+        return {
+            field: col.field,
+            dimensions: this.grid.columnDimensions,
+            dimensionValues: keyValueMap,
+            value: pivotValue
+        };
     }
 }
