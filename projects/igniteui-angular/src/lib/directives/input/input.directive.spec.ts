@@ -757,15 +757,15 @@ describe('IgxInput', () => {
         expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
     }));
 
-    fit('should not submit old file input value after clearing the input', () => {
+    it('should not hold old file input value in form after clearing the input', () => {
         const fixture = TestBed.createComponent(FileInputFormComponent);
         fixture.detectChanges();
 
         const igxInput = fixture.componentInstance.input;
-        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+        const inputElement = igxInput.nativeElement;
         const form = fixture.componentInstance.formWithFileInput;
 
-        expect(igxInput.nativeElement.value).toEqual('');
+        expect(inputElement.value).toEqual('');
 
         inputElement.value = 'C:FakePath/sun.jpg';
         inputElement.dispatchEvent(new Event('input'));
