@@ -1,7 +1,7 @@
 import { IgxDateTimeEditorDirective, IgxDateTimeEditorModule } from './date-time-editor.directive';
 import { DatePart } from './date-time-editor.common';
 import { DOCUMENT, formatDate } from '@angular/common';
-import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -341,7 +341,8 @@ describe('IgxDateTimeEditor', () => {
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
-                        IgxDateTimeEditorSampleComponent
+                        IgxDateTimeEditorSampleComponent,
+                        IgxDateTimeEditorShadowDomComponent
                     ],
                     imports: [IgxInputGroupModule, IgxDateTimeEditorModule, FormsModule, NoopAnimationsModule]
                 })
@@ -933,6 +934,82 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
+            it('should properly increment/decrement date-time portions with arrow up/down keys in shadow DOM', () => {
+                fixture = TestBed.createComponent(IgxDateTimeEditorShadowDomComponent);
+                fixture.detectChanges();
+
+                fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy hh:mm:ss';
+                fixture.detectChanges();
+
+                inputElement = fixture.debugElement.query(By.css('input'));
+                dateTimeEditorDirective = inputElement.injector.get(IgxDateTimeEditorDirective);
+
+                const today = new Date(2022, 5, 12, 14, 35, 12);
+                dateTimeEditorDirective.value = today;
+
+                inputElement.nativeElement.focus();
+                fixture.detectChanges();
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(1, 1);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate() + 1);
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(1, 1);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate());
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(4, 4);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getMonth()).toEqual(today.getMonth() + 1);
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(4, 4);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getMonth()).toEqual(today.getMonth());
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(9, 9);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getFullYear()).toEqual(today.getFullYear() + 1);
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(9, 9);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getFullYear()).toEqual(today.getFullYear());
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(12, 12);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getHours()).toEqual(today.getHours() + 1);
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(12, 12);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getHours()).toEqual(today.getHours());
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(15, 15);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getMinutes()).toEqual(today.getMinutes() + 1);
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(15, 15);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getMinutes()).toEqual(today.getMinutes());
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(18, 18);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getSeconds()).toEqual(today.getSeconds() + 1);
+
+                dateTimeEditorDirective.nativeElement.setSelectionRange(18, 18);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', inputElement, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getSeconds()).toEqual(today.getSeconds());
+            });
         });
 
         describe('Form control tests: ', () => {
@@ -1077,4 +1154,16 @@ class IgxDateTimeEditorFormComponent {
             this.submitted.emit(this.reactiveForm.value.dateEditor);
         }
     }
+}
+
+@Component({
+    template: `
+        <igx-input-group>
+        	<label igxLabel>Choose Date</label>
+        	<input type="text" igxInput [igxDateTimeEditor]="dateTimeFormat"/>
+        </igx-input-group>`,
+    encapsulation: ViewEncapsulation.ShadowDom
+})
+export class IgxDateTimeEditorShadowDomComponent {
+    public dateTimeFormat = 'dd/MM/yyyy hh:mm:ss';
 }
