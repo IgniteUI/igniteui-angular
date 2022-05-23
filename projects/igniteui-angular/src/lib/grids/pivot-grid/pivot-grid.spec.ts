@@ -14,7 +14,7 @@ import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponen
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxPivotDateAggregate, IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
-import { IPivotGridRecord, PivotDimensionType } from './pivot-grid.interface';
+import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotGridModule } from './pivot-grid.module';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
@@ -2354,6 +2354,39 @@ describe('IgxPivotGrid #pivotGrid', () => {
             let pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
             expect(pivotRecord.aggregationValues.get('London')).toBe(293);
 
+        });
+
+        it('should allow formatting based on additional record and column data',() => {
+            pivotGrid.pivotConfiguration = {
+                columns: [
+                    {
+                        memberName: 'City',
+                        enabled: true
+                    }
+                ],
+                rows: [
+                    {
+                        memberName: 'ProductCategory',
+                        enabled: true
+                    }],
+                values: [
+                    {
+                        member: 'UnitsSold',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'SUM',
+                            label: 'Sum'
+                        },
+                        enabled: true,
+                        formatter: (value, rowData: IPivotGridRecord, columnData: IPivotGridColumn) => {
+                          return  rowData.dimensionValues.get('ProductCategory') + '/' + columnData.dimensionValues.get('City')+':' + value;
+                        }
+                    }
+                ]
+            };
+            fixture.detectChanges();
+            expect(pivotGrid.gridAPI.get_cell_by_index(0, 0).nativeElement.innerText).toBe('Accessories/Plovdiv:undefined');
+            expect(pivotGrid.gridAPI.get_cell_by_index(0, 3).nativeElement.innerText).toBe('Accessories/London:293');
         });
     });
 });
