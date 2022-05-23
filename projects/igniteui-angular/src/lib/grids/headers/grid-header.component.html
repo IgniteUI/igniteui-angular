@@ -17,8 +17,9 @@
 </span>
 <ng-container *ngIf="!column.columnGroup">
     <div class="igx-grid-th__icons">
-        <ng-container *ngIf="column.sortable">
-            <div class="sort-icon" [attr.data-sortIndex]="column.field | sortingIndex:grid.sortingExpressions"
+        <ng-container *ngIf="column.sortable && !disabled">
+            <div class="sort-icon"
+                [attr.data-sortIndex]="(grid.sortingOptions.mode === 'single' && grid.sortingExpressions.length <=1) ? null : column.field | sortingIndex:grid.sortingExpressions"
                 [attr.draggable]="false" (click)="onSortingIconClick($event)" (pointerdown)="$event.stopPropagation()">
                 <ng-container *ngTemplateOutlet="sortIconTemplate; context: { $implicit:  this }"></ng-container>
             </div>

@@ -79,14 +79,11 @@ describe('IgxGrid - GroupBy #grid', () => {
             const icon = chip.nativeElement.querySelector('[igxsuffix]').textContent.trim();
 
             expect(content).toBe(grouping[index].fieldName);
-            expect(content).toBe(sorting[index].fieldName);
 
             if (icon === SORTING_ICON_ASC_CONTENT) {
                 expect(grouping[index].dir).toBe(SortingDirection.Asc);
-                expect(sorting[index].dir).toBe(SortingDirection.Asc);
             } else {
                 expect(grouping[index].dir).toBe(SortingDirection.Desc);
-                expect(sorting[index].dir).toBe(SortingDirection.Desc);
             }
         });
     };
@@ -741,7 +738,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     }));
 
-    it('should disallow setting sorting state None to grouped column when sorting via the UI.', fakeAsync(() => {
+    it('should not be able to sort the column when is already grouped by', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -752,27 +749,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        // click header sort icon
-        GridFunctions.clickHeaderSortIcon(headers[0]);
-        tick();
-        fix.detectChanges();
-
-        const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
-
-        // click header sort icon again
-        GridFunctions.clickHeaderSortIcon(headers[0]);
-        tick();
-        fix.detectChanges();
-
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
-
-        // click header sort icon again
-        GridFunctions.clickHeaderSortIcon(headers[0]);
-        tick();
-        fix.detectChanges();
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
-
+        //header sort icon should not be displayed
+        const sortIcon = headers[0].query(By.css('.sort-icon'));
+        expect(sortIcon).toBeNull()
     }));
 
     it('should group by the specified field when grouping by an already sorted field.', fakeAsync(() => {
@@ -783,6 +762,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
+        expect(grid.sortingExpressions.length).toBe(1);
+
         grid.groupBy({
             fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
         });
@@ -790,6 +771,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         const groupRows = grid.groupsRowList.toArray();
         // verify group order
         checkGroups(groupRows, [null, '', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']);
+        expect(grid.sortingExpressions.length).toBe(0);
+        expect(grid.groupingExpressions.length).toBe(1);
     }));
 
     it('should allow grouping of already sorted column', waitForAsync(() => {
@@ -2481,11 +2464,12 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         fix.detectChanges();
         await wait(100);
+        fix.detectChanges();
         const rows = grid.dataRowList.toArray();
         expect(rows.length).toEqual(1);
         GridSelectionFunctions.clickRowCheckbox(rows[0].element);
         await wait(100);
-        grid.cdr.detectChanges();
+        fix.detectChanges();
         expect(grid.selectedRows.length).toEqual(1);
         GridSelectionFunctions.verifyRowSelected(rows[0]);
 
@@ -3090,7 +3074,8 @@ describe('IgxGrid - GroupBy #grid', () => {
                 [{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false }];
             fix.detectChanges();
 
-            expect(grid.sortingExpressions.length).toEqual(2);
+            //grouping expressions should not affect grouping expressions
+            expect(grid.sortingExpressions.length).toEqual(1);
             expect(grid.groupingExpressions.length).toEqual(1);
 
             const groupRows = grid.groupsRowList.toArray();
@@ -3312,10 +3297,11 @@ describe('IgxGrid - GroupBy #grid', () => {
                 fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
             });
             fix.detectChanges();
+
             expect(grid.sortingExpressions).toEqual([
-                { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
                 { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
-                { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
+                { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+                { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
             ]);
             expect(grid.groupingExpressions).toEqual([{
                 fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
@@ -3450,10 +3436,9 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupingExpressions = grExprs;
             fix.detectChanges();
 
-            // check sorting expressions order - grouping should be applied first
-            expect(grid.sortingExpressions.length).toBe(2);
-            expect(grid.sortingExpressions[0]).toBe(grExprs[0]);
-            expect(grid.sortingExpressions[1]).toBe(sExprs[0]);
+            // check grouping expressions override sorting expressions - grouping should be applied first
+            expect(grid.sortingExpressions.length).toBe(1);
+            expect(grid.sortingExpressions[0]).toBe(sExprs[0]);
 
             dataRows = grid.dataRowList.toArray();
             const expectedReleaseRecsOrder = [true, false, true, false, false, null, true, true];

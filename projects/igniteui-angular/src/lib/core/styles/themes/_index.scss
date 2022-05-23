@@ -39,6 +39,7 @@
 ) {
     // Stores all excluded component styles
     $excluded: ();
+    $scope: if(is-root(), ':root', '&');
 
     @include palette-vars($palette, $contrast: true);
     @include elevation-vars($elevations);
@@ -49,7 +50,7 @@
     }
 
     @if $elevation == false {
-        :root {
+        #{$scope} {
             --igx-elevation-factor: 0;
 
             @if $wc {
@@ -59,7 +60,7 @@
     }
 
     @if $roundness {
-        :root {
+        #{$scope} {
             --igx-radius-factor: #{$roundness};
 
             @if $wc {
