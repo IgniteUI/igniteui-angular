@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -8,7 +8,7 @@ import {
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IFormattingViews, IgxCalendarComponent, IgxCalendarModule } from '../calendar/public_api';
+import { IFormattingViews, IgxCalendarComponent, IgxCalendarModule, WEEKDAYS } from '../calendar/public_api';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
@@ -291,6 +291,47 @@ describe('IgxDatePicker', () => {
                 expect(inputGroupRequiredClass).not.toBeNull();
                 expect(asterisk).toBe('"*"');
             });
+
+            it('Should the weekStart property takes precedence over locale.', fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+
+                datePicker.locale = 'en';
+                fixture.detectChanges();
+
+                expect(datePicker.weekStart).toEqual(0);
+
+                datePicker.weekStart = WEEKDAYS.FRIDAY;
+                expect(datePicker.weekStart).toEqual(5);
+
+                datePicker.locale = 'fr';
+                fixture.detectChanges();
+
+                expect(datePicker.weekStart).toEqual(5);
+
+                flush();
+            }));
+
+            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+
+                const locale = 'en-US';
+                datePicker.locale = locale;
+                fixture.detectChanges();
+
+                expect(datePicker.locale).toEqual(locale);
+                expect(datePicker.weekStart).toEqual(WEEKDAYS.SUNDAY)
+
+                datePicker.locale = 'frrr';
+                datePicker.weekStart = WEEKDAYS.FRIDAY;
+                fixture.detectChanges();
+
+                expect(datePicker.locale).toEqual('en-US');
+                expect(datePicker.weekStart).toEqual(WEEKDAYS.FRIDAY);
+            }));
         });
 
         describe('Projected elements', () => {

@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Directive } from '@angular/core';
+import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID } from '@angular/core';
 import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
@@ -163,7 +163,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _locale = 'en';
+    private _locale;
 
     /**
      * @hidden
@@ -240,17 +240,21 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
      */
     public set weekStart(value: WEEKDAYS | number) {
+        this._weekStart = value;
+
         this.calendarModel.firstWeekDay = value;
     }
 
     /**
      * Gets the `locale` of the calendar.
-     * Default value is `"en"`.
+     * Default value is `application's LOCALE_ID`.
      */
     @Input()
     public get locale(): string {
         return this._locale;
     }
+
+    private _weekStart: number | WEEKDAYS;
 
     /**
      * Sets the `locale` of the calendar.
@@ -259,9 +263,16 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set locale(value: string) {
         this._locale = value;
-        if (!this.weekStart) {
+        try {
+            getLocaleFirstDayOfWeek(this._locale);
+        } catch (e) {
+            this._locale = this._localeId;
+        }
+
+        if (this._weekStart === undefined) {
             this.calendarModel.firstWeekDay = getLocaleFirstDayOfWeek(this._locale);
         }
+
         this.initFormatters();
     }
 
@@ -440,8 +451,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    constructor(protected platform: PlatformUtil) {
+    constructor(protected platform: PlatformUtil, @Inject(LOCALE_ID) protected _localeId: any) {
         this.calendarModel = new Calendar();
+        this.locale = _localeId;
 
         this.viewDate = this.viewDate ? this.viewDate : new Date();
 

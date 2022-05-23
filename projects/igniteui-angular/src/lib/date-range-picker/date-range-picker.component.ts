@@ -111,24 +111,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
-
-    /**
-     * Locale settings used for value formatting and calendar.
-     *
-     * @remarks
-     * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
-     * If a `locale` is set, it must be registered via `registerLocaleData`.
-     * Please refer to https://angular.io/guide/i18n#i18n-pipes.
-     * If it is not registered, `Intl` will be used for formatting.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker locale="jp"></igx-date-range-picker>
-     * ```
-     */
-    @Input()
-    public locale: string;
+    public weekStart: WEEKDAYS | number;
 
     /**
      * A custom formatter function, applied on the selected or passed in date.
@@ -614,8 +597,12 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
 
         this.locale = this.locale || this._localeId;
-        if (!this.weekStart) {
-            this.weekStart = getLocaleFirstDayOfWeek(this.locale);
+        if (this.weekStart === undefined) {
+            try {
+                this.weekStart = getLocaleFirstDayOfWeek(this.locale);
+            } catch (e) {
+                this.weekStart = getLocaleFirstDayOfWeek(this._localeId);
+            }
         }
     }
 

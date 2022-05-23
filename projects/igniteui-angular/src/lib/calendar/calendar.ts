@@ -157,12 +157,16 @@ export class Calendar {
 
     private _firstWeekDay: number | WEEKDAYS;
 
-    constructor(firstWeekDay: number | WEEKDAYS = WEEKDAYS.SUNDAY) {
+    constructor(firstWeekDay: number | WEEKDAYS = undefined) {
         this._firstWeekDay = firstWeekDay;
     }
 
     public get firstWeekDay(): number {
-        return this._firstWeekDay % 7;
+        if (this._firstWeekDay !== undefined) {
+            return this._firstWeekDay % 7;
+        }
+
+        return this._firstWeekDay;
     }
 
     public set firstWeekDay(value: number) {

@@ -20,7 +20,7 @@ import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api'
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { IgxPickersCommonModule } from '../date-common/public_api';
 import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
-import { IgxCalendarComponent } from '../calendar/public_api';
+import {IgxCalendarComponent, WEEKDAYS} from '../calendar/public_api';
 import { Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
@@ -139,7 +139,7 @@ describe('IgxDateRangePicker', () => {
 
             overlay = new IgxOverlayService(
                 mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil);
-            mockCalendar = new IgxCalendarComponent(platform);
+            mockCalendar = new IgxCalendarComponent(platform, 'en');
             mockDaysView = {
                 focusActiveDate: jasmine.createSpy()
             } as any;
@@ -1354,6 +1354,47 @@ describe('IgxDateRangePicker', () => {
                     .toHaveBeenCalledWith(overlayContent, jasmine.anything(), document,
                         jasmine.anything(), dateRange.element.nativeElement);
             }));
+
+            it('Should the weekStart property takes precedence over locale.', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeCustomComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                dateRange.locale = 'en';
+                fixture.detectChanges();
+
+                expect(dateRange.weekStart).toEqual(0);
+
+                dateRange.weekStart = WEEKDAYS.FRIDAY;
+                expect(dateRange.weekStart).toEqual(5);
+
+                dateRange.locale = 'fr';
+                fixture.detectChanges();
+
+                expect(dateRange.weekStart).toEqual(5);
+
+                flush();
+            }));
+
+            it('Should passing invalid value for locale, then setting weekStart must be respected.', () => {
+                fixture = TestBed.createComponent(DateRangeCustomComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                const locale = 'en-US';
+                dateRange.locale = locale;
+                fixture.detectChanges();
+
+                expect(dateRange.locale).toEqual(locale);
+                expect(dateRange.weekStart).toEqual(WEEKDAYS.SUNDAY)
+
+                dateRange.locale = 'frrr';
+                dateRange.weekStart = WEEKDAYS.FRIDAY;
+                fixture.detectChanges();
+
+                expect(dateRange.locale).toEqual('en-US');
+                expect(dateRange.weekStart).toEqual(WEEKDAYS.FRIDAY);
+            });
         });
     });
 });
