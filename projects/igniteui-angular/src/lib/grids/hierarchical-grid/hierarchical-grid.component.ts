@@ -571,10 +571,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         super.ngOnInit();
     }
 
-    public ngDoCheck() {
-        super.ngDoCheck();
-    }
-
     /**
      * @hidden
      */
