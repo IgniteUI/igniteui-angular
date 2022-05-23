@@ -527,8 +527,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <!-- Set in markup -->
      *  <igx-combo #combo>
      *      ...
-     *      <ng-template igxComboItem>
-     *          <div class="custom-item" let-item let-key="valueKey">
+     *      <ng-template igxComboItem let-item let-key="valueKey">
+     *          <div class="custom-item">
      *              <div class="custom-item__name">{{ item[key] }}</div>
      *              <div class="custom-item__cost">{{ item.cost }}</div>
      *          </div>
