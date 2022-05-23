@@ -763,19 +763,27 @@ describe('IgxInput', () => {
         const fixture = TestBed.createComponent(FileInputFormComponent);
         fixture.detectChanges();
 
-        const igxInput = fixture.componentInstance.input;
-        const inputElement = igxInput.nativeElement;
         const form = fixture.componentInstance.formWithFileInput;
-        const clearButton = fixture.debugElement.query(By.css(INPUT_GROUP_CLEAR_CSS_CLASS)).nativeElement;
+        const igxInput = fixture.componentInstance.input;
+        const igxInputGroup = fixture.componentInstance.igxInputGroup;
+        const inputElement = igxInput.nativeElement;
 
-        expect(inputElement.value).toEqual('');
+        expect(igxInput.value).toEqual('');
+        expect(form.controls['fileInput'].value).toEqual('');
 
-        inputElement.value = 'C:FakePath/sun.jpg';
+        const list = new DataTransfer();
+        const file = new File(["content"], "filename.jpg");
+        list.items.add(file);
+        const myFileList = list.files;
+
+        inputElement.files = myFileList;
         inputElement.dispatchEvent(new Event('input'));
         fixture.detectChanges();
 
-        expect(igxInput.value).toEqual('C:FakePath/sun.jpg');
-        expect(form.controls['fileInput'].value).toEqual('C:FakePath/sun.jpg')
+        expect(igxInput.value).toEqual('C:\\fakepath\\filename.jpg');
+        expect(form.controls['fileInput'].value).toEqual('C:\\fakepath\\filename.jpg')
+
+        const clearButton = igxInputGroup.element.nativeElement.querySelector('.igx-input-group__clear-icon');
         expect(clearButton).toBeDefined();
 
         UIInteractions.simulateClickEvent(clearButton);
@@ -783,8 +791,42 @@ describe('IgxInput', () => {
 
         expect(igxInput.value).toEqual('');
         expect(form.controls['fileInput'].value).toEqual('');
-
     });
+
+    it('should not hold old file input value after clearing the input when ngModel is used', () => {
+        const fixture = TestBed.createComponent(FileInputFormComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.inputWithNgModel;
+        const igxInputGroup = fixture.componentInstance.igxInputGroupNgModel;
+        const inputElement = igxInput.nativeElement;
+        const model = fixture.componentInstance.model;
+
+        expect(igxInput.value).toEqual('');
+        expect(model.inputValue).toEqual(null);
+
+        const list = new DataTransfer();
+        const file = new File(["content"], "filename.jpg");
+        list.items.add(file);
+        const myFileList = list.files;
+
+        inputElement.files = myFileList;
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+
+        expect(igxInput.value).toEqual('C:\\fakepath\\filename.jpg');
+        expect(model.inputValue).toEqual('C:\\fakepath\\filename.jpg');
+
+        const clearButton = igxInputGroup.element.nativeElement.querySelector('.igx-input-group__clear-icon');
+        expect(clearButton).toBeDefined();
+
+        UIInteractions.simulateClickEvent(clearButton);
+        fixture.detectChanges();
+
+        expect(igxInput.value).toEqual('');
+        expect(model.inputValue).toEqual('');
+    });
+
 });
 
 @Component({
@@ -1105,17 +1147,26 @@ class InputReactiveFormComponent {
     template: `
         <form [formGroup]="formWithFileInput" (ngSubmit)="onSubmit()">
             <igx-input-group #igxInputGroup>
-                <input igxInput #fileInput name="fileInput" type="text" formControlName="fileInput" />
+                <input igxInput #fileInput name="fileInput" type="file" formControlName="fileInput" />
                 <label igxLabel for="fileInput">File Name</label>
             </igx-input-group>
         </form>
+        <igx-input-group #igxInputGroupNgModel>
+            <input igxInput #inputNgModel name="inputNgModel" type="file" [(ngModel)]="model.inputValue"/>
+            <label igxLabel for="inputNgModel">File Name</label>
+        </igx-input-group>
 `
 })
 
 class FileInputFormComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
     @ViewChild('fileInput', { read: IgxInputDirective }) public input: IgxInputDirective;
+    @ViewChild('igxInputGroupNgModel', { static: true }) public igxInputGroupNgModel: IgxInputGroupComponent;
+    @ViewChild('inputNgModel', { read: IgxInputDirective }) public inputWithNgModel: IgxInputDirective;
     public formWithFileInput: FormGroup;
+    public model = {
+        inputValue: null
+    };
 
     constructor(fb: FormBuilder) {
         this.formWithFileInput = fb.group({
