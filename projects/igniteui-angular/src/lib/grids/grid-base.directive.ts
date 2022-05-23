@@ -3245,7 +3245,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         protected transactionFactory: IgxFlatTransactionFactory,
         private elementRef: ElementRef<HTMLElement>,
-        private zone: NgZone,
+        protected zone: NgZone,
         @Inject(DOCUMENT) public document: any,
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
@@ -3481,7 +3481,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         )
             .subscribe(() => {
                 this.zone.run(() => {
-                    this.notifyChanges(true);
+                    // do not trigger reflow if element is detached.
+                    if (this.document.contains(this.nativeElement)) {
+                        this.notifyChanges(true);
+                    }
                 });
             });
 
@@ -3551,9 +3554,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.cdr.detectChanges();
         });
 
-        this.verticalScrollContainer.contentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(() => {
-            this.notifyChanges(false);
-            this.cdr.detectChanges();
+        this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
+            this.notifyChanges();
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
