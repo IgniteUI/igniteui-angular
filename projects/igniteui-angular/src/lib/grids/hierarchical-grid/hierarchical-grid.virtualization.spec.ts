@@ -74,15 +74,18 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         elem.scrollTop = 400;
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait();
+        await wait(30);
+        fixture.detectChanges();
 
         // collapse and expand the row
         (firstRow.nativeElement.children[0] as HTMLElement).click();
         fixture.detectChanges();
-        await wait();
+        await wait(30);
+        fixture.detectChanges();
         (firstRow.nativeElement.children[0] as HTMLElement).click();
         fixture.detectChanges();
-        await wait();
+        await wait(30);
+        fixture.detectChanges();
 
         expect(elem.scrollTop).toBe(400);
         /** row toggle rAF */
@@ -432,6 +435,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
         childGrid.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
         await wait(200);
+        fixture.detectChanges();
 
         expect(verticalScrollWrapper.hidden).toBeFalsy();
         expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toBeLessThan(initialBodyWidth);

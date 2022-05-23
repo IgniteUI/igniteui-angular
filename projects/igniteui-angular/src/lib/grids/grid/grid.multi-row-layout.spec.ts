@@ -995,11 +995,12 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const verticalVirt = grid.verticalScrollContainer;
 
+        fixture.detectChanges();
+
         // scroll to bottom
         const lastIndex = grid.data.length - 1;
         verticalVirt.scrollTo(lastIndex);
-        await wait(100);
-        verticalVirt.scrollTo(lastIndex);
+        fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
 
@@ -1120,6 +1121,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         fix.detectChanges();
         await wait(DEBOUNCETIME);
+        fix.detectChanges();
 
         grid.navigateTo(NAVIGATE);
 
