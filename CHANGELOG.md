@@ -22,6 +22,9 @@ All notable changes for each version of this project will be documented in this 
     ```
     Also an additional optional `columnData` parameter can be added, which contains information on the column dimensions.
 
+- `IgxExpansionPanel`
+    - Changed the expansion panel layout, adding padding to the header and content elements.
+
 
 ### New palette
 
