@@ -2481,11 +2481,12 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         fix.detectChanges();
         await wait(100);
+        fix.detectChanges();
         const rows = grid.dataRowList.toArray();
         expect(rows.length).toEqual(1);
         GridSelectionFunctions.clickRowCheckbox(rows[0].element);
         await wait(100);
-        grid.cdr.detectChanges();
+        fix.detectChanges();
         expect(grid.selectedRows.length).toEqual(1);
         GridSelectionFunctions.verifyRowSelected(rows[0]);
 

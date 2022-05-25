@@ -3234,7 +3234,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         )
             .subscribe(() => {
                 this.zone.run(() => {
-                    this.notifyChanges(true);
+                    // do not trigger reflow if element is detached.
+                    if (this.document.contains(this.nativeElement)) {
+                        this.notifyChanges(true);
+                    }
                 });
             });
 
@@ -3305,8 +3308,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
-            this.notifyChanges(false);
-            this.cdr.detectChanges();
+            this.notifyChanges();
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
