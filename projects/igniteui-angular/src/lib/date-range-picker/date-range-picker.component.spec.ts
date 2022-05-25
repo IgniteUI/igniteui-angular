@@ -1376,7 +1376,7 @@ describe('IgxDateRangePicker', () => {
                 flush();
             }));
 
-            it('Should passing invalid value for locale, then setting weekStart must be respected.', () => {
+            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeCustomComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -1394,7 +1394,7 @@ describe('IgxDateRangePicker', () => {
 
                 expect(dateRange.locale).toEqual('en-US');
                 expect(dateRange.weekStart).toEqual(WEEKDAYS.FRIDAY);
-            });
+            }));
         });
     });
 });

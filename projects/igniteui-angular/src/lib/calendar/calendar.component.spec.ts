@@ -2026,7 +2026,7 @@ describe('IgxCalendar - ', () => {
                 flush();
             }));
 
-            it('Should passing invalid value for locale, then setting weekStart must be respected.', () => {
+            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
                 const locale = 'en-US';
                 calendar.locale = locale;
                 fixture.detectChanges();
@@ -2040,9 +2040,11 @@ describe('IgxCalendar - ', () => {
 
                 expect(calendar.locale).toEqual('fr');
                 expect(calendar.weekStart).toEqual(WEEKDAYS.FRIDAY);
-            });
 
-            it('Should setting the global LOCALE_ID, Calendar must be displayed per current locale.', () => {
+                flush();
+            }));
+
+            it('Should setting the global LOCALE_ID, Calendar must be displayed per current locale.', fakeAsync(() => {
                 // Verify locale is set respecting the globally LOCALE_ID provider
                 expect(calendar.locale).toEqual('fr');
 
@@ -2074,7 +2076,9 @@ describe('IgxCalendar - ', () => {
                 expect(headerDate.nativeElement.textContent.trim()).toMatch('1 juin');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2022');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('juin');
-            });
+
+                flush();
+            }));
         });
     });
 });

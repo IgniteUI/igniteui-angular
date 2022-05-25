@@ -772,7 +772,6 @@ describe('IgxDatePicker', () => {
                 };
                 datePicker.overlaySettings = customSettings;
                 expect(datePicker.overlaySettings).toEqual(customSettings);
-                registerLocaleData(localeES);
                 datePicker.locale = 'ES';
                 expect(datePicker.locale).toEqual('ES');
                 datePicker.placeholder = 'Buenos dias, muchachos';
