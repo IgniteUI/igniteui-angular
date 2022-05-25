@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, FormBuilder, ReactiveFormsModule, Validators, FormControl, FormGroup } from '@angular/forms';
+import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
@@ -696,7 +696,7 @@ describe('IgxInput', () => {
         const dom = fix.debugElement;
         const input = fix.componentInstance.input;
         const inputGroup = fix.componentInstance.igxInputGroup.element.nativeElement;
-        const formGroup: FormGroup = fix.componentInstance.reactiveForm;
+        const formGroup: UntypedFormGroup = fix.componentInstance.reactiveForm;
 
         // interaction test - expect actual asterisk
         // The only way to get a pseudo elements like :before OR :after is to use getComputedStyle(element [, pseudoElt]),
@@ -975,7 +975,7 @@ class ReactiveFormComponent {
         num: [null, Validators.required]
     });
 
-    constructor(private fb: FormBuilder) { }
+    constructor(private fb: UntypedFormBuilder) { }
 
     public markAsTouched() {
         if (!this.form.valid) {
@@ -1026,20 +1026,20 @@ class ToggleRequiredWithNgModelInputComponent {
 class InputReactiveFormComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
     @ViewChild('inputReactive', { read: IgxInputDirective }) public input: IgxInputDirective;
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
 
     public validationType = {
         fullName: [Validators.required]
     };
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         this.reactiveForm = fb.group({
-            fullName: new FormControl('', Validators.required)
+            fullName: new UntypedFormControl('', Validators.required)
         });
     }
     public onSubmitReactive() { }
 
-    public removeValidators(form: FormGroup) {
+    public removeValidators(form: UntypedFormGroup) {
         for (const key in form.controls) {
             if (form.controls.hasOwnProperty(key)) {
                 form.get(key).clearValidators();
@@ -1048,7 +1048,7 @@ class InputReactiveFormComponent {
         }
     }
 
-    public addValidators(form: FormGroup) {
+    public addValidators(form: UntypedFormGroup) {
         for (const key in form.controls) {
             if (form.controls.hasOwnProperty(key)) {
                 form.get(key).setValidators(this.validationType[key]);

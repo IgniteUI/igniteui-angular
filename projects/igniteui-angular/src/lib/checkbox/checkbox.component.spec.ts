@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxCheckboxComponent } from './checkbox.component';
@@ -424,5 +424,5 @@ class CheckboxFormGroupComponent {
 
     public myForm = this.fb.group({ checkbox: [null] });
 
-    constructor(private fb: FormBuilder) {}
+    constructor(private fb: UntypedFormBuilder) {}
 }
