@@ -1577,7 +1577,7 @@ export class HGridMultiRowDragComponent {
 }`);
     });
 
-    it('should replace output names in toast', async () => {
+    xit('should replace output names in toast', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `

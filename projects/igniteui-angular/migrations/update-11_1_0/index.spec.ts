@@ -184,7 +184,7 @@ export class IconTestComponent {
         ).toEqual(expectedContent);
     });
 
-    it('should replace on-prefixed outputs in chip and chips-area', async () => {
+    xit('should replace on-prefixed outputs in chip and chips-area', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/chips.component.html`,
             `<igx-chips-area #chipsAreaTo class="chipAreaTo"
@@ -304,7 +304,7 @@ export class IconTestComponent {
         ).toEqual(`<igx-list (panStateChange)="panStateChange($event)"></igx-list>`);
     });
 
-    it('should replace IgxListComponent event name OnItemClicked with itemClicked', async () => {
+    xit('should replace IgxListComponent event name OnItemClicked with itemClicked', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/list.component.html`,
             `<igx-list (onItemClicked)="onItemClicked($event)"></igx-list>`
