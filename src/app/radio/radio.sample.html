@@ -58,8 +58,8 @@
             <div>
                 <label for="radioGroupSeasons">Favorite season </label>
                 <igx-radio-group id="radioGroupSeasons" name="radioGroupSeasons" labelPosition="before" [(ngModel)]="personBob.favoriteSeason">
-                    <igx-radio class="radio-sample" *ngFor="let item of seasons" value="{{item}}">
-                        {{item}}
+                    <igx-radio class="radio-sample" *ngFor="let item of seasons" [value]="item.name" [disabled]="item.disabled">
+                        {{item.name}}
                     </igx-radio>
                 </igx-radio-group>
             </div>
@@ -76,8 +76,8 @@
             </label>
             <br>
                 <igx-radio-group formControlName="favoriteSeason" name="radioGroupReactive">
-                    <igx-radio class="radio-sample" *ngFor="let item of seasons" value="{{item}}">
-                        {{item}}
+                    <igx-radio class="radio-sample" *ngFor="let item of seasons" [value]="item.name" [disabled]="item.disabled">
+                        {{item.name}}
                     </igx-radio>
                 </igx-radio-group>
             <br>
