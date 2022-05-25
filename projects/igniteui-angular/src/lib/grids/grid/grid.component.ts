@@ -287,6 +287,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.setupColumns();
         }
         this.cdr.markForCheck();
+        if (this.isPercentHeight) {
+            this.notifyChanges(true);
+        }
     }
 
     /**
