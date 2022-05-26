@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
 import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
-import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
+import { WorkspaceSchema, WorkspaceProject, ProjectType } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
     SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeChange, ThemeType
@@ -45,7 +45,10 @@ export class UpdateChanges {
             // Force Angular service to compile project on initial load w/ configure project
             // otherwise if the first compilation occurs on an HTML file the project won't have proper refs
             // and no actual angular metadata will be resolved for the rest of the migration
-            const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+            const wsProject = this.resolveWorkspaceProject();
+            if (!wsProject) {
+                return null;
+            }
             const mainRelPath = wsProject.architect?.build?.options['main'] ?
                 path.join(wsProject.root, wsProject.architect?.build?.options['main']) :
                 `src/main.ts`;
@@ -60,6 +63,7 @@ export class UpdateChanges {
             const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
             project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
         }
+
         return this._projectService;
     }
 
@@ -206,7 +210,7 @@ export class UpdateChanges {
     /** Path must be absolute. If calling externally, use this.getAbsolutePath */
     protected getDefaultLanguageService(entryPath: string): tss.LanguageService | undefined {
         const project = this.getDefaultProjectForFile(entryPath);
-        return project.getLanguageService();
+        return project?.getLanguageService();
     }
 
     protected updateSelectors(entryPath: string) {
@@ -544,7 +548,7 @@ export class UpdateChanges {
         }
     }
 
-    protected updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
+    protected updateClassMembers(entryPath: string, memberChanges: MemberChanges): void {
         let content = this.host.read(entryPath).toString();
         const absPath = tss.server.toNormalizedPath(path.join(process.cwd(), entryPath));
         // use the absolute path for ALL LS operations
@@ -557,6 +561,9 @@ export class UpdateChanges {
             }
 
             langServ = langServ || this.getDefaultLanguageService(absPath);
+            if (!langServ) {
+                return;
+            }
             let matches: number[];
             if (entryPath.endsWith('.ts')) {
                 const source = langServ.getProgram().getSourceFile(absPath);
@@ -795,11 +802,32 @@ export class UpdateChanges {
     }
 
     private getDefaultProjectForFile(entryPath: string): tss.server.Project {
-        const scriptInfo = this.projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.asNormalizedPath(entryPath), false);
+        const scriptInfo = this.projectService?.getOrCreateScriptInfoForNormalizedPath(tss.server.asNormalizedPath(entryPath), false);
+        if (!scriptInfo) {
+            return null;
+        }
         this.projectService.openClientFile(scriptInfo.fileName);
         const project = this.projectService.findProject(scriptInfo.containingProjects[0].projectName);
         project.addMissingFileRoot(scriptInfo.fileName);
         return project;
+    }
+
+    private resolveWorkspaceProject(): WorkspaceProject<ProjectType> | null {
+        let wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+        if (!wsProject) {
+            const projectKeys = Object.keys(this.workspace.projects);
+            if (!projectKeys.length) {
+                this.context
+                    .logger
+                    .info(
+`Could not resolve project from directory ${this.serverHost.getCurrentDirectory()}. Some migrations may not be applied.`);
+                return null;
+            }
+            // get the first configured project in the workspace
+            wsProject = this.workspace.projects[projectKeys[0]];
+        }
+
+        return wsProject;
     }
 }
 
