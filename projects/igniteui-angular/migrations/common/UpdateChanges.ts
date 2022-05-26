@@ -39,6 +39,20 @@ interface AppliedChange {
 export class UpdateChanges {
     protected tsconfigPath = TSCONFIG_PATH;
     protected _projectService: tss.server.ProjectService;
+
+    public _shouldInvokeLS = true;
+    public get shouldInvokeLS(): boolean {
+        return this._shouldInvokeLS;
+    }
+    public set shouldInvokeLS(val: boolean) {
+        if (val === undefined || val === null) {
+            // call LS by default
+            this.shouldInvokeLS = true;
+            return;
+        }
+        this._shouldInvokeLS = val;
+    }
+
     public get projectService(): tss.server.ProjectService {
         if (!this._projectService) {
             this._projectService = createProjectService(this.serverHost);
@@ -176,7 +190,9 @@ export class UpdateChanges {
 
         this.updateTemplateFiles();
         this.updateTsFiles();
-        this.updateMembers();
+        if (this.shouldInvokeLS) {
+            this.updateMembers();
+        }
         /** Sass files */
         if (this.themeChanges && this.themeChanges.changes.length) {
             for (const entryPath of this.sassFiles) {
