@@ -381,11 +381,15 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(childGrid.calcWidth - 370).toBeLessThan(3);
         UIInteractions.simulateClickAndSelectEvent(row.expander);
         fixture.detectChanges();
+        await wait(30);
+        fixture.detectChanges();
         fixture.componentInstance.width = '300px';
         fixture.detectChanges();
         await wait(30);
         fixture.detectChanges();
         UIInteractions.simulateClickAndSelectEvent(row.expander);
+        fixture.detectChanges();
+        await wait(30);
         fixture.detectChanges();
         expect(childGrid.calcWidth - 170).toBeLessThan(3);
     });

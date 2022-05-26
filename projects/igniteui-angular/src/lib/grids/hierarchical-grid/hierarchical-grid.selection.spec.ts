@@ -546,10 +546,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             }
         }));
 
-        it('should able to change rowSelection at runtime', () => {
+        it('should able to change rowSelection at runtime', async () => {
+            hierarchicalGrid.width = '1000px';
+            fix.detectChanges();
             hierarchicalGrid.expandChildren = true;
             fix.detectChanges();
             rowIsland1.expandChildren = true;
+            fix.detectChanges();
+            await wait(30);
             fix.detectChanges();
 
             const childGridLevel1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
@@ -558,11 +562,15 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             hierarchicalGrid.selectAllRows();
             childGridLevel1.selectRows = ['00'];
             fix.detectChanges();
+            await wait(30);
+            fix.detectChanges();
 
             // Change row selection for grids
             hierarchicalGrid.rowSelection = GridSelectionMode.none;
             rowIsland1.rowSelection = GridSelectionMode.multiple;
             rowIsland2.rowSelection = GridSelectionMode.single;
+            fix.detectChanges();
+            await wait(30);
             fix.detectChanges();
 
             expect(hierarchicalGrid.rowSelection).toBe(GridSelectionMode.none);
