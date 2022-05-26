@@ -759,7 +759,7 @@ describe('IgxInput', () => {
         expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
     }));
 
-    fit('should not hold old file input value in form after clearing the input', () => {
+    it('should not hold old file input value in form after clearing the input', () => {
         const fixture = TestBed.createComponent(FileInputFormComponent);
         fixture.detectChanges();
 
@@ -793,7 +793,7 @@ describe('IgxInput', () => {
         expect(form.controls['fileInput'].value).toEqual('');
     });
 
-    fit('should not hold old file input value after clearing the input when ngModel is used', () => {
+    it('should not hold old file input value after clearing the input when ngModel is used', () => {
         const fixture = TestBed.createComponent(FileInputFormComponent);
         fixture.detectChanges();
 
