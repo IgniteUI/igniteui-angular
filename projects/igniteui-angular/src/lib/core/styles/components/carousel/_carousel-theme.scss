@@ -94,6 +94,10 @@
         }
     }
 
+    @if not($border-radius){
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -159,7 +163,7 @@
         @if $not-bootstrap-theme {
             border-radius: border-radius(50%);
         } @else {
-            border-radius: border-radius(var-get($theme, 'border-radius'));
+            border-radius: var-get($theme, 'border-radius');
         }
 
         outline-style: none;
@@ -307,7 +311,7 @@
         height: inherit;
         overflow: hidden;
         outline-style: none;
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
         min-height: 300px;
         min-width: 300px;
     }

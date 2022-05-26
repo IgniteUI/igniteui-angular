@@ -121,6 +121,14 @@
         $shadow: elevation($elevations, $elevation);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
+    @if not($item-border-radius) {
+        $item-border-radius: border-radius(map.get($theme, 'item-border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -181,7 +189,7 @@
         @if $variant != 'indigo-design' {
             border-inline-end: 1px solid var-get($theme, 'border-color');
         }
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
     }
 
     %aside-panning {
@@ -309,7 +317,7 @@
         user-select: none;
         outline: transparent;
         white-space: nowrap;
-        border-radius: border-radius(var-get($theme, 'item-border-radius'));
+        border-radius: var-get($theme, 'item-border-radius');
         text-decoration: none;
         width: calc(100% - #{$drawer-item-margin * 2});
         border: none;
