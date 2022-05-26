@@ -38,11 +38,11 @@ $light-expansion-panel: extend(
         ),
 
         header-title-color: (
-            color: ('grays', 800)
+            color: ('grays', 900)
         ),
 
         header-description-color: (
-            color: ('grays', 600)
+            color: ('grays', 700)
         ),
 
         header-icon-color: (
@@ -50,7 +50,7 @@ $light-expansion-panel: extend(
         ),
 
         body-color: (
-            color: ('grays', 800)
+            color: ('grays', 900)
         ),
 
         disabled-color: (
@@ -65,34 +65,34 @@ $light-expansion-panel: extend(
 
 /// Generates a fluent expansion panel schema.
 /// @type {Map}
+/// @prop {Map} body-color [color: ('grays', 700)] - The panel body text color.
+/// @prop {Map} disabled-color [color: ('grays', 400)] - The panel disabled text color.
 /// @requires {function} extend
 /// @requires {Map} $light-expansion-panel
 $fluent-expansion-panel: extend(
     $light-expansion-panel,
     (
         variant: 'fluent',
+
+        body-color: (
+            color: ('grays', 700)
+        ),
+
+        disabled-color: (
+            color: ('grays', 400)
+        ),
     )
 );
 
 /// Generates a bootstrap expansion panel schema.
 /// @type {Map}
-/// @prop {Map} header-background [contrast-color: ('grays', 900)] - The panel header background color.
-/// @prop {Map} body-background [contrast-color: ('grays', 900)] - The panel body background color.
 /// @prop {Number} border-radius [0] - The border radius used for expansion-panel. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-expansion-panel
 $bootstrap-expansion-panel: extend(
     $light-expansion-panel,
     (
-        variant: 'bootstrap',
-
-        header-background: (
-            contrast-color: ('grays', 900)
-        ),
-
-        body-background: (
-            contrast-color: ('grays', 900)
-        ),
+        variant: 'bootstrap'
     )
 );
 
@@ -112,12 +112,8 @@ $indigo-expansion-panel: extend(
     (
         variant: 'indigo-design',
 
-        header-title-color: (
-            color: ('grays', 900)
-        ),
-
         header-description-color: (
-            color: ('grays', 700)
+            color: ('grays', 500)
         ),
 
         header-icon-color: (
