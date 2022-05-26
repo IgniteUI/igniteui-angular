@@ -138,6 +138,10 @@
         $shadow: elevation($elevations, $elevation);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         selector: $selector,
@@ -186,7 +190,7 @@
         display: flex;
         box-shadow: var-get($theme, 'shadow');
         transition: $transition;
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
 
         button {
             // The margin here is required to fix a bug in Safari #7858
@@ -222,13 +226,13 @@
         }
 
         &:first-of-type {
-            border-top-#{$left}-radius: border-radius(var-get($theme, 'border-radius'));
-            border-bottom-#{$left}-radius: border-radius(var-get($theme, 'border-radius'));
+            border-top-#{$left}-radius: var-get($theme, 'border-radius');
+            border-bottom-#{$left}-radius: var-get($theme, 'border-radius');
         }
 
         &:last-of-type {
-            border-top-#{$right}-radius: border-radius(var-get($theme, 'border-radius'));
-            border-bottom-#{$right}-radius: border-radius(var-get($theme, 'border-radius'));
+            border-top-#{$right}-radius: var-get($theme, 'border-radius');
+            border-bottom-#{$right}-radius: var-get($theme, 'border-radius');
         }
 
         &[igxButton][disabled='true'] {
@@ -261,8 +265,8 @@
         }
 
         &:first-of-type {
-            border-top-#{$left}-radius: border-radius(var-get($theme, 'border-radius'));
-            border-top-#{$right}-radius: border-radius(var-get($theme, 'border-radius'));
+            border-top-#{$left}-radius: var-get($theme, 'border-radius');
+            border-top-#{$right}-radius: var-get($theme, 'border-radius');
             border-bottom-#{$left}-radius: 0;
             border-bottom-#{$right}-radius: 0;
         }
@@ -270,8 +274,8 @@
         &:last-of-type {
             border-top-#{$left}-radius: 0;
             border-top-#{$right}-radius: 0;
-            border-bottom-#{$left}-radius: border-radius(var-get($theme, 'border-radius'));
-            border-bottom-#{$right}-radius: border-radius(var-get($theme, 'border-radius'));
+            border-bottom-#{$left}-radius: var-get($theme, 'border-radius');
+            border-bottom-#{$right}-radius: var-get($theme, 'border-radius');
         }
     }
 

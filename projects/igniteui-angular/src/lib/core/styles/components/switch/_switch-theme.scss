@@ -114,6 +114,18 @@
         $disabled-shadow: elevation($elevation: $disabled-elevation);
     }
 
+    @if not($border-radius-track) {
+        $border-radius-track: border-radius(map.get($theme, 'border-radius-track'));
+    }
+    
+    @if not($border-radius-thumb) {
+        $border-radius-thumb: border-radius(map.get($theme, 'border-radius-thumb'));
+    }
+    
+    @if not($border-radius-ripple) {
+        $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -271,7 +283,7 @@
         width: rem($switch-width);
         height: rem($switch-height);
         border: 1px solid var-get($theme, 'border-color');
-        border-radius: border-radius(var-get($theme, 'border-radius-track'));
+        border-radius: var-get($theme, 'border-radius-track');
         background: var-get($theme, 'track-off-color');
         cursor: pointer;
         user-select: none;
@@ -328,7 +340,7 @@
         width: rem($switch-thumb-width);
         height: $switch-thumb-height;
         min-width: rem($switch-thumb-width);
-        border-radius: border-radius(var-get($theme, 'border-radius-thumb'));
+        border-radius: var-get($theme, 'border-radius-thumb');
         background: var-get($theme, 'thumb-off-color');
         box-shadow: $thumb-resting-shadow;
         transition: $input-transition;
@@ -377,7 +389,7 @@
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
-        border-radius: border-radius(var-get($theme, 'border-radius-ripple'));
+        border-radius: var-get($theme, 'border-radius-ripple');
     }
 
     %igx-switch--focused {
@@ -412,7 +424,7 @@
 
         @if $variant == 'indigo-design' {
             %switch-composite {
-                border-radius: border-radius(var-get($theme, 'border-radius-thumb'));
+                border-radius: var-get($theme, 'border-radius-thumb');
                 box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color');
             }
         }

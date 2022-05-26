@@ -459,6 +459,10 @@
         $drag-shadow: elevation($elevations, $drag-elevation);
     }
 
+    @if not($drop-area-border-radius) {
+        $drop-area-border-radius: border-radius(map.get($theme, 'drop-area-border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         selector: $selector,
@@ -2291,7 +2295,7 @@
         align-items: center;
         justify-content: flex-start;
         height: map.get($drop-area-height, 'comfortable');
-        border-radius: border-radius(var-get($theme, 'drop-area-border-radius'));
+        border-radius: var-get($theme, 'drop-area-border-radius');
         padding: map.get($grid-cell-padding, 'comfortable');
         flex: 1 0 0%;
         background: var-get($theme, 'drop-area-background');
@@ -2311,13 +2315,13 @@
 
     %igx-drop-area--cosy {
         height: map.get($drop-area-height, 'cosy');
-        border-radius: border-radius(var-get($theme, 'drop-area-border-radius'));
+        border-radius: var-get($theme, 'drop-area-border-radius');
         padding: map.get($grid-cell-padding, 'cosy');
     }
 
     %igx-drop-area--compact {
         height: map.get($drop-area-height, 'compact');
-        border-radius: border-radius(var-get($theme, 'drop-area-border-radius'));
+        border-radius: var-get($theme, 'drop-area-border-radius');
         padding: map.get($grid-cell-padding, 'compact');
     }
 

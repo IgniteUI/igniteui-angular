@@ -54,6 +54,10 @@
         $text-color: text-contrast($background);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         selector: $selector,
@@ -76,7 +80,7 @@
         flex-flow: column wrap;
         background: var-get($theme, 'background');
         color: var-get($theme, 'text-color');
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
         margin: 0 auto;
     }
 

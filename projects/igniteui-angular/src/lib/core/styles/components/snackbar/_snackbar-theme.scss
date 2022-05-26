@@ -70,6 +70,10 @@
         $shadow: elevation($elevations, $elevation);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -109,7 +113,7 @@
         background: var-get($theme, 'background');
         backface-visibility: hidden;
         box-shadow: var-get($theme, 'shadow');
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
         backdrop-filter: blur(8px);
     }
 

@@ -74,6 +74,10 @@
         $shadow: elevation($elevations, $elevation);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         selector: $selector,
@@ -138,7 +142,7 @@
         position: relative;
         min-width: $dialog-min-width;
         border: 1px solid var-get($theme, 'border-color');
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background');
         box-shadow: var-get($theme, 'shadow');
         overflow: hidden;
