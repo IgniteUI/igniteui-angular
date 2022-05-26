@@ -269,7 +269,7 @@
     }
 
     @if not($month-border-radius) {
-        $month-border-radius: border-radius(var-get($theme, 'month-border-radius'));
+        $month-border-radius: border-radius(map.get($theme, 'month-border-radius'));
     }
 
     @if not($date-border-radius) {
