@@ -1546,7 +1546,7 @@ export class HGridMultiRowDragComponent {
         const hierRow: this.hierGrid1.getRowByIndex(0) as IgxHierarchicalRowComponent;
         const row: this.grid1.getRowByIndex(0) as IgxGridRowComponent;
         const treeRow: this.treeGrid1.getRowByIndex(0) as IgxTreeGridRowComponent;
-        const hierRowComp: this.hierGrid1.hGridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+        const hierRowComp: this.hierGrid1.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
         const rowComp: this.grid1.gridAPI.get_row_by_index(0) as IgxGridRowComponent;
         const treeRowComp: this.gridAPI.get_row_by_index(0) as IgxTreeGridRowComponent;
     }
@@ -1570,7 +1570,7 @@ export class HGridMultiRowDragComponent {
         const hierRow: this.hierGrid1.getRowByIndex(0) as RowType;
         const row: this.grid1.getRowByIndex(0) as RowType;
         const treeRow: this.treeGrid1.getRowByIndex(0) as RowType;
-        const hierRowComp: this.hierGrid1.hGridAPI.get_row_by_index(0) as RowType;
+        const hierRowComp: this.hierGrid1.gridAPI.get_row_by_index(0) as RowType;
         const rowComp: this.grid1.gridAPI.get_row_by_index(0) as RowType;
         const treeRowComp: this.gridAPI.get_row_by_index(0) as RowType;
     }

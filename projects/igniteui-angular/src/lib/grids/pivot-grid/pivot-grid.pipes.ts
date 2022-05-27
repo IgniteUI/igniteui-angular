@@ -2,18 +2,19 @@ import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { DefaultPivotGridRecordSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import {
-    DefaultPivotGridRecordSortingStrategy,
-    DefaultPivotSortingStrategy, DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
+    DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
 } from '../../data-operations/pivot-strategy';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IGridSortingStrategy } from '../common/strategy';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, IPivotValue } from './pivot-grid.interface';
+import { PivotSortUtil } from './pivot-sort-util';
 import { PivotUtil } from './pivot-util';
 
 /**
@@ -172,8 +173,6 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
 
         const enabledRows = config.rows?.filter(x => x.enabled);
         let groupData: IPivotGridGroupRecord[] = [];
-        let prevDim;
-        let prevDimRoot;
         let prevId;
         const index = enabledRows.indexOf(dim);
         for (let rec of data) {
@@ -187,8 +186,6 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
                 groupData = [];
             }
             groupData.push(rec);
-            prevDim = currentDim;
-            prevDimRoot = dim;
             prevId = id;
         }
         if (groupData.length > 0) {
@@ -274,7 +271,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
         collection: IPivotGridRecord[],
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy,
-        pipeTrigger: number
+        _pipeTrigger: number
     ): IPivotGridRecord[] {
         let result: IPivotGridRecord[];
 
@@ -299,12 +296,11 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
 })
 export class IgxPivotGridSortingPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
-    public transform(collection: any[], config: IPivotConfiguration, sorting: IGridSortingStrategy,
-        id: string, pipeTrigger: number, pinned?): any[] {
+    public transform(collection: any[], config: IPivotConfiguration, sorting: IGridSortingStrategy, _pipeTrigger: number): any[] {
         let result: any[];
         const allDimensions = config.rows || [];
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        const expressions = PivotUtil.generateDimensionSortingExpressions(enabledDimensions);
+        const expressions = PivotSortUtil.generateDimensionSortingExpressions(enabledDimensions);
         if (!expressions.length) {
             result = collection;
         } else {

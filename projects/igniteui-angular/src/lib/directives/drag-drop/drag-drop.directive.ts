@@ -1,4 +1,4 @@
-﻿import {
+import {
     Directive,
     ElementRef,
     EventEmitter,
@@ -570,6 +570,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _ghostStartY;
     protected _ghostHostX = 0;
     protected _ghostHostY = 0;
+    protected _dynamicGhostRef;
 
     protected _pointerDownId = null;
     protected _clicked = false;
@@ -713,6 +714,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.ghost && this.ghostElement && this._removeOnDestroy) {
             this.ghostElement.parentNode.removeChild(this.ghostElement);
             this.ghostElement = null;
+            
+            if (this._dynamicGhostRef) {
+                this._dynamicGhostRef.destroy();
+                this._dynamicGhostRef = null;
+            }
         }
     }
 
@@ -1090,6 +1096,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             }
             this.ghostElement.parentNode.removeChild(this.ghostElement);
             this.ghostElement = null;
+            if (this._dynamicGhostRef) {
+                this._dynamicGhostRef.destroy();
+                this._dynamicGhostRef = null;
+            }
         } else if (!this.ghost) {
             this.element.nativeElement.style.transitionProperty = '';
             this.element.nativeElement.style.transitionDuration = '0.0s';
@@ -1126,10 +1136,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             return;
         }
 
-        let dynamicGhostRef;
         if (this.ghostTemplate) {
-            dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
-            this.ghostElement = dynamicGhostRef.rootNodes[0];
+            this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            this.ghostElement = this._dynamicGhostRef.rootNodes[0];
         } else {
             this.ghostElement = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
         }
@@ -1155,8 +1164,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this.ghostCreate.emit(createEventArgs);
         if (createEventArgs.cancel) {
             this.ghostElement = null;
-            if (this.ghostTemplate && dynamicGhostRef) {
-                dynamicGhostRef.destroy();
+            if (this.ghostTemplate && this._dynamicGhostRef) {
+                this._dynamicGhostRef.destroy();
             }
             return;
         }
@@ -1215,7 +1224,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         // Check for shadowRoot instance and use it if present
         for (const elFromPoint of elementsFromPoint) {
-            if (elFromPoint?.shadowRoot !== null) {
+            if (!!elFromPoint?.shadowRoot) {
                 elementsFromPoint = elFromPoint.shadowRoot.elementsFromPoint(pageX, pageY);
             }
         }

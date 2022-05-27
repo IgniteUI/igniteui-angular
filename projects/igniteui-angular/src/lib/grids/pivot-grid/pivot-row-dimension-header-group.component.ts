@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, NgZone, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, NgZone, ViewChild } from '@angular/core';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
-import { IgxRowDirective } from '../row.directive';
 import { IPivotDimension, PivotRowHeaderGroupType } from './pivot-grid.interface';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 
@@ -101,12 +100,6 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
             node.row === this.rowIndex &&
             node.column === this.visibleIndex :
             false;
-    }
-
-    public get activeGroup() {
-        const nav = this.grid.navigation;
-        const node = nav.activeNode;
-        return node ? nav.isRowHeaderActive && node.row === this.rowIndex && node.column === this.visibleIndex : false;
     }
 
     protected get activeNode() {

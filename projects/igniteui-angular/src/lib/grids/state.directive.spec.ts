@@ -182,6 +182,30 @@ describe('IgxGridState - input properties #grid', () => {
         expect(gridState).toBe(filteringState);
     });
 
+    it('setState should correctly restore grid columns state from string containing a dateTime column', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        const lastDateCol = { field: 'LastDate', header: 'Last date', width: '110px', dataType: 'dateTime', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false,
+            hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false };
+        fix.componentInstance.columns.push(lastDateCol);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.grid;
+        grid.getCellByColumn(0, 'LastDate').value = new Date('2021-06-05T23:59');
+        fix.detectChanges();
+        const state = fix.componentInstance.state;
+
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"equals","isUnary":false,"iconName":"equals"},"fieldName":"LastDate","ignoreCase":true,"searchVal":"2021-06-05T20:59:00.000Z"}],"operator":1,"fieldName":"LastDate"}],"operator":0,"type":0}}';
+        const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
+
+        let gridState = state.getState(true, 'filtering');
+        expect(gridState).toBe(initialState);
+
+        state.setState(filteringState);
+        gridState = state.getState(false, 'filtering') as IGridState;
+        HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
+        gridState = state.getState(true, 'filtering');
+        expect(gridState).toBe(filteringState);
+    });
+
     it('setState should correctly restore grid filtering state from  with null date values', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
@@ -320,6 +344,8 @@ describe('IgxGridState - input properties #grid', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
         const state = fix.componentInstance.state;
+        const grid = fix.componentInstance.grid;
+        spyOn(grid.columnInit, 'emit').and.callThrough();
         /* eslint-disable max-len */
         const columnsState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":false,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"200px","header":"Prodyct Name","resizable":true,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false}]}';
         const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true,"selectable":false,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"parent":null,"columnGroup":false,"disableHiding":false}]}';
@@ -334,6 +360,7 @@ describe('IgxGridState - input properties #grid', () => {
         HelperFunctions.verifyColumns(columnsStateObject.columns, gridState);
         gridState = state.getState(true, 'columns');
         expect(gridState).toBe(columnsState);
+        expect(grid.columnInit.emit).toHaveBeenCalledTimes(columnsStateObject.columns.length);
     });
 
     it('setState should correctly restore grid paging state from string', () => {
@@ -443,7 +470,7 @@ describe('IgxGridState - input properties #grid', () => {
         expect(grid.pinnedRows[0].key).toBe(1);
         expect(grid.pinnedRows[1].key).toBe(3);
     });
-    
+
     it('setState should correctly restore grid moving state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
@@ -460,7 +487,7 @@ describe('IgxGridState - input properties #grid', () => {
         expect(grid.moving).toBeFalsy();
         gridState = state.getState(true, 'moving');
         expect(gridState).toBe(movingState);
-        
+
     });
 
     it('setState should correctly restore grid moving state from object', () => {
@@ -470,7 +497,7 @@ describe('IgxGridState - input properties #grid', () => {
         const state = fix.componentInstance.state;
         const movingState = '{"moving":false}';
         const initialState = '{"moving":true}';
-        const movingStateObject = JSON.parse(movingState);        
+        const movingStateObject = JSON.parse(movingState);
 
         let gridState = state.getState(true, 'moving');
         expect(gridState).toBe(initialState);
@@ -590,6 +617,31 @@ describe('IgxGridState - input properties #grid', () => {
         gridState = state.getState(true, 'expansion');
         expect(gridState).toBe(expansionState);
     });
+
+    // fit('createExpressionsTreeFromObject should return null when columns are still not resolved', () => {
+    //     const fix = TestBed.createComponent(IgxGridStateComponent);
+    //     fix.detectChanges();
+    //     fix.componentInstance.ngOnInit();
+    //     fix.detectChanges();
+    //     const grid  = fix.componentInstance.grid;
+    //     // grid.columnList = new QueryList<IgxColumnComponent>();
+    //     const state = fix.componentInstance.state;
+    //     // eslint-disable-next-line max-len
+    //
+    //     const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"is-true"},"searchVal":null,"ignoreCase":true},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"greater-than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
+    //     const initialState = '{"advancedFiltering":{}}';
+    //     const advFilteringStateObject = JSON.parse(advFilteringState);
+    //
+    //     let gridState = state.getState(true, 'advancedFiltering');
+    //     expect(gridState).toBe(initialState);
+    //
+    //     state.setState(advFilteringStateObject);
+    //     gridState = state.getState(false, 'advancedFiltering') as IGridState;
+    //
+    //     let areColumnsResolved = grid.columnList.length > 0 || !!gridState.columns
+    //
+    //     expect(areColumnsResolved).toBe(false);
+    // });
 });
 
 class HelperFunctions {

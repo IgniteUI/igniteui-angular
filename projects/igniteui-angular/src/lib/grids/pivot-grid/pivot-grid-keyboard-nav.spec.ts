@@ -52,6 +52,16 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         GridFunctions.verifyHeaderIsFocused(secondCell.parent);
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
+
+        // should do nothing if wrong key is pressed
+        UIInteractions.simulateClickAndSelectEvent(firstCell);
+        fixture.detectChanges();
+        GridFunctions.verifyHeaderIsFocused(firstCell.parent);
+        activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+        expect(activeCells.length).toBe(1);
+        UIInteractions.triggerKeyDownEvtUponElem('h', firstCell.nativeElement);
+        fixture.detectChanges();
+        GridFunctions.verifyHeaderIsFocused(firstCell.parent);
     });
 
     it('should not go outside of the boundaries of the row dimensions content', () => {
@@ -119,6 +129,39 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         expect(activeCells.length).toBe(1);
     });
 
+    it('should allow navigating from any to first row headers(Ctrl + ArrowUp)', () => {
+        // Ctrl + arrowup
+        let allGroups = fixture.debugElement.queryAll(
+            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const thirdCell = allGroups.filter(x => x.componentInstance.column.field === 'ProductCategory')[2]
+        UIInteractions.simulateClickAndSelectEvent(thirdCell);
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', thirdCell.nativeElement, true, false, false, true);
+        fixture.detectChanges();
+
+        allGroups = fixture.debugElement.queryAll(
+            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const firstCell = allGroups[0];
+        GridFunctions.verifyHeaderIsFocused(firstCell.parent);
+        let activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+        expect(activeCells.length).toBe(1);
+
+        // just arrow up
+        UIInteractions.simulateClickAndSelectEvent(thirdCell);
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', thirdCell.nativeElement, true, false, false, false);
+        fixture.detectChanges();
+        allGroups = fixture.debugElement.queryAll(
+            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const secondCell = allGroups.filter(x => x.componentInstance.column.field === 'ProductCategory')[1];
+        GridFunctions.verifyHeaderIsFocused(secondCell.parent);
+        activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+        expect(activeCells.length).toBe(1);
+
+    });
+
     it('should allow navigating between column headers', () => {
         let firstHeader = fixture.debugElement.queryAll(
             By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`))[0];
@@ -133,7 +176,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', pivotGrid.theadRow.nativeElement);
         fixture.detectChanges();
-        
+
         const secondHeader = fixture.debugElement.queryAll(
             By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`))[1];
         GridFunctions.verifyHeaderIsFocused(secondHeader.parent);
@@ -190,5 +233,34 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         GridFunctions.verifyHeaderIsFocused(secondHeader.parent);
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
         expect(activeCells.length).toBe(1);
+    });
+
+    it('should allow navigating within the cells of the body', async () => {
+        const cell = pivotGrid.rowList.first.cells.first;
+        GridFunctions.focusFirstCell(fixture, pivotGrid);
+        fixture.detectChanges();
+        expect(pivotGrid.navigation.activeNode.row).toBeUndefined();
+        expect(pivotGrid.navigation.activeNode.column).toBeUndefined();
+
+        UIInteractions.simulateClickAndSelectEvent(cell.nativeElement);
+        fixture.detectChanges();
+
+        GridFunctions.focusFirstCell(fixture, pivotGrid);
+        fixture.detectChanges();
+        expect(pivotGrid.navigation.activeNode.row).toBeDefined();
+        expect(pivotGrid.navigation.activeNode.column).toBeDefined();
+
+        let  activeCells = fixture.debugElement.queryAll(By.css(`.igx-grid__td--active`));
+        expect(activeCells.length).toBe(1);
+        expect(cell.column.field).toEqual('Stanley-UnitsSold');
+
+        const gridContent = GridFunctions.getGridContent(fixture);
+        UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent);
+        await wait(30);
+        fixture.detectChanges();
+
+        activeCells = fixture.debugElement.queryAll(By.css(`.igx-grid__td--active`));
+        expect(activeCells.length).toBe(1);
+        expect(activeCells[0].componentInstance.column.field).toEqual('Stanley-UnitPrice')
     });
 });

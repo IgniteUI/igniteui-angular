@@ -69,9 +69,9 @@
         cursor: pointer;
 
         igx-icon {
-            width: rem(15px);
-            height: rem(15px);
-            font-size: rem(15px);
+            width: var(--igx-icon-size, #{rem(15px)});
+            height: var(--igx-icon-size, #{rem(15px)});
+            font-size: var(--igx-icon-size, #{rem(15px)});
         }
     }
 
@@ -91,7 +91,7 @@
         height: 100%;
         background: var-get($theme, 'filtering-row-background');
         // TODO The border-radius should not be hardcoded.
-        border-radius: rem(4px);
+        border-radius: border-radius(rem(4px));
 
         @include button-group(button-group-theme(
             $shadow: none,
@@ -109,7 +109,6 @@
             $item-border-color: transparent,
             $item-selected-border-color: transparent
         ));
-
 
         @include tree(tree-theme(
             $background: color($palette, 'surface'),
@@ -180,7 +179,8 @@
         margin-#{$left}: rem(16px);
     }
 
-    %grid-excel-sort {
+    %grid-excel-sort,
+    %grid-excel-move {
         display: block;
         padding: rem(8px) rem(16px);
 
@@ -190,9 +190,10 @@
         }
 
         igx-icon {
-            font-size: rem(18px);
-            width: rem(18px);
-            height: rem(18px);
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
+            display: initial;
         }
     }
 
@@ -221,20 +222,7 @@
         }
     }
 
-    %grid-excel-move {
-        display: block;
-        padding: rem(8px) rem(16px);
-
-        header {
-            color: color($palette, 'grays', 700);
-            margin-bottom: rem(4px);
-        }
-    }
-
-    %grid-excel-move__buttons {
-        display: flex;
-        justify-content: space-between;
-
+    %grid-excel-move igx-buttongroup {
         @include if-rtl() {
             flex-direction: row-reverse;
 
@@ -317,9 +305,9 @@
             flex: 1;
 
             igx-icon {
-                width: $tree-node-expander-size;
-                height: $tree-node-expander-size;
-                font-size: $tree-node-expander-size;
+                width: var(--igx-icon-size, #{$tree-node-expander-size});
+                height: var(--igx-icon-size, #{$tree-node-expander-size});
+                font-size: var(--igx-icon-size, #{$tree-node-expander-size});
             }
 
             > igx-checkbox,
@@ -359,7 +347,7 @@
     }
 
     %grid-excel-menu--cosy {
-        igx-chips-area  {
+        igx-chips-area {
             padding: rem(8px) rem(8px) 0 rem(8px);
         }
 
@@ -418,7 +406,7 @@
     }
 
     %grid-excel-menu--compact {
-        igx-chips-area  {
+        igx-chips-area {
             padding: rem(4px) rem(4px) 0 rem(4px);
             gap: rem(4px);
         }
@@ -428,7 +416,8 @@
             padding: rem(4px);
         }
 
-        %grid-excel-sort {
+        %grid-excel-sort,
+        %grid-excel-move {
             padding: rem(4px);
 
             @extend %grid-excel-action--compact;
@@ -439,9 +428,7 @@
         }
 
         %grid-excel-move {
-            @extend %grid-excel-action--compact;
             margin-bottom: 0;
-            padding: rem(4px);
         }
 
         %grid-excel-actions {
@@ -490,7 +477,7 @@
         min-width: 520px;
         background: var-get($theme, 'filtering-row-background');
         box-shadow: elevation($elevation: 12);
-        border-radius: rem(4px);
+        border-radius: border-radius(rem(4px));
     }
 
     %grid-excel-menu__secondary--cosy {
@@ -585,9 +572,9 @@
         margin: 0 rem(16px) rem(16px);
 
         igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 

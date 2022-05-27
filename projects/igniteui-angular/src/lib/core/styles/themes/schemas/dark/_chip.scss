@@ -93,9 +93,22 @@ $dark-fluent-chip: extend(
         hover-background: (
             color: ('grays', 100, .8)
         ),
-
+        focus-background: (
+            color: ('primary', 500),
+        ),
         text-color: (
             color: ('grays', 500)
+        ),
+        selected-background: (
+            color: ('primary', 500)
+        ),
+
+        hover-selected-background: (
+            color: ('primary', 600)
+        ),
+
+        focus-selected-background: (
+            color: ('primary', 800)
         ),
     )
 );

@@ -2,8 +2,7 @@ import { cloneValue } from '../../core/utils';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-strategy';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { PivotGridType } from '../common/grid.interface';
 import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
@@ -291,49 +290,6 @@ export class PivotUtil {
         return parentFields.join('-');
     }
 
-    public static getTotalLvl(rec, pivotKeys: IPivotKeys) {
-        let total = 0;
-        Object.keys(rec).forEach(key => {
-            if (key.indexOf(pivotKeys.rowDimensionSeparator + pivotKeys.level) !== -1 &&
-                key.indexOf(pivotKeys.level + pivotKeys.rowDimensionSeparator) === -1 &&
-                key.indexOf(pivotKeys.records) === -1) {
-                total += rec[key] || 0;
-            }
-        });
-        return total;
-    }
-
-    public static flattenColumnHierarchy(hierarchies: any, values: IPivotValue[], pivotKeys: IPivotKeys) {
-        const flatData = [];
-        hierarchies.forEach((h, key) => {
-            const obj = {};
-            const multipleValues = values.length > 1;
-            for (const value of values) {
-                if (h[pivotKeys.aggregations]) {
-                    if (multipleValues) {
-                        obj[key + pivotKeys.columnDimensionSeparator + value.member] = h[pivotKeys.aggregations][value.member];
-                    } else {
-                        obj[key] = h[pivotKeys.aggregations][value.member];
-                    }
-                }
-                obj[pivotKeys.records] = h[pivotKeys.records];
-                flatData.push(obj);
-                if (h[pivotKeys.children]) {
-                    const records = this.flattenColumnHierarchy(h[pivotKeys.children], values, pivotKeys);
-                    for (const record of records) {
-                        delete record[pivotKeys.records];
-                        const childKeys = Object.keys(record);
-                        for (const childKey of childKeys) {
-                            obj[childKey] = record[childKey];
-                        }
-                    }
-                }
-            }
-        });
-
-        return flatData;
-    }
-
     public static buildExpressionTree(config: IPivotConfiguration) {
         const allDimensions = (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
@@ -440,23 +396,5 @@ export class PivotUtil {
         }
     }
 
-    public static generateDimensionSortingExpressions(dimensions: IPivotDimension[]): ISortingExpression[] {
-        const expressions: ISortingExpression[] = [];
-        PivotUtil.flatten(dimensions).forEach(x => {
-            if (x.sortDirection) {
-                expressions.push({
-                    dir: x.sortDirection,
-                    fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
-                });
-            } else {
-                expressions.push({
-                    dir: SortingDirection.None,
-                    fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
-                });
-            }
-        });
-        return expressions;
-    }
+
 }

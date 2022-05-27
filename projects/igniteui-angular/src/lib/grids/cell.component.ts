@@ -48,7 +48,7 @@ import { ISelectionNode } from './common/types';
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager]
 })
-export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
+export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType {
     /**
      * @hidden
      * @internal
@@ -812,9 +812,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             }
             return;
         }
-        if (this.platformUtil.isFirefox) {
-            event.preventDefault();
-        }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
         this.activate(event);
     };
@@ -859,7 +856,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
-            this._updateCRUDStatus(event);
+            const currentActive = this.selectionService.activeElement;
+            this.selectionService.activeElement = node;
+            const cancel = this._updateCRUDStatus(event);
+            if (cancel) {
+                this.selectionService.activeElement = currentActive;
+                return;
+            }
 
             const activeElement = this.selectionService.activeElement;
             const row = activeElement ? this.grid.gridAPI.get_row_by_index(activeElement.row) : null;
@@ -867,7 +870,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 return;
             }
 
-            this.selectionService.activeElement = node;
         } else {
             this.selectionService.activeElement = null;
             if (this.grid.crudService.cellInEditMode && !this.editMode) {
@@ -997,7 +999,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     private getCellType(useRow?: boolean): CellType {
         const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.data) : this.intRow.index;
-        // TODO: Fix types
         return new IgxGridCell(this.grid, rowID, this.column.field);
     }
 }

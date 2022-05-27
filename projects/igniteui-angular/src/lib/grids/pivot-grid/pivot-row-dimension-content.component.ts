@@ -3,10 +3,10 @@ import {
     ChangeDetectorRef,
     Component,
     ComponentFactoryResolver,
-    ContentChildren,
     ElementRef,
     Inject,
     Input,
+    OnChanges,
     QueryList,
     SimpleChanges,
     TemplateRef,
@@ -14,12 +14,9 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { IgxColumnGroupComponent } from '../columns/column-group.component';
-import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { IgxRowDirective } from '../row.directive';
 import { IPivotDimension, IPivotDimensionData, IPivotGridGroupRecord } from './pivot-grid.interface';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { PivotUtil } from './pivot-util';
@@ -37,7 +34,7 @@ import { PivotUtil } from './pivot-util';
     selector: 'igx-pivot-row-dimension-content',
     templateUrl: './pivot-row-dimension-content.component.html'
 })
-export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowComponent {
+export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowComponent implements OnChanges {
     /**
      * @hidden
      * @internal
@@ -93,7 +90,6 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     * @internal
     */
     public ngOnChanges(changes: SimpleChanges) {
-        const rowDimConfig = this.grid.rowDimensions;
         if (changes.rowData) {
             // generate new rowDimension on row data change
             this.rowDimensionData = null;
@@ -111,8 +107,8 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     * @hidden
     * @internal
     */
-    public toggleRowDimension(event, column) {
-        this.grid.toggleRow(this.getRowDimensionKey(column))
+    public toggleRowDimension(event) {
+        this.grid.toggleRow(this.getRowDimensionKey())
         event?.stopPropagation();
     }
 
@@ -121,27 +117,18 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
      * @hidden
      * @internal
      */
-    public getRowDimensionKey(col: IgxColumnComponent) {
+    public getRowDimensionKey() {
         const dimData = this.rowDimensionData;
         const key = PivotUtil.getRecordKey(this.rowData, dimData.dimension);
         return key;
     }
 
-    public getExpandState(col: IgxColumnComponent) {
-        return this.grid.gridAPI.get_row_expansion_state(this.getRowDimensionKey(col));
+    public getExpandState() {
+        return this.grid.gridAPI.get_row_expansion_state(this.getRowDimensionKey());
     }
 
-    public getLevel(col: IgxColumnComponent) {
-        return (this.dimension as any).level;
-    }
-
-    public get rowSpan() {
-        return this.rowData.rowSpan || 1;
-    }
-
-    public get headerHeight() {
-
-        return this.rowSpan > 1 ? this.rowSpan * this.grid.rowHeight + (this.rowSpan - 1) : this.grid.rowHeight;
+    public getLevel() {
+        return this.dimension.level;
     }
 
     protected extractFromDimensions() {

@@ -1,5 +1,4 @@
-import { DEFAULT_PIVOT_KEYS, IPivotDimension, IPivotGridRecord } from '../grids/pivot-grid/pivot-grid.interface';
-import { PivotUtil } from '../grids/pivot-grid/pivot-util';
+import { IPivotGridRecord } from '../grids/pivot-grid/pivot-grid.interface';
 
 export class PivotGridFunctions {
 

@@ -342,6 +342,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
+    /**
+     * @hidden
+     */
+    protected get isRTL() {
+        const dir = window.getComputedStyle(this.dc.instance._viewContainer.element.nativeElement).getPropertyValue('direction');
+        return dir === 'rtl';
+    }
+
     protected get sizesCache(): number[] {
         return this._sizesCache;
     }
@@ -415,8 +423,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === 'vertical') {
             this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
             this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
-            if (!this.scrollComponent || !this.document.contains(this.scrollComponent.elementRef.nativeElement)) {
-                this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance
+            if (!this.scrollComponent || this.scrollComponent.destroyed) {
+                this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance;
             }
             this._maxHeight = this._calcMaxBrowserHeight();
             this.scrollComponent.size = this.igxForOf ? this._calcHeight() : 0;
@@ -593,7 +601,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             return;
         }
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.scrollPosition = nextScroll;
+            this.scrollPosition = this.isRTL ? -nextScroll : nextScroll;
         } else {
             const maxVirtScrollTop = this._virtHeight - containerSize;
             if (nextScroll > maxVirtScrollTop) {
@@ -614,7 +622,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     public scrollNext() {
-        const scr = Math.ceil(this.scrollPosition);
+        const scr = Math.abs(Math.ceil(this.scrollPosition));
         const endIndex = this.getIndexAt(scr + parseInt(this.igxForContainerSize, 10), this.sizesCache);
         this.scrollTo(endIndex);
     }
@@ -639,7 +647,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public scrollNextPage() {
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.scrollPosition += parseInt(this.igxForContainerSize, 10);
+            this.scrollPosition += this.isRTL ? -parseInt(this.igxForContainerSize, 10) : parseInt(this.igxForContainerSize, 10);
         } else {
             this.addScrollTop(parseInt(this.igxForContainerSize, 10));
         }
@@ -654,7 +662,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public scrollPrevPage() {
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.scrollPosition -= parseInt(this.igxForContainerSize, 10);
+            this.scrollPosition -= this.isRTL ? -parseInt(this.igxForContainerSize, 10) : parseInt(this.igxForContainerSize, 10);
         } else {
             const containerSize = (parseInt(this.igxForContainerSize, 10));
             this.addScrollTop(-containerSize);
@@ -767,7 +775,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
-                const h = rNode.offsetHeight || parseInt(this.igxForItemSize, 10);
+                const height = window.getComputedStyle(rNode).getPropertyValue('height');
+                const h = parseFloat(height) || parseInt(this.igxForItemSize, 10);
                 const index = this.state.startIndex + i;
                 if (!this.isRemote && !this.igxForOf[index]) {
                     continue;
@@ -884,10 +893,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected updateSizes() {
+        const scrollable = this.isScrollable();
         this.recalcUpdateSizes();
         this._applyChanges();
         this._updateScrollOffset();
-        this.contentSizeChange.emit();
+        if (scrollable !== this.isScrollable()) {
+            this.scrollbarVisibilityChanged.emit();
+        } else {
+            this.contentSizeChange.emit();
+        }
     }
 
     /**
@@ -1027,9 +1041,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             return;
         }
         const prevStartIndex = this.state.startIndex;
+        const scrLeft = event.target.scrollLeft;
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllElements(event.target.scrollLeft);
-        this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        const scrollOffset = this.fixedUpdateAllElements(Math.abs(event.target.scrollLeft));
+        if (scrLeft < 0) {
+            // RTL
+            this.dc.instance._viewContainer.element.nativeElement.style.left = scrollOffset + 'px';
+        } else {
+            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        }
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1463,6 +1483,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     @Input()
     public igxGridForOfUniqueSizeCache = false;
 
+    @Input()
+    public igxGridForOfVariableSizes = true;
+
     public get igxGridForOf() {
         return this.igxForOf;
     }
@@ -1491,6 +1514,12 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     protected get itemsDimension() {
         return this.igxForSizePropName || 'height';
+    }
+
+    public recalcUpdateSizes() {
+        if (this.igxGridForOfVariableSizes) {
+            super.recalcUpdateSizes();
+        }
     }
 
     /**
@@ -1615,8 +1644,14 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             return;
         }
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllElements(scrollAmount);
-        this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        const scrollOffset = this.fixedUpdateAllElements(Math.abs(scrollAmount));
+        if (scrollAmount < 0) {
+            // RTL
+            this.dc.instance._viewContainer.element.nativeElement.style.left = scrollOffset + 'px';
+        } else {
+            // LTR
+            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        }
     }
 
     protected getItemSize(item) {

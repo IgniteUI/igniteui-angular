@@ -11,7 +11,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxRowDirective } from '../row.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IPivotDimension, IPivotDimensionData, IPivotGridRecord } from './pivot-grid.interface';
+import { IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 
 

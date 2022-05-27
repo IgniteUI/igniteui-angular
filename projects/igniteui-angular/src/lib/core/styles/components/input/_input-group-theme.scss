@@ -54,6 +54,9 @@
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
 /// @param {Color} $error-secondary-color [null] - The error color used in the error state.
 ///
+/// @param {Color} $success-border-color [null] - The border color for success state for bootstrap input group.
+/// @param {Color} $error-border-color [null] - The border color for error state for bootstrap input group.
+///
 /// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
 /// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
 /// @param {border-radius} $search-border-radius [null] - The border radius used for search input.
@@ -67,7 +70,6 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
-/// @requires round-borders
 ///
 /// @example scss Change the focused border and label colors
 ///   $my-input-group-theme: input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
@@ -118,6 +120,9 @@
     $warning-secondary-color: null,
     $error-secondary-color: null,
 
+    $success-shadow-color: null,
+    $error-shadow-color: null,
+
     $placeholder-color: null,
     $disabled-placeholder-color: null,
 
@@ -140,21 +145,6 @@
     }
 
     $theme: apply-palette($input-group-schema, $palette);
-
-    $box-border-radius: round-borders(
-        if($box-border-radius, $box-border-radius,
-        map.get($input-group-schema, 'box-border-radius')
-    ), 0, 20px);
-
-    $border-border-radius: round-borders(
-        if($border-border-radius, $border-border-radius,
-        map.get($input-group-schema, 'border-border-radius')
-    ), 0, 20px);
-
-    $search-border-radius: round-borders(
-        if($search-border-radius, $search-border-radius,
-        map.get($input-group-schema, 'search-border-radius')
-    ), 0, 20px);
 
     $search-resting-elevation: map.get($input-group-schema, 'search-resting-elevation');
     $search-hover-elevation: map.get($input-group-schema, 'search-hover-elevation');
@@ -225,6 +215,10 @@
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
         error-secondary-color: $error-secondary-color,
+
+        success-shadow-color: $success-shadow-color,
+        error-shadow-color: $error-shadow-color,
+
         placeholder-color: $placeholder-color,
         disabled-placeholder-color: $disabled-placeholder-color,
 
@@ -400,7 +394,11 @@
     }
 
     %form-group-box-wrapper {
-        border-radius: var-get($theme, 'box-border-radius');
+        border-radius: border-radius(var-get($theme, 'box-border-radius'));
+        @if $variant == 'material' {
+            border-bottom-#{$left}-radius: border-radius(rem(0));
+            border-bottom-#{$right}-radius: border-radius(rem(0));
+        }
         overflow: hidden;
     }
 
@@ -443,13 +441,19 @@
     }
 
     %form-group-bundle--box {
-        padding: 0 rem(16px, map.get($base-scale-size, 'comfortable'));
+        padding: 0 0 0 rem(16px, map.get($base-scale-size, 'comfortable'));
         background: var-get($theme, 'box-background');
         box-shadow: inset 0 -2px 0 0 var-get($theme, 'idle-bottom-line-color');
+
+        igx-suffix,
+        [igxSuffix] {
+            padding-right: rem(16px, map.get($base-scale-size, 'comfortable'));
+        }
     }
 
     %form-group-bundle--indigo {
-        padding: 0 rem(16px, map.get($base-scale-size, 'comfortable'));
+        padding: 0;
+        padding-inline-start: rem(16px, map.get($base-scale-size, 'comfortable'));
         background: transparent;
         transition: background $transition-timing, box-shadow $transition-timing;
         box-shadow: inset 0 -1px 0 0 var-get($theme, 'idle-bottom-line-color');
@@ -457,6 +461,11 @@
         &:hover,
         &:focus {
             background: var-get($theme, 'box-background');
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            padding-inline-end: rem(16px, map.get($base-scale-size, 'comfortable'));
         }
     }
 
@@ -472,16 +481,31 @@
         box-shadow: inset 0 -2px 0 0 var-get($theme, 'error-secondary-color');
     }
 
+    %form-group-bundle-error--indigo--hover {
+        border-color: var-get($theme, 'error-secondary-color');
+        box-shadow: 0 0 0 1px var-get($theme, 'error-secondary-color');
+    }
+
     %form-group-helper--indigo--disabled {
         color: var-get($theme, 'disabled-text-color');
     }
 
     %form-group-bundle--box-cosy {
-        padding: 0 rem(16px, map.get($base-scale-size, 'cosy'));
+        padding: 0 0 0 rem(16px, map.get($base-scale-size, 'cosy'));
+
+        igx-suffix,
+        [igxSuffix] {
+            padding-right: rem(16px, map.get($base-scale-size, 'cosy'));
+        }
     }
 
     %form-group-bundle--box-compact {
-        padding: 0 rem(16px, map.get($base-scale-size, 'compact'));
+        padding: 0 0 0 rem(16px, map.get($base-scale-size, 'compact'));
+
+        igx-suffix,
+        [igxSuffix] {
+            padding-right: rem(16px, map.get($base-scale-size, 'compact'));
+        }
     }
 
     %form-group-bundle--hover {
@@ -535,7 +559,7 @@
     %form-group-bundle--border {
         padding: 0 0 0 rem(16px, map.get($base-scale-size, 'comfortable'));
         box-shadow: inset 0 0 0 1px var-get($theme, 'border-color');
-        border-radius: var-get($theme, 'border-border-radius');
+        border-radius: border-radius(var-get($theme, 'border-border-radius'));
         background: var-get($theme, 'border-background');
 
         igx-suffix,
@@ -545,11 +569,21 @@
     }
 
     %form-group-bundle--border-cosy {
-        padding: 0 rem(16px, map.get($base-scale-size, 'cosy'));
+        padding: 0 0 0 rem(16px, map.get($base-scale-size, 'cosy'));
+
+        igx-suffix,
+        [igxSuffix] {
+            padding-right: rem(16px, map.get($base-scale-size, 'cosy'));
+        }
     }
 
     %form-group-bundle--border-compact {
-        padding: 0 rem(16px, map.get($base-scale-size, 'compact'));
+        padding: 0 0 0 rem(16px, map.get($base-scale-size, 'compact'));
+
+        igx-suffix,
+        [igxSuffix] {
+            padding-right: rem(16px, map.get($base-scale-size, 'compact'));
+        }
     }
 
     %form-group-bundle-border--hover {
@@ -703,7 +737,7 @@
     }
 
     %form-group-bundle-required--fluent {
-        &::after {
+        &::before {
             content: '*';
             position: absolute;
             top: rem(-8px);
@@ -713,7 +747,7 @@
     }
 
     %fluent-label + %form-group-bundle-required--fluent {
-        &::after {
+        &::before {
             display: none;
         }
     }
@@ -723,11 +757,11 @@
         padding: 0;
         min-height: 32px;
         border: 1px solid var-get($theme, 'border-color');
-        box-shadow: none;
-        border-radius: var-get($theme, 'border-border-radius');
+        border-radius: border-radius(var-get($theme, 'border-border-radius'));
         background: var-get($theme, 'border-background');
         position: relative;
         align-items: stretch;
+        box-shadow: none !important;
     }
 
     %form-group-bundle--fluent--hover {
@@ -736,8 +770,17 @@
     }
 
     %form-group-bundle--fluent--focus {
+        caret-color: var-get($theme, 'focused-text-color');
         border-color: var-get($theme, 'focused-border-color');
-        box-shadow: none;
+
+        &::after {
+            pointer-events: none;
+            position: absolute;
+            content: '';
+            width: 100%;
+            height: 100%;
+            border: rem(1px) solid var-get($theme, 'focused-border-color');
+        }
     }
 
     %form-group-bundle--fluent--hover-disabled,
@@ -746,14 +789,28 @@
         background: var-get($theme, 'border-disabled-background');
     }
 
+    %form-group-bundle-error--fluent,
     %form-group-bundle-error--fluent--hover,
-    %form-group-bundle-error--fluent {
+    %form-group-bundle-error--fluent--focus {
         border-color: var-get($theme, 'error-secondary-color');
     }
 
+    %form-group-bundle-success--fluent,
     %form-group-bundle-success--fluent--hover,
-    %form-group-bundle-success--fluent {
+    %form-group-bundle-success--fluent--focus {
         border-color: var-get($theme, 'success-secondary-color');
+    }
+
+    %form-group-bundle-success--fluent--focus {
+        &::after {
+            border: rem(1px) solid var-get($theme, 'success-secondary-color');
+        }
+    }
+
+    %form-group-bundle-error--fluent--focus {
+        &::after {
+            border: rem(1px) solid var-get($theme, 'error-secondary-color');
+        }
     }
 
     %fluent-input {
@@ -769,6 +826,7 @@
     %form-group-bundle-main--fluent {
         padding-#{$left}: rem(8px);
         align-self: center;
+        cursor: default;
     }
 
     igx-prefix + %form-group-bundle-main--fluent,
@@ -822,7 +880,7 @@
 
     %form-group-bundle--search {
         padding: 0 rem(16px, map.get($base-scale-size, 'comfortable'));
-        border-radius: var-get($theme, 'search-border-radius');
+        border-radius: border-radius(var-get($theme, 'search-border-radius'));
         background: var-get($theme, 'search-background');
         box-shadow: var-get($theme, 'search-resting-shadow');
     }
@@ -1048,7 +1106,7 @@
 
     %form-group-clear-icon {
         &:focus {
-            border-radius: 4px;
+            border-radius: border-radius(rem(4px));
             background-color: color($palette, 'primary', 500);
             color: contrast-color($palette, 'primary', 500);
 
@@ -1239,21 +1297,20 @@
         padding: rem(8px, map.get($base-scale-size, 'compact')) 0;
     }
 
+    igx-prefix.igx-prefix--upload,
+    [igxPrefix].igx-prefix--upload {
+        padding: 0 !important;
+    }
+
     %form-group-prefix-fluent {
         color: var-get($theme, 'input-prefix-color');
         background: var-get($theme, 'input-prefix-background');
-        padding: rem(8px, map.get($base-scale-size, 'comfortable'));
+        padding: 0 rem(8px, map.get($base-scale-size, 'comfortable'));
         width: auto;
         height: auto;
         line-height: normal;
         font-weight: 400;
-        border-radius: var-get($theme, 'border-border-radius') 0 0 var-get($theme, 'border-border-radius');
-
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
+        border-radius: border-radius(var-get($theme, 'border-border-radius')) 0 0 border-radius(var-get($theme, 'border-border-radius'));
 
         &:last-of-type {
             margin-#{$right}: rem(8px);
@@ -1261,13 +1318,7 @@
     }
 
     %form-group-prefix-fluent-search {
-        padding: rem(8px, map.get($base-scale-size, 'comfortable'));
-
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
+        padding: 0 rem(8px, map.get($base-scale-size, 'comfortable'));
 
         &:last-of-type {
             margin-#{$right}: 0;
@@ -1276,18 +1327,12 @@
 
     %form-group-suffix-fluent {
         color: var-get($theme, 'input-suffix-color');
-        padding: rem(8px, map.get($base-scale-size, 'comfortable'));
+        padding: 0 rem(8px, map.get($base-scale-size, 'comfortable'));
         background: var-get($theme, 'input-suffix-background');
         width: auto;
         height: auto;
         line-height: normal;
-        border-radius: 0 var-get($theme, 'border-border-radius') var-get($theme, 'border-border-radius') 0;
-
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
+        border-radius: 0 border-radius(var-get($theme, 'border-border-radius')) border-radius(var-get($theme, 'border-border-radius')) 0;
 
         &:first-of-type {
             margin-#{$left}: rem(8px);
@@ -1297,17 +1342,32 @@
     %form-group-suffix-fluent-search {
         width: auto;
         height: auto;
-        padding: rem(8px, map.get($base-scale-size, 'comfortable'));
+        padding: 0 rem(8px, map.get($base-scale-size, 'comfortable'));
         line-height: normal;
-
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
 
         &:first-of-type {
             margin-#{$left}: 0;
+        }
+    }
+
+    %form-group-prefix-fluent,
+    %form-group-suffix-fluent,
+    %form-group-suffix-fluent-search,
+    %form-group-prefix-fluent-search {
+        igx-icon {
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
+        }
+    }
+
+    %form-group-prefix-fluent,
+    %form-group-suffix-fluent {
+        .igx-typography [igx-button],
+        .igx-typography igx-button,
+        .igx-typography button,
+        button {
+            border-radius: rem(1px) 0 0 rem(1px);
         }
     }
 
@@ -1330,22 +1390,22 @@
 
     %form-group-prefix-fluent-search--cosy,
     %form-group-prefix-fluent--cosy {
-        padding: rem(8px, map.get($base-scale-size, 'cosy'));
+        padding: 0 rem(8px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-prefix-fluent-search--compact,
     %form-group-prefix-fluent--compact {
-        padding: rem(8px, map.get($base-scale-size, 'compact'));
+        padding: 0 rem(8px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-suffix-fluent-search--cosy,
     %form-group-suffix-fluent--cosy {
-        padding: rem(8px, map.get($base-scale-size, 'cosy'));
+        padding: 0 rem(8px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-suffix-fluent-search--compact,
     %form-group-suffix-fluent--compact {
-        padding: rem(8px, map.get($base-scale-size, 'compact'));
+        padding: 0 rem(8px, map.get($base-scale-size, 'compact'));
     }
     // FLUENT END
 
@@ -1494,13 +1554,13 @@
         }
 
         %form-group-prefix--bootstrap:first-child {
-            border-top-#{$left}-radius: var-get($theme, 'box-border-radius');
-            border-bottom-#{$left}-radius: var-get($theme, 'box-border-radius');
+            border-top-#{$left}-radius: border-radius(var-get($theme, 'box-border-radius'));
+            border-bottom-#{$left}-radius: border-radius(var-get($theme, 'box-border-radius'));
         }
 
         %form-group-suffix--bootstrap:last-child {
-            border-top-#{$right}-radius: var-get($theme, 'box-border-radius');
-            border-bottom-#{$right}-radius: var-get($theme, 'box-border-radius');
+            border-top-#{$right}-radius: border-radius(var-get($theme, 'box-border-radius'));
+            border-bottom-#{$right}-radius: border-radius(var-get($theme, 'box-border-radius'));
         }
 
         %bootstrap-input:not(:first-child),
@@ -1578,9 +1638,9 @@
         white-space: nowrap;
 
         igx-icon {
-            width: map.get($bootstrap-font-size, 'comfortable');
-            height: map.get($bootstrap-font-size, 'comfortable');
-            font-size: map.get($bootstrap-font-size, 'comfortable');
+            width: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
+            height: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
+            font-size: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
             font-weight: 400;
         }
     }
@@ -1610,9 +1670,9 @@
         height: auto;
 
         igx-icon {
-            width: map.get($bootstrap-font-size, 'cosy');
-            height: map.get($bootstrap-font-size, 'cosy');
-            font-size: map.get($bootstrap-font-size, 'cosy');
+            width: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'cosy')});
+            height: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'cosy')});
+            font-size: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'cosy')});
         }
     }
 
@@ -1623,9 +1683,9 @@
         height: auto;
 
         igx-icon {
-            width: map.get($bootstrap-font-size, 'compact');
-            height: map.get($bootstrap-font-size, 'compact');
-            font-size: map.get($bootstrap-font-size, 'compact');
+            width: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'compact')});
+            height: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'compact')});
+            font-size: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'compact')});
         }
     }
 
@@ -1657,38 +1717,39 @@
         height: auto;
         line-height: 1.5 !important;
         margin: 0;
-        border-radius: var-get($theme, 'box-border-radius');
+        border-radius: border-radius(var-get($theme, 'box-border-radius'));
         border: 1px solid var-get($theme, 'border-color');
         font-size: map.get($bootstrap-font-size, 'comfortable');
         padding: map.get($bootstrap-padding, 'comfortable');
+        transition: box-shadow .15s ease-out, border .15s ease-out;
     }
 
     %bootstrap-file-input {
         width: calc(100% - #{2 * nth(map.get($bootstrap-padding, 'comfortable'), 2)});
         height: inherit;
-        border-radius: var-get($theme, 'box-border-radius');
-        border: 1px solid var-get($theme, 'border-color');
+        border-radius: border-radius(var-get($theme, 'box-border-radius'));
+        border: rem(1px) solid var-get($theme, 'border-color');
         padding: map.get($bootstrap-padding, 'comfortable');
     }
 
     %bootstrap-input--focus {
-        border: 1px solid var-get($theme, 'focused-secondary-color');
-        box-shadow: 0 0 0 rem(3px) var-get($theme, 'focused-secondary-color');
+        border: rem(1px) solid var-get($theme, 'focused-border-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'focused-secondary-color');
     }
 
     %bootstrap-input--success {
-        border: 1px solid var-get($theme, 'success-secondary-color');
-        box-shadow: 0 0 0 rem(3px) var-get($theme, 'success-secondary-color');
+        border: rem(1px) solid var-get($theme, 'success-secondary-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
     }
 
     %bootstrap-input--error {
-        border: 1px solid var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-secondary-color');
+        border: rem(1px) solid var-get($theme, 'error-secondary-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
     }
 
     %bootstrap-input--disabled {
         background: var-get($theme, 'border-disabled-background');
-        border: 1px solid var-get($theme, 'disabled-border-color');
+        border: rem(1px) solid var-get($theme, 'disabled-border-color');
         box-shadow: none;
     }
 

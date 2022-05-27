@@ -20,7 +20,6 @@ import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-s
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { ExpressionUI } from '../grids/filtering/excel-style/common';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
-import { GridColumnDataType } from '../data-operations/data-util';
 import { ColumnType } from '../grids/common/grid.interface';
 
 @Component({

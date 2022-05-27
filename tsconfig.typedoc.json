@@ -1,0 +1,20 @@
+{
+    "extends": "./tsconfig.json",
+    "exclude": [
+        "dist",
+        "projects/igniteui-angular/migrations/",
+        "projects/igniteui-angular/schematics/",
+        "e2e",
+        "cypress",
+        "projects/igniteui-angular/cypress/"
+    ],
+    "typedocOptions": {
+        "out": "dist/igniteui-angular/docs/typescript",
+        "exclude": "**/*.spec.ts",
+        "theme":  "igtheme",
+        "excludePrivate": true,
+        "excludeProtected": true,
+        "name": "Ignite UI for Angular",
+        "readme": "none"
+    },
+}

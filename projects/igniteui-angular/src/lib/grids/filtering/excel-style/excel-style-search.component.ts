@@ -396,8 +396,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
 
         if (!this.searchValue) {
-            const anyFiltered = this.esf.listData.some(i => i.isFiltered);
-            const anyUnfiltered = this.esf.listData.some(i => !i.isFiltered);
+            let anyFiltered = this.esf.listData.some(i => i.isFiltered);
+            let anyUnfiltered = this.esf.listData.some(i => !i.isFiltered);
             selectAllBtn.indeterminate = anyFiltered && anyUnfiltered;
             if (this.isHierarchical() && this.tree) {
                 this._hierarchicalSelectedItems = this.tree.nodes.map(n => n.data as FilterListItem).filter(item => item.isFiltered);
@@ -411,7 +411,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     this.tree.nodes.forEach(n => {
                         const item = n.data as FilterListItem;
                         n.selected = item.isSelected || item.isFiltered;
+                        anyFiltered = anyFiltered || n.selected;
+                        anyUnfiltered = anyUnfiltered || !n.selected;
                     });
+                    selectAllBtn.indeterminate = anyFiltered && anyUnfiltered;
                 }
             }
             selectAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all;

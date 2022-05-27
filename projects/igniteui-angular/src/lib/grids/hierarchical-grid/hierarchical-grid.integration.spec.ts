@@ -68,7 +68,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             tick(DEBOUNCE_TIME);
             fixture.detectChanges();
 
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
 
             expect(childGrid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
             expect(childGrid.getColumnByName('ProductName').level).toEqual(expectedLevel);
@@ -109,7 +109,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
 
             expect(fCell.selected).toBeTruthy();
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const fChildCell = childGrid.dataRowList.first.cells.first;
 
             // select child cell
@@ -285,9 +285,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
                 fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
             });
             fixture.detectChanges();
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const firstChildCell = childGrid.dataRowList.first.cells.first;
-            expect(hierarchicalGrid.hgridAPI.get_row_by_index(3) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(3) instanceof IgxChildGridRowComponent).toBeTruthy();
             expect(childGrid.data).toBe(fixture.componentInstance.data[0]['childData']);
             expect(firstChildCell.value).toBe('00');
         }));
@@ -296,7 +296,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
             // enable sorting
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             childGrid.columnList.first.sortable = true;
             fixture.detectChanges();
 
@@ -328,7 +328,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             filteringCells = fixture.debugElement.queryAll(By.css(FILTERING_CELL_CLASS));
             expect(filteringCells.length).toEqual(6);
 
-            GridFunctions.clickFilterCellChipUI(fixture, 'ProductName', hierarchicalGrid.hgridAPI.getChildGrids(false)[0]);
+            GridFunctions.clickFilterCellChipUI(fixture, 'ProductName', hierarchicalGrid.gridAPI.getChildGrids(false)[0]);
             expect(document.querySelectorAll(FILTERING_ROW_CLASS).length).toEqual(2);
         }));
 
@@ -337,7 +337,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
             tick(DEBOUNCE_TIME);
             fixture.detectChanges();
-            let childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            let childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             let firstChildCell = childGrid.dataRowList.first.cells.first;
             UIInteractions.simulateClickAndSelectEvent(firstChildCell);
             tick(DEBOUNCE_TIME);
@@ -348,9 +348,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
 
             expect(hierarchicalGrid.getRowByIndex(0).expanded).toBe(true);
-            expect(hierarchicalGrid.hgridAPI.get_row_by_index(1) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
-            childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             firstChildCell = childGrid.dataRowList.first.cells.first;
             expect(firstChildCell.selected).toBe(true);
         }));
@@ -395,8 +395,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // summaries seem to require this additional change detection call with Ivy disabled to display for the child grid
             fixture.detectChanges();
 
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-            const expander = childGrid.dataRowList.first.expander;
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+            const expander = (childGrid.dataRowList.first as IgxHierarchicalRowComponent).expander;
 
             // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
             const summaryRow = childGrid.summariesRowList.first.nativeElement;
@@ -405,7 +405,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(summaryRowIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
 
             const gridHeight = childGrid.nativeElement.offsetHeight;
-            const childElements: HTMLElement[] = Array.from(childGrid.nativeElement.children);
+            const childElements: HTMLElement[] = Array.from(childGrid.nativeElement.children) as HTMLElement [];
             const elementsHeight = childElements.map(elem => elem.offsetHeight).reduce((total, height) => total + height, 0);
 
             // Expect the combined height of all elements (header, body, footer etc) to equal the calculated height of the grid.
@@ -414,7 +414,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // expand first row of child
             childGrid.expandRow(childGrid.dataRowList.first.key);
 
-            const grandChild = childGrid.hgridAPI.getChildGrids(false)[0];
+            const grandChild = childGrid.gridAPI.getChildGrids(false)[0];
             const grandChildSummaryRow = grandChild.summariesRowList.first.nativeElement;
             const childSummaryRowIndentation = grandChildSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
 
@@ -439,7 +439,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(rootSummaryIndentation.offsetWidth)
                 .toEqual(rootExpander.nativeElement.offsetWidth + rootCheckbox.nativeElement.offsetWidth);
 
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const expander = childGrid.dataRowList.first.expander;
 
             // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
@@ -458,7 +458,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.summaryRowHeight = 0;
             fixture.detectChanges();
 
-            let childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            let childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             let tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
             let childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
 
@@ -469,7 +469,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.summaryRowHeight = 0;
             fixture.detectChanges();
 
-            childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
             childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
 
@@ -480,7 +480,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.summaryRowHeight = 0;
             fixture.detectChanges();
 
-            childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
             childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
 
@@ -498,7 +498,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // summaries seem to require this additional change detection call with Ivy disabled to display for the child grid
             fixture.detectChanges();
 
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
 
             const summaryRow = childGrid.summariesRowList.first;
             expect(summaryRow.nativeElement.children.length).toEqual(2);
@@ -546,7 +546,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(dataRows[1].expanded).toBeTruthy();
             expect(hierarchicalGrid.dataView.length).toEqual(17);
 
-            let childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
+            let childGrids = hierarchicalGrid.gridAPI.getChildGrids(false);
             expect(childGrids.length).toEqual(2);
             expect(childGrids[0].dataRowList.first.cells.first.value).toEqual('00');
 
@@ -560,7 +560,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(dataRows[1].expanded).toBeFalsy();
             expect(hierarchicalGrid.dataView.length).toEqual(15);
 
-            childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
+            childGrids = hierarchicalGrid.gridAPI.getChildGrids(false);
 
             // Return to previous page
             GridFunctions.navigateToPrevPage(hierarchicalGrid.nativeElement);
@@ -572,7 +572,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(dataRows[1].expanded).toBeTruthy();
             expect(hierarchicalGrid.dataView.length).toEqual(17);
 
-            childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
+            childGrids = hierarchicalGrid.gridAPI.getChildGrids(false);
             expect(childGrids[0].dataRowList.first.cells.first.value).toEqual('00');
         }));
 
@@ -601,13 +601,13 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
 
             expect(hierarchicalGrid.hasVerticalScroll()).toBeFalsy();
-            expect(hierarchicalGrid.hgridAPI.get_row_by_index(1) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             // expand 3rd row
             hierarchicalGrid.expandRow(dataRows[3].key);
             tick(DEBOUNCE_TIME);
             fixture.detectChanges();
-            expect(hierarchicalGrid.hgridAPI.get_row_by_index(4) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(4) instanceof IgxChildGridRowComponent).toBeTruthy();
         }));
 
         it('should correctly hide/show vertical scrollbar after page is changed.', (async () => {
@@ -697,9 +697,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             tick();
             fixture.detectChanges();
 
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const toolbar = childGrid.nativeElement.querySelector('igx-grid-toolbar');
-            const hidingUI = toolbar.querySelector('igx-grid-toolbar-hiding');
+            const hidingUI = toolbar.querySelector('igx-grid-toolbar-hiding') as HTMLElement;
 
             // Check if visible columns and headers are rendered correctly
             expect(childGrid.visibleColumns.length).toEqual(4);
@@ -727,7 +727,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             pending('Change test for new scrollbar structure');
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
 
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const toolbar = childGrid.nativeElement.querySelector('igx-grid-toolbar');
 
             // Check if visible columns and headers are rendered correctly
@@ -738,10 +738,10 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(toolbar.querySelector('igx-grid-toolbar-pinning')).toBeDefined();
 
             // Check if the child grid columns are the one used by the pinning UI
-            childGrid.visibleColumns.forEach((column, index) => expect(toolbar.columnPinningUI.columns[index]).toEqual(column));
+            // childGrid.visibleColumns.forEach((column, index) => expect(toolbar.columnPinningUI.columns[index]).toEqual(column));
 
-              // Instead of clicking we can just toggle the checkbox
-            toolbar.columnPinningUI.columnItems.toArray()[1].toggle();
+            // Instead of clicking we can just toggle the checkbox
+            // toolbar.columnPinningUI.columnItems.toArray()[1].toggle();
             fixture.detectChanges();
 
             // Check pinned state
@@ -827,7 +827,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         it('should be possible by templating the header and getting column reference for child grid', fakeAsync(() => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
 
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             let childHeader = GridFunctions.getColumnHeaders(fixture)[3];
             const firstHeaderIcon = childHeader.query(By.css('.igx-icon'));
 
@@ -853,7 +853,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             tick(DEBOUNCE_TIME);
             fixture.detectChanges();
 
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             // check unpinned/pinned columns
             expect(childGrid.pinnedColumns.length).toBe(3);
             expect(childGrid.unpinnedColumns.length).toBe(1);

@@ -195,14 +195,6 @@
 
     $theme: apply-palette($stepper-schema, $palette);
 
-    $border-radius-indicator: round-borders(
-        if($border-radius-indicator, $border-radius-indicator, map.get($stepper-schema, 'border-radius-indicator')), 0, 100px
-    );
-
-    $border-radius-step-header: round-borders(
-        if($border-radius-step-header, $border-radius-step-header, map.get($stepper-schema, 'border-radius-step-header')), 0, 100px
-    );
-
     @if not($indicator-background) and $step-background {
         $indicator-background: text-contrast($step-background);
     }
@@ -506,7 +498,7 @@
         gap: $title-gap;
         cursor: pointer;
         background: var-get($theme, 'step-background');
-        border-radius: var-get($theme, 'border-radius-step-header');
+        border-radius: border-radius(var-get($theme, 'border-radius-step-header'));
 
         &:hover {
             background: var-get($theme, 'step-hover-background');
@@ -529,16 +521,16 @@
         height: $indicator-size;
         width: $indicator-size;
         white-space: nowrap;
-        border-radius: var-get($theme, 'border-radius-indicator');
+        border-radius: border-radius(var-get($theme, 'border-radius-indicator'));
         color: var-get($theme, 'indicator-color');
         background: var-get($theme, 'indicator-background');
         box-shadow: 0 0 0 $outline-width var-get($theme, 'indicator-outline');
 
         @if $variant != 'bootstrap' {
             > igx-icon {
-                width: calc(#{$indicator-size} - #{rem(6px)});
-                height: calc(#{$indicator-size} - #{rem(6px)});
-                font-size: calc(#{$indicator-size} - #{rem(6px)});
+                width: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                height: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                font-size: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
                 color: inherit;
             }
         }
@@ -997,4 +989,3 @@
         }
     }
 }
-

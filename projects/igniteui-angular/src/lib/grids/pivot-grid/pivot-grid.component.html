@@ -32,7 +32,7 @@
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree:filteringPipeTrigger:pipeTrigger
-        | pivotGridSort:pivotConfiguration:sortStrategy:id:pipeTrigger
+        | pivotGridSort:pivotConfiguration:sortStrategy:pipeTrigger
         | pivotGridRow:pivotConfiguration:expansionStates:pipeTrigger:sortingExpressions
         | pivotGridColumn:pivotConfiguration:expansionStates:pipeTrigger:sortingExpressions
         | pivotGridAutoTransform:pivotConfiguration:pipeTrigger
@@ -41,6 +41,7 @@
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
+            [igxGridForOfVariableSizes]='false'
             #verticalScrollContainer>
             <ng-template
                 [igxTemplateOutlet]='recordTemplate'
@@ -49,8 +50,8 @@
             </ng-template>
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>
-            <igx-pivot-row [style.min-height.px]="renderedRowHeight" [gridID]="id" [index]="rowIndex" [data]="rowData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
+            <igx-pivot-row [style.height.px]="renderedRowHeight" [gridID]="id" [index]="rowIndex" [data]="rowData"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-pivot-row>
         </ng-template>
@@ -138,6 +139,7 @@
             <igx-pivot-row-dimension-content role='row' class="igx-grid-thead" [grid]="this"
                                              [dimension]='rowData.dimensions[dimIndex]'
                                              [rootDimension]='dim'
+                                             [style.height.px]="renderedRowHeight * (rowData.rowSpan || 1)"
                                              [rowIndex]='rowIndex' [rowData]='rowData'
                                              [density]="displayDensity" [width]="rowDimensionWidthToPixels(dim)">
             </igx-pivot-row-dimension-content>

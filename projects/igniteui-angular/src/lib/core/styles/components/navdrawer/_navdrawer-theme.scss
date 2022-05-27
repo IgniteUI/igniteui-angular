@@ -36,7 +36,6 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
-/// @requires round-borders
 ///
 /// @example scss Change the background and item colors
 ///   $navdrawer-theme: navdrawer-theme(
@@ -80,14 +79,6 @@
     }
 
     $theme: apply-palette($navdrawer-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($navdrawer-schema, 'border-radius')), 0, 36px
-    );
-
-    $item-border-radius: round-borders(
-        if($item-border-radius, $item-border-radius, map.get($navdrawer-schema, 'item-border-radius')), 0, 24px
-    );
 
     @if not($item-header-text-color) and $background {
         $item-header-text-color: text-contrast($background);
@@ -169,7 +160,6 @@
 
     $variant: map.get($theme, variant);
 
-
     %navdrawer-display {
         transition: flex-basis;
         transition-duration: .3s;
@@ -194,7 +184,7 @@
         @if $variant != 'indigo-design' {
             border-#{$right}: 1px solid var-get($theme, 'border-color');
         }
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
     }
 
     %aside-panning {
@@ -318,7 +308,7 @@
         user-select: none;
         outline: transparent;
         white-space: nowrap;
-        border-radius: var-get($theme, 'item-border-radius');
+        border-radius: border-radius(var-get($theme, 'item-border-radius'));
         text-decoration: none;
         width: calc(100% - #{$drawer-item-margin * 2});
         border: none;
@@ -349,20 +339,6 @@
         &[igxButton] {
             background: transparent;
             border: none;
-            box-shadow: none;
-
-            igx-icon {
-                width: $drawer-icon-size;
-                height: $drawer-icon-size;
-                font-size: $drawer-icon-size;
-                margin: 0;
-            }
-
-            &:hover,
-            &:focus {
-                box-shadow: none;
-                border: none;
-            }
         }
 
         &%igx-button--fab {
@@ -395,24 +371,6 @@
             color: var-get($theme, 'item-active-icon-color');
         }
 
-        // Need this to override the igx-buttons
-        &[igxButton] {
-            box-shadow: none;
-
-            igx-icon {
-                width: $drawer-icon-size;
-                height: $drawer-icon-size;
-                font-size: $drawer-icon-size;
-                margin: 0;
-            }
-
-            &:hover,
-            &:focus {
-                box-shadow: none;
-                border: none;
-            }
-        }
-
         &:focus,
         &:hover {
             color: var-get($theme, 'item-active-text-color');
@@ -420,6 +378,27 @@
 
             igx-icon {
                 color: var-get($theme, 'item-active-icon-color');
+            }
+        }
+    }
+
+    %item,
+    %item--active {
+        // Need this to override the igx-buttons
+        &[igxButton] {
+            box-shadow: none;
+
+            igx-icon {
+                width: var(--igx-icon-size, #{$drawer-icon-size});
+                height: var(--igx-icon-size, #{$drawer-icon-size});
+                font-size: var(--igx-icon-size, #{$drawer-icon-size});
+                margin: 0;
+            }
+
+            &:hover,
+            &:focus {
+                box-shadow: none;
+                border: none;
             }
         }
     }

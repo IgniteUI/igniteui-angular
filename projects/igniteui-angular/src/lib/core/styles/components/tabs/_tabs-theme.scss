@@ -47,7 +47,6 @@
 /// @requires extend
 /// @requires elevation
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Set a custom background color
 ///   $my-tabs-theme: tabs-theme(
@@ -85,10 +84,6 @@
     } @else {
         $tabs-schema: $schema;
     }
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($tabs-schema, 'border-radius')), 0, 6px
-    );
 
     $theme: apply-palette($tabs-schema, $palette);
 
@@ -255,11 +250,14 @@
     }
 
     %tabs-display {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
 
     %tabs-header {
         overflow: hidden;
+        flex: 0 0 auto;
         background: var-get($theme, 'item-background');
         box-shadow: var-get($theme, 'tab-area-shadow');
         min-height: rem(42px);
@@ -376,8 +374,8 @@
 
         @if $bootstrap-theme {
             border: 1px solid transparent;
-            border-top-left-radius: var-get($theme, 'border-radius');
-            border-top-right-radius: var-get($theme, 'border-radius');
+            border-top-left-radius: border-radius(var-get($theme, 'border-radius'));
+            border-top-right-radius: border-radius(var-get($theme, 'border-radius'));
         }
 
         @if $indigo-theme {
@@ -525,20 +523,20 @@
     %tabs-panels {
         position: relative;
         overflow: hidden;
-        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
     }
 
     %tabs-panel {
-        display: block;
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        width: 100%;
-        height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
+        flex: 1 1 auto;
 
         &::-moz-focus-inner {
             // remove focus dotted border in firefox

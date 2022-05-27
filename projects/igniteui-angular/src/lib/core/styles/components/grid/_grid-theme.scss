@@ -125,7 +125,6 @@
 /// @requires to-opaque
 /// @requires extend
 /// @requires elevation
-/// @requires round-borders
 @function grid-theme(
     $palette: null,
     $schema: $light-schema,
@@ -245,10 +244,6 @@
     }
 
     $theme: apply-palette($grid-schema, $palette);
-
-    $drop-area-border-radius: round-borders(
-        if($drop-area-border-radius, $drop-area-border-radius, map.get($grid-schema, 'drop-area-border-radius')), 0, 16px
-    );
 
     @if not($cell-selected-within-text-color) and $cell-selected-within-background {
         $cell-selected-within-text-color: text-contrast($cell-selected-within-background);
@@ -720,6 +715,8 @@
     }
 
     %grid-display {
+        --igx-tree-indent-size: #{rem(24px)};
+
         position: relative;
         display: grid;
         grid-template-rows: auto auto auto 1fr auto auto;
@@ -737,6 +734,14 @@
         %cbx-display {
             min-width: $cbx-size;
         }
+    }
+
+    %grid-display-cosy {
+        --igx-tree-indent-size: #{rem(16px)};
+    }
+
+    %grid-display-compact {
+        --igx-tree-indent-size: #{rem(12px)};
     }
 
     %grid-caption {
@@ -1078,9 +1083,9 @@
         background-clip: border-box;
 
         igx-icon {
-            width: $drag-icon-size;
-            height: $drag-icon-size;
-            font-size: $drag-icon-size;
+            width: var(--igx-icon-size, #{$drag-icon-size});
+            height: var(--igx-icon-size, #{$drag-icon-size});
+            font-size: var(--igx-icon-size, #{$drag-icon-size});
         }
     }
 
@@ -1146,9 +1151,9 @@
         justify-content: center;
 
         igx-icon {
-            height: rem(18px);
-            width: rem(18px);
-            font-size: rem(18px);
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
 
         %igx-icon--error {
@@ -1343,6 +1348,11 @@
         background-clip: border-box !important;
     }
 
+    // This is no longer being extended and is left
+    // here for reference purposes only. It seems setting
+    // overflow: hidden on the cell prevents drag and selection
+    // of the cell.
+    // See github issue #9821
     %igx-grid__td--tree-cell {
         overflow: hidden;
     }
@@ -1627,9 +1637,9 @@
             display: flex;
 
             igx-icon {
-                width: rem(15px);
-                height: rem(15px);
-                font-size: rem(15px);
+                width: var(--igx-icon-size, #{rem(15px)});
+                height: var(--igx-icon-size, #{rem(15px)});
+                font-size: var(--igx-icon-size, #{rem(15px)});
             }
 
             &::after {
@@ -1769,6 +1779,9 @@
 
     %igx-grid-th--filtrable-sortable {
         .sort-icon {
+            cursor: pointer;
+            opacity: .7;
+
             &:hover {
                 opacity: 1;
             }
@@ -1776,7 +1789,6 @@
     }
 
     .sort-icon {
-        opacity: 0;
         transition: all 250ms ease-in-out;
     }
 
@@ -2093,9 +2105,9 @@
 
         igx-icon {
             color: var-get($theme, 'group-label-icon');
-            width: rem(16px);
-            height: rem(16px);
-            font-size: rem(16px);
+            width: var(--igx-icon-size, #{rem(16px)});
+            height: var(--igx-icon-size, #{rem(16px)});
+            font-size: var(--igx-icon-size, #{rem(16px)});
         }
     }
 
@@ -2243,9 +2255,9 @@
         margin: 0 rem(4px);
 
         igx-icon {
-            width: 16px;
-            height: 16px;
-            font-size: 16px;
+            width: var(--igx-icon-size, #{rem(16px)});
+            height: var(--igx-icon-size, #{rem(16px)});
+            font-size: var(--igx-icon-size, #{rem(16px)});
         }
 
         @include if-rtl() {
@@ -2279,7 +2291,7 @@
         align-items: center;
         justify-content: flex-start;
         height: map.get($drop-area-height, 'comfortable');
-        border-radius: var-get($theme, 'drop-area-border-radius');
+        border-radius: border-radius(var-get($theme, 'drop-area-border-radius'));
         padding: map.get($grid-cell-padding, 'comfortable');
         flex: 1 0 0%;
         background: var-get($theme, 'drop-area-background');
@@ -2299,13 +2311,13 @@
 
     %igx-drop-area--cosy {
         height: map.get($drop-area-height, 'cosy');
-        border-radius: var-get($theme, 'drop-area-border-radius');
+        border-radius: border-radius(var-get($theme, 'drop-area-border-radius'));
         padding: map.get($grid-cell-padding, 'cosy');
     }
 
     %igx-drop-area--compact {
         height: map.get($drop-area-height, 'compact');
-        border-radius: var-get($theme, 'drop-area-border-radius');
+        border-radius: border-radius(var-get($theme, 'drop-area-border-radius'));
         padding: map.get($grid-cell-padding, 'compact');
     }
 
@@ -2330,7 +2342,7 @@
 
         igx-icon {
             color: var-get($theme, 'expand-icon-color');
-            width: $indicator-icon-width;
+            width: var(--igx-icon-size, #{$indicator-icon-width});
         }
 
         &:hover,
@@ -2437,20 +2449,6 @@
         }
     }
 
-    @for $i from 1 through 25 {
-        %igx-grid__tree-cell--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'comfortable')};
-        }
-
-        %igx-grid__tree-cell-cosy--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'cosy')};
-        }
-
-        %igx-grid__tree-cell-compact--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'compact')};
-        }
-    }
-
     %igx-grid__outlet {
         z-index: 10002;
         position: fixed;
@@ -2525,9 +2523,9 @@
         visibility: visible;
 
         igx-icon {
-            width: 18px;
-            height: 18px;
-            font-size: 18px;
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
 
         %igx-badge-display {
@@ -3077,6 +3075,3 @@
     }
     // Pivot grid END
 }
-
-
-

@@ -151,6 +151,7 @@ import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/gri
 import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
+import { IgxGridCellComponent } from './cell.component';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -1501,7 +1502,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
             if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
-                !this.advancedFilteringExpressionsTree) {
+                this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree)) {
                 this.filteredData = null;
             }
 
@@ -1537,8 +1538,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this.advancedFilteringExpressionsTreeChange.emit(this._advancedFilteringExpressionsTree);
 
-        if (this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree) &&
-            !this.advancedFilteringExpressionsTree) {
+        if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
+            this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree)) {
             this.filteredData = null;
         }
 
@@ -2680,6 +2681,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    public destroy$ = new Subject<any>();
+
+    /**
+     * @hidden
+     */
     protected _perPage = DEFAULT_ITEMS_PER_PAGE;
     /**
      * @hidden
@@ -2739,11 +2745,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _columnPinning = false;
 
     protected _pinnedRecordIDs = [];
-
-    /**
-     * @hidden
-     */
-    protected destroy$ = new Subject<any>();
 
     /**
      * @hidden
@@ -3000,7 +3001,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         protected viewRef: ViewContainerRef,
         private appRef: ApplicationRef,
         private moduleRef: NgModuleRef<any>,
-        private factoryResolver: ComponentFactoryResolver,
         private injector: Injector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
@@ -3234,7 +3234,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         )
             .subscribe(() => {
                 this.zone.run(() => {
-                    this.notifyChanges(true);
+                    // do not trigger reflow if element is detached.
+                    if (this.document.contains(this.nativeElement)) {
+                        this.notifyChanges(true);
+                    }
                 });
             });
 
@@ -3301,10 +3304,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             // called to recalc all widths that may have changes as a result of
             // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
+            this.cdr.detectChanges();
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
-            this.calculateGridSizes(false);
+            this.notifyChanges();
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
@@ -3324,7 +3328,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._setupServices();
         this._setupListeners();
         this.rowListDiffer = this.differs.find([]).create(null);
-        this.columnListDiffer = this.differs.find([]).create(null);
+        // compare based on field, not on object ref.
+        this.columnListDiffer = this.differs.find([]).create((index, col: ColumnType) => col.field);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
     }
@@ -3463,7 +3468,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let dynamicFactory: ComponentFactory<any>;
         const factoryResolver = this.moduleRef
             ? this.moduleRef.componentFactoryResolver
-            : this.factoryResolver;
+            : this.resolver;
         try {
             dynamicFactory = factoryResolver.resolveComponentFactory(component);
         } catch (error) {
@@ -4232,6 +4237,32 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    protected _getDataViewIndex(index: number): number {
+        let newIndex = index;
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.paginator.page !== 0) {
+            newIndex = index - this.paginator.perPage * this.paginator.page;
+        } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
+            newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
+        }
+        return newIndex;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected getDataIndex(dataViewIndex: number): number {
+        let newIndex = dataViewIndex;
+        if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
+            newIndex = dataViewIndex + this.gridAPI.grid.virtualizationState.startIndex;
+        }
+        return newIndex;
+    }
+
+    /**
      * Places a column before or after the specified target column.
      *
      * @example
@@ -4884,7 +4915,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.rowList.forEach((row) => {
             if (row.cells) {
-                row.cells.forEach((c) => {
+                row.cells.forEach((c: IgxGridCellComponent) => {
                     c.clearHighlight();
                 });
             }
@@ -4936,7 +4967,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get hasSummarizedColumns(): boolean {
-        return this.summaryService.hasSummarizedColumns;
+        const summarizedColumns = this.columnList.filter(col => col.hasSummary && !col.hidden);
+        return summarizedColumns.length > 0;
     }
 
     /**
@@ -5680,21 +5712,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public getNextCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (IgxColumnComponent) => boolean = null): ICellPosition {
         const columns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
-
-        if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
+        const dataViewIndex = this._getDataViewIndex(currRowIndex);
+        if (!this.isValidPosition(dataViewIndex, curVisibleColIndex)) {
             return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
         }
         const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => a - b) :
             columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
         const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
-        if (this.dataView.slice(currRowIndex, currRowIndex + 1)
+        if (this.dataView.slice(dataViewIndex, dataViewIndex + 1)
             .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData) && nextCellIndex !== undefined) {
             return { rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex };
         } else {
-            if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
+            const nextIndex = this.getNextDataRowIndex(currRowIndex)
+            if (colIndexes.length === 0 || nextIndex === currRowIndex) {
                 return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
             } else {
-                return { rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0] };
+                return { rowIndex: nextIndex, visibleColumnIndex: colIndexes[0] };
             }
         }
     }
@@ -5714,21 +5747,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public getPreviousCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (IgxColumnComponent) => boolean = null): ICellPosition {
         const columns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
-
-        if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
+        const dataViewIndex = this._getDataViewIndex(currRowIndex);
+        if (!this.isValidPosition(dataViewIndex, curVisibleColIndex)) {
             return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
         }
         const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => b - a) :
             columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
         const prevCellIndex = colIndexes.find(index => index < curVisibleColIndex);
-        if (this.dataView.slice(currRowIndex, currRowIndex + 1)
+        if (this.dataView.slice(dataViewIndex, dataViewIndex + 1)
             .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData) && prevCellIndex !== undefined) {
             return { rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex };
         } else {
-            if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex, true) === currRowIndex) {
+            const prevIndex = this.getNextDataRowIndex(currRowIndex, true);
+            if (colIndexes.length === 0 || prevIndex === currRowIndex) {
                 return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
             } else {
-                return { rowIndex: this.getNextDataRowIndex(currRowIndex, true), visibleColumnIndex: colIndexes[0] };
+                return { rowIndex: prevIndex, visibleColumnIndex: colIndexes[0] };
             }
         }
     }
@@ -5962,18 +5996,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 console.warn('The record cannot be added as a child to an unspecified record.');
                 return;
             }
-            index = 0;
+            index = null;
         } else {
             // find the index of the record with that PK
             index = this.gridAPI.get_rec_index_by_id(rowID, this.dataView);
-            rowID = index;
             if (index === -1) {
                 console.warn('No row with the specified ID was found.');
                 return;
             }
         }
+
+        this._addRowForIndex(index, asChild);
+    }
+
+    protected _addRowForIndex(index: number, asChild?: boolean) {
         if (!this.dataView.length) {
-            this.beginAddRowForIndex(rowID, asChild);
+            this.beginAddRowForIndex(index, asChild);
             return;
         }
         // check if the index is valid - won't support anything outside the data view
@@ -5985,13 +6023,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.verticalScrollContainer.chunkLoad
                     .pipe(first(), takeUntil(this.destroy$))
                     .subscribe(() => {
-                        this.beginAddRowForIndex(rowID, asChild);
+                        this.beginAddRowForIndex(index, asChild);
                     });
                 this.navigateTo(index);
                 this.notifyChanges(true);
                 return;
             }
-            this.beginAddRowForIndex(rowID, asChild);
+            this.beginAddRowForIndex(index, asChild);
         } else {
             console.warn('The row with the specified PK or index is outside of the current data view.');
         }
@@ -6012,7 +6050,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (index === 0) {
             return this.beginAddRowById(null);
         }
-        return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index - 1, this.dataView));
+        return this._addRowForIndex(index - 1);
     }
 
     /**
@@ -6221,7 +6259,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const list = this.columnList.toArray();
         this._reorderColumns(from, to, pos, list);
         const newList = this._resetColumnList(list);
-        this.columnList.reset(newList);
+        this.updateColumns(newList);
+    }
+
+
+    /**
+     * Update internal column's collection.
+     * @hidden
+     */
+    public updateColumns(newColumns:IgxColumnComponent[]) {
+        // update internal collections to retain order.
+        this._pinnedColumns = newColumns
+        .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
+        this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
+        this.columnList.reset(newColumns);
         this.columnList.notifyOnChanges();
         this._columns = this.columnList.toArray();
     }
@@ -6348,7 +6399,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             let added = false;
             let removed = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                this.columnInit.emit(record.item);
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
@@ -6357,7 +6407,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             });
 
-            this.initColumns(this.columnList);
+            this.initColumns(this.columnList, (col: IgxColumnComponent) => this.columnInit.emit(col));
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
@@ -6741,7 +6791,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.hasColumnGroups ? this.columnList.filter((c) => !c.pinned) :
             this.columnList.filter((c) => !c.pinned)
-                .sort((a, b) => a.index - b.index);
+                .sort((a, b) => this._unpinnedColumns.findIndex(x => x.field === a.field) - this._unpinnedColumns.findIndex(x => x.field === b.field));
     }
 
     protected extractDataFromSelection(source: any[], formatters = false, headers = false, columnData?: any[]): any[] {
@@ -7115,8 +7165,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     cb(cbArgs);
                 });
             }
-
-            if (this.dataView[rowIndex].detailsData) {
+            const dataViewIndex = this._getDataViewIndex(rowIndex);
+            if (this.dataView[dataViewIndex].detailsData) {
                 this.navigation.setActiveNode({ row: rowIndex });
                 this.cdr.detectChanges();
             }
@@ -7152,14 +7202,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private getNextDataRowIndex(currentRowIndex, previous = false): number {
-        if (currentRowIndex < 0 || (currentRowIndex === 0 && previous) || (currentRowIndex >= this.dataView.length - 1 && !previous)) {
+        const resolvedIndex = this._getDataViewIndex(currentRowIndex);
+        if (currentRowIndex < 0 || (currentRowIndex === 0 && previous) || (resolvedIndex >= this.dataView.length - 1 && !previous)) {
             return currentRowIndex;
         }
         // find next/prev record that is editable.
         const nextRowIndex = previous ? this.findPrevEditableDataRowIndex(currentRowIndex) :
             this.dataView.findIndex((rec, index) =>
-                index > currentRowIndex && this.isEditableDataRecordAtIndex(index));
-        return nextRowIndex !== -1 ? nextRowIndex : currentRowIndex;
+                index > resolvedIndex && this.isEditableDataRecordAtIndex(index));
+        const nextDataIndex = this.getDataIndex(nextRowIndex);
+        return nextDataIndex !== -1 ? nextDataIndex : currentRowIndex;
     }
 
     /**
@@ -7169,8 +7221,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     private findPrevEditableDataRowIndex(currentIndex): number {
         let i = this.dataView.length;
+        const resolvedIndex = this._getDataViewIndex(currentIndex);
         while (i--) {
-            if (i < currentIndex && this.isEditableDataRecordAtIndex(i)) {
+            if (i < resolvedIndex && this.isEditableDataRecordAtIndex(i)) {
                 return i;
             }
         }
@@ -7254,7 +7307,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (rebuildCache) {
             this.rowList.forEach((row) => {
                 if (row.cells) {
-                    row.cells.forEach((c) => {
+                    row.cells.forEach((c: IgxGridCellComponent) => {
                         c.highlightText(text, caseSensitiveResolved, exactMatchResolved);
                     });
                 }

@@ -1,7 +1,6 @@
 import {
     Directive,
     ElementRef,
-    HostListener,
     Input,
     NgZone
 } from '@angular/core';

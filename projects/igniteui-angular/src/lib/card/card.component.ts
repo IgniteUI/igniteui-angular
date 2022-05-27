@@ -316,7 +316,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      */
     @HostBinding('class.igx-card-actions--vertical')
     @Input()
-    public vertical: boolean;
+    public vertical = false;
 
     /**
      * A getter that returns `true` when the layout has been
@@ -365,7 +365,9 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * @internal
      */
     public ngOnInit() {
-        this.vertical = !this.isVerticalSet && this.card.horizontal;
+        if (!this.isVerticalSet && this.card.horizontal) {
+            this.vertical = true;
+        };
     }
 }
 

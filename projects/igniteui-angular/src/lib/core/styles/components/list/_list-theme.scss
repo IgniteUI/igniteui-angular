@@ -53,7 +53,6 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires round-borders
 /// @requires luminance
 ///
 /// @example scss Change the list background color
@@ -100,14 +99,6 @@
     }
 
     $theme: apply-palette($list-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($list-schema, 'border-radius')), 0, 24px
-    );
-
-    $item-border-radius: round-borders(
-        if($item-border-radius, $item-border-radius, map.get($list-schema, 'item-border-radius')), 0, 24px
-    );
 
     @if not($header-background) and $background {
         $header-background: $background;
@@ -308,14 +299,11 @@
         display: flex;
         flex-flow: column nowrap;
         background: var-get($theme, 'background');
-        height: 100%;
-        overflow: hidden;
+        height: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
         z-index: 0;
-        border-radius: var-get($theme, 'border-radius');
-
-        @if $bootstrap-theme {
-            border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
-        }
+        border-radius: border-radius(var-get($theme, 'border-radius'));
     }
 
     %igx-list--empty {
@@ -351,9 +339,17 @@
         display: flex;
         flex-flow: column wrap;
         justify-content: center;
-        border-radius: var-get($theme, 'item-border-radius');
+        border-radius: border-radius(var-get($theme, 'item-border-radius'));
         color: var-get($theme, 'item-text-color');
         background: var-get($theme, 'item-background');
+
+        @if $bootstrap-theme {
+            border-bottom: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
+
+            &:last-of-type {
+                border-bottom: none;
+            }
+        }
 
         &:hover {
             color: var-get($theme, 'item-text-color-hover');
@@ -440,7 +436,7 @@
         align-items: center;
         position: relative;
         padding: map.get($list-item-padding, 'comfortable');
-        border-radius: var-get($theme, 'item-border-radius');
+        border-radius: border-radius(var-get($theme, 'item-border-radius'));
         background: inherit;
         z-index: 2;
     }

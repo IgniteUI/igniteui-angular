@@ -22,12 +22,21 @@
 /// @param {Color} $hover-foreground [null] - The hover text color of the button.
 /// @param {Color} $focus-background [null] - The focus background color of the button.
 /// @param {Color} $focus-foreground [null] - The focus text color of the button.
+/// @param {Color} $focus-visible-background [null] - The focus-visible background color of the button.
+/// @param {Color} $focus-visible-foreground [null] - The focus-visible text color of the button.
+/// @param {Color} $active-background [null] - The active background of the button.
+/// @param {Color} $active-foreground [null] - The active text color of the button.
 /// @param {Number} $border-radius [null] - The border radius of the button.
 /// @param {Color} $border-color [null] - The border color of the button.
+/// @param {Color} $hover-border-color [null] - The hover border color of the button.
+/// @param {Color} $focus-border-color [null] - The focus border color of the button.
+/// @param {Color} $focus-visible-border-color [null] - The focus-visible border color of the button.
+/// @param {Color} $active-border-color [null] - The active border color of the button.
 /// @param {Color} $shadow-color [null] - The shadow color of the button.
 /// @param {Color} $resting-shadow [null] - The shadow of the button in its idle state.
 /// @param {Color} $hover-shadow [null] - The shadow of the button in its hover state.
 /// @param {Color} $focus-shadow [null] - The shadow of the button in its focus state.
+/// @param {Color} $active-shadow [null] - The shadow of the button in its focus state.
 /// @param {Color} $disabled-background [null] - The disabled background color of the button.
 /// @param {Color} $disabled-foreground [null] - The disabled text color of the button.
 /// @param {Color} $disabled-border-color [null] - The disabled border color of the button.
@@ -38,7 +47,6 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
-/// @requires round-borders
 ///
 /// @example scss Change the background and text colors in raised buttons
 ///   $my-button-theme: button-theme(
@@ -61,14 +69,25 @@
     $focus-background: null,
     $focus-foreground: null,
 
+    $focus-visible-background: null,
+    $focus-visible-foreground: null,
+
+    $active-background: null,
+    $active-foreground: null,
+
     $border-radius: null,
     $border-color: null,
+    $hover-border-color: null,
+    $focus-border-color: null,
+    $focus-visible-border-color: null,
+    $active-border-color: null,
 
     $shadow-color: null,
 
     $resting-shadow: null,
     $hover-shadow: null,
     $focus-shadow: null,
+    $active-shadow: null,
 
     $disabled-background: null,
     $disabled-foreground: null,
@@ -86,27 +105,11 @@
     $themes: ();
     $variant: null;
 
-    $_minmax-radius: (
-        flat: (0, 20px),
-        outlined: (0, 20px),
-        raised: (0, 20px),
-        fab: (12px, 28px),
-        icon: (0, 20px),
-    );
-
     @each $_name, $_schema in $button-schema {
-        $_border-radius: round-borders(
-            if(
-                $border-radius,
-                $border-radius,
-                map.get($_schema, 'border-radius')
-            ),
-            map.get($_minmax-radius, $_name)...
-        );
-
         $_resting-shadow: $resting-shadow;
         $_hover-shadow: $hover-shadow;
         $_focus-shadow: $focus-shadow;
+        $_active-shadow: $active-shadow;
 
         @if not($variant) {
             $variant: map.get($_schema, 'variant');
@@ -120,16 +123,28 @@
             $hover-background: lighten-color($background, 5%);
         }
 
-        @if not($focus-background) and $background {
-            $focus-background: lighten-color($background, 5%);
-        }
-
         @if not($hover-foreground) and $hover-background {
             $hover-foreground: text-contrast($hover-background);
         }
 
+        @if not($focus-background) and $background {
+            $focus-background: lighten-color($background, 5%);
+        }
+
         @if not($focus-foreground) and $focus-background {
             $focus-foreground: text-contrast($focus-background);
+        }
+
+        @if not($focus-visible-background) and $focus-background {
+            $focus-visible-background: $focus-background;
+        }
+
+        @if not($focus-visible-foreground) and $focus-foreground {
+            $focus-visible-foreground: $focus-foreground;
+        }
+
+        @if not($focus-visible-border-color) and $focus-border-color {
+            $focus-visible-border-color: $focus-border-color;
         }
 
         @if not($_resting-shadow) {
@@ -147,6 +162,11 @@
             $_focus-shadow: elevation($elevations, $focus-elevation);
         }
 
+        @if not($_active-shadow) {
+            $active-elevation: map.get($_schema, 'active-elevation');
+            $_active-shadow: elevation($elevations, $active-elevation);
+        }
+
         $themes: map.merge($themes, (
             $_name: extend(apply-palette($_schema, $palette), (
                 name: $name,
@@ -159,14 +179,25 @@
                 focus-background: $focus-background,
                 focus-foreground: $focus-foreground,
 
-                border-radius: $_border-radius,
+                focus-visible-background: $focus-visible-background,
+                focus-visible-foreground: $focus-visible-foreground,
+
+                active-background: $active-background,
+                active-foreground: $active-foreground,
+
+                border-radius: $border-radius,
                 border-color: $border-color,
+                hover-border-color: $hover-border-color,
+                focus-border-color: $focus-border-color,
+                focus-visible-border-color: $focus-visible-border-color,
+                active-border-color: $active-border-color,
 
                 shadow-color: $shadow-color,
 
                 resting-shadow: $_resting-shadow,
                 hover-shadow: $_hover-shadow,
                 focus-shadow: $_focus-shadow,
+                active-shadow: $_active-shadow,
 
                 disabled-background: $disabled-background,
                 disabled-foreground: $disabled-foreground,
@@ -190,7 +221,6 @@
 @mixin button($theme) {
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
-    $button-border: 1px solid transparent;
     $button-width: rem(88px);
 
     $variant: map.get($theme, variant);
@@ -224,7 +254,13 @@
     $button-floating-width: rem(56px);
     $button-floating-height: $button-floating-width;
 
-    $button-icon-width: rem(36px, 16px);
+    $button-icon-width: map.get((
+        material: rem(36px, 16px),
+        fluent: rem(32px, 16px),
+        bootstrap: rem(36px, 16px),
+        indigo-design: rem(36px, 16px),
+    ), $variant);
+
     $button-icon-height: $button-icon-width;
     $button-icon-font-size: rem(24px, 24px);
     $button-icon-padding: 0;
@@ -248,9 +284,15 @@
     );
 
     $button-padding-bootstrap: (
-        comfortable: rem(8px, 16px) rem(16px, 16px),
-        cosy: rem(6px, 16px) rem(12px, 16px),
-        compact: rem(4px, 16px) rem(8px, 16px)
+        comfortable: rem(6px, 16px) rem(12px, 16px),
+        cosy: rem(4px, 16px) rem(10px, 16px),
+        compact: rem(2px, 16px) rem(8px, 16px)
+    );
+
+    $button-padding-indigo: (
+        comfortable: rem(3px, 16px) rem(12px, 16px),
+        cosy: rem(2px, 16px) rem(12px, 16px),
+        compact: rem(1px, 16px) rem(8px, 16px)
     );
 
     $outlined-button-padding-indigo: (
@@ -259,11 +301,35 @@
         compact: rem(2px, 16px) rem(6px, 16px)
     );
 
+    $icon-button-width-material: (
+        comfortable: rem(36px, 16px),
+        cosy: rem(30px, 16px),
+        compact: rem(24px, 16px),
+    );
+
+    $icon-button-width-fluent: (
+        comfortable: rem(38px, 16px),
+        cosy: rem(32px, 16px),
+        compact: rem(24px, 16px),
+    );
+
+    $icon-button-width-bootstrap: (
+        comfortable: rem(48px, 16px),
+        cosy: rem(38px, 16px),
+        compact: rem(31px, 16px),
+    );
+
+    $icon-button-width-indigo: (
+        comfortable: rem(36px, 16px),
+        cosy: rem(32px, 16px),
+        compact: rem(28px, 16px),
+    );
+
     $button-padding: map.get((
         material: $button-padding-material,
         fluent: $button-padding-fluent,
         bootstrap: $button-padding-bootstrap,
-        indigo-design: $button-padding-bootstrap,
+        indigo-design: $button-padding-indigo,
     ), $variant);
 
     $outlined-button-padding: map.get((
@@ -273,6 +339,13 @@
         indigo-design: $outlined-button-padding-indigo
     ), $variant);
 
+    $icon-button-width: map.get((
+        material: $icon-button-width-material,
+        fluent: $icon-button-width-fluent,
+        bootstrap: $icon-button-width-bootstrap,
+        indigo-design: $icon-button-width-indigo
+    ), $variant);
+
     $button--size-material: (
         comfortable: rem(36px),
         cosy: rem(30px),
@@ -280,8 +353,8 @@
     );
 
     $button--size-fluent: (
-        comfortable: rem(32px),
-        cosy: rem(28px),
+        comfortable: rem(38px),
+        cosy: rem(32px),
         compact: rem(24px)
     );
 
@@ -294,7 +367,7 @@
     $button--size-indigo: (
         comfortable: rem(36px),
         cosy: rem(32px),
-        compact: rem(24px)
+        compact: rem(28px)
     );
 
     $button-size: map.get((
@@ -316,13 +389,25 @@
         compact: rem(32px)
     );
 
+    $button-floating-size-indigo: (
+        comfortable: rem(48px),
+        cosy: rem(42px),
+        compact: rem(36px)
+    );
+
     $icon-in-button-margin: (
         comfortable: rem(12px),
         cosy: rem(8px),
         compact: rem(4px)
     );
 
-    $icon-in-button-size: rem(18px);
+    $icon-sizes: map.get((
+        material: rem(18px),
+        fluent: rem(16px),
+        bootstrap: rem(18px),
+        indigo-design: rem(18px),
+    ), $variant);
+    $icon-in-button-size: $icon-sizes;
 
     $raised-shadow: map.get((
         material: var-get($raised-theme, 'resting-shadow'),
@@ -340,6 +425,13 @@
 
     $raised-shadow--focus: map.get((
         material: var-get($raised-theme, 'focus-shadow'),
+        fluent: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'),
+        bootstrap: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'),
+        indigo-design: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color')
+    ), $variant);
+
+    $raised-shadow--active: map.get((
+        material: var-get($raised-theme, 'active-shadow'),
         fluent: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'),
         bootstrap: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'),
         indigo-design: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color')
@@ -366,6 +458,13 @@
         indigo-design: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
     ), $variant);
 
+    $fab-shadow--active: map.get((
+        material: var-get($fab-theme, 'active-shadow'),
+        fluent:  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+        bootstrap: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+        indigo-design: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
+    ), $variant);
+
     $icon-shadow: map.get((
         material: var-get($icon-theme, 'focus-shadow'),
         fluent: 0 0 0 rem(3px) var-get($icon-theme, 'shadow-color'),
@@ -381,7 +480,7 @@
         min-width: $button-width;
         padding: map.get($button-padding, 'comfortable');
         min-height: map.get($button-size, 'comfortable');
-        border: none;
+        border: rem(1px) solid var-get($flat-theme, 'border-color');
         cursor: pointer;
         user-select: none;
         outline-style: none;
@@ -392,9 +491,9 @@
         font-family: inherit;
 
         igx-icon {
-            width: $icon-in-button-size;
-            height: $icon-in-button-size;
-            font-size: $icon-in-button-size;
+            width: var(--igx-icon-size, #{$icon-in-button-size});
+            height: var(--igx-icon-size, #{$icon-in-button-size});
+            font-size: var(--igx-icon-size, #{$icon-in-button-size});
             color: inherit;
             display: flex;
             justify-content: center;
@@ -427,48 +526,129 @@
     %igx-button--flat {
         background: var-get($flat-theme, 'background');
         color: var-get($flat-theme, 'foreground');
-        border-radius: var-get($flat-theme, 'border-radius');
+        border-radius: border-radius(var-get($flat-theme, 'border-radius'));
 
         &:hover {
             background: var-get($flat-theme, 'hover-background');
             color: var-get($flat-theme, 'hover-foreground');
+            border-color: var-get($flat-theme, 'hover-border-color');
         }
 
-        &:focus,
-        &:active {
+        &:focus {
             background: var-get($flat-theme, 'focus-background');
             color: var-get($flat-theme, 'focus-foreground');
             box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
+            border-color: var-get($flat-theme, 'focus-border-color');
+        }
+
+        &:active {
+            background: var-get($flat-theme, 'active-background');
+            color: var-get($flat-theme, 'active-foreground');
+            box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
+            border-color: var-get($flat-theme, 'active-border-color');
+        }
+
+        &:focus-visible {
+            background: var-get($flat-theme, 'focus-visible-background');
+            color: var-get($flat-theme, 'focus-visible-foreground');
+            border-color: var-get($flat-theme, 'focus-visible-border-color');
+        }
+
+        @if($variant == 'bootstrap') {
+            &:focus,
+            &:active,
+            &:focus-visible {
+                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+            }
         }
     }
 
     %igx-button--outlined {
         background: var-get($outlined-theme, 'background');
         color: var-get($outlined-theme, 'foreground');
-        border-radius: var-get($outlined-theme, 'border-radius');
+        border-color: var-get($outlined-theme, 'border-color');
+        border-radius: border-radius(var-get($outlined-theme, 'border-radius'));
         padding: map.get($outlined-button-padding, 'comfortable');
 
-        @if $variant != 'indigo-design' {
-            border: $button-border;
-            border-color: var-get($outlined-theme, 'border-color');
-        } @else {
-            border: {
-                width: 2px;
-                style: solid;
-                color: var-get($outlined-theme, 'border-color');
-            }
+        @if $variant == 'indigo-design' {
+            border-width: rem(2px);
         }
 
         &:hover {
             background: var-get($outlined-theme, 'hover-background');
             color: var-get($outlined-theme, 'hover-foreground');
+            border-color: var-get($outlined-theme, 'hover-border-color');
         }
 
-        &:focus,
-        &:active {
+        &:focus {
             background: var-get($outlined-theme, 'focus-background');
             color: var-get($outlined-theme, 'focus-foreground');
+            border-color: var-get($outlined-theme, 'focus-border-color');
+
+            @if($variant == 'bootstrap') {
+                &:hover {
+                    background: var-get($outlined-theme, 'hover-background');
+                    color: var-get($outlined-theme, 'hover-foreground');
+                }
+                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+            } @else if($variant == 'indigo-design') {
+                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+            }
+        }
+
+        &:active {
+            background: var-get($outlined-theme, 'active-background');
+            color: var-get($outlined-theme, 'active-foreground');
+            border-color: var-get($outlined-theme, 'active-border-color');
             box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+        }
+
+        &:focus-visible {
+            background: var-get($outlined-theme, 'focus-visible-background');
+            color: var-get($outlined-theme, 'focus-visible-foreground');
+            border-color: var-get($outlined-theme, 'focus-visible-border-color');
+
+            &:hover {
+                background: var-get($outlined-theme, 'hover-background');
+                color: var-get($outlined-theme, 'hover-foreground');
+                border-color: var-get($outlined-theme, 'hover-border-color');
+            }
+
+            &:active {
+                background: var-get($outlined-theme, 'active-background');
+                color: var-get($outlined-theme, 'active-foreground');
+                border-color: var-get($outlined-theme, 'active-border-color');
+            }
+        }
+
+        @if($variant == 'fluent') {
+            &:focus-visible {
+                &::after {
+                    $outline-btn-indent: rem(2px);
+                    content: '';
+                    position: absolute;
+                    top: $outline-btn-indent;
+                    left: $outline-btn-indent;
+                    pointer-events: none;
+                    width: calc(100% - (#{$outline-btn-indent} * 2));
+                    height: calc(100% - (#{$outline-btn-indent} * 2));
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
+                }
+
+                /* stylelint-disable */
+                &:hover {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
+                    }
+                }
+
+                &:active {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                    }
+                }
+                /* stylelint-enable */
+            }
         }
     }
 
@@ -494,23 +674,84 @@
         color: var-get($raised-theme, 'foreground');
         background: var-get($raised-theme, 'background');
         box-shadow: $raised-shadow;
-        border-radius: var-get($raised-theme, 'border-radius');
+        border-radius: border-radius(var-get($raised-theme, 'border-radius'));
 
         &:hover {
             color: var-get($raised-theme, 'hover-foreground');
             background: var-get($raised-theme, 'hover-background');
+            border-color: var-get($raised-theme, 'hover-border-color');
             box-shadow: $raised-shadow--hover;
         }
 
-        &:focus,
-        &:active {
+        &:focus {
             color: var-get($raised-theme, 'focus-foreground');
             background: var-get($raised-theme, 'focus-background');
+            border-color: var-get($raised-theme, 'focus-border-color');
 
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
+            }
+        }
+
+        &:active {
+            color: var-get($raised-theme, 'active-foreground');
+            background: var-get($raised-theme, 'active-background');
+            border-color: var-get($raised-theme, 'active-border-color');
+
+            @if $variant == 'material' or  $variant == 'fluent' {
+                box-shadow: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--active;
+            } @else {
+                box-shadow: $raised-shadow--active;
+            }
+        }
+
+        &:focus-visible {
+            background: var-get($raised-theme, 'focus-visible-background');
+            color: var-get($raised-theme, 'focus-visible-foreground');
+            border-color: var-get($raised-theme, 'focus-visible-border-color');
+
+            &:hover {
+                color: var-get($raised-theme, 'hover-foreground');
+                background: var-get($raised-theme, 'hover-background');
+                border-color: var-get($raised-theme, 'hover-border-color');
+            }
+
+            &:active {
+                color: var-get($raised-theme, 'active-foreground');
+                background: var-get($raised-theme, 'active-background');
+                border-color: var-get($raised-theme, 'active-border-color');
+            }
+        }
+
+        @if($variant == 'fluent') {
+            &:focus-visible {
+                &::after {
+                    $outline-btn-indent: rem(3px);
+                    content: '';
+                    position: absolute;
+                    top: $outline-btn-indent;
+                    left: $outline-btn-indent;
+                    pointer-events: none;
+                    width: calc(100% - (#{$outline-btn-indent} * 2));
+                    height: calc(100% - (#{$outline-btn-indent} * 2));
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
+                }
+
+                /* stylelint-disable */
+                &:hover {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
+                    }
+                }
+
+                &:active {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                    }
+                }
+                /* stylelint-enable */
             }
         }
     }
@@ -521,7 +762,6 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        border: $button-border;
         outline: none;
         cursor: pointer;
         transition: $button-transition;
@@ -540,24 +780,92 @@
         white-space: nowrap;
         color: var-get($fab-theme, 'foreground');
         background: var-get($fab-theme, 'background');
+        border-color: var-get($flat-theme, 'border-color');
         box-shadow: $fab-shadow;
-        border-radius: var-get($fab-theme, 'border-radius');
+        border-radius: border-radius(var-get($fab-theme, 'border-radius'));
+
+        @if $variant == 'indigo-design' {
+            min-width: map.get($button-floating-size-indigo, 'comfortable');
+            min-height: map.get($button-floating-size-indigo, 'comfortable');
+        }
 
         &:hover {
             color: var-get($fab-theme, 'hover-foreground');
             background: var-get($fab-theme, 'hover-background');
+            border-color: var-get($flat-theme, 'hover-border-color');
             box-shadow: $fab-shadow;
         }
 
-        &:focus,
-        &:active {
+        &:focus {
             color: var-get($fab-theme, 'focus-foreground');
             background: var-get($fab-theme, 'focus-background');
+            border-color: var-get($flat-theme, 'focus-border-color');
 
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
+            }
+        }
+
+        &:active {
+            color: var-get($fab-theme, 'active-foreground');
+            background: var-get($fab-theme, 'active-background');
+            border-color: var-get($flat-theme, 'active-border-color');
+
+            @if $variant == 'material' or  $variant == 'fluent' {
+                box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--active;
+            } @else {
+                box-shadow: $raised-shadow--active;
+            }
+        }
+
+        &:focus-visible {
+            background: var-get($fab-theme, 'focus-visible-background');
+            color: var-get($fab-theme, 'focus-visible-foreground');
+            border-color: var-get($fab-theme, 'focus-visible-border-color');
+
+            &:hover {
+                color: var-get($fab-theme, 'hover-foreground');
+                background: var-get($fab-theme, 'hover-background');
+                border-color: var-get($fab-theme, 'hover-border-color');
+            }
+
+            &:active {
+                color: var-get($fab-theme, 'active-foreground');
+                background: var-get($fab-theme, 'active-background');
+                border-color: var-get($fab-theme, 'active-border-color');
+            }
+        }
+
+        @if($variant == 'fluent') {
+            &:focus-visible {
+                &::after {
+                    $outline-btn-indent: rem(3px);
+                    content: '';
+                    position: absolute;
+                    top: $outline-btn-indent;
+                    left: $outline-btn-indent;
+                    pointer-events: none;
+                    border-radius: calc(#{border-radius(#{var-get($fab-theme, 'border-radius')})} - #{$outline-btn-indent});
+                    width: calc(100% - (#{$outline-btn-indent} * 2));
+                    height: calc(100% - (#{$outline-btn-indent} * 2));
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
+                }
+
+                /* stylelint-disable */
+                &:hover {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
+                    }
+                }
+
+                &:active {
+                    &::after {
+                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                    }
+                }
+                /* stylelint-enable */
             }
         }
 
@@ -572,6 +880,11 @@
         min-width: map.get($button-floating-size, 'cosy');
         min-height: map.get($button-floating-size, 'cosy');
 
+        @if $variant == 'indigo-design' {
+            min-width: map.get($button-floating-size-indigo, 'cosy');
+            min-height: map.get($button-floating-size-indigo, 'cosy');
+        }
+
         @include icon-w-margin(
             map.get($icon-in-button-margin, 'cosy'),
             $left
@@ -583,6 +896,11 @@
         min-width: map.get($button-floating-size, 'compact');
         min-height: map.get($button-floating-size, 'compact');
 
+        @if $variant == 'indigo-design' {
+            min-width: map.get($button-floating-size-indigo, 'compact');
+            min-height: map.get($button-floating-size-indigo, 'compact');
+        }
+
         @include icon-w-margin(
             map.get($icon-in-button-margin, 'compact'),
             $left
@@ -590,27 +908,71 @@
     }
 
     %igx-button--icon {
-        width: $button-icon-width;
-        height: $button-icon-width;
+        width: map.get($icon-button-width, 'comfortable');
+        height: map.get($icon-button-width, 'comfortable');
         min-width: unset;
         min-height: unset;
         font-size: $button-icon-font-size;
         padding: $button-icon-padding;
         color: var-get($icon-theme, 'foreground');
         background: var-get($icon-theme, 'background');
-        border-radius: var-get($icon-theme, 'border-radius');
+        border-radius: border-radius(var-get($icon-theme, 'border-radius'));
+        border-color: var-get($icon-theme, 'border-color');
 
         &:hover {
-            transition: $button-transition;
+            @if $variant != 'fluent' {
+                transition: $button-transition;
+            }
+
             color: var-get($icon-theme, 'hover-foreground');
             background: var-get($icon-theme, 'hover-background');
+            border-color: var-get($icon-theme, 'hover-border-color');
+        }
+
+        &:focus {
+            color: var-get($icon-theme, 'focus-foreground');
+            background: var-get($icon-theme, 'focus-background');
+            border-color: var-get($icon-theme, 'focus-border-color');
+
+            &:hover {
+                color: var-get($icon-theme, 'hover-foreground');
+                background: var-get($icon-theme, 'hover-background');
+                border-color: var-get($icon-theme, 'hover-border-color');
+            }
+
+            &:active {
+                color: var-get($icon-theme, 'active-foreground');
+                background: var-get($icon-theme, 'active-background');
+                border-color: var-get($icon-theme, 'active-border-color');
+            }
+        }
+
+        &:active {
+            color: var-get($icon-theme, 'active-foreground');
+            background: var-get($icon-theme, 'active-background');
+            border-color: var-get($flat-theme, 'active-border-color');
+        }
+
+        &:focus-visible {
+            color: var-get($icon-theme, 'focus-visible-foreground');
+            background: var-get($icon-theme, 'focus-visible-background');
+            border-color: var-get($icon-theme, 'focus-visible-border-color') ;
+
+            &:hover {
+                color: var-get($icon-theme, 'hover-foreground');
+                background: var-get($icon-theme, 'hover-background');
+                border-color: var-get($icon-theme, 'focus-visible-border-color');
+            }
+
+            &:active {
+                color: var-get($icon-theme, 'active-foreground');
+                background: var-get($icon-theme, 'active-background');
+                border-color: var-get($icon-theme, 'focus-visible-border-color');
+            }
         }
 
         &:focus,
         &:active {
-            color: var-get($icon-theme, 'focus-foreground');
-            background: var-get($icon-theme, 'focus-background');
-
             @if $variant == 'material' or  $variant == 'fluent' {
                 box-shadow: 0 0 0 rem(3px) var-get($icon-theme, 'shadow-color'), $icon-shadow;
             } @else {
@@ -619,20 +981,22 @@
         }
     }
 
+    %igx-button--icon-cosy {
+        width: map.get($icon-button-width, 'cosy');
+        height: map.get($icon-button-width, 'cosy');
+    }
+
+    %igx-button--icon-compact {
+        width: map.get($icon-button-width, 'compact');
+        height: map.get($icon-button-width, 'compact');
+    }
+
     %igx-button--disabled {
+        background: var-get($flat-theme, 'disabled-background');
+        color: var-get($flat-theme, 'disabled-foreground');
+        border-color: var-get($flat-theme, 'disabled-border-color');
         pointer-events: none;
         box-shadow: none;
-        color: var-get($flat-theme, 'disabled-foreground');
-        background: transparent;
-
-        &%igx-button--raised,
-        &%igx-button--fab {
-            background: var-get($flat-theme, 'disabled-background');
-        }
-
-        &%igx-button--outlined {
-            border-color: var-get($flat-theme, 'disabled-border-color');
-        }
 
         &:focus {
             box-shadow: none;

@@ -285,6 +285,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.setupColumns();
         }
         this.cdr.markForCheck();
+        if (this.isPercentHeight) {
+            this.notifyChanges(true);
+        }
     }
 
     /**
@@ -761,7 +764,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
-        return record && record?.records && record.records?.length;
+        return record && record?.records && record.records?.length &&
+         record.expression && record.expression?.fieldName;
     }
 
     /**
@@ -979,7 +983,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             if (changes && this.columnList.length > 0) {
                 changes.forEachAddedItem((rec) => {
                     const col = this.getColumnByName(rec.item.fieldName);
-                    col.hidden = true;
+                    if (col) {
+                        col.hidden = true;
+                    }
                 });
                 changes.forEachRemovedItem((rec) => {
                     const col = this.getColumnByName(rec.item.fieldName);
@@ -1030,10 +1036,22 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param index
      */
     public getRowByIndex(index: number): RowType {
+        let row: RowType;
         if (index < 0) {
             return undefined;
         }
-        return this.createRow(index);
+        if (this.dataView.length >= this.virtualizationState.startIndex + this.virtualizationState.chunkSize) {
+            row = this.createRow(index);
+        } else {
+            if (!(index < this.virtualizationState.startIndex) && !(index > this.virtualizationState.startIndex + this.virtualizationState.chunkSize)) {
+                row = this.createRow(index);
+            }
+        }
+
+        if (this.gridAPI.grid.pagingMode === 1 && this.gridAPI.grid.page !== 0) {
+            row.index = index + this.paginator.perPage * this.paginator.page;
+        }
+        return row;
     }
 
     /**
@@ -1062,7 +1080,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => this.createRow(index));
+        return this.dataView.map((rec, index) => {
+            this.pagingMode === 1 && this.paginator.page !== 0 ? index = index + this.paginator.perPage * this.paginator.page : index = this.dataRowList.first.index + index;
+            return this.createRow(index);
+        });
     }
 
     /**
@@ -1101,7 +1122,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.field === columnField);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            return new IgxGridCell(this, rowIndex, columnField);
+            if (this.pagingMode === 1 && this.gridAPI.grid.page !== 0) {
+                row.index = rowIndex + this.paginator.perPage * this.paginator.page;
+            }
+            return new IgxGridCell(this, row.index, columnField);
         }
     }
 
@@ -1142,14 +1166,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         let row: RowType;
         let rec: any;
 
-        if (index < 0 || index >= this.dataView.length) {
-            if (index >= this.dataView.length){
-                const virtIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
-                rec = data ?? this.dataView[virtIndex];
-            }
-        }else {
-            rec = data ?? this.dataView[index];
-        }
+        const dataIndex = this._getDataViewIndex(index);
+        rec = data ?? this.dataView[dataIndex];
 
         if (rec && this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this as any, index, rec);

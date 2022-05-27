@@ -57,7 +57,7 @@
                                       [removable]="true" (remove)="columnRemoved($event)" (dragOver)="onDimDragOver($event, 1)"
                                       (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, colArea, 1)"
                                       (moveStart)='onDimDragStart($event, colArea)' (moveEnd)='onDimDragEnd()'
-                                      (click)="onChipSort($event, col, 1)">
+                                      (click)="onChipSort($event, col)">
                                 <igx-icon igxPrefix>view_column</igx-icon>
                                 <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
                                           (click)='onFilteringIconClick($event, col)'>filter_list</igx-icon>
@@ -134,7 +134,7 @@
                                       [removable]="true" (remove)="rowRemoved($event)" (dragLeave)="onDimDragLeave($event)"
                                       (dragDrop)="onDimDrop($event, rowArea, 0)" (dragOver)="onDimDragOver($event, 0)"
                                       (moveStart)='onDimDragStart($event, rowArea)' (moveEnd)='onDimDragEnd()'
-                                      (click)="onChipSort($event, row, 0)">
+                                      (click)="onChipSort($event, row)">
                                 <igx-icon igxPrefix>table_rows</igx-icon>
                                 <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
                                           (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>

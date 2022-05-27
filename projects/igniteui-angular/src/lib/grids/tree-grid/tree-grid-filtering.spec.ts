@@ -437,7 +437,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tick(100);
             fix.detectChanges();
 
-            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
 
             let checkboxes: any[] = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid');
             checkboxes[2].parentElement.click();
@@ -448,6 +448,30 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             expect(checkboxes[0].indeterminate && !checkboxes[0].checked).toBe(true);
             expect(checkboxes[1].indeterminate && !checkboxes[1].checked).toBe(true);
             expect(checkboxes[2].checked).toBe(false);
+
+            // Click Select All twice to deselect all items and check only one child item
+            checkboxes[0].click();
+            checkboxes[0].click();
+            tick(100);
+            fix.detectChanges();
+
+            checkboxes[2].click();
+            tick(100);
+            fix.detectChanges();
+
+            // Apply changes and open excel style filter dialog
+            GridFunctions.clickApplyExcelStyleFiltering(fix, null, 'igx-tree-grid');
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            tick(100);
+            fix.detectChanges();
+
+            // Verify Select All is indeterminate
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
+            checkboxes = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
+            expect(checkboxes[0].indeterminate).toBe(true);
         }));
 
         it('Should filter items and clear the search component correctly', async () => {

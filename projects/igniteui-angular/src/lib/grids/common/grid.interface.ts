@@ -61,7 +61,7 @@ export interface CellType {
     column: ColumnType;
     row: RowType;
     grid: GridType;
-    id: { rowID: any; columnID: number; rowIndex: number };
+    id?: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
     readonly?: boolean;
     title?: any;
@@ -247,8 +247,9 @@ export interface GridServiceType {
     getParentRowId?(child: GridType): any;
     getChildGrids?(inDepth?: boolean): GridType[];
     getChildGrid?(path: IPathSegment[]): GridType;
-    // XXX: Fix type
-    unsetChildRowIsland?(rowIsland: any): void;
+
+    unsetChildRowIsland?(rowIsland: GridType): void;
+    registerChildRowIsland?(rowIsland: GridType): void;
 }
 
 
@@ -276,7 +277,6 @@ export interface GridType extends IGridDataBindable {
     dataCloneStrategy: IDataCloneStrategy;
 
     gridAPI: GridServiceType;
-
 
     filterMode: FilterMode;
 
@@ -435,7 +435,6 @@ export interface GridType extends IGridDataBindable {
     loadingRows?: Set<any>;
     parent?: GridType;
     highlightedRowID?: any;
-    hgridAPI?: GridServiceType;
     updateOnRender?: boolean;
     childLayoutKeys?: any[];
     childLayoutList?: QueryList<any>;
@@ -519,7 +518,7 @@ export interface GridType extends IGridDataBindable {
     clearGrouping?(field: string): void;
     groupBy?(expression: IGroupingExpression | Array<IGroupingExpression>): void;
     resolveOutlet?(): IgxOverlayOutletDirective;
-
+    updateColumns(columns: ColumnType[]): void;
     getSelectedRanges(): GridSelectionRange[];
     deselectAllColumns(): void;
     deselectColumns(columns: string[] | ColumnType[]): void;

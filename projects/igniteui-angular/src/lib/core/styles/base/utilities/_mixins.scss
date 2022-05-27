@@ -200,6 +200,7 @@
     $_meta: map.get($palette, '_meta');
     $theme: if($_meta, map.get($_meta, 'variant'), null);
     $gray: if($_meta, map.get($_meta, 'grays'), #fff);
+    $surface: map.get(map.get($palette, 'surface'), 500);
 
     #{$scope} {
         @each $name, $color in $palette {
@@ -233,9 +234,9 @@
 
                 @if $_valid-base and $_valid-variant {
                     @if $prefix == 'igc' and $name == 'grays' {
-                        --#{$prefix}-gray-#{$variant}: #{gen-hsla-color('gray', $variant, $theme, $gray, #{$prefix})};
+                        --#{$prefix}-gray-#{$variant}: #{gen-hsla-color('gray', $variant, $theme, $gray, #{$prefix}, $surface)};
                     } @else {
-                        --#{$prefix}-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme, $gray, #{$prefix})};
+                        --#{$prefix}-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme, $gray, #{$prefix}, $surface)};
                     }
                 } @else if $name != '_meta' {
                     @if $prefix == 'igc' and $name == 'grays' {
@@ -292,6 +293,15 @@
 ///
 @mixin elevations-to-wc($elevations) {
     @include elevation-vars($elevations, $prefix: 'igc');
+}
+
+/// Returns a middle value between an upper and lower bound
+/// @access private
+/// @param {Number} $radius - A preferred value
+/// @param {Number} $min - A minimum value
+/// @param {Number} $max - A maximum allowed value
+@mixin border-radius($radius, $min: rem(0), $max: $radius) {
+    border-radius: clamp($min, calc(var(--igx-radius-factor) * $radius), $max);
 }
 
 /// Generates CSS class names for all colors from

@@ -32,7 +32,6 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
-/// @requires round-borders
 ///
 /// @example scss Change the background and content text colors in card
 ///   $my-card-theme: card-theme(
@@ -66,10 +65,6 @@
     }
 
     $theme: apply-palette($card-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($card-schema, 'border-radius')),0 ,24px
-    );
 
     @if not($header-text-color) and $background {
         $header-text-color: text-contrast($background);
@@ -145,7 +140,7 @@
         flex-direction: column;
         box-shadow: var-get($theme, 'resting-shadow');
         overflow: hidden;
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: border-radius(var-get($theme, 'border-radius'));
         background: var-get($theme, 'background');
         transition: $card-transitions;
         backface-visibility: hidden;

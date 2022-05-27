@@ -1,11 +1,10 @@
 
-import { GridType, PivotGridType } from '../grids/common/grid.interface';
+import { ColumnType, PivotGridType } from '../grids/common/grid.interface';
 import { DEFAULT_PIVOT_KEYS, IPivotDimension, IPivotDimensionStrategy, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
-import { FilteringStrategy } from './filtering-strategy';
-import { GridColumnDataType } from './data-util';
-import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
-import { cloneArray, parseDate } from '../core/utils';
+import { FilteringStrategy, IgxFilterItem } from './filtering-strategy';
+import { cloneArray } from '../core/utils';
+import { IFilteringExpressionsTree } from './filtering-expressions-tree';
 
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: NoopPivotDimensionsStrategy = null;
@@ -102,7 +101,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
                     })
                 }
             });
-            
         }
         this.applyAggregates(rec, columns, values, pivotKeys);
     }
@@ -124,10 +122,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         }
         return leafs;
     }
-
-    private isLeaf(record, pivotKeys) {
-        return !(record[pivotKeys.records] && record[pivotKeys.records].some(r => r[pivotKeys.records]));
-    }
 }
 
 export class DimensionValuesFilteringStrategy extends FilteringStrategy {
@@ -143,69 +137,53 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
 
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false,
         grid?: PivotGridType): any {
-        const config = grid.pivotConfiguration;
         const allDimensions = grid.allDimensions;
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
-        return PivotUtil.extractValueFromDimension(dim, rec);
-    }
-}
-
-export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
-    protected static _instance: DefaultPivotSortingStrategy = null;
-    protected dimension;
-    public static instance(): DefaultPivotSortingStrategy {
-        return this._instance || (this._instance = new this());
-    }
-    public sort(data: any[],
-        fieldName: string,
-        dir: SortingDirection,
-        ignoreCase: boolean,
-        valueResolver: (obj: any, key: string, isDate?: boolean) => any,
-        isDate?: boolean,
-        isTime?: boolean,
-        grid?: PivotGridType) {
-        const key = fieldName;
-        const allDimensions = grid.allDimensions;
-        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        this.dimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === key);
-        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, this.getFieldValue, isDate, isTime);
-        return this.arraySort(data, cmpFunc);
+        const dim :IPivotDimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
+        const value = dim.childLevel ? this._getDimensionValueHierarchy(dim, rec).map(x => `[` + x +`]`).join('.') : PivotUtil.extractValueFromDimension(dim, rec);
+        return value;
     }
 
-    protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
-        let resolvedValue = PivotUtil.extractValueFromDimension(this.dimension, obj) || obj[0];
-        const formatAsDate = this.dimension.dataType === GridColumnDataType.Date || this.dimension.dataType === GridColumnDataType.DateTime;
-        if (formatAsDate) {
-            const date = parseDate(resolvedValue);
-            resolvedValue = isTime && date ?
-                new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()) : date;
+    public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
+        const grid = (column.grid as any);
+        const enabledDimensions = grid.allDimensions.filter(x => x && x.enabled);
+        let data = column.grid.gridAPI.filterDataByExpressions(tree);
+        const dim = enabledDimensions.find(x => x.memberName === column.field);
+        const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
+            data,
+            [dim],
+            PivotDimensionType.Column,
+            grid.pivotKeys
+        );
+        const isNoop = grid.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy || grid.pivotConfiguration.rowStrategy instanceof NoopPivotDimensionsStrategy;
+        const items: IgxFilterItem[] = !isNoop ? this._getFilterItems(allValuesHierarchy, grid.pivotKeys) : [{value : ''}];
+        return Promise.resolve(items);
+    }
 
+    private _getFilterItems(hierarchy: Map<string, any>, pivotKeys: IPivotKeys) : IgxFilterItem[] {
+        const items:  IgxFilterItem[] = [];
+        hierarchy.forEach((value) => {
+            const val = value.value;
+            const path = val.split(pivotKeys.columnDimensionSeparator);
+            const hierarchicalValue = path.length > 1 ? path.map(x => `[` + x +`]`).join('.') : val;
+            const text = path[path.length -1];
+            items.push({
+                value: hierarchicalValue,
+                label: text,
+                children: this._getFilterItems(value.children, pivotKeys)
+            });
+        });
+        return items;
+    }
+
+    private _getDimensionValueHierarchy(dim: IPivotDimension, rec: any) : string[] {
+        let path = [];
+        let value = PivotUtil.extractValueFromDimension(dim, rec);
+        path.push(value);
+        if (dim.childLevel) {
+            const childVals = this._getDimensionValueHierarchy(dim.childLevel, rec);
+            path = path.concat(childVals);
         }
-        return resolvedValue;
-    }
-}
-
-export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrategy {
-    protected static _instance: DefaultPivotGridRecordSortingStrategy = null;
-    public static instance(): DefaultPivotGridRecordSortingStrategy {
-        return this._instance || (this._instance = new this());
-    }
-    public sort(data: any[],
-        fieldName: string,
-        dir: SortingDirection,
-        ignoreCase: boolean,
-        valueResolver: (obj: any, key: string, isDate?: boolean) => any,
-        isDate?: boolean,
-        isTime?: boolean,
-        grid?: PivotGridType) {
-        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, fieldName, reverse, ignoreCase, this.getFieldValue, isDate, isTime);
-        return this.arraySort(data, cmpFunc);
-    }
-
-    protected getFieldValue(obj: IPivotGridRecord, key: string, isDate: boolean = false, isTime: boolean = false): any {
-        return obj.aggregationValues.get(key);
+        return path;
     }
 }

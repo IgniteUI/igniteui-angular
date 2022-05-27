@@ -308,7 +308,7 @@ export abstract class BaseProgressDirective {
         return currentValue < prevValue ? this.step : -this.step;
     }
 
-    protected runAnimation(value: number) {}
+    protected abstract runAnimation(value: number);
 
     /**
      * @hidden

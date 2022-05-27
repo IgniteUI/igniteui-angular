@@ -146,6 +146,7 @@ export abstract class IgxCarouselComponentBase {
         }
 
         this.enterAnimationPlayer = this.animationService.buildAnimation(animation, this.getCurrentElement());
+
         this.enterAnimationPlayer.animationEnd.subscribe(() => {
             if (this.enterAnimationPlayer) {
                 this.enterAnimationPlayer.reset();
@@ -168,6 +169,7 @@ export abstract class IgxCarouselComponentBase {
         }
 
         this.leaveAnimationPlayer = this.animationService.buildAnimation(animation, this.getPreviousElement());
+
         this.leaveAnimationPlayer.animationEnd.subscribe(() => {
             if (this.leaveAnimationPlayer) {
                 this.leaveAnimationPlayer.reset();

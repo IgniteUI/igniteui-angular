@@ -9,7 +9,7 @@
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
 
-    <input #comboInput igxInput [value]="value" (input)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
+    <input #comboInput igxInput [value]="value" (focus)="onFocus()" (input)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
         (keydown)="handleKeyDown($event)" (blur)="onBlur()" [attr.placeholder]="placeholder" aria-autocomplete="both"
         [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" [disabled]="disabled"
         [igxTextSelection]="!composing" />
@@ -51,6 +51,7 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id"
         (keydown)="handleItemKeyDown($event)">
         <igx-combo-item role="option" [singleMode]="true" [itemHeight]='itemHeight' (click)="handleItemClick()" *igxFor="let item of data
+            | comboClean
             | comboFiltering:filterValue:displayKey:filteringOptions:true
             | comboGrouping:groupKey:valueKey:groupSortingDirection;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"

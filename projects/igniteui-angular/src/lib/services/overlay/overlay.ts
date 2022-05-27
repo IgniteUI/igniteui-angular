@@ -409,6 +409,7 @@ export class IgxOverlayService implements OnDestroy {
             document,
             true,
             info.settings.target);
+        this.addModalClasses(info);
         if (info.settings.positionStrategy.settings.openAnimation) {
             // TODO: should we build players again. This was already done in attach!!!
             // this.buildAnimationPlayers(info);
@@ -533,6 +534,7 @@ export class IgxOverlayService implements OnDestroy {
         if (eventArgs.cancel) {
             return;
         }
+        this.removeModalClasses(info);
         if (info.settings.positionStrategy.settings.closeAnimation) {
             this.playCloseAnimation(info, event);
         } else {

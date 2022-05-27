@@ -1,8 +1,8 @@
-import { IgxGridModule, IgxGridComponent, CellType } from './public_api';
+import { IgxGridModule, IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { DebugElement, QueryList } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxAddRowComponent, IgxGridRowEditingTransactionComponent
@@ -936,7 +936,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             gridContent = GridFunctions.getGridContent(fixture);
         }));
 
-        it('Should exit add row mode when moving a column', () => {
+        it('Should exit add row mode when moving a column', fakeAsync(() => {
             spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
@@ -949,12 +949,13 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
 
             grid.moveColumn(grid.columnList.get(1), grid.columnList.get(2));
+            tick();
             fixture.detectChanges();
 
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
             expect(grid.data.length).toBe(dataLength);
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
-        });
+        }));
 
         it('Should exit add row mode when pinning/unpinning a column', () => {
             spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();

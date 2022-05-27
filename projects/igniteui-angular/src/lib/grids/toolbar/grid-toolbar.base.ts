@@ -4,7 +4,6 @@ import { first, takeUntil } from 'rxjs/operators';
 
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { ColumnDisplayOrder } from '../common/enums';
-import { ElasticPositionStrategy } from '../../services/overlay/position/elastic-position-strategy';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
@@ -115,9 +114,12 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     /** @hidden @internal */
     public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective, actions?: IgxColumnActionsComponent): void {
         if (actions) {
-            this._setupListeners(toggleRef);
+            this._setupListeners(toggleRef, actions);
             const setHeight = () =>
-                actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight * 0.5, 200)}px`;
+                actions.columnsAreaMaxHeight = actions.columnsAreaMaxHeight !== '100%'
+                    ? actions.columnsAreaMaxHeight :
+                    this.columnListHeight ??
+                    `${Math.max(this.grid.calcHeight * 0.5, 200)}px`;
             toggleRef.opening.pipe(first()).subscribe(setHeight);
         }
         toggleRef.toggle({ ...this.overlaySettings, ...{ target: anchorElement, outlet: this.grid.outlet,
