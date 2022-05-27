@@ -38,7 +38,8 @@ describe('IgxInput', () => {
                 ReactiveFormComponent,
                 InputsWithSameNameAttributesComponent,
                 ToggleRequiredWithNgModelInputComponent,
-                InputReactiveFormComponent
+                InputReactiveFormComponent,
+                FileInputFormComponent
             ],
             imports: [
                 IgxInputGroupModule,
