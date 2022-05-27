@@ -151,7 +151,8 @@
 
         @include expansion-panel-typography($type-scale, $categories: (
             title: 'subtitle-1',
-            description: 'body-2'
+            description: 'body-2',
+            body: 'caption'
         ));
 
         @include snackbar-typography($type-scale, $categories: (
@@ -222,7 +223,8 @@
         ));
 
         @include expansion-panel-typography($type-scale, $categories: (
-            description: 'body-1',
+            description: 'body-2',
+            body: 'body-1'
         ));
     }
 
