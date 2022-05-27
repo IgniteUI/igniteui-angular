@@ -717,7 +717,6 @@ export class IgxOverlayService implements OnDestroy {
         //  to eliminate flickering show the element just before animation start
         info.wrapperElement.style.visibility = '';
         info.visible = true;
-        this.addModalClasses(info);
         info.igxOpenAnimationPlayer.play();
     }
 
@@ -734,7 +733,6 @@ export class IgxOverlayService implements OnDestroy {
         }
         this.animationStarting.emit({ id: info.id, animationPlayer: info.igxCloseAnimationPlayer, animationType: 'close' });
         info.event = event;
-        this.removeModalClasses(info);
         info.igxCloseAnimationPlayer.play();
     }
 
