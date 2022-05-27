@@ -37,7 +37,8 @@ describe('IgxInput', () => {
                 ReactiveFormComponent,
                 InputsWithSameNameAttributesComponent,
                 ToggleRequiredWithNgModelInputComponent,
-                InputReactiveFormComponent
+                InputReactiveFormComponent,
+                FileInputFormComponent
             ],
             imports: [
                 IgxInputGroupModule,
@@ -728,7 +729,7 @@ describe('IgxInput', () => {
         expect(form.controls['fileInput'].value).toEqual('');
 
         const list = new DataTransfer();
-        const file = new File(["content"], "filename.jpg");
+        const file = new File(['content'], 'filename.jpg');
         list.items.add(file);
         const myFileList = list.files;
 
@@ -737,7 +738,7 @@ describe('IgxInput', () => {
         fixture.detectChanges();
 
         expect(igxInput.value).toEqual('C:\\fakepath\\filename.jpg');
-        expect(form.controls['fileInput'].value).toEqual('C:\\fakepath\\filename.jpg')
+        expect(form.controls['fileInput'].value).toEqual('C:\\fakepath\\filename.jpg');
 
         const clearButton = igxInputGroup.element.nativeElement.querySelector('.igx-input-group__clear-icon');
         expect(clearButton).toBeDefined();
@@ -762,7 +763,7 @@ describe('IgxInput', () => {
         expect(model.inputValue).toEqual(null);
 
         const list = new DataTransfer();
-        const file = new File(["content"], "filename.jpg");
+        const file = new File(['content'], 'filename.jpg');
         list.items.add(file);
         const myFileList = list.files;
 
