@@ -191,7 +191,7 @@ export class AppModule {}
 `);
     });
 
-    it('Should properly rename rowData property to data',  async () => {
+    it('Should properly rename rowData property to data', async () => {
         pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
@@ -257,7 +257,7 @@ export class AppModule {}
         );
     });
 
-    it('Should properly rename columnsCollection property to columns',  async () => {
+    it('Should properly rename columnsCollection property to columns', async () => {
         pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
@@ -291,7 +291,7 @@ export class AppModule {}
         );
     });
 
-    it('Should properly rename columnsCollection property to columns - treeGrid',  async () => {
+    it('Should properly rename columnsCollection property to columns - treeGrid', async () => {
         pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
@@ -329,5 +329,180 @@ export class AppModule {}
         }
         `
         );
+    });
+
+    it('should remove grid toolbar inputs and define a igx-grid-toolbar component instead', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-grid #grid1 [data]="data" [showToolbar]='someVal' height="300px" width="300px"
+        columnHiding="'true'" [toolbarTitle]='someVal1' columnHidingTitle='hidingTitle' hiddenColumnsText='hiddenColumns'
+        [columnPinning]="someVal2" [columnPinningTitle]="pinningTitle" [pinnedColumnsText]="pinnedColumns">
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+        <igx-grid #grid1 [data]="data" height="300px" width="300px">
+<igx-grid-toolbar *ngIf="someVal">
+<igx-grid-toolbar-title>someVal1</igx-grid-toolbar-title>
+<igx-grid-toolbar-actions>
+<igx-grid-toolbar-hiding title="hidingTitle" buttonText="hiddenColumns"></igx-grid-toolbar-hiding>
+<igx-grid-toolbar-pinning *ngIf="someVal2" title="pinningTitle" buttonText="pinnedColumns"></igx-grid-toolbar-pinning>
+</igx-grid-toolbar-actions>
+</igx-grid-toolbar>
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+    });
+
+    it('should migrate row island toolbar inputs to igx-grid-toolbar component instead', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+            <igx-hierarchical-grid [showExpandAll]='true' [data]="localData" [autoGenerate]="true" [height]="'600px'"
+            [width]="'800px'" #hGrid [primaryKey]="'ID'">
+            <igx-grid-toolbar>
+            <igx-grid-toolbar-title>Singers</igx-grid-toolbar-title>
+            <igx-grid-toolbar-actions>
+            <igx-grid-toolbar-hiding title="Column Hiding" buttonText="Hidden"></igx-grid-toolbar-hiding>
+            </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
+            <igx-row-island #island [key]="'childData'" [autoGenerate]="true"
+            [primaryKey]="'ID'" [toolbarTitle]="someVal1" columnHiding="'true'" [columnHidingTitle]="hidingTitle"
+            [columnPinning]="someVal2" hiddenColumnsText="Hidden">
+                <igx-row-island [key]="'childData'" [autoGenerate]="true"
+                    [allowFiltering]="true" [rowSelection]="'multiple'">
+                </igx-row-island>
+            </igx-row-island>
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]="true"></igx-row-island>
+            </igx-hierarchical-grid>`);
+
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+            <igx-hierarchical-grid [showExpandAll]='true' [data]="localData" [autoGenerate]="true" [height]="'600px'"
+            [width]="'800px'" #hGrid [primaryKey]="'ID'">
+            <igx-grid-toolbar>
+            <igx-grid-toolbar-title>Singers</igx-grid-toolbar-title>
+            <igx-grid-toolbar-actions>
+            <igx-grid-toolbar-hiding title="Column Hiding" buttonText="Hidden"></igx-grid-toolbar-hiding>
+            </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
+            <igx-row-island #island [key]="'childData'" [autoGenerate]="true"
+            [primaryKey]="'ID'">
+<igx-grid-toolbar>
+<igx-grid-toolbar-title>someVal1</igx-grid-toolbar-title>
+<igx-grid-toolbar-actions>
+<igx-grid-toolbar-hiding title="hidingTitle" buttonText="Hidden"></igx-grid-toolbar-hiding>
+<igx-grid-toolbar-pinning *ngIf="someVal2"></igx-grid-toolbar-pinning>
+</igx-grid-toolbar-actions>
+</igx-grid-toolbar>
+                <igx-row-island [key]="'childData'" [autoGenerate]="true"
+                    [allowFiltering]="true" [rowSelection]="'multiple'">
+                </igx-row-island>
+            </igx-row-island>
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]="true"></igx-row-island>
+            </igx-hierarchical-grid>`);
+    });
+
+    it('should update existing toolbar component', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-grid #grid1 [data]="data" height="300px" width="300px" [toolbarTitle]="someVal1" [hiddenColumnsText]="hiddenColumns"
+        [columnPinningTitle]="pinnedColumns">
+<igx-grid-toolbar *ngIf="someVal">
+<igx-grid-toolbar-actions>
+<igx-grid-toolbar-hiding  title="hidingTitle"></igx-grid-toolbar-hiding>
+</igx-grid-toolbar-actions>
+</igx-grid-toolbar>
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+        <igx-grid #grid1 [data]="data" height="300px" width="300px">
+<igx-grid-toolbar *ngIf="someVal">
+<igx-grid-toolbar-title>someVal1</igx-grid-toolbar-title>
+<igx-grid-toolbar-actions>
+<igx-grid-toolbar-hiding title="hidingTitle" buttonText="hiddenColumns"></igx-grid-toolbar-hiding>
+<igx-grid-toolbar-pinning title="pinnedColumns"></igx-grid-toolbar-pinning>
+</igx-grid-toolbar-actions>
+</igx-grid-toolbar>
+
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+    });
+
+    it('should remove grid toolbar inputs and define a igx-grid-toolbar component instead', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-grid #grid1 [data]="data" height="300px" width="300px"
+        [pinnedColumnsText]="pinnedColumns">
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+        <igx-grid #grid1 [data]="data" height="300px" width="300px">
+<igx-grid-toolbar>
+<igx-grid-toolbar-actions>
+<igx-grid-toolbar-pinning buttonText="pinnedColumns"></igx-grid-toolbar-pinning>
+</igx-grid-toolbar-actions>
+</igx-grid-toolbar>
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+    });
+
+    it('should contain all actions from the before toolbar', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-grid #grid1 hiddenColumnsText="Hidden" primaryKey='id'>
+        <igx-grid-toolbar *ngIf="showToolbar">
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-hiding title="Indicators"></igx-grid-toolbar-hiding>
+                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-exporter [exportCSV]="false">
+                    <span excelText>Export to Excel</span>
+                </igx-grid-toolbar-exporter>
+                <igx-grid-toolbar-advanced-filtering>Custom text for the toggle button</igx-grid-toolbar-advanced-filtering>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
+</igx-grid>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+        <igx-grid #grid1 primaryKey='id'>
+<igx-grid-toolbar *ngIf="showToolbar">
+<igx-grid-toolbar-actions>
+<igx-grid-toolbar-hiding title="Indicators" buttonText="Hidden"></igx-grid-toolbar-hiding>
+<igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+<igx-grid-toolbar-exporter [exportCSV]="false">
+                    <span excelText>Export to Excel</span>
+                </igx-grid-toolbar-exporter>
+<igx-grid-toolbar-advanced-filtering>Custom text for the toggle button</igx-grid-toolbar-advanced-filtering>
+</igx-grid-toolbar-actions>
+</igx-grid-toolbar>
+        
+</igx-grid>`);
     });
 });
