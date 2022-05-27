@@ -214,6 +214,14 @@
         $item-subtitle-color-active: $item-text-color-active;
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
+    @if not($item-border-radius) {
+        $item-border-radius: border-radius(map.get($theme, 'item-border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -303,7 +311,7 @@
         overflow-y: auto;
         overflow-x: hidden;
         z-index: 0;
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
     }
 
     %igx-list--empty {
@@ -339,7 +347,7 @@
         display: flex;
         flex-flow: column wrap;
         justify-content: center;
-        border-radius: border-radius(var-get($theme, 'item-border-radius'));
+        border-radius: var-get($theme, 'item-border-radius');
         color: var-get($theme, 'item-text-color');
         background: var-get($theme, 'item-background');
 
@@ -436,7 +444,7 @@
         align-items: center;
         position: relative;
         padding: map.get($list-item-padding, 'comfortable');
-        border-radius: border-radius(var-get($theme, 'item-border-radius'));
+        border-radius: var-get($theme, 'item-border-radius');
         background: inherit;
         z-index: 2;
     }
