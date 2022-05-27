@@ -43,9 +43,6 @@
 @mixin pivot-data-selector($theme) {
     @include css-vars($theme);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $chip-height-material: (
         comfortable: rem(22px),
         cosy: rem(20px),
@@ -53,7 +50,7 @@
     );
 
     $chip-item-padding: 0 rem(2px);
-    $panel-padding: em(4px, 16px);
+    $panel-padding: rem(4px, 16px);
 
     %selector-base {
         display: flex;
@@ -93,7 +90,7 @@
         %form-group-prefix,
         %form-group-prefix--cosy,
         %form-group-prefix--compact {
-            padding-#{$right}: rem(16px) !important;
+            padding-inline-end: rem(16px) !important;
             box-sizing: content-box;
         }
 
@@ -133,6 +130,16 @@
                 font-size: rem(12px);
             }
         }
+
+        %igx-expansion-panel__header-inner {
+            background: var-get($theme, 'header-color');
+            padding: $panel-padding;
+
+            .dragOver & {
+                background: color($color: 'grays', $variant: 300);
+                box-shadow: inset 0 0 0 1px color($color: 'grays', $variant: 400);
+            }
+        }
     }
 
     %selector-filter {
@@ -154,7 +161,7 @@
         }
 
         igx-checkbox + span {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
             line-height: rem(28px);
         }
     }
@@ -163,16 +170,6 @@
     %selector-header-extra {
         display: flex;
         align-items: center;
-    }
-
-    %igx-expansion-panel__header-inner {
-        background: var-get($theme, 'header-color');
-        padding: $panel-padding;
-
-        .dragOver & {
-            background: color($color: 'grays', $variant: 300);
-            box-shadow: inset 0 0 0 1px color($color: 'grays', $variant: 400);
-        }
     }
 
     %selector-header-extra {
@@ -284,7 +281,7 @@
         display: flex;
 
         igx-icon + igx-icon {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
     }
 }

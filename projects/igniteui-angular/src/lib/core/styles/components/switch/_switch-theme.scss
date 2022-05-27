@@ -257,9 +257,6 @@
         $color: var-get($theme, 'thumb-on-color')
     );
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     %switch-display {
         position: relative;
         display: inline-flex;
@@ -344,12 +341,9 @@
         background: var-get($theme, 'thumb-off-color');
         box-shadow: $thumb-resting-shadow;
         transition: $input-transition;
+        transform: translateX(#{rem($switch-off-offset)});
 
-        @include if-ltr() {
-            transform: translateX(#{rem($switch-off-offset)});
-        }
-
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: translateX(#{rem(-1 * $switch-off-offset)});
         }
 
@@ -362,12 +356,9 @@
 
     %switch-composite-thumb--x {
         background: var-get($theme, 'thumb-on-color');
+        transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
 
-        @include if-ltr() {
-            transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
-        }
-
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: translateX(-#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
         }
     }
@@ -383,7 +374,7 @@
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
-        left: calc(50% - #{$ripple-radius});
+        inset-inline-start: calc(50% - #{$ripple-radius});
         width: $ripple-size;
         height: $ripple-size;
         overflow: hidden;
@@ -403,7 +394,7 @@
                     content: '';
                     position: absolute;
                     top: -$focus-outline-offset-top;
-                    left: -$focus-outline-offset-left;
+                    inset-inline-start: -$focus-outline-offset-left;
                     box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
                     width: calc(100% + (#{$focus-outline-offset-left} * 2));
                     height: calc(100% + (#{$focus-outline-offset-top} * 2));
@@ -496,12 +487,12 @@
     }
 
     %switch-label--after {
-        margin-#{$left}: $label-margin;
+        margin-inline-start: $label-margin;
     }
 
     %switch-label--before {
         order: -1;
-        margin-#{$right}: $label-margin;
+        margin-inline-end: $label-margin;
     }
 
     %switch-label--disabled {
@@ -513,10 +504,7 @@
             position: absolute;
             content: '';
             opacity: .06;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            inset: 0;
         }
     }
 

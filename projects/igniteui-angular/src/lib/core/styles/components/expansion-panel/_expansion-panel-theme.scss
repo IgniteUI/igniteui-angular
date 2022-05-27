@@ -102,12 +102,7 @@
 @mixin expansion-panel($theme) {
     @include css-vars($theme);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
-    $panel-padding: em(16px, 16px);
-    $panel-compact-padding: em(16px, 16px);
-    $panel-cosy-padding: em(8px, 16px);
+    $panel-padding: rem(16px) rem(24px);
 
     %igx-expansion-panel {
         display: flex;
@@ -118,7 +113,7 @@
 
     %igx-expansion-panel__header-title {
         color: var-get($theme, 'header-title-color');
-        margin-#{$right}: rem(16px, 16px);
+        margin-inline-end: rem(16px, 16px);
     }
 
     %igx-expansion-panel__header-description {
@@ -143,6 +138,7 @@
     %igx-expanded-panel-margin {
         igx-expansion-panel[aria-expanded='true'] {
             margin: var-get($theme, 'expanded-margin') 0;
+            transition: margin 350ms $ease-in-quad;
 
             &:first-of-type {
                 margin-top: 0;
@@ -151,6 +147,10 @@
             &:last-of-type {
                 margin-bottom: 0;
             }
+        }
+
+        igx-expansion-panel[aria-expanded='false'] {
+            transition: margin 350ms $ease-out-quad;
         }
     }
 
@@ -179,12 +179,12 @@
 
     %igx-expansion-panel__header-icon--end {
         order: 1;
-        margin-#{$left}: rem(16px, 16px);
+        margin-inline-start: rem(16px, 16px);
     }
 
     %igx-expansion-panel__header-icon--start {
         order: -1;
-        margin-#{$right}: rem(16px, 16px);
+        margin-inline-end: rem(16px, 16px);
     }
 
     %igx-expansion-panel__header-icon--none {
@@ -209,6 +209,7 @@
         color: var-get($theme, 'body-color');
         background: var-get($theme, 'body-background');
         overflow: hidden;
+        padding: $panel-padding;
     }
 
     %igx-expansion-panel--disabled {

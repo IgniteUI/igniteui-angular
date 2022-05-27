@@ -501,30 +501,33 @@
             color: inherit;
             display: flex;
             justify-content: center;
+            width: var(--igx-icon-size, #{$icon-in-button-size});
+            height: var(--igx-icon-size, #{$icon-in-button-size});
+            font-size: var(--igx-icon-size, #{$icon-in-button-size});
+            color: inherit;
         }
 
-        @include icon-w-margin(
-            map.get($icon-in-button-margin, 'comfortable'),
-            $left
-        );
+        * + * {
+            margin-inline-start: map.get($icon-in-button-margin, 'comfortable');
+        }
     }
 
     %igx-button-display--cosy {
         padding: map.get($button-padding, 'cosy');
         min-height: map.get($button-size, 'cosy');
-        @include icon-w-margin(
-            map.get($icon-in-button-margin, 'cosy'),
-            $left
-        );
+
+        * + * {
+            margin-inline-start: map.get($icon-in-button-margin, 'cosy');
+        }
     }
 
     %igx-button-display--compact {
         padding: map.get($button-padding, 'compact');
         min-height: map.get($button-size, 'compact');
-        @include icon-w-margin(
-            map.get($icon-in-button-margin, 'compact'),
-            $left
-        );
+
+        * + * {
+            margin-inline-start: map.get($icon-in-button-margin, 'compact');
+        }
     }
 
     %igx-button--flat {
@@ -632,7 +635,7 @@
                     content: '';
                     position: absolute;
                     top: $outline-btn-indent;
-                    left: $outline-btn-indent;
+                    inset-inline-start: $outline-btn-indent;
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
@@ -659,19 +662,19 @@
     %igx-button--outlined-cosy {
         padding: map.get($outlined-button-padding, 'cosy');
         min-height: map.get($button-size, 'cosy');
-        @include icon-w-margin(
-            map.get($icon-in-button-margin, 'cosy'),
-            $left
-        );
+
+        * + * {
+            margin-inline-start: map.get($icon-in-button-margin, 'cosy');
+        }
     }
 
     %igx-button--outlined-compact {
         padding: map.get($outlined-button-padding, 'compact');
         min-height: map.get($button-size, 'compact');
-        @include icon-w-margin(
-            map.get($icon-in-button-margin, 'compact'),
-            $left
-        );
+
+        * + * {
+            margin-inline-start: map.get($icon-in-button-margin, 'compact');
+        }
     }
 
     %igx-button--raised {
@@ -736,7 +739,7 @@
                     content: '';
                     position: absolute;
                     top: $outline-btn-indent;
-                    left: $outline-btn-indent;
+                    inset-inline-start: $outline-btn-indent;
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
@@ -849,7 +852,7 @@
                     content: '';
                     position: absolute;
                     top: $outline-btn-indent;
-                    left: $outline-btn-indent;
+                    inset-inline-start: $outline-btn-indent;
                     pointer-events: none;
                     border-radius: calc(#{border-radius(#{var-get($fab-theme, 'border-radius')})} - #{$outline-btn-indent});
                     width: calc(100% - (#{$outline-btn-indent} * 2));
@@ -873,10 +876,9 @@
             }
         }
 
-        @include icon-w-margin(
-            map.get($icon-in-button-margin, 'comfortable'),
-            $left
-        );
+        * + * {
+            margin-inline-start: map.get($icon-in-button-margin, 'comfortable');
+        }
     }
 
     %igx-button--fab-cosy {
@@ -889,10 +891,9 @@
             min-height: map.get($button-floating-size-indigo, 'cosy');
         }
 
-        @include icon-w-margin(
-            map.get($icon-in-button-margin, 'cosy'),
-            $left
-        );
+        * + * {
+            margin-inline-start: map.get($icon-in-button-margin, 'cosy');
+        }
     }
 
     %igx-button--fab-compact {
@@ -905,10 +906,9 @@
             min-height: map.get($button-floating-size-indigo, 'compact');
         }
 
-        @include icon-w-margin(
-            map.get($icon-in-button-margin, 'compact'),
-            $left
-        );
+        * + * {
+            margin-inline-start: map.get($icon-in-button-margin, 'compact');
+        }
     }
 
     %igx-button--icon {

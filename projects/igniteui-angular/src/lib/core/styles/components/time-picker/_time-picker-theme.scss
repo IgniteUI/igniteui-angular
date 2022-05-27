@@ -160,9 +160,6 @@
     $variant: map.get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $vertical-header-width: rem(168px);
 
     $picker-buttons-padding: map.get((
@@ -218,16 +215,17 @@
     }
 
     %time-picker__hourList {
-        text-align: #{$right};
+        text-align: end;
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             order: 2;
         }
     }
 
     %time-picker__minuteList {
         text-align: center;
-        @include if-rtl() {
+
+        [dir='rtl'] & {
             order: 1;
         }
     }
@@ -241,7 +239,7 @@
         flex-direction: column;
         padding-top: rem(48px);
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             order: 3;
         }
     }
@@ -315,7 +313,7 @@
         display: flex;
         color: var-get($theme, 'header-hour-text-color');
 
-        @include if-rtl() {
+        [dir='rtl'] & {
             flex-direction: row-reverse;
             justify-content: flex-end;
         }
@@ -336,7 +334,7 @@
         padding: $picker-buttons-padding;
 
         [igxButton] + [igxButton] {
-            margin-#{$left}: rem(8px);
+            margin-inline-start: rem(8px);
         }
     }
 }

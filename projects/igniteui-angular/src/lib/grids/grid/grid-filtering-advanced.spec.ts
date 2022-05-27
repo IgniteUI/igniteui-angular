@@ -2568,6 +2568,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), false);
                 verifyContextMenuVisibility(fix, false);
             }));
+
         });
 
     });

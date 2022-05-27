@@ -2,6 +2,45 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.2.0
+
+### General
+
+- `IgxPivotGrid`
+    - **Breaking Change** - Changing the `IPivotValue`'s `formatter` and `styles` functions optional parameters, example:
+    ```
+        formatter?: (value: any, rowData?: IPivotGridRecord, columnData?: IPivotGridColumn) => any;
+    ```
+    First optional parameter `rowData` is now of type `IPivotGridRecord` and contains more contextual information on the dimension and aggregation values. Previously it contained just the aggregation data object. Old usage can be updated as follows, from:
+    ```
+        formatter: (value: any, rowData: any) => rowData['someField'];
+    ```
+    to:
+
+    ```
+        formatter: (value: any, rowData: IPivotGridRecord) => rowData.aggregationValues.get('someField');
+    ```
+    Also an additional optional `columnData` parameter can be added, which contains information on the column dimensions.
+
+- `IgxExpansionPanel`
+    - Changed the expansion panel layout, adding padding to the header and content elements.
+
+
+### New palette
+
+A new fluent light and dark palettes that use the default fluent colors - `$light-fluent-palette` and `$dark-fluent-palette`.
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - new *sortingOption* property has been introduced on grid level; This property allows you to set either `single` or `multiple` sorting mode; When single mode is enabled you can sort one column at a time; The default value of the property is `multiple`;
+
+    - **Behavioral Change** - sorting and grouping expressions are now working separately; If grouping/sorting expressions are in a conflict, grouping expressions take precedence. You can read more about that in our official documentation.
+- `IgxSlider`
+    - support for double value binding in slider of type RANGE through newly exposed `lowerValue` and `upperValue`
+
+- `IgxDrag`
+    - **Behavioral Change** - support for window scroll when dragging element to its edges
+    - new *scrollContainer* property that can specify specific element that should be scrolled instead of window for custom solutions.
 ## 13.1.0
 
 ### New Features
@@ -9,7 +48,7 @@ All notable changes for each version of this project will be documented in this 
 - Added new CSS property `--igx-icon-size` to allow changing the icon when its original size is modified by other components.
 ```SCSS
     // will have effect only on icons that are children of .igx-button
-    [igxButton] {
+    .igx-button {
         --igx-icon-size: 10px;
     }
 ```
@@ -141,7 +180,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDialog`
     - Added `focusTrap` input to set whether the Tab key focus is trapped within the dialog when opened. Defaults to `true`.
 - `IgxProgressBar`
-    - Exposed new animationDuration input - sets the duration of the progress animation. 
+    - Exposed new animationDuration input - sets the duration of the progress animation.
 
 ### General
 

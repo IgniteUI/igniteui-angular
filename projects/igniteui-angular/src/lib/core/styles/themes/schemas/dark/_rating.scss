@@ -1,0 +1,28 @@
+@use '../light/rating' as *;
+
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark rating schema.
+/// @type {Map}
+/// @requires $light-rating
+/// @see $default-palette
+$dark-rating: $light-rating;
+
+/// Generates a dark fluent rating schema.
+/// @type {Map}
+/// @requires $fluent-rating
+$dark-fluent-rating: $fluent-rating;
+
+/// Generates a dark bootstrap rating schema.
+/// @type {Map}
+/// @requires $bootstrap-rating
+$dark-bootstrap-rating: $bootstrap-rating;
+
+/// Generates a dark indigo rating schema.
+/// @type {Map}
+/// @requires $indigo-rating
+$dark-indigo-rating: $indigo-rating;

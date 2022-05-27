@@ -131,10 +131,6 @@
 /// @requires var-get
 @mixin carousel($theme) {
     @include css-vars($theme);
-
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     @include scale-in-center();
     @include scale-out-center();
 
@@ -204,19 +200,17 @@
     }
 
     %igx-carousel-arrow--next {
-        #{$right}: 0;
+        inset-inline-end: 0;
     }
 
     %igx-carousel-arrow--prev {
-        #{$left}: 0;
+        inset-inline-start: 0;
     }
 
     %igx-carousel-arrow--next,
     %igx-carousel-arrow--prev {
-        @include if-rtl() {
-            igx-icon {
-                transform: scaleX(-1);
-            }
+        [dir='rtl'] & {
+            transform: scaleX(-1);
         }
     }
 
@@ -229,13 +223,10 @@
         padding: $carousel-indicators-padding;
         list-style: none;
         z-index: 10;
-        #{$left}: 50%;
+        inset-inline-start: 50%;
+        transform: translateX(-50%);
 
-        @include if-ltr() {
-            transform: translateX(-50%);
-        }
-
-        @include if-rtl() {
+        [dir='rtl'] & {
             transform: translateX(50%);
         }
     }
@@ -285,15 +276,9 @@
             content: '';
             position: absolute;
             @if $variant != 'indigo-design' {
-                top: 1px;
-                bottom: 1px;
-                #{$left}: 1px;
-                #{$right}: 1px;
+                inset: 1px;
             } @else {
-                top: 0;
-                bottom: 0;
-                #{$left}: 0;
-                #{$right}: 0;
+                inset: 0;
             }
             border-radius: inherit;
             background: var-get($theme, 'indicator-dot-color');
@@ -335,10 +320,7 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: 0;
         z-index: -1;
         background: var-get($theme, 'slide-background');
         visibility: hidden;

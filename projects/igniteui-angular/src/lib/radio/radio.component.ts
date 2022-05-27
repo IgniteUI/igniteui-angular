@@ -333,6 +333,17 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
 
     constructor(private cdr: ChangeDetectorRef) { }
 
+     /**
+     * @hidden
+     * @internal
+     */
+      @HostListener('change', ['$event'])
+      public _changed(){
+          if(event instanceof Event){
+            event.preventDefault();
+          }
+      }
+
     /**
      * @hidden
      * @internal

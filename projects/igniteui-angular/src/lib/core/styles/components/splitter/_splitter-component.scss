@@ -18,6 +18,8 @@
             $deps: ()
         );
 
+        @extend %igx-splitter-base !optional;
+
         @include b(#{$this}-bar-host) {
             &:focus {
                 @extend %igx-splitter-bar--focus !optional;

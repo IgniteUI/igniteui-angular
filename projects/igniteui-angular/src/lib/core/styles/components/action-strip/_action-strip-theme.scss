@@ -82,9 +82,6 @@
 
     $variant: map.get($theme, variant);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     %igx-action-strip-display {
         display: flex;
         align-items: center;
@@ -94,7 +91,7 @@
         height: 100%;
         pointer-events: none;
         top: 0;
-        #{$left}: 0;
+        inset-inline-start: 0;
         background: var-get($theme, 'background');
         color: inherit;
         padding: map.get($padding, 'comfortable');
@@ -143,18 +140,18 @@
         }
 
         igx-icon + [igxLabel] {
-            margin-#{$left}: rem(12px);
+            margin-inline-start: rem(12px);
         }
 
         &%igx-drop-down__item--cosy {
             igx-icon + [igxLabel] {
-                margin-#{$left}: rem(10px);
+                margin-inline-start: rem(10px);
             }
         }
 
         &%igx-drop-down__item--compact {
             igx-icon + [igxLabel] {
-                margin-#{$left}: rem(8px);
+                margin-inline-start: rem(8px);
             }
         }
     }
@@ -184,7 +181,7 @@
         max-height: 36px;
 
         &:last-child {
-            margin-#{$right}: 0;
+            margin-inline-end: 0;
         }
 
         igx-icon {
@@ -204,10 +201,10 @@
 
     %igx-action-strip__editing-actions {
         > [igxButton] {
-            margin-#{$left}: rem(4px);
+            margin-inline-start: rem(4px);
 
             &:first-of-type {
-                margin-#{$left}: 0;
+                margin-inline-start: 0;
             }
         }
     }

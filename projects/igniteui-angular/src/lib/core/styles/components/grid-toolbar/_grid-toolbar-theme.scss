@@ -115,28 +115,19 @@
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     // Caption
     $grid-toolbar-fs: rem(16px);
 
     $grid-toolbar-padding: (
-        comfortable: 0 rem(16px) 0 rem(24px),
-        cosy: 0 rem(12px) 0 rem(16px),
-        compact: 0 rem(8px) 0 rem(12px)
+        comfortable: rem(16px) rem(24px),
+        cosy: rem(12px) rem(16px),
+        compact: rem(8px) rem(12px)
     );
 
     $grid-toolbar-spacer: (
         comfortable: rem(16px),
         cosy: rem(12px),
         compact: rem(8px)
-    );
-
-    $grid-toolbar-padding-rtl: (
-        comfortable: 0 rem(24px) 0 rem(16px),
-        cosy: 0 rem(16px) 0 rem(12px),
-        compact: 0 rem(12px) 0 rem(8px)
     );
 
     $grid-toolbar-height: (
@@ -162,36 +153,30 @@
         height: auto;
         min-height: map.get($grid-toolbar-height, 'comfortable');
         position: relative;
-
-        @include if-ltr() {
-            padding: map.get($grid-toolbar-padding, 'comfortable');
-        }
-
-        @include if-rtl() {
-            padding: map.get($grid-toolbar-padding-rtl, 'comfortable');
-        }
+        padding-block: 0;
+        padding-inline: map.get($grid-toolbar-padding, 'comfortable');
 
         [igxButton] {
-            margin-#{$left}: map.get($grid-toolbar-spacer, 'comfortable');
+            margin-inline-start: map.get($grid-toolbar-spacer, 'comfortable');
 
             &:first-of-type {
-                margin-#{$left}: 0;
+                margin-inline-start: 0;
             }
 
             &:last-of-type {
-                margin-#{$right}: 0;
+                margin-inline-end: 0;
             }
         }
 
         &[dir='rtl'] {
-            text-align: #{$right};
+            text-align: end;
 
             [igxButton] {
-                margin-#{$left}: 0;
-                margin-#{$right}: rem(8);
+                margin-inline-start: 0;
+                margin-inline-end: rem(8);
 
                 &:last-child {
-                    margin-#{$right}: 0;
+                    margin-inline-end: 0;
                 }
             }
         }
@@ -199,31 +184,19 @@
 
     %igx-grid-toolbar--cosy {
         min-height: map.get($grid-toolbar-height, 'cosy');
-        @include if-ltr() {
-            padding: map.get($grid-toolbar-padding, 'cosy');
-        }
-
-        @include if-rtl() {
-            padding: map.get($grid-toolbar-padding-rtl, 'cosy');
-        }
+        padding-inline: map.get($grid-toolbar-padding, 'cosy');
 
         [igxButton] {
-            margin-#{$left}: map.get($grid-toolbar-spacer, 'cosy');
+            margin-inline-start: map.get($grid-toolbar-spacer, 'cosy');
         }
     }
 
     %igx-grid-toolbar--compact {
         min-height: map.get($grid-toolbar-height, 'compact');
-        @include if-ltr() {
-            padding: map.get($grid-toolbar-padding, 'compact');
-        }
-
-        @include if-rtl() {
-            padding: map.get($grid-toolbar-padding-rtl, 'compact');
-        }
+        padding-inline: map.get($grid-toolbar-padding, 'compact');
 
         [igxButton] {
-            margin-#{$left}: map.get($grid-toolbar-spacer, 'compact');
+            margin-inline-start: map.get($grid-toolbar-spacer, 'compact');
         }
     }
 
@@ -232,7 +205,7 @@
         flex: 1 1 auto;
         @include ellipsis();
         max-width: 40ch;
-        margin-#{$right}: map.get($grid-toolbar-spacer, 'comfortable')
+        margin-inline-end: map.get($grid-toolbar-spacer, 'comfortable')
     }
 
     %igx-grid-toolbar__custom-content {
@@ -240,21 +213,21 @@
         flex-wrap: wrap;
         flex-grow: 1;
         justify-content: flex-end;
-        margin-#{$right}: map.get($grid-toolbar-spacer, 'comfortable');
+        margin-inline-end: map.get($grid-toolbar-spacer, 'comfortable');
     }
 
     %igx-grid-toolbar__actions {
         display: flex;
         align-items: center;
         flex-flow: row wrap;
-        margin-#{$left}: auto;
+        margin-inline-start: auto;
 
         > * {
             display: flex;
-            margin-#{$left}: map.get($grid-toolbar-spacer, 'comfortable');
+            margin-inline-start: map.get($grid-toolbar-spacer, 'comfortable');
 
             &:first-child {
-                margin-#{$left}: 0;
+                margin-inline-start: 0;
             }
         }
     }
@@ -270,7 +243,7 @@
     %igx-grid-toolbar__title:empty + %igx-grid-toolbar__custom-content:empty {
         + %igx-grid-toolbar__actions {
             width: 100%;
-            margin-left: 0;
+            margin-inline-start: 0;
             justify-content: flex-end;
         }
     }
@@ -278,8 +251,8 @@
     %igx-grid-toolbar__progress-bar {
         position: absolute;
         width: 100%;
-        left: 0;
-        right: 0;
+        inset-inline-start: 0;
+        inset-inline-end: 0;
         bottom: rem(-1px);
         height: rem(2px);
         overflow: hidden;

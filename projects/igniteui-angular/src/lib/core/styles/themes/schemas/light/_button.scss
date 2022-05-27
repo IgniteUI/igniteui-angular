@@ -232,7 +232,7 @@ $material-fab-button: extend(
 
 /// @type {Map}
 /// @prop {Color} background [transparent] - The background color of the an icon button.
-/// @prop {Map} foreground [color: ('grays', 800)] - The icon color of an icon button.
+/// @prop {Map} foreground [color: ('grays', 900)] - The icon color of an icon button.
 /// @prop {Map} hover-background [color: ('grays', 100)] - The hover background color of an icon button.
 /// @prop {Map} hover-foreground [color: ('grays', 800)] - The hover icon color of an icon button.
 /// @prop {Map} focus-background [color: ('grays', 400] - The focus background color an icon button.
@@ -258,23 +258,29 @@ $material-icon-button: extend(
         background: transparent,
 
         foreground: (
-            color: ('grays', 800)
+            color: ('grays', 900)
         ),
 
-        hover-background: (
-            color: ('grays', 100)
-        ),
+        hover-background: transparent,
 
         hover-foreground: (
-            color: ('grays', 800)
+            color: ('grays', 900)
         ),
 
         focus-background: (
-            color: ('grays', 400)
+            color: ('grays', 200)
         ),
 
         focus-foreground: (
-            color: ('grays', 800)
+            color: ('grays', 900)
+        ),
+
+        focus-visible-background: (
+            color: ('grays', 200)
+        ),
+
+        focus-visible-foreground: (
+            color: ('grays', 900)
         ),
 
         focus-visible-background: (
@@ -286,11 +292,11 @@ $material-icon-button: extend(
         ),
 
         active-background: (
-            color: ('grays', 400)
+            color: ('grays', 200)
         ),
 
         active-foreground: (
-            color: ('grays', 800)
+            color: ('grays', 900)
         ),
 
         disabled-background: transparent,
@@ -1017,20 +1023,29 @@ $bootstrap-icon-button: extend(
     $bootstrap-base-button,
     $material-icon-button,
     (
-        hover-background: (
+        selector: '[igxButton="icon"], .igx-button--icon',
+        background: transparent,
+        foreground: (
             color: ('primary', 500)
         ),
 
+        hover-background: transparent,
         hover-foreground: (
-            contrast-color: ('primary', 600)
-        ),
-
-        focus-background: (
             color: ('primary', 600)
         ),
 
+        focus-background: (
+            color: ('grays', 100)
+        ),
         focus-foreground: (
-            contrast-color: ('primary', 600)
+            color: ('primary', 600)
+        ),
+
+        focus-visible-background: (
+            color: ('grays', 100)
+        ),
+        focus-visible-foreground: (
+            color: ('primary', 600)
         ),
 
         focus-visible-background: (
@@ -1342,8 +1357,8 @@ $indigo-icon-button: extend(
     $material-icon-button,
     $indigo-base-button,
     (
-        hover-background: (
-            color: ('grays', 300)
+        foreground: (
+            color: ('grays', 700)
         ),
 
         focus-background: (
