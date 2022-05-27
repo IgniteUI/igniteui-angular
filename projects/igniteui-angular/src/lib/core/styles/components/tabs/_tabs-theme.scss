@@ -177,6 +177,10 @@
         $tab-ripple-color: text-contrast($item-background);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -374,8 +378,8 @@
 
         @if $bootstrap-theme {
             border: 1px solid transparent;
-            border-top-left-radius: border-radius(var-get($theme, 'border-radius'));
-            border-top-right-radius: border-radius(var-get($theme, 'border-radius'));
+            border-top-left-radius: var-get($theme, 'border-radius');
+            border-top-right-radius: var-get($theme, 'border-radius');
         }
 
         @if $indigo-theme {
