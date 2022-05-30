@@ -14,9 +14,15 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_a
 import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxPickerToggleComponent } from './picker-icons.common';
 import { PickerInteractionMode } from './types';
+import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 @Directive()
 export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider, AfterViewInit, OnDestroy {
+    /**
+     * @hidden
+     */
+    private _locale;
+
     /**
      * The editor's input mask.
      *
@@ -108,8 +114,28 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
      * <igx-date-picker locale="jp"></igx-date-picker>
      * ```
      */
+    /**
+     * Gets the `locale` of the date-picker.
+     * Default value is `application's LOCALE_ID`.
+     */
     @Input()
-    public locale: string;
+    public get locale(): string {
+        return this._locale;
+    }
+
+    /**
+     * Sets the `locale` of the date-picker.
+     * Expects a valid BCP 47 language tag.
+     * Default value is `application's LOCALE_ID`.
+     */
+    public set locale(value: string) {
+        this._locale = value;
+        try {
+            getLocaleFirstDayOfWeek(this._locale);
+        } catch (e) {
+            this._locale = this._localeId;
+        }
+    }
 
     /**
      * The container used for the pop-up element.

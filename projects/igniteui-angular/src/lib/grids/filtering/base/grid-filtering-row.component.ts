@@ -32,6 +32,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ExpressionUI } from '../excel-style/common';
 import { ColumnType } from '../../common/grid.interface';
+import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 /**
  * @hidden
@@ -276,6 +277,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         } else {
             return this.filteringService.grid.resourceStrings.igx_grid_filter_row_placeholder;
         }
+    }
+
+    public get localeId(): number {
+        return getLocaleFirstDayOfWeek(this.filteringService.grid.locale);
     }
 
     /**
