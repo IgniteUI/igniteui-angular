@@ -4,7 +4,7 @@ import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { cloneArray, resolveNestedPath } from '../../core/utils';
+import { cloneArray } from '../../core/utils';
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -180,21 +180,6 @@ class NestedPropertyGridComponent {
 }
 
 describe('Grid - nested data source properties #grid', () => {
-
-    const NAMES = 'John Jane Ivan Bianka'.split(' ');
-    const AGES = [30, 23, 33, 21];
-
-    describe('API', () => {
-
-        it('should correctly resolve key paths in nested data', () => {
-            expect(
-                DATA.map(record => resolveNestedPath(record, 'user.name.first'))
-            ).toEqual(NAMES);
-            expect(
-                DATA.map(record => resolveNestedPath(record, 'user.age'))
-            ).toEqual(AGES);
-        });
-    });
 
     describe('Grid base cases', () => {
 

@@ -4,6 +4,7 @@ import { ExportUtilities } from '../exporter-common/export-utilities';
 import { CharSeparatedValueData } from './char-separated-value-data';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { IBaseEventArgs } from '../../core/utils';
+import { NestedPropertyStrategy } from '../../data-operations/nested-property-strategy';
 
 export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
     csvData?: string;

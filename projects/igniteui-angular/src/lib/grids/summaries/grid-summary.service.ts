@@ -1,7 +1,7 @@
 import { Injectable} from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { DataUtil } from '../../data-operations/data-util';
-import { cloneArray, resolveNestedPath } from '../../core/utils';
+import { cloneArray } from '../../core/utils';
 import { GridType, FlatGridType, TreeGridType } from '../common/grid.interface';
 
 /** @hidden */
@@ -121,7 +121,8 @@ export class IgxGridSummaryService {
         }
         this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
-                const summaryResult = column.summaries.operate(data.map(r => resolveNestedPath(r, column.field)),
+                const summaryResult = column.summaries.operate(
+                    data.map(r => this.grid.nestedPropertyStrategy.resolveNestedPath(r, column.field)),
                     data, column.field, this.grid.locale, column.pipeArgs);
                 rowSummaries.set(column.field, summaryResult);
             }

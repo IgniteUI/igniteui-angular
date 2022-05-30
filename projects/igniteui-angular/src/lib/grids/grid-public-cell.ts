@@ -1,4 +1,3 @@
-import { resolveNestedPath } from '../core/utils';
 import { CellType } from './common/cell.interface';
 import { RowType } from './common/row.interface';
 import { IgxGridComponent } from './grid/public_api';
@@ -127,7 +126,9 @@ export class IgxGridCell implements CellType {
 		// will return undefined for a column layout, because getCellByColumnVisibleIndex may return the column layout at that index.
 		// getCellByColumnVisibleIndex is deprecated and will be removed in future version
 		return this.column.field ?
-			this.column.hasNestedPath ? resolveNestedPath(this.row?.data, this.column.field) : this.row?.data[this.column.field]
+			this.column.hasNestedPath ?
+			this.grid.nestedPropertyStrategy.resolveNestedPath(this.row?.data, this.column.field) :
+			this.row?.data[this.column.field]
 			: undefined;
 	}
 

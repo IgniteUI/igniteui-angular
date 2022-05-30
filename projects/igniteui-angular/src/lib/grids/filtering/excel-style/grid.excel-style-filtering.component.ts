@@ -19,7 +19,7 @@ import {
 import { IgxOverlayService } from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { resolveNestedPath, parseDate, uniqueDates, PlatformUtil } from '../../../core/utils';
+import { parseDate, uniqueDates, PlatformUtil } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -550,11 +550,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         const columnField = this.column.field;
         const columnValues = (this.column.dataType === GridColumnDataType.Date) ?
             data.map(record => {
-                const value = (resolveNestedPath(record, columnField));
+                const value = (this.grid.nestedPropertyStrategy.resolveNestedPath(record, columnField));
                 const label = this.getFilterItemLabel(value, true, record);
                 return { label, value };
             }) : data.map(record => {
-                const value = resolveNestedPath(record, columnField);
+                const value = this.grid.nestedPropertyStrategy.resolveNestedPath(record, columnField);
                 return shouldFormatValues ? this.column.formatter(value, record) : value;
             });
 

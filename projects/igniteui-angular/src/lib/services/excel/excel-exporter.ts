@@ -10,6 +10,7 @@ import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
 import { WorksheetFile } from './excel-files';
+import { NestedPropertyStrategy } from '../../data-operations/nested-property-strategy';
 
 export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
     xlsx?: JSZip;

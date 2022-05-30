@@ -38,8 +38,9 @@ export type GridColumnDataType = (typeof GridColumnDataType)[keyof typeof GridCo
  * @hidden
  */
 export class DataUtil {
-    public static sort<T>(data: T[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting(),
+    public static sort<T>(data: T[], expressions: ISortingExpression[], sorting?: IGridSortingStrategy,
         grid?: GridType): T[] {
+        sorting = sorting || new IgxSorting(grid.nestedPropertyStrategy);
         return sorting.sort(data, expressions, grid);
     }
 
@@ -115,7 +116,7 @@ export class DataUtil {
 
     public static filter<T>(data: T[], state: IFilteringState, grid?: GridType): T[] {
         if (!state.strategy) {
-            state.strategy = new FilteringStrategy();
+            state.strategy = new FilteringStrategy(grid.nestedPropertyStrategy);
         }
         return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree, grid);
     }

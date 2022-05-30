@@ -1,4 +1,4 @@
-import { cloneArray, resolveNestedPath, parseDate } from '../core/utils';
+import { cloneArray, parseDate } from '../core/utils';
 import { IGroupByRecord } from './groupby-record.interface';
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { IGroupingExpression } from './grouping-expression.interface';
@@ -7,6 +7,7 @@ import { IGroupByExpandState } from './groupby-expand-state.interface';
 import { IGroupByResult } from './grouping-result.interface';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
+import { NestedPropertyStrategy } from './nested-property-strategy';
 
 const DATE_TYPE = 'date';
 const TIME_TYPE = 'time';
@@ -99,6 +100,8 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
 }
 
 export class IgxSorting implements IGridSortingStrategy {
+    public constructor(private _nestedPropertyStrategy = NestedPropertyStrategy.instance()) { }
+
     public sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[] {
         return this.sortDataRecursive(data, expressions, 0, grid);
     }
@@ -174,7 +177,7 @@ export class IgxSorting implements IGridSortingStrategy {
     }
 
     protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
-        let resolvedValue = resolveNestedPath(obj, key);
+        let resolvedValue = this._nestedPropertyStrategy.resolveNestedPath(obj, key);
         if (isDate || isTime) {
             const date = parseDate(resolvedValue);
             resolvedValue  = isTime && date ?

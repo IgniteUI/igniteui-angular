@@ -130,6 +130,8 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
                 exporter = this.excelExporter;
         }
 
+        options.nestedPropertyStrategy = this.grid.nestedPropertyStrategy;
+
         const args = { exporter, options, grid: this.grid, cancel: false } as IgxExporterEvent;
 
         this.exportStarted.emit(args);

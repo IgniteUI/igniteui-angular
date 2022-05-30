@@ -1,11 +1,16 @@
-import { parseDate, resolveNestedPath } from '../../core/utils';
+import { parseDate } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { BaseFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { INestedPropertyStrategy, NestedPropertyStrategy } from '../../data-operations/nested-property-strategy';
 import { GridType } from '../common/grid.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
+    constructor(protected _nestedPropertyStrategy = NestedPropertyStrategy.instance()) {
+        super();
+    }
+
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): ITreeGridRecord[] {
         return this.filterImpl(data, expressionsTree, advancedExpressionsTree, undefined, grid);
@@ -13,7 +18,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
 
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false): any {
         const hierarchicalRecord = rec as ITreeGridRecord;
-        let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
+        let value = this._nestedPropertyStrategy.resolveNestedPath(hierarchicalRecord.data, fieldName);
         value = value && isDate ? parseDate(value) : value;
         return value;
     }
@@ -53,8 +58,9 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
      * @param fields An array of column field names that should be formatted.
      * If omitted the values of all columns which has formatter will be formatted.
      */
-    constructor(private fields?: string[]) {
-        super();
+    constructor(private fields?: string[],
+        nestedPropertyStrategy?: INestedPropertyStrategy) {
+        super(nestedPropertyStrategy);
     }
 
     /** @hidden */
@@ -65,7 +71,7 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
         const column = grid.getColumnByName(fieldName);
         const hierarchicalRecord = rec as ITreeGridRecord;
-        let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
+        let value = this._nestedPropertyStrategy.resolveNestedPath(hierarchicalRecord.data, fieldName);
 
         value = column.formatter && this.shouldApplyFormatter(fieldName) ?
             column.formatter(value) :

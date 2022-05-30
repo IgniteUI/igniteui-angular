@@ -457,27 +457,6 @@ export const compareMaps = (map1: Map<any, any>, map2: Map<any, any>): boolean =
 
 /**
  *
- * Given a property access path in the format `x.y.z` resolves and returns
- * the value of the `z` property in the passed object.
- *
- * @hidden
- * @internal
- */
-export const resolveNestedPath = (obj: any, path: string) => {
-    const parts = path?.split('.') ?? [];
-    let current = obj[parts.shift()];
-
-    parts.forEach(prop => {
-        if (current) {
-            current = current[prop];
-        }
-    });
-
-    return current;
-};
-
-/**
- *
  * Given a property access path in the format `x.y.z` and a value
  * this functions builds and returns an object following the access path.
  *

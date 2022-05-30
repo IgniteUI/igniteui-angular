@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { cloneArray, cloneValue, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
+import { cloneArray, cloneValue, IBaseEventArgs, yieldingLoop } from '../../core/utils';
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
@@ -407,7 +407,7 @@ export abstract class IgxBaseExporter {
 
                 record.data = columns.reduce((a, e) => {
                     if (!e.skip) {
-                        let rawValue = resolveNestedPath(record.data, e.field);
+                        let rawValue = this.options.nestedPropertyStrategy.resolveNestedPath(record.data, e.field);
 
                         const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
 

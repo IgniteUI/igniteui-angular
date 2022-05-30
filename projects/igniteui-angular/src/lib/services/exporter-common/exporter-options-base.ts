@@ -1,3 +1,5 @@
+import { NestedPropertyStrategy } from '../../data-operations/nested-property-strategy';
+
 export abstract class IgxExporterOptionsBase {
     /**
      * Specifies whether hidden columns should be exported.
@@ -77,6 +79,19 @@ export abstract class IgxExporterOptionsBase {
      * @memberof IgxExporterOptionsBase
      */
      public freezeHeaders = false;
+
+    /**
+     * Specifies the strategy for resolving nested values in the exported data.
+     *
+     * @example
+     * ```typescript
+     * let nestedPropertyStrategy = this.exportOptions.nestedPropertyStrategy;
+     * this.exportOptions.nestedPropertyStrategy = NoopNestedPropertyStrategy.instance();
+     * ```
+     *
+     * @memberof IgxExporterOptionsBase
+     */
+    public nestedPropertyStrategy = NestedPropertyStrategy.instance();
 
     private _fileName: string;
 
