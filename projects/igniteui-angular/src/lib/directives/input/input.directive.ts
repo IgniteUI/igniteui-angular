@@ -254,6 +254,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /** @hidden @internal */
     public clear() {
+        this.ngControl?.control?.setValue('');
         this.nativeElement.value = null;
         this._fileNames = '';
     }
