@@ -121,6 +121,14 @@
         $dropdown-shadow: elevation($elevations, $elevation);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
+    @if not($active-item-border-radius) {
+        $active-item-border-radius: border-radius(map.get($theme, 'active-item-border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         selector: $selector,
@@ -168,7 +176,7 @@
         flex-flow: column nowrap;
         max-width: rem(340px);
         min-width: rem(320px);
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
         box-shadow: var-get($theme, 'modal-shadow');
         overflow: hidden;
     }
@@ -259,7 +267,7 @@
     %time-picker__item {
         width: rem(54px);
         padding: rem(5px) rem(10px);
-        border-radius: border-radius(var-get($theme, 'active-item-border-radius'));
+        border-radius: var-get($theme, 'active-item-border-radius');
         height: rem(48px);
         display: flex;
         justify-content: center;
