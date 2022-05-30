@@ -25,14 +25,14 @@ export class RadioSampleComponent implements AfterContentInit {
     public options = [0, 1, 2, 3, 4];
     public initial = this.options[0];
     public seasons = [
-        'Winter',
-        'Spring',
-        'Summer',
-        'Autumn',
+        { name: 'Winter', disabled: false },
+        { name: 'Spring', disabled: true },
+        { name: 'Summer', disabled: false },
+        { name: 'Autumn', disabled: true }
     ];
-    public personBob: Person = new Person('Bob', this.seasons[2]);
+    public personBob: Person = new Person('Bob', this.seasons[2].name);
     public newPerson: Person;
-    public personKirk: Person = new Person('Kirk', this.seasons[1]);
+    public personKirk: Person = new Person('Kirk', this.seasons[1].name);
     public personKirkForm: UntypedFormGroup;
     public alignment: RadioGroupAlignment = RadioGroupAlignment.vertical;
 
@@ -63,7 +63,7 @@ export class RadioSampleComponent implements AfterContentInit {
     }
 
     public onSubmit() {
-        this.personBob.favoriteSeason = this.seasons[1];
+        this.personBob.favoriteSeason = this.seasons[1].name;
     }
 
     private _createPersonKirkForm() {
