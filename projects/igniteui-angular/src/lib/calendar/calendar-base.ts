@@ -263,11 +263,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set locale(value: string) {
         this._locale = value;
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
-            this._locale = this._localeId;
-        }
 
         if (this._weekStart === undefined) {
             this.calendarModel.firstWeekDay = getLocaleFirstDayOfWeek(this._locale);
