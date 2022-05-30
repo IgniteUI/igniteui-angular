@@ -102,7 +102,7 @@
 @mixin expansion-panel($theme) {
     @include css-vars($theme);
 
-    $panel-padding: spacing(16px, 'comfortable');
+    $panel-padding: spacing(16px, 'comfortable') spacing(24px, 'comfortable');
 
     %igx-expansion-panel {
         display: flex;
@@ -138,6 +138,7 @@
     %igx-expanded-panel-margin {
         igx-expansion-panel[aria-expanded='true'] {
             margin: var-get($theme, 'expanded-margin') 0;
+            transition: margin 350ms $ease-in-quad;
 
             &:first-of-type {
                 margin-top: 0;
@@ -146,6 +147,10 @@
             &:last-of-type {
                 margin-bottom: 0;
             }
+        }
+
+        igx-expansion-panel[aria-expanded='false'] {
+            transition: margin 350ms $ease-out-quad;
         }
     }
 
@@ -204,6 +209,7 @@
         color: var-get($theme, 'body-color');
         background: var-get($theme, 'body-background');
         overflow: hidden;
+        padding: $panel-padding;
     }
 
     %igx-expansion-panel--disabled {

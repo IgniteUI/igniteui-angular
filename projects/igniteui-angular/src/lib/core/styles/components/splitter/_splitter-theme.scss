@@ -49,6 +49,10 @@
         $expander-color: text-contrast($bar-color);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -152,7 +156,7 @@
 
     %igx-splitter-handle {
         background: var-get($theme, 'handle-color');
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
     }
 
     %igx-splitter-handle--horizontal {

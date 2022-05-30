@@ -51,6 +51,10 @@
         $color: text-contrast($link-background);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -88,7 +92,7 @@
         font-size: rem(14px);
         padding: spacing(2px) spacing(4px);
         line-height: normal;
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
         border: 1px solid var-get($theme, 'border-color');
         color: var-get($theme, 'color');
         z-index: 10002;
