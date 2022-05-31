@@ -40,7 +40,7 @@ export type GridColumnDataType = (typeof GridColumnDataType)[keyof typeof GridCo
 export class DataUtil {
     public static sort<T>(data: T[], expressions: ISortingExpression[], sorting?: IGridSortingStrategy,
         grid?: GridType): T[] {
-        sorting = sorting || new IgxSorting(grid.nestedPropertyStrategy);
+        sorting = sorting || new IgxSorting(grid?.nestedPropertyStrategy);
         return sorting.sort(data, expressions, grid);
     }
 
