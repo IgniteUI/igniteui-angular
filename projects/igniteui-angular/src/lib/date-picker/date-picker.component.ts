@@ -66,6 +66,26 @@ let NEXT_ID = 0;
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
     OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
     /**
+     * @hidden
+     */
+    private _weekStart: number | WEEKDAYS
+
+    /**
+     * @hidden
+     */
+    private _defaultLocaleFirstDayOfWeek: number;
+
+    /**
+     * @hidden
+     */
+    private _isWeekStartSet: boolean;
+
+    /**
+     * @hidden
+     */
+    private _locale;
+
+    /**
      * Gets/Sets on which day the week starts.
      *
      * @example
@@ -74,7 +94,23 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     @Input()
-    public weekStart: WEEKDAYS | number;
+    public get weekStart(): WEEKDAYS | number {
+        if (!this._weekStart) {
+            return this._defaultLocaleFirstDayOfWeek;
+        }
+
+        return this._weekStart;
+    }
+
+    /**
+     * Sets the start day of the week.
+     * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
+     */
+    public set weekStart(value: WEEKDAYS | number) {
+        this._weekStart = value;
+
+        this._isWeekStartSet = true;
+    }
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -486,6 +522,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
+        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */
@@ -722,18 +759,53 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
     //#endregion
 
+    /**
+     * Locale settings used for value formatting and calendar or time spinner.
+     *
+     * @remarks
+     * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
+     * If a `locale` is set, it must be registered via `registerLocaleData`.
+     * Please refer to https://angular.io/guide/i18n#i18n-pipes.
+     * If it is not registered, `Intl` will be used for formatting.
+     *
+     * @example
+     * ```html
+     * <igx-date-picker locale="jp"></igx-date-picker>
+     * ```
+     */
+    /**
+     * Gets the `locale` of the date-picker.
+     * Default value is `application's LOCALE_ID`.
+     */
+    @Input()
+    public get locale(): string {
+        return this._locale;
+    }
+
+    /**
+     * Sets the `locale` of the date-picker.
+     * Expects a valid BCP 47 language tag.
+     * Default value is `application's LOCALE_ID`.
+     */
+    public set locale(value: string) {
+        this._locale = value;
+        try {
+            getLocaleFirstDayOfWeek(this._locale);
+        } catch (e) {
+            this._locale = this._localeId;
+        }
+
+        if (!this._isWeekStartSet) {
+            this._defaultLocaleFirstDayOfWeek = getLocaleFirstDayOfWeek(this._locale);
+        }
+    }
+
+
     /** @hidden @internal */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
 
         this.locale = this.locale || this._localeId;
-        if (this.weekStart == null) {
-            try {
-                this.weekStart = getLocaleFirstDayOfWeek(this.locale);
-            } catch (e) {
-                this.weekStart = getLocaleFirstDayOfWeek(this._localeId);
-            }
-        }
     }
 
     /** @hidden @internal */
@@ -932,6 +1004,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         }
     }
 
+
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
         const isVertical = this.headerOrientation === PickerHeaderOrientation.Vertical;
@@ -940,7 +1013,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar.formatViews = this.pickerFormatViews;
         this._calendar.locale = this.locale;
         this._calendar.vertical = isVertical;
-        this._calendar.weekStart = this.weekStart;
+        this._calendar.weekStart = this._isWeekStartSet ? this.weekStart : this._defaultLocaleFirstDayOfWeek;
         this._calendar.specialDates = this.specialDates;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;

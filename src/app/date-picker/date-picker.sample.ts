@@ -22,6 +22,14 @@ export class DatePickerSampleComponent {
     public today = new Date(this.date1);
     public nextYear = new Date(this.date1.getFullYear() + 1, this.date1.getMonth(), this.date1.getDate());
 
+    public changeLocale(locale: string) {
+        this.datePicker.locale = locale;
+    }
+
+    public changeWeekStart(value: number) {
+        this.datePicker.weekStart = value;
+    }
+
     public disabledDates: DateRangeDescriptor[] = [{ type: DateRangeType.Specific, dateRange: [this.date1, this.date2, this.date3] }];
     public specialDates: DateRangeDescriptor[] = [{ type: DateRangeType.Specific, dateRange: [this.date5, this.date6, this.date7] }];
 }

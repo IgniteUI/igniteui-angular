@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
-import { DateRange, IChangeRadioEventArgs } from 'igniteui-angular';
+import {DateRange, IChangeRadioEventArgs, IgxCalendarComponent, IgxDateRangePickerComponent} from 'igniteui-angular';
 
 @Component({
     selector: 'app-date-range',
@@ -8,6 +8,9 @@ import { DateRange, IChangeRadioEventArgs } from 'igniteui-angular';
     styleUrls: ['./date-range.sample.scss']
 })
 export class DateRangeSampleComponent {
+    @ViewChild('dr1', { static: true })
+    private dateRangePicker: IgxDateRangePickerComponent;
+
     public range: DateRange = { start: new Date('2000,10,1'), end: new Date('2000,10,20') };
     public range1: DateRange = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 5)) };
     public range2: DateRange;
@@ -53,6 +56,14 @@ export class DateRangeSampleComponent {
             );
             this.reactiveForm.setControl(name, newControl);
         });
+    }
+
+    public changeLocale(locale: string) {
+        this.dateRangePicker.locale = locale;
+    }
+
+    public changeWeekStart(value: number) {
+        this.dateRangePicker.weekStart = value;
     }
 }
 const minDateValidator = (minValue: Date): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {

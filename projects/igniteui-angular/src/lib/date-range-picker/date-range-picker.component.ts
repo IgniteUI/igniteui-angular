@@ -72,6 +72,26 @@ const SingleInputDatesConcatenationString = ' - ';
 export class IgxDateRangePickerComponent extends PickerBaseDirective
     implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
     /**
+     * @hidden
+     */
+    private _weekStart: number | WEEKDAYS
+
+    /**
+     * @hidden
+     */
+    private _defaultLocaleFirstDayOfWeek: number;
+
+    /**
+     * @hidden
+     */
+    private _isWeekStartSet: boolean;
+
+    /**
+     * @hidden
+     */
+    private _locale;
+
+    /**
      * The number of displayed month views.
      *
      * @remarks
@@ -111,7 +131,23 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public weekStart: WEEKDAYS | number;
+    public get weekStart(): WEEKDAYS | number {
+        if (!this._weekStart) {
+            return this._defaultLocaleFirstDayOfWeek;
+        }
+
+        return this._weekStart;
+    }
+
+    /**
+     * Sets the start day of the week.
+     * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
+     */
+    public set weekStart(value: WEEKDAYS | number) {
+        this._weekStart = value;
+
+        this._isWeekStartSet = true;
+    }
 
     /**
      * A custom formatter function, applied on the selected or passed in date.
@@ -436,6 +472,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
+        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */
@@ -592,18 +629,53 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.disabled = isDisabled;
     }
 
+    /**
+     * Locale settings used for value formatting and calendar or time spinner.
+     *
+     * @remarks
+     * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
+     * If a `locale` is set, it must be registered via `registerLocaleData`.
+     * Please refer to https://angular.io/guide/i18n#i18n-pipes.
+     * If it is not registered, `Intl` will be used for formatting.
+     *
+     * @example
+     * ```html
+     * <igx-date-picker locale="jp"></igx-date-picker>
+     * ```
+     */
+    /**
+     * Gets the `locale` of the date-picker.
+     * Default value is `application's LOCALE_ID`.
+     */
+    @Input()
+    public get locale(): string {
+        return this._locale;
+    }
+
+    /**
+     * Sets the `locale` of the date-picker.
+     * Expects a valid BCP 47 language tag.
+     * Default value is `application's LOCALE_ID`.
+     */
+    public set locale(value: string) {
+        this._locale = value;
+        try {
+            getLocaleFirstDayOfWeek(this._locale);
+        } catch (e) {
+            this._locale = this._localeId;
+        }
+
+        if (!this._isWeekStartSet) {
+            this._defaultLocaleFirstDayOfWeek = getLocaleFirstDayOfWeek(this._locale);
+        }
+
+    }
+
     /** @hidden */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
 
         this.locale = this.locale || this._localeId;
-        if (this.weekStart === undefined) {
-            try {
-                this.weekStart = getLocaleFirstDayOfWeek(this.locale);
-            } catch (e) {
-                this.weekStart = getLocaleFirstDayOfWeek(this._localeId);
-            }
-        }
     }
 
     /** @hidden */
@@ -1037,7 +1109,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.calendar.hasHeader = false;
         this.calendar.locale = this.locale;
         this.calendar.selection = CalendarSelection.RANGE;
-        this.calendar.weekStart = this.weekStart;
+        this.calendar.weekStart = this._isWeekStartSet ? this.weekStart : this._defaultLocaleFirstDayOfWeek;
         this.calendar.hideOutsideDays = this.hideOutsideDays;
         this.calendar.monthsViewNumber = this.displayMonthsCount;
         this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
