@@ -100,7 +100,7 @@ export const tryInstallPackage = (context: SchematicContext, packageManager: str
         context.logger.debug(`Installing ${pkg} via ${packageManager}.`);
         switch (packageManager) {
             case 'yarn':
-                execSync(`${packageManager} add ${pkg} --no-lock-file`, { stdio: 'ignore' });
+                execSync(`${packageManager} add ${pkg}`, { stdio: 'ignore' });
                 break;
             case 'npm':
                 execSync(`${packageManager} i ${pkg} --no-save --no-audit`, { stdio: 'ignore' });
