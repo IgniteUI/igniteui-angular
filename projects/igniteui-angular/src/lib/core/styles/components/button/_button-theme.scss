@@ -110,6 +110,7 @@
         $_hover-shadow: $hover-shadow;
         $_focus-shadow: $focus-shadow;
         $_active-shadow: $active-shadow;
+        $_border-radius: $border-radius;
 
         @if not($variant) {
             $variant: map.get($_schema, 'variant');
@@ -167,8 +168,8 @@
             $_active-shadow: elevation($elevations, $active-elevation);
         }
 
-        @if not($border-radius) {
-            $border-radius: border-radius(map.get($_schema, 'border-radius'));
+        @if not($_border-radius) {
+            $_border-radius: border-radius(map.get($_schema, 'border-radius'));
         }
 
         $themes: map.merge($themes, (
