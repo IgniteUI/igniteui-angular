@@ -127,7 +127,7 @@ export class IgxGridCell implements CellType {
 		// getCellByColumnVisibleIndex is deprecated and will be removed in future version
 		return this.column.field ?
 			this.column.hasNestedPath ?
-			this.grid.nestedPropertyStrategy.resolveNestedPath(this.row?.data, this.column.field) :
+			this.grid.nestedPropertyStrategy.resolveValue(this.row?.data, this.column.field) :
 			this.row?.data[this.column.field]
 			: undefined;
 	}

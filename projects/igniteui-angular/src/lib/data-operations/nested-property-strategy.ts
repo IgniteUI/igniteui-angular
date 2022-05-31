@@ -1,8 +1,8 @@
-export interface INestedPropertyStrategy {
-    resolveNestedPath(obj: any, path: string): any;
+export interface IValueResolveStrategy {
+    resolveValue(obj: any, path: string): any;
 }
 
-export class NoopNestedPropertyStrategy implements INestedPropertyStrategy {
+export class NoopNestedPropertyStrategy implements IValueResolveStrategy {
     private static _instance: NoopNestedPropertyStrategy = null;
 
     private constructor() {  }
@@ -11,12 +11,12 @@ export class NoopNestedPropertyStrategy implements INestedPropertyStrategy {
         return this._instance || (this._instance = new NoopNestedPropertyStrategy());
     }
 
-    public resolveNestedPath(obj: any, path: string): any {
+    public resolveValue(obj: any, path: string): any {
         return obj[path];
     }
 }
 
-export class NestedPropertyStrategy implements INestedPropertyStrategy {
+export class NestedPropertyStrategy implements IValueResolveStrategy {
     private static _instance: NestedPropertyStrategy = null;
 
     public constructor() {  }
@@ -33,7 +33,7 @@ export class NestedPropertyStrategy implements INestedPropertyStrategy {
      * @hidden
      * @internal
      */
-    public resolveNestedPath(obj: any, path: string) {
+    public resolveValue(obj: any, path: string) {
         const parts = path?.split('.') ?? [];
         let current = obj[parts.shift()];
 

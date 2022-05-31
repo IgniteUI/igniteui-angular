@@ -116,7 +116,7 @@ export class DataUtil {
 
     public static filter<T>(data: T[], state: IFilteringState, grid?: GridType): T[] {
         if (!state.strategy) {
-            state.strategy = new FilteringStrategy(grid.nestedPropertyStrategy);
+            state.strategy = new FilteringStrategy(grid?.nestedPropertyStrategy);
         }
         return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree, grid);
     }

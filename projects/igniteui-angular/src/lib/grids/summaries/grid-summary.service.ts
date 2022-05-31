@@ -122,7 +122,7 @@ export class IgxGridSummaryService {
         this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
                 const summaryResult = column.summaries.operate(
-                    data.map(r => this.grid.nestedPropertyStrategy.resolveNestedPath(r, column.field)),
+                    data.map(r => this.grid.nestedPropertyStrategy.resolveValue(r, column.field)),
                     data, column.field, this.grid.locale, column.pipeArgs);
                 rowSummaries.set(column.field, summaryResult);
             }

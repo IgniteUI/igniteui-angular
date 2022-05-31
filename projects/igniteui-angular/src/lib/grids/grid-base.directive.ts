@@ -156,7 +156,7 @@ import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.compo
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { ColumnType } from './common/column.interface';
-import { INestedPropertyStrategy, NestedPropertyStrategy } from '../data-operations/nested-property-strategy';
+import { IValueResolveStrategy, NestedPropertyStrategy } from '../data-operations/nested-property-strategy';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -2157,11 +2157,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public get nestedPropertyStrategy(): INestedPropertyStrategy {
+    public get nestedPropertyStrategy(): IValueResolveStrategy {
         return this._nestedPropertyStrategy;
     }
 
-    public set nestedPropertyStrategy(value: INestedPropertyStrategy){
+    public set nestedPropertyStrategy(value: IValueResolveStrategy){
         this._nestedPropertyStrategy = value;
     }
 
@@ -7091,7 +7091,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (col) {
                         const key = headers ? col.header || col.field : col.field;
                         const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
-                        const value = this._nestedPropertyStrategy.resolveNestedPath(rowData, col.field);
+                        const value = this._nestedPropertyStrategy.resolveValue(rowData, col.field);
                         record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {
                             if (!record[key]) {
@@ -7595,12 +7595,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
-                const value = c.formatter ? c.formatter(this._nestedPropertyStrategy.resolveNestedPath(dataRow, c.field), dataRow) :
-                    c.dataType === 'number' ? this.decimalPipe.transform(this._nestedPropertyStrategy.resolveNestedPath(dataRow, c.field),
+                const value = c.formatter ? c.formatter(this._nestedPropertyStrategy.resolveValue(dataRow, c.field), dataRow) :
+                    c.dataType === 'number' ? this.decimalPipe.transform(this._nestedPropertyStrategy.resolveValue(dataRow, c.field),
                         pipeArgs.digitsInfo, this.locale) :
-                        c.dataType === 'date' ? this.datePipe.transform(this._nestedPropertyStrategy.resolveNestedPath(dataRow, c.field),
+                        c.dataType === 'date' ? this.datePipe.transform(this._nestedPropertyStrategy.resolveValue(dataRow, c.field),
                             pipeArgs.format, pipeArgs.timezone, this.locale)
-                            : this._nestedPropertyStrategy.resolveNestedPath(dataRow, c.field);
+                            : this._nestedPropertyStrategy.resolveValue(dataRow, c.field);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
 

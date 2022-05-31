@@ -407,7 +407,7 @@ export abstract class IgxBaseExporter {
 
                 record.data = columns.reduce((a, e) => {
                     if (!e.skip) {
-                        let rawValue = this.options.nestedPropertyStrategy.resolveNestedPath(record.data, e.field);
+                        let rawValue = this.options.nestedPropertyStrategy.resolveValue(record.data, e.field);
 
                         const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
 

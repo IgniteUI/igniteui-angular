@@ -7,7 +7,7 @@ import { IGroupByExpandState } from './groupby-expand-state.interface';
 import { IGroupByResult } from './grouping-result.interface';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
-import { NestedPropertyStrategy } from './nested-property-strategy';
+import { IValueResolveStrategy, NestedPropertyStrategy } from './nested-property-strategy';
 
 const DATE_TYPE = 'date';
 const TIME_TYPE = 'time';
@@ -100,7 +100,7 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
 }
 
 export class IgxSorting implements IGridSortingStrategy {
-    public constructor(private _nestedPropertyStrategy = NestedPropertyStrategy.instance()) { }
+    public constructor(private _nestedPropertyStrategy: IValueResolveStrategy = NestedPropertyStrategy.instance()) { }
 
     public sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[] {
         return this.sortDataRecursive(data, expressions, 0, grid);
@@ -177,12 +177,11 @@ export class IgxSorting implements IGridSortingStrategy {
     }
 
     protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
-        let resolvedValue = this._nestedPropertyStrategy.resolveNestedPath(obj, key);
+        let resolvedValue = this._nestedPropertyStrategy.resolveValue(obj, key);
         if (isDate || isTime) {
             const date = parseDate(resolvedValue);
             resolvedValue  = isTime && date ?
                 new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()) : date;
-
         }
         return resolvedValue;
     }
@@ -237,7 +236,7 @@ export class IgxSorting implements IGridSortingStrategy {
         const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
         const isTime = column?.dataType === TIME_TYPE;
         const isString = column?.dataType === STRING_TYPE;
-        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate, isTime);
+        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue.bind(this), isDate, isTime);
         if (expressionIndex === exprsLen - 1) {
             return data;
         }

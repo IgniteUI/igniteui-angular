@@ -13,7 +13,7 @@ import { IgxTreeGridRowComponent } from '../tree-grid/tree-grid-row.component';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
 import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
-import { INestedPropertyStrategy } from '../../data-operations/nested-property-strategy';
+import { IValueResolveStrategy } from '../../data-operations/nested-property-strategy';
 
 interface CSSProp {
     [prop: string]: any;
@@ -29,7 +29,7 @@ interface CSSProp {
 export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
     public transform(cssClasses: CSSProp,_: any, data: any, field: string,
-        index: number, __: number, nestedPropertyStrategy: INestedPropertyStrategy): string {
+        index: number, __: number, nestedPropertyStrategy: IValueResolveStrategy): string {
         if (!cssClasses) {
             return '';
         }
@@ -39,7 +39,7 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
         for (const cssClass of Object.keys(cssClasses)) {
             const callbackOrValue = cssClasses[cssClass];
             const apply = typeof callbackOrValue === 'function' ?
-                callbackOrValue(data, field, nestedPropertyStrategy.resolveNestedPath(data, field), index) : callbackOrValue;
+                callbackOrValue(data, field, nestedPropertyStrategy.resolveValue(data, field), index) : callbackOrValue;
             if (apply) {
                 result.push(cssClass);
             }
@@ -59,7 +59,7 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 export class IgxGridCellStylesPipe implements PipeTransform {
 
     public transform(styles: CSSProp, _: any, data: any, field: string,
-        index: number, __: number, nestedPropertyStrategy: INestedPropertyStrategy): CSSProp {
+        index: number, __: number, nestedPropertyStrategy: IValueResolveStrategy): CSSProp {
         const css = {};
         if (!styles) {
             return css;
@@ -67,7 +67,7 @@ export class IgxGridCellStylesPipe implements PipeTransform {
 
         for (const prop of Object.keys(styles)) {
             const res = styles[prop];
-            css[prop] = typeof res === 'function' ? res(data, field, nestedPropertyStrategy.resolveNestedPath(data, field), index) : res;
+            css[prop] = typeof res === 'function' ? res(data, field, nestedPropertyStrategy.resolveValue(data, field), index) : res;
         }
 
         return css;
@@ -372,8 +372,8 @@ export class IgxSortActionColumnsPipe implements PipeTransform {
 export class IgxGridDataMapperPipe implements PipeTransform {
 
     public transform(data: any[], field: string, _: number, val: any,
-        isNestedPath: boolean, nestedPropertyStrategy: INestedPropertyStrategy) {
-        return isNestedPath ? nestedPropertyStrategy.resolveNestedPath(data, field) : val;
+        isNestedPath: boolean, nestedPropertyStrategy: IValueResolveStrategy) {
+        return isNestedPath ? nestedPropertyStrategy.resolveValue(data, field) : val;
     }
 }
 
@@ -389,16 +389,16 @@ export class IgxStringReplacePipe implements PipeTransform {
 export class IgxGridTransactionStatePipe implements PipeTransform {
 
     public transform(row_id: any, field: string, rowEditable: boolean, transactions: any,
-        _: any, __: any, ___: any, nestedPropertyStrategy: INestedPropertyStrategy) {
+        _: any, __: any, ___: any, nestedPropertyStrategy: IValueResolveStrategy) {
         if (rowEditable) {
             const rowCurrentState = transactions.getAggregatedValue(row_id, false);
             if (rowCurrentState) {
-                const value = nestedPropertyStrategy.resolveNestedPath(rowCurrentState, field);
+                const value = nestedPropertyStrategy.resolveValue(rowCurrentState, field);
                 return value !== undefined && value !== null;
             }
         } else {
             const transaction = transactions.getState(row_id);
-            const value = nestedPropertyStrategy.resolveNestedPath(transaction?.value ?? {}, field);
+            const value = nestedPropertyStrategy.resolveValue(transaction?.value ?? {}, field);
             return transaction && transaction.value && (value || value === 0 || value === false);
         }
     }

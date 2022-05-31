@@ -2,7 +2,7 @@ import { FilteringLogic, IFilteringExpression } from './filtering-expression.int
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { parseDate } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
-import { INestedPropertyStrategy, NestedPropertyStrategy } from './nested-property-strategy';
+import { IValueResolveStrategy, NestedPropertyStrategy } from './nested-property-strategy';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
@@ -81,7 +81,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instace: FilteringStrategy = null;
 
-    constructor(protected _nestedPropertyStrategy = NestedPropertyStrategy.instance()) {
+    constructor(protected _nestedPropertyStrategy: IValueResolveStrategy = NestedPropertyStrategy.instance()) {
         super();
     }
 
@@ -109,7 +109,7 @@ export class FilteringStrategy extends BaseFilteringStrategy {
     }
 
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false): any {
-        let value = this._nestedPropertyStrategy.resolveNestedPath(rec, fieldName);
+        let value = this._nestedPropertyStrategy.resolveValue(rec, fieldName);
         value = value && (isDate || isTime) ? parseDate(value) : value;
         return value;
     }
@@ -122,7 +122,7 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
      * If omitted the values of all columns which has formatter will be formatted.
      */
     constructor(private fields?: string[],
-        nestedPropertyStrategy?: INestedPropertyStrategy) {
+        nestedPropertyStrategy?: IValueResolveStrategy) {
         super(nestedPropertyStrategy);
     }
 
@@ -133,7 +133,7 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
 
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
         const column = grid.getColumnByName(fieldName);
-        let value = this._nestedPropertyStrategy.resolveNestedPath(rec, fieldName);
+        let value = this._nestedPropertyStrategy.resolveValue(rec, fieldName);
 
         value = column.formatter && this.shouldApplyFormatter(fieldName) ?
             column.formatter(value, rec) : value && (isDate || isTime) ? parseDate(value) : value;
