@@ -71,21 +71,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _weekStart: number | WEEKDAYS
 
     /**
-     * @hidden
-     */
-    private _defaultLocaleFirstDayOfWeek: number;
-
-    /**
-     * @hidden
-     */
-    private _isWeekStartSet: boolean;
-
-    /**
-     * @hidden
-     */
-    private _locale;
-
-    /**
      * Gets/Sets on which day the week starts.
      *
      * @example
@@ -95,7 +80,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
-        if (!this._weekStart) {
+        if (this._weekStart === undefined) {
             return this._defaultLocaleFirstDayOfWeek;
         }
 

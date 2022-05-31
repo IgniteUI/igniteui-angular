@@ -35,7 +35,6 @@ import {
     DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
     IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent
 } from './date-range-picker-inputs.common';
-import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -75,21 +74,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * @hidden
      */
     private _weekStart: number | WEEKDAYS
-
-    /**
-     * @hidden
-     */
-    private _defaultLocaleFirstDayOfWeek: number;
-
-    /**
-     * @hidden
-     */
-    private _isWeekStartSet: boolean;
-
-    /**
-     * @hidden
-     */
-    private _locale;
 
     /**
      * The number of displayed month views.
@@ -132,7 +116,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
-        if (!this._weekStart) {
+        if (this._weekStart === undefined) {
             return this._defaultLocaleFirstDayOfWeek;
         }
 
@@ -627,48 +611,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     public setDisabledState?(isDisabled: boolean): void {
         this.disabled = isDisabled;
-    }
-
-    /**
-     * Locale settings used for value formatting and calendar or time spinner.
-     *
-     * @remarks
-     * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
-     * If a `locale` is set, it must be registered via `registerLocaleData`.
-     * Please refer to https://angular.io/guide/i18n#i18n-pipes.
-     * If it is not registered, `Intl` will be used for formatting.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker locale="jp"></igx-date-picker>
-     * ```
-     */
-    /**
-     * Gets the `locale` of the date-picker.
-     * Default value is `application's LOCALE_ID`.
-     */
-    @Input()
-    public get locale(): string {
-        return this._locale;
-    }
-
-    /**
-     * Sets the `locale` of the date-picker.
-     * Expects a valid BCP 47 language tag.
-     * Default value is `application's LOCALE_ID`.
-     */
-    public set locale(value: string) {
-        this._locale = value;
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
-            this._locale = this._localeId;
-        }
-
-        if (!this._isWeekStartSet) {
-            this._defaultLocaleFirstDayOfWeek = getLocaleFirstDayOfWeek(this._locale);
-        }
-
     }
 
     /** @hidden */
