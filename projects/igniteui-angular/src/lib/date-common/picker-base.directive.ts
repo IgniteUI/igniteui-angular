@@ -265,6 +265,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
         super(_displayDensityOptions || { displayDensity: 'comfortable' });
+        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */
