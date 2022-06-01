@@ -34,7 +34,8 @@ import {
 } from '../../animations/main';
 import { PlatformUtil } from '../../core/utils';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { IgxAnimationService } from '../animation/animation';
+import { AnimationService } from '../animation/animation';
+import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { ContainerPositionStrategy } from './position/container-position-strategy';
@@ -150,7 +151,7 @@ export class IgxOverlayService implements OnDestroy {
         @Inject(DOCUMENT) private document: any,
         private _zone: NgZone,
         protected platformUtil: PlatformUtil,
-        private animationService: IgxAnimationService) {
+        @Inject(IgxAngularAnimationService)private animationService: AnimationService) {
         this._document = this.document;
     }
 
@@ -691,11 +692,11 @@ export class IgxOverlayService implements OnDestroy {
         delete info.settings;
         delete info.initialSize;
         info.openAnimationDetaching = true;
-        info.igxOpenAnimationPlayer?.destroy();
-        delete info.igxOpenAnimationPlayer;
+        info.openAnimationPlayer?.destroy();
+        delete info.openAnimationPlayer;
         info.closeAnimationDetaching = true;
-        info.igxCloseAnimationPlayer?.destroy();
-        delete info.igxCloseAnimationPlayer;
+        info.closeAnimationPlayer?.destroy();
+        delete info.closeAnimationPlayer;
         delete info.ngZone;
         delete info.wrapperElement;
         info = null;
@@ -703,37 +704,37 @@ export class IgxOverlayService implements OnDestroy {
 
     private playOpenAnimation(info: OverlayInfo) {
         //  if there is opening animation already started do nothing
-        if (info.igxOpenAnimationPlayer?.hasStarted()) {
+        if (info.openAnimationPlayer?.hasStarted()) {
             return;
         }
-        if (info.igxCloseAnimationPlayer?.hasStarted()) {
-            const position = info.igxCloseAnimationPlayer.Position;
-            info.igxCloseAnimationPlayer.reset();
-            info.igxOpenAnimationPlayer.init();
-            info.igxOpenAnimationPlayer.Position = 1 - position;
+        if (info.closeAnimationPlayer?.hasStarted()) {
+            const position = info.closeAnimationPlayer.Position;
+            info.closeAnimationPlayer.reset();
+            info.openAnimationPlayer.init();
+            info.openAnimationPlayer.Position = 1 - position;
         }
-        this.animationStarting.emit({ id: info.id, animationPlayer: info.igxOpenAnimationPlayer, animationType: 'open' });
+        this.animationStarting.emit({ id: info.id, animationPlayer: info.openAnimationPlayer, animationType: 'open' });
 
         //  to eliminate flickering show the element just before animation start
         info.wrapperElement.style.visibility = '';
         info.visible = true;
-        info.igxOpenAnimationPlayer.play();
+        info.openAnimationPlayer.play();
     }
 
     private playCloseAnimation(info: OverlayInfo, event?: Event) {
         //  if there is closing animation already started do nothing
-        if (info.igxCloseAnimationPlayer?.hasStarted()) {
+        if (info.closeAnimationPlayer?.hasStarted()) {
             return;
         }
-        if (info.igxOpenAnimationPlayer?.hasStarted()) {
-            const position = info.igxOpenAnimationPlayer.Position;
-            info.igxOpenAnimationPlayer.reset();
-            info.igxCloseAnimationPlayer.init();
-            info.igxCloseAnimationPlayer.Position = 1 - position;
+        if (info.openAnimationPlayer?.hasStarted()) {
+            const position = info.openAnimationPlayer.Position;
+            info.openAnimationPlayer.reset();
+            info.closeAnimationPlayer.init();
+            info.closeAnimationPlayer.Position = 1 - position;
         }
-        this.animationStarting.emit({ id: info.id, animationPlayer: info.igxCloseAnimationPlayer, animationType: 'close' });
+        this.animationStarting.emit({ id: info.id, animationPlayer: info.closeAnimationPlayer, animationType: 'close' });
         info.event = event;
-        info.igxCloseAnimationPlayer.play();
+        info.closeAnimationPlayer.play();
     }
 
     //  TODO: check if applyAnimationParams will work with complex animations
@@ -776,7 +777,7 @@ export class IgxOverlayService implements OnDestroy {
                 if (isInsideClick) {
                     return;
                     //  if the click is outside click, but close animation has started do nothing
-                } else if (!(info.igxCloseAnimationPlayer?.hasStarted())) {
+                } else if (!(info.closeAnimationPlayer?.hasStarted())) {
                     this._hide(info.id, ev);
                 }
             }
@@ -793,7 +794,7 @@ export class IgxOverlayService implements OnDestroy {
                 //  if all overlays minus closing overlays equals one add the handler
                 this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length -
                 this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal &&
-                    x.igxCloseAnimationPlayer?.hasStarted()).length === 1) {
+                    x.closeAnimationPlayer?.hasStarted()).length === 1) {
 
                 // click event is not fired on iOS. To make element "clickable" we are
                 // setting the cursor to pointer
@@ -829,7 +830,7 @@ export class IgxOverlayService implements OnDestroy {
     private addResizeHandler() {
         const closingOverlaysCount =
             this._overlayInfos
-                .filter(o => o.igxCloseAnimationPlayer?.hasStarted())
+                .filter(o => o.closeAnimationPlayer?.hasStarted())
                 .length;
         if (this._overlayInfos.length - closingOverlaysCount === 1) {
             this._document.defaultView.addEventListener('resize', this.repositionAll);
@@ -839,7 +840,7 @@ export class IgxOverlayService implements OnDestroy {
     private removeResizeHandler() {
         const closingOverlaysCount =
             this._overlayInfos
-                .filter(o => o.igxCloseAnimationPlayer?.hasStarted())
+                .filter(o => o.closeAnimationPlayer?.hasStarted())
                 .length;
         if (this._overlayInfos.length - closingOverlaysCount === 1) {
             this._document.defaultView.removeEventListener('resize', this.repositionAll);
@@ -892,14 +893,14 @@ export class IgxOverlayService implements OnDestroy {
 
     private buildAnimationPlayers(info: OverlayInfo) {
         if (info.settings.positionStrategy.settings.openAnimation) {
-            info.igxOpenAnimationPlayer = this.animationService
+            info.openAnimationPlayer = this.animationService
                 .buildAnimation(info.settings.positionStrategy.settings.openAnimation, info.elementRef.nativeElement);
-            info.igxOpenAnimationPlayer.animationEnd.subscribe(() => this.openAnimationDone(info));
+            info.openAnimationPlayer.animationEnd.subscribe(() => this.openAnimationDone(info));
         }
         if (info.settings.positionStrategy.settings.closeAnimation) {
-            info.igxCloseAnimationPlayer = this.animationService
+            info.closeAnimationPlayer = this.animationService
                 .buildAnimation(info.settings.positionStrategy.settings.closeAnimation, info.elementRef.nativeElement);
-            info.igxCloseAnimationPlayer.animationEnd.subscribe(() => this.closeAnimationDone(info));
+            info.closeAnimationPlayer.animationEnd.subscribe(() => this.closeAnimationDone(info));
         }
     }
 
@@ -907,31 +908,31 @@ export class IgxOverlayService implements OnDestroy {
         if (!info.openAnimationDetaching) {
             this.opened.emit({ id: info.id, componentRef: info.componentRef });
         }
-        if (info.igxOpenAnimationPlayer) {
-            info.igxOpenAnimationPlayer.reset();
+        if (info.openAnimationPlayer) {
+            info.openAnimationPlayer.reset();
         }
-        if (info.igxCloseAnimationPlayer?.hasStarted()) {
-            info.igxCloseAnimationPlayer.reset();
+        if (info.closeAnimationPlayer?.hasStarted()) {
+            info.closeAnimationPlayer.reset();
         }
     }
 
     private closeAnimationDone(info: OverlayInfo) {
-        if (info.igxCloseAnimationPlayer) {
-            info.igxCloseAnimationPlayer.reset();
+        if (info.closeAnimationPlayer) {
+            info.closeAnimationPlayer.reset();
         }
-        if (info.igxOpenAnimationPlayer?.hasStarted()) {
-            info.igxOpenAnimationPlayer.reset();
+        if (info.openAnimationPlayer?.hasStarted()) {
+            info.openAnimationPlayer.reset();
         }
         this.closeDone(info);
     }
 
     private finishAnimations(info: OverlayInfo) {
         // // TODO: should we emit here opened or closed events
-        if (info.igxOpenAnimationPlayer?.hasStarted()) {
-            info.igxOpenAnimationPlayer.finish();
+        if (info.openAnimationPlayer?.hasStarted()) {
+            info.openAnimationPlayer.finish();
         }
-        if (info.igxCloseAnimationPlayer?.hasStarted()) {
-            info.igxCloseAnimationPlayer.finish();
+        if (info.closeAnimationPlayer?.hasStarted()) {
+            info.closeAnimationPlayer.finish();
         }
     }
 }

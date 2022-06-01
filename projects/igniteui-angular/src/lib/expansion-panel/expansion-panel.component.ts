@@ -6,10 +6,12 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
+    Inject,
     Input,
     Output
 } from '@angular/core';
-import { IgxAnimationService } from '../services/animation/animation';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { AnimationService } from '../services/animation/animation';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import {
@@ -207,7 +209,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     private _collapsed = true;
 
     constructor(
-        protected animationService: IgxAnimationService,
+        @Inject(IgxAngularAnimationService) protected animationService: AnimationService,
         private cdr: ChangeDetectorRef,
         private elementRef?: ElementRef) {
         super(animationService);

@@ -9,6 +9,7 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
+    Inject,
     Injectable,
     Input,
     IterableChangeRecord,
@@ -28,7 +29,8 @@ import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
 import { IgxIconModule } from '../icon/public_api';
-import { IgxAnimationService } from '../services/animation/animation';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { AnimationService } from '../services/animation/animation';
 import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
@@ -535,8 +537,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.restartInterval();
     }
 
-    constructor(cdr: ChangeDetectorRef, private element: ElementRef, private iterableDiffers: IterableDiffers,
-        animationService: IgxAnimationService, private platformUtil: PlatformUtil) {
+    constructor(
+        cdr: ChangeDetectorRef,
+        private element: ElementRef,
+        private iterableDiffers: IterableDiffers,
+        @Inject(IgxAngularAnimationService) animationService: AnimationService,
+        private platformUtil: PlatformUtil) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
     }

@@ -20,7 +20,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Direction, HorizontalAnimationType, IgxSlideComponentBase } from '../../carousel/carousel-base';
 import { PlatformUtil } from '../../core/utils';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
-import { IgxAnimationService } from '../../services/animation/animation';
+import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
+import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT } from '../stepper.common';
 import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.directive';
@@ -384,7 +385,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         public renderer: Renderer2,
         protected platform: PlatformUtil,
         protected stepperService: IgxStepperService,
-        protected animationService: IgxAnimationService,
+        @Inject(IgxAngularAnimationService) protected animationService: AnimationService,
         private element: ElementRef<HTMLElement>,
         private dir: IgxDirectionality
     ) {

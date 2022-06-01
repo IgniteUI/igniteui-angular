@@ -23,7 +23,8 @@ import { DisplayDensity } from '../../core/displayDensity';
 import { CurrentResourceStrings } from '../../core/i18n/resources';
 import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
-import { IgxAnimationService } from '../../services/animation/animation';
+import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
+import { AnimationService } from '../../services/animation/animation';
 import {
     IgxTree,
     IgxTreeNode,
@@ -395,7 +396,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         protected treeService: IgxTreeService,
         protected navService: IgxTreeNavigationService,
         protected cdr: ChangeDetectorRef,
-        protected animationService: IgxAnimationService,
+        @Inject(IgxAngularAnimationService)protected animationService: AnimationService,
         private element: ElementRef<HTMLElement>,
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {

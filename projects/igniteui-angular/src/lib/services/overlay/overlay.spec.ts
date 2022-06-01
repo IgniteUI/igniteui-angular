@@ -19,7 +19,8 @@ import { IgxCalendarContainerComponent } from '../../date-common/calendar-contai
 import { IgxDatePickerModule } from '../../date-picker/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxAnimationService } from '../animation/animation';
+import { IgxAngularAnimationService } from '../animation/angular-animation-service';
+import { AnimationService } from '../animation/animation';
 import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
 import { IgxOverlayService } from './overlay';
 import { ContainerPositionStrategy } from './position';
@@ -225,7 +226,7 @@ describe('igxOverlay', () => {
         let mockNgZone: any;
         let mockPlatformUtil: any;
         let overlay: IgxOverlayService;
-        let mockAnimationService: IgxAnimationService;
+        let mockAnimationService: AnimationService;
         beforeEach(() => {
             mockElement = {
                 style: { visibility: '', cursor: '', transitionDuration: '' },
@@ -305,7 +306,7 @@ describe('igxOverlay', () => {
             };
             mockNgZone = {};
             mockPlatformUtil = { isIOS: false };
-            mockAnimationService = new IgxAnimationService(mockAnimationBuilder);
+            mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
 
             overlay = new IgxOverlayService(
                 mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);

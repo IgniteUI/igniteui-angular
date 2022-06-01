@@ -1,6 +1,7 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { getResizeObserver, mkenum } from '../../core/utils';
-import { IgxAnimationService } from '../../services/animation/animation';
+import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
+import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
@@ -119,7 +120,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver: ResizeObserver;
 
-    constructor(animationService: IgxAnimationService, cdr: ChangeDetectorRef, private ngZone: NgZone, public dir: IgxDirectionality) {
+    constructor(@Inject(IgxAngularAnimationService) animationService: AnimationService, cdr: ChangeDetectorRef, private ngZone: NgZone, public dir: IgxDirectionality) {
         super(animationService, cdr, dir);
     }
 

@@ -2,7 +2,7 @@ import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
     AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
-    ElementRef, EventEmitter, HostBinding, Input, NgModule, OnChanges, OnDestroy,
+    ElementRef, EventEmitter, HostBinding, Inject, Input, NgModule, OnChanges, OnDestroy,
     OnInit, Output, QueryList, SimpleChanges,TemplateRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -12,7 +12,8 @@ import { fadeIn } from '../animations/main';
 import { HorizontalAnimationType, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
-import { IgxAnimationService } from '../services/animation/animation';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { AnimationService } from '../services/animation/animation';
 import { IgxStepComponent } from './step/step.component';
 import {
     IgxStepper, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType,
@@ -333,7 +334,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     constructor(
         cdr: ChangeDetectorRef,
-        animationService: IgxAnimationService,
+        @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private stepperService: IgxStepperService,
         private element: ElementRef<HTMLElement>) {
         super(animationService, cdr);

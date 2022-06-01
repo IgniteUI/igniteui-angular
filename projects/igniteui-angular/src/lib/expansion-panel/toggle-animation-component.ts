@@ -1,8 +1,9 @@
-import { AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
-import { Directive, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
+import { AnimationReferenceMetadata } from '@angular/animations';
+import { Directive, ElementRef, EventEmitter, Inject, OnDestroy } from '@angular/core';
 import { noop, Subject } from 'rxjs';
 import { growVerIn, growVerOut } from '../animations/grow';
-import { IgxAnimationPlayer, IgxAnimationService } from '../services/animation/animation';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { AnimationPlayer, AnimationService } from '../services/animation/animation';
 
 /**@hidden @internal */
 export interface ToggleAnimationSettings {
@@ -16,8 +17,8 @@ export interface ToggleAnimationOwner {
     openAnimationDone: EventEmitter<void>;
     closeAnimationStart: EventEmitter<void>;
     closeAnimationDone: EventEmitter<void>;
-    openAnimationPlayer: IgxAnimationPlayer;
-    closeAnimationPlayer: IgxAnimationPlayer;
+    openAnimationPlayer: AnimationPlayer;
+    closeAnimationPlayer: AnimationPlayer;
     playOpenAnimation(element: ElementRef, onDone: () => void): void;
     playCloseAnimation(element: ElementRef, onDone: () => void): void;
 }
@@ -49,10 +50,10 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
     }
 
     /** @hidden @internal */
-    public openAnimationPlayer: IgxAnimationPlayer = null;
+    public openAnimationPlayer: AnimationPlayer = null;
 
     /** @hidden @internal */
-    public closeAnimationPlayer: IgxAnimationPlayer = null;
+    public closeAnimationPlayer: AnimationPlayer = null;
 
     protected destroy$: Subject<void> = new Subject();
     protected players: Map<string, AnimationPlayer> = new Map();
@@ -69,7 +70,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
     private onClosedCallback: () => any = this._defaultClosedCallback;
     private onOpenedCallback: () => any = this._defaultOpenedCallback;
 
-    constructor(protected animationService: IgxAnimationService) {
+    constructor(@Inject(IgxAngularAnimationService)protected animationService: AnimationService) {
     }
 
     /** @hidden @internal */
@@ -106,7 +107,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         }
     }
 
-    private initializePlayer(type: ANIMATION_TYPE, targetElement: ElementRef, callback: () => void): IgxAnimationPlayer {
+    private initializePlayer(type: ANIMATION_TYPE, targetElement: ElementRef, callback: () => void): AnimationPlayer {
         const oppositeType = type === ANIMATION_TYPE.OPEN ? ANIMATION_TYPE.CLOSE : ANIMATION_TYPE.OPEN;
         // V.S. Jun 28th, 2021 #9783: Treat falsy animation settings as disabled animations
         const targetAnimationSettings = this.animationSettings || { closeAnimation: null, openAnimation: null };
@@ -186,7 +187,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         }
     }
 
-    private getPlayer(type: ANIMATION_TYPE): IgxAnimationPlayer {
+    private getPlayer(type: ANIMATION_TYPE): AnimationPlayer {
         switch (type) {
             case ANIMATION_TYPE.OPEN:
                 return this.openAnimationPlayer;

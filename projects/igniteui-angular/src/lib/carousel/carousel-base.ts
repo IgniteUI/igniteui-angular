@@ -1,9 +1,10 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter, Inject } from '@angular/core';
 import { fadeIn } from '../animations/fade';
 import { slideInLeft } from '../animations/slide';
 import { mkenum } from '../core/utils';
-import { IgxAnimationPlayer, IgxAnimationService } from '../services/animation/animation';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { AnimationPlayer, AnimationService } from '../services/animation/animation';
 
 export enum Direction { NONE, NEXT, PREV }
 
@@ -40,9 +41,9 @@ export abstract class IgxCarouselComponentBase {
     /** @hidden */
     protected previousItem: IgxSlideComponentBase;
     /** @hidden */
-    protected enterAnimationPlayer?: IgxAnimationPlayer;
+    protected enterAnimationPlayer?: AnimationPlayer;
     /** @hidden */
-    protected leaveAnimationPlayer?: IgxAnimationPlayer;
+    protected leaveAnimationPlayer?: AnimationPlayer;
     /** @hidden */
     protected defaultAnimationDuration = 320;
     /** @hidden */
@@ -50,7 +51,9 @@ export abstract class IgxCarouselComponentBase {
     /** @hidden */
     protected newDuration = 0;
 
-    constructor(private animationService: IgxAnimationService, private cdr: ChangeDetectorRef) {
+    constructor(
+        @Inject(IgxAngularAnimationService)private animationService: AnimationService,
+        private cdr: ChangeDetectorRef) {
     }
 
     /** @hidden */
@@ -68,7 +71,7 @@ export abstract class IgxCarouselComponentBase {
     }
 
     /** @hidden */
-    protected animationStarted(animation: IgxAnimationPlayer): boolean {
+    protected animationStarted(animation: AnimationPlayer): boolean {
         return animation && animation.hasStarted();
     }
 

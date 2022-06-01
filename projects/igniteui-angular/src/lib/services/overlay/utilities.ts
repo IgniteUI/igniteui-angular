@@ -1,8 +1,8 @@
-import { AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
+import { AnimationReferenceMetadata } from '@angular/animations';
 import { ComponentRef, ElementRef, NgZone } from '@angular/core';
 import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { IgxAnimationPlayer } from '../animation/animation';
+import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
 
@@ -125,7 +125,7 @@ export interface OverlayAnimationEventArgs extends IBaseEventArgs {
     /** Id of the overlay generated with `attach()` method */
     id: string;
     /** Animation player that will play the animation */
-    animationPlayer: AnimationPlayer | IgxAnimationPlayer;
+    animationPlayer: AnimationPlayer;
     /** Type of animation to be played. It should be either 'open' or 'close' */
     animationType: 'open' | 'close';
 }
@@ -148,11 +148,11 @@ export interface OverlayInfo {
     settings?: OverlaySettings;
     initialSize?: Size;
     hook?: HTMLElement;
-    igxOpenAnimationPlayer?: IgxAnimationPlayer;
+    openAnimationPlayer?: AnimationPlayer;
     // calling animation.destroy in detach fires animation.done. This should not happen
     // this is why we should trace if animation ever started
     openAnimationDetaching?: boolean;
-    igxCloseAnimationPlayer?: IgxAnimationPlayer;
+    closeAnimationPlayer?: AnimationPlayer;
     // calling animation.destroy in detach fires animation.done. This should not happen
     // this is why we should trace if animation ever started
     closeAnimationDetaching?: boolean;

@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensity } from '../core/displayDensity';
-import { IgxAnimationService } from '../services/animation/animation';
+import { AnimationService } from '../services/animation/animation';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
@@ -231,7 +231,7 @@ describe('IgxTree #treeView', () => {
         describe('IgxTreeNodeComponent', () => {
             let mockTree: IgxTreeComponent;
             let mockCdr: ChangeDetectorRef;
-            let mockAnimationService: IgxAnimationService;
+            let mockAnimationService: AnimationService;
 
             beforeEach(() => {
                 mockTree = jasmine.createSpyObj<any>('mockTree', ['findNodes'],
@@ -246,7 +246,7 @@ describe('IgxTree #treeView', () => {
                         }
                     });
                 mockCdr = jasmine.createSpyObj<ChangeDetectorRef>('mockCdr', ['detectChanges', 'markForCheck'], {});
-                mockAnimationService = jasmine.createSpyObj<IgxAnimationService>('mockAB', ['buildAnimation'], {});
+                mockAnimationService = jasmine.createSpyObj<AnimationService>('mockAB', ['buildAnimation'], {});
             });
             it('Should call service expand/collapse methods when toggling state through `[expanded]` input', () => {
                 const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,

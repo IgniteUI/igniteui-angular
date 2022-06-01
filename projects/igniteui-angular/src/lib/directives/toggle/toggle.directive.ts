@@ -206,8 +206,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         //  if there is open animation do nothing
         //  if toggle is not collapsed and there is no close animation do nothing
         const info = this.overlayService.getOverlayById(this._overlayId);
-        const openAnimationStarted = info?.igxOpenAnimationPlayer?.hasStarted() ?? false;
-        const closeAnimationStarted = info?.igxCloseAnimationPlayer?.hasStarted() ?? false;
+        const openAnimationStarted = info?.openAnimationPlayer?.hasStarted() ?? false;
+        const closeAnimationStarted = info?.closeAnimationPlayer?.hasStarted() ?? false;
         if (openAnimationStarted || !(this._collapsed || closeAnimationStarted)) {
             return;
         }
@@ -245,7 +245,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         //  if toggle is collapsed do nothing
         //  if there is close animation do nothing, toggle will close anyway
         const info = this.overlayService.getOverlayById(this._overlayId);
-        const closeAnimationStarted = info?.igxCloseAnimationPlayer?.hasStarted() || false;
+        const closeAnimationStarted = info?.closeAnimationPlayer?.hasStarted() || false;
         if (this._collapsed || closeAnimationStarted) {
             return;
         }
@@ -273,7 +273,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /** @hidden @internal */
     public get isClosing() {
         const info = this.overlayService.getOverlayById(this._overlayId);
-        return info ? info.igxCloseAnimationPlayer?.hasStarted() : false;
+        return info ? info.closeAnimationPlayer?.hasStarted() : false;
     }
 
     /**
