@@ -301,7 +301,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      * An event that is emitted after the dialog is opened.
      * ```html
-     * <igx-dialog (onOpened)="onDialogOpenedHandler($event)" (leftButtonSelect)="dialog.close()" rightButtonLabel="OK">
+     * <igx-dialog (opened)="onDialogOpenedHandler($event)" (leftButtonSelect)="dialog.close()" rightButtonLabel="OK">
      * </igx-dialog>
      * ```
      */
