@@ -185,7 +185,7 @@
 ///    @include palette-vars($default-palette);
 ///
 @mixin palette-vars($palette, $contrast: true, $prefix: 'igx') {
-    $scope: if(is-root(), ':root', '&');
+    $scope: if(is-root(), '*', '&');
     $_meta: map.get($palette, '_meta');
     $theme: if($_meta, map.get($_meta, 'variant'), null);
     $gray: if($_meta, map.get($_meta, 'grays'), #fff);
