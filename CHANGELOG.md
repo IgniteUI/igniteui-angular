@@ -6,6 +6,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 
+- `IgxGridEditingActions`
+    - Added new inputs to show/hide the edit and delete buttons - `editRow`, `deleteRow`.
+
 - `IgxPivotGrid`
     - **Breaking Change** - Changing the `IPivotValue`'s `formatter` and `styles` functions optional parameters, example:
     ```
