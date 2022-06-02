@@ -330,7 +330,7 @@
             @if $variant == 'indigo-design' {
                 margin-inline-start: spacing(24px);
             } @else {
-                margin-inline-start: spacing(4px);
+                margin-inline-end: spacing(4px);
             }
         }
 
