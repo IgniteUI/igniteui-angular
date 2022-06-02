@@ -131,8 +131,7 @@
     }
 
     %igx-avatar--rounded {
-        --border-radius: 44px;
-        border-radius: var-get(('border-radius': 44px), 'border-radius');
+        --igx-avatar-border-radius: #{rem(44px)};
     }
 
     %igx-avatar--initials {
