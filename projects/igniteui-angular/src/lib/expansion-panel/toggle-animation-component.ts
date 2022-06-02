@@ -1,6 +1,7 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { Directive, ElementRef, EventEmitter, Inject, OnDestroy } from '@angular/core';
 import { noop, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { growVerIn, growVerOut } from '../animations/grow';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationPlayer, AnimationService } from '../services/animation/animation';
@@ -136,7 +137,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         target.init();
         this.getPlayer(type).position = 1 - oppositePosition;
         this.setCallback(type, callback);
-        target.animationEnd.subscribe(() => {
+        target.animationEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.onDoneHandler(type);
         });
         return target;

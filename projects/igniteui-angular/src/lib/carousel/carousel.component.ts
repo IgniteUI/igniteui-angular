@@ -1010,7 +1010,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
     private focusSlideElement() {
         if (this.leaveAnimationPlayer) {
-            this.leaveAnimationPlayer.animationEnd.subscribe(() => {
+            this.leaveAnimationPlayer.animationEnd
+                .pipe(takeUntil(this.destroy$))
+                .subscribe(() => {
                 this.slides.find(s => s.active).nativeElement.focus();
             });
         } else {

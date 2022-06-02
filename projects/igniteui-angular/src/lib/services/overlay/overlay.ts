@@ -895,12 +895,16 @@ export class IgxOverlayService implements OnDestroy {
         if (info.settings.positionStrategy.settings.openAnimation) {
             info.openAnimationPlayer = this.animationService
                 .buildAnimation(info.settings.positionStrategy.settings.openAnimation, info.elementRef.nativeElement);
-            info.openAnimationPlayer.animationEnd.subscribe(() => this.openAnimationDone(info));
+            info.openAnimationPlayer.animationEnd
+                .pipe(takeUntil(this.destroy$))
+                .subscribe(() => this.openAnimationDone(info));
         }
         if (info.settings.positionStrategy.settings.closeAnimation) {
             info.closeAnimationPlayer = this.animationService
                 .buildAnimation(info.settings.positionStrategy.settings.closeAnimation, info.elementRef.nativeElement);
-            info.closeAnimationPlayer.animationEnd.subscribe(() => this.closeAnimationDone(info));
+            info.closeAnimationPlayer.animationEnd
+                .pipe(takeUntil(this.destroy$))
+                .subscribe(() => this.closeAnimationDone(info));
         }
     }
 

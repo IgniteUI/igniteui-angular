@@ -933,9 +933,19 @@ describe('Stepper service unit tests', () => {
 
         mockAnimationService = {
             buildAnimation: (_builder: AnimationBuilder) => ({
-                animationEnd:  { subscribe: () => { }},
-                animationStart: { subscribe: () => { }},
-                Position: 0,
+                animationEnd: {
+                    pipe: () => ({
+                        subscribe: () => { }
+                    }),
+                    subscribe: () => { }
+                },
+                animationStart: {
+                    pipe: () => ({
+                        subscribe: () => { }
+                    }),
+                    subscribe: () => { }
+                },
+                position: 0,
                 init: () => { },
                 hasStarted: () => true,
                 play: () => { },
