@@ -171,7 +171,7 @@
 ///    @include igx-palette-vars($default-palette);
 ///
 @mixin igx-palette-vars($palette, $contrast: true) {
-    $scope: if(is-root(), ':root', '&');
+    $scope: if(is-root(), '*', '&');
     $_meta: map-get($palette, '_meta');
     $theme: if($_meta, map-get($_meta, 'variant'), null);
 
