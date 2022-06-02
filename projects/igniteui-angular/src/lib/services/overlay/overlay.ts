@@ -708,10 +708,10 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
         if (info.closeAnimationPlayer?.hasStarted()) {
-            const position = info.closeAnimationPlayer.Position;
+            const position = info.closeAnimationPlayer.position;
             info.closeAnimationPlayer.reset();
             info.openAnimationPlayer.init();
-            info.openAnimationPlayer.Position = 1 - position;
+            info.openAnimationPlayer.position = 1 - position;
         }
         this.animationStarting.emit({ id: info.id, animationPlayer: info.openAnimationPlayer, animationType: 'open' });
 
@@ -727,10 +727,10 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
         if (info.openAnimationPlayer?.hasStarted()) {
-            const position = info.openAnimationPlayer.Position;
+            const position = info.openAnimationPlayer.position;
             info.openAnimationPlayer.reset();
             info.closeAnimationPlayer.init();
-            info.closeAnimationPlayer.Position = 1 - position;
+            info.closeAnimationPlayer.position = 1 - position;
         }
         this.animationStarting.emit({ id: info.id, animationPlayer: info.closeAnimationPlayer, animationType: 'close' });
         info.event = event;

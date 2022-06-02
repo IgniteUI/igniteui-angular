@@ -8,22 +8,22 @@ export class IgxAngularAnimationPlayer implements AnimationPlayer {
     public animationStart: EventEmitter<IBaseEventArgs> = new EventEmitter<IBaseEventArgs>();
     public animationEnd: EventEmitter<IBaseEventArgs> = new EventEmitter<IBaseEventArgs>();
 
-    public get Position(): number {
+    public get position(): number {
         return this._innerPlayer.getPosition();
     }
 
-    public set Position(value: number) {
+    public set position(value: number) {
         this.internalPlayer.setPosition(value);
     }
 
     constructor(private internalPlayer: AngularAnimationPlayer) {
         this.internalPlayer.onDone(() => this.onDone());
-        const innerRenderer  = (this.internalPlayer as any)._renderer;
-            //  We need inner player as Angular.AnimationPlayer.getPosition returns always 0.
-            // To workaround this we are getting the positions from the inner player.
-            //  This is logged in Angular here - https://github.com/angular/angular/issues/18891
-            //  As soon as this is resolved we can remove this hack
-            this._innerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
+        const innerRenderer = (this.internalPlayer as any)._renderer;
+        //  We need inner player as Angular.AnimationPlayer.getPosition returns always 0.
+        // To workaround this we are getting the positions from the inner player.
+        //  This is logged in Angular here - https://github.com/angular/angular/issues/18891
+        //  As soon as this is resolved we can remove this hack
+        this._innerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
     }
 
     public init(): void {
@@ -31,14 +31,14 @@ export class IgxAngularAnimationPlayer implements AnimationPlayer {
     }
 
     public play(): void {
-        this.animationStart.emit({owner: this});
+        this.animationStart.emit({ owner: this });
         this.internalPlayer.play();
     }
 
     public finish(): void {
         this.internalPlayer.finish();
         // TODO: when animation finish angular deletes all onDone handlers. Add handlers again if needed
-        }
+    }
 
     public reset(): void {
         this.internalPlayer.reset();
@@ -55,6 +55,6 @@ export class IgxAngularAnimationPlayer implements AnimationPlayer {
     }
 
     private onDone(): void {
-        this.animationEnd.emit({owner: this});
+        this.animationEnd.emit({ owner: this });
     }
 }

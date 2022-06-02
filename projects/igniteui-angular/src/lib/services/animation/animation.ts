@@ -9,7 +9,7 @@ export interface AnimationService {
      * @param element The DOM element on which animation will be applied
      * @returns AnimationPlayer
      */
-     buildAnimation: (animation: AnimationReferenceMetadata, element: HTMLElement) => AnimationPlayer
+     buildAnimation: (animationMetaData: AnimationReferenceMetadata, element: HTMLElement) => AnimationPlayer
 }
 
 export interface AnimationPlayer {
@@ -24,7 +24,7 @@ export interface AnimationPlayer {
     /**
      * Current position of the animation.
      */
-    Position: number;
+    position: number;
     /**
      * Initialize the animation
     */

@@ -206,8 +206,6 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
 
-    private _collapsed = true;
-
     constructor(
         @Inject(IgxAngularAnimationService) protected animationService: AnimationService,
         private cdr: ChangeDetectorRef,

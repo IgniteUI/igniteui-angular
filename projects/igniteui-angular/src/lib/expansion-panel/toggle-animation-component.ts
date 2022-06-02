@@ -124,7 +124,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         const opposite = this.getPlayer(oppositeType);
         let oppositePosition = 1;
         if (opposite) {
-            oppositePosition = opposite.Position;
+            oppositePosition = opposite.position;
             this.cleanUpPlayer(oppositeType);
         }
         if (type === ANIMATION_TYPE.OPEN) {
@@ -134,7 +134,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         }
         const target = this.getPlayer(type);
         target.init();
-        this.getPlayer(type).Position = 1 - oppositePosition;
+        this.getPlayer(type).position = 1 - oppositePosition;
         this.setCallback(type, callback);
         target.animationEnd.subscribe(() => {
             this.onDoneHandler(type);

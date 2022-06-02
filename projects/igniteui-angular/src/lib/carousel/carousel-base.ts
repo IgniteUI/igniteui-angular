@@ -52,7 +52,7 @@ export abstract class IgxCarouselComponentBase {
     protected newDuration = 0;
 
     constructor(
-        @Inject(IgxAngularAnimationService)private animationService: AnimationService,
+        @Inject(IgxAngularAnimationService) private animationService: AnimationService,
         private cdr: ChangeDetectorRef) {
     }
 
@@ -150,6 +150,7 @@ export abstract class IgxCarouselComponentBase {
 
         this.enterAnimationPlayer = this.animationService.buildAnimation(animation, this.getCurrentElement());
         this.enterAnimationPlayer.animationEnd.subscribe(() => {
+            // TODO: animation may never end. Find better way to clean up the player
             if (this.enterAnimationPlayer) {
                 this.enterAnimationPlayer.reset();
                 this.enterAnimationPlayer = null;
@@ -172,6 +173,7 @@ export abstract class IgxCarouselComponentBase {
 
         this.leaveAnimationPlayer = this.animationService.buildAnimation(animation, this.getPreviousElement());
         this.leaveAnimationPlayer.animationEnd.subscribe(() => {
+            // TODO: animation may never end. Find better way to clean up the player
             if (this.leaveAnimationPlayer) {
                 this.leaveAnimationPlayer.reset();
                 this.leaveAnimationPlayer = null;
