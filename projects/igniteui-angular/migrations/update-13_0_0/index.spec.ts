@@ -505,4 +505,42 @@ export class AppModule {}
         
 </igx-grid>`);
     });
+
+    fit('should remove grid toolbar exporter inputs and define a igx-grid-toolbar component instead', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-grid #grid1 [data]="data" height="300px" width="300px"
+        [exportExcel]="true" [exportCsv]="csvExport">
+        <igx-grid-toolbar>
+        <igx-grid-toolbar-actions>
+          <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
+          <span excelText>Custom text for the excel export entry</span>
+          <span csvText>Custom text for the CSV export entry</span>
+      </igx-grid-toolbar-exporter>
+        </igx-grid-toolbar-actions>
+    </igx-grid-toolbar>
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+        <igx-grid #grid1 [data]="data" height="300px" width="300px">
+<igx-grid-toolbar>
+<igx-grid-toolbar-actions>
+<igx-grid-toolbar-exporter exportExcel="true" exportCsv="csvExport">
+<span excelText>Custom text for the excel export entry</span>
+<span csvText>Custom text for the CSV export entry</span>
+</igx-grid-toolbar-exporter>
+</igx-grid-toolbar-actions>
+</igx-grid-toolbar>
+        
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+    });
 });
