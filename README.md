@@ -1,4 +1,17 @@
-# Ignite UI for Angular - from Infragistics
+<p align="center">
+  <a href="#">
+    <img alt="stencil-logo" src="src/assets/images/ignite-ui-logo-light-background.png" width="180">
+  </a>
+</p>
+
+<h1 align="center">
+  Ignite UI for Angular - from Infragistics 
+</h1>
+
+<p align="center">
+  A compiler for generating <a href="https://www.webcomponents.org/introduction">Web Components</a> 
+</p>
+
 
 ![Node.js CI](https://github.com/IgniteUI/igniteui-angular/workflows/Node.js%20CI/badge.svg)
 [![Build Status](https://dev.azure.com/IgniteUI/igniteui-angular/_apis/build/status/IgniteUI.igniteui-angular)](https://dev.azure.com/IgniteUI/igniteui-angular/_build/latest?definitionId=3)
