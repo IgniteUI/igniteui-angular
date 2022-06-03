@@ -264,6 +264,166 @@
                 "selector": "igx-row-island",
                 "type": "component"
             }
+        },
+        {
+            "name": "exportExcel",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportExcel",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportExcel",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportExcel",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportExcelText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportExcelText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportExcelText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportExcelText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportCsv",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportCsv",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportCsv",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportCsv",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportCsvText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportCsvText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportCsvText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportCsvText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "exportText",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
         }
     ]
 }

@@ -21,9 +21,11 @@ export default (options: Options): Rule =>
         const SERVICES = ['IgxCsvExporterService', 'IgxExcelExporterService'];
         const TAGS = ['igx-grid', 'igx-tree-grid', 'igx-hierarchical-grid', 'igx-row-island'];
         const toolbarProp = ['[showToolbar]', 'showToolbar', '[toolbarTitle]', 'toolbarTitle',
-            '[columnHiding]', 'columnHiding', '[columnHidingTitle]', 'columnHidingTitle', '[hiddenColumnsText]', 'hiddenColumnsText',
-            '[columnPinning]', 'columnPinning', '[columnPinningTitle]', 'columnPinningTitle', '[pinnedColumnsText]', 'pinnedColumnsText'];
-        const actionsLeft = ['igx-grid-toolbar-advanced-filtering', 'igx-grid-toolbar-exporter'];
+        '[columnHiding]', 'columnHiding', '[columnHidingTitle]', 'columnHidingTitle', '[hiddenColumnsText]', 'hiddenColumnsText',
+        '[columnPinning]', 'columnPinning', '[columnPinningTitle]', 'columnPinningTitle', '[pinnedColumnsText]', 'pinnedColumnsText',
+        '[exportExcel]', 'exportExcel', '[exportExcelText]', 'exportExcelText',
+        '[exportCsv]', 'exportCsv', '[exportCsvText]', 'exportCsvText', '[exportText]', 'exportText'];
+        const actionsLeft = ['igx-grid-toolbar-advanced-filtering'];
         const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
 
         const moduleTsFiles = tsFiles.filter(x => x.endsWith('.module.ts'));
@@ -87,7 +89,8 @@ export default (options: Options): Rule =>
         // has actions
         const hasHiding = Object.keys(attributes).filter(x => x.toLowerCase().includes('hid')).length > 0 || !!(toolbar && findElementNodes([toolbar], ['igx-grid-toolbar-hiding'])[0]);
         const hasPinning = Object.keys(attributes).filter(x => x.toLowerCase().includes('pin')).length > 0 || !!(toolbar && findElementNodes([toolbar], ['igx-grid-toolbar-pinning'])[0]);
-        const hasActions = hasHiding || hasPinning;
+        const hasExporting = Object.keys(attributes).filter(x => x.toLowerCase().includes('export')).length > 0 || !!(toolbar && findElementNodes([toolbar], ['igx-grid-toolbar-exporter'])[0]);
+        const hasActions = hasHiding || hasPinning || hasExporting;
 
         if (hasActions) {
             result += '\n<igx-grid-toolbar-actions>';
@@ -115,7 +118,7 @@ export default (options: Options): Rule =>
         }
 
         const pinning = !!toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-pinning'])[0] : null;
-        const showPinning = !pinning || attributes['columnPinning']?.value ? attributes['columnPinning'] : getAttribute(hiding as Element, ['*ngIf', '[*ngIf]'])[0];
+        const showPinning = !pinning || attributes['columnPinning']?.value ? attributes['columnPinning'] : getAttribute(pinning as Element, ['*ngIf', '[*ngIf]'])[0];
         if (hasPinning) {
             result += `\n<igx-grid-toolbar-pinning`;
         }
@@ -132,6 +135,39 @@ export default (options: Options): Rule =>
         }
         if (hasPinning) {
             result += '></igx-grid-toolbar-pinning>';
+        }
+
+        const exporting = !!toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-exporter'])[0] : null;
+        const showExcelExporter = !exporting || attributes['exportExcel']?.value ? attributes['exportExcel'] : getAttribute(exporting as Element, ['exportExcel', '[exportExcel]'])[0];
+        const showCsvExporter = !exporting || attributes['exportCsv']?.value ? attributes['exportCsv'] : getAttribute(exporting as Element, ['exportCsv', '[exportCsv]'])[0];
+
+        if (hasExporting) {
+            result += `\n<igx-grid-toolbar-exporter`;
+        }
+        if (showExcelExporter && showExcelExporter.value) {
+            result += ` exportExcel="${showExcelExporter.value}"`;
+        }
+        if (showCsvExporter && showCsvExporter.value) {
+            result += ` exportCsv="${showCsvExporter.value}"`;
+        }
+        result += '>';
+
+        const excelTitle = !exporting || attributes['exportExcelText']?.value ? attributes['exportExcelText'] : getExportText(exporting, 'excelText');
+        if (excelTitle && excelTitle.value) {
+            result += excelTitle.template ? '\n' + excelTitle.value : `\n<span excelText>${excelTitle.value}</span>`;
+        }
+
+        const csvTitle = !exporting || attributes['exportCsvText']?.value ? attributes['exportCsvText'] : getExportText(exporting, 'csvText');
+        if (csvTitle && csvTitle.value) {
+            result += csvTitle.template ? '\n' + csvTitle.value : `\n<span csvText>${csvTitle.value}</span>`;
+        }
+
+        const exportTitle = !exporting || attributes['exportText']?.value ? attributes['exportText'] : getExportText(exporting, 'text');
+        if (exportTitle && exportTitle.value) {
+            result += '\n' + exportTitle.value;
+        }
+        if (hasExporting) {
+            result += '\n</igx-grid-toolbar-exporter>';
         }
 
         //add any actions left
@@ -162,6 +198,26 @@ export default (options: Options): Rule =>
 
         applyChanges();
         changes.clear();
+    }
+
+    const getExportText = (exporter, type) => {
+        const element = exporter.children.find(el => {
+            if (type === 'text' && !!el.value && el.value.trim().length > 0) {
+                return el;
+            } else if (!!el.attrs && hasAttribute(el as Element, type)) {
+                return el;
+            }
+            return undefined;
+        });
+        if (!element) {
+            return '';
+        }
+        if (type !== 'text') {
+            const { startTag, endTag, file } = getSourceOffset(element as Element);
+            const replaceText = file.content.substring(startTag.start, endTag.end);
+            return { value: replaceText, template: true };
+        }
+        return element;
     }
 
     for (const path of update.templateFiles) {
