@@ -1,6 +1,6 @@
 <p align="center">
   <a href="#">
-    <img alt="stencil-logo" src="src/assets/images/ignite-ui-logo-light-background.png" width="180">
+    <img alt="ignite-ui-logo" src="src/assets/images/ignite-ui-logo-light-background.png" width="180">
   </a>
 </p>
 
