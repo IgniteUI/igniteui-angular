@@ -1161,14 +1161,14 @@ class FileInputFormComponent {
     @ViewChild('fileInput', { read: IgxInputDirective }) public input: IgxInputDirective;
     @ViewChild('igxInputGroupNgModel', { static: true }) public igxInputGroupNgModel: IgxInputGroupComponent;
     @ViewChild('inputNgModel', { read: IgxInputDirective }) public inputWithNgModel: IgxInputDirective;
-    public formWithFileInput: FormGroup;
+    public formWithFileInput: UntypedFormGroup;
     public model = {
         inputValue: null
     };
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         this.formWithFileInput = fb.group({
-            fileInput: new FormControl('')
+            fileInput: new UntypedFormControl('')
         });
     }
 }
