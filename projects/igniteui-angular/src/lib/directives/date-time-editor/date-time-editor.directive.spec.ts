@@ -253,7 +253,8 @@ describe('IgxDateTimeEditor', () => {
                  * format must be set because the editor will prioritize Date if Hours is not set
                  * and no DatePart is provided to increment / decrement
                  */
-                dateTimeEditor.value = new Date();
+                // do not use new Date. This test will fail if run between 23:00 and 23:59
+                dateTimeEditor.value = new Date(1900, 1, 1, 12, 0, 0, 0);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
                 const hours = dateTimeEditor.value.getHours();
 
