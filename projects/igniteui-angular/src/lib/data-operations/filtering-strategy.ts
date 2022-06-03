@@ -138,7 +138,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
             if (column.dataType === GridColumnDataType.String && column.filteringIgnoreCase) {
                 key = key?.toString().toLowerCase();
             } else if (column.dataType === GridColumnDataType.DateTime) {
-                key = item.value?.toLocaleString();
+                key = item.value?.toString();
                 item.value = key ? new Date(key) : key;
             } else if (column.dataType === GridColumnDataType.Time) {
                 const date = key ? new Date(key) : key;
