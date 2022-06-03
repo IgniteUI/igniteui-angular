@@ -1,7 +1,10 @@
-import { AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { Directive, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
+import { AnimationReferenceMetadata } from '@angular/animations';
+import { Directive, ElementRef, EventEmitter, Inject, OnDestroy } from '@angular/core';
 import { noop, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { growVerIn, growVerOut } from '../animations/grow';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { AnimationPlayer, AnimationService } from '../services/animation/animation';
 
 /**@hidden @internal */
 export interface ToggleAnimationSettings {
@@ -31,8 +34,6 @@ export enum ANIMATION_TYPE {
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnDestroy {
-
-
     /** @hidden @internal */
     public openAnimationDone: EventEmitter<void> = new EventEmitter();
     /** @hidden @internal */
@@ -55,8 +56,6 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
     /** @hidden @internal */
     public closeAnimationPlayer: AnimationPlayer = null;
 
-
-
     protected destroy$: Subject<void> = new Subject();
     protected players: Map<string, AnimationPlayer> = new Map();
     protected _animationSettings: ToggleAnimationSettings = {
@@ -72,7 +71,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
     private onClosedCallback: () => any = this._defaultClosedCallback;
     private onOpenedCallback: () => any = this._defaultOpenedCallback;
 
-    constructor(protected builder: AnimationBuilder) {
+    constructor(@Inject(IgxAngularAnimationService)protected animationService: AnimationService) {
     }
 
     /** @hidden @internal */
@@ -93,18 +92,15 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         if (!targetElement) { // if no element is passed, there is nothing to animate
             return;
         }
-
         let target = this.getPlayer(type);
         if (!target) {
             target = this.initializePlayer(type, targetElement, callback);
         }
-
         // V.S. Jun 28th, 2021 #9783: player will NOT be initialized w/ null settings
         // events will already be emitted
         if (!target || target.hasStarted()) {
             return;
         }
-
         const targetEmitter = type === ANIMATION_TYPE.OPEN ? this.openAnimationStart : this.closeAnimationStart;
         targetEmitter.emit();
         if (target) {
@@ -126,29 +122,22 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
             this.onDoneHandler(type);
             return;
         }
-        const animation = useAnimation(animationSettings);
-        const animationBuilder = this.builder.build(animation);
         const opposite = this.getPlayer(oppositeType);
         let oppositePosition = 1;
         if (opposite) {
-            if (opposite.hasStarted()) {
-                // .getPosition() still returns 0 sometimes, regardless of the fix for https://github.com/angular/angular/issues/18891;
-                const renderer = (opposite as any)._renderer;
-                oppositePosition = renderer.engine.players[renderer.engine.players.length - 1].getPosition();
-            }
-
+            oppositePosition = opposite.position;
             this.cleanUpPlayer(oppositeType);
         }
         if (type === ANIMATION_TYPE.OPEN) {
-            this.openAnimationPlayer = animationBuilder.create(targetElement.nativeElement);
+            this.openAnimationPlayer = this.animationService.buildAnimation(animationSettings, targetElement.nativeElement);
         } else if (type === ANIMATION_TYPE.CLOSE) {
-            this.closeAnimationPlayer = animationBuilder.create(targetElement.nativeElement);
+            this.closeAnimationPlayer = this.animationService.buildAnimation(animationSettings, targetElement.nativeElement);
         }
         const target = this.getPlayer(type);
         target.init();
-        this.getPlayer(type).setPosition(1 - oppositePosition);
+        this.getPlayer(type).position = 1 - oppositePosition;
         this.setCallback(type, callback);
-        target.onDone(() => {
+        target.animationEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.onDoneHandler(type);
         });
         return target;
@@ -173,7 +162,6 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
             this.closeInterrupted = false;
         }
     }
-
 
     private cleanUpPlayer(target: ANIMATION_TYPE) {
         switch (target) {
