@@ -1,37 +1,39 @@
 import { CommonModule } from '@angular/common';
 import {
+    AfterContentInit,
+    ChangeDetectorRef,
     Component,
+    ContentChild,
+    ContentChildren,
     ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
+    Inject,
+    Injectable,
     Input,
+    IterableChangeRecord,
+    IterableDiffer,
+    IterableDiffers,
     NgModule,
     OnDestroy,
     Output,
-    ContentChildren,
     QueryList,
-    IterableDiffer,
-    IterableDiffers,
-    AfterContentInit,
-    IterableChangeRecord,
     TemplateRef,
-    ViewChild,
-    ContentChild,
-    Injectable,
-    ChangeDetectorRef
+    ViewChild
 } from '@angular/core';
-import { IgxIconModule } from '../icon/public_api';
-import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
-import { Subject, merge } from 'rxjs';
+import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
-import { AnimationBuilder } from '@angular/animations';
-import { IgxSlideComponent } from './slide.component';
 import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import { HorizontalAnimationType, Direction, IgxCarouselComponentBase } from './carousel-base';
+import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
+import { IgxIconModule } from '../icon/public_api';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { AnimationService } from '../services/animation/animation';
+import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './carousel-base';
+import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
+import { IgxSlideComponent } from './slide.component';
 
 let NEXT_ID = 0;
 
@@ -535,9 +537,13 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.restartInterval();
     }
 
-    constructor(cdr: ChangeDetectorRef, private element: ElementRef, private iterableDiffers: IterableDiffers,
-        builder: AnimationBuilder, private platformUtil: PlatformUtil) {
-        super(builder, cdr);
+    constructor(
+        cdr: ChangeDetectorRef,
+        private element: ElementRef,
+        private iterableDiffers: IterableDiffers,
+        @Inject(IgxAngularAnimationService) animationService: AnimationService,
+        private platformUtil: PlatformUtil) {
+        super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 
@@ -1004,7 +1010,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
     private focusSlideElement() {
         if (this.leaveAnimationPlayer) {
-            this.leaveAnimationPlayer.onDone(() => {
+            this.leaveAnimationPlayer.animationEnd
+                .pipe(takeUntil(this.destroy$))
+                .subscribe(() => {
                 this.slides.find(s => s.active).nativeElement.focus();
             });
         } else {
