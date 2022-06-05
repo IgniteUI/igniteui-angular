@@ -1223,7 +1223,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         }));
     }
 
-    protected getRemoteSelection(newSelection: any[], oldSelection: any[]): string {
+    protected getRemoteSelection(newSelection: any[], oldSelection: any[], shouldRegisterRemoteEntries): string {
         if (!newSelection.length) {
             // If new selection is empty, clear all items
             this.registerRemoteEntries(oldSelection, false);
@@ -1231,8 +1231,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         }
         const removedItems = oldSelection.filter(e => newSelection.indexOf(e) < 0);
         const addedItems = newSelection.filter(e => oldSelection.indexOf(e) < 0);
-        this.registerRemoteEntries(addedItems);
-        this.registerRemoteEntries(removedItems, false);
+        if (shouldRegisterRemoteEntries) {
+            this.registerRemoteEntries(addedItems);
+            this.registerRemoteEntries(removedItems, false);
+        }
         return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
     }
 
