@@ -1513,7 +1513,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             }
             this._onChangeCallback(args.newSelection);
         } else if (this.isRemote) {
-            this.registerRemoteEntries(args.added, false)
+            this.registerRemoteEntries(args.added, false);
         }
     }
 
