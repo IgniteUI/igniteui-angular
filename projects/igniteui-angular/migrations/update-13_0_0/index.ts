@@ -137,7 +137,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 
         const exporting = !!toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-exporter'])[0] : null;
         const showExcelExporter = !exporting || attributes['exportExcel']?.value ? attributes['exportExcel'] : getAttribute(exporting as Element, ['exportExcel', '[exportExcel]'])[0];
-        const showCsvExporter = !exporting || attributes['exportCsv']?.value ? attributes['exportCsv'] : getAttribute(exporting as Element, ['exportCsv', '[exportCsv]'])[0];
+        const showCsvExporter = !exporting || attributes['exportCsv']?.value ? attributes['exportCsv'] : getAttribute(exporting as Element, ['exportCSV', '[exportCSV]'])[0];
 
         if (hasExporting) {
             result += `\n<igx-grid-toolbar-exporter`;
@@ -146,9 +146,11 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
             result += ` exportExcel="${showExcelExporter.value}"`;
         }
         if (showCsvExporter && showCsvExporter.value) {
-            result += ` exportCsv="${showCsvExporter.value}"`;
+            result += ` exportCSV="${showCsvExporter.value}"`;
         }
-        result += '>';
+        if (hasExporting) {
+            result += '>';
+        }
 
         const excelTitle = !exporting || attributes['exportExcelText']?.value ? attributes['exportExcelText'] : getExportText(exporting, 'excelText');
         if (excelTitle && excelTitle.value) {
