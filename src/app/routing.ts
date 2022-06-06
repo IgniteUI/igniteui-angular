@@ -130,6 +130,7 @@ import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent as StepperSampleComponent } from './stepper/stepper.sample';
 import { RatingSampleComponent } from './rating/rating.sample';
+import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 
 const appRoutes = [
     {
@@ -304,6 +305,10 @@ const appRoutes = [
     {
         path: 'slider',
         component: SliderSampleComponent
+    },
+    {
+        path: 'range-slider',
+        component: RangeSliderComponent
     },
     {
         path: 'splitter',

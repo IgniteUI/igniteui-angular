@@ -239,6 +239,14 @@
         $subtitle-focus-color: text-contrast($step-focus-background);
     }
 
+    @if not($border-radius-indicator) {
+        $border-radius-indicator: border-radius(map.get($theme, 'border-radius-indicator'));
+    }
+
+    @if not($border-radius-step-header) {
+        $border-radius-step-header: border-radius(map.get($theme, 'border-radius-step-header'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -495,7 +503,7 @@
         gap: $title-gap;
         cursor: pointer;
         background: var-get($theme, 'step-background');
-        border-radius: border-radius(var-get($theme, 'border-radius-step-header'));
+        border-radius: var-get($theme, 'border-radius-step-header');
 
         &:hover {
             background: var-get($theme, 'step-hover-background');
@@ -518,16 +526,16 @@
         height: $indicator-size;
         width: $indicator-size;
         white-space: nowrap;
-        border-radius: border-radius(var-get($theme, 'border-radius-indicator'));
+        border-radius: var-get($theme, 'border-radius-indicator');
         color: var-get($theme, 'indicator-color');
         background: var-get($theme, 'indicator-background');
         box-shadow: 0 0 0 $outline-width var-get($theme, 'indicator-outline');
 
         @if $variant != 'bootstrap' {
             > igx-icon {
-                width: calc(#{$indicator-size} - #{rem(6px)});
-                height: calc(#{$indicator-size} - #{rem(6px)});
-                font-size: calc(#{$indicator-size} - #{rem(6px)});
+                width: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                height: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                font-size: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
                 color: inherit;
             }
         }

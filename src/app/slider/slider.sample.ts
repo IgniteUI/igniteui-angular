@@ -21,15 +21,12 @@ export class SliderSampleComponent {
     public ticksOrientation: TicksOrientation = TicksOrientation.Bottom;
     public primaryTickLabels = true;
     public secondaryTickLabels = true;
-    public sliderType: IgxSliderType = IgxSliderType.RANGE;
+    public sliderType: IgxSliderType = IgxSliderType.SLIDER;
     public labelsDates = new Array<Date>();
     public task: Task = new Task('Implement new app', 30);
     public labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    public rangeValue = {
-        lower: 34,
-        upper: 67
-    };
+    public rangeValue = 34;
 
     public rangeLabel = {
         lower: 2,

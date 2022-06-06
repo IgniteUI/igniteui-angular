@@ -571,21 +571,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         super.ngOnInit();
     }
 
-    public ngDoCheck() {
-        if (this._cdrRequestRepaint && !this._init) {
-            this.updateSizes();
-        }
-        super.ngDoCheck();
-    }
-
     /**
      * @hidden
      */
     public ngAfterViewInit() {
         super.ngAfterViewInit();
-        this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
-        this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
-
+        this.zone.runOutsideAngular(() => {
+            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
+            this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
+        });
         this.verticalScrollContainer.beforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
             if (this.isChildGridRecord(rowData)) {
@@ -1008,28 +1002,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     relatedGrid.updateOnRender = false;
                 }
             });
-
-            const childGrids = this.getChildGrids(true);
-            childGrids.forEach((grid: IgxHierarchicalGridComponent) => {
-                if (grid.isPercentWidth) {
-                    grid.notifyChanges(true);
-                }
-                grid.updateScrollPosition();
-            });
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public updateScrollPosition() {
-        const vScr = this.verticalScrollContainer.getScroll();
-        const hScr = this.headerContainer.getScroll();
-        if (vScr) {
-            vScr.scrollTop = this.scrollTop;
-        }
-        if (hScr) {
-            hScr.scrollLeft = this.scrollLeft;
         }
     }
 
@@ -1063,6 +1035,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             const keys = layoutsList.map((item) => item.key);
             return keys.indexOf(field) === -1;
         });
+    }
+
+    protected resizeNotifyHandler() {
+        // do not trigger reflow if element is detached or if it is child grid.
+        if (this.document.contains(this.nativeElement) && !this.parent) {
+            this.notifyChanges(true);
+        }
     }
 
     /**
@@ -1104,16 +1083,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return super._shouldAutoSize(renderedHeight);
     }
 
-    private updateSizes() {
-        if (document.body.contains(this.nativeElement) && this.isPercentWidth) {
-            this.reflow();
-
-            this.gridAPI.getChildGrids(false).forEach((grid: IgxHierarchicalGridComponent) => {
-                grid.updateSizes();
-            });
-        }
-    }
-
     private updateColumnList(recalcColSizes = true) {
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
         const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
@@ -1140,10 +1109,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
 
     private hg_verticalScrollHandler(event) {
-        this.scrollTop = event.target.scrollTop;
+        this.scrollTop = this.verticalScrollContainer.scrollPosition;
     }
     private hg_horizontalScrollHandler(event) {
-        this.scrollLeft = event.target.scrollLeft;
+        this.scrollLeft = this.headerContainer.scrollPosition;
     }
 }
 

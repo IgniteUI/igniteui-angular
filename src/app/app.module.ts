@@ -161,6 +161,7 @@ import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 import { RatingSampleComponent } from './rating/rating.sample';
+import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 
 const components = [
     AccordionSampleComponent,
@@ -206,6 +207,7 @@ const components = [
     RippleSampleComponent,
     SelectSampleComponent,
     SliderSampleComponent,
+    RangeSliderComponent,
     SplitterSampleComponent,
     SnackbarSampleComponent,
     BottomNavSampleComponent,

@@ -1,18 +1,15 @@
 import {
-    Component,
-    EventEmitter,
+    ChangeDetectorRef, Component, ElementRef, EventEmitter,
     HostBinding,
     HostListener,
     Input,
     Output,
-    ViewChild,
-    ElementRef,
-    ChangeDetectorRef
+    ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IBaseEventArgs, mkenum } from '../core/utils';
-import { EditorProvider } from '../core/edit-provider';
 import { noop } from 'rxjs';
+import { EditorProvider } from '../core/edit-provider';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
     value: any;
@@ -130,7 +127,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @memberof IgxRadioComponent
      */
     @Input()
-    public labelPosition: RadioLabelPosition | string = 'after';
+    public labelPosition: RadioLabelPosition | string;
 
     /**
      * Sets/gets the `value` attribute.
@@ -289,7 +286,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     @HostBinding('class.igx-radio--disabled')
     @Input()
     public get disabled(): boolean {
-        return this._disabled;
+        return this._disabled || false;
     }
     public set disabled(value: boolean) {
         this._disabled = (value as any === '') || value;
@@ -323,7 +320,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @hidden
      * @internal
      */
-    private _disabled = false;
+    private _disabled: boolean;
     /**
      * @hidden
      */
@@ -335,6 +332,17 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     private _onChangeCallback: (_: any) => void = noop;
 
     constructor(private cdr: ChangeDetectorRef) { }
+
+     /**
+     * @hidden
+     * @internal
+     */
+      @HostListener('change', ['$event'])
+      public _changed(){
+          if(event instanceof Event){
+            event.preventDefault();
+          }
+      }
 
     /**
      * @hidden

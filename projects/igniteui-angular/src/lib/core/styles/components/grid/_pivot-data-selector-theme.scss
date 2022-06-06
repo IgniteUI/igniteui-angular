@@ -123,17 +123,21 @@
             margin-inline-end: rem(8px);
         }
 
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
-
         %igx-expansion-panel__header-title {
             display: flex;
 
             > h6 {
                 font-size: rem(12px);
+            }
+        }
+
+        %igx-expansion-panel__header-inner {
+            background: var-get($theme, 'header-color');
+            padding: $panel-padding;
+    
+            .dragOver & {
+                background: color($color: 'grays', $variant: 300);
+                box-shadow: inset 0 0 0 1px color($color: 'grays', $variant: 400);
             }
         }
     }
@@ -166,16 +170,6 @@
     %selector-header-extra {
         display: flex;
         align-items: center;
-    }
-
-    %igx-expansion-panel__header-inner {
-        background: var-get($theme, 'header-color');
-        padding: $panel-padding;
-
-        .dragOver & {
-            background: color($color: 'grays', $variant: 300);
-            box-shadow: inset 0 0 0 1px color($color: 'grays', $variant: 400);
-        }
     }
 
     %selector-header-extra {
@@ -227,11 +221,14 @@
         border: 1px solid color($color: 'grays', $variant: 100);
         border-radius: border-radius(rem(2px));
         z-index: 10;
+    }
 
+    %selector-base,
+    %selector-item-ghost {
         igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 

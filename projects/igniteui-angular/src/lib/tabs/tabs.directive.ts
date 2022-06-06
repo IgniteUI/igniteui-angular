@@ -1,11 +1,13 @@
-import { AnimationBuilder } from '@angular/animations';
 import {
     AfterViewInit, ChangeDetectorRef, ContentChildren, Directive, EventEmitter,
+    Inject,
     Input, OnDestroy, Output, QueryList
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IBaseEventArgs } from '../core/utils';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { AnimationService } from '../services/animation/animation';
 import { IgxDirectionality } from '../services/direction/directionality';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabContentBase, IgxTabsBase } from './tabs.base';
@@ -120,8 +122,11 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     private _itemChanges$: Subscription;
 
     /** @hidden */
-    constructor(builder: AnimationBuilder, cdr: ChangeDetectorRef, public dir: IgxDirectionality) {
-        super(builder, cdr);
+    constructor(
+        @Inject(IgxAngularAnimationService) animationService: AnimationService,
+        cdr: ChangeDetectorRef,
+        public dir: IgxDirectionality) {
+        super(animationService, cdr);
     }
 
     /** @hidden */

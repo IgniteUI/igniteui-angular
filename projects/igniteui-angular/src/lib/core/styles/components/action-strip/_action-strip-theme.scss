@@ -52,6 +52,10 @@
         $icon-color: text-contrast($actions-background);
     }
 
+    @if not($actions-border-radius) {
+        $actions-border-radius: border-radius(map.get($theme, 'actions-border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -100,9 +104,9 @@
             height: rem(28px);
 
             igx-icon {
-                width: rem(14px);
-                height: rem(14px);
-                font-size: rem(14px);
+                width: var(--igx-icon-size, #{rem(14px)});
+                height: var(--igx-icon-size, #{rem(14px)});
+                font-size: var(--igx-icon-size, #{rem(14px)});
             }
         }
     }
@@ -130,9 +134,9 @@
         }
 
         igx-icon {
-            font-size: rem(18px);
-            width: rem(18px);
-            height: rem(18px);
+            width: var(--igx-icon-size, rem(18px));
+            height: var(--igx-icon-size, rem(18px));
+            font-size: var(--igx-icon-size, rem(18px));
         }
 
         igx-icon + [igxLabel] {
@@ -172,7 +176,7 @@
         pointer-events: all;
         position: relative;
         color: var-get($theme, 'icon-color');
-        border-radius: border-radius(var-get($theme, 'actions-border-radius'));
+        border-radius: var-get($theme, 'actions-border-radius');
         background: var-get($theme, 'actions-background');
         max-height: 36px;
 
@@ -190,7 +194,7 @@
             }
 
             @if $variant == 'indigo-design' {
-                border-radius: border-radius(var-get($theme, 'actions-border-radius'));
+                border-radius: var-get($theme, 'actions-border-radius');
             }
         }
     }

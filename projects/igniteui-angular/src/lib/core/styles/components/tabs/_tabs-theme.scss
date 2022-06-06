@@ -23,9 +23,14 @@
 /// @param {Color} $item-hover-background [null] - The background used for the tabs on hover.
 /// @param {Color} $item-hover-color [null] - The text color used for the tabs on hover.
 ///
+/// @param {Color} $item-icon-color [null] - The color used for the tab icon.
+/// @param {Color} $item-active-icon-color [null] - The color used for the active tab icon.
+/// @param {Color} $item-hover-icon-color [null] - The color used for the tab icon on hover.
+/// @param {Color} $item-disabled-icon-color [null] - The color used for the disabled tab icon.
+///
 /// @param {Color} $item-active-color [null] - The color used for the active tabs text.
-/// @param {Color} $item-active-icon-color [null] - The color used for the active tabs icon.
 /// @param {Color} $item-active-background [null] - The color used for the active/focused tab background.
+/// @param {Color} $item-disabled-color [null] - The color used for the disabled tabs text.
 ///
 /// @param {Color} $indicator-color [null] - The color used for the active tab indicator.
 /// @param {Color} $button-color [null] - The color used for the button icon/text color.
@@ -61,9 +66,13 @@
     $item-background: null,
     $item-hover-background: null,
     $item-hover-color: null,
-    $item-active-color: null,
+    $item-icon-color: null,
     $item-active-icon-color: null,
+    $item-hover-icon-color: null,
+    $item-disabled-icon-color: null,
+    $item-active-color: null,
     $item-active-background: null,
+    $item-disabled-color: null,
     $indicator-color: null,
     $button-color: null,
     $button-background: null,
@@ -177,6 +186,10 @@
         $tab-ripple-color: text-contrast($item-background);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -184,9 +197,13 @@
         item-background: $item-background,
         item-hover-color: $item-hover-color,
         item-hover-background: $item-hover-background,
-        item-active-color: $item-active-color,
+        item-icon-color: $item-icon-color,
         item-active-icon-color: $item-active-icon-color,
+        item-hover-icon-color: $item-hover-icon-color,
+        item-disabled-icon-color: $item-disabled-icon-color,
+        item-active-color: $item-active-color,
         item-active-background: $item-active-background,
+        item-disabled-color: $item-disabled-color,
         indicator-color: $indicator-color,
         button-color: $button-color,
         button-background: $button-background,
@@ -247,11 +264,14 @@
     }
 
     %tabs-display {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
 
     %tabs-header {
         overflow: hidden;
+        flex: 0 0 auto;
         background: var-get($theme, 'item-background');
         box-shadow: var-get($theme, 'tab-area-shadow');
         min-height: rem(42px);
@@ -272,7 +292,7 @@
         position: relative;
         flex-grow: 1;
 
-        @if $bootstrap-theme or $indigo-theme {
+        @if $bootstrap-theme {
             &::after {
                 content: '';
                 position: absolute;
@@ -362,20 +382,19 @@
         overflow: hidden;
         cursor: pointer;
         position: relative;
-
-        @if $not-bootstrap-theme {
-            transition: all .3s $tabs-animation-function;
-        }
-
         user-select: none;
         background: var-get($theme, 'item-background');
         color: var-get($theme, 'item-text-color');
         outline: 0;
 
+        igx-icon { 
+            color: var-get($theme, 'item-icon-color');
+        }
+
         @if $bootstrap-theme {
             border: 1px solid transparent;
-            border-start-start-radius: border-radius(var-get($theme, 'border-radius'));
-            border-start-end-radius: border-radius(var-get($theme, 'border-radius'));
+            border-start-start-radius: var-get($theme, 'border-radius');
+            border-start-end-radius: var-get($theme, 'border-radius');
         }
 
         @if $indigo-theme {
@@ -388,6 +407,7 @@
 
         &:focus {
             background: var-get($theme, 'item-active-background');
+            color: var-get($theme, 'item-hover-color');
             border-bottom-color: transparent;
         }
 
@@ -396,11 +416,24 @@
             color: var-get($theme, 'item-hover-color');
 
             @if $bootstrap-theme {
-                border-color: var-get($theme, 'border-color--hover') var-get($theme, 'border-color--hover') transparent;
+                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color--hover');
             }
         }
 
+        &:hover,
+        &:focus {
+            igx-icon {
+                color: var-get($theme, 'item-hover-icon-color');
+            }
+        }
+
+        @if $bootstrap-theme {
+            border-start-start-radius: border-radius(var-get($theme, 'border-radius'));
+            border-start-end-radius: border-radius(var-get($theme, 'border-radius'));
+        }
+
         @if $not-bootstrap-theme {
+            transition: all .3s $tabs-animation-function;
             border: 1px solid var-get($theme, 'border-color');
 
             &:hover,
@@ -428,18 +461,14 @@
         outline: 0;
         color: var-get($theme, 'item-active-color');
 
-        @if $bootstrap-theme {
-            border-color: var-get($theme, 'border-color--hover') var-get($theme, 'border-color--hover') transparent;
-        }
-
+        &:hover,
         &:focus {
             background: var-get($theme, 'item-active-background');
             color: var-get($theme, 'item-active-color');
-        }
 
-        &:hover {
-            background: var-get($theme, 'item-active-background');
-            color: var-get($theme, 'item-active-color');
+            igx-icon {
+                color: var-get($theme, 'item-active-icon-color');
+            }
         }
 
         igx-icon {
@@ -449,48 +478,60 @@
         @if $bootstrap-theme {
             background: var-get($theme, 'item-active-background');
             position: relative;
-            z-index: 1;
-            border-top-color: var-get($theme, 'border-color');
-            border-inline-color: var-get($theme, 'border-color');
-            border-bottom-color: transparent;
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
 
             &::after {
                 content: '';
                 position: absolute;
-                bottom: -1px;
+                bottom: 0;
                 inset-inline-start: 0;
                 width: 100%;
                 height: 1px;
                 background: var-get($theme, 'item-active-background');
+                z-index: 1;
             }
 
-            &:hover,
-            &:focus {
-                border-top-color: var-get($theme, 'border-color');
-                border-inline-color: var-get($theme, 'border-color');
-                border-bottom-color: transparent;
+            &:hover {
+                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+            }
+        }
+    }
+
+    %tabs-header-item:focus,
+    %tabs-header-item--selected:focus {
+        @if $bootstrap-theme {
+            border: none;
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'item-hover-color');
+            border-radius: rem(4px);
+            z-index: 1;
+
+            &::after {
+                display: none;
             }
         }
     }
 
     %tabs-header-item--disabled {
         outline: 0;
-        @if not $indigo-theme {
-            opacity: .5;
-        } @else  {
-            > * {
-                opacity: .4;
-            }
-        }
+        color: var-get($theme, 'item-disabled-color');
         cursor: default;
         pointer-events: none;
+
+        igx-icon {
+            color: var-get($theme, 'item-disabled-icon-color');
+        }
     }
 
     %tabs-header-item-inner {
+        display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
         text-align: center;
+
+        > * {
+            @include line-clamp(2, true, true);
+        }
 
         > [igxtabheadericon] {
             margin-bottom: rem(8px);
@@ -519,17 +560,17 @@
     %tabs-panels {
         position: relative;
         overflow: hidden;
-        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
     }
 
     %tabs-panel {
-        display: block;
         position: absolute;
         inset: 0;
-        width: 100%;
-        height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
+        flex: 1 1 auto;
 
         &::-moz-focus-inner {
             // remove focus dotted border in firefox
