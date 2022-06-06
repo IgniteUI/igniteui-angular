@@ -344,7 +344,7 @@ export class UpdateChanges {
             }
             switch (change.owner.type) {
                 case 'component':
-                    searchPattern = String.raw`\<${change.owner.selector}[^\>]*\>`;
+                    searchPattern = String.raw`\<${change.owner.selector}(?=[\s\>])[^\>]*\>`;
                     break;
                 case 'directive':
                     searchPattern = String.raw`\<[^\>]*[\s\[]${change.owner.selector}[^\>]*\>`;
