@@ -21,7 +21,7 @@
             -webkit-filter: opacity(1);
             filter: opacity(1);
             // Fix shadows if you print to PDF using chrome END
-            color-adjust: exact;
+            print-color-adjust: exact;
             text-shadow: none !important;
         }
 
@@ -49,7 +49,7 @@
         .igx-ripple,
         .igx-grid__tbody-scrollbar,
         igx-switch__ripple,
-        igx-virtual-helper, {
+        igx-virtual-helper {
             display: none !important;
         }
 
