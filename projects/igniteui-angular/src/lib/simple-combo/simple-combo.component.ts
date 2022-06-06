@@ -413,16 +413,18 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             if (this._updateInput) {
                 this.comboInput.value = this._internalFilter = this._value = displayText !== args.displayText
                     ? args.displayText
-                    : this.createDisplayText(argsSelection, [args.oldSelection], true);
+                    : this.createDisplayText(argsSelection, [args.oldSelection]);
             }
             this._onChangeCallback(args.newSelection);
             this._updateInput = true;
+        } else if (this.isRemote) {
+            this.registerRemoteEntries(newSelectionAsArray, false);
         }
     }
 
-    protected createDisplayText(newSelection: any[], oldSelection: any[], shouldRegisterRemoteEntries: boolean = false): string {
+    protected createDisplayText(newSelection: any[], oldSelection: any[]): string {
         if (this.isRemote) {
-            return this.getRemoteSelection(newSelection, oldSelection, shouldRegisterRemoteEntries);
+            return this.getRemoteSelection(newSelection, oldSelection);
         }
 
         if (this.displayKey !== null && this.displayKey !== undefined
