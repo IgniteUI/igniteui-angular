@@ -1,7 +1,8 @@
-import { AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
+import { AnimationReferenceMetadata } from '@angular/animations';
 import { ComponentRef, ElementRef, NgZone } from '@angular/core';
 import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
 
@@ -148,7 +149,6 @@ export interface OverlayInfo {
     initialSize?: Size;
     hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
-    openAnimationInnerPlayer?: any;
     // calling animation.destroy in detach fires animation.done. This should not happen
     // this is why we should trace if animation ever started
     openAnimationDetaching?: boolean;
@@ -156,7 +156,6 @@ export interface OverlayInfo {
     // calling animation.destroy in detach fires animation.done. This should not happen
     // this is why we should trace if animation ever started
     closeAnimationDetaching?: boolean;
-    closeAnimationInnerPlayer?: any;
     ngZone: NgZone;
     transformX?: number;
     transformY?: number;
@@ -196,7 +195,6 @@ export class Util {
             top: 0,
             width: 0
         };
-
         if (target instanceof HTMLElement) {
             targetRect = (target as HTMLElement).getBoundingClientRect();
         } else if (target instanceof Point) {
@@ -210,7 +208,6 @@ export class Util {
                 width: 0
             };
         }
-
         return targetRect;
     }
 
