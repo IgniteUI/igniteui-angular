@@ -475,16 +475,16 @@ export class AppModule {}
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
         <igx-grid #grid1 hiddenColumnsText="Hidden" primaryKey='id'>
-        <igx-grid-toolbar *ngIf="showToolbar">
-            <igx-grid-toolbar-actions>
-                <igx-grid-toolbar-hiding title="Indicators"></igx-grid-toolbar-hiding>
-                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-                <igx-grid-toolbar-exporter [exportCSV]="false">
-                    <span excelText>Export to Excel</span>
-                </igx-grid-toolbar-exporter>
-                <igx-grid-toolbar-advanced-filtering>Custom text for the toggle button</igx-grid-toolbar-advanced-filtering>
-            </igx-grid-toolbar-actions>
-        </igx-grid-toolbar>
+<igx-grid-toolbar *ngIf="showToolbar">
+<igx-grid-toolbar-actions>
+<igx-grid-toolbar-hiding title="Indicators"></igx-grid-toolbar-hiding>
+<igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+<igx-grid-toolbar-exporter [exportCSV]="false">
+<span excelText>Export to Excel</span>
+</igx-grid-toolbar-exporter>
+<igx-grid-toolbar-advanced-filtering>Custom text for the toggle button</igx-grid-toolbar-advanced-filtering>
+</igx-grid-toolbar-actions>
+</igx-grid-toolbar>
 </igx-grid>`);
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
@@ -496,13 +496,13 @@ export class AppModule {}
 <igx-grid-toolbar-actions>
 <igx-grid-toolbar-hiding title="Indicators" buttonText="Hidden"></igx-grid-toolbar-hiding>
 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-<igx-grid-toolbar-exporter [exportCSV]="false">
-                    <span excelText>Export to Excel</span>
-                </igx-grid-toolbar-exporter>
+<igx-grid-toolbar-exporter exportCSV="false">
+<span excelText>Export to Excel</span>
+</igx-grid-toolbar-exporter>
 <igx-grid-toolbar-advanced-filtering>Custom text for the toggle button</igx-grid-toolbar-advanced-filtering>
 </igx-grid-toolbar-actions>
 </igx-grid-toolbar>
-        
+
 </igx-grid>`);
     });
 
@@ -531,7 +531,7 @@ export class AppModule {}
         <igx-grid #grid1 [data]="data" height="300px" width="300px">
 <igx-grid-toolbar>
 <igx-grid-toolbar-actions>
-<igx-grid-toolbar-exporter exportExcel="true" exportCsv="csvExport">
+<igx-grid-toolbar-exporter exportExcel="true" exportCSV="csvExport">
 <span excelText>Custom text for the excel export entry</span>
 <span csvText>Custom text for the CSV export entry</span>
 </igx-grid-toolbar-exporter>
