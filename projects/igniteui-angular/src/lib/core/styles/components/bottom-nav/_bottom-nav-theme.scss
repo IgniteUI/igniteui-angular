@@ -91,7 +91,7 @@
     $menu-height: rem(56px);
     $item-min-width: rem(80px);
     $item-max-width: rem(168px);
-    $item-padding: 0 spacing(12px);
+    $item-margin: 0 spacing(12px);
 
     %igx-bottom-nav-panel {
         display: block;
@@ -144,7 +144,7 @@
         cursor: pointer;
         user-select: none;
         overflow: hidden;
-        padding: $item-padding;
+        margin: $item-margin;
         -webkit-tap-highlight-color: transparent;
         outline-style: none;
     }
@@ -162,7 +162,7 @@
 
     %igx-tab-label {
         @include ellipsis();
-        padding-block-start: spacing(4px);
+        padding-block-start: rem(4px);
         max-width: 100%;
         text-align: center;
         transform: translateZ(0);
@@ -175,7 +175,6 @@
         position: relative;
         justify-content: center;
         height: 24px;
-        padding: 0 spacing(8px);
         transform: translateZ(0);
         transition: transform .15s $ease-in-out-quad;
         z-index: 1;

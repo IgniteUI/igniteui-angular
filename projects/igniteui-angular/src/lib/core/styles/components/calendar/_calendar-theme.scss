@@ -1149,7 +1149,8 @@
     }
 
     %cal-value--label {
-        @include type-style($type-scale, $weekday-label)
+        @include type-style($type-scale, $weekday-label);
+        margin: 0;
     }
 
     %cal-value--year-current {

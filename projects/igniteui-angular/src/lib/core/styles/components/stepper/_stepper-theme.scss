@@ -357,10 +357,10 @@
         indigo-design: spacing(8px)
     ), $variant);
 
-    $step-body-padding: spacing(16px);
+    $step-body-padding: rem(16px);
     $title-gap: rem(8px);
     $indicator-gap: rem(4px);
-    $v-line-indent: calc(#{spacing(px($step-header-padding))} + (#{$indicator-size} / 2));
+    $v-line-indent: calc(#{$step-header-padding} + (#{$indicator-size} / 2));
     $separator-position: 50%;
 
     $outline-width: map.get((
@@ -494,7 +494,7 @@
 
     %igx-stepper__step-header {
         display: flex;
-        padding: spacing(px($step-header-padding));
+        padding: $step-header-padding;
         position: relative;
         line-height: normal;
         flex-direction: column;
