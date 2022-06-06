@@ -12,6 +12,7 @@ module.exports = function (config) {
       { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
     ],
     plugins: [
+      'karma-spec-reporter',
       require('karma-parallel'),
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
@@ -29,6 +30,15 @@ module.exports = function (config) {
       },
       tagPrefix: '#',
       skipTags: 'perf'
+    },
+    reporters: ['spec'],
+    specReporter: {
+      maxLogLines: 5, // limit number of lines logged per test
+      suppressErrorSummary: true, // do not print error summary
+      suppressFailed: false,  // do not print information about failed tests
+      suppressPassed: false,  // do not print information about passed tests
+      suppressSkipped: true,  // do not print information about skipped tests
+      showSpecTiming: true // print the time elapsed for each spec
     },
     port: 9876,
     colors: true,
