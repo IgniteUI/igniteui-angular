@@ -52,6 +52,10 @@
         $icon-color: text-contrast($actions-background);
     }
 
+    @if not($actions-border-radius) {
+        $actions-border-radius: border-radius(map.get($theme, 'actions-border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -172,7 +176,7 @@
         pointer-events: all;
         position: relative;
         color: var-get($theme, 'icon-color');
-        border-radius: border-radius(var-get($theme, 'actions-border-radius'));
+        border-radius: var-get($theme, 'actions-border-radius');
         background: var-get($theme, 'actions-background');
         max-height: 36px;
 
@@ -190,7 +194,7 @@
             }
 
             @if $variant == 'indigo-design' {
-                border-radius: border-radius(var-get($theme, 'actions-border-radius'));
+                border-radius: var-get($theme, 'actions-border-radius');
             }
         }
     }

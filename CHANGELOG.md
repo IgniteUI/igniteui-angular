@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 14.0.0
+
+### General
+
+- `Migrations`
+    - Migrations now support Yarn berry (version 2+)
+
 ## 13.2.0
 
 ### General
@@ -21,6 +28,9 @@ All notable changes for each version of this project will be documented in this 
         formatter: (value: any, rowData: IPivotGridRecord) => rowData.aggregationValues.get('someField');
     ```
     Also an additional optional `columnData` parameter can be added, which contains information on the column dimensions.
+
+- `IgxExpansionPanel`
+    - Changed the expansion panel layout, adding padding to the header and content elements.
 
 
 ### New palette
