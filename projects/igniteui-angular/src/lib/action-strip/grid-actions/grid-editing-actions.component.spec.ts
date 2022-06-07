@@ -268,7 +268,7 @@ describe('igxGridEditingActions #grid ', () => {
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
                 oldValue: null
-            }
+            };
 
             // select delete
             addChildBtn.actionClick.emit();

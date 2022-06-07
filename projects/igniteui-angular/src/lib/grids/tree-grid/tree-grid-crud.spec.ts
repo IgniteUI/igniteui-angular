@@ -961,7 +961,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     cancel: false,
                     rowData: treeGrid.getRowData(someRow.key),
                     oldValue: null
-                }
+                };
 
                 treeGrid.deleteRow(someRow.key);
                 fix.detectChanges();
@@ -996,7 +996,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     cancel: true,
                     rowData: treeGrid.getRowData(someRow.key),
                     oldValue: null
-                }
+                };
 
                 treeGrid.deleteRow(someRow.key);
                 fix.detectChanges();
