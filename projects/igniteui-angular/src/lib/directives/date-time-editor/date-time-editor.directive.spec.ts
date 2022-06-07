@@ -3,7 +3,7 @@ import { DatePart } from './date-time-editor.common';
 import { DOCUMENT, formatDate } from '@angular/common';
 import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
+import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '../../input-group/public_api';
@@ -1113,7 +1113,7 @@ describe('IgxDateTimeEditor', () => {
         });
 
         describe('Form control tests: ', () => {
-            let form: FormGroup;
+            let form: UntypedFormGroup;
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
@@ -1258,12 +1258,12 @@ class IgxDateTimeEditorFormComponent {
     public formInput: IgxInputDirective;
     @Output()
     public submitted = new EventEmitter<any>();
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
     public dateTimeFormat = 'dd-MM-yyyy';
     public minDate: Date;
     public maxDate: Date;
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         this.reactiveForm = fb.group({
             dateEditor: ['', Validators.required]
         });
