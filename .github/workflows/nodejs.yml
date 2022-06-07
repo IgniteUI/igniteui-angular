@@ -39,7 +39,7 @@ jobs:
       - name: Test
         run: |
             npm run test:lib
-            npm run test:styles
+#            npm run test:styles
             npm run test:schematics
             npm run test:i18n
         env:
