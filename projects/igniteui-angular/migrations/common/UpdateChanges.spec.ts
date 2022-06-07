@@ -150,6 +150,14 @@ describe('UpdateChanges', () => {
         expect(appTree.readContent('test.component.html')).toEqual(
             `<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw" (onOld)=""> </other> <another />`);
 
+        // should only match the defined selector #11666
+        const fileContent2 = `<comp (onReplaceMe)="a"> <comp-not-same (onReplaceMe)="..NOT"> <another (onOld)="b" /> <another-diff (onOld)="toKeep" />`;
+        appTree.overwrite('test.component.html', fileContent2);
+        update.applyChanges();
+        expect(appTree.readContent('test.component.html')).toEqual(
+            `<comp (replaced)="a"> <comp-not-same (onReplaceMe)="..NOT"> <another /> <another-diff (onOld)="toKeep" />`
+        );
+
         outputJson.changes[0].owner = { type: 'directive' as any, selector: 'tag' };
         outputJson.changes[1].owner = { type: 'directive' as any, selector: 'tag' };
         appTree.overwrite('test.component.html', fileContent);
@@ -227,6 +235,14 @@ describe('UpdateChanges', () => {
         update4.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual(
             `<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`
+        );
+
+        // should only match the defined selector #11666
+        fileContent = `<comp [replaceMe]="dwdw"> <comp-not-same [replaceMe]="..NOT"> <another oldProp="b" /> <another-diff oldProp="toKeep" />`;
+        appTree.overwrite('test.component.html', fileContent);
+        update4.applyChanges();
+        expect(appTree.readContent('test.component.html')).toEqual(
+            `<comp [replaced]="dwdw"> <comp-not-same [replaceMe]="..NOT"> <another /> <another-diff oldProp="toKeep" />`
         );
 
         done();

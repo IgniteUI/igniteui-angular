@@ -897,7 +897,30 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(0);
         }));
 
-        it('should move the focus to the AddItem button with ArrowDown when allowCustomItems is true', fakeAsync(() => {
+        it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
+            fixture.componentInstance.allowCustomValues = true;
+            fixture.detectChanges();
+            combo.open();
+            fixture.detectChanges();
+            UIInteractions.setInputElementValue(input.nativeElement, 'Massachuset');
+            fixture.detectChanges();
+
+            expect(combo.isAddButtonVisible()).toBeTruthy();
+            let addItemButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`));
+            expect(addItemButton).not.toBeNull();
+
+            // after adding the item, the addItem button should not be displayed (there is a full match)
+            addItemButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBeFalsy();
+            expect(combo.data.findIndex(i => i.field === 'Massachuset')).not.toBe(-1);
+            addItemButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`));
+            expect(combo.isAddButtonVisible()).toBeFalsy();
+            expect(addItemButton).toBeNull();
+        }));
+
+        it('should move the focus to the AddItem button with ArrowDown when allowCustomValues is true', fakeAsync(() => {
             fixture.componentInstance.allowCustomValues = true;
             fixture.detectChanges();
             UIInteractions.setInputElementValue(input.nativeElement, 'MassachusettsL');
