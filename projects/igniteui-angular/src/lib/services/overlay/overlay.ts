@@ -322,7 +322,7 @@ export class IgxOverlayService implements OnDestroy {
      * @returns Id of the created overlay. Valid until `detach` is called.
      * @deprecated deprecated in 14.0.0. Use attache(component, settings, viewContainerRef) overload
      */
-    public attach(component: Type<any>, settings?: OverlaySettings, viewContainerRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): string;
+    public attach(component: Type<any>, settings?: OverlaySettings, viewContainerRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string;
     /**
      * Generates Id. Provide this Id when call `show(id)` method
      *
@@ -334,8 +334,8 @@ export class IgxOverlayService implements OnDestroy {
     public attach(
         component: ElementRef | Type<any>,
         settings?: OverlaySettings,
-        // TODO: rename parameter and make it mandatory
-        viewContainerRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'> | ViewContainerRef): string {
+        // TODO: make viewContainerRef parameter mandatory
+        viewContainerRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | ViewContainerRef): string {
         const info: OverlayInfo = this.getOverlayInfo(component, viewContainerRef);
 
         if (!info) {
@@ -559,7 +559,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private getOverlayInfo(
         component: ElementRef | Type<any>,
-        viewContainerRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'> | ViewContainerRef): OverlayInfo {
+        viewContainerRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | ViewContainerRef): OverlayInfo {
         const info: OverlayInfo = { ngZone: this._zone, transformX: 0, transformY: 0 };
         if (component instanceof ElementRef) {
             info.elementRef = component;

@@ -1,5 +1,5 @@
 import { Component, PipeTransform, Pipe, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, Validators, UntypedFormGroup } from '@angular/forms';
 import { worldInfo, attractions } from './data';
 import { IgxDialogComponent } from 'igniteui-angular';
 
@@ -13,18 +13,18 @@ export class AutocompleteSampleComponent {
     @ViewChild('alert', { read: IgxDialogComponent, static: true })
     private alert: IgxDialogComponent;
 
-    public travel: FormGroup;
+    public travel: UntypedFormGroup;
     public worldInfo;
     public attractions;
     public attractionsWidth = '';
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         this.worldInfo = worldInfo;
         this.attractions = attractions;
 
         this.travel = fb.group({
-            country: new FormControl('', Validators.required),
-            attraction: new FormControl('', Validators.required),
+            country: new UntypedFormControl('', Validators.required),
+            attraction: new UntypedFormControl('', Validators.required),
         });
     }
 
