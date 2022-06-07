@@ -1,7 +1,7 @@
 import { IgxInputState } from './../directives/input/input.directive';
 import { Component, ViewChild, DebugElement, OnInit, ElementRef } from '@angular/core';
 import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
+import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/public_api';
 import { IgxIconModule } from '../icon/public_api';
@@ -559,7 +559,7 @@ describe('igxSelect', () => {
             // 1) check if label's --required class and its asterisk are applied
             const dom = fix.debugElement;
             const selectComp = fix.componentInstance.select;
-            const formGroup: FormGroup = fix.componentInstance.reactiveForm;
+            const formGroup: UntypedFormGroup = fix.componentInstance.reactiveForm;
             let inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             let inputGroupInvalidClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
             // interaction test - expect actual asterisk
@@ -760,7 +760,7 @@ describe('igxSelect', () => {
         it('Should disable when form is disabled', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
             fix.detectChanges();
-            const formGroup: FormGroup = fix.componentInstance.reactiveForm;
+            const formGroup: UntypedFormGroup = fix.componentInstance.reactiveForm;
             const selectComp = fix.componentInstance.select;
             const inputGroup = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
 
@@ -1066,6 +1066,7 @@ describe('igxSelect', () => {
             it('should not append any text to the input box when an item is focused but not selected',
                 fakeAsync(() => {
                     let focusedItem = select.items[2];
+                    let selectedItem: IgxSelectItemComponent = null;
                     const navigationStep = focusedItem.index;
 
                     const navigateDropdownItems = (keydownEvent: KeyboardEvent) => {
@@ -1098,7 +1099,7 @@ describe('igxSelect', () => {
                     verifyFocusedItemIsNotSelected();
 
                     // Focus item when there is a selected item
-                    const selectedItem = select.items[13] as IgxSelectItemComponent;
+                    selectedItem = select.items[13] as IgxSelectItemComponent;
                     selectedItem.element.nativeElement.click();
                     tick();
                     fixture.detectChanges();
@@ -2920,7 +2921,7 @@ class IgxSelectAffixComponent {
 class IgxSelectReactiveFormComponent {
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
     public items: string[] = [
         'Option 1',
         'Option 2',
@@ -2937,16 +2938,16 @@ class IgxSelectReactiveFormComponent {
         optionsSelect: [Validators.required]
     };
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         this.reactiveForm = fb.group({
-            firstName: new FormControl('', Validators.required),
+            firstName: new UntypedFormControl('', Validators.required),
             password: ['', Validators.required],
             optionsSelect: ['', Validators.required]
         });
     }
     public onSubmitReactive() { }
 
-    public removeValidators(form: FormGroup) {
+    public removeValidators(form: UntypedFormGroup) {
         // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
             form.get(key).clearValidators();
@@ -2954,7 +2955,7 @@ class IgxSelectReactiveFormComponent {
         }
     }
 
-    public addValidators(form: FormGroup) {
+    public addValidators(form: UntypedFormGroup) {
         // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
             form.get(key).setValidators(this.validationType[key]);
