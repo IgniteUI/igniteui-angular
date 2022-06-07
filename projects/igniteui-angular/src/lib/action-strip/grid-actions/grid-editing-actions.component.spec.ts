@@ -14,6 +14,8 @@ import {
     IgxHierarchicalGridModule
 } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
+import { IgxTreeGridComponent, IgxTreeGridModule } from '../../grids/tree-grid/public_api';
+import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-components.spec';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -26,14 +28,16 @@ describe('igxGridEditingActions #grid ', () => {
                 IgxActionStripTestingComponent,
                 IgxActionStripPinEditComponent,
                 IgxActionStripEditMenuComponent,
-                IgxHierarchicalGridActionStripComponent
+                IgxHierarchicalGridActionStripComponent,
+                IgxTreeGridEditActionsComponent
             ],
             imports: [
                 NoopAnimationsModule,
                 IgxActionStripModule,
                 IgxGridModule,
                 IgxHierarchicalGridModule,
-                IgxIconModule
+                IgxIconModule,
+                IgxTreeGridModule
             ]
         }).compileComponents();
     }));
@@ -236,6 +240,43 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(actionStripRoot.hidden).toBeTrue();
             expect(actionStripChild.hidden).toBeTrue();
+        });
+    });
+
+    describe('TreeGrid - action strip', () => {
+        let treeGrid: IgxTreeGridComponent;
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxTreeGridEditActionsComponent);
+            fixture.detectChanges();
+            treeGrid = fixture.componentInstance.treeGrid;
+            actionStrip = fixture.componentInstance.actionStrip;
+        }));
+
+        it('should allow deleting row', async () => {
+            spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
+            spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
+            const row = treeGrid.rowList.toArray()[0];
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            const editActions = fixture.debugElement.queryAll(By.css(`igx-grid-action-button`));
+            expect(editActions[3].componentInstance.iconName).toBe('delete');
+            const addChildBtn = editActions[3].componentInstance;
+
+            const rowDeleteArgs = {
+                rowID: row.key,
+                cancel: false,
+                rowData: treeGrid.getRowData(row.key),
+                oldValue: null
+            };
+
+            // select delete
+            addChildBtn.actionClick.emit();
+            fixture.detectChanges();
+
+            expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalled();
+            expect(treeGrid.rowList.first.rowData['ID']).toBe(6);
         });
     });
 });

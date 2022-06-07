@@ -944,6 +944,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             }));
 
             it('should delete a root level row by ID', () => {
+                spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
+                spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
                 let someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.key).toBe(1);
 
@@ -951,14 +953,60 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
 
+                const rowDeleteArgs = {
+                    rowID: someRow.key,
+                    cancel: false,
+                    rowData: treeGrid.getRowData(someRow.key),
+                    oldValue: null
+                };
+
                 treeGrid.deleteRow(someRow.key);
                 fix.detectChanges();
+
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
+                expect(treeGrid.rowDeleted.emit).toHaveBeenCalled();
+
                 someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.key).toBe(2);
 
                 verifyRowsCount(fix, 7, 7);
                 verifyTreeGridRecordsCount(fix, 4, 7);
                 verifyProcessedTreeGridRecordsCount(fix, 4, 7);
+            });
+
+            it('should cancel rowDelete event', () => {
+                spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
+                spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
+                let someRow = treeGrid.getRowByIndex(0);
+                expect(someRow.key).toBe(1);
+
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                treeGrid.rowDelete.subscribe((e: any) => {
+                    e.cancel = true;
+                });
+
+                const rowDeleteArgs = {
+                    rowID: someRow.key,
+                    cancel: true,
+                    rowData: treeGrid.getRowData(someRow.key),
+                    oldValue: null
+                };
+
+                treeGrid.deleteRow(someRow.key);
+                fix.detectChanges();
+
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
+                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledTimes(0);
+
+                someRow = treeGrid.getRowByIndex(0);
+                expect(someRow.key).toBe(1);
+
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
             });
 
             it('should delete a child level row by ID', () => {

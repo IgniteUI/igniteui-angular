@@ -714,8 +714,23 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        return this._gridAPI.deleteRowById(rowId);
+        const args = {
+            rowID: rowId,
+            cancel: false,
+            rowData: this.getRowData(rowId),
+            oldValue: null
+        };
+        this.rowDelete.emit(args);
+        if (args.cancel) {
+            return;
+        }
 
+        const record = this.gridAPI.deleteRowById(rowId);
+        if (record !== null && record !== undefined) {
+            //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
+            this.rowDeleted.emit({ data: record });
+        }
+        return record;
     }
 
     /**
