@@ -395,7 +395,11 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
         // eslint-disable-next-line no-bitwise
         const clearSelection = !(+event.ctrlKey ^ +event.metaKey);
-        this.selectionService.selectRowById(this.key, clearSelection, event);
+        if (this.selected && !clearSelection) {
+            this.selectionService.deselectRow(this.key, event);
+        } else {
+            this.selectionService.selectRowById(this.key, clearSelection, event);
+        }
     }
 
     /**
