@@ -36,13 +36,13 @@ import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
-  HorizontalAlignment,
-  OverlayCancelableEventArgs,
-  OverlayEventArgs,
-  OverlaySettings,
-  Point,
-  PositionSettings,
-  VerticalAlignment
+    HorizontalAlignment,
+    OverlayCancelableEventArgs,
+    OverlayEventArgs,
+    OverlaySettings,
+    Point,
+    PositionSettings,
+    VerticalAlignment
 } from './utilities';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
