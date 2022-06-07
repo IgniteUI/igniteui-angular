@@ -9,6 +9,8 @@ All notable changes for each version of this project will be documented in this 
 - `Migrations`
     - Migrations now support Yarn berry (version 2+)
 
+- `IgxOverlayService` - `attache` method accepting `moduleRef` is deprecated due to deprecated Angular API. New overload is added accepting `viewComponentRef`.
+
 ## 13.2.0
 
 ### General

@@ -1,39 +1,39 @@
 import { AnimationBuilder, AnimationReferenceMetadata } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import {
-  ApplicationRef,
-  ComponentFactory,
-  ComponentFactoryResolver,
-  ComponentRef,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Injectable,
-  Injector,
-  NgModuleRef,
-  NgZone,
-  OnDestroy,
-  Type,
-  ViewContainerRef
+    ApplicationRef,
+    ComponentFactory,
+    ComponentFactoryResolver,
+    ComponentRef,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Injectable,
+    Injector,
+    NgModuleRef,
+    NgZone,
+    OnDestroy,
+    Type,
+    ViewContainerRef
 } from '@angular/core';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import {
-  fadeIn,
-  fadeOut,
-  IAnimationParams,
-  scaleInHorLeft,
-  scaleInHorRight,
-  scaleInVerBottom,
-  scaleInVerTop,
-  scaleOutHorLeft,
-  scaleOutHorRight,
-  scaleOutVerBottom,
-  scaleOutVerTop,
-  slideInBottom,
-  slideInTop,
-  slideOutBottom,
-  slideOutTop
+    fadeIn,
+    fadeOut,
+    IAnimationParams,
+    scaleInHorLeft,
+    scaleInHorRight,
+    scaleInVerBottom,
+    scaleInVerTop,
+    scaleOutHorLeft,
+    scaleOutHorRight,
+    scaleOutVerBottom,
+    scaleOutVerTop,
+    slideInBottom,
+    slideInTop,
+    slideOutBottom,
+    slideOutTop
 } from '../../animations/main';
 import { PlatformUtil } from '../../core/utils';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
@@ -47,19 +47,19 @@ import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
-  AbsolutePosition,
-  HorizontalAlignment,
-  OverlayAnimationEventArgs,
-  OverlayCancelableEventArgs,
-  OverlayClosingEventArgs,
-  OverlayEventArgs,
-  OverlayInfo,
-  OverlaySettings,
-  Point,
-  PositionSettings,
-  RelativePosition,
-  RelativePositionStrategy,
-  VerticalAlignment
+    AbsolutePosition,
+    HorizontalAlignment,
+    OverlayAnimationEventArgs,
+    OverlayCancelableEventArgs,
+    OverlayClosingEventArgs,
+    OverlayEventArgs,
+    OverlayInfo,
+    OverlaySettings,
+    Point,
+    PositionSettings,
+    RelativePosition,
+    RelativePositionStrategy,
+    VerticalAlignment
 } from './utilities';
 
 /**
@@ -317,26 +317,26 @@ export class IgxOverlayService implements OnDestroy {
      *
      * @param component Component Type to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
-     * @param moduleRef Optional reference to an object containing Injector and ComponentFactoryResolver
+     * @param viewContainerRef Optional reference to an object containing Injector and ComponentFactoryResolver
      * that can resolve the component's factory
      * @returns Id of the created overlay. Valid until `detach` is called.
      * @deprecated deprecated in 14.0.0. Use attache(component, settings, viewContainerRef) overload
      */
-    public attach(component: Type<any>, settings?: OverlaySettings, moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): string;
+    public attach(component: Type<any>, settings?: OverlaySettings, viewContainerRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): string;
     /**
      * Generates Id. Provide this Id when call `show(id)` method
      *
      * @param component Component Type to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
-     * @param moduleRef Reference
+     * @param viewContainerRef Reference
      */
-    public attach(component: Type<any>, settings?: OverlaySettings, moduleRef?: ViewContainerRef): string;
+    public attach(component: Type<any>, settings?: OverlaySettings, viewContainerRef?: ViewContainerRef): string;
     public attach(
         component: ElementRef | Type<any>,
         settings?: OverlaySettings,
         // TODO: rename parameter and make it mandatory
-        moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'> | ViewContainerRef): string {
-        const info: OverlayInfo = this.getOverlayInfo(component, moduleRef);
+        viewContainerRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'> | ViewContainerRef): string {
+        const info: OverlayInfo = this.getOverlayInfo(component, viewContainerRef);
 
         if (!info) {
             console.warn('Overlay was not able to attach provided component!');
@@ -559,24 +559,24 @@ export class IgxOverlayService implements OnDestroy {
 
     private getOverlayInfo(
         component: ElementRef | Type<any>,
-        moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'> | ViewContainerRef): OverlayInfo {
+        viewContainerRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'> | ViewContainerRef): OverlayInfo {
         const info: OverlayInfo = { ngZone: this._zone, transformX: 0, transformY: 0 };
         if (component instanceof ElementRef) {
             info.elementRef = component;
         } else {
             let dynamicComponent: ComponentRef<any>;
-            if (moduleRef instanceof ViewContainerRef) {
-                dynamicComponent = moduleRef.createComponent(component);
+            if (viewContainerRef instanceof ViewContainerRef) {
+                dynamicComponent = viewContainerRef.createComponent(component);
             } else {
                 let dynamicFactory: ComponentFactory<any>;
-                const factoryResolver = moduleRef ? moduleRef.componentFactoryResolver : this._factoryResolver;
+                const factoryResolver = viewContainerRef ? viewContainerRef.componentFactoryResolver : this._factoryResolver;
                 try {
                     dynamicFactory = factoryResolver.resolveComponentFactory(component);
                 } catch (error) {
                     console.error(error);
                     return null;
                 }
-                const injector = moduleRef ? moduleRef.injector : this._injector;
+                const injector = viewContainerRef ? viewContainerRef.injector : this._injector;
                 dynamicComponent = dynamicFactory.create(injector);
                 this._appRef.attachView(dynamicComponent.hostView);
             }

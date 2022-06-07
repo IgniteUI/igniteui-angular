@@ -422,6 +422,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @ViewChild(IgxInputGroupComponent)
     private inputGroup: IgxInputGroupComponent;
 
+    @ViewChild(IgxInputGroupComponent, {read: ViewContainerRef})
+    private viewContainerRef: ViewContainerRef;
+
     @ViewChild(IgxLabelDirective)
     private labelDirective: IgxLabelDirective;
 
@@ -511,7 +514,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     constructor(public element: ElementRef<HTMLElement>,
         @Inject(LOCALE_ID) protected _localeId: string,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        private _viewContainerRef: ViewContainerRef,
         private _injector: Injector,
         private _renderer: Renderer2,
         private platform: PlatformUtil,
@@ -585,7 +587,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             overlaySettings.outlet = this.outlet;
         }
         this._overlayId = this._overlayService
-            .attach(IgxCalendarContainerComponent, overlaySettings, this._viewContainerRef);
+            .attach(IgxCalendarContainerComponent, overlaySettings, this.viewContainerRef);
         this._overlayService.show(this._overlayId);
     }
 

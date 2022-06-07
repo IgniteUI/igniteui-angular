@@ -1,15 +1,16 @@
 import {
-  Component,
-  ComponentRef,
-  ElementRef,
-  HostBinding,
-  Inject,
-  NgModule,
-  ViewChild,
-  ViewContainerRef,
-  ViewEncapsulation
+    ApplicationRef,
+    Component,
+    ComponentRef,
+    ElementRef,
+    HostBinding,
+    Inject,
+    NgModule,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation
 } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { scaleInVerTop, scaleOutVerTop } from '../../animations/main';
@@ -1066,6 +1067,36 @@ describe('igxOverlay', () => {
 
             document.body.removeChild(wrapperElement);
         });
+
+        it('#3988 - Should use ngModuleRef to create component', inject([ApplicationRef], (appRef: ApplicationRef) => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            fixture.detectChanges();
+
+            spyOn(appRef, 'attachView');
+            const mockNativeElement = document.createElement('div');
+            const mockComponent = {
+                hostView: fixture.componentRef.hostView,
+                changeDetectorRef: { detectChanges: () => { } },
+                location: { nativeElement: mockNativeElement },
+                destroy: () => { }
+            };
+            const factoryMock = jasmine.createSpyObj('factoryMock', {
+                create: mockComponent
+            });
+            const injector = 'testInjector';
+            const componentFactoryResolver = jasmine.createSpyObj('componentFactoryResolver', {
+                resolveComponentFactory: factoryMock
+            });
+
+            const id = overlay.attach(SimpleDynamicComponent, {}, { componentFactoryResolver, injector } as any);
+            expect(componentFactoryResolver.resolveComponentFactory).toHaveBeenCalledWith(SimpleDynamicComponent);
+            expect(factoryMock.create).toHaveBeenCalledWith(injector);
+            expect(appRef.attachView).toHaveBeenCalledWith(fixture.componentRef.hostView);
+            expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
+
+            overlay.detachAll();
+        }));
 
         it('#3988 - Should use viewContainerRef to create component', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);

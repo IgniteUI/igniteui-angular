@@ -5908,14 +5908,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
             this._advancedFilteringOverlaySettings.outlet = this.outlet;
 
-            // TODO: provide ViewContainerRef once start to use it for component creation
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,
                 settings,
-                {
-                    injector: this.viewRef.injector,
-                    componentFactoryResolver: this.resolver
-                });
+                this.viewRef);
             this.overlayService.show(this._advancedFilteringOverlayId);
         }
     }

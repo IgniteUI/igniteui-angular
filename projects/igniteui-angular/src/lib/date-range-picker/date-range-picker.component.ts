@@ -305,6 +305,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @ViewChild(IgxInputGroupComponent)
     public inputGroup: IgxInputGroupComponent;
 
+    @ViewChild(IgxInputGroupComponent, {read: ViewContainerRef})
+    private viewContainerRef: ViewContainerRef;
+
     /** @hidden @internal */
     @ViewChild(IgxInputDirective)
     public inputDirective: IgxInputDirective;
@@ -445,7 +448,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         @Inject(LOCALE_ID) protected _localeId: any,
         protected platform: PlatformUtil,
         private _injector: Injector,
-        private _viewContainerRef: ViewContainerRef,
         private _cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
@@ -492,7 +494,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             , overlaySettings);
 
         this._overlayId = this._overlayService
-            .attach(IgxCalendarContainerComponent, settings, this._viewContainerRef);
+            .attach(IgxCalendarContainerComponent, settings, this.viewContainerRef);
         this.subscribeToOverlayEvents();
         this._overlayService.show(this._overlayId);
     }
