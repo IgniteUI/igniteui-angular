@@ -418,6 +418,8 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
                 this._value = this.createDisplayText(args.newSelection, args.oldSelection);
             }
             this._onChangeCallback(args.newSelection);
+        } else if (this.isRemote) {
+            this.registerRemoteEntries(args.added, false);
         }
     }
 
