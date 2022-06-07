@@ -69,7 +69,6 @@ import { IgxPivotRowComponent } from "./pivot-row.component";
         IgxPivotDataSelectorComponent,
     ],
     imports: [IgxGridModule, IgxExpansionPanelModule, IgxDragDropModule, IgxListModule, IgxAccordionModule],
-    entryComponents: [IgxGridComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxPivotGridModule {}

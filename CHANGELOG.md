@@ -5,7 +5,7 @@ All notable changes for each version of this project will be documented in this 
 ## 14.0.0
 
 ### General
-
+- Updating dependency to Angular 14
 - `Migrations`
     - Migrations now support Yarn berry (version 2+)
 

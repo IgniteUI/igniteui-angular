@@ -6,7 +6,7 @@ import { IgxComboComponent, IComboSelectionChangingEventArgs,
 import { ButtonGroupAlignment } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
-import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormControl, UntypedFormBuilder } from '@angular/forms';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -41,16 +41,16 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public compact: DisplayDensity = DisplayDensity.compact;
 
     public genres = [];
-    public user: FormGroup;
+    public user: UntypedFormGroup;
     private overlaySettings: OverlaySettings[] = [null, null, null, null];
     private initialItemTemplate: TemplateRef<any> = null;
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         this.user = fb.group({
             date: [''],
             dateTime: [''],
             email: ['', Validators.required],
-            fullName: new FormControl('', Validators.required),
+            fullName: new UntypedFormControl('', Validators.required),
             genres: ['', Validators.required],
             movie: ['', Validators.required],
             phone: ['']
