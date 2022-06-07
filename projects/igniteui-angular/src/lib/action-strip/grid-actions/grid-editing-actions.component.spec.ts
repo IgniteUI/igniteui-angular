@@ -264,9 +264,9 @@ describe('igxGridEditingActions #grid ', () => {
             const addChildBtn = editActions[3].componentInstance;
 
             const rowDeleteArgs = {
-                rowID: row.key,
+                rowID: row.rowID,
                 cancel: false,
-                rowData: treeGrid.getRowData(row.key),
+                rowData: row.rowData,
                 oldValue: null
             };
 
