@@ -254,7 +254,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, ngModuleRef, null, overlay);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, overlay);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -772,6 +772,9 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect((dateRange as any).calendar.selectedDates.length).toBeGreaterThan(0);
+
+                // clean up test
+                tick(350);
             }));
         });
 
@@ -1314,6 +1317,9 @@ describe('IgxDateRangePicker', () => {
                 dateRange.select(startDate, endDate);
                 fixture.detectChanges();
                 expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
+
+                // clean up test
+                tick(350);
             }));
 
             it('should render custom label', () => {

@@ -1295,6 +1295,9 @@ describe('Multi-View Calendar - ', () => {
             overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
             HelperTestFunctions.verifyMonthsViewNumber(overlay, 2);
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16')]);
+
+            // clean up test
+            tick(350);
         }));
 
         it('Verify setting hideOutsideDays and monthsViewNumber from datepicker', fakeAsync(() => {
@@ -1327,8 +1330,10 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getHiddenDays(overlay, 0).length).toBe(0);
             expect(HelperTestFunctions.getHiddenDays(overlay, 1).length).toBe(0);
             expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(0);
-        }));
 
+            // clean up test
+            tick(350);
+        }));
     });
 });
 
