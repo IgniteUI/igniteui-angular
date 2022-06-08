@@ -830,6 +830,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifyRowsArraySelected([firstRow, fourthRow]);
             expect(hierarchicalGrid.selectedRows).toEqual(['0', '3']);
 
+            UIInteractions.simulateClickEvent(fourthRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(fourthRow, false);
+            expect(hierarchicalGrid.selectedRows).toEqual(['0']);
+
             // Click on a row in the child grid
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             expect(childGrid.selectedRows).toEqual([]);
@@ -838,8 +844,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             UIInteractions.simulateClickEvent(childGridFirstRow.nativeElement, false, true);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyRowsArraySelected([firstRow, fourthRow]);
-            expect(hierarchicalGrid.selectedRows).toEqual(['0', '3']);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            expect(hierarchicalGrid.selectedRows).toEqual(['0']);
             GridSelectionFunctions.verifyRowSelected(childGridFirstRow);
             expect(childGrid.selectedRows).toEqual(['02']);
         });

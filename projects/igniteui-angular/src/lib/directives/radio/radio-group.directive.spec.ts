@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioModule, IgxRadioGroupDirective } from './radio-group.directive';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -284,9 +284,9 @@ class RadioGroupReactiveFormsComponent {
 
     public newModel: Person;
     public model: Person = { name: 'Kirk', favoriteSeason: this.seasons[1] };
-    public personForm: FormGroup;
+    public personForm: UntypedFormGroup;
 
-    constructor(private _formBuilder: FormBuilder) {
+    constructor(private _formBuilder: UntypedFormBuilder) {
         this._createForm();
     }
 
@@ -331,9 +331,9 @@ class RadioGroupDeepProjectionComponent {
     public radioGroup: IgxRadioGroupDirective;
 
     public choices = [0, 1, 2];
-    public group1: FormGroup;
+    public group1: UntypedFormGroup;
 
-    constructor(private _builder: FormBuilder) {
+    constructor(private _builder: UntypedFormBuilder) {
         this._createForm();
     }
 
