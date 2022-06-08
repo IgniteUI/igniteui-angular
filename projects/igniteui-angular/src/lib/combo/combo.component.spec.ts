@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewCh
 import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule,
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, ReactiveFormsModule,
     FormsModule, NgControl, NgModel, NgForm } from '@angular/forms';
 import {
     IgxComboComponent,
@@ -29,7 +29,7 @@ import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxComboState } from './combo.common';
-import { IgxLabelDirective } from 'igniteui-angular';
+import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -2170,7 +2170,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
 
             const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
-            spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({ element: { nativeElement: mockObj } });
+            spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({ element: { nativeElement: mockObj } } as IgxDropDownItemBaseDirective);
             (combo.dropdown.headers[0] as IgxComboItemComponent).clicked(null);
             fixture.detectChanges();
             expect(mockObj.focus).not.toHaveBeenCalled(); // Focus only if `allowItemFocus === true`
@@ -2733,7 +2733,7 @@ describe('igxCombo', () => {
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
             });
             it('should properly initialize when used as a form control - without validators', () => {
-                const form: FormGroup = fixture.componentInstance.reactiveForm;
+                const form: UntypedFormGroup = fixture.componentInstance.reactiveForm;
                 form.controls.townCombo.validator = null;
                 expect(combo).toBeDefined();
                 const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
@@ -3145,9 +3145,9 @@ class IgxComboFormComponent {
         this.combo.select(values);
     }
 
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
 
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
@@ -3178,7 +3178,7 @@ class IgxComboFormComponent {
         }
 
         this.reactiveForm = fb.group({
-            firstName: new FormControl('', Validators.required),
+            firstName: new UntypedFormControl('', Validators.required),
             password: ['', Validators.required],
             townCombo: [[this.items[0]], Validators.required]
         });

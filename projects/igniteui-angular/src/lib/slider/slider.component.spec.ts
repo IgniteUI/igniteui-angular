@@ -6,7 +6,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxSliderType, IRangeSliderValue, TicksOrientation, TickLabelsOrientation } from './slider.common';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxDirectionality, DIR_DOCUMENT } from '../services/direction/directionality';
 
 declare let Simulator: any;
@@ -1941,7 +1941,7 @@ export class SliderTemplateFormComponent {
 export class SliderReactiveFormComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
 
-    public formControl = new FormControl(10);
+    public formControl = new UntypedFormControl(10);
 }
 
 @Component({

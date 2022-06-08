@@ -319,9 +319,9 @@ export class IgxOverlayService implements OnDestroy {
      * @returns Id of the created overlay. Valid until `detach` is called.
      */
     public attach(component: Type<any>, settings?: OverlaySettings,
-        moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): string;
+        moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string;
     public attach(component: ElementRef | Type<any>, settings?: OverlaySettings,
-        moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): string {
+        moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string {
         const info: OverlayInfo = this.getOverlayInfo(component, moduleRef);
 
         if (!info) {
@@ -543,7 +543,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private getOverlayInfo(component: any, moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): OverlayInfo {
+    private getOverlayInfo(component: any, moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): OverlayInfo {
         const info: OverlayInfo = { ngZone: this._zone, transformX: 0, transformY: 0 };
         if (component instanceof ElementRef) {
             info.elementRef = component;
