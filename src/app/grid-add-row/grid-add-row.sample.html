@@ -25,7 +25,7 @@
 
         <igx-action-strip #actionstrip>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
-            <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
+            <igx-grid-editing-actions [addRow]="false" [editRow]="false" [deleteRow]='false'></igx-grid-editing-actions>
         </igx-action-strip>
         <igx-paginator
             *ngIf="paging"
