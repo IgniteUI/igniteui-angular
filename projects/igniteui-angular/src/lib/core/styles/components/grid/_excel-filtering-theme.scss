@@ -287,10 +287,7 @@
             overflow: hidden;
             margin-inline: -#{rem(16px)};
             border: 0;
-        }
 
-        igx-list,
-        %igx-excel-filter__tree {
             @if $bootstrap-theme {
                 border-top: 1px dashed color($palette, 'grays', 100);
                 border-bottom: 1px dashed color($palette, 'grays', 100);
@@ -305,6 +302,14 @@
             overflow-y: auto;
             margin: 0 rem(-16px);
             flex: 1;
+
+            @if $bootstrap-theme {
+                border-top: 1px dashed color($palette, 'grays', 100);
+                border-bottom: 1px dashed color($palette, 'grays', 100);
+            } @else {
+                border-top: 1px dashed color($palette, 'grays', 300);
+                border-bottom: 1px dashed color($palette, 'grays', 300);
+            }
 
             igx-icon {
                 width: var(--igx-icon-size, #{$tree-node-expander-size});

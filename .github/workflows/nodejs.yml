@@ -36,10 +36,15 @@ jobs:
         run: npm run lint:i18n
       - name: Build
         run: npm run build:lib
+    #   - name: Test
+    #     run: |
+    #         npm run test:lib
+    #         npm run test:styles
+    #         npm run test:schematics
+    #         npm run test:i18n
       - name: Test
         run: |
             npm run test:lib
-            npm run test:styles
             npm run test:schematics
             npm run test:i18n
         env:

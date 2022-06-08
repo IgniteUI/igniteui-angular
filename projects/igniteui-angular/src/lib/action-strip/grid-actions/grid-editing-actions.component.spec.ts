@@ -96,6 +96,26 @@ describe('igxGridEditingActions #grid ', () => {
             expect(grid.selectionService.activeElement.column).toBe(1);
             expect(grid.selectionService.activeElement.row).toBe(0);
         });
+
+        it('should allow hiding/showing the edit/delete actions via the related property.', () => {
+           const editActions = fixture.componentInstance.actionStrip.actionButtons.first;
+           editActions.editRow = false;
+           fixture.detectChanges();
+
+           grid.actionStrip.show(grid.rowList.first);
+           fixture.detectChanges();
+           let icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
+           let iconsText = icons.map(x => x.nativeElement.innerText);
+           expect(iconsText).toEqual(['delete']);
+
+           editActions.editRow = true;
+           editActions.deleteRow = false;
+           fixture.detectChanges();
+
+           icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
+           iconsText = icons.map(x => x.nativeElement.innerText);
+           expect(iconsText).toEqual(['edit']);
+        });
     });
 
     describe('Menu ', () => {

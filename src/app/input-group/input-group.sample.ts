@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, AfterViewInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import {
     IgxInputGroupType,
     ButtonGroupAlignment,
@@ -45,7 +45,7 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     constructor(
         @Inject(DisplayDensityToken)
         public displayDensityOptions: IDisplayDensityOptions,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         @Inject(IGX_INPUT_GROUP_TYPE) public TOKEN: IgxInputGroupType
     ) {
         this.myForm.disable();
