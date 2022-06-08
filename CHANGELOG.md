@@ -9,7 +9,11 @@ All notable changes for each version of this project will be documented in this 
 - `Migrations`
     - Migrations now support Yarn berry (version 2+)
 
+mvenkov/move-overlay-attach-to-viewcomponentref
 - `IgxOverlayService` - `attache` method accepting `moduleRef` is deprecated due to deprecated Angular API. New overload is added accepting `viewComponentRef`.
+
+- `IgxGridEditingActions`
+    - Added new inputs to show/hide the edit and delete buttons - `editRow`, `deleteRow`.
 
 ## 13.2.0
 
