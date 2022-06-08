@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy } f
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, FormControl } from '@angular/forms';
+import { FormsModule, UntypedFormControl } from '@angular/forms';
 import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
@@ -243,7 +243,7 @@ describe('IgxDateRangePicker', () => {
 
             const range = { start: new Date(2020, 4, 18), end: new Date(2020, 6, 28) };
             dateRange.writeValue(range);
-            const mockFormControl = new FormControl(dateRange.value);
+            const mockFormControl = new UntypedFormControl(dateRange.value);
             expect(dateRange.validate(mockFormControl)).toBeNull();
 
             range.start.setMonth(2);

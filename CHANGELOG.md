@@ -5,9 +5,12 @@ All notable changes for each version of this project will be documented in this 
 ## 14.0.0
 
 ### General
-
+- Updating dependency to Angular 14
 - `Migrations`
     - Migrations now support Yarn berry (version 2+)
+
+- `IgxGridEditingActions`
+    - Added new inputs to show/hide the edit and delete buttons - `editRow`, `deleteRow`.
 
 ## 13.2.0
 
