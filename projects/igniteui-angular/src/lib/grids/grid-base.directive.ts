@@ -6983,6 +6983,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected autoSizeColumnsInView() {
         if(!this.autoSizeColumns) return;
         const vState = this.headerContainer.state;
+        let colResized = false;
         for (let i = vState.startIndex; i < vState.startIndex + vState.chunkSize; i++) {
             const col = this.visibleColumns[i];
             if (!col.autoSize && col.headerCell) {
@@ -6991,7 +6992,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 cellsContentWidths.push(col.headerCell.nativeElement.offsetWidth);
                 col.autoSize = Math.max(...cellsContentWidths);
                 col.resetCaches();
+                colResized = true;
             }
+        }
+        if (colResized) {
+            this.cdr.detectChanges();
         }
     }
 
@@ -7203,7 +7208,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.run(() => {
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
-                this.autoSizeColumnsInView();
+                requestAnimationFrame(() => {
+                    this.autoSizeColumnsInView();
+                });
             });
         });
 
