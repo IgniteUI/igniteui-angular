@@ -5,6 +5,12 @@
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
             [hidden]='c.hidden' [sortable]="true" [groupable]="true" [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
         </igx-column>
+        <igx-column field='Salary' [sortable]="true" [groupable]="true" [editable]="true" [hasSummary]="true" >
+            <ng-template igxCell let-cell="cell">
+                <div *ngIf='cell.value > 1000'>{{ cell.value}}</div>
+                
+            </ng-template>
+        </igx-column>
         <!-- <igx-column-layout field='group2'>
             <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'"></igx-column>
             <igx-column [rowStart]="2" [colStart]="1" field="ContactName" [width]="'100px'"></igx-column>
