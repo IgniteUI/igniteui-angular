@@ -217,7 +217,7 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         filteringTree.filteringOperands = [];
-        for (const column of grid.columnList) {
+        for (const column of grid.columns) {
             this.prepare_filtering_expression(filteringTree, column.field, term,
                 condition, ignoreCase || column.filteringIgnoreCase);
         }
@@ -295,7 +295,7 @@ export class IgxFilteringService implements OnDestroy {
         const filteringTree = grid.filteringExpressionsTree;
         const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
 
-        for (const column of grid.columnList) {
+        for (const column of grid.columns) {
             this.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
                 ignoreCase || column.filteringIgnoreCase);
         }
