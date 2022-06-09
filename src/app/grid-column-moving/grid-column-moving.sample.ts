@@ -96,7 +96,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
         ];
     }
 
-    reverseColumn() {
+    public reverseColumn() {
         this.columns.reverse();
         this.grid1.cdr.detectChanges();
     }
