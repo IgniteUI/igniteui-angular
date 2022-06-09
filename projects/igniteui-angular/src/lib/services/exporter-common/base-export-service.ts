@@ -213,7 +213,7 @@ export abstract class IgxBaseExporter {
         }
 
         this.options = options;
-        let columns = grid.columnList.toArray();
+        let columns = grid.columns.toArray();
 
         if (this.options.ignoreMultiColumnHeaders) {
             columns = columns.filter(col => col.children === undefined);

@@ -537,8 +537,8 @@ export class IgxGridStateDirective {
             } else {
                 const expr = item as IFilteringExpression;
                 let dataType: string;
-                if (this.currGrid.columnList.length > 0) {
-                    dataType = this.currGrid.columnList.find(c => c.field === expr.fieldName).dataType;
+                if (this.currGrid.columns.length > 0) {
+                    dataType = this.currGrid.columns.find(c => c.field === expr.fieldName).dataType;
                 } else if (this.state.columns) {
                     dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;
                 } else {

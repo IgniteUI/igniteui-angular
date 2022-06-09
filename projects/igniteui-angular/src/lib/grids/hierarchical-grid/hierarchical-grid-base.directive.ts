@@ -101,7 +101,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      */
     public get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+            this._maxLevelHeaderDepth = this.columns.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
     }
@@ -219,7 +219,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const outputs = factoryColumn.outputs.filter(o => o.propName !== 'columnChange');
         outputs.forEach(output => {
-            this.columnList.forEach(column => {
+            this.columns.forEach(column => {
                 if (column[output.propName]) {
                     column[output.propName].pipe(takeUntil(column.destroy$)).subscribe((args) => {
                         const rowIslandColumn = this.parentIsland.childColumns.find(col => col.field === column.field);

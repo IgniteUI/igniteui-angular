@@ -298,7 +298,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.visibleIndex === index);
+        const column = this.columns.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxHierarchicalGridRow && column) {
             return new IgxGridCell(this, rowIndex, column.field);
         }
@@ -544,7 +544,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public getCellByColumn(rowIndex: number, columnField: string): CellType {
         const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.field === columnField);
+        const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxHierarchicalGridRow && column) {
             return new IgxGridCell(this, rowIndex, columnField);
         }
@@ -564,7 +564,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public getCellByKey(rowSelector: any, columnField: string): CellType {
         const row = this.getRowByKey(rowSelector);
-        const column = this.columnList.find((col) => col.field === columnField);
+        const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
             return new IgxGridCell(this, row.index, columnField);
         }
@@ -866,7 +866,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         if (this.hasColumnLayouts) {
             // invalid configuration - hierarchical grid should not allow column layouts
             // remove column layouts
-            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
+            const nonColumnLayoutColumns = this.columns.filter((col) => !col.columnLayout && !col.columnLayoutChild);
             this.updateColumns(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
@@ -900,13 +900,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     private updateColumnList(recalcColSizes = true) {
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
-        const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
+        const nestedColumns = childLayouts.map((layout) => layout.columns);
         const colsArray = [].concat.apply([], nestedColumns);
-        const colLength = this.columnList.length;
+        const colLength = this.columns.length;
         if (colsArray.length > 0) {
-            const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
+            const topCols = this.columns.filter((item) => colsArray.indexOf(item) === -1);
             this.updateColumns(topCols);
-            if (recalcColSizes && this.columnList.length !== colLength) {
+            if (recalcColSizes && this.columns.length !== colLength) {
                 this.calculateGridSizes(false);
             }
         }
