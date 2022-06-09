@@ -5155,7 +5155,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get hasVisibleColumns(): boolean {
         if (this._hasVisibleColumns === undefined) {
-            return this.columns ? this.columns.some(c => !c.hidden) : false;
+            return this._columns ? this._columns.some(c => !c.hidden) : false;
         }
         return this._hasVisibleColumns;
     }
