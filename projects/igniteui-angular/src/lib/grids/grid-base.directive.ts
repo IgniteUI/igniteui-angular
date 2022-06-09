@@ -2430,8 +2430,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
             this._maxLevelHeaderDepth = this.hasColumnLayouts ?
-                this.columnList.reduce((acc, col) => Math.max(acc, col.rowStart), 0) :
-                this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+                this.columns.reduce((acc, col) => Math.max(acc, col.rowStart), 0) :
+                this.columns.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
     }
@@ -2445,7 +2445,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ``
      */
     public get hiddenColumnsCount() {
-        return this.columnList.filter((col) => col.columnGroup === false && col.hidden === true).length;
+        return this.columns.filter((col) => col.columnGroup === false && col.hidden === true).length;
     }
 
     /**
@@ -3368,14 +3368,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public resetColumnsCaches() {
-        this.columnList.forEach(column => column.resetCaches());
+        this.columns.forEach(column => column.resetCaches());
     }
 
     /**
      * @hidden @internal
      */
     public generateRowID(): string | number {
-        const primaryColumn = this.columnList.find(col => col.field === this.primaryKey);
+        const primaryColumn = this.columns.find(col => col.field === this.primaryKey);
         const idType = this.data.length ?
             this.resolveDataTypes(this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
         return idType === 'string' ? uuidv4() : FAKE_ROW_ID--;
@@ -3445,7 +3445,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.resetColumnCollections();
         this.resetCachedWidths();
         this.hasVisibleColumns = undefined;
-        this._columnGroups = this.columnList.some(col => col.columnGroup);
+        this._columnGroups = this.columns.some(col => col.columnGroup);
     }
 
     /**
@@ -3736,7 +3736,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
-        const col = args.column ? this.columnList.find((c) => c === args.column) : undefined;
+        const col = args.column ? this.columns.find((c) => c === args.column) : undefined;
 
         if (!col) {
             return;
@@ -4092,7 +4092,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param name
      */
     public getColumnByName(name: string): IgxColumnComponent {
-        return this.columnList.find((col) => col.field === name);
+        return this.columns.find((col) => col.field === name);
     }
 
     public getColumnByVisibleIndex(index: number): IgxColumnComponent {
@@ -4114,7 +4114,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this._visibleColumns.length) {
             return this._visibleColumns;
         }
-        this._visibleColumns = this.columnList.filter(c => !c.hidden);
+        this._visibleColumns = this.columns.filter(c => !c.hidden);
         return this._visibleColumns;
     }
 
@@ -4254,7 +4254,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public get showAddButton() {
-        return this.rowEditable && this.dataView.length === 0 && this.columnList.length > 0;
+        return this.rowEditable && this.dataView.length === 0 && this.columns.length > 0;
     }
 
     /**
@@ -4262,7 +4262,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public get showDragIcons(): boolean {
-        return this.rowDraggable && this.columnList.length > this.hiddenColumnsCount;
+        return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
     }
 
     /**
@@ -4466,7 +4466,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public updateCell(value: any, rowSelector: any, column: string): void {
         if (this.isDefined(this.primaryKey)) {
-            const col = this.columnList.toArray().find(c => c.field === column);
+            const col = this.columns.find(c => c.field === column);
             if (col) {
                 // Simplify
                 const rowData = this.gridAPI.getRowData(rowSelector);
@@ -4961,7 +4961,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get hasSortableColumns(): boolean {
-        return this.columnList.some((col) => col.sortable);
+        return this.columns.some((col) => col.sortable);
     }
 
     /**
@@ -4973,7 +4973,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get hasEditableColumns(): boolean {
-        return this.columnList.some((col) => col.editable);
+        return this.columns.some((col) => col.editable);
     }
 
     /**
@@ -4985,7 +4985,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get hasFilterableColumns(): boolean {
-        return this.columnList.some((col) => col.filterable);
+        return this.columns.some((col) => col.filterable);
     }
 
     /**
@@ -4997,7 +4997,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get hasSummarizedColumns(): boolean {
-        const summarizedColumns = this.columnList.filter(col => col.hasSummary && !col.hidden);
+        const summarizedColumns = this.columns.filter(col => col.hasSummary && !col.hidden);
         return summarizedColumns.length > 0;
     }
 
@@ -5013,7 +5013,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get hasVisibleColumns(): boolean {
         if (this._hasVisibleColumns === undefined) {
-            return this.columnList ? this.columnList.some(c => !c.hidden) : false;
+            return this.columnList ? this.columns.some(c => !c.hidden) : false;
         }
         return this._hasVisibleColumns;
     }
@@ -5056,7 +5056,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get hasColumnLayouts() {
-        return !!this.columnList.some(col => col.columnLayout);
+        return !!this.columns.some(col => col.columnLayout);
     }
 
 
@@ -5559,7 +5559,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public selectAllColumns() {
-        this.selectColumns(this.columnList.filter(c => !c.columnGroup));
+        this.selectColumns(this.columns.filter(c => !c.columnGroup));
     }
 
     /**
@@ -5695,7 +5695,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public navigateTo(rowIndex: number, visibleColIndex = -1, cb: (args: any) => void = null) {
         const totalItems = (this as any).totalItemCount ?? this.dataView.length - 1;
         if (rowIndex < 0 || rowIndex > totalItems || (visibleColIndex !== -1
-            && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
+            && this.columns.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
             return;
         }
         if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
@@ -5741,7 +5741,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public getNextCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (IgxColumnComponent) => boolean = null): ICellPosition {
-        const columns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+        const columns = this.columns.filter(col => !col.columnGroup && col.visibleIndex >= 0);
         const dataViewIndex = this._getDataViewIndex(currRowIndex);
         if (!this.isValidPosition(dataViewIndex, curVisibleColIndex)) {
             return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
@@ -5776,7 +5776,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public getPreviousCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (IgxColumnComponent) => boolean = null): ICellPosition {
-        const columns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+        const columns = this.columns.filter(col => !col.columnGroup && col.visibleIndex >= 0);
         const dataViewIndex = this._getDataViewIndex(currRowIndex);
         if (!this.isValidPosition(dataViewIndex, curVisibleColIndex)) {
             return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
@@ -6229,7 +6229,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this.columnWidthSetByUser) {
             this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : MINIMUM_COLUMN_WIDTH + 'px';
         }
-        this.columnList.forEach((column: IgxColumnComponent) => {
+        this.columns.forEach((column: IgxColumnComponent) => {
             if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
                 const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
@@ -6286,7 +6286,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
-        const list = this.columnList.toArray();
+        const list = this.columns;
         this._reorderColumns(from, to, pos, list);
         const newList = this._resetColumnList(list);
         this.updateColumns(newList);
@@ -6310,7 +6310,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected _resetColumnList(list?) {
         if (!list) {
-            list = this.columnList.toArray();
+            list = this.columns;
         }
         let newList = [];
         list.filter(c => c.level === 0).forEach(p => {
@@ -6417,7 +6417,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
         const diff = this.columnListDiffer.diff(change);
 
-        if (this.autoGenerate && this.columnList.length === 0 && this._autoGeneratedCols.length > 0) {
+        if (this.autoGenerate && this.columns.length === 0 && this._autoGeneratedCols.length > 0) {
             // In Ivy if there are nested conditional templates the content children are re-evaluated
             // hence autogenerated columns are cleared and need to be reset.
             this.updateColumns(this._autoGeneratedCols);
@@ -6774,10 +6774,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: (args: any) => void = null) {
-        this._columnGroups = this.columnList.some(col => col.columnGroup);
+        this._columnGroups = this.columns.some(col => col.columnGroup);
         if (this.hasColumnLayouts) {
             // Set overall row layout size
-            this.columnList.forEach((col) => {
+            this.columns.forEach((col) => {
                 if (col.columnLayout) {
                     const layoutSize = col.children ?
                         col.children.reduce((acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc), 1) :
@@ -6789,11 +6789,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasColumnLayouts && this.hasColumnGroups) {
             // invalid configuration - multi-row and column groups
             // remove column groups
-            const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || col.columnLayoutChild);
+            const columnLayoutColumns = this.columns.filter((col) => col.columnLayout || col.columnLayoutChild);
             this.updateColumns(columnLayoutColumns);
         }
         this._maxLevelHeaderDepth = null;
-        this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.defaultWidth = this.columnWidthSetByUser ? this._columnWidth : column.defaultWidth ? column.defaultWidth : '';
 
@@ -6815,11 +6814,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected reinitPinStates() {
-        this._pinnedColumns = this.columnList
-            .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
-        this._unpinnedColumns = this.hasColumnGroups ? this.columnList.filter((c) => !c.pinned) :
-            this.columnList.filter((c) => !c.pinned)
-                .sort((a, b) => this._unpinnedColumns.findIndex(x => x.field === a.field) - this._unpinnedColumns.findIndex(x => x.field === b.field));
+        this._pinnedColumns = this.columns.filter((c) => c.pinned);
+        this._unpinnedColumns = this.hasColumnGroups ? this.columns.filter((c) => !c.pinned) :
+            this.columns.filter((c) => !c.pinned);
     }
 
     protected extractDataFromSelection(source: any[], formatters = false, headers = false, columnData?: any[]): any[] {
@@ -7108,7 +7105,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _columnsReordered(column: IgxColumnComponent) {
         this.notifyChanges();
         if (this.hasColumnLayouts) {
-            this.columnList.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         // after reordering is done reset cached column collections.
         this.resetColumnCollections();
@@ -7287,7 +7284,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private isValidPosition(rowIndex, colIndex): boolean {
         const rows = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).length;
-        const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0 && !col.hidden).length;
+        const cols = this.columns.filter(col => !col.columnGroup && col.visibleIndex >= 0 && !col.hidden).length;
         if (rows < 1 || cols < 1) {
             return false;
         }

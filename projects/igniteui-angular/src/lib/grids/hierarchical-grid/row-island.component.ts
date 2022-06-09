@@ -288,10 +288,10 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                     (grid as any).onRowIslandChange(this.children);
                 });
             });
-        const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
+        const nestedColumns = this.children.map((layout) => layout.columns);
         const colsArray = [].concat.apply([], nestedColumns);
-        const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
-        this.childColumns.reset(topCols);
+        const topCols = this.columns.filter((item) => colsArray.indexOf(item) === -1);
+        this._childColumns = topCols;
         this.columnList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             Promise.resolve().then(() => {
                 this.updateColumnList();
@@ -300,7 +300,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
         // handle column changes so that they are passed to child grid instances when columnChange is emitted.
         this.ri_columnListDiffer.diff(this.childColumns);
-        this.childColumns.toArray().forEach(x => x.columnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
+        this._childColumns.forEach(x => x.columnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
         this.childColumns.changes.pipe(takeUntil(this.destroy$)).subscribe((change: QueryList<IgxColumnComponent>) => {
             const diff = this.ri_columnListDiffer.diff(change);
             if (diff) {
@@ -380,10 +380,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     public calculateGridHeight() { }
 
+    protected _childColumns = [];
+
     protected updateColumnList() {
-        const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
+        const nestedColumns = this.children.map((layout) => layout.columns);
         const colsArray = [].concat.apply([], nestedColumns);
-        const topCols = this.columnList.filter((item) => {
+        const topCols = this.columns.filter((item) => {
             if (colsArray.indexOf(item) === -1) {
                 /* Reset the default width of the columns that come into this row island,
                 because the root catches them first during the detectChanges() and sets their defaultWidth. */
@@ -393,13 +395,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             return false;
         });
         this.childColumns.reset(topCols);
-
-        if (this.parentIsland) {
-            this.parentIsland.columnList.notifyOnChanges();
-        } else {
-            this.rootGrid.columnList.notifyOnChanges();
-        }
-
         this.rowIslandAPI.getChildGrids().forEach((grid: GridType) => {
             grid.createColumnsList(this.childColumns.toArray());
             if (!document.body.contains(grid.nativeElement)) {
