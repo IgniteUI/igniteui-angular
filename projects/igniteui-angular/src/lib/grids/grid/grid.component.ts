@@ -383,7 +383,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             // setter called before grid is registered in grid API service
             this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
         }
-        if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columnList) {
+        if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columns) {
             const groupedCols: IgxColumnComponent[] = [];
             const ungroupedCols: IgxColumnComponent[] = [];
             const groupedColsArr = newExpressions.filter((obj) => !oldExpressions.some((obj2) => obj.fieldName === obj2.fieldName));
@@ -452,7 +452,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         } else {
             this.groupingDiffer = null;
         }
-        if (this.columnList && this.groupingExpressions) {
+        if (this.columns && this.groupingExpressions) {
             this._setGroupColsVisibility(value);
         }
 
@@ -937,7 +937,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.detailTemplate.changes.subscribe(() =>
             this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec));
 
-        if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
+        if (this.hideGroupedColumns && this.columns && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
         this._setupNavigationService();
