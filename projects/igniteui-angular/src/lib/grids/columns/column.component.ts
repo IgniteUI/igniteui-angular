@@ -2136,7 +2136,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public move(index: number) {
         let target;
-        let columns = (this.grid.columnList as QueryList<IgxColumnComponent>).filter(c => c.visibleIndex > -1);
+        let columns = this.grid.columns.filter(c => c.visibleIndex > -1);
         // grid last visible index
         const li = columns.map(c => c.visibleIndex).reduce((a, b) => Math.max(a, b));
         const parent = this.parent;
@@ -2156,7 +2156,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         /* eslint-enable max-len */
         if (isPreceding) {
             columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
-            target = columns.find(c => c.level === this.level && c.visibleIndex + c.calcChildren() - this.calcChildren() === index);
+            target = columns.find(c => c.level === this.level && c.visibleIndex + (c as any).calcChildren() - this.calcChildren() === index);
         } else {
             columns = columns.filter(c => c.visibleIndex < this.visibleIndex);
             target = columns.find(c => c.level === this.level && c.visibleIndex === index);

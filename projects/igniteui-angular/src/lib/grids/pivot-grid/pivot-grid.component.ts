@@ -1855,9 +1855,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 }
             }
         });
-        this.reflow();
 
         this.updateColumns(columns);
+        this.reflow();
         if (data && data.length > 0) {
             this.shouldGenerate = false;
         }
