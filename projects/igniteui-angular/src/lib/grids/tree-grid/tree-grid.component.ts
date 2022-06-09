@@ -976,7 +976,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             // invalid configuration - tree grid should not allow column layouts
             // remove column layouts
             const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
-            this.columnList.reset(nonColumnLayoutColumns);
+            this.updateColumns(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
     }

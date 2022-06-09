@@ -23,6 +23,7 @@
         </igx-column-layout> -->
         <ng-template igxGridDetail let-dataItem>
             <div>
+                <div *ngIf='true'>Test</div>
                 <div *ngIf="dataItem.Country"><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
                 <div><span class='categoryStyle'>City:</span> {{dataItem.City}}</div>
                 <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
