@@ -351,7 +351,7 @@ export class IgxFilteringService implements OnDestroy {
             this.columnsWithComplexFilter.clear();
 
             this.columnToExpressionsMap.forEach((value: ExpressionUI[], key: string) => {
-                const column = this.grid.columnList.find((col) => col.field === key);
+                const column = this.grid.columns.find((col) => col.field === key);
                 if (column) {
                     value.length = 0;
 
