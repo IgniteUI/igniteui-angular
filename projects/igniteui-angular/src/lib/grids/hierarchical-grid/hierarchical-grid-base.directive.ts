@@ -206,8 +206,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             columns.push(ref.instance);
         });
         const result = flatten(columns);
-        this.columnList.reset(result);
-        this.columnList.notifyOnChanges();
+        this.updateColumns(result);
         this.initPinning();
 
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);

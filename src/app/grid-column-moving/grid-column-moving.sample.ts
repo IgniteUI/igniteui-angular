@@ -20,6 +20,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
     public density: DisplayDensity = 'comfortable';
     public displayDensities;
     public pagingEnabled = true;
+    public show = true;
 
     public mchData = [
         /* eslint-disable max-len */
@@ -93,6 +94,11 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { field: 'Contract', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'boolean' }
         ];
+    }
+
+    reverseColumn() {
+        this.columns.reverse();
+        this.grid1.cdr.detectChanges();
     }
 
     public selectDensity(event) {

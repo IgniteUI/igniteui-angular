@@ -1052,7 +1052,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             // invalid configuration - hierarchical grid should not allow column layouts
             // remove column layouts
             const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
-            this.columnList.reset(nonColumnLayoutColumns);
+            this.updateColumns(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
     }
@@ -1070,7 +1070,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.updateColumnList();
             const cols = change.filter(c => c.grid === this);
             if (cols.length > 0 || this.autoGenerate) {
-                this.columnList.reset(cols);
+                this.updateColumns(cols);
                 super.onColumnsChanged(this.columnList);
             }
         });
@@ -1090,7 +1090,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const colLength = this.columnList.length;
         if (colsArray.length > 0) {
             const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
-            this.columnList.reset(topCols);
+            this.updateColumns(topCols);
             if (recalcColSizes && this.columnList.length !== colLength) {
                 this.calculateGridSizes(false);
             }
