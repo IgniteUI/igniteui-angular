@@ -1951,7 +1951,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
         fix.detectChanges();
 
-        expect(grid.columnList.get(0).width).toEqual('550px');
+        expect(grid.columns[0].width).toEqual('550px');
 
         grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {

@@ -4333,13 +4333,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             columnPinStateChanged = column.unpin(index);
         }
 
-        if (target.pinned && column.pinned && !columnPinStateChanged) {
-            this._reorderColumns(column, target, pos, this._pinnedColumns);
-        }
+        // if (target.pinned && column.pinned && !columnPinStateChanged) {
+        //     this._reorderColumns(column, target, pos, this._pinnedColumns);
+        // }
 
-        if (!target.pinned && !column.pinned && !columnPinStateChanged) {
-            this._reorderColumns(column, target, pos, this._unpinnedColumns);
-        }
+        // if (!target.pinned && !column.pinned && !columnPinStateChanged) {
+        //     this._reorderColumns(column, target, pos, this._unpinnedColumns);
+        // }
 
         this._moveColumns(column, target, pos);
         this._columnsReordered(column);
