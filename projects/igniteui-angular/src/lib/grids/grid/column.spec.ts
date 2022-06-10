@@ -154,26 +154,27 @@ describe('IgxGrid - Column properties #grid', () => {
         }
     });
 
-    it('should reflect the column in the DOM based on its index', () => {
+    it('should reflect the column in the DOM based on its index', fakeAsync() => {
         const fix = TestBed.createComponent(ColumnCellFormatterComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
         let headers: DebugElement[];
 
-        expect(grid.columnList.first.field).toMatch('ID');
-        expect(grid.columnList.last.field).toMatch('Name');
+        expect(grid.columns[0].field).toMatch('ID');
+        expect(grid.columns[2].field).toMatch('Name');
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.textContent).toMatch('ID');
         expect(headers[2].nativeElement.textContent).toMatch('Name');
 
         // Swap columns
-        grid.moveColumn(grid.columnList.first, grid.columnList.last);
+        grid.moveColumn(grid.columns[0], grid.columns[2]);
+        tick();
         fix.detectChanges();
 
-        expect(grid.columnList.first.field).toMatch('IsEmployed');
-        expect(grid.columnList.last.field).toMatch('ID');
+        expect(grid.columns[0].field).toMatch('IsEmployed');
+        expect(grid.columns[2].field).toMatch('ID');
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.textContent).toMatch('IsEmployed');

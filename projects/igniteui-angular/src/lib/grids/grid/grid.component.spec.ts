@@ -84,14 +84,14 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
 
             expect(grid).toBeDefined('Grid initializing through autoGenerate failed');
-            expect(grid.columnList.length).toEqual(4, 'Invalid number of columns initialized');
+            expect(grid.columns.length).toEqual(4, 'Invalid number of columns initialized');
             expect(grid.rowList.length).toEqual(1, 'Invalid number of rows initialized');
-            expect(grid.columnList.first.dataType).toEqual(GridColumnDataType.Number, 'Invalid dataType set on column');
-            expect(grid.columnList.find((col) => col.index === 1).dataType)
+            expect(grid.columns[0].dataType).toEqual(GridColumnDataType.Number, 'Invalid dataType set on column');
+            expect(grid.columns.find((col) => col.index === 1).dataType)
                 .toEqual(GridColumnDataType.String, 'Invalid dataType set on column');
-            expect(grid.columnList.find((col) => col.index === 2).dataType)
+            expect(grid.columns.find((col) => col.index === 2).dataType)
                 .toEqual(GridColumnDataType.Boolean, 'Invalid dataType set on column');
-            expect(grid.columnList.last.dataType).toEqual(GridColumnDataType.Date, 'Invalid dataType set on column');
+            expect(grid.columns[grid.columns.length - 1].dataType).toEqual(GridColumnDataType.Date, 'Invalid dataType set on column');
             expect(fix.componentInstance.columnEventCount).toEqual(4);
         }));
 
