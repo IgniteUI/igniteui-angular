@@ -56,6 +56,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             grid.moveColumn(columnsList[0], columnsList[2]);
             tick();
             fixture.detectChanges();
+            columnsList = grid.columns;
             expect(columnsList[0].field).toEqual('Name');
             expect(columnsList[1].field).toEqual('LastName');
             expect(columnsList[2].field).toEqual('ID');
