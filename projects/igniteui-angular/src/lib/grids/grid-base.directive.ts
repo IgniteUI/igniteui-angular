@@ -6286,7 +6286,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
-        const list = this._columns;
+        const orderedList = this._pinnedColumns.concat(this._unpinnedColumns);
+        const list = orderedList;
         this._reorderColumns(from, to, pos, list);
         const newList = this._resetColumnList(list);
         this.updateColumns(newList);
