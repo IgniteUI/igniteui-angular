@@ -744,18 +744,18 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         // check grid's columns collection
         // 5 in total
-        expect(grid.columnList.toArray().length).toBe(5);
+        expect(grid.columns.length).toBe(5);
         // 1 column layout
-        expect(grid.columnList.filter(x => x.columnLayout).length).toBe(1);
+        expect(grid.columns.filter(x => x.columnLayout).length).toBe(1);
         // 4 normal columns
-        expect(grid.columnList.filter(x => !x.columnLayout && !x.columnGroup).length).toBe(4);
+        expect(grid.columns.filter(x => !x.columnLayout && !x.columnGroup).length).toBe(4);
 
         // check header
         expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(5);
         expect(document.querySelectorAll(GRID_COL_THEAD_CLASS).length).toEqual(4);
     }));
 
-    it('should render correct heights when groups have different total row span', fakeAsync(() => {
+    fit('should render correct heights when groups have different total row span', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnLayoutAndGroupsTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [
@@ -779,13 +779,13 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         // check first group has height of 2 row spans in header and rows but the header itself should span 1 row
         // check group block and column header height
-        const firstLayout = grid.columnList.toArray()[0];
+        const firstLayout = grid.columns[0];
         expect(grid.multiRowLayoutRowSize).toEqual(2);
         expect(firstLayout.getGridTemplate(true)).toEqual('repeat(2,1fr)');
         expect(firstLayout.headerGroup.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
         expect(grid.getColumnByName('Fax').headerCell.nativeElement.offsetHeight).toBe(grid.rowHeight + 1);
 
-        const secondLayout = grid.columnList.toArray()[2];
+        const secondLayout = grid.columns[2];
         const contactNameColumn = grid.getColumnByName('ContactName');
         expect(contactNameColumn.getGridTemplate(true)).toEqual('repeat(2,1fr)');
         expect(secondLayout.headerGroup.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);

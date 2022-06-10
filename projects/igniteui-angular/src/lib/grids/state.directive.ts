@@ -229,6 +229,9 @@ export class IgxGridStateDirective {
                     }
                 });
                 context.grid.updateColumns(newColumns);
+                newColumns.forEach(col => {
+                    (context.grid as any).columnInit.emit(col);
+                });
             }
         },
         groupBy: {
