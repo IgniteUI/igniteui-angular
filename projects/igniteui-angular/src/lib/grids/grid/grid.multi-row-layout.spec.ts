@@ -784,7 +784,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(document.querySelectorAll(GRID_COL_THEAD_CLASS).length).toEqual(4);
     }));
 
-    fit('should render correct heights when groups have different total row span', fakeAsync(() => {
+    it('should render correct heights when groups have different total row span', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnLayoutAndGroupsTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [
