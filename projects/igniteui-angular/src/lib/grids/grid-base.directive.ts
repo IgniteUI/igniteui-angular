@@ -6522,7 +6522,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.autoGenerate) {
             this.autogenerateColumns();
         } else {
-            this.updateColumns(this.columnList.toArray());
+            this._columns = this.columnList.toArray();
         }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
@@ -6970,7 +6970,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             // invalid configuration - multi-row and column groups
             // remove column groups
             const columnLayoutColumns = this._columns.filter((col) => col.columnLayout || col.columnLayoutChild);
-            this.updateColumns(columnLayoutColumns);
+            this._columns = columnLayoutColumns;
         }
         this._maxLevelHeaderDepth = null;
         collection.forEach((column: IgxColumnComponent) => {
