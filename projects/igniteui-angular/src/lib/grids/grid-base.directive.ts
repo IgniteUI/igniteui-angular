@@ -4026,7 +4026,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get columns(): IgxColumnComponent[] {
-        return this._rendered ? this._columns : [];
+        return this._columns || [];
     }
 
     /**
