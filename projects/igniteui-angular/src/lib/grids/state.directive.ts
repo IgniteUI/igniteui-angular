@@ -7,8 +7,10 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IPagingState } from '../data-operations/paging-state.interface';
 import { GridColumnDataType } from '../data-operations/data-util';
-import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
-    IgxStringFilteringOperand, IFilteringOperation} from '../data-operations/filtering-condition';
+import {
+    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+    IgxStringFilteringOperand, IFilteringOperation, IgxDateTimeFilteringOperand
+} from '../data-operations/filtering-condition';
 import { GridSelectionRange } from './selection/selection.service';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
@@ -575,6 +577,9 @@ export class IgxGridStateDirective {
                 break;
             case GridColumnDataType.Date:
                 filters = IgxDateFilteringOperand.instance();
+                break;
+            case GridColumnDataType.DateTime:
+                filters = IgxDateTimeFilteringOperand.instance();
                 break;
             case GridColumnDataType.String:
             default:
