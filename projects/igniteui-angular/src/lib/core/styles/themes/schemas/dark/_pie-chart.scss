@@ -6,31 +6,40 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+/// Generates the base dark pie-chart schema.
+/// @type {Map}
+/// @property {Color} label-outer-color [color: ('grays', 400)] - Sets the color for labels rendered outside of the pie chart.
+$base-pie-chart: (
+    'label-outer-color': (
+        color: ('grays', 400)
+    ),
+);
+
 /// Generates a dark base pie chart schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $light-pie-chart
 /// @see $light-pie-chart
-$dark-pie-chart: $light-pie-chart;
+$dark-pie-chart: extend($light-pie-chart, $base-pie-chart);
 
 /// Generates a dark fluent pie chart schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $fluent-pie-chart
 /// @see $fluent-pie-chart
-$dark-fluent-pie-chart: $fluent-pie-chart;
+$dark-fluent-pie-chart: extend($fluent-pie-chart, $base-pie-chart);
 
 /// Generates a dark bootstrap pie chart schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $bootstrap-pie-chart
 /// @see $bootstrap-pie-chart
-$dark-bootstrap-pie-chart: $bootstrap-pie-chart;
+$dark-bootstrap-pie-chart: extend($bootstrap-pie-chart, $base-pie-chart);
 
 /// Generates a dark indigo pie chart schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $indigo-pie-chart
 /// @see $indigo-pie-chart
-$dark-indigo-pie-chart: $indigo-pie-chart;
+$dark-indigo-pie-chart: extend($indigo-pie-chart, $base-pie-chart);
 
