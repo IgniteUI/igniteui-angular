@@ -10,7 +10,7 @@
 /// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
 /// @property {Number} label-extent [null] - Sets the pixel amount by which the labels are offset from the edge of the slices.
 /// @property {Color} label-inner-color [null] - Sets the color for labels rendered inside of the pie chart.
-/// @property {Color} label-outer-color [color: ('grays', 900)] - Sets the color for labels rendered outside of the pie chart.
+/// @property {Color} label-outer-color [color: ('grays', 700)] - Sets the color for labels rendered outside of the pie chart.
 /// @property {String} labels-position [null] - Sets the position of chart labels. Valid values are: 'none', 'center', 'insideEnd', 'outsideEnd', and 'bestFit'.
 /// @property {Number} leader-line-margin [null] - Sets the margin between a label and the end of its leader line.
 /// @property {String} leader-line-type [null] - Sets what type of leader lines will be used for the outside end labels. Valid values are: 'straight', 'spline', and 'arc'.
@@ -24,7 +24,7 @@ $light-pie-chart: (
     'label-inner-color': null,
 
     'label-outer-color': (
-        color: ('grays', 900)
+        color: ('grays', 700)
     ),
 
     'labels-position': null,
