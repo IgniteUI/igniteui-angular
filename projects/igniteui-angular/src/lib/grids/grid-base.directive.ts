@@ -6797,7 +6797,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasColumnLayouts && this.hasColumnGroups) {
             // invalid configuration - multi-row and column groups
             // remove column groups
-            const columnLayoutColumns = this._columns.filter((col) => col.columnLayout || col.columnLayoutChild);
+            const columnLayoutColumns = collection.filter((col) => col.columnLayout || col.columnLayoutChild);
             collection = columnLayoutColumns;
         }
         this._maxLevelHeaderDepth = null;
