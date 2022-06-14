@@ -347,7 +347,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         fixture.detectChanges();
         wait();
 
-        childGrid.columnList.find(c => c.index === 1).editable = true;
+        childGrid.columns.find(c => c.index === 1).editable = true;
         const childGridSecondRow = childGrid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
         expect(childGridSecondRow.expanded).toBe(false);
 
@@ -491,7 +491,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
         expect(childGrid).toBeDefined();
 
-        childGrid.columnList.find(c => c.index === 1).editable = true;
+        childGrid.columns.find(c => c.index === 1).editable = true;
         const childGridSecondRow = childGrid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
         expect(childGridSecondRow.expanded).toBe(false);
 
@@ -729,15 +729,15 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
 
         const childGrids = hierarchicalGrid.gridAPI.getChildGrids(false);
 
-        const child1Cols = childGrids[0].columnList.toArray();
-        const riCols = ri1.columnList.toArray();
+        const child1Cols = childGrids[0].columns;
+        const riCols = ri1.columns;
         expect(child1Cols.length).toEqual(riCols.length);
         for (const column of riCols) {
             const col = child1Cols.find((c) => c.field === column.field);
             expect(col).not.toBeNull();
         }
-        const child2Cols = childGrids[1].columnList.toArray();
-        const ri2Cols = ri2.columnList.toArray();
+        const child2Cols = childGrids[1].columns;
+        const ri2Cols = ri2.columns;
         expect(child2Cols.length).toEqual(ri2Cols.length);
         for (let j = 0; j < riCols.length; j++) {
             const col = child2Cols.find((c) => c.field === ri2Cols[j].field);
