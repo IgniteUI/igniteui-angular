@@ -150,6 +150,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public readonly data: any[] | null;
     public readonly filteredData: any[];
 
+    protected _childColumns = [];
+
     private ri_columnListDiffer;
     private layout_id = `igx-row-island-`;
     private isInit = false;
@@ -386,8 +388,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public calculateGridHeight() { }
-
-    protected _childColumns = [];
 
     protected updateColumnList() {
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());

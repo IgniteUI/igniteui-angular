@@ -2129,7 +2129,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         /* eslint-enable max-len */
         if (isPreceding) {
             columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
-            target = columns.find(c => c.level === this.level && c.visibleIndex + (c as any).calcChildren() - this.calcChildren() === index);
+            target = columns.find(c => c.level === this.level &&
+                 c.visibleIndex + (c as any).calcChildren() - this.calcChildren() === index);
         } else {
             columns = columns.filter(c => c.visibleIndex < this.visibleIndex);
             target = columns.find(c => c.level === this.level && c.visibleIndex === index);

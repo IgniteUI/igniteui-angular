@@ -6219,6 +6219,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index - 1, this.dataView));
     }
 
+    /**
+     * Update internal column's collection.
+     * @hidden
+     */
+     public updateColumns(newColumns: IgxColumnComponent[]) {
+        // update internal collections to retain order.
+        this._pinnedColumns = newColumns
+            .filter((c) => c.pinned);
+        this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
+        this._columns = newColumns;
+        this.resetCaches();
+    }
+
     protected beginAddRowForIndex(index: number, asChild: boolean = false) {
         const row: IgxRowDirective<IgxGridBaseDirective & GridType> = index == null ?
             null : this.rowList.find(r => r.index === index);
@@ -6428,20 +6441,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._reorderColumns(from, to, pos, list);
         const newList = this._resetColumnList(list);
         this.updateColumns(newList);
-    }
-
-
-    /**
-     * Update internal column's collection.
-     * @hidden
-     */
-    public updateColumns(newColumns: IgxColumnComponent[]) {
-        // update internal collections to retain order.
-        this._pinnedColumns = newColumns
-            .filter((c) => c.pinned);
-        this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
-        this._columns = newColumns;
-        this.resetCaches();
     }
 
     /**

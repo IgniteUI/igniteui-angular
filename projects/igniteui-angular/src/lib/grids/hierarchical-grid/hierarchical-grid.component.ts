@@ -889,7 +889,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
             return topCols;
         } else {
-           return this.columnList.toArray()
+           return this.columnList.toArray();
         }
     }
 
