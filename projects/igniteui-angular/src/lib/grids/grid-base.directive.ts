@@ -6522,7 +6522,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.autoGenerate) {
             this.autogenerateColumns();
         } else {
-            this._columns = this.columnList.toArray();
+            this._columns = this.getColumnList();
         }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
@@ -6533,6 +6533,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .subscribe((change: QueryList<IgxColumnComponent>) => {
                 this.onColumnsChanged(change);
             });
+    }
+
+    protected getColumnList() {
+        return this.columnList.toArray();
     }
 
     /**

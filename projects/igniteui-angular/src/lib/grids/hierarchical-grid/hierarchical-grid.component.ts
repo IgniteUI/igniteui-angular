@@ -876,8 +876,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     protected setupColumns() {
         if (this.parentIsland && this.parentIsland.childColumns.length > 0 && !this.autoGenerate) {
             this.createColumnsList(this.parentIsland.childColumns.toArray());
+        } else {
+            super.setupColumns();
         }
-        super.setupColumns();
+    }
+
+    protected getColumnList() {
+        const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
+        const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
+        const colsArray = [].concat.apply([], nestedColumns);
+        if (colsArray.length > 0) {
+            const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
+            return topCols;
+        } else {
+           return this.columnList.toArray()
+        }
     }
 
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
@@ -900,11 +913,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     private updateColumnList(recalcColSizes = true) {
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
-        const nestedColumns = childLayouts.map((layout) => layout.columns);
+        const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
-        const colLength = this.columns.length;
+        const colLength = this.columnList.length;
         if (colsArray.length > 0) {
-            const topCols = this.columns.filter((item) => colsArray.indexOf(item) === -1);
+            const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
             this.updateColumns(topCols);
             if (recalcColSizes && this.columns.length !== colLength) {
                 this.calculateGridSizes(false);

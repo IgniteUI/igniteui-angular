@@ -57,7 +57,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const expectedColumnGroups = 1;
             const expectedLevel = 1;
 
-            expect(hierarchicalGrid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
+            expect(hierarchicalGrid.columns.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
             expect(hierarchicalGrid.getColumnByName('ProductName').level).toEqual(expectedLevel);
 
             expect(GridFunctions.getColumnHeaders(fixture).length).toEqual(3);
@@ -71,7 +71,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
 
-            expect(childGrid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
+            expect(childGrid.columns.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
             expect(childGrid.getColumnByName('ProductName').level).toEqual(expectedLevel);
 
             expect(GridFunctions.getColumnHeaders(fixture).length).toEqual(6);
