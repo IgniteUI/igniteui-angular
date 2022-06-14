@@ -1081,11 +1081,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
         Promise.resolve().then(() => {
             this.updateColumnList();
-            const cols = change.filter(c => c.grid === this);
-            if (cols.length > 0 || this.autoGenerate) {
-                this.updateColumns(cols);
-                super.onColumnsChanged(this.columnList);
-            }
         });
     }
 
