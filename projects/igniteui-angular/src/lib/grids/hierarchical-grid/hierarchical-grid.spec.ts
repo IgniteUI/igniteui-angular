@@ -1146,9 +1146,9 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
         expect(hierarchicalGrid.columns[3].field).toBe('Col2');
         // check child cols
         expect(child1Grid.columns.length).toBe(3);
-        expect(hierarchicalGrid.columns[0].field).toBe('ID');
-        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
-        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
+        expect(child1Grid.columns[0].field).toBe('ID');
+        expect(child1Grid.columns[1].field).toBe('ProductName');
+        expect(child1Grid.columns[2].field).toBe('Col1');
     }));
 
     it('should update columns for expanded child when adding column to row island', fakeAsync(() => {

@@ -392,7 +392,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     protected updateColumnList() {
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
-        const topCols = this.columns.filter((item) => {
+        const topCols = this.columnList.filter((item) => {
             if (colsArray.indexOf(item) === -1) {
                 /* Reset the default width of the columns that come into this row island,
                 because the root catches them first during the detectChanges() and sets their defaultWidth. */
