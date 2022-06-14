@@ -2198,7 +2198,7 @@ export class GridSelectionFunctions {
         const endCol = startColumnIndex < endColumnIndex ? endColumnIndex : startColumnIndex;
         for (let i = startCol; i <= endCol; i++) {
             for (let j = startRow; j <= endRow; j++) {
-                const cell = grid.gridAPI.get_cell_by_index(j, grid.columnList.find(col => col.visibleIndex === i).field);
+                const cell = grid.gridAPI.get_cell_by_index(j, grid.columns.find(col => col.visibleIndex === i).field);
                 if (cell) {
                     GridSelectionFunctions.verifyCellSelected(cell, selected);
                 }

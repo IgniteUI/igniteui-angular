@@ -297,8 +297,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
             // enable sorting
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-            childGrid.columnList.first.sortable = true;
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
+            childGrid.columns[0].sortable = true;
             fixture.detectChanges();
 
             const childHeader = GridFunctions.getColumnHeader('ID', fixture, childGrid);
@@ -452,8 +452,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should render summaries for column inside a column group.', fakeAsync(() => {
-            fixture.componentInstance.rowIsland.childColumns.first.hasSummary = false;
-            fixture.componentInstance.rowIsland.childColumns.last.hasSummary = true;
+            const count = fixture.componentInstance.rowIsland.columns.length - 1;
+            fixture.componentInstance.rowIsland.columns[0].hasSummary = false;
+            fixture.componentInstance.rowIsland.columns[count].hasSummary = true;
             fixture.detectChanges();
 
             // expand first row
@@ -795,7 +796,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const firstHeaderIcon = childHeader.query(By.css('.igx-icon'));
 
             expect(GridFunctions.isHeaderPinned(childHeader.parent)).toBeFalsy();
-            expect(childGrid.columnList.first.pinned).toBeFalsy();
+            expect(childGrid.columns[0].pinned).toBeFalsy();
             expect(firstHeaderIcon).toBeDefined();
 
             UIInteractions.simulateClickAndSelectEvent(firstHeaderIcon);
@@ -803,7 +804,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             tick();
 
             childHeader = GridFunctions.getColumnHeaders(fixture)[3];
-            expect(childGrid.columnList.first.pinned).toBeTruthy();
+            expect(childGrid.columns[0].pinned).toBeTruthy();
             expect(GridFunctions.isHeaderPinned(childHeader.parent)).toBeTruthy();
         }));
 
