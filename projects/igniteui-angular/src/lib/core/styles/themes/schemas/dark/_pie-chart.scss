@@ -1,3 +1,4 @@
+@use '../../../base' as *;
 @use '../light/pie-chart' as *;
 
 ////
@@ -10,7 +11,7 @@
 /// @type {Map}
 /// @property {Color} label-outer-color [color: ('grays', 400)] - Sets the color for labels rendered outside of the pie chart.
 $base-pie-chart: (
-    'label-outer-color': (
+    label-outer-color: (
         color: ('grays', 400)
     ),
 );
