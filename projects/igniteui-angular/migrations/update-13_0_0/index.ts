@@ -185,7 +185,13 @@ export default (options: Options): Rule =>
         if (hasActions) {
             result += '\n</igx-grid-toolbar-actions>';
         }
-
+        const toolbarChildren = (toolbar as Element)?.children.filter(child => (child as Element).name && !(child as Element).name.includes('toolbar'));
+        toolbarChildren?.forEach(child => {
+            const { startTag, endTag, file } = getSourceOffset(child as Element);
+            const replaceText = file.content.substring(startTag.start, endTag.end);
+            result += '\n' + replaceText;
+        });
+        
         return result + `\n</igx-grid-toolbar>`;
     };
 
