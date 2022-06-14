@@ -149,7 +149,7 @@ export class GridFunctions {
     }
 
     public static getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
-        const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
+        const colGroups = grid.columns.filter(c => c.columnGroup && c.header === headerName);
         if (colGroups.length === 0) {
             return null;
         } else if (colGroups.length === 1) {
