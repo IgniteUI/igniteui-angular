@@ -113,6 +113,18 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
+        it('should initialize a grid and allow changing columns runtime with ngFor', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.detectChanges();
+            // reverse order of ngFor bound collection
+            fix.componentInstance.columns.reverse();
+            fix.detectChanges();
+            // check order
+            const grid = fix.componentInstance.grid;
+            expect(grid.columns[0].field).toBe('value');
+            expect(grid.columns[1].field).toBe('index');
+        });
+
         it('should initialize grid with remote virtualization', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
