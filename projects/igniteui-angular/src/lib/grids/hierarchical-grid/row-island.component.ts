@@ -288,10 +288,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                     (grid as any).onRowIslandChange(this.children);
                 });
             });
-        const nestedColumns = this.children.map((layout) => layout.columns);
+        const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
-        const topCols = this.columns.filter((item) => colsArray.indexOf(item) === -1);
+        const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
         this._childColumns = topCols;
+        this.updateColumns(this._childColumns);
         this.columnList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             Promise.resolve().then(() => {
                 this.updateColumnList();
@@ -383,7 +384,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     protected _childColumns = [];
 
     protected updateColumnList() {
-        const nestedColumns = this.children.map((layout) => layout.columns);
+        const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
         const topCols = this.columns.filter((item) => {
             if (colsArray.indexOf(item) === -1) {
@@ -394,9 +395,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             }
             return false;
         });
-        this.childColumns.reset(topCols);
+        this._childColumns = topCols;
         this.rowIslandAPI.getChildGrids().forEach((grid: GridType) => {
-            grid.createColumnsList(this.childColumns.toArray());
+            grid.createColumnsList(this._childColumns);
             if (!document.body.contains(grid.nativeElement)) {
                 grid.updateOnRender = true;
             }
