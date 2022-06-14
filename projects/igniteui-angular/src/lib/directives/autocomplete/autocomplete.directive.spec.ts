@@ -8,7 +8,7 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxInputDirective } from '../input/input.directive';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../../input-group/public_api';
 import { IgxDropDownModule, IgxDropDownComponent, IgxDropDownItemNavigationDirective } from '../../drop-down/public_api';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { IgxIconModule } from '../../icon/public_api';
 import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services/public_api';
 
@@ -1011,9 +1011,9 @@ class AutocompleteFormComponent {
     @ViewChild('plainInput', { static: true }) public plainInput: ElementRef<HTMLInputElement>;
     public towns: string[];
 
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
 
         this.towns = [
             // eslint-disable-next-line max-len

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { IChangeRadioEventArgs } from 'igniteui-angular';
 
 @Component({
@@ -56,7 +56,7 @@ export class InputSampleComponent {
         disabled: true
     }];
 
-    constructor(private fb: FormBuilder) {}
+    constructor(private fb: UntypedFormBuilder) {}
 
     public onClick(event: MouseEvent) {
         console.log(event);
