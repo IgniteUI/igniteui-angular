@@ -15,7 +15,8 @@ import {
     EventEmitter,
     Optional,
     Inject,
-    SimpleChanges
+    SimpleChanges,
+    HostBinding
 } from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -121,6 +122,15 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     @Input()
     public allowItemsFocus = false;
+
+    /**
+     * An @Input property that set aria-labelledby attribute
+     * ```html
+     * <igx-drop-down [labelledby]="labelId"></igx-drop-down>
+     * ```
+     */
+    @Input()
+    public labelledby;
 
     @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
     protected virtDir: IgxForOfDirective<any>;

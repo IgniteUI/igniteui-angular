@@ -6,6 +6,7 @@ import {
     DoCheck,
     ElementRef,
     EventEmitter,
+    forwardRef,
     HostBinding,
     HostListener,
     Inject,
@@ -30,7 +31,7 @@ import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/public_api';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/inputGroupType';
-import { IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/public_api';
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings } from '../services/public_api';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboAPIService } from './combo.api';
@@ -391,12 +392,17 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
     @Input()
-    @HostBinding('attr.aria-labelledby')
     public ariaLabelledBy: string;
 
     /** @hidden @internal */
     @HostBinding('class.igx-combo')
     public cssClass = 'igx-combo'; // Independent of display density for the time being
+
+    /** @hidden @internal */
+    @HostBinding('attr.aria-labelledby')
+    public get labelledBy() {
+        return this.ariaLabelledBy || this.label?.id || this.placeholder || '';
+    }
 
     /** @hidden @internal */
     @HostBinding(`attr.role`)
@@ -415,9 +421,27 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    @HostBinding('attr.aria-owns')
-    public get ariaOwns() {
+    @HostBinding('attr.aria-controls')
+    public get ariaControls() {
         return this.dropdown.id;
+    }
+
+     /** @hidden @internal */
+     @HostBinding('attr.aria-autocomplete')
+     public get ariaAutocomplete() {
+         return 'list';
+     }
+
+     /** @hidden @internal */
+    @HostBinding('attr.aria-readonly')
+    public get ariaReadonly() {
+        return this.readonly;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('attr.aria-activedescendant')
+    public get activeDescendant() {
+        return this.dropdownContainer.nativeElement.id;
     }
 
     /**
@@ -695,6 +719,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public clearIconTemplate: TemplateRef<any> = null;
 
     /** @hidden @internal */
+    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
+
+    /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true })
     public inputGroup: IgxInputGroupComponent;
 
@@ -856,6 +883,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public customValueFlag = true;
     /** @hidden @internal */
     public filterValue = '';
+    /** @hidden @internal */
+    public readonly = true;
     /** @hidden @internal */
     public defaultFallbackGroup = 'Other';
     /** @hidden @internal */
