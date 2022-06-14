@@ -1380,18 +1380,18 @@ describe('IgxHierarchicalGrid hide child columns', () => {
 
         const firstHeaderIcon = childHeader1.query(By.css('.igx-icon'));
 
-        spyOn(child1Grid.componentInstance.columnList.first.pinnedChange, 'emit').and.callThrough();
+        spyOn(child1Grid.componentInstance.columns[0].pinnedChange, 'emit').and.callThrough();
 
         expect(GridFunctions.isHeaderPinned(childHeader1.parent)).toBeFalsy();
-        expect(child1Grid.componentInstance.columnList.first.pinned).toBeFalsy();
+        expect(child1Grid.componentInstance.columns[0].pinned).toBeFalsy();
         expect(firstHeaderIcon).toBeDefined();
 
         UIInteractions.simulateClickAndSelectEvent(firstHeaderIcon);
         fixture.detectChanges();
         tick();
 
-        expect(child1Grid.componentInstance.columnList.first.pinnedChange.emit).toHaveBeenCalledTimes(1);
-        expect(child1Grid.componentInstance.columnList.first.pinned).toBeTruthy();
+        expect(child1Grid.componentInstance.columns[0].pinnedChange.emit).toHaveBeenCalledTimes(1);
+        expect(child1Grid.componentInstance.columns[0].pinned).toBeTruthy();
 
         // Hiding
 
@@ -1399,17 +1399,18 @@ describe('IgxHierarchicalGrid hide child columns', () => {
 
         const secondHeaderIcon = childHeader2.query(By.css('.igx-icon'));
 
-        spyOn(child1Grid.componentInstance.columnList.last.hiddenChange, 'emit').and.callThrough();
+        const lastIndex = child1Grid.componentInstance.columns.length - 1;
+        spyOn(child1Grid.componentInstance.columns[lastIndex].hiddenChange, 'emit').and.callThrough();
 
-        expect(child1Grid.componentInstance.columnList.last.hidden).toBeFalsy();
+        expect(child1Grid.componentInstance.columns[lastIndex].hidden).toBeFalsy();
         expect(secondHeaderIcon).toBeDefined();
 
         UIInteractions.simulateClickAndSelectEvent(secondHeaderIcon);
         fixture.detectChanges();
         tick();
 
-        expect(child1Grid.componentInstance.columnList.last.hiddenChange.emit).toHaveBeenCalledTimes(1);
-        expect(child1Grid.componentInstance.columnList.last.hidden).toBeTruthy();
+        expect(child1Grid.componentInstance.columns[lastIndex].hiddenChange.emit).toHaveBeenCalledTimes(1);
+        expect(child1Grid.componentInstance.columns[lastIndex].hidden).toBeTruthy();
     }));
 });
 
