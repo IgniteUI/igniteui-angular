@@ -2140,7 +2140,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
 
         const pos = isPreceding ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
-        grid.moveColumn(this, target as IgxColumnComponent, pos);
+        this.grid.moveColumn(this, target as IgxColumnComponent, pos);
     }
 
     /**

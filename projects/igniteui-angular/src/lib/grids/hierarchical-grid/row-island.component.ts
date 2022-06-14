@@ -403,9 +403,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         });
         this._childColumns = topCols;
         this.rowIslandAPI.getChildGrids().forEach((grid: GridType) => {
-            grid.createColumnsList(this._childColumns);
+            (grid as any).createColumnsList(this._childColumns);
             if (!document.body.contains(grid.nativeElement)) {
-                grid.updateOnRender = true;
+                (grid as any).updateOnRender = true;
             }
         });
     }

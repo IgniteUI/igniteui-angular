@@ -4175,14 +4175,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    public get columns(): IgxColumnComponent[] {
-        return this._columns;
-    }
-
-    /**
      * Gets an array of `IgxColumnComponent`s.
      *
      * @example
@@ -6207,22 +6199,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             console.warn('The row with the specified PK or index is outside of the current data view.');
         }
-    }
-
-
-    /**
-     * Update internal column's collection.
-     *
-     * @hidden
-     */
-    public updateColumns(newColumns: IgxColumnComponent[]) {
-        // update internal collections to retain order.
-        this._pinnedColumns = newColumns
-            .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
-        this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
-        this.columnList.reset(newColumns);
-        this.columnList.notifyOnChanges();
-        this._columns = this.columnList.toArray();
     }
 
     /**
