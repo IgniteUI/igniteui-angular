@@ -575,6 +575,9 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should expand/collapse row when Alt + arrow Left/Right keys are pressed', async () => {
+            treeGrid.width = '400px';
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
             treeGrid.headerContainer.scrollTo(4);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
