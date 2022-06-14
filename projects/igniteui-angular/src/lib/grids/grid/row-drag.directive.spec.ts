@@ -550,7 +550,7 @@ describe('Row Drag Tests #grid', () => {
             expect(dropRowCells[2].value).toEqual(dragRowCells[1].value);
             expect(dropRowCells[3].value).toEqual(dragRowCells[3].value);
             expect(dropRowCells[4].value).toEqual(dragRowCells[4].value);
-        });
+        }));
         it('should be able to drag grid row when column pinning is enabled', () => {
             dragGrid.pinColumn('ProductName');
             fixture.detectChanges();

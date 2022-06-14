@@ -297,7 +297,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
             // enable sorting
-            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             childGrid.columns[0].sortable = true;
             fixture.detectChanges();
 

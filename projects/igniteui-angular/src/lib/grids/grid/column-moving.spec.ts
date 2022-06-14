@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -127,7 +127,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             const args = { source: grid.columns[2], target: grid.columns[1], cancel: false };
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledWith(args);
-        });
+        }));
 
         it('Should exit edit mode and commit the new value when column moving programmatically', () => {
             fixture.componentInstance.isEditable = true;
@@ -1452,8 +1452,6 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('MCH - should programmatically reorder columns', (async () => {
-            let columnsList = grid.columnList.toArray();
-
             // step 1 - move level 0 column to first position
             let column = grid.getColumnByName('ID');
             column.move(0);
@@ -1588,8 +1586,6 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('MCH - should not move group column to last position', (async () => {
-            let columnsList = grid.columnList.toArray();
-
             let column = grid.getColumnByName('Missing');
             column.move(3);
             fixture.detectChanges();
@@ -1610,8 +1606,6 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('MCH - should be able to move group column to position lastIndex - group.children.length', (async () => {
-            let columnsList = grid.columnList.toArray();
-
             let column = grid.getColumnByName('Missing');
             column.move(3);
             fixture.detectChanges();
@@ -1632,8 +1626,6 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('MCH - trying to move level 1 column to last position should be impossible', (async () => {
-            let columnsList = grid.columnList.toArray();
-
             let columnsList = grid.columns.filter((col) => !(col instanceof IgxColumnGroupComponent));
             expect(columnsList[0].field).toEqual('Missing');
             expect(columnsList[1].field).toEqual('CompanyName');
