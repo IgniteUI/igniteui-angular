@@ -441,7 +441,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     /** @hidden @internal */
     @HostBinding('attr.aria-activedescendant')
     public get activeDescendant() {
-        return this.dropdownContainer.nativeElement.id;
+        return this.dropdownContainer.nativeElement.id || '';
     }
 
     /**
