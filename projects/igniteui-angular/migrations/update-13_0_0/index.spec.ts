@@ -543,4 +543,42 @@ export class AppModule {}
             <igx-column field="CountryFlag" header="Country"></igx-column>
         </igx-grid>`);
     });
+
+    it('should remove grid toolbar inputs but do not remove all templating inside tooblar component', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-grid #grid1 [data]="data" [showToolbar]="true" [toolbarTitle]="fdasfsa" height="300px" width="300px">
+<igx-grid-toolbar>
+<igx-select [(ngModel)]="currentSortingType" (selectionChanging)="sortTypeSelection($event)">
+    <label igxLabel>Select Sorting Type</label>
+    <igx-select-item *ngFor="let type of sortingTypes" [value]="type.value">
+        {{type.name}}
+    </igx-select-item>
+</igx-select>
+        </igx-grid-toolbar>
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+        <igx-grid #grid1 [data]="data" height="300px" width="300px">
+<igx-grid-toolbar *ngIf="true">
+<igx-grid-toolbar-title>fdasfsa</igx-grid-toolbar-title>
+<igx-select [(ngModel)]="currentSortingType" (selectionChanging)="sortTypeSelection($event)">
+    <label igxLabel>Select Sorting Type</label>
+    <igx-select-item *ngFor="let type of sortingTypes" [value]="type.value">
+        {{type.name}}
+    </igx-select-item>
+</igx-select>
+</igx-grid-toolbar>
+
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+    });
 });
