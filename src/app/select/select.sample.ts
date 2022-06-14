@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
     ISelectionEventArgs, CancelableEventArgs,
     HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy,
@@ -33,7 +33,7 @@ export class SelectSampleComponent implements OnInit {
     public selected: string;
     public selectRequired = true;
 
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
     public cities: string[] = [
         'Sofia',
         'Varna',
@@ -47,7 +47,7 @@ export class SelectSampleComponent implements OnInit {
         citiesSelect: [Validators.required]
     };
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         this.reactiveForm = fb.group({
             citiesSelect: ['', Validators.required]
         });

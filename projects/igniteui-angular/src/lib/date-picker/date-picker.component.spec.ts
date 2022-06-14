@@ -1,5 +1,5 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
@@ -1325,8 +1325,8 @@ export class IgxDatePickerReactiveFormComponent {
 
     public date: Date = new Date(2012, 5, 3);
 
-    public form: FormGroup = new FormGroup({
-        date: new FormControl(null, Validators.required)
+    public form: UntypedFormGroup = new UntypedFormGroup({
+        date: new UntypedFormControl(null, Validators.required)
     });
 
     public removeValidators() {
