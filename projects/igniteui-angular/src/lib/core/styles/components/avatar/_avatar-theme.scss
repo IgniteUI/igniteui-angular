@@ -49,6 +49,10 @@
         $color: text-contrast($background);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -99,7 +103,7 @@
         color: var-get($theme, 'color');
         background: var-get($theme, 'background');
         vertical-align: middle;
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
         outline-style: none;
         flex-shrink: 0;
 
@@ -127,8 +131,7 @@
     }
 
     %igx-avatar--rounded {
-        --igx-avatar-border-radius: 44px;
-        border-radius: var-get(('border-radius': 44px), 'border-radius');
+        --igx-avatar-border-radius: #{rem(44px)};
     }
 
     %igx-avatar--initials {

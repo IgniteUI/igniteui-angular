@@ -1,8 +1,10 @@
-import { AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
+import { ChangeDetectorRef, EventEmitter, Inject } from '@angular/core';
 import { fadeIn } from '../animations/fade';
 import { slideInLeft } from '../animations/slide';
 import { mkenum } from '../core/utils';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { AnimationPlayer, AnimationService } from '../services/animation/animation';
 
 export enum Direction { NONE, NEXT, PREV }
 
@@ -49,7 +51,9 @@ export abstract class IgxCarouselComponentBase {
     /** @hidden */
     protected newDuration = 0;
 
-    constructor(private builder: AnimationBuilder, private cdr: ChangeDetectorRef) {
+    constructor(
+        @Inject(IgxAngularAnimationService) private animationService: AnimationService,
+        private cdr: ChangeDetectorRef) {
     }
 
     /** @hidden */
@@ -143,11 +147,10 @@ export abstract class IgxCarouselComponentBase {
         if (!animation) {
             return;
         }
-        const animationBuilder = this.builder.build(animation);
 
-        this.enterAnimationPlayer = animationBuilder.create(this.getCurrentElement());
-
-        this.enterAnimationPlayer.onDone(() => {
+        this.enterAnimationPlayer = this.animationService.buildAnimation(animation, this.getCurrentElement());
+        this.enterAnimationPlayer.animationEnd.subscribe(() => {
+            // TODO: animation may never end. Find better way to clean up the player
             if (this.enterAnimationPlayer) {
                 this.enterAnimationPlayer.reset();
                 this.enterAnimationPlayer = null;
@@ -168,10 +171,9 @@ export abstract class IgxCarouselComponentBase {
             return;
         }
 
-        const animationBuilder = this.builder.build(animation);
-        this.leaveAnimationPlayer = animationBuilder.create(this.getPreviousElement());
-
-        this.leaveAnimationPlayer.onDone(() => {
+        this.leaveAnimationPlayer = this.animationService.buildAnimation(animation, this.getPreviousElement());
+        this.leaveAnimationPlayer.animationEnd.subscribe(() => {
+            // TODO: animation may never end. Find better way to clean up the player
             if (this.leaveAnimationPlayer) {
                 this.leaveAnimationPlayer.reset();
                 this.leaveAnimationPlayer = null;

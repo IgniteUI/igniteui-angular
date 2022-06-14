@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewCh
 import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule,
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, ReactiveFormsModule,
     FormsModule, NgControl, NgModel, NgForm } from '@angular/forms';
 import {
     IgxComboComponent,
@@ -29,6 +29,7 @@ import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxComboState } from './combo.common';
+import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -51,6 +52,7 @@ const CSS_CLASS_INPUTGROUP_WRAPPER = 'igx-input-group__wrapper';
 const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
 const CSS_CLASS_INPUTGROUP_MAINBUNDLE = 'igx-input-group__bundle-main';
 const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
+const CSS_CLASS_INPUTGROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_SEARCHINPUT = 'input[name=\'searchInput\']';
 const CSS_CLASS_HEADER = 'header-class';
@@ -1912,7 +1914,8 @@ describe('igxCombo', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxComboSampleComponent
+                    IgxComboSampleComponent,
+                    IgxComboRemoteDataComponent
                 ],
                 imports: [
                     IgxComboModule,
@@ -2116,6 +2119,19 @@ describe('igxCombo', () => {
             expect(combo.selection.length).toEqual(0);
             expect(itemCheckbox[0].classList.contains(CSS_CLASS_ITME_CHECKBOX_CHECKED)).toBeFalsy();
         });
+        it('should prevent registration of remote entries when selectionChanging is cancelled', () => {
+            fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.instance;
+
+            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
+            combo.toggle();
+            fixture.detectChanges();
+
+            simulateComboItemClick(0);
+            expect(combo.selection.length).toEqual(0);
+            expect((combo as any)._remoteSelection[0]).toBeUndefined();
+        });
     });
     describe('Grouping tests: ', () => {
         configureTestSuite();
@@ -2168,7 +2184,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
 
             const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
-            spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({ element: { nativeElement: mockObj } });
+            spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({ element: { nativeElement: mockObj } } as IgxDropDownItemBaseDirective);
             (combo.dropdown.headers[0] as IgxComboItemComponent).clicked(null);
             fixture.detectChanges();
             expect(mockObj.focus).not.toHaveBeenCalled(); // Focus only if `allowItemFocus === true`
@@ -2731,7 +2747,7 @@ describe('igxCombo', () => {
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
             });
             it('should properly initialize when used as a form control - without validators', () => {
-                const form: FormGroup = fixture.componentInstance.reactiveForm;
+                const form: UntypedFormGroup = fixture.componentInstance.reactiveForm;
                 form.controls.townCombo.validator = null;
                 expect(combo).toBeDefined();
                 const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
@@ -2824,6 +2840,28 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(form.status).toEqual('VALID');
                 fixture.debugElement.query(By.css('button')).triggerEventHandler('click', UIInteractions.simulateClickAndSelectEvent);
+            });
+            it('should add/remove asterisk when setting validators dynamically', () => {
+                let inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
+                let asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
+                expect(asterisk).toBe('"*"');
+                expect(inputGroupIsRequiredClass).toBeDefined();
+
+                fixture.componentInstance.reactiveForm.controls.townCombo.clearValidators();
+                fixture.componentInstance.reactiveForm.controls.townCombo.updateValueAndValidity();
+                fixture.detectChanges();
+                inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
+                asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
+                expect(asterisk).toBe('none');
+                expect(inputGroupIsRequiredClass).toBeNull();
+
+                fixture.componentInstance.reactiveForm.controls.townCombo.setValidators(Validators.required);
+                fixture.componentInstance.reactiveForm.controls.townCombo.updateValueAndValidity();
+                fixture.detectChanges();
+                inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
+                asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
+                expect(asterisk).toBe('"*"');
+                expect(inputGroupIsRequiredClass).toBeDefined();
             });
         });
         describe('Template form tests: ', () => {
@@ -3100,7 +3138,7 @@ class IgxComboSampleComponent {
 <p>
 <igx-combo #comboReactive formControlName="townCombo"
 class="input-container" [filterable]="true" placeholder="Location(s)"
-[data]="items" [displayKey]="'field'" [groupKey]="'region'"></igx-combo>
+[data]="items" [displayKey]="'field'" [groupKey]="'region'"><label igxLabel>Town</label></igx-combo>
 </p>
 <p>
 <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
@@ -3121,9 +3159,9 @@ class IgxComboFormComponent {
         this.combo.select(values);
     }
 
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
 
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
@@ -3154,7 +3192,7 @@ class IgxComboFormComponent {
         }
 
         this.reactiveForm = fb.group({
-            firstName: new FormControl('', Validators.required),
+            firstName: new UntypedFormControl('', Validators.required),
             password: ['', Validators.required],
             townCombo: [[this.items[0]], Validators.required]
         });

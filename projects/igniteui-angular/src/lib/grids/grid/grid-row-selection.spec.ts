@@ -356,13 +356,6 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyRowSelected(firstRow);
 
-            // Click again on this row holding Ctrl
-            UIInteractions.simulateClickEvent(firstRow.nativeElement, false, true);
-            fix.detectChanges();
-
-            GridSelectionFunctions.verifyRowSelected(firstRow);
-            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
-
             // Click on a different row
             UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
             fix.detectChanges();
@@ -371,6 +364,45 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(secondRow);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
+        });
+        it('Should deselect selected row with clicking and holding Ctrl', () => {
+            expect(grid.selectRowOnClick).toBe(true);
+            spyOn(grid.rowSelectionChanging, 'emit').and.callThrough();
+            const firstRow = grid.gridAPI.get_row_by_index(2);
+            const secondRow = grid.gridAPI.get_row_by_index(0);
+
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+
+            // Click again on this row holding Ctrl
+            UIInteractions.simulateClickEvent(firstRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
+
+            // Click on the first and second row
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(4);
+
+            // Click again on the second row
+            UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(5);
         });
         it('Should NOT select rows with clicking and holding Ctrl when selectRowOnClick has false value', () => {
             grid.selectRowOnClick = false;
@@ -878,6 +910,25 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
             GridSelectionFunctions.verifyRowSelected(secondRow);
             expect(grid.selectedRows).toEqual([1]);
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
+        });
+        it('Should deselect a selected row with clicking and holding Ctrl', () => {
+            spyOn(grid.rowSelectionChanging, 'emit').and.callThrough();
+            const firstRow = grid.gridAPI.get_row_by_index(2);
+
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
+            expect(grid.selectedRows).toEqual([3]);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+
+            // Click on the same row holding Ctrl
+            UIInteractions.simulateClickEvent(firstRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            expect(grid.selectedRows.length).toEqual(0);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
         });
         it('Should not select a row with clicking and holding Ctrl when selectRowOnClick has false value', () => {

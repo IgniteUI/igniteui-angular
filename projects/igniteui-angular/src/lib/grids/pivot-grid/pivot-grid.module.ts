@@ -9,6 +9,7 @@ import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import { IgxPivotGridComponent } from "./pivot-grid.component";
 import {
     IgxFilterPivotItemsPipe,
+    IgxPivotGridCellStyleClassesPipe,
     IgxPivotAutoTransform,
     IgxPivotCellMergingPipe,
     IgxPivotColumnPipe,
@@ -44,6 +45,7 @@ import { IgxPivotRowComponent } from "./pivot-row.component";
         IgxPivotGridColumnSortingPipe,
         IgxPivotCellMergingPipe,
         IgxFilterPivotItemsPipe,
+        IgxPivotGridCellStyleClassesPipe,
         IgxPivotDataSelectorComponent,
     ],
     exports: [
@@ -63,10 +65,10 @@ import { IgxPivotRowComponent } from "./pivot-row.component";
         IgxPivotGridColumnSortingPipe,
         IgxPivotCellMergingPipe,
         IgxFilterPivotItemsPipe,
+        IgxPivotGridCellStyleClassesPipe,
         IgxPivotDataSelectorComponent,
     ],
     imports: [IgxGridModule, IgxExpansionPanelModule, IgxDragDropModule, IgxListModule, IgxAccordionModule],
-    entryComponents: [IgxGridComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxPivotGridModule {}

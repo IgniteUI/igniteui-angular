@@ -1,5 +1,5 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { cloneArray } from '../../core/utils';
+import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { DefaultPivotGridRecordSortingStrategy } from '../../data-operations/pivot-sort-strategy';
@@ -13,7 +13,7 @@ import { GridBaseAPIService } from '../api.service';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IGridSortingStrategy } from '../common/strategy';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, IPivotValue } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridColumn, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, IPivotValue } from './pivot-grid.interface';
 import { PivotSortUtil } from './pivot-sort-util';
 import { PivotUtil } from './pivot-util';
 
@@ -110,7 +110,7 @@ export class IgxPivotAutoTransform implements PipeTransform {
                 }
             }
             const flattened = PivotUtil.flatten(config.rows);
-            pivotRec.dimensions.sort((x,y) => flattened.indexOf(x) - flattened.indexOf(y));
+            pivotRec.dimensions.sort((x, y) => flattened.indexOf(x) - flattened.indexOf(y));
             result.push(pivotRec);
         }
         return result;
@@ -143,7 +143,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
             PivotUtil.flattenGroups(data, row, expansionStates, defaultExpand);
         }
         const finalData = enabledRows.length > 0 ?
-         data.filter(x => x.dimensions.length === enabledRows.length) : data;
+            data.filter(x => x.dimensions.length === enabledRows.length) : data;
 
         if (this.grid) {
             this.grid.setFilteredSortedData(finalData, false);
@@ -278,7 +278,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
         if (!expressions.length) {
             result = collection;
         } else {
-            for(const expr of expressions) {
+            for (const expr of expressions) {
                 expr.strategy = DefaultPivotGridRecordSortingStrategy.instance();
             }
             result = PivotUtil.sort(cloneArray(collection, true), expressions, sorting);
@@ -341,5 +341,32 @@ export class IgxFilterPivotItemsPipe implements PipeTransform {
             copy = collection.filter(filterFunc);
         }
         return copy;
+    }
+}
+
+interface GridStyleCSSProperty {
+    [prop: string]: any;
+}
+
+@Pipe({ name: 'igxPivotCellStyleClasses' })
+export class IgxPivotGridCellStyleClassesPipe implements PipeTransform {
+
+    public transform(cssClasses: GridStyleCSSProperty, _: any, rowData: IPivotGridRecord, columnData: IPivotGridColumn, index: number, __: number): string {
+        if (!cssClasses) {
+            return '';
+        }
+
+        const result = [];
+
+        for (const cssClass of Object.keys(cssClasses)) {
+            const callbackOrValue = cssClasses[cssClass];
+            const apply = typeof callbackOrValue === 'function' ?
+                callbackOrValue(rowData, columnData, resolveNestedPath(rowData, columnData.field), index) : callbackOrValue;
+            if (apply) {
+                result.push(cssClass);
+            }
+        }
+
+        return result.join(' ');
     }
 }

@@ -381,7 +381,6 @@
       }
     }
   },
-  "defaultProject": "igniteui-dev-demos",
   "cli": {
     "analytics": false
   }

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { HorizontalAnimationType } from 'projects/igniteui-angular/src/lib/carousel/carousel-base';
 import {
     IgxStepperTitlePosition, IgxStepperOrientation, IgxStepType, VerticalAnimationType
@@ -40,10 +40,10 @@ export class IgxStepperSampleComponent {
         lastName: ''
     };
 
-    public user3: FormGroup;
-    public user4: FormGroup;
+    public user3: UntypedFormGroup;
+    public user4: UntypedFormGroup;
 
-    constructor(private cdr: ChangeDetectorRef, fb: FormBuilder) {
+    constructor(private cdr: ChangeDetectorRef, fb: UntypedFormBuilder) {
         this.stepTypes = [
             {
                 label: 'Indicator', stepType: IgxStepType.Indicator,
@@ -109,7 +109,7 @@ export class IgxStepperSampleComponent {
         ];
 
         this.user3 = fb.group({
-            fullName: new FormControl('', Validators.required),
+            fullName: new UntypedFormControl('', Validators.required),
             email: ['', Validators.required]
         });
 

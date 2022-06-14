@@ -172,6 +172,9 @@
     %igx-slider-display {
         display: flex;
         position: relative;
+        // Z-index 0 is needed to set the stacking context for the inner elements with z-index.
+        // https://github.com/IgniteUI/igniteui-angular/issues/11597
+        z-index: 0;
         height: rem($slider-height);
         flex-grow: 1;
         align-items: center;

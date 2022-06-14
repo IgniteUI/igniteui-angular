@@ -23,6 +23,13 @@ import { takeUntil, throttle } from 'rxjs/operators';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { IDropStrategy, IgxDefaultDropStrategy } from './drag-drop.strategy';
 
+enum DragScrollDirection {
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT
+}
+
 export enum DragDirection {
     VERTICAL,
     HORIZONTAL,
@@ -299,6 +306,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public ghostHost;
 
     /**
+     * An @Input assigning a scroll container to the dragged element. By default its the window.
+     */
+    @Input()
+    public scrollContainer: HTMLElement =null
+
+    /**
      * Event triggered when the draggable element drag starts.
      * ```html
      * <div igxDrag (dragStart)="onDragStart()">
@@ -484,7 +497,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.ghost && this.ghostElement) {
             return this.ghostLeft;
         }
-        return this.baseLeft;
+        return this.baseLeft + this.windowScrollLeft;
     }
 
     /**
@@ -494,7 +507,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.ghost && this.ghostElement) {
             return this.ghostTop;
         }
-        return this.baseTop;
+        return this.baseTop + this.windowScrollTop;
     }
 
     protected get baseLeft(): number {
@@ -539,6 +552,22 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return parseInt(this.ghostElement.style.top, 10) + this._ghostHostY;
     }
 
+    protected get windowScrollTop() {
+        return document.documentElement.scrollTop || window.scrollY;
+    }
+
+    protected get windowScrollLeft() {
+        return document.documentElement.scrollLeft || window.scrollX;
+    }
+
+    protected get windowScrollHeight() {
+        return document.documentElement.scrollHeight;
+    }
+
+    protected get windowScrollWidth() {
+        return document.documentElement.scrollWidth;
+    }
+
     /**
      * @hidden
      */
@@ -579,6 +608,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _destroy = new Subject<boolean>();
     protected _removeOnDestroy = true;
     protected _data: any;
+    protected _scrollContainer = null;
+    protected _originalScrollContainerWidth = 0;
+    protected _originalScrollContainerHeight = 0;
+    protected _scrollContainerStep = 5;
+    protected _scrollContainerStepMs = 10;
+    protected _scrollContainerThreshold = 25;
+    protected _containerScrollIntervalId = null;
 
     /**
      * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
@@ -720,6 +756,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 this._dynamicGhostRef = null;
             }
         }
+
+        if (this._containerScrollIntervalId) {
+            clearInterval(this._containerScrollIntervalId);
+            this._containerScrollIntervalId = null;
+        }
     }
 
     /**
@@ -732,8 +773,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.ghost && this.ghostElement) {
             const offsetHostX = this.ghostHost ? this.ghostHostOffsetLeft(this.ghostHost) : 0;
             const offsetHostY = this.ghostHost ? this.ghostHostOffsetTop(this.ghostHost) : 0;
-            this.ghostLeft = newLocation.pageX - offsetHostX + this.getWindowScrollLeft();
-            this.ghostTop = newLocation.pageY - offsetHostY + this.getWindowScrollTop();
+            this.ghostLeft = newLocation.pageX - offsetHostX + this.windowScrollLeft;
+            this.ghostTop = newLocation.pageY - offsetHostY + this.windowScrollTop;
         } else if (!this.ghost) {
             const deltaX = newLocation.pageX - this.pageX;
             const deltaY = newLocation.pageY - this.pageY;
@@ -817,8 +858,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         } else if (this.ghost && !this.ghostElement) {
             this._startX = this.baseLeft;
             this._startY = this.baseTop;
-            this._ghostStartX = this._startX + this.getWindowScrollLeft();
-            this._ghostStartY = this._startY + this.getWindowScrollTop();
+            this._ghostStartX = this._startX + this.windowScrollLeft;
+            this._ghostStartY = this._startY + this.windowScrollTop;
         }
 
         if (this.ghost && !this.ghostElement) {
@@ -841,8 +882,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             } else {
                 const targetRects = target.nativeElement.getBoundingClientRect();
                 this.setLocation(new IgxDragLocation(
-                    targetRects.left -  this.getWindowScrollLeft(),
-                    targetRects.top - this.getWindowScrollTop()
+                    targetRects.left -  this.windowScrollLeft,
+                    targetRects.top - this.windowScrollTop
                 ));
             }
         }, 0);
@@ -881,8 +922,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this._startY = event.touches[0].pageY;
         }
 
-        this._defaultOffsetX = this.baseLeft - this._startX + this.getWindowScrollLeft();
-        this._defaultOffsetY = this.baseTop - this._startY + this.getWindowScrollTop();
+        this._defaultOffsetX = this.baseLeft - this._startX + this.windowScrollLeft;
+        this._defaultOffsetY = this.baseTop - this._startY + this.windowScrollTop;
         this._ghostStartX = this._startX + this.ghostOffsetX;
         this._ghostStartY = this._startY + this.ghostOffsetY;
         this._lastX = this._startX;
@@ -965,6 +1006,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             const setPageX = moveArgs.nextPageX;
             const setPageY = moveArgs.nextPageY;
             if (!moveArgs.cancel) {
+                // Scroll root container if the user reaches its boundaries.
+                this.onScrollContainer();
+
+                // Move the actual element around
                 if (this.ghost) {
                     const updatedTotalMovedX = this.dragDirection === DragDirection.VERTICAL ? 0 : setPageX - this._startX;
                     const updatedTotalMovedY = this.dragDirection === DragDirection.HORIZONTAL ? 0 : setPageY - this._startY;
@@ -1038,6 +1083,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 this.dragClick.emit(eventArgs);
             });
         }
+
+        if (this._containerScrollIntervalId) {
+            clearInterval(this._containerScrollIntervalId);
+            this._containerScrollIntervalId = null;
+        }
     }
 
     /**
@@ -1082,8 +1132,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         if (this.ghost && this.ghostElement) {
-            this._ghostStartX = this.baseLeft + this.getWindowScrollLeft();
-            this._ghostStartY = this.baseTop + this.getWindowScrollTop();
+            this._ghostStartX = this.baseLeft + this.windowScrollLeft;
+            this._ghostStartY = this.baseTop + this.windowScrollTop;
 
             const ghostDestroyArgs: IDragGhostBaseEventArgs = {
                 owner: this,
@@ -1220,16 +1270,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             originalEvent
         };
 
-        let elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
-
+        const elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
+        let targetElements = [];
         // Check for shadowRoot instance and use it if present
         for (const elFromPoint of elementsFromPoint) {
             if (!!elFromPoint?.shadowRoot) {
-                elementsFromPoint = elFromPoint.shadowRoot.elementsFromPoint(pageX, pageY);
+                targetElements = targetElements.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY));
+            } else if (targetElements.indexOf(elFromPoint) === -1) {
+                targetElements.push(elFromPoint);
             }
         }
 
-        for (const element of elementsFromPoint) {
+        for (const element of targetElements) {
             if (element.getAttribute('droppable') === 'true' &&
             element !== this.ghostElement && element !== this.element.nativeElement) {
                 topDropArea = element;
@@ -1254,6 +1306,21 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (topDropArea) {
             this.dispatchEvent(topDropArea, 'igxDragOver', customEventArgs);
         }
+    }
+
+    /**
+     * @hidden
+     * Traverse shadow dom in depth.
+     */
+    protected getFromShadowRoot(elem, pageX, pageY) {
+        const elementsFromPoint = elem.shadowRoot.elementsFromPoint(pageX, pageY);
+        let res = elementsFromPoint;
+        for (const elFromPoint of elementsFromPoint) {
+            if (!!elFromPoint?.shadowRoot && elFromPoint.shadowRoot !== elem.shadowRoot) {
+                res = res.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY));
+            }
+        }
+        return res;
     }
 
     /**
@@ -1334,22 +1401,14 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this.element.nativeElement.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0px)';
     }
 
-    protected getWindowScrollTop() {
-        return window.scrollY ? window.scrollY : (window.pageYOffset ? window.pageYOffset : 0);
-    }
-
-    protected getWindowScrollLeft() {
-        return window.scrollX ? window.scrollX : (window.pageXOffset ? window.pageXOffset : 0);
-    }
-
     protected ghostHostOffsetLeft(ghostHost: any) {
         const ghostPosition = document.defaultView.getComputedStyle(ghostHost).getPropertyValue('position');
         if (ghostPosition === 'static' && ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
             return 0;
         } else if (ghostPosition === 'static' && ghostHost.offsetParent) {
-            return ghostHost.offsetParent.getBoundingClientRect().left - this.getWindowScrollLeft();
+            return ghostHost.offsetParent.getBoundingClientRect().left - this.windowScrollLeft;
         }
-        return ghostHost.getBoundingClientRect().left - this.getWindowScrollLeft();
+        return ghostHost.getBoundingClientRect().left - this.windowScrollLeft;
     }
 
     protected ghostHostOffsetTop(ghostHost: any) {
@@ -1357,9 +1416,102 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (ghostPosition === 'static' && ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
             return 0;
         } else if (ghostPosition === 'static' && ghostHost.offsetParent) {
-            return ghostHost.offsetParent.getBoundingClientRect().top - this.getWindowScrollTop();
+            return ghostHost.offsetParent.getBoundingClientRect().top - this.windowScrollTop;
         }
-        return ghostHost.getBoundingClientRect().top - this.getWindowScrollTop();
+        return ghostHost.getBoundingClientRect().top - this.windowScrollTop;
+    }
+
+    protected getContainerScrollDirection() {
+        const containerBounds = this.scrollContainer ?  this.scrollContainer.getBoundingClientRect() : null;
+        const scrolledX = !this.scrollContainer ? this.windowScrollLeft > 0 : this.scrollContainer.scrollLeft > 0;
+        const scrolledY = !this.scrollContainer ? this.windowScrollTop > 0 : this.scrollContainer.scrollTop > 0;
+        // Take into account window scroll top because we do not use fixed positioning to the window.
+        const topBorder = (!this.scrollContainer ? 0 : containerBounds.top) + this.windowScrollTop + this._scrollContainerThreshold;
+        // Subtract the element height because we position it from top left corner.
+        const elementHeight = this.ghost && this.ghostElement ? this.ghostElement.offsetHeight : this.element.nativeElement.offsetHeight;
+        const bottomBorder = (!this.scrollContainer ? window.innerHeight : containerBounds.bottom ) +
+            this.windowScrollTop - this._scrollContainerThreshold  - elementHeight;
+        // Same for window scroll left 
+        const leftBorder = (!this.scrollContainer ? 0 : containerBounds.left) + this.windowScrollLeft + this._scrollContainerThreshold;
+        // Subtract the element width again because we position it from top left corner.
+        const elementWidth = this.ghost && this.ghostElement ? this.ghostElement.offsetWidth :  this.element.nativeElement.offsetWidth;
+        const rightBorder = (!this.scrollContainer ? window.innerWidth : containerBounds.right) +
+            this.windowScrollLeft - this._scrollContainerThreshold - elementWidth
+        
+        if (this.pageY <= topBorder && scrolledY) {
+            return DragScrollDirection.UP;
+        } else if (this.pageY > bottomBorder) {
+            return DragScrollDirection.DOWN;
+        } else if (this.pageX < leftBorder && scrolledX) {
+            return DragScrollDirection.LEFT;
+        } else if (this.pageX > rightBorder) {
+            return DragScrollDirection.RIGHT;
+        }
+        return null;
+    }
+
+    protected onScrollContainerStep(scrollDir: DragScrollDirection) {
+        animationFrameScheduler.schedule(() => {
+
+            let xDir = scrollDir == DragScrollDirection.LEFT ? -1 : (scrollDir == DragScrollDirection.RIGHT ? 1 : 0);
+            let yDir = scrollDir == DragScrollDirection.UP ? -1 : (scrollDir == DragScrollDirection.DOWN ? 1 : 0);
+            if (!this.scrollContainer) {
+                // Cap scrolling so we don't scroll past the window max scroll position.
+                const maxScrollX = this._originalScrollContainerWidth - document.documentElement.clientWidth;
+                const maxScrollY = this._originalScrollContainerHeight - document.documentElement.clientHeight;
+                xDir = (this.windowScrollLeft <= 0 && xDir < 0) || (this.windowScrollLeft >= maxScrollX && xDir > 0) ? 0 : xDir;
+                yDir = (this.windowScrollTop <= 0 && yDir < 0) || (this.windowScrollTop >= maxScrollY && yDir > 0) ? 0 : yDir;
+            } else {
+                // Cap scrolling so we don't scroll past the container max scroll position.
+                const maxScrollX = this._originalScrollContainerWidth - this.scrollContainer.clientWidth;
+                const maxScrollY = this._originalScrollContainerHeight - this.scrollContainer.clientHeight;
+                xDir = (this.scrollContainer.scrollLeft <= 0 && xDir < 0) || (this.scrollContainer.scrollLeft >= maxScrollX && xDir > 0) ? 0 : xDir;
+                yDir = (this.scrollContainer.scrollTop <= 0 && yDir < 0) || (this.scrollContainer.scrollTop >= maxScrollY && yDir > 0) ? 0 : yDir;
+            }
+
+            const scrollByX = xDir * this._scrollContainerStep;
+            const scrollByY = yDir * this._scrollContainerStep;
+
+            // Scroll the corresponding window or container.
+            if (!this.scrollContainer) {
+                window.scrollBy(scrollByX, scrollByY);
+            } else {
+                this.scrollContainer.scrollLeft += scrollByX;
+                this.scrollContainer.scrollTop += scrollByY;
+            }
+
+            if (this.ghost && !this.scrollContainer)  {
+                // Scroll the ghost only when there is no container specifies.
+                // If it has container the ghost pretty much stays in the same position while the container is scrolled since e use top/left position.
+                // Otherwise increase the position the same amount we have scrolled the window
+                this.ghostLeft += scrollByX;
+                this.ghostTop += scrollByY;
+            } else if (!this.ghost) {
+                // Move the base element the same amount we moved the window/container because we use transformations.
+                const translateX = this.getTransformX(this.element.nativeElement) + scrollByX;
+                const translateY = this.getTransformY(this.element.nativeElement) + scrollByY;
+                this.setTransformXY(translateX, translateY);
+                if (!this.scrollContainer) {
+                    this._lastX += scrollByX;
+                    this._lastY += scrollByY;
+                }
+            }
+        })
+    }
+
+    protected onScrollContainer() {
+        const scrollDir = this.getContainerScrollDirection();
+        if (scrollDir !== null && scrollDir !== undefined && !this._containerScrollIntervalId) {
+            // Save original container sizes to ensure that we don't increase scroll sizes infinitely when out of bounds.
+            this._originalScrollContainerWidth = this.scrollContainer ? this.scrollContainer.scrollWidth : this.windowScrollWidth;
+            this._originalScrollContainerHeight = this.scrollContainer ? this.scrollContainer.scrollHeight : this.windowScrollHeight;
+
+            this._containerScrollIntervalId = setInterval(() => this.onScrollContainerStep(scrollDir), this._scrollContainerStepMs);
+        } else if ((scrollDir === null || scrollDir === undefined) && this._containerScrollIntervalId) {
+            // We moved out of end bounds and there is interval started
+            clearInterval(this._containerScrollIntervalId);
+            this._containerScrollIntervalId = null;
+        }
     }
 }
 

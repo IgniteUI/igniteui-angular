@@ -2,29 +2,32 @@
 
 # Current Milestone
 
-## Milestone 21 (Due by May, 2022)
+## Milestone 22 (Due by June, 2022)
 
-1. Improve sorting experience for users [#9674](https://github.com/IgniteUI/igniteui-angular/issues/9674)
-2. Template grid excel filter footer [#10183](https://github.com/IgniteUI/igniteui-angular/issues/10183) 
-3. Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205)
-4. Pivot Grid background color [#11158](https://github.com/IgniteUI/igniteui-angular/issues/11158)
-5. Fluent inputs styles [#11145](https://github.com/IgniteUI/igniteui-angular/issues/11145)
-6. Checkbox size and disabled state in Bootstrap [#11096](https://github.com/IgniteUI/igniteui-angular/issues/11096)
-7. [Pivot] Integrate ESF in tree view [#11049](https://github.com/IgniteUI/igniteui-angular/issues/11049) 
-8. Rework default sorting/filtering strategy's and their methods to be grid agnostic [#10922](https://github.com/IgniteUI/igniteui-angular/issues/10922)
-9. Validator service for igxGrid editing [#6501](https://github.com/IgniteUI/igniteui-angular/issues/6501)
+1. Support for Angular 14.0.0.
 
 ## Going down the road
 
-1. Scheduler component [#8097](https://github.com/IgniteUI/igniteui-angular/issues/8097)
-2. IgxLinearProgressBar: animate initial progress [#10068](https://github.com/IgniteUI/igniteui-angular/issues/10068)
-3. Classes to indicate position of auto overlay [#9481](https://github.com/IgniteUI/igniteui-angular/issues/9481)
+1. Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205) 
+2. Rework default sorting/filtering strategy's and their methods to be grid agnostic [#10922](https://github.com/IgniteUI/igniteui-angular/issues/10922) 
+3. Validator service for igxGrid editing [#6501](https://github.com/IgniteUI/igniteui-angular/issues/6501)
 4. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
 5. Getting only one sort and one filter event after changing the state of grid using setState function [#8064](https://github.com/IgniteUI/igniteui-angular/issues/8064)
 6. Grid Cell Merging [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
-7. Switch overlay service from angular animations to native Web Animations [#8780](https://github.com/IgniteUI/igniteui-angular/issues/8780)
+7. IgxLinearProgressBar: animate initial progress [#10068](https://github.com/IgniteUI/igniteui-angular/issues/10068)
+8. Classes to indicate position of auto overlay [#9481](https://github.com/IgniteUI/igniteui-angular/issues/9481) 
+9. Switch overlay service from angular animations to native Web Animations [#8780](https://github.com/IgniteUI/igniteui-angular/issues/8780)
 
 # Previous Milestone
+
+## Milestone 21 (Released May 25th, 2022)
+
+1. **[DONE]** Improve sorting experience for users [#9674](https://github.com/IgniteUI/igniteui-angular/issues/9674)
+2. **[DONE]** Template grid excel filter footer [#10183](https://github.com/IgniteUI/igniteui-angular/issues/10183) 
+3. **[DONE]** Pivot Grid background color [#11158](https://github.com/IgniteUI/igniteui-angular/issues/11158)
+4. **[DONE]** Fluent inputs styles [#11145](https://github.com/IgniteUI/igniteui-angular/issues/11145)
+5. **[DONE]** Checkbox size and disabled state in Bootstrap [#11096](https://github.com/IgniteUI/igniteui-angular/issues/11096)
+6. **[DONE]** [Pivot] Integrate ESF in tree view [#11049](https://github.com/IgniteUI/igniteui-angular/issues/11049) 
 
 ## Milestone 20 (Released March 2nd, 2022)
 
