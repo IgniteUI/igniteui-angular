@@ -1984,7 +1984,7 @@ export class GridFunctions {
             const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
             expect(groupBlock).not.toBeNull();
             groupSetting.columns.forEach((col, colIndex) => {
-                const cell = cellsFromBlock.find(x => x.column.field == col.field) as any;
+                const cell = cellsFromBlock.find(x => x.column.field === col.field) as any;
                 const cellElem = cell.nativeElement;
                 // check correct attributes are applied
                 expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
