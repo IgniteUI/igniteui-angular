@@ -1,6 +1,7 @@
 <p align="center">
   <a href="#">
-    <img alt="ignite-ui-logo" src="src/assets/svg/ignite-ui-logo-flames.svg" width="">
+    <img alt=![ignite-ui-logo-flames](https://user-images.githubusercontent.com/52001020/173772885-e1c6d7eb-a3ff-4444-8ab3-b5d65333a6cd.svg)
+ width="">
   </a>
 </p>
 
