@@ -10,7 +10,6 @@ import {
     Inject,
     Injectable,
     Injector,
-    NgModuleRef,
     NgZone,
     OnDestroy,
     Type,
@@ -317,7 +316,7 @@ export class IgxOverlayService implements OnDestroy {
      *
      * @param component Component Type to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
-     * @param viewContainerRef Optional reference to an object containing Injector and ComponentFactoryResolver
+     * @param moduleRef Optional reference to an object containing Injector and ComponentFactoryResolver
      * that can resolve the component's factory
      * @returns Id of the created overlay. Valid until `detach` is called.
      * @deprecated deprecated in 14.0.0. Use attache(component, settings, viewContainerRef) overload
@@ -325,21 +324,20 @@ export class IgxOverlayService implements OnDestroy {
     public attach(
         component: Type<any>,
         settings?: OverlaySettings,
-        viewContainerRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string;
+        moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string;
     /**
      * Generates Id. Provide this Id when call `show(id)` method
      *
      * @param component Component Type to show in overlay
-     * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @param viewContainerRef Reference
+     * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      */
-    public attach(component: Type<any>, settings?: OverlaySettings, viewContainerRef?: ViewContainerRef): string;
+    public attach(component: Type<any>, viewContainerRef: ViewContainerRef, settings?: OverlaySettings): string;
     public attach(
-        component: ElementRef | Type<any>,
-        settings?: OverlaySettings,
-        // TODO: make viewContainerRef parameter mandatory
-        viewContainerRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | ViewContainerRef): string {
-        const info: OverlayInfo = this.getOverlayInfo(component, viewContainerRef);
+        componentOrElement: ElementRef | Type<any>,
+        viewContainerRefOrSettings: ViewContainerRef | OverlaySettings | undefined,
+        moduleRefOrSettings?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | OverlaySettings): string {
+        const info: OverlayInfo = this.getOverlayInfo(componentOrElement, this.getUserViewContainerOrModuleRef(viewContainerRefOrSettings, moduleRefOrSettings));
 
         if (!info) {
             console.warn('Overlay was not able to attach provided component!');
@@ -348,8 +346,8 @@ export class IgxOverlayService implements OnDestroy {
 
         info.id = (this._componentId++).toString();
         info.visible = false;
-        settings = Object.assign({}, this._defaultSettings, settings);
-        info.settings = settings;
+        moduleRefOrSettings = Object.assign({}, this._defaultSettings, this.getUserOverlaySettings(viewContainerRefOrSettings, moduleRefOrSettings));
+        info.settings = moduleRefOrSettings;
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
@@ -559,6 +557,34 @@ export class IgxOverlayService implements OnDestroy {
             this.closeDone(info);
         }
     }
+
+    private getUserOverlaySettings(
+      viewContainerRefOrSettings: ViewContainerRef | OverlaySettings | undefined,
+      moduleRefOrSettings?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | OverlaySettings): OverlaySettings | undefined {
+        let result: OverlaySettings | undefined;
+        if (!(viewContainerRefOrSettings instanceof ViewContainerRef)) {
+            result = viewContainerRefOrSettings;
+        }
+        if (!('injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings)) {
+            result = moduleRefOrSettings;
+        }
+        return result;
+    }
+
+
+    private getUserViewContainerOrModuleRef(
+        viewContainerRefOrSettings: ViewContainerRef | OverlaySettings | undefined,
+        moduleRefOrSettings?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | OverlaySettings
+        ): ViewContainerRef | { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | undefined {
+          let result: ViewContainerRef | { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | undefined;
+          if (viewContainerRefOrSettings instanceof ViewContainerRef) {
+              result = viewContainerRefOrSettings;
+          }
+          if ('injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings) {
+              result = moduleRefOrSettings;
+          }
+          return result;
+      }
 
     private getOverlayInfo(
         component: ElementRef | Type<any>,
