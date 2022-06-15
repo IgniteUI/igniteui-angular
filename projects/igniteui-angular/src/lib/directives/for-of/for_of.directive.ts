@@ -1517,7 +1517,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     public recalcUpdateSizes() {
-        if (this.igxGridForOfVariableSizes) {
+        if (this.igxGridForOfVariableSizes && this.igxForScrollOrientation === 'vertical') {
             super.recalcUpdateSizes();
         }
     }
