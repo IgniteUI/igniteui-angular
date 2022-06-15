@@ -269,16 +269,32 @@
 @mixin category-chart-typography($type-scale, $categories: (
     'title': 'h6',
     'subtitle': 'subtitle-1',
+    'x-axis-label-text-style': 'body-2',
+    'x-axis-title-text-style': 'body-2',
+    'y-axis-label-text-style': 'body-2',
+    'y-axis-title-text-style': 'body-2',
 )) {
     $name: 'category-chart';
     $title: map.get($categories, 'title');
     $subtitle: map.get($categories, 'subtitle');
+    $x-axis-label-text-style: map.get($categories, 'x-axis-label-text-style');
+    $x-axis-title-text-style: map.get($categories, 'x-axis-title-text-style');
+    $y-axis-label-text-style: map.get($categories, 'y-axis-label-text-style');
+    $y-axis-title-text-style: map.get($categories, 'y-axis-title-text-style');
 
     $title-styles: type-scale-category($type-scale, $title);
     $subtitle-styles: type-scale-category($type-scale, $subtitle);
+    $x-axis-label-styles: type-scale-category($type-scale, $x-axis-label-text-style);
+    $x-axis-title-styles: type-scale-category($type-scale, $x-axis-title-text-style);
+    $y-axis-label-styles: type-scale-category($type-scale, $y-axis-label-text-style);
+    $y-axis-title-styles: type-scale-category($type-scale, $y-axis-title-text-style);
 
     igx-category-chart {
         @include font-var('title-text-style', $title-styles, $name);
         @include font-var('subtitle-text-style', $subtitle-styles, $name);
+        @include font-var('x-axis-label-text-style', $x-axis-label-styles, $name);
+        @include font-var('x-axis-title-text-style', $x-axis-title-styles, $name);
+        @include font-var('y-axis-label-text-style', $y-axis-label-styles, $name);
+        @include font-var('y-axis-title-text-style', $y-axis-title-styles, $name);
     }
 }
