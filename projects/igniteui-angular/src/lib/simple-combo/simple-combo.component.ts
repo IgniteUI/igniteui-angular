@@ -432,7 +432,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return this.convertKeysToItems(newSelection).map(e => e[this.displayKey])[0];
         }
 
-        return newSelection[0] || '';
+        return newSelection[0]?.toString() || '';
     }
 
     private clearSelection(ignoreFilter?: boolean): void {
