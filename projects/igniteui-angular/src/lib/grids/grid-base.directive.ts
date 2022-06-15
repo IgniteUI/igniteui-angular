@@ -5164,7 +5164,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get hasMovableColumns(): boolean {
-        return this.columnList && this.columnList.some((col) => col.movable);
+        return this.columns && this.columns.some((col) => col.movable);
     }
 
     /**
