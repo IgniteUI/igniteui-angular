@@ -16,7 +16,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
+import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs, PlatformUtil } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfModule } from '../directives/for-of/for_of.directive';
@@ -194,6 +194,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         protected selectionService: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
         protected _iconService: IgxIconService,
+        private platformUtil: PlatformUtil,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector) {
@@ -217,6 +218,15 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         } else if (event.key === 'Escape' || event.key === 'Esc') {
             this.toggle();
         }
+    }
+
+    /** @hidden @internal */
+    public handleInputChange(event?: any): void {
+        if (event.target.value === this.platformUtil.KEYMAP.SPACE && !this.searchValue.trim()) {
+            this.searchInput.nativeElement.value = '';
+            return;
+        }
+        super.handleInputChange(event);
     }
 
     /**
