@@ -6221,6 +6221,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Update internal column's collection.
+     *
      * @hidden
      */
      public updateColumns(newColumns: IgxColumnComponent[]) {
