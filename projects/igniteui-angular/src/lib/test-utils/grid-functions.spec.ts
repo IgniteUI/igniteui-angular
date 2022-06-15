@@ -1965,9 +1965,10 @@ export class GridFunctions {
     }
 
     public static verifyLayoutHeadersAreAligned(headerGroups: IgxGridHeaderGroupComponent[], rowCells: IgxGridCellComponent[]) {
-        for (let i = 0; i < headerGroups.length; i++) {
-            const widthDiff = headerGroups[i].header.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
-            const heightDiff = headerGroups[i].header.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
+        for (const headerGroup of headerGroups) {
+            const rc = rowCells.find(x => x.column === headerGroup.header.column);
+            const widthDiff = headerGroup.header.nativeElement.clientWidth - rc.nativeElement.clientWidth;
+            const heightDiff = headerGroup.header.nativeElement.clientHeight - rc.nativeElement.clientHeight;
             expect(widthDiff).toBeLessThanOrEqual(1);
             expect(heightDiff).toBeLessThanOrEqual(3);
         }
