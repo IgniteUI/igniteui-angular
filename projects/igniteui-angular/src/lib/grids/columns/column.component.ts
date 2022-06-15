@@ -2413,7 +2413,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             // no width
             this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
-            this._calcWidth = parseInt(this.width);
+            this._calcWidth = this.width;
         }
         this.calcPixelWidth = parseFloat(this._calcWidth);
     }

@@ -16,7 +16,8 @@ export class IgxHeaderGroupWidthPipe implements PipeTransform {
 
     public transform(width: any, minWidth: any, hasLayout: boolean) {
         const isFitContent = width === 'fit-content';
-        return hasLayout ? '' : isFitContent ? width : `${Math.max(parseFloat(width), minWidth)}px`;
+        const isPercentage = typeof width === 'string' && width.indexOf('%') !== -1;
+        return hasLayout ? '' : isFitContent || isPercentage ? width : `${Math.max(parseFloat(width), minWidth)}px`;
     }
 }
 
