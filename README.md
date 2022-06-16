@@ -1,4 +1,13 @@
-# Ignite UI for Angular - from Infragistics
+<p align="center">
+  <a href="#">
+    <img alt="ignite-ui-logo" src="src/assets/svg/ignite-ui-logo-flames.svg" width="">
+  </a>
+</p>
+
+<h1 align="center">
+  Ignite UI for Angular - from Infragistics 
+</h1>
+
 
 ![Node.js CI](https://github.com/IgniteUI/igniteui-angular/workflows/Node.js%20CI/badge.svg)
 [![Build Status](https://dev.azure.com/IgniteUI/igniteui-angular/_apis/build/status/IgniteUI.igniteui-angular)](https://dev.azure.com/IgniteUI/igniteui-angular/_build/latest?definitionId=3)

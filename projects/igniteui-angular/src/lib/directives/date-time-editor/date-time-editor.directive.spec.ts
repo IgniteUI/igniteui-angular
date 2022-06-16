@@ -3,7 +3,7 @@ import { DatePart } from './date-time-editor.common';
 import { DOCUMENT, formatDate } from '@angular/common';
 import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
+import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '../../input-group/public_api';
@@ -253,7 +253,8 @@ describe('IgxDateTimeEditor', () => {
                  * format must be set because the editor will prioritize Date if Hours is not set
                  * and no DatePart is provided to increment / decrement
                  */
-                dateTimeEditor.value = new Date();
+                // do not use new Date. This test will fail if run between 23:00 and 23:59
+                dateTimeEditor.value = new Date(1900, 1, 1, 12, 0, 0, 0);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
                 const hours = dateTimeEditor.value.getHours();
 
@@ -1112,7 +1113,7 @@ describe('IgxDateTimeEditor', () => {
         });
 
         describe('Form control tests: ', () => {
-            let form: FormGroup;
+            let form: UntypedFormGroup;
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
@@ -1257,12 +1258,12 @@ class IgxDateTimeEditorFormComponent {
     public formInput: IgxInputDirective;
     @Output()
     public submitted = new EventEmitter<any>();
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
     public dateTimeFormat = 'dd-MM-yyyy';
     public minDate: Date;
     public maxDate: Date;
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         this.reactiveForm = fb.group({
             dateEditor: ['', Validators.required]
         });

@@ -1,5 +1,5 @@
 import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
@@ -101,7 +101,7 @@ import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 
-const appRoutes = [
+const appRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',
@@ -454,7 +454,7 @@ const appRoutes = [
     },
     {
         path: 'pagination',
-        Comment: PaginationSampleComponent
+        component: PaginationSampleComponent
     },
     {
         path: 'pivot',

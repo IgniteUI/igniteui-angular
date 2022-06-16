@@ -1,10 +1,11 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, FormBuilder, ReactiveFormsModule, Validators, FormControl, FormGroup } from '@angular/forms';
+import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
@@ -37,7 +38,8 @@ describe('IgxInput', () => {
                 ReactiveFormComponent,
                 InputsWithSameNameAttributesComponent,
                 ToggleRequiredWithNgModelInputComponent,
-                InputReactiveFormComponent
+                InputReactiveFormComponent,
+                FileInputFormComponent
             ],
             imports: [
                 IgxInputGroupModule,
@@ -696,7 +698,7 @@ describe('IgxInput', () => {
         const dom = fix.debugElement;
         const input = fix.componentInstance.input;
         const inputGroup = fix.componentInstance.igxInputGroup.element.nativeElement;
-        const formGroup: FormGroup = fix.componentInstance.reactiveForm;
+        const formGroup: UntypedFormGroup = fix.componentInstance.reactiveForm;
 
         // interaction test - expect actual asterisk
         // The only way to get a pseudo elements like :before OR :after is to use getComputedStyle(element [, pseudoElt]),
@@ -755,6 +757,74 @@ describe('IgxInput', () => {
         expect(asterisk).toBe('"*"');
         expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
     }));
+
+    it('should not hold old file input value in form after clearing the input', () => {
+        const fixture = TestBed.createComponent(FileInputFormComponent);
+        fixture.detectChanges();
+
+        const form = fixture.componentInstance.formWithFileInput;
+        const igxInput = fixture.componentInstance.input;
+        const igxInputGroup = fixture.componentInstance.igxInputGroup;
+        const inputElement = igxInput.nativeElement;
+
+        expect(igxInput.value).toEqual('');
+        expect(form.controls['fileInput'].value).toEqual('');
+
+        const list = new DataTransfer();
+        const file = new File(["content"], "filename.jpg");
+        list.items.add(file);
+        const myFileList = list.files;
+
+        inputElement.files = myFileList;
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+
+        expect(igxInput.value).toEqual('C:\\fakepath\\filename.jpg');
+        expect(form.controls['fileInput'].value).toEqual('C:\\fakepath\\filename.jpg')
+
+        const clearButton = igxInputGroup.element.nativeElement.querySelector('.igx-input-group__clear-icon');
+        expect(clearButton).toBeDefined();
+
+        UIInteractions.simulateClickEvent(clearButton);
+        fixture.detectChanges();
+
+        expect(igxInput.value).toEqual('');
+        expect(form.controls['fileInput'].value).toEqual('');
+    });
+
+    it('should not hold old file input value after clearing the input when ngModel is used', () => {
+        const fixture = TestBed.createComponent(FileInputFormComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.inputWithNgModel;
+        const igxInputGroup = fixture.componentInstance.igxInputGroupNgModel;
+        const inputElement = igxInput.nativeElement;
+        const model = fixture.componentInstance.model;
+
+        expect(igxInput.value).toEqual('');
+        expect(model.inputValue).toEqual(null);
+
+        const list = new DataTransfer();
+        const file = new File(["content"], "filename.jpg");
+        list.items.add(file);
+        const myFileList = list.files;
+
+        inputElement.files = myFileList;
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+
+        expect(igxInput.value).toEqual('C:\\fakepath\\filename.jpg');
+        expect(model.inputValue).toEqual('C:\\fakepath\\filename.jpg');
+
+        const clearButton = igxInputGroup.element.nativeElement.querySelector('.igx-input-group__clear-icon');
+        expect(clearButton).toBeDefined();
+
+        UIInteractions.simulateClickEvent(clearButton);
+        fixture.detectChanges();
+
+        expect(igxInput.value).toEqual('');
+        expect(model.inputValue).toEqual('');
+    });
 });
 
 @Component({
@@ -975,7 +1045,7 @@ class ReactiveFormComponent {
         num: [null, Validators.required]
     });
 
-    constructor(private fb: FormBuilder) { }
+    constructor(private fb: UntypedFormBuilder) { }
 
     public markAsTouched() {
         if (!this.form.valid) {
@@ -1026,20 +1096,20 @@ class ToggleRequiredWithNgModelInputComponent {
 class InputReactiveFormComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
     @ViewChild('inputReactive', { read: IgxInputDirective }) public input: IgxInputDirective;
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
 
     public validationType = {
         fullName: [Validators.required]
     };
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         this.reactiveForm = fb.group({
-            fullName: new FormControl('', Validators.required)
+            fullName: new UntypedFormControl('', Validators.required)
         });
     }
     public onSubmitReactive() { }
 
-    public removeValidators(form: FormGroup) {
+    public removeValidators(form: UntypedFormGroup) {
         for (const key in form.controls) {
             if (form.controls.hasOwnProperty(key)) {
                 form.get(key).clearValidators();
@@ -1048,7 +1118,7 @@ class InputReactiveFormComponent {
         }
     }
 
-    public addValidators(form: FormGroup) {
+    public addValidators(form: UntypedFormGroup) {
         for (const key in form.controls) {
             if (form.controls.hasOwnProperty(key)) {
                 form.get(key).setValidators(this.validationType[key]);
@@ -1068,6 +1138,38 @@ class InputReactiveFormComponent {
                 }
             }
         }
+    }
+}
+
+@Component({
+    template: `
+        <form [formGroup]="formWithFileInput" (ngSubmit)="onSubmit()">
+            <igx-input-group #igxInputGroup>
+                <input igxInput #fileInput name="fileInput" type="file" formControlName="fileInput" />
+                <label igxLabel for="fileInput">File Name</label>
+            </igx-input-group>
+        </form>
+        <igx-input-group #igxInputGroupNgModel>
+            <input igxInput #inputNgModel name="inputNgModel" type="file" [(ngModel)]="model.inputValue"/>
+            <label igxLabel for="inputNgModel">File Name</label>
+        </igx-input-group>
+`
+})
+
+class FileInputFormComponent {
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('fileInput', { read: IgxInputDirective }) public input: IgxInputDirective;
+    @ViewChild('igxInputGroupNgModel', { static: true }) public igxInputGroupNgModel: IgxInputGroupComponent;
+    @ViewChild('inputNgModel', { read: IgxInputDirective }) public inputWithNgModel: IgxInputDirective;
+    public formWithFileInput: UntypedFormGroup;
+    public model = {
+        inputValue: null
+    };
+
+    constructor(fb: UntypedFormBuilder) {
+        this.formWithFileInput = fb.group({
+            fileInput: new UntypedFormControl('')
+        });
     }
 }
 
