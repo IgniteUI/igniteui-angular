@@ -222,7 +222,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public handleInputChange(event?: any): void {
-        if (event.target.value === this.platformUtil.KEYMAP.SPACE && !this.searchValue.trim()) {
+        if (event?.target?.value === this.platformUtil.KEYMAP.SPACE && !this.searchValue.trim()) {
             this.searchInput.nativeElement.value = '';
             return;
         }
