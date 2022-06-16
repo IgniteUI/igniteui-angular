@@ -191,8 +191,6 @@
             position: absolute;
             content: '';
             top: 0;
-            // This needs to stay "left" in the [dir='rtl'] otherwise the animation is incorrect.
-            left: -200%;
             width: 100%;
             height: inherit;
             background-color: inherit;
@@ -257,7 +255,7 @@
 
     @include keyframes('indeterminate-bar') {
         0% {
-            transform: scaleX(0) translateX(-100%);
+            transform: scaleX(0) translateX(-200%);
             transform-origin: left;
         }
 
