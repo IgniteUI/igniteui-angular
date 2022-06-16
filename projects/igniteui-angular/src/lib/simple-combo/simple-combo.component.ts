@@ -126,7 +126,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         super(elementRef, cdr, selectionService, comboAPI,
             _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
-        this.readonly = false;
     }
 
     /** @hidden @internal */

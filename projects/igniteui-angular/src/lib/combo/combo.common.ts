@@ -398,52 +398,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     @HostBinding('class.igx-combo')
     public cssClass = 'igx-combo'; // Independent of display density for the time being
 
-    /** @hidden @internal */
-    @HostBinding('attr.aria-labelledby')
-    public get labelledBy() {
-        return this.ariaLabelledBy || this.label?.id || this.placeholder || '';
-    }
-
-    /** @hidden @internal */
-    @HostBinding(`attr.role`)
-    public role = 'combobox';
-
-    /** @hidden @internal */
-    @HostBinding('attr.aria-expanded')
-    public get ariaExpanded(): boolean {
-        return !this.dropdown.collapsed;
-    }
-
-    /** @hidden @internal */
-    @HostBinding('attr.aria-haspopup')
-    public get hasPopUp() {
-        return 'listbox';
-    }
-
-    /** @hidden @internal */
-    @HostBinding('attr.aria-controls')
-    public get ariaControls() {
-        return this.dropdown.id;
-    }
-
-     /** @hidden @internal */
-     @HostBinding('attr.aria-autocomplete')
-     public get ariaAutocomplete() {
-         return 'list';
-     }
-
-     /** @hidden @internal */
-    @HostBinding('attr.aria-readonly')
-    public get ariaReadonly() {
-        return this.readonly;
-    }
-
-    /** @hidden @internal */
-    @HostBinding('attr.aria-activedescendant')
-    public get activeDescendant() {
-        return this.dropdownContainer.nativeElement.id || '';
-    }
-
     /**
      * An @Input property that enabled/disables combo. The default is `false`.
      * ```html
@@ -883,8 +837,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public customValueFlag = true;
     /** @hidden @internal */
     public filterValue = '';
-    /** @hidden @internal */
-    public readonly = true;
     /** @hidden @internal */
     public defaultFallbackGroup = 'Other';
     /** @hidden @internal */

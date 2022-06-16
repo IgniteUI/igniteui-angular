@@ -26,6 +26,12 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     @HostBinding('style.height.px')
     public itemHeight: string | number = '';
 
+    @HostBinding('attr.aria-label')
+    @Input()
+    public get ariaLabel(): string {
+        return this.itemID;
+    }
+
     /** @hidden @internal */
     @Input()
     public singleMode: boolean;

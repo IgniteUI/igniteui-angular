@@ -8,8 +8,12 @@
     <ng-container ngProjectAs="igx-hint, [igxHint]">
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
-    <input igxInput #comboInput name="comboInput" type="text" [value]="value" [attr.placeholder]="placeholder"
-            [disabled]="disabled" (blur)="onBlur()" />
+    <input igxInput #comboInput name="comboInput" type="text" [value]="value"
+            [attr.placeholder]="placeholder" [disabled]="disabled"
+            role="combobox" aria-haspopup="listbox" aria-readonly="true"
+            [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
+            [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
+            (blur)="onBlur()" />
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
@@ -50,7 +54,8 @@
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
-        [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id">
+        [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id" aria-multiselectable="true"
+        [attr.aria-activedescendant]="this.dropdown.focusedItem?.id || ''">
         <igx-combo-item role="option" [itemHeight]='itemHeight' *igxFor="let item of data
             | comboFiltering:filterValue:displayKey:filteringOptions:filterable
             | comboGrouping:groupKey:valueKey:groupSortingDirection;
