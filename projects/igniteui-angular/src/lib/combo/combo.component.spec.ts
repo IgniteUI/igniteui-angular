@@ -2586,6 +2586,15 @@ describe('igxCombo', () => {
             addItemButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`));
             expect(addItemButton).toEqual(null);
         });
+        it('should not add text in search input when typing only blank spaces', () => {
+            combo.open();
+            fixture.detectChanges();
+            const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
+            UIInteractions.simulateTyping('  ', searchInput);
+            fixture.detectChanges();
+
+            expect(combo.searchInput.nativeElement.value).toEqual('');
+        });
         it(`should handle enter keydown on "Add Item" properly`, () => {
             combo.allowCustomValues = true;
             fixture.detectChanges();
