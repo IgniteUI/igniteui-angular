@@ -110,7 +110,8 @@ $dark-bootstrap-stepper: extend(
 
 /// Generates a dark indigo stepper schema.
 /// @type {Map}
-/// @property {Map} indicator-outline [color: (color: ('grays', 600)] - The outline color of the incomplete step indicator.
+/// @property {Map} indicator-color [color: ('grays', 900)] - The text color of the incomplete step indicator.
+/// @property {Map} indicator-outline [color: ('grays', 600)] - The outline color of the incomplete step indicator.
 /// @property {Map} disabled-indicator-outline [color: ('grays', 300)] - The outline color of the disabled step indicator.
 /// @requires {function} extend
 /// @requires $indigo-stepper
@@ -120,6 +121,10 @@ $dark-indigo-stepper: extend(
     $indigo-stepper,
     $base-stepper,
     (
+        indicator-color: (
+            color: ('grays', 900)
+        ),
+
         indicator-outline: (
             color: ('grays', 600)
         ),
