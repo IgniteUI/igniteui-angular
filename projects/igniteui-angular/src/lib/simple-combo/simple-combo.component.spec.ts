@@ -1072,7 +1072,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toBeFalsy();
         });
 
-        it('should empty and invalid item values', () => {
+        it('should accept empty and invalid item values', () => {
             combo.valueKey = 'key';
             combo.displayKey = 'value';
             combo.data = [
@@ -1087,36 +1087,14 @@ describe('IgxSimpleCombo', () => {
             const item1 = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
             expect(item1).toBeDefined();
 
-            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-            fixture.detectChanges();
-            expect(combo.value).toBe(null);
-
-            combo.open();
-            fixture.detectChanges();
             const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
             expect(item2).toBeDefined();
 
-            item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-            fixture.detectChanges();
-            expect(combo.value).toBe('val2');
-
-            combo.open();
-            fixture.detectChanges();
             const item3 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
             expect(item3).toBeDefined();
 
-            item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-            fixture.detectChanges();
-            expect(combo.value).toBe('');
-
-            combo.open();
-            fixture.detectChanges();
-            const item5 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
-            expect(item5).toBeDefined();
-
-            item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-            fixture.detectChanges();
-            expect(combo.value).toBe(undefined);
+            const item4 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+            expect(item4).toBeDefined();
         });
 
         it('should not display falsy item values except 0 (array of primitive data)', () => {
