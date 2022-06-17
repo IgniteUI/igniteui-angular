@@ -814,7 +814,8 @@ describe('IgxSimpleCombo', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxSimpleComboSampleComponent
+                    IgxSimpleComboSampleComponent,
+                    ComboModelBindingComponent
                 ],
                 imports: [
                     IgxSimpleComboModule,
@@ -1071,7 +1072,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toBeFalsy();
         });
 
-        it('should empty and invalid item values', () => {
+        it('should accept empty and invalid item values', () => {
             combo.valueKey = 'key';
             combo.displayKey = 'value';
             combo.data = [
@@ -1086,36 +1087,14 @@ describe('IgxSimpleCombo', () => {
             const item1 = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
             expect(item1).toBeDefined();
 
-            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-            fixture.detectChanges();
-            expect(combo.value).toBe(null);
-
-            combo.open();
-            fixture.detectChanges();
             const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
             expect(item2).toBeDefined();
 
-            item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-            fixture.detectChanges();
-            expect(combo.value).toBe('val2');
-
-            combo.open();
-            fixture.detectChanges();
             const item3 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
             expect(item3).toBeDefined();
 
-            item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-            fixture.detectChanges();
-            expect(combo.value).toBe('');
-
-            combo.open();
-            fixture.detectChanges();
-            const item5 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
-            expect(item5).toBeDefined();
-
-            item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-            fixture.detectChanges();
-            expect(combo.value).toBe(undefined);
+            const item4 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+            expect(item4).toBeDefined();
         });
         it('should not display falsy item values except 0 (array of primitive data)', () => {
             combo.valueKey = null;
@@ -1146,6 +1125,32 @@ describe('IgxSimpleCombo', () => {
 
             const items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
             expect(items.length).toEqual(1);
+        });
+
+        it('should use valueKey as display text when displayKey is a falsy value (if valueKey is truthy)' , () => {
+            fixture = TestBed.createComponent(ComboModelBindingComponent);
+            fixture.detectChanges();
+
+            combo = fixture.componentInstance.combo;
+            combo.valueKey = 'key';
+            combo.displayKey = 'value';
+            combo.data = [
+                { key: 0, value: 0 },
+                { key: 'truthy value', value: false },
+                { key: null, value: null },
+                { key: undefined, value: undefined },
+            ];
+            combo.open();
+            fixture.detectChanges();
+
+            const item = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
+            const displayText = item.nativeElement.textContent.trim();
+            expect(displayText).toEqual('truthy value');
+
+            item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.value).toBe('truthy value');
         });
     });
 

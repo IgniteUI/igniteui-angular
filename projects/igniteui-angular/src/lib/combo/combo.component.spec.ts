@@ -1415,7 +1415,8 @@ describe('igxCombo', () => {
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
-                        IgxComboSampleComponent
+                        IgxComboSampleComponent,
+                        ComboModelBindingComponent
                     ],
                     imports: [
                         IgxComboModule,
@@ -1743,6 +1744,31 @@ describe('igxCombo', () => {
 
                 const items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
                 expect(items.length).toEqual(1);
+            });
+            it('should use valueKey as display text when displayKey is a falsy value (if valueKey is truthy)' , () => {
+                fixture = TestBed.createComponent(ComboModelBindingComponent);
+                fixture.detectChanges();
+
+                combo = fixture.componentInstance.combo;
+                combo.valueKey = 'key';
+                combo.displayKey = 'value';
+                combo.data = [
+                    { key: 0, value: 0 },
+                    { key: 'truthy value', value: false },
+                    { key: null, value: null },
+                    { key: undefined, value: undefined },
+                ];
+                combo.open();
+                fixture.detectChanges();
+
+                const item = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
+                const displayText = item.nativeElement.textContent.trim();
+                expect(displayText).toEqual('truthy value');
+
+                item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                fixture.detectChanges();
+
+                expect(combo.value).toBe('truthy value');
             });
         });
         describe('primitive data dropdown: ', () => {
