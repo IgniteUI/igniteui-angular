@@ -162,12 +162,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _locale;
+    private _locale: string;
 
     /**
      * @hidden
      */
-    private _weekStart: WEEKDAYS;
+    private _weekStart: WEEKDAYS | number;
 
     /**
      * @hidden
@@ -232,10 +232,10 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Gets the start day of the week.
      * Can return a numeric or an enum representation of the week day.
-     * Defaults to `Sunday` / `0`.
+     * If not set, defaults to the first day of the week for the application locale.
      */
     @Input()
-    public get weekStart(): WEEKDAYS {
+    public get weekStart(): WEEKDAYS | number {
         return this.calendarModel.firstWeekDay;
     }
 
@@ -243,14 +243,14 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Sets the start day of the week.
      * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
      */
-    public set weekStart(value: WEEKDAYS) {
+    public set weekStart(value: WEEKDAYS | number) {
         this._weekStart = value;
         this.calendarModel.firstWeekDay = value;
     }
 
     /**
      * Gets the `locale` of the calendar.
-     * * If not set, defaults to applciation's locale.
+     * If not set, defaults to application's locale.
      */
     @Input()
     public get locale(): string {
@@ -263,13 +263,15 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set locale(value: string) {
         this._locale = value;
-        // if value is invalid, set it back to _localeId
+
+        // if value is not a valid BCP 47 tag, set it back to _localeId
         try {
             getLocaleFirstDayOfWeek(this._locale);
         } catch (e) {
             this._locale = this._localeId;
         }
 
+        // changing locale runtime needs to update the `weekStart` too, if `weekStart` is not explicitly set
         if (this._weekStart === undefined) {
             this.calendarModel.firstWeekDay = getLocaleFirstDayOfWeek(this._locale);
         }
@@ -452,13 +454,10 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    constructor(protected platform: PlatformUtil, @Inject(LOCALE_ID) protected _localeId: any) {
+    constructor(protected platform: PlatformUtil, @Inject(LOCALE_ID) protected _localeId: string) {
         this.calendarModel = new Calendar();
         this.locale = _localeId;
-
         this.viewDate = this.viewDate ? this.viewDate : new Date();
-
-        this.calendarModel.firstWeekDay = this.weekStart;
         this.initFormatters();
     }
 

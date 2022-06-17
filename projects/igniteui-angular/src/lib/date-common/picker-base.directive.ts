@@ -20,7 +20,7 @@ import { WEEKDAYS } from '../calendar/calendar';
 @Directive()
 export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider, AfterViewInit, OnDestroy {
     protected _locale;
-    protected _weekStart: WEEKDAYS;
+    protected _weekStart: WEEKDAYS | number;
 
     /**
      * The editor's input mask.
@@ -139,7 +139,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     /**
      * Sets the start day of the week.
      */
-    public set weekStart(value: WEEKDAYS) {
+    public set weekStart(value: WEEKDAYS | number) {
         this._weekStart = value;
     }
 

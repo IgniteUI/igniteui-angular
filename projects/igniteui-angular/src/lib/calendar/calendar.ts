@@ -155,7 +155,7 @@ export enum WEEKDAYS {
 
 export class Calendar {
 
-    private _firstWeekDay: WEEKDAYS;
+    private _firstWeekDay: WEEKDAYS | number;
 
     constructor(firstWeekDay: WEEKDAYS = WEEKDAYS.SUNDAY) {
         this._firstWeekDay = firstWeekDay;

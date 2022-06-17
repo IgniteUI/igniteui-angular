@@ -413,7 +413,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private onValidatorChange: () => void = noop;
 
     constructor(public element: ElementRef,
-        @Inject(LOCALE_ID) protected _localeId: any,
+        @Inject(LOCALE_ID) protected _localeId: string,
         protected platform: PlatformUtil,
         private _injector: Injector,
         private _moduleRef: NgModuleRef<any>,
