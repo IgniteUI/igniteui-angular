@@ -1,8 +1,5 @@
-<p align="center">
-  <a href="#">
-    <img alt="ignite-ui-logo" src="src/assets/svg/ignite-ui-logo-flames.svg" width="">
-  </a>
-</p>
+![ignite-ui-logo-flames](https://user-images.githubusercontent.com/52001020/173773052-e8fd2806-2631-47a8-838d-1eabdaa4afce.svg)
+
 
 <h1 align="center">
   Ignite UI for Angular - from Infragistics 
