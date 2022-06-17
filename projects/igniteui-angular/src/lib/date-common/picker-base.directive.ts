@@ -15,12 +15,12 @@ import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxPickerToggleComponent } from './picker-icons.common';
 import { PickerInteractionMode } from './types';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
+import { WEEKDAYS } from '../calendar/calendar';
 
 @Directive()
 export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider, AfterViewInit, OnDestroy {
     protected _locale;
-    protected _defaultLocaleFirstDayOfWeek: number;
-    protected _isWeekStartSet: boolean;
+    protected _weekStart: WEEKDAYS;
 
     /**
      * The editor's input mask.
@@ -100,14 +100,6 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     public disabled = false;
 
     /**
-     * Locale settings used for value formatting and calendar or time spinner.
-     *
-     * @remarks
-     * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
-     * If a `locale` is set, it must be registered via `registerLocaleData`.
-     * Please refer to https://angular.io/guide/i18n#i18n-pipes.
-     * If it is not registered, `Intl` will be used for formatting.
-     *
      * @example
      * ```html
      * <igx-date-picker locale="jp"></igx-date-picker>
@@ -115,7 +107,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
      */
     /**
      * Gets the `locale` of the date-picker.
-     * Default value is `application's LOCALE_ID`.
+     * If not set, defaults to applciation's locale..
      */
     @Input()
     public get locale(): string {
@@ -125,21 +117,32 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     /**
      * Sets the `locale` of the date-picker.
      * Expects a valid BCP 47 language tag.
-     * Default value is `application's LOCALE_ID`.
      */
     public set locale(value: string) {
         this._locale = value;
+        // if value is invalid, set it back to _localeId
         try {
             getLocaleFirstDayOfWeek(this._locale);
         } catch (e) {
             this._locale = this._localeId;
         }
-
-        if (!this._isWeekStartSet) {
-            this._defaultLocaleFirstDayOfWeek = getLocaleFirstDayOfWeek(this._locale);
-        }
-
     }
+
+    /**
+     * Gets/Sets on which day the week starts.
+     */
+    @Input()
+    public get weekStart(): WEEKDAYS | number {
+        return this._weekStart ?? getLocaleFirstDayOfWeek(this._locale);
+    }
+
+    /**
+     * Sets the start day of the week.
+     */
+    public set weekStart(value: WEEKDAYS) {
+        this._weekStart = value;
+    }
+
     /**
      * The container used for the pop-up element.
      *

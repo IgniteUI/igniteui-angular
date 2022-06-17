@@ -70,10 +70,6 @@ const SingleInputDatesConcatenationString = ' - ';
 })
 export class IgxDateRangePickerComponent extends PickerBaseDirective
     implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
-    /**
-     * @hidden
-     */
-    private _weekStart: number | WEEKDAYS
 
     /**
      * The number of displayed month views.
@@ -102,36 +98,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     @Input()
     public hideOutsideDays: boolean;
-
-    /**
-     * The start day of the week.
-     *
-     * @remarks
-     * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker [weekStart]="1"></igx-date-range-picker>
-     * ```
-     */
-    @Input()
-    public get weekStart(): WEEKDAYS | number {
-        if (this._weekStart === undefined) {
-            return this._defaultLocaleFirstDayOfWeek;
-        }
-
-        return this._weekStart;
-    }
-
-    /**
-     * Sets the start day of the week.
-     * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
-     */
-    public set weekStart(value: WEEKDAYS | number) {
-        this._weekStart = value;
-
-        this._isWeekStartSet = true;
-    }
 
     /**
      * A custom formatter function, applied on the selected or passed in date.
@@ -1051,7 +1017,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.calendar.hasHeader = false;
         this.calendar.locale = this.locale;
         this.calendar.selection = CalendarSelection.RANGE;
-        this.calendar.weekStart = this._isWeekStartSet ? this.weekStart : this._defaultLocaleFirstDayOfWeek;
+        this.calendar.weekStart = this.weekStart;
         this.calendar.hideOutsideDays = this.hideOutsideDays;
         this.calendar.monthsViewNumber = this.displayMonthsCount;
         this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));

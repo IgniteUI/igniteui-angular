@@ -8,7 +8,7 @@ import { IgxCalendarView } from './month-picker-base';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { getLocaleFirstDayOfWeek } from "@angular/common";
+import { getLocaleFirstDayOfWeek, getLocaleId } from "@angular/common";
 
 /**
  * Sets the selection type - single, multi or range.
@@ -167,7 +167,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _weekStart: number | WEEKDAYS;
+    private _weekStart: WEEKDAYS;
 
     /**
      * @hidden
@@ -235,7 +235,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Defaults to `Sunday` / `0`.
      */
     @Input()
-    public get weekStart(): WEEKDAYS | number {
+    public get weekStart(): WEEKDAYS {
         return this.calendarModel.firstWeekDay;
     }
 
@@ -243,15 +243,14 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Sets the start day of the week.
      * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
      */
-    public set weekStart(value: WEEKDAYS | number) {
+    public set weekStart(value: WEEKDAYS) {
         this._weekStart = value;
-
         this.calendarModel.firstWeekDay = value;
     }
 
     /**
      * Gets the `locale` of the calendar.
-     * * Default value is `application's LOCALE_ID`.
+     * * If not set, defaults to applciation's locale.
      */
     @Input()
     public get locale(): string {
@@ -261,10 +260,10 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Sets the `locale` of the calendar.
      * Expects a valid BCP 47 language tag.
-     * Default value is `"en"`.
      */
     public set locale(value: string) {
         this._locale = value;
+        // if value is invalid, set it back to _localeId
         try {
             getLocaleFirstDayOfWeek(this._locale);
         } catch (e) {

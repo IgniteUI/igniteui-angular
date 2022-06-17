@@ -44,7 +44,7 @@ export interface IColumnPipeArgs {
     display?: string;
 
     /** The first week day to be displayed in calendar when filtering or editing a date column */
-    weekStart?: number | WEEKDAYS;
+    weekStart?: WEEKDAYS;
 }
 
 export interface ISortingOptions {

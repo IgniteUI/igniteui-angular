@@ -38,7 +38,6 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { PickerHeaderOrientation as PickerHeaderOrientation } from '../date-common/types';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxPickerClearComponent, IgxPickerActionsDirective } from '../date-common/public_api';
-import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 let NEXT_ID = 0;
 
@@ -65,37 +64,6 @@ let NEXT_ID = 0;
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
     OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
-    /**
-     * @hidden
-     */
-    private _weekStart: number | WEEKDAYS
-
-    /**
-     * Gets/Sets on which day the week starts.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [weekStart]="4" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
-     * ```
-     */
-    @Input()
-    public get weekStart(): WEEKDAYS | number {
-        if (this._weekStart === undefined) {
-            return this._defaultLocaleFirstDayOfWeek;
-        }
-
-        return this._weekStart;
-    }
-
-    /**
-     * Sets the start day of the week.
-     * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
-     */
-    public set weekStart(value: WEEKDAYS | number) {
-        this._weekStart = value;
-
-        this._isWeekStartSet = true;
-    }
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -744,48 +712,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
     //#endregion
 
-    /**
-     * Locale settings used for value formatting and calendar or time spinner.
-     *
-     * @remarks
-     * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
-     * If a `locale` is set, it must be registered via `registerLocaleData`.
-     * Please refer to https://angular.io/guide/i18n#i18n-pipes.
-     * If it is not registered, `Intl` will be used for formatting.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker locale="jp"></igx-date-picker>
-     * ```
-     */
-    /**
-     * Gets the `locale` of the date-picker.
-     * Default value is `application's LOCALE_ID`.
-     */
-    @Input()
-    public get locale(): string {
-        return this._locale;
-    }
-
-    /**
-     * Sets the `locale` of the date-picker.
-     * Expects a valid BCP 47 language tag.
-     * Default value is `application's LOCALE_ID`.
-     */
-    public set locale(value: string) {
-        this._locale = value;
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
-            this._locale = this._localeId;
-        }
-
-        if (!this._isWeekStartSet) {
-            this._defaultLocaleFirstDayOfWeek = getLocaleFirstDayOfWeek(this._locale);
-        }
-    }
-
-
     /** @hidden @internal */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
@@ -998,7 +924,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar.formatViews = this.pickerFormatViews;
         this._calendar.locale = this.locale;
         this._calendar.vertical = isVertical;
-        this._calendar.weekStart = this._isWeekStartSet ? this.weekStart : this._defaultLocaleFirstDayOfWeek;
+        this._calendar.weekStart = this.weekStart;
         this._calendar.specialDates = this.specialDates;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
