@@ -51,7 +51,7 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id"
         (keydown)="handleItemKeyDown($event)">
         <igx-combo-item role="option" [singleMode]="true" [itemHeight]='itemHeight' (click)="handleItemClick()" *igxFor="let item of data
-            | comboClean:valueKey
+            | comboClean:valueKey:displayKey
             | comboFiltering:filterValue:displayKey:filteringOptions:true
             | comboGrouping:groupKey:valueKey:groupSortingDirection;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
