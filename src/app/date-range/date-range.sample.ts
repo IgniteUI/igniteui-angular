@@ -1,6 +1,7 @@
-import {Component, ViewChild} from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
-import {DateRange, IChangeRadioEventArgs, IgxCalendarComponent, IgxDateRangePickerComponent} from 'igniteui-angular';
+
+import { Component } from '@angular/core';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl } from '@angular/forms';
+import { DateRange, IChangeRadioEventArgs, IgxCalendarComponent, IgxDateRangePickerComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-date-range',
@@ -23,12 +24,12 @@ export class DateRangeSampleComponent {
     public minDate: Date = new Date();
     public maxDate: Date = new Date(new Date().setDate(new Date().getDate() + 25));
 
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
 
     public updateOnOptions: string[] = ['change', 'blur', 'submit'];
     public updateOn = 'blur';
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         const today = new Date();
         const in5days = new Date();
         in5days.setDate(today.getDate() + 5);
@@ -50,7 +51,7 @@ export class DateRangeSampleComponent {
         Object.keys(this.reactiveForm.controls).forEach(name => {
             const control = this.reactiveForm.controls[name];
             const value = control.value;
-            const newControl = new FormControl(
+            const newControl = new UntypedFormControl(
                 value,
                 { updateOn: e.value, validators: Validators.required }
             );

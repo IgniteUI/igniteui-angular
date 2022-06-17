@@ -1,6 +1,6 @@
 import { Component, ViewChild, DebugElement, EventEmitter, QueryList } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTimePickerComponent, IgxTimePickerModule, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
@@ -433,7 +433,7 @@ describe('IgxTimePicker', () => {
 
             const date = new Date(2020, 4, 7, 8, 50, 0);
             timePicker.writeValue(date);
-            const mockFormControl = new FormControl(timePicker.value);
+            const mockFormControl = new UntypedFormControl(timePicker.value);
             expect(timePicker.validate(mockFormControl)).toBeNull();
 
             date.setHours(3);
@@ -1790,8 +1790,8 @@ export class IgxTimePickerReactiveFormComponent {
 
     public time: Date = new Date(2012, 5, 3);
 
-    public form: FormGroup = new FormGroup({
-        time: new FormControl(null, Validators.required)
+    public form: UntypedFormGroup = new UntypedFormGroup({
+        time: new UntypedFormControl(null, Validators.required)
     });
 
     public removeValidators() {
