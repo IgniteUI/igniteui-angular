@@ -3555,7 +3555,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
-            this.notifyChanges();
+            this.notifyChanges(true);
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
@@ -6814,12 +6814,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected _shouldAutoSize(renderedHeight) {
         this.tbody.nativeElement.style.display = 'none';
-        const res = !this.nativeElement.parentElement ||
+        let res = !this.nativeElement.parentElement ||
             this.nativeElement.parentElement.clientHeight === 0 ||
-            this.nativeElement.parentElement.clientHeight === renderedHeight ||
+            this.nativeElement.parentElement.clientHeight === renderedHeight;
+        if (!this.platform.isChromium && !this.platform.isFirefox) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
-            this.checkContainerSizeChange();
+            res = this.checkContainerSizeChange();
+        }
         this.tbody.nativeElement.style.display = '';
         return res;
     }
