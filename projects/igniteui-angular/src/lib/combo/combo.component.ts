@@ -442,7 +442,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     /** Returns a string that should be populated in the combo's text box */
     private concatDisplayText(selection: any[]): string {
         const value = this.displayKey !== null && this.displayKey !== undefined ?
-            this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
+            this.convertKeysToItems(selection).map(entry => entry[this.displayKey] ? entry[this.displayKey] : entry[this.valueKey]).join(', ') :
             selection.join(', ');
         return value;
     }
