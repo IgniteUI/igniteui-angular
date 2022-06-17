@@ -267,7 +267,8 @@ describe('igxGridEditingActions #grid ', () => {
                 rowID: row.key,
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
-                oldValue: null
+                oldValue: null,
+                owner: treeGrid
             };
 
             // select delete
